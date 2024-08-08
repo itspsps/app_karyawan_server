@@ -6,7 +6,6 @@
     "license": "MIT",
     "require": {
         "php": "8.1 || ^8.2.5",
-        "alexpechkarev/google-maps": "^11.0",
         "barryvdh/laravel-dompdf": "^2.2",
         "doctrine/dbal": "^4.0",
         "fruitcake/laravel-cors": "^2.0",
