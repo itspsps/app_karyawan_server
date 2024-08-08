@@ -1,0 +1,123 @@
+/* Get Started */
+.get-started{
+	text-align:center;
+	flex:1;
+    width:100%;
+	.swiper-wrapper{
+		margin-bottom:0;
+	}
+	.dz-title{
+		margin-bottom: 12px;
+		font-size: 24px;
+	}
+	p{
+		margin-bottom: 0;
+		margin-top: 0;
+	}
+
+}
+.swiper-btn{
+    display: flex;
+    width: 100%;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 1.5rem;
+}
+.swiper-button-prev{
+    i{
+        transform: rotateY(180deg);
+    }
+}
+.swiper-button-next,
+.swiper-button-prev{
+    position:unset;
+    height:3rem;
+    opacity:1;
+    width:3rem;
+    margin: 0;
+    font-size: 1.3rem;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    border-radius:3rem;
+    backgroun: transparent;
+    @include transitionMedium;
+    color:#767676;
+    border:1px solid #CBCBCB;
+    i{
+       line-height: .5;
+    }
+    &:after{
+        content:none;
+    }
+    &:hover{
+        background:var(--primary);
+        color:#fff;
+    }
+}
+
+// swiper box
+.started-swiper-box{
+    max-width: 1024px;
+    margin-left: auto;
+    margin-right: auto;
+    width: 100%;
+    display: flex;
+    padding: 0;
+    flex-direction: column;
+    height: 100vh;
+	
+    .swiper-slide{
+		height: 100%;
+		position: relative;
+	}
+    .dz-media{
+        margin: auto auto 0px;
+        img{
+            max-width: 180px;
+        }
+    }
+	.slide-info{
+		height: 100%;
+		display: flex;
+		flex-direction: column;
+		justify-content: space-between;
+		box-sizing: border-box;
+		padding-bottom: 10px;
+		background-repeat: no-repeat;
+		background-position: top left;
+		background-size: 100%;
+		z-index: 1;
+		position: relative;
+	}
+	.view-logo{
+		margin: auto;
+	}
+	.view-logo + .slide-content{
+		margin-top: 0;
+        }
+	.slide-content{
+		z-index: 1;
+		position: relative;
+		padding: 0 15px;
+		max-width: 320px;
+		margin: auto auto 0;
+	}
+	.bg-icon{
+		position: absolute;
+		left: 0;
+		top: 50%;
+		opacity: 0.1;
+		transform: translateY(-50%);
+	}
+}
+.page-onboading{
+    .swiper-btn{
+        margin-top: 0;
+        margin-bottom: 70px;
+        justify-content: center;
+    }
+}
+/* .page-onboading + .footer{
+    background-color: var(--bg-white);
+} */

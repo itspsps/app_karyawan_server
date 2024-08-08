@@ -1,0 +1,25 @@
+.dz-spinner{
+    &.box-spinner{        
+        color: #fff;
+        background: rgba(255, 255, 255, 0.20);
+        margin-left: auto;
+        text-align: center;
+        margin-right: auto;
+        line-height: 80px;
+        width: 60px;
+        height: 60px;
+        border-radius: var(--border-radius-base);
+    }
+    .spinner-lg{
+        width: 3rem;
+        height: 3rem;
+    }
+    .spinner-md{
+        width: 2.5rem;
+        height: 2.5rem;
+    }
+    .spinner-sm{
+        width: 1.5rem;
+        height: 1.5rem;
+    }
+}

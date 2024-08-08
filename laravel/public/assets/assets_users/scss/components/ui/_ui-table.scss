@@ -1,0 +1,12 @@
+.table > :not(:first-child) {
+    border-top: 0px solid currentColor; 
+}
+.table-striped > tbody > tr:nth-of-type(odd) > * {
+    --bs-table-accent-bg: var(--rgba-primary-1);
+}
+.table{
+    th{
+        font-size: 14px;
+        font-weight: 600;
+    }
+}

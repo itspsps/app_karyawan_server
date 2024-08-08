@@ -1,0 +1,14 @@
+.main-content{
+    display: flex;
+    height: 100%;
+    align-items: center;
+    .left-content{
+        width: 30px;
+        height: 100%;
+        display: flex;
+        align-items: center;
+    }
+    .mid-content{
+        flex: 1;
+    }
+}

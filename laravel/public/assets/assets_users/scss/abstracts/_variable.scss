@@ -1,0 +1,151 @@
+// to ignore cli warning about deprecated mixin
+$enable-deprecation-messages: false;
+$ignore-warning             : true;
+$border: #DDDDDD;
+//$radius: 50px;
+
+// Color
+$primary   : #673ab7;
+$secondary : #48A9F8 !default;
+$success   : #56c760 !default;
+$info      : #58bad7 !default;
+$warning   : #f0a901 !default;
+$danger    : #f75a5b !default;
+$light     : #f4f4f4 !default;
+$dark      : #000;
+
+// Body
+$body-bg   : #f7f7f7;
+$body-color: #7e7e7e;
+$d-border: #333754;
+$d-bg: #20203c;
+$l-bg: #FAFAFA;
+
+// Typography
+$font-family-base : 'Poppins', sans-serif;;
+$font-family-title : 'Poppins', sans-serif;
+$headings-font-weight   : 600;
+
+// $headings-font-family:        $fm;
+$font-size-base         : 0.875rem !default;
+$font-weight-base       : 500 !default;
+
+$line-height-base    : 1.6;
+$h1-font-size           : 1.75rem;
+$h2-font-size           : 1.5rem;
+$h3-font-size           : 1.375rem;
+$h4-font-size           : 1.25rem;
+$h5-font-size           : 1.125rem;
+$h6-font-size           : 1rem;
+
+$text-muted : #AEAED5;
+$colors     : () !default;
+
+$heading-primary-size: 1.8rem;
+$sub-heading-size    : 1.6rem !default;
+$grid-gutter-width   : 30px;
+$dropdown-lik-color  : $body-color;
+$border-color        : #E1E1F0;
+$headings-color      : #212529 !default;
+$grid-breakpoints    : (xs: 0, sm: 576px, md: 768px, lg: 992px, xl: 1200px, xxl: 1440);
+$container-max-widths: (sm: 540px,
+  md: 720px,
+  lg: 960px,
+  xl: 1024px) !default;
+
+$input-btn-focus-width: 0rem !default;
+$border-radius-base   : 8px !default;
+$shadow-color: rgba(160, 159, 202, 0.15);
+
+// Other Color
+$orange  : #ff8853;
+$skyblue : #00aeff;
+$maroon  : #9e0168;
+$yellow  : #ffa808;
+$red     : #ff586e;
+$green   : #029e76;
+$blue    : #5543d1;
+
+// Color Opacity
+$primary-light: rgba($primary,0.1);
+$secondary-light: rgba($secondary,0.1);
+$success-light: rgba($success,0.1);
+$warning-light: rgba($warning,0.1);
+$danger-light: rgba($danger,0.1);
+$info-light: rgba($info,0.1);
+$dark-light: rgba($dark,0.1);
+$white-light: rgba($light,0.1);
+$yellow-light: rgba($yellow,0.1);
+
+/////////////////////////
+// Primary Light
+/////////////////////////
+$primary-light: lighten($primary, 40%);
+$secondary-light: lighten($secondary, 30%);
+$success-light: lighten($success, 30%);
+$warning-light: lighten($warning, 48%);
+$danger-light: lighten($danger, 30%);
+$info-light: lighten($info, 30%);
+$dark-light: lighten($dark, 50%);
+
+/////////////////////////
+// Opacity 
+/////////////////////////
+$primary-opacity: rgba($primary, 0.1);
+$secondary-opacity: rgba($secondary, 0.5);
+$success-opacity: rgba($success, 0.1);
+$warning-opacity: rgba($warning, 0.1);
+$danger-opacity: rgba($danger, 0.15);
+$info-opacity: rgba($info, 0.1);
+$dark-opacity: rgba($dark, 0.35);
+
+// border radius
+$radius: 1.25rem !default;
+$radius-lg: 1rem !default;
+$radius-sm: .75rem !default;
+
+///////////////////
+// Social Colors
+///////////////////
+$facebook: #3b5998;
+$twitter: #1da1f2;
+$youtube: #FF0000;
+$google-plus: #db4439;
+$linkedin: #007bb6;
+$instagram: #c32aa3;
+$pinterest: #bd081c;
+$google: #4285f4;
+$snapchat: #fffc00;
+$whatsapp: #25d366;
+$tumblr: #35465d;
+$reddit: #ff4500;
+$spotify: #1ed760;
+$yahoo: #430297;
+$dribbble: #ea4c89;
+$skype: #00aff0;
+$quora: #aa2200;
+$riverBed: #4C585C;
+$vimeo: #1ab7ea;
+
+:root{
+	--primary: #{$primary};
+	--secondary: #{$secondary};
+    --gradient: linear-gradient(73.08deg, #673ab7 15.14%, #9a70e5 92.25%);
+	--primary-hover: #{darken($primary, 10)};
+	--primary-dark: #{darken($primary, 30)};
+	--rgba-primary-1: #{rgba($primary, 0.1)};
+	--rgba-primary-2: #{rgba($primary, 0.2)};
+	--rgba-primary-3: #{rgba($primary, 0.3)};
+	--rgba-primary-4: #{rgba($primary, 0.4)};
+	--rgba-primary-5: #{rgba($primary, 0.5)};
+	--rgba-primary-6: #{rgba($primary, 0.6)};
+	--rgba-primary-7: #{rgba($primary, 0.7)};
+	--rgba-primary-8: #{rgba($primary, 0.8)};
+	--rgba-primary-9: #{rgba($primary, 0.9)};
+	--font-family-base: #{$font-family-base};
+	--font-family-title: #{$font-family-title};
+	--border-radius-base: #{$border-radius-base};
+	--border-color: #{$border};
+	--bg-white: #FFF;
+	--title: #{$headings-color};
+} 

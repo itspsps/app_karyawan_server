@@ -1,0 +1,44 @@
+.modal-header{
+	padding: 1rem 1.875rem;
+    .btn-close{
+        background: none;
+		padding: 0;
+		margin: 0;
+		font-size: 18px;
+		opacity: 0.3;
+		line-height: 1;
+    }
+	.close{
+		padding: 0.875rem 1.815rem;
+		margin: 0;
+		position: absolute;
+		right: 0;
+		float: none;
+		top: 0;
+		font-size: 1.875rem;
+		font-weight: 100;
+	}
+	
+	@include respond('phone') {
+		padding: 1rem 1rem 1rem;
+	}
+}
+.modal-body{
+	padding: 1.875rem;
+	
+	@include respond('phone') {
+		padding: 1rem;
+    }
+}
+.modal-footer{
+	padding: 10px 10px;
+    border-top: var(--bg-white);
+	
+	@include respond('phone') {
+		padding: 1rem;
+    }
+}
+.modal-content{
+	border-radius:$radius;
+    background: var(--bg-white);
+}

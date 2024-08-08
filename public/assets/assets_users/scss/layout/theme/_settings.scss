@@ -1,0 +1,77 @@
+.theme-color-settings{
+    padding: 15px 10px 10px;
+    margin: 10px 0 0;
+    display: flex;
+    flex-wrap: wrap;
+    li{
+        display: inline-block;
+        width: 33.33%;
+        text-align: center;
+        margin-bottom: 20px;    
+        input{
+            display: none;    
+        }
+        label{
+            background-color: #000;
+            width: 40px;
+            border-radius: var(--border-radius-base);
+            height: 40px;
+            margin: 0 auto 5px;
+            position: relative;
+            display: block;
+            &:after{
+                content: "\f00c";
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                display: none;
+                transform: translate(-50%, -50%);
+                font-family: 'Font Awesome 6 Free';
+                font-weight: 900;
+                font-size: 16px;
+                color: #fff;
+            }
+            }
+        input:checked + label{
+            &:after{
+                display: block;
+            }
+        }
+        input[value="color-primary"] + label{
+            background-color: #673ab7;     
+        }
+        input[value="color-green"] + label{
+            background-color: #4cd964;     
+        }
+        input[value="color-blue"] + label{
+            background-color: #2196f3;     
+        }
+        input[value="color-pink"] + label{
+            background-color: #ff9eb1;     
+        }
+        input[value="color-yellow"] + label{
+            background-color: #ffcc00;     
+        }
+        input[value="color-orange"] + label{
+            background-color: #ff9500;     
+        }
+        input[value="color-purple"] + label{
+            background-color: #9237e3;     
+        }
+        input[value="color-red"] + label{
+            background-color: #ff3b30;     
+        }
+        input[value="color-lightblue"] + label{
+            background-color: #5ac8fa;     
+        }
+        input[value="color-teal"] + label{
+            background-color: #009688;     
+        }
+        input[value="color-lime"] + label{
+            background-color: #cddc39;     
+        }
+        input[value="color-deeporange"] + label{
+            background-color: #ff6b22;     
+        }
+    }
+}

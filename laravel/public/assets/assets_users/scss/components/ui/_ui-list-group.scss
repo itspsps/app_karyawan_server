@@ -1,0 +1,132 @@
+.list-group-item {
+    background-color: rgba(255,255,255,0);
+    border: 0.0625rem solid $border;
+    padding: 0.75rem 0.625rem;
+	color: $body-color;
+	
+	&.active{
+		background-color :var(--primary);
+		border-color :var(--primary);
+	}
+    &:first-child{
+        border-top-left-radius: var(--border-radius-base);
+        border-top-right-radius: var(--border-radius-base);
+    }
+    &:last-child{
+        border-bottom-left-radius: var(--border-radius-base);
+        border-bottom-right-radius: var(--border-radius-base);
+    }
+}
+
+.list-group-item.disabled, .list-group-item:disabled {
+    color: #fff;
+    background-color: $secondary;
+    border-color: $secondary;
+}
+[class*="bg-"]{
+	.list-group-item{
+		border-color:rgba($white, 0.05);
+	}
+}
+.bg-warning{
+	.list-group-item{
+		border-color:rgba($black, 0.05);
+	}
+}
+
+.card {
+    &.text-white{
+        .list-group{
+            .list-group-item{
+                color: #fff;        
+            }
+        }
+    }    
+}
+
+
+.list-group-item{
+	&-primary{
+		color: var(--primary);
+	}
+	&-secondary{
+		color: $secondary;
+	}
+	&-success{
+		color: $success;
+	}
+	&-danger{
+		color: $danger;
+	}
+	&-warning{
+		color: $warning;
+	}
+	&-info{
+		color: $info;
+	} 
+	&-light{
+		color: $light;
+	}
+	&-dark{
+		color: $dark;
+	}
+}
+
+.dz-list{
+    & > ul > li{
+        border-bottom: 1px solid #F2ECF6;
+        
+		&:last-child{
+			border-bottom: 0;
+		}
+        .dz-media{
+            margin-right: 15px;
+            min-width: 15px;
+        }
+        .dz-inner{
+            
+        }
+        .item-content{
+            padding: 12px 0;
+            display: flex;
+            align-items: center;
+            position: relative;
+            
+            .dz-title{
+                color: var(--title);
+                font-size: 0.875rem;
+                font-weight: 600;
+            }
+        }
+        .item-link{
+            &:after{
+                content: "\f105";
+                font-family: "Font Awesome 6 Free";
+                right: 0;
+                position: absolute;
+                top: 50%;
+                transform: translateY(-50%);
+                opacity: 0.3;
+            }
+        }
+        a{
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--title);
+        }
+    }
+    &.list-space{
+        & > ul > li{
+            a{
+                padding-left: 20px;
+                padding-right: 20px;
+                
+                &.item-link{
+                    &:after{
+                        right: 20px;
+                    }
+                }
+            }
+        }
+    }
+}

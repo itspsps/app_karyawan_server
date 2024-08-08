@@ -1,0 +1,211 @@
+.footer{
+    height: auto;
+    align-items: center;
+    display: flex;
+    z-index: 1;
+    flex-direction: column;
+    &.fixed{
+        width: 100%;
+        left: 0;
+        bottom: 0;
+        border-top: 1px solid var(--border-color);
+        z-index: 999;
+        position: fixed;    
+        background-color: $body-bg;
+    }
+    .chat-footer {
+        form{
+            width: 100%;
+            .input-wrapper{
+                .form-control{
+                    &::placeholder{
+                        color: #B0B0B0;
+                    }
+                    border: 0;
+                    padding-left: 0;
+                    padding-right: 0;
+                }
+                .btn{
+                    position: absolute;
+                    bottom: 5px;
+                    right: 5px;
+                    &:hover{
+                        svg path{
+                            fill: #fff;
+                        }
+                    }
+                }
+                .icon-popup{
+                    position: absolute;
+                    bottom: 10px;
+                    left: 10px;
+                    z-index: 999;
+                }
+                &.message-area{
+                    background-color: #fff;
+                    position: relative;
+                    padding-right: 48px;
+                    overflow: hidden;
+                    border-radius: 28px;
+                    border: 1px solid #DADADA;
+                    padding-left: 45px;
+                    .emoji-icon{
+                        display: inline-block;
+                        padding-right: 7px;
+                        padding-top: 10px;
+                        img{
+                            width: 40px;    
+                            height: 40px;    
+                        }
+                    }
+                }
+                .offcanvas{                
+                    .offcanvas-body{                    
+                        
+                    }
+                }
+            }
+        }
+    }
+
+    .form-check{
+        &.checkmark{
+            padding:0;
+            .form-check-label{
+                width: 48px;
+                height: 48px;
+                cursor: pointer;
+                border-radius: 30px;
+                text-align: center;
+                line-height: 45px;
+                border: 1px solid #EAEAEA;
+            }
+            .form-check-input{
+                display:none;
+            }
+            .form-check-input:checked + .form-check-label{
+                background-color:#EAEAEA;
+                svg{
+                    path{
+                        fill: var(--primary);
+                    }
+                }
+            }	
+        }
+    }
+}
+
+.message-icon{
+    display: none;
+    .container{
+        padding: 14px;
+    }    
+    .checkbox{
+        &.messagebar-sheet-image{
+            width: 40px;
+            height: 40px;
+            background-size: contain;
+            position: relative;
+            display: inline-block;
+            background-repeat: no-repeat;
+            margin: 0 6px 10px;
+        }
+        input[type="checkbox"]{
+            position: absolute;
+            bottom: 0;
+            background-color: transparent;
+            right: 0;
+            border-color: #fff;
+            box-shadow: 0 0px 6px 0 rgba(0, 0, 0, 0.3);
+            &:checked{
+                background-color: var(--primary);                                    
+                border-color: var(--primary);                                    
+            }
+        }
+    }
+}
+
+[data-theme-color="color-primary"]{
+    .footer{
+        &.transparent{
+            background-color: #e5e0ee;        
+        }
+    }
+}
+[data-theme-color="color-green"]{
+    .footer{
+        &.transparent{
+            background-color: #d1ffd9;        
+        }
+    }
+}
+[data-theme-color="color-blue"]{
+    .footer{
+        &.transparent{
+            background-color: #b1dcff;        
+        }
+    }
+}
+[data-theme-color="color-pink"]{
+    .footer{
+        &.transparent{
+            background-color: #ffe2e8;        
+        }
+    }
+}
+[data-theme-color="color-yellow"]{
+    .footer{
+        &.transparent{
+            background-color: #fff8dc;        
+        }
+    }
+}
+[data-theme-color="color-orange"]{
+    .footer{
+        &.transparent{
+            background-color: #ffe4bd;        
+        }
+    }
+}
+[data-theme-color="color-purple"]{
+    .footer{
+        &.transparent{
+            background-color: #e1bfff;        
+        }
+    }
+}
+[data-theme-color="color-red"]{
+    .footer{
+        &.transparent{
+            background-color: #ffdbd9;        
+        }
+    }
+}
+[data-theme-color="color-lightblue"]{
+    .footer{
+        &.transparent{
+            background-color: #d3f1ff;        
+        }
+    }
+}
+[data-theme-color="color-teal"]{
+    .footer{
+        &.transparent{
+            background-color: #e3e3e3;        
+        }
+    }
+}
+[data-theme-color="color-lime"]{
+    .footer{
+        &.transparent{
+            background-color: #fcffdd;        
+        }
+    }
+}
+[data-theme-color="color-deeporange"]{
+    .footer{
+        &.transparent{
+            background-color: #ffbd9d;        
+        }
+    }
+}

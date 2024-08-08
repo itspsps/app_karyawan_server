@@ -1,0 +1,153 @@
+.divider{
+    position: relative;
+    width: 100%;
+    clear: both;
+    border-color: var(--primary);
+    border-width: 2px 0 0 0;
+    margin: 15px 0;
+    border-style: solid;
+    z-index: 1;
+    
+    &.divider-dotted{        
+        border-style: dotted;
+    }
+    &.divider-dashed{        
+        border-style: dashed;
+    }
+    &.border-light{
+        border-color: #efefef !important;
+    }
+    &.inner-divider {
+        padding: 10px 0;
+        & > i ,
+        & > span{
+            color: #fff;
+            position: absolute;
+            text-align: center;
+            background-color: var(--primary);
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        & > i {
+            width: 35px;
+            height: 35px;
+            line-height: 35px;
+            border-radius: 50%;
+            top: -18px;
+        }
+        & > span{
+            padding: 8px 12px;
+            font-size: 13px;
+            font-weight: 500;
+            line-height: 13px;
+            top: -15px;
+            border-radius: 2px;
+        }
+        &.left{
+            i,
+            span{
+                left: 0;
+                transform: unset;
+            }
+        }
+        &.right{
+            i,
+            span{
+                left: auto;
+                right: 0;
+                transform: unset;
+            }
+        }
+        &.border-primary{
+            i ,
+            span {
+                background-color: var(--primary);
+            }
+            &.transparent{
+                span{
+                    color: var(--primary);
+                }    
+            }
+        }
+        &.border-secondary{
+            i ,
+            span {
+                background-color: var(--secondary);
+            }
+            &.transparent{
+                span{
+                    color: var(--secondary);
+                }    
+            }
+        }
+        &.border-success{
+            i ,
+            span {
+                background-color: $success;
+            }    
+            &.transparent{
+                span{
+                    color: $success;
+                }    
+            }
+        }
+        &.border-danger{
+            i ,
+            span {
+                background-color: $danger;
+            }  
+            &.transparent{
+                span{
+                    color: $danger;
+                }    
+            }
+        }
+        &.border-info{
+            i ,
+            span {
+                background-color: $info;
+            }
+            &.transparent{
+                span{
+                    color: $info;
+                }    
+            }
+        }
+        &.border-warning{
+            i ,
+            span {
+                background-color: $warning;
+            }
+            &.transparent{
+                span{
+                    color: $warning;
+                }    
+            }
+        }
+        &.border-light{
+            i ,
+            span {
+                background-color: #efefef;
+                color: #000;
+            }    
+        }
+        &.border-dark{
+            i ,
+            span {
+                background-color: $dark;
+            }
+            &.transparent{
+                span{
+                    color: $dark;
+                }    
+            }
+        }
+        &.transparent{
+            border-width: 1px 0 0 0;
+            span{
+                background-color: var(--bg-white);
+                color: $body-color;
+            }
+        }
+    }
+}

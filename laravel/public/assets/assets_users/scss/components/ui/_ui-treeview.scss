@@ -1,0 +1,39 @@
+.dz-tree{
+    .jstree-themeicon{
+        background-image:none;
+        font-style:unset;
+        &:after{
+            content:"\f07b";
+            font-weight: 700;
+            color:$warning;
+            font-family:"Font Awesome 6 Free";
+            
+        }
+    }
+    .jstree-clicked:hover,
+    .jstree-clicked {
+        background: rgba($primary, 0.1);
+    }
+    .jstree-close{
+        & > a .jstree-themeicon{
+            &:after{
+                content:"\f07b";
+            }
+        }
+    }
+    .jstree-open{
+        & > a .jstree-themeicon{
+            &:after{
+                content:"\f07c";
+            }
+        }
+    }
+    &.style-1{
+        .jstree-wholerow {
+            &.jstree-wholerow-clicked{
+                background: rgba($primary, 0.1);                
+            }
+        }
+    }
+ 
+}

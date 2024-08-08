@@ -1,0 +1,47 @@
+.imageuploadify.well{
+	width: 100%;
+    background: #fff;
+    border-radius: 25px !important;
+    color: #848484;
+    font-size: 14px;
+    font-weight: 500;
+    text-align: left;
+    position: relative;
+    padding:0 !important;
+    min-height: 48px;
+	overflow: hidden;
+	
+	.imageuploadify-images-list{
+		i,
+		.imageuploadify-message{
+			display: none;
+		}
+		.imageuploadify-message{
+			border: 0;
+			padding: 0;
+			font-size: 14px;
+		}
+		.btn-default{
+			color: #7e7e7e!important;
+			border-radius: 50px;
+			margin: 0;
+			background-color: #fff!important;
+			max-width: 100%;
+			border: 0;
+		}
+		.imageuploadify-container{
+			border-radius: 5px;
+			box-shadow: unset;
+			margin-left: 15px !important;
+			border: 1px solid #ddd;
+			
+			.imageuploadify-details{
+				display: none;
+			}
+			button.btn-danger {
+				padding: 0;
+				font-weight: 900;
+			}
+		}
+	}
+}

@@ -1,0 +1,48 @@
+$value: 20;
+$x: 5;
+$y: px;
+@for $i from 0 through $value{
+	.media-#{$i*$x}{
+		width: ($x*$i) + px;
+		min-width: ($x*$i) + px;
+		height: ($x*$i) + px;
+	}
+}
+
+.media{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+	
+	img{
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+	
+	&-primary{
+		background:var(--rgba-primary-1);
+		color:var(--primary);
+	}
+	&-info{
+		background:$info-light;
+		color:$info;
+	}
+	&-warning{
+		background:$warning-light;
+		color:$warning;
+	}
+	&-danger{
+		background:$danger-light;
+		color:$danger;
+	}
+	&-success{
+		background:$success-light;
+		color:$success;
+	}
+    &.rounded-circle{
+        img{
+            border-radius: 50%;
+        }
+    }
+}

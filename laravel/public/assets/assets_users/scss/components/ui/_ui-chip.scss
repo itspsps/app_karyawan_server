@@ -1,0 +1,24 @@
+.chip *{
+    font-size: 12px;
+}
+.chip{
+    display: inline-block;
+    margin: 0px 5px 10px 0px;
+    border-radius: 30px;
+    padding-right: 15px;
+    i{
+        width: 30px;
+        line-height: 30px;
+        border-radius: 30px;
+        display: inline-block;
+        text-align: center;
+        margin-right: 5px;
+    }
+    img{
+        display: inline;
+        margin-right: 9px;
+        border-radius: 30px;
+        width: 31px;
+        line-height: 31px;    
+    }
+}

@@ -1,0 +1,244 @@
+.badge{
+    line-height: 1;
+    border-radius: var(--border-radius-base);
+    padding: 6px 8px;
+    border: 1px solid transparent;
+    font-size: 11px;
+    font-weight: 500;
+	
+	&.notification{
+		padding: 1.5rem 1.5rem;
+	}
+    &.counter{
+        position: absolute;
+        z-index: 2;
+        right: -8px;
+        top: -10px;
+        font-weight: 600;
+        width: 19px;
+        height: 19px;
+        border-radius: 50%;
+        padding: 3px 4px;
+        font-size: 12px;    
+    }
+    &.badge-light{
+        margin: -10px 0;
+    }
+}
+a.badge{
+	&:hover{
+		color: #fff;
+	}
+	&.badge-light{
+		&:hover{
+			color: $dark;
+		}
+	}
+}
+a[class*="badge-outline-"]{
+	&:hover{
+		color: $dark;
+	}
+}
+	
+.badge-rounded{
+    border-radius: 1.25rem;
+}
+.badge-circle{
+    border-radius: 50%;
+    padding: 0;
+    min-width: 1.5rem;
+    min-height: 1.5rem;
+    line-height: 1.4rem;
+	
+	&.badge-lg{
+		min-width: 2.75rem;
+		min-height: 2.75rem;
+		padding: 0.75rem 0.625rem;
+	}
+	&.badge-sm{
+		min-width: 1.5rem;
+		min-height: 1.5rem;
+		border-radius: 50%;
+		padding: 0.25rem 0.3125rem;
+		font-size: 0.75rem;
+	}
+}
+.badge-outline-primary{
+    border-color: var(--primary);
+    color: var(--primary);
+}
+.badge-outline-secondary{
+    border-color: $secondary;
+    color: $secondary;
+}
+.badge-outline-success{
+    border-color: $success;
+    color: $success;
+}
+.badge-outline-info{
+    border-color: $info;
+    color: $info;
+}
+.badge-outline-warning{
+    border-color: $warning;
+    color: $warning;
+}
+.badge-outline-danger{
+    border-color: $danger;
+    color: $danger;
+}
+.badge-outline-light{
+    border-color: darken($light, 4%);
+    color: $dark;
+}
+.badge-outline-dark{
+    border-color: $dark;
+    color: $dark;
+	
+}
+
+
+
+.badge-sm {
+    font-size: 10px;
+    padding: 6px 8px;
+    border-radius: var(--border-radius-base);
+}
+.badge-lg {
+    padding: 10px 12px;
+    font-size: 12px;
+}
+
+
+.badge-default{
+    background: #ADB6C7;
+}
+.badge-success {
+    background-color: $success;
+}
+.badge-secondary {
+    background-color: $secondary;
+}
+.badge-info {
+    background-color: $info;
+}
+.badge-primary {
+    background-color: var(--primary);
+}
+.badge-warning {
+    background-color: $warning;
+}
+.badge-danger {
+    background-color: $danger;
+}
+.badge-dark {
+    background-color: $dark;
+}
+.badge-light {
+    background-color: darken($light,4%);
+	color: $dark;
+}
+
+
+
+.light{
+	&.badge-default{
+		background: #ADB6C7;
+	}
+	&.badge-primary{
+		background-color: $primary-light;
+		color:$primary;
+	}
+	&.badge-success {
+		background-color: $success-light;
+		color:$success;
+	}
+	&.badge-info{
+		background-color: $info-light;
+		color:$info;
+	}
+	&.badge-secondary{
+		background-color: $secondary-light;
+		color:$secondary;
+	}
+	&.badge-warning{
+		background-color: $warning-light;
+		color:$warning;
+	}
+	&.badge-danger{
+		background-color: $danger-light;
+		color:$danger;
+	}
+	&.badge-dark{
+		background-color: $dark-light;
+		color:$dark;
+	}
+	&.badge-light{
+		background-color: lighten($light, 1%);
+		color:$dark;
+	}
+}
+
+.bootstrap-label{
+    .label{
+        display: inline-block;
+        margin-right: 1rem;
+
+        &:last-child{
+            margin-right: 0;
+        }
+    }
+}
+
+.badge-demo{
+
+    .badge{
+        margin-right: 0.3125rem;
+        margin-bottom: 0.3125rem;
+
+        &:last-child{
+            margin-right: 0;
+        }
+    }
+}
+
+.bootstrap-badge-buttons{
+
+    button{
+        margin-right: .2rem;
+        margin-bottom: 1rem;
+
+        &:last-child{
+            margin-right: 0;
+        }
+    }
+}
+.shadow-primary{
+    box-shadow: 0px 8px 14px -4px var(--rgba-primary-5);
+    transition: all 0.5s !important;
+    &:hover{    
+        box-shadow: none;
+    }
+}
+.shadow-info{
+    box-shadow: 0px 8px 14px -4px rgba($info, .5);
+    transition: all 0.5s !important;
+    &:hover{    
+        box-shadow: none;
+    }
+}
+.shadow-secondary{
+    box-shadow: 0px 8px 14px -4px rgba($secondary, .5);
+    transition: all 0.5s !important;
+    &:hover{    
+        box-shadow: none;
+    }
+}
+.shadow-dark{
+    box-shadow: 0px 8px 14px -4px rgba($dark, .5);
+    transition: all 0.5s !important;
+    &:hover{    
+        box-shadow: none;
+    }
+}

@@ -1,0 +1,209 @@
+@font-face {
+    font-family: "flaticon";
+    src: url("./flaticon.ttf?13d66a76509902b9b729aae37e78aa6c") format("truetype"),
+url("./flaticon.woff?13d66a76509902b9b729aae37e78aa6c") format("woff"),
+url("./flaticon.woff2?13d66a76509902b9b729aae37e78aa6c") format("woff2"),
+url("./flaticon.eot?13d66a76509902b9b729aae37e78aa6c#iefix") format("embedded-opentype"),
+url("./flaticon.svg?13d66a76509902b9b729aae37e78aa6c#flaticon") format("svg");
+}
+
+i[class^="flaticon-"]:before, i[class*=" flaticon-"]:before {
+    font-family: flaticon !important;
+    font-style: normal;
+    font-weight: normal !important;
+    font-variant: normal;
+    text-transform: none;
+    line-height: 1;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+.flaticon-logout:before {
+    content: "\f101";
+}
+.flaticon-setting:before {
+    content: "\f102";
+}
+.flaticon-account:before {
+    content: "\f103";
+}
+.flaticon-avatar:before {
+    content: "\f104";
+}
+.flaticon-arrow:before {
+    content: "\f105";
+}
+.flaticon-right-arrow:before {
+    content: "\f106";
+}
+.flaticon-left-arrow:before {
+    content: "\f107";
+}
+.flaticon-arrows:before {
+    content: "\f108";
+}
+.flaticon-left:before {
+    content: "\f109";
+}
+.flaticon-right:before {
+    content: "\f10a";
+}
+.flaticon-close:before {
+    content: "\f10b";
+}
+.flaticon-paper-plane:before {
+    content: "\f10c";
+}
+.flaticon-search:before {
+    content: "\f10d";
+}
+.flaticon-bubble-chat:before {
+    content: "\f10e";
+}
+.flaticon-comment:before {
+    content: "\f10f";
+}
+.flaticon-messenger:before {
+    content: "\f110";
+}
+.flaticon-layer:before {
+    content: "\f111";
+}
+.flaticon-home:before {
+    content: "\f112";
+}
+.flaticon-like:before {
+    content: "\f113";
+}
+.flaticon-heart:before {
+    content: "\f114";
+}
+.flaticon-blank-page:before {
+    content: "\f115";
+}
+.flaticon-instagram:before {
+    content: "\f116";
+}
+.flaticon-camera:before {
+    content: "\f117";
+}
+.flaticon-message:before {
+    content: "\f118";
+}
+.flaticon-dollar:before {
+    content: "\f119";
+}
+.flaticon-accordion:before {
+    content: "\f11a";
+}
+.flaticon-modal-list:before {
+    content: "\f11b";
+}
+.flaticon-hand-pointer:before {
+    content: "\f11c";
+}
+.flaticon-sync:before {
+    content: "\f11d";
+}
+.flaticon-menu:before {
+    content: "\f11e";
+}
+.flaticon-descending:before {
+    content: "\f11f";
+}
+.flaticon-boxes:before {
+    content: "\f120";
+}
+.flaticon-checked:before {
+    content: "\f121";
+}
+.flaticon-check:before {
+    content: "\f122";
+}
+.flaticon-star:before {
+    content: "\f123";
+}
+.flaticon-choose:before {
+    content: "\f124";
+}
+.flaticon-information:before {
+    content: "\f125";
+}
+.flaticon-mobile:before {
+    content: "\f126";
+}
+.flaticon-layer-1:before {
+    content: "\f127";
+}
+.flaticon-physics:before {
+    content: "\f128";
+}
+.flaticon-toggle:before {
+    content: "\f129";
+}
+.flaticon-placeholder:before {
+    content: "\f12a";
+}
+.flaticon-bluetooth:before {
+    content: "\f12b";
+}
+.flaticon-add:before {
+    content: "\f12c";
+}
+.flaticon-caret-down:before {
+    content: "\f12d";
+}
+.flaticon-dropdown-arrow:before {
+    content: "\f12e";
+}
+.flaticon-menu-1:before {
+    content: "\f12f";
+}
+.flaticon-up-arrow:before {
+    content: "\f130";
+}
+.flaticon-down:before {
+    content: "\f131";
+}
+.flaticon-list:before {
+    content: "\f132";
+}
+.flaticon-pop-up:before {
+    content: "\f133";
+}
+.flaticon-clipboard:before {
+    content: "\f134";
+}
+.flaticon-progress:before {
+    content: "\f135";
+}
+.flaticon-log-in:before {
+    content: "\f136";
+}
+.flaticon-log-out:before {
+    content: "\f137";
+}
+.flaticon-verified:before {
+    content: "\f138";
+}
+.flaticon-smile:before {
+    content: "\f139";
+}
+.flaticon-like-1:before {
+    content: "\f13a";
+}
+.flaticon-select:before {
+    content: "\f13b";
+}
+.flaticon-warning:before {
+    content: "\f13c";
+}
+.flaticon-error:before {
+    content: "\f13d";
+}
+.flaticon-cancel:before {
+    content: "\f13e";
+}
+.flaticon-time:before {
+    content: "\f13f";
+}

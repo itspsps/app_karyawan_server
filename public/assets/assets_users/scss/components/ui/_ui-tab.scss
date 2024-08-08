@@ -1,0 +1,90 @@
+.dz-tab{
+    .nav{
+        &.nav-tabs{
+            border:0;
+            .nav-item{
+                -webkit-box-flex: 1;
+                -ms-flex-positive: 1;
+                flex-grow: 1;
+                justify-content: center;
+                display: flex;
+                .nav-link{
+                    background-color: transparent;
+                    color: #000;
+                    border: 0;
+                    font-size: 0.875rem;
+                    font-weight: 500;
+                    padding: 5px 0;
+                    width: 100%;
+                    border-radius: var(--border-radius-base);   
+                }
+            }
+        }
+    }
+    .tab-content{
+        border-radius: var(--border-radius-base);
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.13) !important;
+        padding: 16px;
+    }
+    .tab-slide-effect{
+        border: 1px solid var(--border-color); 
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.075) !important;
+        border-radius: var(--border-radius-base);
+        margin-bottom: 10px;
+        padding: 5px;
+        .nav-tabs{
+            padding: 0;
+            margin: 0;
+            position: relative;
+            z-index: 1;
+            box-shadow: none !important;
+            .nav-item.active .nav-link{
+                color: #fff !important;
+            }
+        }
+        .tab-active-indicator{
+            position: absolute;
+            height: 100%;
+            z-index: -1;
+            background-color: var(--primary) !important;
+            border-radius: var(--border-radius-base);
+            @include transitionMedium;
+        }
+    }
+    &.tab-color{
+        .tab-slide-effect{
+            border-radius: 5rem;
+            border:0;
+            background-color: rgba(255, 255, 255, 0.125);
+            .tab-active-indicator{
+                background-color: rgba(255, 255, 255, 0.25) !important;
+                border-radius: 20rem;
+            }
+        }
+        .nav-tabs{
+            .nav-link{
+                background-color: transparent !important;
+                color: rgba(255, 255, 255, 0.5) !important;
+                width: 100%; 
+                @include transitionMedium;
+            }
+            .nav-item.active .nav-link{
+                color: #fff !important;
+            }
+        }
+    }
+}
+
+.default-tab{
+    .nav-tabs{
+        border-color: var(--border-color);
+        .nav-item{
+            .nav-link{
+                &.active{
+                    background-color: var(--bg-white);
+                    border-color: var(--border-color) var(--border-color) var(--bg-white);
+                }
+            }
+        }
+    }    
+}

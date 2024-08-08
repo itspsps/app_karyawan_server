@@ -1,0 +1,75 @@
+@import "../../abstracts/variable";
+
+
+
+.noUi-target {
+    border: 0px; 
+    border-radius: var(--border-radius-base);
+}
+
+.noUi-connect {
+    background-color: var(--primary);
+    &s {
+        background-color: #eee;
+    }
+
+    &.c-1-color {
+        background-color: $success;
+    }
+
+    &.c-2-color {
+        background-color: $info;
+    }
+
+    &.c-3-color {
+        background-color: var(--primary);
+    }
+
+    &.c-4-color {
+        background-color: $warning;
+    }
+}
+
+.noUi-vertical {
+    width: 0.375rem;
+}
+
+.noUi-horizontal {
+    height: 0.475rem;
+    margin-bottom: 10px;
+}
+
+.noUi-horizontal .noUi-handle, .noUi-vertical .noUi-handle {
+    height: 17px;
+    width: 17px;
+    border-radius: 50px;
+    box-shadow: none;
+    border: none;
+    background-color: var(--primary);
+
+    &::after, &::before {
+        display: none;
+    }
+}
+.noUi-vertical .noUi-handle {
+    left: -4px;
+    top: -6px;
+}
+.noUi-horizontal .noUi-handle {
+    top: -5px;
+}
+html:not([dir=rtl]) .noUi-horizontal .noUi-handle {
+    right: -6px;
+}
+#slider-toggle {
+	height: 50px;
+}
+#slider-toggle.off .noUi-handle {
+	border-color: var(--primary);
+}
+label{
+    input{
+        width: 20px;
+        height: 20px;
+    }
+}

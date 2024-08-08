@@ -1,0 +1,374 @@
+/* Theme Dark */
+.theme-dark{
+    background-color: #110021 !important;
+    color: rgba(255, 255, 255, 0.7);
+    .text-primary{
+        color: #fff !important;
+    }
+    //root-variable
+    --border-color: rgba(255, 255, 255, 0.2);
+    --bg-white: #201030;
+    
+	h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
+		color: #fff;
+        a{
+            color: #fff;                
+        }
+	}
+    
+    .mode span + span{
+        color: #fff;    
+    }
+    
+    .light.btn-primary{
+        border: 1px solid var(--border-color);
+    }
+    
+    .border-bottom,
+    .border-top {
+        border-color: var(--border-color) !important;
+    }
+    
+    .btn-close{
+        color: #fff;
+    }
+    
+    .input-group{
+        .input-group-text{
+            background: #201030;
+            border-color: var(--border-color);
+        }
+        .form-control{
+            border-color: var(--border-color);
+        }
+    }
+    .form-control{
+        background: #201030;
+        border-color: var(--border-color);
+        &.style-1{
+            border-color: var(--border-color);
+        }
+        &:focus,
+        &:active{
+            background: #201030;
+        }
+    }
+    
+    .sidebar{
+        .nav-label{
+            color: #fff;    
+        }
+        .navbar-nav{
+            li a{
+                color: #fff;
+                &:after{
+                    opacity: 0.5;
+                    color: #fff;
+                }    
+            }    
+        }
+    }
+    //Header===
+    .header{
+        &.transparent{            
+            background-color: transparent;
+            .main-bar{
+                &.sticky-header{
+                    .header-content{
+                        .mid-content h5{
+                            color: #fff;
+                        }
+                    }   
+                }
+            }
+        }
+        .main-bar{
+            .right-content{
+                .form-check{
+                    &.checkmark{
+                        padding:0;
+                        .form-check-label{
+                            path{
+                                stroke: #fff;
+                            }
+                        }
+                        .form-check-input:checked + .form-check-label{
+                            svg{
+                                path{
+                                    fill: #fff;
+                                }
+                            }
+                        }	
+                    }
+                }
+            }
+        }
+    }
+    
+    //Footer ===
+    .footer{
+        &.bg-white{
+            background-color: #201030 !important;            
+        }
+        &.fixed{
+            background-color: #201030;            
+        }
+        .form-check{
+            &.checkmark{
+                .form-check-label{
+                    border: 1px solid var(--border-color);
+                    svg{
+                        path{
+                            stroke: #fff;
+                        }
+                    }
+                }
+                .form-check-input:checked + .form-check-label{
+                    background-color:#EAEAEA;
+                    svg{
+                        path{
+                            fill: var(--primary);
+                            stroke: var(--primary);
+                        }
+                    }
+                }	
+            }
+        }
+        .chat-footer{
+            .btn{
+                svg path{
+                    fill: #fff;
+                }
+            }
+            form .input-wrapper{
+                &.message-area{
+                    background-color: #201030;
+                    border-color: var(--border-color);
+                }
+            }
+        }
+    }
+    
+    //Menubar ===
+    .menubar-area{
+        background-color: #201030;    
+        .toolbar-inner{
+            .nav-link{
+                &.active{
+                    svg path{
+                        fill: #fff;
+                    }    
+                    &:after{                            
+                        background: #fff;
+                    }
+                }
+            }    
+        }
+    }
+    
+    
+    
+    //Homepage====
+    .dashboard-area{ 
+        .categorie-section {
+            ul{                
+                li{
+                    .btn{    
+                        background-color: #201030;    
+                        svg path{
+                            fill: #fff;
+                        }
+                        &:hover{
+                            svg path{
+                                fill: var(--primary);
+                            }
+                        }
+                    } 
+                } 
+            }
+        }
+    }
+	.card{
+        background-color: #201030;    
+        &.bg-light{
+            background-color: #201030 !important;                
+        }
+        .text-primary{
+            color: var(--primary) !important;
+        }
+    }
+    .job-post{
+        .card-info{
+            svg path{
+                fill: #fff;
+            }    
+        }
+    }
+    .recent-jobs-list ul li{
+        .item-content{
+            .item-inner{
+                svg path{
+                    fill: #fff;
+                }    
+            }
+        }
+    }
+    
+    .offcanvas{
+        background-color: #201030;    
+    }
+    
+    //Job Detail====
+    .tag-group .tag-btn{
+        color: #fff;
+        border-color: var(--border-color);
+    }
+    
+    ul.list-check li{
+        color: #fff;
+        &:after{
+            color: #fff;
+        }
+    }
+    
+    .icon-box{
+        background-color: #201030;  
+        border-color: var(--border-color);  
+        svg path{
+            fill: #fff;
+        }
+    }
+    
+    //Search ====
+    .btn{
+        &.tag-btn{
+            background: #201030;
+            color: #fff;    
+        }
+    }
+    
+    .fixed-content{    
+        background-color: #201030 !important;
+    }
+    
+    .imageuploadify.well{        
+        background-color: #201030 !important;
+        .imageuploadify-images-list .btn-default{
+            background-color: #201030 !important;
+        }
+    }
+    
+    //Company Detail ====
+    .company-detail{
+        .detail-content{
+            border-color: var(--border-color);
+        }
+        .contact-box{
+            li{
+                .contact-icon{
+                    border-color: var(--border-color);
+                    background: #201030;
+                    svg path{
+                        fill: #fff;
+                    }
+                }    
+            }    
+        }
+    }
+    
+    //Notification ====
+    .notification-content .notification{
+        border-color: var(--border-color);    
+        background-color: #201030;
+    }
+    
+    //Profile ====
+    .profile-area{
+        .profile{    
+            .detail{
+                color: #fff;    
+            }
+        }
+        .contact-profile{
+            .contact-icon{
+                border-color: var(--border-color);
+                background: #201030;
+                svg path{
+                    fill: #fff;
+                }
+            }    
+        }
+        .skill-bar{
+            border: 1px solid var(--border-color);    
+        }
+    }
+    
+    //Login ====
+    .social-btn-group .social-btn{
+        background-color: #201030;
+    }
+    .btn-link,
+    .saprate{
+        color: #fff;
+    }
+    
+    //Message ====
+    .message-content .chat-content .message-item .bubble{
+        background: #30223e;
+        color: #fff;
+    }
+    .message-list li{
+        border-color: var(--border-color);    
+    }
+    
+    //Page ====
+    .dz-list > ul > li{
+        border-color: var(--border-color); 
+        .item-content{
+            .dz-title{
+                color: #fff;
+            }
+            &.item-link{
+                color: #fff;
+                &:after{
+                    opacity: 0.5;
+                    color: #fff;
+                }
+            }
+        }
+    }
+    
+    
+    .accordion-header{
+        color: #fff;
+    }
+    
+    .page-onboading + .footer {
+        background-color: #110021;
+    }
+    
+    //Timeline ====
+    
+    .dz-timeline .timeline-item.light .timeline-content{
+        color: #fff;
+    }
+    .dz-timeline.timeline-number .timeline-item .line-content-box{
+        background-color: #201030 !important;
+        border: 1px solid var(--border-color);
+    }
+    
+    //Stepper ====
+    .dz-stepper small, .dz-stepper .small{
+        color: #fff;
+    }
+    
+    //Tabs ====
+    .dz-tab .nav.nav-tabs .nav-item .nav-link{
+        color: #fff;
+    }
+    
+    //RangeSlider ====
+    .noUi-connects{
+        background-color: #534a60;
+    }
+}

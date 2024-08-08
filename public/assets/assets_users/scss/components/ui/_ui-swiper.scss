@@ -1,0 +1,98 @@
+.dz-swiper{ 
+    margin-left: -15px !important;
+    margin-right: -15px !important;
+    .swiper-slide{
+        width:300px;
+        &:first-child{
+            margin-left: 15px;
+        }
+    }
+}
+.swiper-center{ 
+    margin-left: -15px !important;
+    margin-right: -15px !important;
+    .swiper-slide{
+        width:300px;
+        &:first-child{
+            margin-left: 15px;
+        }
+    }
+}
+.swiper-slider-full{ 
+    margin-right: -15px !important;
+    margin-left: -15px !important;
+    .swiper-slide{
+        width:100%;
+    }
+}
+    
+.dz-swiper-gallery-wrapper{
+    overflow: hidden;
+    position: relative;
+    
+    .swiper-gallery-prev,
+    .swiper-gallery-next{
+        border: 0;
+        background-color: rgba(0, 0, 0, 0.43) !important;
+        color: rgba(255, 255, 255, 0.68);
+        width: 40px;
+        height: 40px;
+        border-radius: var(--border-radius-base);
+        line-height: 40px;
+        transform: translateY(-50%);
+        &:after{
+            font-size: 1.5rem;
+            font-family: 'FontAwesome';
+        }
+        &:hover{
+            color: rgba(255, 255, 255, 0.43);
+        }
+    }
+    .swiper-gallery-prev{
+        &:after{
+            content: '\f105';           
+        }
+    }
+    .swiper-gallery-next{
+        &:after{
+            content: '\f104';           
+        }
+    }
+    .dz-swiper-gallery-thumb{
+        margin-top: 10px;
+    }
+}
+
+
+.pagination-dots{
+    &.style-1{
+        bottom: 0!important;
+        opacity: 1;
+        position: unset;
+        padding: 10px 0;
+        z-index: 1;
+        
+        .swiper-pagination-bullet {
+            margin: 0 4px;
+            width: 16px;
+            border-radius: 5px;
+            height: 6px;
+            background: #d2d2d2;
+            opacity: 1;
+            -webkit-transition: all 0.5s;
+            -ms-transition: all 0.5s;
+            transition: all 0.5s;
+            @include transitionMedium;
+            
+            &-active{
+                background:var(--primary);
+                width: 27px;
+            }
+        }
+    }
+}
+.swiper-slide{
+    .job-post{
+        margin-bottom: 8px;
+    }
+}

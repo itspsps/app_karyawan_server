@@ -1,0 +1,92 @@
+//Action Sheets
+.offcanvas{
+    //background-color: var(--rgba-secondry-1);
+    &.offcanvas-bottom{
+        border-radius: 0.625rem 0.625rem 0 0;
+        height: unset;
+        border-top: 0;
+    }
+    &.offcanvas-top{
+        border-radius: 0 0 10px 10px;
+        height: unset;
+        border-bottom: 0;
+        bottom: auto;
+    }
+    .offcanvas-header{
+        padding: 1rem 0;
+        margin: 0 0.875rem !important;
+        border-bottom: 1px solid var(--border-color);
+        margin: 0;
+        .offcanvas-title{
+            line-height: 1.2;
+        }
+        .btn-close{
+			background: none;
+			padding: 0;
+			margin: 0;
+			font-size: 18px;
+			opacity: 0.3;
+			line-height: 1;
+        }
+    }
+    
+    .offcanvas-backdrop{
+        &.show{
+            opacity: 0.3 !important;
+        }
+    }
+}
+.highlight-text{
+    color: var(--primary);
+    margin-bottom: 0;
+    font-size: 0.875rem;
+    font-weight: 600;
+}
+.scale-box{
+    position: relative;
+    animation: scale-box 2s infinite;
+}
+@keyframes scale-box {
+  0%   {transform: scale(1);}
+  50%  {transform: scale(0.7);}
+  100% {transform: scale(1);}
+}
+
+
+//Action Modal
+.modal.fade .modal-dialog {
+    transition: transform 0.3s ease-out;
+    transform: translate(0, 50px);
+}
+.modal.fade.show .modal-dialog {
+    transform: none;
+}
+.modal.fade.show.modal-static .modal-dialog {
+    transform: scale(1.02);
+}
+.modal{
+    .modal-dialog{
+        .modal-content{
+            border-radius: 0.625rem;
+            .modal-header{
+                padding: 1rem;
+                border-bottom: 1px solid var(--border-color);
+                margin: 0;
+                .modal-title{
+                    line-height: 1.2;    
+                }
+            }
+        }    
+    }
+}
+.btn-close{
+    /* background: #dc3545;
+    padding: 3px;
+    opacity: 1;
+    margin: 0; */
+}
+.top-right{
+    position: absolute;
+    top: 15px;
+    right: 15px;
+}

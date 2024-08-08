@@ -1,0 +1,163 @@
+.toast{
+    background-color: var(--bg-white);
+    border: 1px solid var(--border-color);
+    background-color: var(--bg-white);
+    overflow: hidden;
+    border-radius: var(--border-radius-base);
+    .toast-header{
+        background-color: rgba(255, 255, 255, 0.85);
+        border-bottom: 1px solid var(--border-color);
+    }
+    &.style-1{
+        position: relative;
+        z-index: 1;
+        .toast-body{
+            display: flex;
+            align-items: center;
+            padding: 16px;
+            svg{
+                flex: 0 0 35px;
+                width: 35px;
+                height: 35px;
+                max-width: 35px;
+            }
+            .toast-content{
+                strong{
+                    color: var(--primary);
+                    font-weight: 500;
+                }
+            }
+            .btn-close{
+                top: 12px;
+                right: 12px;
+                z-index: 10;
+            }
+        }
+        &.toast-primary{
+            background-color: var(--primary);
+            color: #fff;
+            .text-primary{
+                svg path{
+                    fill: #fff!important;
+                }
+            }
+            .toast-content{
+                strong{
+                    color: #fff;
+                    font-weight: 500;
+                }
+            }
+            .btn-close{
+                filter: invert(1) grayscale(100%) brightness(200%);
+            }
+        }
+        &.toast-secondary{
+            background-color: var(--secondary);
+            color: #fff;
+            .text-primary{
+                svg path{
+                    fill: #fff!important;
+                }
+            }
+            .toast-content{
+                strong{
+                    color: #fff;
+                    font-weight: 500;
+                }
+            }
+            .btn-close{
+                filter: invert(1) grayscale(100%) brightness(200%);
+            }
+        }
+        &.toast-success{
+            background-color: $success;
+            color: #fff;
+            .text-primary{
+                svg path{
+                    fill: #fff!important;
+                }
+            }
+            .toast-content{
+                strong{
+                    color: #fff;
+                    font-weight: 500;
+                }
+            }
+            .btn-close{
+                filter: invert(1) grayscale(100%) brightness(200%);
+            }
+        }
+        &.toast-warning{
+            background-color: $warning;
+            color: #fff;
+            .text-primary{
+                svg path{
+                    fill: #fff!important;
+                }
+            }
+            .toast-content{
+                strong{
+                    color: #fff;
+                    font-weight: 500;
+                }
+            }
+            .btn-close{
+                filter: invert(1) grayscale(100%) brightness(200%);
+            }
+        }
+        &.toast-danger{
+            background-color: $danger;
+            color: #fff;
+            .text-primary{
+                svg path{
+                    fill: #fff!important;
+                }
+            }
+            .toast-content{
+                strong{
+                    color: #fff;
+                    font-weight: 500;
+                }
+            }
+            .btn-close{
+                filter: invert(1) grayscale(100%) brightness(200%);
+            }
+        }
+        &.toast-info{
+            background-color: $info;
+            color: #fff;
+            .text-primary{
+                svg path{
+                    fill: #fff!important;
+                }
+            }
+            .toast-content{
+                strong{
+                    color: #fff;
+                    font-weight: 500;
+                }
+            }
+            .btn-close{
+                filter: invert(1) grayscale(100%) brightness(200%);
+            }
+        }
+        &.toast-dark{
+            background-color: $dark;
+            color: #fff;
+            .text-primary{
+                svg path{
+                    fill: #fff!important;
+                }
+            }
+            .toast-content{
+                strong{
+                    color: #fff;
+                    font-weight: 500;
+                }
+            }
+            .btn-close{
+                filter: invert(1) grayscale(100%) brightness(200%);
+            }
+        }
+    }    
+}

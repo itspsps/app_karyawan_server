@@ -1,0 +1,81 @@
+.account-area{
+    min-height: calc(100vh - 190px);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    flex: 1;
+    form{
+        display: flex;
+        flex-direction: column;
+        .saprate{
+            display: flex;
+            flex: 1;
+            align-items: center;
+            justify-content: center;
+        }
+        .btn-link{
+            margin: 20px 0;
+        }
+    }
+}
+.social-btn-group{
+	margin-top: 10px;
+    margin-bottom: auto;
+    white-space: nowrap;
+    .social-btn{
+        width: 149px;
+        min-width: 149px;
+        height: 48px;
+        background-color: #fff;
+        text-align: center;
+        border: 1px solid var(--border-color);
+        line-height: 44px;
+        border-radius: 50px;
+        display: inline-block;
+        img{
+            width: 28px;
+            height: 28px;
+        }
+    }    
+}
+.saprate{
+	position: relative;
+	display: inline-block;
+	color: var(--primary);
+	//text-align: center;
+	font-size: 0.875rem;
+	padding: 0 70px;
+    &:after{    
+		content: "";
+		position: absolute;
+		width: 50px;
+		height: 1px;
+		background-color: rgba(0, 0, 0, 0.4);
+		top: 50%;
+		left: 0;
+		transform: translateY(-50%);
+    }
+    &:before{    
+		content: "";
+		position: absolute;
+		width: 50px;
+		height: 1px;
+		background-color: rgba(0, 0, 0, 0.4);
+		top: 50%;
+		right: 0;
+		transform: translateY(-50%);
+    }
+}
+.digit-group {
+    display: flex;
+    flex-direction: initial;
+	input {
+        margin: 0 4px;
+        border-radius: 15px;
+        text-align: center;
+        font-size: 24px;
+        padding-left: 5px;
+        padding-right: 5px;
+        color: var(--bg-dark);
+	}
+}

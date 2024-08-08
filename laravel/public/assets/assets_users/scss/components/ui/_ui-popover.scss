@@ -1,0 +1,25 @@
+.popover{
+    background-color: var(--secondary);
+    .popover-header{        
+        background-color: var(--secondary);
+        border-color: $border;
+        color: #fff;
+    }
+    .popover-body{
+        color: #fff;
+    }
+    &.bs-popover-end{
+        .popover-arrow{
+            &:after{
+                border-right-color: var(--secondary);
+            }    
+        }
+    }
+    &.bs-popover-top{
+        .popover-arrow{
+            &:after{
+                border-top-color: var(--secondary);
+            }    
+        }
+    }
+}

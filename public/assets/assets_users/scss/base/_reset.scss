@@ -1,0 +1,193 @@
+* {
+    outline: none;
+    padding: 0;
+
+    &::after {
+        margin : 0;
+        padding: 0;
+    }
+
+    &::before {
+        margin : 0;
+        padding: 0;
+    }
+}
+
+// Selection
+::selection {
+	color: $white;
+	background:var(--primary);
+}
+body {
+    line-height: 1.6;
+	color:$body-color;
+	font-size: 0.875rem;
+    font-weight: 400;
+	font-family: var(--font-family-base);
+    &.fixed {
+        overflow: hidden;
+        position: fixed;
+    }
+}
+
+// Headings Style
+h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6{
+	font-family:var(--font-family-title);
+	font-weight:$headings-font-weight;
+	color:var(--title);
+    
+    a{
+        color: var(--title);
+    }
+}
+h1{
+	font-size:$h1-font-size;
+}
+h2{
+	font-size:$h2-font-size;
+}
+h3{
+	font-size:$h3-font-size;
+}
+h4{
+	font-size:$h4-font-size;
+}
+h5{
+	font-size:$h5-font-size;
+}
+h6{
+	font-size:$h6-font-size;
+}
+
+ul {
+    padding: 0;
+    margin : 0;
+}
+img {
+    border-style: none;
+    height: auto;
+    max-width: 100%;
+    vertical-align: middle;
+}
+li {
+    list-style: none;
+}
+
+a {
+    text-decoration: none;
+    outline        : none;
+	color          : var(--primary);	
+	@include transitionMedium;	
+    &:hover,
+    &:focus,
+    &.active {
+        text-decoration: none;
+        outline        : none;
+		color:var(--primary-hover);
+    }
+}
+
+// color
+.text-primary{
+	color:var(--primary) !important; 	
+}
+.text-secondary {
+    color: var(--secondary) !important;
+}
+.border-bottom{
+    border-bottom: 1px solid #F1F1F1 !important;
+}
+.bg-primary {
+    background-color: var(--primary) !important;
+}
+.text-black{
+	color:#071c35;
+}
+.container {
+    max-width: 1024px;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 15px;
+    padding-right: 15px;
+    box-sizing: border-box;
+    padding-top: 15px;
+    padding-bottom: 15px;
+}
+b,
+strong,
+.strong {
+    font-weight: 500;
+}
+
+.h-0 {
+    height: 0;
+}
+#main-wrapper{
+    opacity       : 0;
+    transition    : all 0.25s ease-in;
+    overflow      : hidden;
+    position      : relative;
+    z-index       : 1;
+    margin-top    : 60px;
+
+    &.show {
+        opacity: 1;
+    }
+}
+.bg-gray{
+	background-color: #f0f6ff;
+}
+    
+// Section Specing
+.content-inner{
+    padding-top:40px;
+    padding-bottom:20px;
+}
+.content-inner-1{
+	padding-top:100px;
+	padding-bottom:100px;
+}
+.content-inner-2{
+	padding-top:120px;
+	padding-bottom:0;
+}
+.rounded{
+	border-radius: var(--border-radius-base)!important;
+}
+
+::-webkit-scrollbar {
+	display: none;
+	-ms-overflow-style: none;
+	scrollbar-width: none;
+}
+body {
+	-ms-overflow-style: none;
+	scrollbar-width: none;
+}
+
+.dz-icon{
+	height: 30px;
+	width: 30px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	border-radius: var(--border-radius-base);
+	color: #fff;
+	font-size: 13px;
+	margin-right: 12px;
+	
+    svg{
+        width: 20px;
+        height: 20px;
+    }
+    
+	i{
+		line-height: 1;
+	}
+    img{
+        border-radius: 50%;
+    }
+}
+.bottom-content{
+	padding-bottom: 80px;
+}

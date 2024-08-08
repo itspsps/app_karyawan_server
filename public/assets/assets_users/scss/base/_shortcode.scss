@@ -1,0 +1,434 @@
+// text size
+.font-10 {
+    font-size: 10px;
+}
+.font-12 {
+    font-size: 12px;
+}
+.font-13 {
+    font-size: 13px;
+}
+.font-14 {
+    font-size: 14px;
+}
+.font-16 {
+    font-size: 16px;
+}
+.font-18 {
+    font-size: 18px;
+}
+.font-20 {
+    font-size: 20px;
+}
+.font-22 {
+    font-size: 22px;
+}
+.font-24 {
+    font-size: 24px;
+}
+.font-26 {
+    font-size: 26px;
+}
+.font-30 {
+    font-size: 30px;
+}
+.font-35 {
+    font-size: 35px;
+}
+.font-40 {
+    font-size: 40px;
+}
+.font-45 {
+    font-size: 45px;
+}
+.font-50 {
+    font-size: 50px;
+}
+.font-55 {
+    font-size: 55px;
+}
+.font-60 {
+    font-size: 60px;
+}
+.font-70 {
+    font-size: 70px;
+}
+.font-75 {
+    font-size: 75px;
+}
+.font-80 {
+    font-size: 80px;
+}
+.font-90 {
+    font-size: 90px;
+}
+.font-100 {
+    font-size: 100px;
+}
+
+// Font Weight 
+.font-w100{
+   font-weight: 100; 
+}
+.font-w200{
+   font-weight: 200; 
+}
+.font-w300{
+   font-weight: 300; 
+}
+.font-w400{
+   font-weight: 400; 
+}
+.font-w500{
+   font-weight: 500; 
+}
+.font-w600{
+   font-weight: 600; 
+}
+.font-w700{
+   font-weight: 700; 
+}
+.font-w800{
+   font-weight: 800; 
+}
+.font-w900{
+   font-weight: 900; 
+}
+
+$value: 20;
+$x: 5;
+$y: px;
+@for $i from 0 through $value{
+    // Padding Value
+    .p-a#{$i*$x}{
+        padding: ($x*$i) + px;
+    }
+    .p-l#{$i*$x}{
+        padding-left: ($x*$i) + px;
+    }
+    .p-r#{$i*$x}{
+        padding-right: ($x*$i) + px;
+    }
+    .p-t#{$i*$x}{
+        padding-top: ($x*$i) + px;
+    }
+    .p-b#{$i*$x}{
+        padding-bottom: ($x*$i) + px;
+    }
+    .p-lr#{$i*$x}{
+        padding-left: ($x*$i) + px;
+        padding-right: ($x*$i) + px;
+    }
+    .p-tb#{$i*$x}{
+        padding-bottom: ($x*$i) + px;
+        padding-top: ($x*$i) + px;
+    }
+    
+    // Margin Value
+    .m-a#{$i*$x}{
+        margin: ($x*$i) + px;
+    }
+    .m-l#{$i*$x}{
+        margin-left: ($x*$i) + px;
+    }
+    .m-r#{$i*$x}{
+        margin-right: ($x*$i) + px;
+    }
+    .m-t#{$i*$x}{
+        margin-top: ($x*$i) + px;
+    }
+    .m-b#{$i*$x}{
+        margin-bottom: ($x*$i) + px;
+    }
+    .m-lr#{$i*$x}{
+        margin-left: ($x*$i) + px;
+        margin-right: ($x*$i) + px;
+    }
+    .m-tb#{$i*$x}{
+        margin-bottom: ($x*$i) + px;
+        margin-top: ($x*$i) + px;
+    }
+}
+@media only screen and (max-width: 1200px) {
+    @for $i from 0 through $value{
+        // Margin Value
+        .m-lg-t#{$i*$x}{
+            margin-top: ($x*$i) + px;
+        }
+        .m-lg-b#{$i*$x}{
+            margin-bottom: ($x*$i) + px;
+        }
+    }
+}
+@media only screen and (max-width: 991px) {
+    @for $i from 0 through $value{
+        // Margin Value
+        .m-md-t#{$i*$x}{
+            margin-top: ($x*$i) + px;
+        }
+        .m-md-b#{$i*$x}{
+            margin-bottom: ($x*$i) + px;
+        }
+    }
+}
+@media only screen and (max-width: 767px) {
+    @for $i from 0 through $value{
+        // Margin Value
+        .m-sm-t#{$i*$x}{
+            margin-top: ($x*$i) + px;
+        }
+        .m-sm-b#{$i*$x}{
+            margin-bottom: ($x*$i) + px;
+        }
+    }
+}
+@media only screen and (max-width: 576px) {
+    @for $i from 0 through $value{
+        // Margin Value
+        .m-xs-t#{$i*$x}{
+            margin-top: ($x*$i) + px;
+        }
+        .m-xs-b#{$i*$x}{
+            margin-bottom: ($x*$i) + px;
+        }
+    }
+}
+.m-auto {
+    margin: auto;
+}
+
+// BOX MAX WIDTH CSS
+.max-w50 {
+    max-width: 50px;
+}
+.max-w60 {
+    max-width: 60px;
+}
+.max-w80 {
+    max-width: 80px;
+}
+.max-w100 {
+    max-width: 100px;
+}
+.max-w200 {
+    max-width: 200px;
+}
+.max-w300 {
+    max-width: 300px;
+}
+.max-w400 {
+    max-width: 400px;
+}
+.max-w500 {
+    max-width: 500px;
+}
+.max-w600 {
+    max-width: 600px;
+}
+.max-w700 {
+    max-width: 700px;
+}
+.max-w800 {
+    max-width: 800px;
+}
+.max-w900 {
+    max-width: 900px;
+}
+.max-w1000 {
+    max-width: 1000px;
+}
+// BACKGROUND IMAGE
+.bg-img-fix {
+    background-attachment: fixed;
+	background-size: cover;
+}
+.full-img{
+	width:100%;
+}
+
+.sticky-top{
+	top:120px;
+}
+.img-cover {
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+}
+section{
+    position: relative;
+	z-index: 1;
+}
+
+// rounded
+.rounded-xl{
+	border-radius: 50% !important;
+}
+.rounded-lg{
+	border-radius: 20px !important;
+}
+.rounded-md{
+	border-radius: 10px !important;
+}
+.rounded-sm{
+	border-radius: 5px !important;
+}
+
+// text color
+.text-maroon{
+	color: $maroon;
+}
+.text-orange{
+	color: $orange;
+}
+.text-yellow{
+	color: $yellow;
+}
+.text-skyblue{
+	color: $green;
+}
+.text-red{
+	color: $red;
+}
+.text-green{
+	color: $green;
+}
+.text-blue{
+	color: $blue;
+}
+
+// bg color
+.bg-maroon{
+	background-color: #dd2ca0;
+    &.light{
+        background-color: rgba(221, 44, 160, 0.1);
+        svg{
+            path{
+                fill: #dd2ca0;
+            }
+        }
+        i{
+            color: #dd2ca0;
+        }
+    }
+}
+.bg-orange{
+    background-color: #ff8853;
+	&.light{
+        background-color: rgba(255, 200, 0, 0.1);
+        svg{
+            path{
+                fill: #ff8853;
+            }
+        }
+        i{
+            color: #ff8853;
+        }
+    }
+}
+.bg-yellow{
+    background-color: #ffc600;
+	&.light{
+        background-color: rgba(255, 200, 0, 0.1);
+        svg{
+            path{
+                fill: #ffc600;
+            }
+        }
+        i{
+            color: #ffc600;
+        }
+    }
+}
+.bg-skyblue{
+    background-color: #00aeff;
+	&.light{
+        background-color: rgba(0, 174, 255, 0.1);
+        svg{
+            path{
+                fill: #00aeff;
+            }
+        }
+        i{
+            color: #00aeff;
+        }
+    }
+}
+.bg-red{
+	background-color: #ff586e;
+    &.light{
+		background-color: rgba(255, 88, 110, 0.1);
+        svg{
+            path{
+                fill: #ff586e;
+            }
+        }
+        i{
+            color: #ff586e;
+        }
+    }
+}
+.bg-green{
+    background-color: #04a57c;
+	&.light{
+        background-color: rgba(4, 165, 124, 0.1);
+        svg{
+            path,
+            rect{
+                fill: #04a57c;
+            }
+        }
+        i{
+            color: #04a57c;
+        }
+    }
+}
+.bg-blue{
+    background-color: #4a8be0;
+	&.light{
+        background-color: rgba(74, 139, 224, 0.1);
+        svg{
+            path{
+                fill: #4a8be0;
+            }
+        }
+        i{
+            color: #4a8be0;
+        }
+    }
+}
+.bg-pink{
+    background-color: #ff4db8;
+	&.light{
+		background-color: rgba(255, 77, 184, 0.1);
+        svg{
+            path{
+                fill: #ff4db8;
+            }
+            circle{
+                fill: #fff;   
+            }
+        }
+        i{
+            color: #ff4db8;
+        }
+    }
+}
+
+/* Letter Spacing */
+.letter{
+	&-1{
+		letter-spacing: 1px;
+	}
+	&-2{
+		letter-spacing: 2px;
+	}
+	&-s3{
+		letter-spacing: 3px;
+	}
+	&-s4{
+		letter-spacing: 4px;
+	}
+	&-s5{
+		letter-spacing: 5px;
+	}
+}

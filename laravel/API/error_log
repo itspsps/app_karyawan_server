@@ -1,0 +1,5 @@
+[12-Feb-2024 16:00:50 Asia/Jakarta] PHP Fatal error:  Uncaught mysqli_sql_exception: Access denied for user 'sumb1497_karyawan'@'localhost' (using password: YES) in /home/sumb1497/public_html/karyawan.com/API/register.php:2
+Stack trace:
+#0 /home/sumb1497/public_html/karyawan.com/API/register.php(2): mysqli_connect()
+#1 {main}
+  thrown in /home/sumb1497/public_html/karyawan.com/API/register.php on line 2
