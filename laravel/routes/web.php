@@ -116,6 +116,9 @@ Route::middleware('auth:sanctum', 'log.activity')->group(function () {
     Route::get('/penugasan/approve/diprosesfinance/show/{id}', [PenugasanUserController::class, 'approveShow']);
     Route::post('/penugasan/approve/diminta/ttd/{id}', [PenugasanUserController::class, 'approvePenugasan']);
 
+    Route::get('/penugasan/get_diminta', [PenugasanUserController::class, 'get_diminta']);
+    Route::get('/penugasan/get_diminta_departemen', [PenugasanUserController::class, 'get_diminta_departemen']);
+    Route::get('/penugasan/get_finance', [PenugasanUserController::class, 'get_finance']);
     Route::get('/penugasan/delete_penugasan/{id}', [PenugasanUserController::class, 'delete_penugasan']);
     Route::put('/penugasan/tambah-penugasan-proses', [PenugasanUserController::class, 'tambahPenugasan']);
     Route::put('/penugasan/approve/proses/{id}', [PenugasanUserController::class, 'penugasanApproveProses']);
@@ -269,6 +272,11 @@ Route::get('/penugasan/sp', [PenugasanController::class, 'index'])->middleware('
 Route::get('/penugasan/sps', [PenugasanController::class, 'index'])->middleware('admin');
 Route::get('/penugasan/sip', [PenugasanController::class, 'index'])->middleware('admin');
 Route::get('/penugasan/datatable-penugasan/sp', [PenugasanController::class, 'datatable_penugasan'])->middleware('admin');
+Route::get('/penugasan/datatable-penugasan/sps', [PenugasanController::class, 'datatable_penugasan'])->middleware('admin');
+Route::get('/penugasan/datatable-penugasan/sip', [PenugasanController::class, 'datatable_penugasan'])->middleware('admin');
+// CETAK PENUGASAN
+Route::get('/penugasan/cetak_form_penugasan/{id}', [PenugasanController::class, 'cetak_form_penugasan']);
+Route::get('/penugasan/ExportPenugasan/{kategori}/{holding}', [PenugasanController::class, 'ExportPenugasan']);
 
 // SHIFT
 Route::get('/shift/sp', [ShiftController::class, 'index'])->middleware('admin');

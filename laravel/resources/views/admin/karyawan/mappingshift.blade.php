@@ -232,6 +232,7 @@
                                 <th>Jam&nbsp;Masuk</th>
                                 <th>Tanggal&nbsp;Pulang</th>
                                 <th>Jam&nbsp;Keluar</th>
+                                <th>Keterangan</th>
                                 <th>Actions</th>
                             </tr>
                         </thead>
@@ -286,6 +287,10 @@
             {
                 data: 'jam_keluar',
                 name: 'jam_keluar'
+            },
+            {
+                data: 'status_absen',
+                name: 'status_absen'
             },
             {
                 data: 'option',

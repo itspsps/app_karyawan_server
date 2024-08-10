@@ -142,8 +142,8 @@ class RekapDataController extends Controller
                 $table = User::with('Mappingshift')
                     ->where('kontrak_kerja', $holding)
                     ->where('kategori', 'Karyawan Bulanan')
+                    // ->limit(210)
                     ->get();
-                // dd($table);
                 return DataTables::of($table)
                     ->addColumn('btn_detail', function ($row) use ($holding) {
                         $btn_detail = '<a id="btn_detail" type="button" href="' . url('rekap-data/detail', ['id' => $row->id]) . '/' . $holding . '" class="btn btn-sm btn-info"><i class="menu-icon tf-icons mdi mdi-eye"></i> Detail</a>';
@@ -151,6 +151,7 @@ class RekapDataController extends Controller
                     })
                     ->addColumn('total_hadir_tepat_waktu', function ($row) use ($now, $now1) {
                         $jumlah_hadir_tepat_waktu = $row->MappingShift->whereBetween('tanggal_masuk', [$now, $now1])->where('keterangan_absensi', 'TEPAT WAKTU')->where('status_absen', 'HADIR KERJA')->count();
+                        // dd($jumlah_hadir_tepat_waktu);
                         return $jumlah_hadir_tepat_waktu . " x";
                     })
                     ->addColumn('total_hadir_telat_hadir', function ($row) use ($now, $now1) {

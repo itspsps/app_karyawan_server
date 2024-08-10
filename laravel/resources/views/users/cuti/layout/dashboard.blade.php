@@ -115,39 +115,4 @@
 
 
         <!-- Content Wrapper. Contains page content -->
-        <!-- <div class="content-wrapper" style="background-image: url({{ url('assets/img/absenbg.jpg') }})"> -->
-        <div class="content-wrapper content-wrapper">
-            <!-- Content Header (Page header) -->
-            <div class="content-header">
-                <div class="container-fluid">
-                    <!-- <center class="mb-2">
-            <h2 class="fw-bold" style="color: rgb(255, 41, 4)">{{ $title }}</h2>
-        </center> -->
-                </div>
-            </div>
-            <!-- /.content-header -->
-
-            <!-- Main content -->
-            <section class="content">
-                @yield('isi')
-            </section>
-
-        </div>
-        <!-- /.content-wrapper -->
-
-        @include('partials.footer')
-
-        <!-- Control Sidebar -->
-        <aside class="control-sidebar control-sidebar-dark">
-            <!-- Control sidebar content goes here -->
-        </aside>
-        <!-- /.control-sidebar -->
-    </div>
-    <!-- ./wrapper -->
-
-    @include('partials.script')
-    @include('sweetalert::alert')
-
-</body>
-
-</html>
+        <!-- <div cla

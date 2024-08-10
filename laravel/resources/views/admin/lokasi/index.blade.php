@@ -1,9 +1,21 @@
 @extends('admin.layouts.dashboard')
 @section('css')
 <link rel="stylesheet" href="https://cdn.datatables.net/2.0.5/css/dataTables.bootstrap5.css">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.8.0/dist/leaflet.css" integrity="sha512-hoalWLoI8r4UszCkZ5kL8vayOGVae1oxXe/2A4AO6J9+580uKHDO3JdHb7NzwwzK5xr/Fs0W40kiNHxM9vyTtQ==" crossorigin="" />
+<script src="https://unpkg.com/leaflet@1.8.0/dist/leaflet.js" integrity="sha512-BB3hKbKWOc9Ez/TAwyWxNXeoV9c1v6FIeYiBieIWkpLjauysF18NzgR1MBNBXf8/KABdlkX68nAhlwcDFLGPCQ==" crossorigin=""></script>
+
 <style type="text/css">
     .my-swal {
         z-index: X;
+    }
+
+
+
+    .leaflet-container {
+        height: 400px;
+        width: 600px;
+        max-width: 100%;
+        max-height: 100%;
     }
 </style>
 @endsection
@@ -280,6 +292,9 @@
                         <tbody class="table-border-bottom-0">
                         </tbody>
                     </table>
+                    <div>
+                        <div id="map"></div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -292,6 +307,7 @@
 <script src="https://cdn.datatables.net/2.0.5/js/dataTables.js"></script>
 <script src="https://cdn.datatables.net/2.0.5/js/dataTables.bootstrap5.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+
 <script>
     let holding = window.location.pathname.split("/").pop();
     var table = $('#table_lokasi').DataTable({
@@ -426,5 +442,41 @@
         });
 
     });
+</script>
+<script>
+    var map = L.map('map').fitWorld().setView([112.09539400000001, -7.758337000000001], 13);
+    var tiles = L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoiZXJpcHJhdGFtYSIsImEiOiJjbGZubmdib3UwbnRxM3Bya3M1NGE4OHRsIn0.oxYqbBbaBwx0dHLguu5gOA', {
+        maxZoom: 18,
+        attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, ' +
+            'Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+        id: 'mapbox/streets-v11',
+        tileSize: 512,
+        zoomOffset: -1
+    }).addTo(map);
+    var marker = L.marker([51.5, -0.09]).addTo(map)
+        .bindPopup('<b>Hello world!</b><br />I am a popup.').openPopup();
+    var circle = L.circle([51.508, -0.11], {
+        color: 'red',
+        fillColor: '#f03',
+        fillOpacity: 0.5,
+        radius: 500
+    }).addTo(map).bindPopup('I am a circle.');
+    var polygon = L.polygon([
+        [51.509, -0.08],
+        [51.503, -0.06],
+        [51.51, -0.047]
+    ]).addTo(map).bindPopup('I am a polygon.');
+    var popup = L.popup()
+        .setLatLng([51.513, -0.09])
+        .setContent('I am a standalone popup.')
+        .openOn(map);
+
+    function onMapClick(e) {
+        popup
+            .setLatLng(e.latlng)
+            .setContent('You clicked the map at ' + e.latlng.toString())
+            .openOn(map);
+    }
+    map.on('click', onMapClick);
 </script>
 @endsection

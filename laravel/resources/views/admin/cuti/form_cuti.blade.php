@@ -27,7 +27,13 @@
                 @endif
             </td>
             <td>
+                @if($data_penugasan->User->kontrak_kerja=='SP')
+                <h4 style="text-align: center; font-size: 16pt;">CV&nbsp;SUMBER&nbsp;PANGAN</h4>
+                @elseif($data_penugasan->User->kontrak_kerja=='SPS')
                 <h4 style="text-align: center; font-size: 16pt;">PT&nbsp;SURYA&nbsp;PANGAN&nbsp;SEMESTA</h4>
+                @elseif($data_penugasan->User->kontrak_kerja=='SIP')
+                <h4 style="text-align: center; font-size: 16pt;">CV&nbsp;SURYA&nbsp;INTI&nbsp;PANGAN</h4>
+                @endif
             </td>
             <td style="width: 40%; vertical-align: bottom; font-size:7pt; text-align: right;">
                 @if($data_cuti->User->kontrak_kerja=='SP')

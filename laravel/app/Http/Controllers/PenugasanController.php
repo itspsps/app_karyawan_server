@@ -20,6 +20,8 @@ use Carbon\Carbon;
 use DB;
 use Carbon\CarbonPeriod;
 use DateTime;
+use PDF;
+use Yajra\DataTables\Facades\DataTables;
 
 class PenugasanController extends Controller
 {
@@ -30,312 +32,416 @@ class PenugasanController extends Controller
             'holding' => $holding,
         ]);
     }
-
-    public function tambahPenugasan(Request $request)
+    public function datatable_penugasan(Request $request)
     {
-        // dd($request->all());
-        $date_now = Carbon::now();
-        if ($request->tanggal_kunjungan > $date_now || $request->tanggal_kunjungan == $date_now) {
-            // dd('oke');
-            if ($request->alamat_dikunjungi == NULL) {
-                $alamat_dikunjungi = $request->alamat_dikunjungi1;
+        $cek_holding = request()->segment(count(request()->segments()));
+        if ($cek_holding == 'sp') {
+            $holding = 'SP';
+        } else if ($cek_holding == 'sps') {
+            $holding = 'SPS';
+        } else {
+            $holding = 'SIP';
+        }
+
+        if (request()->ajax()) {
+            if (!empty($request->filter_month)) {
+                $jumlah_hari = explode(' ', $request->filter_month);
+                $startDate = trim($jumlah_hari[0]);
+                $endDate = trim($jumlah_hari[2]);
+                $date1 = date('Y-m-d', strtotime($startDate));
+                $date2 = date('Y-m-d', strtotime($endDate));
+                // dd($date1, $date2);
+                // dd($tgl_mulai, $tgl_selesai);
+                $table = Cuti::leftJoin('users', 'users.id', 'cutis.user_id')->where('nama_cuti', 'Cuti Tahunan')
+                    ->where('users.kontrak_kerja', $holding)
+                    ->whereBetween('tanggal', [$date1, $date2])
+                    ->select('users.kontrak_kerja', 'cutis.*')
+                    ->get();
+                // dd($table);
+                return DataTables::of($table)
+
+                    ->addColumn('no_form_cuti', function ($row) {
+                        if ($row->status_cuti == 1) {
+                            $status = '<a href="javascript:void(0);" id="btn_cuti_1"><h6 class="text-primary">' . $row->no_form_cuti . '</h6></a>';
+                        } else if ($row->status_cuti == 3) {
+                            $status = '<a href="' . url("cuti/cetak_form_cuti/" . $row->id) . '" target="_blank"><h6 class="text-success">' . $row->no_form_cuti . '</h6></a>';
+                        } else if ($row->status_cuti == 0) {
+                            $status = '<a href="javascript:void(0);" id="btn_cuti_0"><h6 class="text-secondary">' . $row->no_form_cuti . '</h6></a>';
+                        } else if ($row->status_cuti == 2) {
+                            $status = '<a href="javascript:void(0);" id="btn_cuti_2"><h6 class="text-secondary">' . $row->no_form_cuti . '</h6></a>';
+                        } else if ($row->status_cuti == 'NOT APPROVE') {
+                            $status = '<a href="javascript:void(0);" id="btn_cuti_not_approve"><h6 class="text-danger">' . $row->no_form_cuti . '</h6></a>';
+                        }
+                        $no_form_cuti = $status;
+                        return $no_form_cuti;
+                    })
+                    ->addColumn('tanggal', function ($row) {
+                        $get_tanggal = Carbon::parse($row->tanggal)->format('d-m-Y');
+                        if ($get_tanggal == NULL) {
+                            $tanggal = NULL;
+                        } else {
+                            $tanggal = $get_tanggal;
+                        }
+                        return $tanggal;
+                    })
+                    ->addColumn('tanggal_mulai', function ($row) {
+                        $get_tanggal_mulai = Carbon::parse($row->tanggal_mulai)->format('d-m-Y');
+                        if ($get_tanggal_mulai == NULL) {
+                            $tanggal_mulai = NULL;
+                        } else {
+                            $tanggal_mulai = $get_tanggal_mulai;
+                        }
+                        return $tanggal_mulai;
+                    })
+                    ->addColumn('tanggal_selesai', function ($row) {
+                        $get_tanggal_selesai = Carbon::parse($row->tanggal_selesai)->format('d-m-Y');
+                        if ($get_tanggal_selesai == NULL) {
+                            $tanggal_selesai = NULL;
+                        } else {
+                            $tanggal_selesai = $get_tanggal_selesai;
+                        }
+                        return $tanggal_selesai;
+                    })
+                    ->addColumn('tanggal_masuk', function ($row) {
+                        $get_tanggal_masuk = Carbon::parse($row->tanggal_selesai)->addDays(1)->format('d-m-Y');
+                        if ($get_tanggal_masuk == NULL) {
+                            $tanggal_masuk = NULL;
+                        } else {
+                            $tanggal_masuk = $get_tanggal_masuk;
+                        }
+                        return $tanggal_masuk;
+                    })
+                    ->addColumn('total_cuti', function ($row) {
+                        if ($row->total_cuti == NULL) {
+                            $total_cuti = NULL;
+                        } else {
+                            $total_cuti = $row->total_cuti . ' Hari';
+                        }
+                        return $total_cuti;
+                    })
+                    ->addColumn('nama_departemen', function ($row) {
+                        $user = User::where('id', $row->user_id)->first();
+                        $departemen = Departemen::where('id', $user->dept_id)->first();
+                        if ($departemen == NULL) {
+                            $nama_departemen = NULL;
+                        } else {
+                            $nama_departemen = $departemen->nama_departemen;
+                        }
+                        return $nama_departemen;
+                    })
+                    ->addColumn('nama_divisi', function ($row) {
+                        $user = User::where('id', $row->user_id)->first();
+                        $divisi = Divisi::where('id', $user->divisi_id)->first();
+                        if ($divisi == NULL) {
+                            $nama_divisi = NULL;
+                        } else {
+                            $nama_divisi = $divisi->nama_divisi;
+                        }
+                        return $nama_divisi;
+                    })
+                    ->addColumn('nama_jabatan', function ($row) {
+                        $user = User::where('id', $row->user_id)->first();
+                        $jabatan = Jabatan::where('id', $user->jabatan_id)->first();
+                        if ($jabatan == NULL) {
+                            $nama_jabatan = NULL;
+                        } else {
+                            $nama_jabatan = $jabatan->nama_jabatan;
+                        }
+                        return $nama_jabatan;
+                    })
+                    ->addColumn('ttd_user', function ($row) use ($holding) {
+                        if ($row->ttd_user == NULL) {
+                            $btn_lihat_ttd_user = '<span class="badge bg-label-danger">KOSONG</span>';
+                        } else {
+                            $btn_lihat_ttd_user = '<button id="btn_lihat_ttd_user" type="button" data-id="' . $row->id . '" data-ttd="' . $row->ttd_user . '" data-tgl = "' . Carbon::parse($row->waktu_ttd_user)->format('d m Y') . '" data-nama="' . $row->nama_user . '" class="btn btn-sm btn-info"><i class="menu-icon tf-icons mdi mdi-eye"></i> Lihat&nbsp;TTD</button>';
+                        }
+                        return $btn_lihat_ttd_user;
+                    })
+
+                    ->addColumn('ttd_atasan', function ($row) use ($holding) {
+                        if ($row->status_cuti == 1) {
+                            $ttd_atasan = '<span class="badge bg-label-primary">Menunggu Approve Atasan 1</span>';
+                        } else if ($row->status_cuti == 3) {
+                            $ttd_atasan = '<button id="ttd_atasan" type="button" data-id="' . $row->id . '" data-ttd="' . $row->ttd_atasan . '" data-tgl = "' . Carbon::parse($row->waktu_approve)->format('d m Y') . '" data-nama="' . $row->approve_atasan . '"  class="btn btn-sm btn-success"><i class="menu-icon tf-icons mdi mdi-eye"></i> Lihat&nbsp;TTD&nbsp;Atasan</button>';
+                        } else if ($row->status_cuti == 0) {
+                            $ttd_atasan = '<span class="badge bg-label-secondary">Pengajuan Cuti</span>';
+                        } else if ($row->status_cuti == 2) {
+                            $ttd_atasan = '<span class="badge bg-label-secondary">Menunggu Approve Atasan 2</span>';
+                        } else if ($row->status_cuti == 'NOT APPROVE') {
+                            $ttd_atasan = '<span class="badge bg-label-danger">Cuti Ditolak</span>';
+                        }
+                        return $ttd_atasan;
+                    })
+                    ->addColumn('ttd_atasan2', function ($row) use ($holding) {
+                        if ($row->status_cuti == 1) {
+                            $ttd_atasan2 = '<span class="badge bg-label-primary">Menunggu Approve Atasan 1</span>';
+                        } else if ($row->status_cuti == 3) {
+                            $ttd_atasan2 = '<button id="ttd_atasan2" type="button" data-id="' . $row->id . '" data-ttd="' . $row->ttd_atasan2 . '" data-tgl = "' . Carbon::parse($row->waktu_approve2)->format('d m Y') . '" data-nama="' . $row->approve_atasan2 . '"  class="btn btn-sm btn-success"><i class="menu-icon tf-icons mdi mdi-eye"></i> Lihat&nbsp;TTD&nbsp;Atasan</button>';
+                        } else if ($row->status_cuti == 0) {
+                            $ttd_atasan2 = '<span class="badge bg-label-secondary">Pengajuan Cuti</span>';
+                        } else if ($row->status_cuti == 2) {
+                            $ttd_atasan2 = '<span class="badge bg-label-secondary">Menuggu Approve Atasan 2</span>';
+                        } else if ($row->status_cuti == 'NOT APPROVE') {
+                            $ttd_atasan2 = '<span class="badge bg-label-danger">Cuti Ditolak</span>';
+                        }
+                        return $ttd_atasan2;
+                    })
+                    ->addColumn('waktu_approve', function ($row) {
+                        if ($row->waktu_approve == NULL) {
+                            $waktu_approve = NULL;
+                        } else {
+                            $waktu_approve = Carbon::parse($row->waktu_approve)->format('d-m-Y H:i');;
+                        }
+                        return $waktu_approve;
+                    })
+                    ->addColumn('waktu_approve2', function ($row) {
+                        if ($row->waktu_approve2 == NULL) {
+                            $waktu_approve2 = NULL;
+                        } else {
+                            $waktu_approve2 = Carbon::parse($row->waktu_approve2)->format('d-m-Y H:i');;
+                        }
+                        return $waktu_approve2;
+                    })
+                    ->addColumn('status_cuti', function ($row) use ($holding) {
+                        if ($row->status_cuti == 1) {
+                            $status = '<span class="badge bg-label-primary">Menunggu Approve Atasan 1</span>';
+                        } else if ($row->status_cuti == 3) {
+                            $status = '<span class="badge bg-label-success">Cuti Disetujui</span>';
+                        } else if ($row->status_cuti == 0) {
+                            $status = '<span class="badge bg-label-secondary">Pengajuan Cuti</span>';
+                        } else if ($row->status_cuti == 2) {
+                            $status = '<span class="badge bg-label-secondary">Menunggu Approve Atasan 2</span>';
+                        } else if ($row->status_cuti == 'NOT APPROVE') {
+                            $status = '<span class="badge bg-label-danger">Cuti Ditolak</span>';
+                        }
+                        $status_cuti = $status;
+                        return $status_cuti;
+                    })
+                    ->rawColumns(['no_form_cuti', 'tanggal', 'total_cuti', 'tanggal_mulai', 'tanggal_selesai', 'tanggal_masuk', 'nama_departemen', 'nama_divisi', 'nama_jabatan', 'ttd_user', 'ttd_atasan', 'ttd_atasan2', 'waktu_approve', 'waktu_approve2', 'status_cuti'])
+                    ->make(true);
             } else {
-                $alamat_dikunjungi = $request->alamat_dikunjungi;
+                $now = Carbon::now()->startOfMonth();
+                $now1 = Carbon::now()->endOfMonth();
+
+                // dd($tgl_mulai, $tgl_selesai);
+                $table = Penugasan::leftJoin('users', 'users.id', 'penugasans.id_diajukan_oleh')
+                    ->where('users.kontrak_kerja', $holding)
+                    ->select('users.kontrak_kerja', 'penugasans.*')
+                    ->get();
+                // dd($table);
+                return DataTables::of($table)
+
+                    ->addColumn('no_form_penugasan', function ($row) {
+                        if ($row->status_penugasan == 0) {
+                            $status = '<a href="javascript:void(0);" id="btn_cuti_0"><h6 class="text-secondary">' . $row->no_form_penugasan . '</h6></a>';
+                        } else if ($row->status_penugasan == 1) {
+                            $status = '<a href="javascript:void(0);" id="btn_cuti_1"><h6 class="text-warning">' . $row->no_form_penugasan . '</h6></a>';
+                        } else if ($row->status_penugasan == 2) {
+                            $status = '<a href="javascript:void(0);" id="btn_cuti_2"><h6 class="text-secondary">' . $row->no_form_penugasan . '</h6></a>';
+                        } else if ($row->status_penugasan == 3) {
+                            $status = '<a href="javascript:void(0);" id="btn_cuti_2"><h6 class="text-info">' . $row->no_form_penugasan . '</h6></a>';
+                        } else if ($row->status_penugasan == 4) {
+                            $status = '<a href="javascript:void(0);" id="btn_cuti_2"><h6 class="text-primary">' . $row->no_form_penugasan . '</h6></a>';
+                        } else if ($row->status_penugasan == 5) {
+                            $status = '<a href="' . url("penugasan/cetak_form_penugasan/" . $row->id) . '" target="_blank"><h6 class="text-success">' . $row->no_form_penugasan . '</h6></a>';
+                        } else if ($row->status_penugasan == 'NOT APPROVE') {
+                            $status = '<a href="javascript:void(0);" id="btn_cuti_not_approve"><h6 class="text-danger">' . $row->no_form_penugasan . '</h6></a>';
+                        }
+                        $no_form_penugasan = $status;
+                        return $no_form_penugasan;
+                    })
+                    ->addColumn('tanggal_pengajuan', function ($row) {
+                        $get_tanggal_pengajuan = Carbon::parse($row->tanggal_pengajuan)->format('d-m-Y');
+                        if ($get_tanggal_pengajuan == NULL) {
+                            $tanggal_pengajuan = NULL;
+                        } else {
+                            $tanggal_pengajuan = $get_tanggal_pengajuan;
+                        }
+                        return $tanggal_pengajuan;
+                    })
+                    ->addColumn('tanggal_kunjungan', function ($row) {
+                        $get_tanggal_kunjungan = Carbon::parse($row->tanggal_kunjungan)->format('d-m-Y');
+                        if ($get_tanggal_kunjungan == NULL) {
+                            $tanggal_kunjungan = NULL;
+                        } else {
+                            $tanggal_kunjungan = $get_tanggal_kunjungan;
+                        }
+                        return $tanggal_kunjungan;
+                    })
+                    ->addColumn('selesai_kunjungan', function ($row) {
+                        $get_selesai_kunjungan = Carbon::parse($row->selesai_kunjungan)->format('d-m-Y');
+                        if ($get_selesai_kunjungan == NULL) {
+                            $selesai_kunjungan = NULL;
+                        } else {
+                            $selesai_kunjungan = $get_selesai_kunjungan;
+                        }
+                        return $selesai_kunjungan;
+                    })
+                    ->addColumn('nama_departemen', function ($row) {
+                        $user = User::where('id', $row->id_diajukan_oleh)->first();
+                        $departemen = Departemen::where('id', $user->dept_id)->first();
+                        if ($departemen == NULL) {
+                            $nama_departemen = NULL;
+                        } else {
+                            $nama_departemen = $departemen->nama_departemen;
+                        }
+                        return $nama_departemen;
+                    })
+                    ->addColumn('nama_divisi', function ($row) {
+                        $user = User::where('id', $row->id_diajukan_oleh)->first();
+                        $divisi = Divisi::where('id', $user->divisi_id)->first();
+                        if ($divisi == NULL) {
+                            $nama_divisi = NULL;
+                        } else {
+                            $nama_divisi = $divisi->nama_divisi;
+                        }
+                        return $nama_divisi;
+                    })
+                    ->addColumn('nama_jabatan', function ($row) {
+                        $user = User::where('id', $row->id_diajukan_oleh)->first();
+                        $jabatan = Jabatan::where('id', $user->jabatan_id)->first();
+                        if ($jabatan == NULL) {
+                            $nama_jabatan = NULL;
+                        } else {
+                            $nama_jabatan = $jabatan->nama_jabatan;
+                        }
+                        return $nama_jabatan;
+                    })
+                    ->addColumn('ttd_user', function ($row) use ($holding) {
+                        if ($row->ttd_id_diajukan_oleh == NULL) {
+                            $btn_lihat_ttd_user = '<span class="badge bg-label-danger">KOSONG</span>';
+                        } else {
+                            $btn_lihat_ttd_user = '<button id="btn_lihat_ttd_pengajuan" type="button" data-id="' . $row->id . '" data-ttd="' . $row->ttd_id_diajukan_oleh . '" data-tgl = "' . Carbon::parse($row->waktu_ttd_id_diajukan_oleh)->format('d m Y') . '" data-nama="' . $row->nama_diajukan . '" class="btn btn-sm btn-info"><i class="menu-icon tf-icons mdi mdi-eye"></i> Lihat&nbsp;TTD</button>';
+                        }
+                        return $btn_lihat_ttd_user;
+                    })
+                    ->addColumn('ttd_diminta', function ($row) use ($holding) {
+                        if ($row->status_penugasan == 0) {
+                            $ttd_diminta = '<span class="badge bg-label-secondary">Pengajuan Perjalanan Dinas</span>';
+                        } else if ($row->status_penugasan == 1) {
+                            $ttd_diminta = '<span class="badge bg-label-primary">Menunggu Approve Diminta</span>';
+                        } else if ($row->status_penugasan == 2) {
+                            $ttd_diminta = '<button id="btn_lihat_ttd_diminta" type="button" data-id="' . $row->id . '" data-ttd="' . $row->ttd_id_diminta_oleh . '" data-tgl = "' . Carbon::parse($row->waktu_ttd_id_diminta_oleh)->format('d m Y') . '" data-nama="' . $row->nama_diminta . '"  class="btn btn-sm btn-success"><i class="menu-icon tf-icons mdi mdi-eye"></i> Lihat&nbsp;TTD&nbsp;Nama&nbsp;Diminta</button>';
+                        } else if ($row->status_penugasan == 3) {
+                            $ttd_diminta = '<button id="btn_lihat_ttd_diminta" type="button" data-id="' . $row->id . '" data-ttd="' . $row->ttd_id_diminta_oleh . '" data-tgl = "' . Carbon::parse($row->waktu_ttd_id_diminta_oleh)->format('d m Y') . '" data-nama="' . $row->nama_diminta . '"  class="btn btn-sm btn-success"><i class="menu-icon tf-icons mdi mdi-eye"></i> Lihat&nbsp;TTD&nbsp;Nama&nbsp;Diminta</button>';
+                        } else if ($row->status_penugasan == 4) {
+                            $ttd_diminta = '<button id="btn_lihat_ttd_diminta" type="button" data-id="' . $row->id . '" data-ttd="' . $row->ttd_id_diminta_oleh . '" data-tgl = "' . Carbon::parse($row->waktu_ttd_id_diminta_oleh)->format('d m Y') . '" data-nama="' . $row->nama_diminta . '"  class="btn btn-sm btn-success"><i class="menu-icon tf-icons mdi mdi-eye"></i> Lihat&nbsp;TTD&nbsp;Nama&nbsp;Diminta</button>';
+                        } else if ($row->status_penugasan == 5) {
+                            $ttd_diminta = '<button id="btn_lihat_ttd_diminta" type="button" data-id="' . $row->id . '" data-ttd="' . $row->ttd_id_diminta_oleh . '" data-tgl = "' . Carbon::parse($row->waktu_ttd_id_diminta_oleh)->format('d m Y') . '" data-nama="' . $row->nama_diminta . '"  class="btn btn-sm btn-success"><i class="menu-icon tf-icons mdi mdi-eye"></i> Lihat&nbsp;TTD&nbsp;Nama&nbsp;Diminta</button>';
+                        } else if ($row->status_penugasan == 'NOT APPROVE') {
+                            $ttd_diminta = '<span class="badge bg-label-danger">Perjalanan Dinas Ditolak</span>';
+                        }
+                        return $ttd_diminta;
+                    })
+                    ->addColumn('ttd_disahkan', function ($row) use ($holding) {
+                        if ($row->status_penugasan == 0) {
+                            $ttd_disahkan = '<span class="badge bg-label-secondary">Pengajuan Perjalanan Dinas</span>';
+                        } else if ($row->status_penugasan == 1) {
+                            $ttd_disahkan = '<span class="badge bg-label-primary">Menunggu Approve Diminta</span>';
+                        } else if ($row->status_penugasan == 2) {
+                            $ttd_disahkan = '<span class="badge bg-label-info">Menunggu Approve Diminta</span>';
+                        } else if ($row->status_penugasan == 3) {
+                            $ttd_disahkan = '<button id="btn_lihat_ttd_disahkan" type="button" data-id="' . $row->id . '" data-ttd="' . $row->ttd_id_disahkan_oleh . '" data-tgl = "' . Carbon::parse($row->waktu_ttd_id_disahkan_oleh)->format('d m Y') . '" data-nama="' . $row->nama_disahkan . '"  class="btn btn-sm btn-success"><i class="menu-icon tf-icons mdi mdi-eye"></i> Lihat&nbsp;TTD&nbsp;Nama&nbsp;Disahkan</button>';
+                        } else if ($row->status_penugasan == 4) {
+                            $ttd_disahkan = '<button id="btn_lihat_ttd_disahkan" type="button" data-id="' . $row->id . '" data-ttd="' . $row->ttd_id_disahkan_oleh . '" data-tgl = "' . Carbon::parse($row->waktu_ttd_id_disahkan_oleh)->format('d m Y') . '" data-nama="' . $row->nama_disahkan . '"  class="btn btn-sm btn-success"><i class="menu-icon tf-icons mdi mdi-eye"></i> Lihat&nbsp;TTD&nbsp;Nama&nbsp;Disahkan</button>';
+                        } else if ($row->status_penugasan == 5) {
+                            $ttd_disahkan = '<button id="btn_lihat_ttd_disahkan" type="button" data-id="' . $row->id . '" data-ttd="' . $row->ttd_id_disahkan_oleh . '" data-tgl = "' . Carbon::parse($row->waktu_ttd_id_disahkan_oleh)->format('d m Y') . '" data-nama="' . $row->nama_disahkan . '"  class="btn btn-sm btn-success"><i class="menu-icon tf-icons mdi mdi-eye"></i> Lihat&nbsp;TTD&nbsp;Nama&nbsp;Disahkan</button>';
+                        } else if ($row->status_penugasan == 'NOT APPROVE') {
+                            $ttd_disahkan = '<span class="badge bg-label-danger">Perjalanan Dinas Ditolak</span>';
+                        }
+                        return $ttd_disahkan;
+                    })
+                    ->addColumn('ttd_proses_hrd', function ($row) use ($holding) {
+                        if ($row->status_penugasan == 0) {
+                            $ttd_proses_hrd = '<span class="badge bg-label-secondary">Pengajuan Perjalan Dinas</span>';
+                        } else if ($row->status_penugasan == 1) {
+                            $ttd_proses_hrd = '<span class="badge bg-label-primary">Menunggu Approve Diminta</span>';
+                        } else if ($row->status_penugasan == 2) {
+                            $ttd_proses_hrd = '<span class="badge bg-label-secondary">Menuggu Approve Atasan 2</span>';
+                        } else if ($row->status_penugasan == 3) {
+                            $ttd_proses_hrd = '<span class="badge bg-label-secondary">Menunggu Approve HRD</span>';
+                        } else if ($row->status_penugasan == 4) {
+                            $ttd_proses_hrd = '<button id="btn_lihat_ttd_proses_hrd" type="button" data-id="' . $row->id . '" data-ttd="' . $row->ttd_proses_hrd . '" data-tgl = "' . Carbon::parse($row->waktu_ttd_proses_hrd)->format('d m Y') . '" data-nama="' . $row->nama_hrd . '"  class="btn btn-sm btn-success"><i class="menu-icon tf-icons mdi mdi-eye"></i> Lihat&nbsp;TTD&nbsp;Nama&nbsp;HRD</button>';
+                        } else if ($row->status_penugasan == 5) {
+                            $ttd_proses_hrd = '<button id="btn_lihat_ttd_proses_hrd" type="button" data-id="' . $row->id . '" data-ttd="' . $row->ttd_proses_hrd . '" data-tgl = "' . Carbon::parse($row->waktu_ttd_proses_hrd)->format('d m Y') . '" data-nama="' . $row->nama_hrd . '"  class="btn btn-sm btn-success"><i class="menu-icon tf-icons mdi mdi-eye"></i> Lihat&nbsp;TTD&nbsp;Nama&nbsp;HRD</button>';
+                        } else if ($row->status_penugasan == 'NOT APPROVE') {
+                            $ttd_proses_hrd = '<span class="badge bg-label-danger">Perjalan Dinas Ditolak</span>';
+                        }
+                        return $ttd_proses_hrd;
+                    })
+                    ->addColumn('ttd_proses_finance', function ($row) use ($holding) {
+                        if ($row->status_penugasan == 0) {
+                            $ttd_proses_finance = '<span class="badge bg-label-secondary">Pengajuan Perjalanan Dinas</span>';
+                        } else if ($row->status_penugasan == 1) {
+                            $ttd_proses_finance = '<span class="badge bg-label-primary">Menunggu Approve Diminta</span>';
+                        } else if ($row->status_penugasan == 2) {
+                            $ttd_proses_finance = '<span class="badge bg-label-secondary">Menuggu Approve Atasan 2</span>';
+                        } else if ($row->status_penugasan == 3) {
+                            $ttd_proses_finance = '<span class="badge bg-label-secondary">Menunggu Approve HRD</span>';
+                        } else if ($row->status_penugasan == 4) {
+                            $ttd_proses_finance = '<span class="badge bg-label-info">Menunggu Approve Finance</span>';
+                        } else if ($row->status_penugasan == 5) {
+                            $ttd_proses_finance = '<button id="btn_lihat_ttd_proses_finance" type="button" data-id="' . $row->id . '" data-ttd="' . $row->ttd_proses_finance . '" data-tgl = "' . Carbon::parse($row->waktu_ttd_proses_finance)->format('d m Y') . '" data-nama="' . $row->nama_finance . '"  class="btn btn-sm btn-success"><i class="menu-icon tf-icons mdi mdi-eye"></i> Lihat&nbsp;TTD&nbsp;Nama&nbsp;Finance</button>';
+                        } else if ($row->status_penugasan == 'NOT APPROVE') {
+                            $ttd_proses_finance = '<span class="badge bg-label-danger">Perjalanan Dinas Ditolak</span>';
+                        }
+                        return $ttd_proses_finance;
+                    })
+                    ->addColumn('status_penugasan', function ($row) use ($holding) {
+                        if ($row->status_penugasan == 0) {
+                            $status = '<span class="badge bg-label-secondary">Pengajuan Perjalan Dinas</span>';
+                        } else if ($row->status_penugasan == 1) {
+                            $status = '<span class="badge bg-label-primary">Menunggu Approve Diminta</span>';
+                        } else if ($row->status_penugasan == 2) {
+                            $status = '<span class="badge bg-label-secondary">Menunggu Approve Atasan 2</span>';
+                        } else if ($row->status_penugasan == 3) {
+                            $status = '<span class="badge bg-label-secondary">Menunggu Approve HRD</span>';
+                        } else if ($row->status_penugasan == 4) {
+                            $status = '<span class="badge bg-label-info">Menunggu Approve Finance</span>';
+                        } else if ($row->status_penugasan == 5) {
+                            $status = '<span class="badge bg-label-success">Perjalan Dinas Di Appove</span>';
+                        } else if ($row->status_penugasan == 'NOT APPROVE') {
+                            $status = '<span class="badge bg-label-danger">Perjalan Dinas Ditolak</span>';
+                        }
+                        $status_penugasan = $status;
+                        return $status_penugasan;
+                    })
+                    ->rawColumns(['no_form_penugasan', 'tanggal_pengajuan', 'tanggal_kunjungan', 'selesai_kunjungan', 'ttd_proses_finance', 'ttd_proses_hrd', 'ttd_disahkan', 'ttd_diminta', 'nama_departemen', 'nama_divisi', 'nama_jabatan', 'ttd_user', 'status_penugasan'])
+                    ->make(true);
             }
-            Penugasan::create([
-                'id_user'                       => User::where('id', Auth::user()->id)->value('id'),
-                'nama_user'                     => User::where('id', Auth::user()->id)->value('name'),
-                'id_user_atasan'                => User::where('id', $request->id_user_atasan)->value('id'),
-                'id_user_atasan2'               => User::where('id', $request->id_user_atasan2)->value('id'),
-                'id_jabatan'                    => Jabatan::where('id', $request->id_jabatan)->value('id'),
-                'id_departemen'                 => Departemen::where('id', $request->id_departemen)->value('id'),
-                'id_divisi'                     => Divisi::where('id', $request->id_divisi)->value('id'),
-                'asal_kerja'                    => $request->asal_kerja,
-                'id_diajukan_oleh'              => User::where('id', $request->id_diajukan_oleh)->value('id'),
-                'nama_diajukan'                 => User::where('id', $request->id_diajukan_oleh)->value('name'),
-                'ttd_id_diajukan_oleh'          => $request->ttd_id_diajukan_oleh,
-                'waktu_ttd_id_diajukan_oleh'    => $request->waktu_ttd_id_diajukan_oleh,
-                'id_diminta_oleh'               => User::where('id', $request->id_diminta_oleh)->value('id'),
-                'nama_diminta'                  => User::where('id', $request->id_diminta_oleh)->value('name'),
-                'ttd_id_diminta_oleh'           => $request->ttd_id_diminta_oleh,
-                'waktu_ttd_id_diminta_oleh'     => $request->waktu_ttd_id_diminta_oleh,
-                'id_disahkan_oleh'              => User::where('id', $request->id_disahkan_oleh)->value('id'),
-                'nama_disahkan'                 => User::where('id', $request->id_disahkan_oleh)->value('name'),
-                'ttd_id_disahkan_oleh'          => $request->ttd_id_disahkan_oleh,
-                'waktu_ttd_id_disahkan_oleh'    => $request->waktu_ttd_id_disahkan_oleh,
-                'id_user_hrd'                   => User::where('id', $request->proses_hrd)->value('id'),
-                'nama_hrd'                      => User::where('id', $request->proses_hrd)->value('name'),
-                'ttd_proses_hrd'                => $request->ttd_proses_hrd,
-                'waktu_ttd_proses_hrd'          => $request->waktu_ttd_proses_hrd,
-                'id_user_finance'               => User::where('id', $request->proses_finance)->value('id'),
-                'nama_finance'                  => User::where('id', $request->proses_finance)->value('name'),
-                'ttd_proses_finance'            => $request->ttd_proses_finance,
-                'waktu_ttd_proses_finance'      => $request->waktu_ttd_proses_finance,
-                'penugasan'                     => $request->penugasan,
-                'wilayah_penugasan'             => $request->wilayah_penugasan,
-                'tanggal_kunjungan'             => $request->tanggal_kunjungan,
-                'selesai_kunjungan'             => $request->selesai_kunjungan,
-                'kegiatan_penugasan'            => $request->kegiatan_penugasan,
-                'pic_dikunjungi'                => $request->pic_dikunjungi,
-                'alamat_dikunjungi'             => $alamat_dikunjungi,
-                'transportasi'                  => $request->transportasi,
-                'kelas'                         => $request->kelas,
-                'budget_hotel'                  => $request->budget_hotel,
-                'makan'                         => $request->makan,
-                'status_penugasan'              => 0,
-                'tanggal_pengajuan'             => $request->tanggal_pengajuan,
-
-            ]);
-            $request->session()->flash('penugasansukses', 'Berhasil Membuat Perdin');
-            return redirect('/penugasan/dashboard');
-        } else {
-            $request->session()->flash('penugasangagal1');
-            return redirect('/penugasan/dashboard');
         }
-    }
-
-    public function penugasanEdit($id)
-    {
-        $user           = User::join('jabatans', 'jabatans.id', '=', 'users.jabatan_id')
-            ->join('departemens', 'departemens.id', '=', 'users.dept_id')
-            ->join('divisis', 'divisis.id', '=', 'users.divisi_id')
-            ->where('users.id', Auth()->user()->id)->first();
-        $penugasan      = Penugasan::join('jabatans', 'jabatans.id', 'penugasans.id_jabatan')
-            ->join('departemens', 'departemens.id', 'penugasans.id_departemen')
-            ->join('divisis', 'divisis.id', 'penugasans.id_divisi')
-            ->join('users', 'users.id', 'penugasans.id_diminta_oleh')
-            ->where('penugasans.id', $id)->first();
-        // $id_penugasan   = $id;
-        $master_lokasi = Lokasi::whereNotIn('kategori_kantor', ['all sps', 'all sp', 'all sip', 'all'])->get();
-        $diminta = User::where(['id' => $penugasan->id_diminta_oleh])->first();
-        $disahkan = User::where(['id' => $penugasan->id_disahkan_oleh])->first();
-        if ($user->kontrak_kerja == 'SP') {
-            // Bu fitri
-            $hrd = User::join('jabatans', 'jabatans.id', '=', 'users.jabatan_id')
-                ->join('bagians', 'bagians.id', '=', 'jabatans.bagian_id')
-                ->join('departemens', 'departemens.id', '=', 'users.dept_id')
-                ->join('divisis', 'divisis.id', '=', 'users.divisi_id')
-                // ->where('jabatans.holding', 'sp')
-                ->where('jabatans.nama_jabatan', 'MANAGER')
-                ->where('bagians.nama_bagian', 'HRD & GA')
-                ->where('divisis.nama_divisi', 'HRD & GA')
-                ->where('departemens.nama_departemen', 'HRD & GA')
-                ->select('users.*')
-                ->get();
-            $finance = User::join('jabatans', 'jabatans.id', '=', 'users.jabatan_id')
-                ->join('bagians', 'bagians.id', '=', 'jabatans.bagian_id')
-                ->join('divisis', 'divisis.id', '=', 'users.divisi_id')
-                ->join('departemens', 'departemens.id', '=', 'users.dept_id')
-                ->where('jabatans.holding', 'sp')
-                ->where('bagians.nama_bagian', 'CASH AND BANK (CASHIER)')
-                ->where('divisis.nama_divisi', 'FINANCE')
-                ->where('departemens.nama_departemen', 'FINANCE AND ACCOUNTING')
-                ->select('users.*')
-                ->get();
-        } else if ($user->kontrak_kerja == 'SPS') {
-            $hrd = User::join('jabatans', 'jabatans.id', '=', 'users.jabatan_id')
-                ->join('bagians', 'bagians.id', '=', 'jabatans.bagian_id')
-                ->join('departemens', 'departemens.id', '=', 'users.dept_id')
-                ->join('divisis', 'divisis.id', '=', 'users.divisi_id')
-                // ->where('jabatans.holding', 'sp')
-                ->where('jabatans.nama_jabatan', 'MANAGER')
-                ->where('bagians.nama_bagian', 'HRD & GA')
-                ->where('divisis.nama_divisi', 'HRD & GA')
-                ->where('departemens.nama_departemen', 'HRD & GA')
-                ->select('users.*')
-                ->get();
-            // diana sps
-            $finance = User::join('jabatans', 'jabatans.id', '=', 'users.jabatan_id')
-                ->join('bagians', 'bagians.id', '=', 'jabatans.bagian_id')
-                ->join('divisis', 'divisis.id', '=', 'users.divisi_id')
-                ->join('departemens', 'departemens.id', '=', 'users.dept_id')
-                ->where('jabatans.holding', 'sps')
-                ->where('bagians.nama_bagian', 'CASH AND BANK (CASHIER)')
-                ->where('divisis.nama_divisi', 'FINANCE')
-                ->where('departemens.nama_departemen', 'FINANCE AND ACCOUNTING')
-                ->select('users.*')
-                ->get();
-            // dd($finance);
-        } else {
-            $hrd = User::join('jabatans', 'jabatans.id', '=', 'users.jabatan_id')
-                ->join('bagians', 'bagians.id', '=', 'jabatans.bagian_id')
-                ->join('departemens', 'departemens.id', '=', 'users.dept_id')
-                ->join('divisis', 'divisis.id', '=', 'users.divisi_id')
-                // ->where('jabatans.holding', 'sp')
-                ->where('jabatans.nama_jabatan', 'MANAGER')
-                ->where('bagians.nama_bagian', 'HRD & GA')
-                ->where('divisis.nama_divisi', 'HRD & GA')
-                ->where('departemens.nama_departemen', 'HRD & GA')
-                ->select('users.*')
-                ->get();
-            // diana sps
-            $finance = User::join('jabatans', 'jabatans.id', '=', 'users.jabatan_id')
-                ->join('bagians', 'bagians.id', '=', 'jabatans.bagian_id')
-                ->join('divisis', 'divisis.id', '=', 'users.divisi_id')
-                ->join('departemens', 'departemens.id', '=', 'users.dept_id')
-                ->where('jabatans.holding', 'sip')
-                ->where('bagians.nama_bagian', 'CASH AND BANK (CASHIER)')
-                ->where('divisis.nama_divisi', 'FINANCE')
-                ->where('departemens.nama_departemen', 'FINANCE AND ACCOUNTING')
-                ->select('users.*')
-                ->get();
-        }
-
-        // dd($hrd);
-        return view('users.penugasan.edit', [
-            'penugasan'     => $penugasan,
-            'user'          => $user,
-            'diminta'          => $diminta,
-            'disahkan'          => $disahkan,
-            'hrd'          => $hrd,
-            'finance'          => $finance,
-            'id_penugasan'  => $id,
-            'master_lokasi'  => $master_lokasi,
-        ]);
-    }
-
-    public function penugasanUpdate(Request $request, $id)
-    {
-        if ($request->alamat_dikunjungi == NULL) {
-            $alamat_dikunjungi = $request->alamat_dikunjungi1;
-        } else {
-            $alamat_dikunjungi = $request->alamat_dikunjungi;
-        }
-        $folderPath     = public_path('signature/');
-        $image_parts    = explode(";base64,", $request->signature);
-        $image_type_aux = explode("image/", $image_parts[0]);
-        $image_type     = $image_type_aux[1];
-        $image_base64   = base64_decode($image_parts[1]);
-        $uniqid         = date('y-m-d') . '-' . uniqid();
-        $file           = $folderPath . $uniqid . '.' . $image_type;
-        file_put_contents($file, $image_base64);
-        $data                               = Penugasan::find($id);
-        $data->asal_kerja                   = $request->asal_kerja;
-        $data->penugasan                    = $request->penugasan;
-        $data->wilayah_penugasan                    = $request->wilayah_penugasan;
-        $data->tanggal_kunjungan            = $request->tanggal_kunjungan;
-        $data->selesai_kunjungan            = $request->selesai_kunjungan;
-        $data->kegiatan_penugasan           = $request->kegiatan_penugasan;
-        $data->pic_dikunjungi               = $request->pic_dikunjungi;
-        $data->alamat_dikunjungi            = $alamat_dikunjungi;
-        $data->transportasi                 = $request->transportasi;
-        $data->kelas                        = $request->kelas;
-        $data->budget_hotel                 = $request->budget_hotel;
-        $data->makan                        = $request->makan;
-        $data->id_user_hrd                  = User::where('id', $request->proses_hrd)->value('id');
-        $data->nama_hrd                     = User::where('id', $request->proses_hrd)->value('name');
-        $data->id_user_finance              = User::where('id', $request->proses_finance)->value('id');
-        $data->nama_finance                 = User::where('id', $request->proses_finance)->value('name');
-        $data->ttd_id_diajukan_oleh         = $uniqid;
-        $data->waktu_ttd_id_diajukan_oleh   = date('Y-m-d H:i:s');
-        $data->status_penugasan             = 1;
-        $data->save();
-        $request->session()->flash('updatesukses', 'Berhasil Membuat Perdin');
-        return redirect('/penugasan/dashboard');
-    }
-
-
-    public function approveShow($id)
-    {
-        $user       = DB::table('users')->join('jabatans', 'jabatans.id', '=', 'users.jabatan_id')
-            ->join('departemens', 'departemens.id', '=', 'users.dept_id')
-            ->join('divisis', 'divisis.id', '=', 'users.divisi_id')
-            ->where('users.id', Auth()->user()->id)->first();
-        $penugasan  = DB::table('penugasans')->join('jabatans', 'jabatans.id', 'penugasans.id_jabatan')
-            ->join('departemens', 'departemens.id', 'penugasans.id_departemen')
-            ->join('users', 'users.id', 'penugasans.id_user')
-            ->join('divisis', 'divisis.id', 'penugasans.id_divisi')
-            ->where('penugasans.id', $id)->first();
-        // dd($penugasan);
-        // $id_penugasan   = $id;
-        $diminta = User::where(['id' => $penugasan->id_diminta_oleh])->first();
-        $disahkan = User::where(['id' => $penugasan->id_disahkan_oleh])->first();
-        $hrd = User::where('id', 'e30d4a42-5562-415c-b1b6-f6b9ccc379a1')->first();
-        if ($user->kontrak_kerja == 'sp') {
-            // kasir SP
-            $finance = User::where('id', '436da676-5782-4f4e-ad50-52b45060430c')->first();
-        } else {
-            // diana sps
-            $finance = User::where('id', 'b709b754-7b00-4118-ab3f-e9b2760b08cf')->first();
-        }
-        $id_penugasan   = DB::table('penugasans')->where('id', $id)->first();
-        return view('users.penugasan.approve', [
-            'penugasan' => $penugasan,
-            'user'      => $user,
-            'id_penugasan'  => $id_penugasan,
-            'diminta'  => $diminta,
-            'disahkan'  => $disahkan,
-            'hrd'  => $hrd,
-            'finance'  => $finance,
-        ]);
-    }
-
-    public function approvePenugasan(Request $request, $id)
-    {
-        // dd($request->all());
-        $folderPath     = public_path('signature/');
-        $image_parts    = explode(";base64,", $request->signature);
-        $image_type_aux = explode("image/", $image_parts[0]);
-        $image_type     = $image_type_aux[1];
-        $image_base64   = base64_decode($image_parts[1]);
-        $uniqid         = date('Y-m-d') . '-' . uniqid();
-        $file           = $folderPath . $uniqid . '.' . $image_type;
-        file_put_contents($file, $image_base64);
-        $data                               = Penugasan::find($id);
-        if ($request->status_penugasan == 2) {
-            $data->ttd_id_diminta_oleh          = $uniqid;
-            $data->waktu_ttd_id_diminta_oleh    = date('Y-m-d H:i:s');
-        } else if ($request->status_penugasan == 3) {
-            $data->ttd_id_disahkan_oleh          = $uniqid;
-            $data->waktu_ttd_id_disahkan_oleh    = date('Y-m-d H:i:s');
-        } else if ($request->status_penugasan == 4) {
-            $data->ttd_proses_hrd          = $uniqid;
-            $data->waktu_ttd_proses_hrd    = date('Y-m-d H:i:s');
-        } else if ($request->status_penugasan == 5) {
-            $data->ttd_proses_finance          = $uniqid;
-            $data->waktu_ttd_proses_finance    = date('Y-m-d H:i:s');
-        }
-        $data->status_penugasan             = $request->status_penugasan;
-        $data->save();
-        $request->session()->flash('approveperdinsukses', 'Berhasil Approve Perjalanan Dinas');
-        return redirect('/home');
-    }
-    public function delete_penugasan(Request $request, $id)
-    {
-        // dd($id);
-        $query = Penugasan::where('id', $id)->delete();
-        $request->session()->flash('hapussukses', 'Berhasil MembuatHapus Perdin');
-        return redirect('penugasan/dashboard');
     }
     public function cetak_form_penugasan($id)
     {
-        $jabatan = Jabatan::join('users', function ($join) {
-            $join->on('jabatans.id', '=', 'users.jabatan_id');
-            $join->orOn('jabatans.id', '=', 'users.jabatan1_id');
-            $join->orOn('jabatans.id', '=', 'users.jabatan2_id');
-            $join->orOn('jabatans.id', '=', 'users.jabatan3_id');
-            $join->orOn('jabatans.id', '=', 'users.jabatan4_id');
-        })->where('users.id', Auth::user()->id)->get();
-        $divisi = Divisi::join('users', function ($join) {
-            $join->on('divisis.id', '=', 'users.divisi_id');
-            $join->orOn('divisis.id', '=', 'users.divisi1_id');
-            $join->orOn('divisis.id', '=', 'users.divisi2_id');
-            $join->orOn('divisis.id', '=', 'users.divisi3_id');
-            $join->orOn('divisis.id', '=', 'users.divisi4_id');
-        })->where('users.id', Auth::user()->id)->get();
-        $cuti = Pen::where('id', $id)->first();
-        $departemen = Departemen::where('id', Auth::user()->dept_id)->first();
-        $pengganti = User::where('id', $cuti->user_id_backup)->first();
+        $penugasan = Penugasan::join('users', 'users.id', 'penugasans.id_user')->where('penugasans.id', $id)->first();
+        $penugasan1 = Penugasan::join('users', 'users.id', 'penugasans.id_diminta_oleh')->where('penugasans.id', $id)->first();
+        $penugasan2 = Penugasan::join('users', 'users.id', 'penugasans.id_disahkan_oleh')->where('penugasans.id', $id)->first();
+        $departemen = Departemen::where('id', $penugasan->id_departemen)->first();
+        $divisi = Divisi::where('id', $penugasan->id_divisi)->first();
+        $jabatan = Jabatan::where('id', $penugasan->id_jabatan)->first();
+        $departemen1 = Departemen::where('id', $penugasan1->dept_id)->first();
+        $divisi1 = Divisi::where('id', $penugasan1->divisi_id)->first();
+        $jabatan1 = Jabatan::where('id', $penugasan1->jabatan_id)->first();
+        $departemen2 = Departemen::where('id', $penugasan2->dept_id)->first();
+        $divisi2 = Divisi::where('id', $penugasan2->divisi_id)->first();
+        $jabatan2 = Jabatan::where('id', $penugasan2->jabatan_id)->first();
+        $pengganti = User::where('id', $penugasan->user_id_backup)->first();
         // dd(Cuti::with('KategoriCuti')->with('User')->where('cutis.id', $id)->where('cutis.status_cuti', '3')->first());
         $data = [
             'title' => 'domPDF in Laravel 10',
-            'data_cuti' => Cuti::with('KategoriCuti')->with('User')->where('cutis.id', $id)->where('cutis.status_cuti', '3')->first(),
+            'data_penugasan' => Penugasan::with('User')->where('penugasans.id', $id)->where('penugasans.status_penugasan', '5')->first(),
             'jabatan' => $jabatan,
             'divisi' => $divisi,
             'departemen' => $departemen,
+            'jabatan1' => $jabatan1,
+            'divisi1' => $divisi1,
+            'departemen1' => $departemen1,
+            'jabatan2' => $jabatan2,
+            'divisi2' => $divisi2,
+            'departemen2' => $departemen2,
             'pengganti' => $pengganti,
         ];
-        $pdf = PDF::loadView('users/cuti/form_cuti', $data);
-        return $pdf->download('FORM_PENGAJUAN_CUTI_' . Auth::user()->name . '_' . date('Y-m-d H:i:s') . '.pdf');
+        $pdf = PDF::loadView('admin/penugasan/form_penugasan', $data)->setPaper('F4', 'landscape');;
+        return $pdf->stream('FORM_PENGAJUAN_PENUGASAN_' . Auth::user()->name . '_' . date('Y-m-d H:i:s') . '.pdf');
     }
 }

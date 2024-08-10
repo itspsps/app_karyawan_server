@@ -250,11 +250,11 @@
                             name: 'btn_detail'
                         },
                         {
-                            data: "id",
-
+                            data: "no",
                             render: function(data, type, row, meta) {
                                 return meta.row + meta.settings._iDisplayStart + 1;
                             }
+
                         },
                         {
                             data: 'nomor_identitas_karyawan',
@@ -294,9 +294,7 @@
                         },
 
                     ],
-                    order: [
-                        [3, 'asc']
-                    ]
+
                 });
             }
             var table1 = $('#table_rekapdata1').DataTable({

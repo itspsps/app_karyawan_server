@@ -3,13 +3,10 @@
 @section('content')
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
-<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-<link type="text/css" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/south-street/jquery-ui.css" rel="stylesheet">
-<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
-<script type="text/javascript" src="http://keith-wood.name/js/jquery.signature.js"></script>
-
-<link rel="stylesheet" type="text/css" href="http://keith-wood.name/css/jquery.signature.css">
-
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<link type="text/css" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/south-street/jquery-ui.css" rel="stylesheet">
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 <style>
     .kbw-signature {
         width: fit-content;
@@ -95,7 +92,7 @@
 
     <!-- Modal -->
     <div class="modal fade" id="modal_pengajuan_cuti">
-        <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-dialog modal-dialog-centered" role="document" aria-hidden="true">
             <!-- Modal content-->
             <div class="modal-content">
                 <div class="modal-header">
@@ -116,14 +113,12 @@
                             {{-- <input type="hidden" name="jabatan" value="{{ $user->jabatan_id }}"> --}}
                             {{-- <input type="hidden" name="divisi" value="{{ $user->divisi_id }}" id=""> --}}
                             <input type="hidden" name="id_user_atasan" value="{{ $getUserAtasan->id }}">
-                            <input type="hidden" name="id_user_atasan2" value="{{ $getUseratasan2->id }}">
                             <input type="hidden" name="nik" value="{{ Auth::user()->id }}">
                             <input type="hidden" name="id_jabatan" value="{{ $user->jabatan_id }}">
                             <input type="hidden" name="id_departemen" value="{{ $user->dept_id }}">
                             <input type="hidden" name="id_divisi" value="{{ $user->divisi_id }}">
                             <input type="hidden" name="id_diajukan_oleh" value="{{ Auth::user()->id }}">
-                            <input type="hidden" name="id_diminta_oleh" value="{{ $getUserAtasan->id }}">
-                            <input type="hidden" name="id_disahkan_oleh" value="{{ $getUseratasan2->id }}">
+                            <input type="hidden" name="id_disahkan_oleh" value="{{ $getUserAtasan->id }}">
                             <input type="hidden" name="proses_hrd" value="proses hrd">
                             <input type="hidden" name="proses_finance" value="proses finance">
                             <input type="hidden" name="tanggal_pengajuan" value="{{ date('Y-m-d') }}">
@@ -150,7 +145,7 @@
                         </div>
                         <div class="input-group">
                             <input type="text" class="form-control" value="Asal Kerja" readonly>
-                            <select class="form-control" name="asal_kerja" required>
+                            <select class="form-control" id="asal_kerja" name="asal_kerja" required>
                                 <option value="">Pilih Asal Kerja...</option>
                                 @foreach($master_lokasi as $lokasi)
                                 <option value="{{$lokasi->lokasi_kantor}}">{{$lokasi->lokasi_kantor}}</option>
@@ -175,7 +170,7 @@
                         </div>
                         <div id="alamat_dikunjungi" class="input-group">
                             <input type="text" class="form-control" value="Lokasi Kantor" readonly>
-                            <select class="form-control" name="alamat_dikunjungi" style="font-weight: bold">
+                            <select class="form-control" id="alamat_kunjungan" name="alamat_dikunjungi" style="font-weight: bold">
                                 <option selected disabled value="">-- Pilih Kantor --</option>
                                 @foreach($lokasi_kantor as $lokasi)
                                 <option value="{{$lokasi->lokasi_kantor}}">{{$lokasi->lokasi_kantor}}</option>
@@ -230,7 +225,7 @@
                                 <option value="400.000 sd 500.000">Rp 400.000 sd 500.000</option>
                                 <option value="300.000 sd 400.000">Rp 300.000 sd 400.000</option>
                                 <option value="200.000 sd 300.000">Rp 200.000 sd 300.000</option>
-                                <option value="Kost Harian < Rp 200.000">Kost Harian < Rp 200.000</option>
+                                <option value="Kost Harian < 200.000">Kost Harian < Rp 200.000</option>
                                 <option value="0">Tidak Ada</option>
                             </select>
                         </div>
@@ -242,6 +237,15 @@
                                 <option value="15.000">Rp 15.000</option>
                             </select>
                         </div>
+                        <div class="input-group">
+                            <input type="text" class="form-control" value="Biaya Ditanggung" readonly>
+                            <select class="form-control" id="biaya_ditanggung_oleh" name="biaya_ditanggung_oleh" required>
+                                <option value="">Pilih ..</option>
+                                @foreach($master_lokasi as $lokasi)
+                                <option value="{{$lokasi->lokasi_kantor}}">{{$lokasi->lokasi_kantor}}</option>
+                                @endforeach
+                            </select>
+                        </div>
                         <hr>
                         <div class="input-group">
                             <input type="text" class="form-control" value="Diajukan oleh" readonly>
@@ -249,11 +253,27 @@
                         </div>
                         <div class="input-group">
                             <input type="text" class="form-control" value="Diminta oleh" readonly>
-                            <input type="text" class="form-control" name="diminta_oleh" value="{{ $getUserAtasan->name }}" readonly>
+                            <select name="diminta_oleh_kategori" id="diminta_oleh_kategori" class="form-control">
+                                <option value="">Pilih</option>
+                                <option value="Atasan">Atasan</option>
+                                <option value="Departemen Lain">Departemen Lain</option>
+                            </select>
+                        </div>
+                        <div class="input-group">
+                            <select name="diminta_oleh_departemen" id="diminta_oleh_departemen" class="form-control">
+                                <option value="">Pilih</option>
+                                @foreach($departemen as $departemen)
+                                <option value="{{$departemen->nama_departemen}}">{{$departemen->nama_departemen}}</option>
+                                @endforeach
+                            </select>
+                            <select name="diminta_oleh" id="diminta_oleh" class="form-control">
+                                <!-- <option value="">Pilih</option> -->
+
+                            </select>
                         </div>
                         <div class="input-group">
                             <input type="text" class="form-control" value="Disahkan oleh" readonly>
-                            <input type="text" class="form-control" name="disahkan_oleh" value="{{ $getUseratasan2->name }}" readonly>
+                            <input type="text" class="form-control" name="disahkan_oleh" value="{{ $getUserAtasan->name }}" readonly>
                         </div>
                         <div class="input-group">
                             <input type="text" class="form-control" value="Diproses HRD" readonly>
@@ -268,9 +288,6 @@
                             <input type="text" class="form-control" value="Diproses Finance" readonly>
                             <select name="proses_finance" id="proses_finance" class="form-control">
                                 <option value="">Pilih</option>
-                                @foreach($finance as $finance)
-                                <option value="{{$finance->id}}">{{$finance->name}}</option>
-                                @endforeach
                             </select>
                         </div>
                     </div>
@@ -393,7 +410,10 @@
 </div>
 @endsection
 @section('js')
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.min.js"></script>
 <script type="text/javascript">
+    var CSRF_TOKEN = $('meta[name="csrf-token"]').attr('content');
     $(document).ready(function() {
         $('#alamat_dikunjungi').hide();
         $('#alamat_dikunjungi1').hide();
@@ -406,6 +426,112 @@
                 $('#alamat_dikunjungi1').show();
                 $('#alamat_dikunjungi').hide();
             }
+        });
+        $('#diminta_oleh_departemen').hide();
+        $('#diminta_oleh').hide();
+        $('#diminta_oleh_kategori').on('change', function() {
+            let value = $(this).val();
+            let level = '{{$data_user->level_jabatan}}'
+            let dept = '{{$data_user->dept_id}}'
+            if (value == 'Atasan') {
+                $.ajax({
+                    type: 'GET',
+                    url: "{{url('penugasan/get_diminta')}}",
+                    data: {
+                        dept: dept,
+                        level: level,
+
+                    },
+                    cache: false,
+
+                    success: function(msg) {
+
+                        $('#diminta_oleh').html(msg);
+                    },
+                    error: function(data) {
+                        console.log('error:', data)
+                    },
+
+                })
+                $('#diminta_oleh').show();
+                $('#diminta_oleh_departemen').hide();
+            } else {
+                $('#diminta_oleh').hide();
+                $('#diminta_oleh_departemen').show();
+            }
+        });
+        $('#diminta_oleh_departemen').on('change', function() {
+            let value = $(this).val();
+            let level = '{{$data_user->level_jabatan}}';
+            $('#diminta_oleh').show();
+            $.ajax({
+                type: 'GET',
+                url: "{{url('penugasan/get_diminta_departemen')}}",
+                data: {
+                    value: value,
+                    level: level,
+
+                },
+                cache: false,
+
+                success: function(msg) {
+
+                    $('#diminta_oleh').html(msg);
+                },
+                error: function(data) {
+                    console.log('error:', data)
+                },
+
+            })
+
+        });
+        $('#biaya_ditanggung_oleh').on('change', function() {
+            let value = $(this).val();
+            $('#diminta_oleh').show();
+            $.ajax({
+                type: 'GET',
+                url: "{{url('penugasan/get_finance')}}",
+                data: {
+                    value: value,
+
+                },
+                cache: false,
+
+                success: function(msg) {
+
+                    $('#proses_finance').html(msg);
+                },
+                error: function(data) {
+                    console.log('error:', data)
+                },
+
+            })
+
+        });
+        $('#alamat_kunjungan').on('change', function() {
+            let id = $(this).val();
+            let asal_kerja = $('#asal_kerja').val();
+            let level = '{{$user->level_jabatan}}';
+            let url = "{{url('penugasan/get_diminta')}}";
+            $.ajax({
+                type: 'GET',
+                url: "{{url('penugasan/get_diminta')}}",
+                data: {
+                    id: id,
+                    level: level,
+                    asal_kerja: asal_kerja,
+                },
+                cache: false,
+
+                success: function(msg) {
+
+                    $('#diminta_oleh').html(msg);
+                },
+                error: function(data) {
+                    console.log('error:', data)
+                },
+
+            })
         });
     });
 </script>

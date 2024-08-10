@@ -128,19 +128,91 @@
                             </div>
                         </div>
                     </div>
-                    <div class="modal fade" id="modal_lihat_ttd_atasan" data-bs-backdrop="static" tabindex="-1">
+                    <div class="modal fade" id="modal_lihat_ttd_diminta" data-bs-backdrop="static" tabindex="-1">
                         <div class="modal-dialog modal-content">
                             <div class="modal-header">
-                                <h4 class="modal-title" id="backDropModalTitle">TTD Atasan</h4>
+                                <h4 class="modal-title" id="backDropModalTitle">TTD Diminta</h4>
                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
                             <div class="modal-body">
                                 <div class="row g-2">
                                     <div class="col-lg-12">
                                         <div class="text-center">
-                                            <img id="ttd_atasan" src="" width="200" height="200" alt="">
-                                            <h6 id="nama_atasan"></h6>
-                                            <h6 id="tgl_atasan"></h6>
+                                            <img id="ttd_diminta" src="" width="200" height="200" alt="">
+                                            <h6 id="nama_diminta"></h6>
+                                            <h6 id="tgl_diminta"></h6>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+                                    Close
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal fade" id="modal_lihat_ttd_disahkan" data-bs-backdrop="static" tabindex="-1">
+                        <div class="modal-dialog modal-content">
+                            <div class="modal-header">
+                                <h4 class="modal-title" id="backDropModalTitle">TTD Disahkan</h4>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="row g-2">
+                                    <div class="col-lg-12">
+                                        <div class="text-center">
+                                            <img id="ttd_disahkan" src="" width="70%" height="70%" alt="">
+                                            <h6 id="nama_disahkan"></h6>
+                                            <h6 id="tgl_disahkan"></h6>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+                                    Close
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal fade" id="modal_lihat_ttd_hrd" data-bs-backdrop="static" tabindex="-1">
+                        <div class="modal-dialog modal-content">
+                            <div class="modal-header">
+                                <h4 class="modal-title" id="backDropModalTitle">TTD HRD</h4>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="row g-2">
+                                    <div class="col-lg-12">
+                                        <div class="text-center">
+                                            <img id="ttd_hrd" src="" width="70%" height="70%" alt="">
+                                            <h6 id="nama_hrd"></h6>
+                                            <h6 id="tgl_hrd"></h6>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+                                    Close
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal fade" id="modal_lihat_ttd_finance" data-bs-backdrop="static" tabindex="-1">
+                        <div class="modal-dialog modal-content">
+                            <div class="modal-header">
+                                <h4 class="modal-title" id="backDropModalTitle">TTD HRD</h4>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="row g-2">
+                                    <div class="col-lg-12">
+                                        <div class="text-center">
+                                            <img id="ttd_finance" src="" width="70%" height="70%" alt="">
+                                            <h6 id="nama_finance"></h6>
+                                            <h6 id="tgl_finance"></h6>
                                         </div>
                                     </div>
                                 </div>
@@ -179,16 +251,12 @@
                                 <th class="text-center">TTD&nbsp;Pengajuan</th>
                                 <th class="text-center">Nama&nbsp;Permintaan</th>
                                 <th class="text-center">TTD&nbsp;Permintaan</th>
-                                <th class="text-center">Nama&nbsp;Atasan</th>
-                                <th class="text-center">TTD&nbsp;Approve&nbsp;Atasan</th>
+                                <th class="text-center">Nama&nbsp;Disahkan</th>
+                                <th class="text-center">TTD&nbsp;Approve&nbsp;Disahkan</th>
                                 <th class="text-center">Nama&nbsp;Proses&nbsp;HRD</th>
                                 <th class="text-center">TTD&nbsp;Proses&nbsp;HRD</th>
-                                <th class="text-center">Catatan&nbsp;Approve&nbsp;1</th>
-                                <th class="text-center">Waktu&nbsp;Approve&nbsp;1</th>
-                                <th class="text-center">Nama&nbsp;Atasan&nbsp;2</th>
-                                <th class="text-center">TTD&nbsp;Approve&nbsp;2</th>
-                                <th class="text-center">Catatan&nbsp;Approve&nbsp;2</th>
-                                <th class="text-center">Waktu&nbsp;Approve&nbsp;2</th>
+                                <th class="text-center">Nama&nbsp;Proses&nbsp;Finance</th>
+                                <th class="text-center">TTD&nbsp;Proses&nbsp;Finance</th>
                                 <th class="text-center">Status</th>
                             </tr>
                         </thead>
@@ -245,8 +313,8 @@
                             name: 'no_form_penugasan'
                         },
                         {
-                            data: 'nama_user',
-                            name: 'nama_user'
+                            data: 'nama_diajukan',
+                            name: 'nama_diajukan'
                         },
                         {
                             data: 'nama_departemen',
@@ -261,76 +329,96 @@
                             name: 'nama_jabatan'
                         },
                         {
-                            data: 'nama_cuti',
-                            name: 'nama_cuti'
+                            data: 'asal_kerja',
+                            name: 'asal_kerja'
                         },
                         {
-                            data: 'tanggal',
-                            name: 'tanggal'
+                            data: 'tanggal_pengajuan',
+                            name: 'tanggal_pengajuan'
                         },
                         {
-                            data: 'tanggal_mulai',
-                            name: 'tanggal_mulai'
+                            data: 'penugasan',
+                            name: 'penugasan'
                         },
                         {
-                            data: 'tanggal_selesai',
-                            name: 'tanggal_selesai'
+                            data: 'wilayah_penugasan',
+                            name: 'wilayah_penugasan'
                         },
                         {
-                            data: 'tanggal_masuk',
-                            name: 'tanggal_masuk'
+                            data: 'alamat_dikunjungi',
+                            name: 'alamat_dikunjungi'
                         },
                         {
-                            data: 'total_cuti',
-                            name: 'total_cuti'
+                            data: 'pic_dikunjungi',
+                            name: 'pic_dikunjungi'
                         },
                         {
-                            data: 'keterangan_cuti',
-                            name: 'keterangan_cuti'
+                            data: 'tanggal_kunjungan',
+                            name: 'tanggal_kunjungan'
                         },
                         {
-                            data: 'nama_user_backup',
-                            name: 'nama_user_backup'
+                            data: 'selesai_kunjungan',
+                            name: 'selesai_kunjungan'
+                        },
+                        {
+                            data: 'kegiatan_penugasan',
+                            name: 'kegiatan_penugasan'
+                        },
+                        {
+                            data: 'transportasi',
+                            name: 'transportasi'
+                        },
+                        {
+                            data: 'kelas',
+                            name: 'kelas'
+                        },
+                        {
+                            data: 'makan',
+                            name: 'makan'
+                        },
+                        {
+                            data: 'budget_hotel',
+                            name: 'budget_hotel'
                         },
                         {
                             data: 'ttd_user',
                             name: 'ttd_user'
                         },
                         {
-                            data: 'approve_atasan',
-                            name: 'approve_atasan'
+                            data: 'nama_diminta',
+                            name: 'nama_diminta'
                         },
                         {
-                            data: 'ttd_atasan',
-                            name: 'ttd_atasan'
+                            data: 'ttd_diminta',
+                            name: 'ttd_diminta'
                         },
                         {
-                            data: 'catatan',
-                            name: 'catatan'
+                            data: 'nama_disahkan',
+                            name: 'nama_disahkan'
                         },
                         {
-                            data: 'waktu_approve',
-                            name: 'waktu_approve'
+                            data: 'ttd_disahkan',
+                            name: 'ttd_disahkan'
                         },
                         {
-                            data: 'approve_atasan2',
-                            name: 'approve_atasan2'
+                            data: 'nama_hrd',
+                            name: 'nama_hrd'
                         },
                         {
-                            data: 'ttd_atasan2',
-                            name: 'ttd_atasan2'
+                            data: 'ttd_proses_hrd',
+                            name: 'ttd_proses_hrd'
                         },
                         {
-                            data: 'catatan2',
-                            name: 'catatan2'
+                            data: 'nama_finance',
+                            name: 'nama_finance'
                         },
                         {
-                            data: 'waktu_approve2',
-                            name: 'waktu_approve2'
+                            data: 'ttd_proses_finance',
+                            name: 'ttd_proses_finance'
                         },
                         {
-                            data: 'status_cuti',
-                            name: 'status_cuti'
+                            data: 'status_penugasan',
+                            name: 'status_penugasan'
                         },
 
                     ],
@@ -339,134 +427,7 @@
                         [1, 'ASC'],
                     ]
                 });
-                var table1 = $('#table_izin_diluar_cuti_tahunan').DataTable({
-                    "scrollY": true,
-                    "scrollX": true,
-                    autoWidth: false,
-                    responsive: true,
-                    processing: true,
-                    serverSide: true,
-                    ajax: {
-                        url: "{{ url('cuti/datatable-diluar_cuti_tahunan') }}" + '/' + holding,
-                    },
-                    columns: [{
-                            data: "id",
 
-                            render: function(data, type, row, meta) {
-                                return meta.row + meta.settings._iDisplayStart + 1;
-                            }
-                        },
-                        {
-                            data: 'no_form_cuti',
-                            name: 'no_form_cuti'
-                        },
-                        {
-                            data: 'nama_user',
-                            name: 'nama_user'
-                        },
-                        {
-                            data: 'nama_departemen',
-                            name: 'nama_departemen'
-                        },
-                        {
-                            data: 'nama_divisi',
-                            name: 'nama_divisi'
-                        },
-                        {
-                            data: 'nama_jabatan',
-                            name: 'nama_jabatan'
-                        },
-                        {
-                            data: 'nama_cuti',
-                            name: 'nama_cuti'
-                        },
-                        {
-                            data: 'kategori_cuti',
-                            name: 'kategori_cuti'
-                        },
-                        {
-                            data: 'tanggal',
-                            name: 'tanggal'
-                        },
-                        {
-                            data: 'tanggal_mulai',
-                            name: 'tanggal_mulai'
-                        },
-                        {
-                            data: 'tanggal_selesai',
-                            name: 'tanggal_selesai'
-                        },
-                        {
-                            data: 'tanggal_masuk',
-                            name: 'tanggal_masuk'
-                        },
-                        {
-                            data: 'total_cuti',
-                            name: 'total_cuti'
-                        },
-                        {
-                            data: 'keterangan_cuti',
-                            name: 'keterangan_cuti'
-                        },
-                        {
-                            data: 'nama_user_backup',
-                            name: 'nama_user_backup'
-                        },
-                        {
-                            data: 'ttd_user',
-                            name: 'ttd_user'
-                        },
-                        {
-                            data: 'approve_atasan',
-                            name: 'approve_atasan'
-                        },
-                        {
-                            data: 'ttd_atasan',
-                            name: 'ttd_atasan'
-                        },
-                        {
-                            data: 'catatan',
-                            name: 'catatan'
-                        },
-                        {
-                            data: 'waktu_approve',
-                            name: 'waktu_approve'
-                        },
-                        {
-                            data: 'approve_atasan2',
-                            name: 'approve_atasan2'
-                        },
-                        {
-                            data: 'ttd_atasan2',
-                            name: 'ttd_atasan2'
-                        },
-                        {
-                            data: 'catatan2',
-                            name: 'catatan2'
-                        },
-                        {
-                            data: 'waktu_approve2',
-                            name: 'waktu_approve2'
-                        },
-                        {
-                            data: 'status_cuti',
-                            name: 'status_cuti'
-                        },
-
-                    ],
-                    order: [
-                        [2, 'ASC'],
-                        [1, 'ASC'],
-                    ]
-                });
-                document.querySelectorAll('a[data-bs-toggle="tab"]').forEach((el) => {
-                    el.addEventListener('shown.bs.tab', () => {
-                        DataTable.tables({
-                            visible: true,
-                            api: true
-                        }).columns.adjust();
-                    });
-                });
             }
 
         });
@@ -494,15 +455,48 @@
             $('#tgl_pengajuan').html(tgl);
 
         });
-        $(document).on("click", "#btn_lihat_ttd_atasan", function() {
-            $('#modal_lihat_ttd_atasan').modal('show');
+        $(document).on("click", "#btn_lihat_ttd_diminta", function() {
+            $('#modal_lihat_ttd_diminta').modal('show');
             let id = $(this).data("id");
             let tgl = $(this).data("tgl");
             let nama = $(this).data("nama");
             let ttd = $(this).data("ttd");
-            $('#ttd_atasan').attr('src', 'https://karyawan.sumberpangan.store/laravel/public/signature/' + ttd + '.png');
-            $('#nama_atasan').html(nama);
-            $('#tgl_atasan').html(tgl);
+            $('#ttd_diminta').attr('src', 'https://karyawan.sumberpangan.store/laravel/public/signature/' + ttd + '.png');
+            $('#nama_diminta').html(nama);
+            $('#tgl_diminta').html(tgl);
+
+        });
+        $(document).on("click", "#btn_lihat_ttd_disahkan", function() {
+            $('#modal_lihat_ttd_disahkan').modal('show');
+            let id = $(this).data("id");
+            let tgl = $(this).data("tgl");
+            let nama = $(this).data("nama");
+            let ttd = $(this).data("ttd");
+            $('#ttd_disahkan').attr('src', 'https://karyawan.sumberpangan.store/laravel/public/signature/' + ttd + '.png');
+            $('#nama_disahkan').html(nama);
+            $('#tgl_disahkan').html(tgl);
+
+        });
+        $(document).on("click", "#btn_lihat_ttd_proses_hrd", function() {
+            $('#modal_lihat_ttd_hrd').modal('show');
+            let id = $(this).data("id");
+            let tgl = $(this).data("tgl");
+            let nama = $(this).data("nama");
+            let ttd = $(this).data("ttd");
+            $('#ttd_hrd').attr('src', 'https://karyawan.sumberpangan.store/laravel/public/signature/' + ttd + '.png');
+            $('#nama_hrd').html(nama);
+            $('#tgl_hrd').html(tgl);
+
+        });
+        $(document).on("click", "#btn_lihat_ttd_proses_finance", function() {
+            $('#modal_lihat_ttd_finance').modal('show');
+            let id = $(this).data("id");
+            let tgl = $(this).data("tgl");
+            let nama = $(this).data("nama");
+            let ttd = $(this).data("ttd");
+            $('#ttd_finance').attr('src', 'https://karyawan.sumberpangan.store/laravel/public/signature/' + ttd + '.png');
+            $('#nama_finance').html(nama);
+            $('#tgl_finance').html(tgl);
 
         });
         $(document).on("click", "#btn_izin_0", function() {

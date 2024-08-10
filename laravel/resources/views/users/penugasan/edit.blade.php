@@ -85,7 +85,7 @@ APPS | KARYAWAN - SP
             <input type="text" class="form-control" name="" value="{{ $penugasan->nama_jabatan }}" style="font-weight: bold" readonly required>
         </div>
         <div class="input-group">
-            <input type="text" class="form-control" value="Divisi" readonly>
+            <input type="text" class="form-control" value="Depaartemen" readonly>
             <input type="text" class="form-control" name="" value="{{ $penugasan->nama_departemen }}" style="font-weight: bold" readonly required>
         </div>
         <div class="input-group">
