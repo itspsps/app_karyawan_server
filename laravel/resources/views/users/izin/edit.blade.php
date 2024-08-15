@@ -18,6 +18,49 @@
         cursor: default;
     }
 </style>
+<div class="head-details">
+    <div class="container">
+        <div class="dz-info col-12">
+            <span class="location d-block text-left">Form Izin&nbsp;
+            </span>
+            @if(auth()->user()->kategori=='Karyawan Bulanan')
+            <h6 class="title">@if($user->kontrak_kerja == 'SP')
+                CV. SUMBER PANGAN
+                @elseif($user->kontrak_kerja == 'SPS')
+                PT. SURYA PANGAN SEMESTA
+                @elseif($user->kontrak_kerja == 'SIP')
+                CV. SURYA INTI PANGAN
+                @endif</h6>
+            {{-- @foreach ($user  as $dep) --}}
+            <h6 class="title">Department of "{{ $user->nama_departemen }}"</h6>
+            {{-- @endforeach --}}
+            @elseif(auth()->user()->kategori=='Karyawan Harian')
+            <h6 class="title">{{auth()->user()->penempatan_kerja}}
+            </h6>
+            @endif
+        </div>
+        <div class="dz-media media-65">
+            <img src="assets/images/logo/logo.svg" alt="">
+        </div>
+    </div>
+</div>
+
+<div class="fixed-content p-0">
+    <div class="container">
+        <div class="main-content">
+            <div class="left-content">
+                <a id="btn_klik" href="{{url('/izin/dashboard')}}" class="btn-back">
+                    <svg width="18" height="18" viewBox="0 0 10 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M9.03033 0.46967C9.2966 0.735936 9.3208 1.1526 9.10295 1.44621L9.03033 1.53033L2.561 8L9.03033 14.4697C9.2966 14.7359 9.3208 15.1526 9.10295 15.4462L9.03033 15.5303C8.76406 15.7966 8.3474 15.8208 8.05379 15.6029L7.96967 15.5303L0.96967 8.53033C0.703403 8.26406 0.679197 7.8474 0.897052 7.55379L0.96967 7.46967L7.96967 0.46967C8.26256 0.176777 8.73744 0.176777 9.03033 0.46967Z" fill="#a19fa8" />
+                    </svg>
+                </a>
+                <h5 class="mb-0">Back</h5>
+            </div>
+            <div class="mid-content">
+            </div>
+        </div>
+    </div>
+</div>
 <div class="container">
     @if($jam_kerja=='' || $jam_kerja==NULL)
     <div id="alert_kontrak_kerja_null" class="alert alert-danger light alert-lg alert-dismissible fade show">
@@ -251,7 +294,7 @@
         </div>
         @else
         <div class="text-center" style="margin: 0 auto;">
-            <a href="{{ url('izin/dashboard') }}" class="btn btn-sm btn-primary btn-rounded">
+            <a id="btn_klik" href="{{ url('izin/dashboard') }}" class="btn btn-sm btn-primary btn-rounded">
                 <i class="fa fa-arrow-left" aria-hidden="true"> </i>
                 &nbsp; Kembali
             </a>
@@ -266,6 +309,7 @@
 <script type="text/javascript" src="{{ asset('assets_ttd/assets/signature.js') }}"></script>
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
 <script>
     var wrapper = document.getElementById("signature-pad");
     var clearButton = wrapper.querySelector("[data-action=clear]");
@@ -575,6 +619,34 @@
 
             $("#modal_surat_dokter").modal("show");
 
+        });
+    });
+</script>
+<script>
+    $(document).on('click', '#btn_klik', function(e) {
+        Swal.fire({
+            allowOutsideClick: false,
+            background: 'transparent',
+            html: ' <div class="spinner-grow text-primary spinner-grow-sm me-2" role="status"></div><div class="spinner-grow text-primary spinner-grow-sm me-2" role="status"></div><div class="spinner-grow text-primary spinner-grow-sm me-2" role="status"></div>',
+            showCancelButton: false,
+            showConfirmButton: false,
+            onBeforeOpen: () => {
+                // Swal.showLoading()
+            },
+        });
+    });
+</script>
+<script>
+    $(document).on('click', '#btn_klik', function(e) {
+        Swal.fire({
+            allowOutsideClick: false,
+            background: 'transparent',
+            html: ' <div class="spinner-grow text-primary spinner-grow-sm me-2" role="status"></div><div class="spinner-grow text-primary spinner-grow-sm me-2" role="status"></div><div class="spinner-grow text-primary spinner-grow-sm me-2" role="status"></div>',
+            showCancelButton: false,
+            showConfirmButton: false,
+            onBeforeOpen: () => {
+                // Swal.showLoading()
+            },
         });
     });
 </script>

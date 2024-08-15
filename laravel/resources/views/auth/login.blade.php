@@ -37,16 +37,7 @@
 <body>
     <div class="page-wraper">
 
-        <!-- Preloader -->
-        <div id="preloader">
-            <div class="spinner-grow text-primary spinner-grow-sm me-2" role="status">
-            </div>
-            <div class="spinner-grow text-primary spinner-grow-sm me-2" role="status">
-            </div>
-            <div class="spinner-grow text-primary spinner-grow-sm me-2" role="status">
-            </div>
-        </div>
-        <!-- Preloader end-->
+
 
         <!-- Page Content -->
         <div class="page-content">
@@ -116,20 +107,20 @@
                         @csrf
                         <div class="input-group">
                             <input type="text" id="username" class="form-control @error('username') is-invalid @enderror" name="username" value="{{ old('username') }}" autocomplete="username" autofocus placeholder="Username">
-                            @error('username')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
                         </div>
+                        @error('username')
+                        <p class="alert alert-danger">{{$message}}</p>
+                        @enderror
                         <div class="input-group">
                             <input type="password" name="password" id="dz-password" id="password" class="form-control be-0 @error('password') is-invalid @enderror" placeholder="***********">
                             <span class="input-group-text show-pass">
                                 <i class="fa fa-eye-slash"></i>
                                 <i class="fa fa-eye"></i>
                             </span>
-                            @error('password')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
                         </div>
+                        @error('password')
+                        <p class="alert alert-danger">{{$message}}</p>
+                        @enderror
                         <div class="form-check">
                             <input class="form-check-input" type="checkbox" value="1" name="remember" id="remember">
                             <label class="form-check-label" for="flexCheckDefault">
@@ -138,7 +129,7 @@
                         </div>
                         <a href="forgot-password.html" class="btn-link d-block text-center">Forgot your password?</a>
                         <div class="input-group">
-                            <button class="btn mt-2 btn-primary w-100 btn-rounded" type="submit">Login</button>
+                            <button id="btn_login" class="btn mt-2 btn-primary w-100 btn-rounded" type="submit">Login</button>
                         </div>
                     </form>
                     <div class="text-center p-tb20">
@@ -238,6 +229,7 @@
     <script src="{{ asset('assets/assets_users/js/settings.js') }}"></script>
     <script src="{{ asset('assets/assets_users/js/custom.js') }}"></script>
     <script src="{{asset('assets/assets_users/vendor/swiper/swiper-bundle.min.js')}}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
     <script>
         $("document").ready(function() {
             // console.log('ok');
@@ -254,6 +246,18 @@
                 $("#alert_login_error").remove();
             }, 7000); // 7 secs
 
+        });
+        $(document).on('click', '#btn_login', function(e) {
+            Swal.fire({
+                allowOutsideClick: false,
+                background: 'transparent',
+                html: ' <div class="spinner-grow text-primary spinner-grow-sm me-2" role="status"></div><div class="spinner-grow text-primary spinner-grow-sm me-2" role="status"></div><div class="spinner-grow text-primary spinner-grow-sm me-2" role="status"></div>',
+                showCancelButton: false,
+                showConfirmButton: false,
+                onBeforeOpen: () => {
+                    // Swal.showLoading()
+                },
+            });
         });
     </script>
 </body>

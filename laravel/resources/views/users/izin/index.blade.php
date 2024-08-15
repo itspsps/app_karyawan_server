@@ -8,6 +8,49 @@
 </style>
 @endsection
 @section('content')
+<div class="head-details">
+    <div class="container">
+        <div class="dz-info col-12">
+            <span class="location d-block text-left">Form Izin&nbsp;
+            </span>
+            @if(auth()->user()->kategori=='Karyawan Bulanan')
+            <h6 class="title">@if($user->kontrak_kerja == 'SP')
+                CV. SUMBER PANGAN
+                @elseif($user->kontrak_kerja == 'SPS')
+                PT. SURYA PANGAN SEMESTA
+                @elseif($user->kontrak_kerja == 'SIP')
+                CV. SURYA INTI PANGAN
+                @endif</h6>
+            {{-- @foreach ($user  as $dep) --}}
+            <h6 class="title">Department of "{{ $user->nama_departemen }}"</h6>
+            {{-- @endforeach --}}
+            @elseif(auth()->user()->kategori=='Karyawan Harian')
+            <h6 class="title">{{auth()->user()->penempatan_kerja}}
+            </h6>
+            @endif
+        </div>
+        <div class="dz-media media-65">
+            <img src="assets/images/logo/logo.svg" alt="">
+        </div>
+    </div>
+</div>
+
+<div class="fixed-content p-0">
+    <div class="container">
+        <div class="main-content">
+            <div class="left-content">
+                <a id="btn_klik" href="{{url('home')}}" class="btn-back">
+                    <svg width="18" height="18" viewBox="0 0 10 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M9.03033 0.46967C9.2966 0.735936 9.3208 1.1526 9.10295 1.44621L9.03033 1.53033L2.561 8L9.03033 14.4697C9.2966 14.7359 9.3208 15.1526 9.10295 15.4462L9.03033 15.5303C8.76406 15.7966 8.3474 15.8208 8.05379 15.6029L7.96967 15.5303L0.96967 8.53033C0.703403 8.26406 0.679197 7.8474 0.897052 7.55379L0.96967 7.46967L7.96967 0.46967C8.26256 0.176777 8.73744 0.176777 9.03033 0.46967Z" fill="#a19fa8" />
+                    </svg>
+                </a>
+                <h5 class="mb-0">Back</h5>
+            </div>
+            <div class="mid-content">
+            </div>
+        </div>
+    </div>
+</div>
 <div class="container">
     @if(Session::has('atasankosong'))
     <div id="alert_atasankosong" class="alert alert-danger light alert-lg alert-dismissible fade show">
@@ -332,7 +375,7 @@
             <div class="offcanvas-body text-center small">
                 <h5 class="title">KONFIRMASI HAPUS</h5>
                 <p>Apakah Anda Ingin Menghapus Pengajuan Izin?</p>
-                <a href="{{url('/izin/delete_izin/'.$record_data->id)}}" class="btn btn-sm btn-danger light pwa-btn">Hapus</a>
+                <a id="btn_klik" href="{{url('/izin/delete_izin/'.$record_data->id)}}" class="btn btn-sm btn-danger light pwa-btn">Hapus</a>
                 <a href="javascrpit:void(0);" class="btn btn-sm light btn-primary ms-2" data-bs-dismiss="offcanvas" aria-label="Close">Batal</a>
             </div>
         </div>
@@ -366,7 +409,7 @@
                 <h5 class="title">FORM PENGAJUAN IZIN TIDAK MASUK</h5>
                 @endif
                 <p>Apakah Anda Ingin Download Form Pengajuan Izin?</p>
-                <a href="{{url('/izin/cetak_form_izin/'.$record_data->id)}}" class="btn btn-sm btn-danger light pwa-btn">
+                <a id="btn_klik" href="{{url('/izin/cetak_form_izin/'.$record_data->id)}}" class="btn btn-sm btn-danger light pwa-btn">
                     <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" fill="#000000" height="18" width="18" version="1.1" id="Capa_1" viewBox="0 0 48 48" xml:space="preserve">
                         <g>
                             <g>
@@ -383,7 +426,7 @@
             </div>
         </div>
         @endif
-        <a href="{{url('/izin/detail/edit/'.$record_data->id)}}">
+        <a id="btn_klik" href="{{url('/izin/detail/edit/'.$record_data->id)}}">
             <div class="notification">
                 <h6>{{ $record_data->izin }}</h6>
                 <p>{{ $record_data->keterangan_izin}}</p>
@@ -421,6 +464,7 @@
 @endsection
 @section('js')
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
 <script>
     $("document").ready(function() {
         // console.log('ok');
@@ -686,6 +730,20 @@
 
             $("#modal_surat_dokter").modal("show");
 
+        });
+    });
+</script>
+<script>
+    $(document).on('click', '#btn_klik', function(e) {
+        Swal.fire({
+            allowOutsideClick: false,
+            background: 'transparent',
+            html: ' <div class="spinner-grow text-primary spinner-grow-sm me-2" role="status"></div><div class="spinner-grow text-primary spinner-grow-sm me-2" role="status"></div><div class="spinner-grow text-primary spinner-grow-sm me-2" role="status"></div>',
+            showCancelButton: false,
+            showConfirmButton: false,
+            onBeforeOpen: () => {
+                // Swal.showLoading()
+            },
         });
     });
 </script>

@@ -794,6 +794,7 @@ class karyawanController extends Controller
                     'motto' => 'max:255',
                     'email' => 'max:255',
                     'nullable',
+                    'email',
                     'unique:users,email,' . $request->email,
                     'telepon' => 'max:12',
                     'nullable',
@@ -867,20 +868,22 @@ class karyawanController extends Controller
                     'max:255',
                     'nik' => 'required',
                     'max:16',
-                    Rule::unique('users')->ignore($request->nik),
+                    'unique:users,nik,' . $request->nik,
                     'fullname' => 'required',
                     'max:255',
                     'motto' => 'max:255',
                     'email' => 'max:255',
                     'nullable',
-                    'unique:users,email' . $request->email,
+                    'email:rfc,dns',
+                    'email_address',
+                    'unique:users,email,' . $request->email,
                     'telepon' => 'max:12',
                     'nullable',
                     'min:11',
                     'username' => 'required',
                     'max:255',
                     'nullable',
-                    'unique:users,username' . $request->username,
+                    'unique:users,username,' . $request->username,
                     'password' => 'required',
                     'max:255',
                     'tempat_lahir' => 'required',
@@ -894,12 +897,10 @@ class karyawanController extends Controller
                     'kategori' => 'required',
                     'kontrak_kerja' => 'required',
                     'max:255',
-                    'lama_kontrak_kerja' => 'required',
-                    'max:255',
+                    'lama_kontrak_kerja' => 'max:255',
                     'tgl_mulai_kontrak' => 'required',
                     'max:25',
-                    'tgl_selesai_kontrak' => 'required',
-                    'max:25',
+                    'tgl_selesai_kontrak' => 'max:25',
                     'kuota_cuti' => 'required',
                     'max:11',
                     'is_admin' => 'required',
@@ -928,7 +929,7 @@ class karyawanController extends Controller
                     'nomor_rekening' => 'required',
                     'npwp' => 'nullable',
                     'max:16',
-                    'unique:users,npwp' . $request->npwp,
+                    'unique:users,npwp,' . $request->npwp,
                     'no_bpjs_ketenagakerjaan' => 'max:16',
                     'no_bpjs_kesehatan' => 'max:16',
                     'bpjs_ketenagakerjaan' => 'max:16',
@@ -941,6 +942,85 @@ class karyawanController extends Controller
                     'kategori_jabatan' => 'max:255'
                 ];
             }
+        } else {
+            $rules = [
+                'name' => 'required',
+                'max:255',
+                'nik' => 'required',
+                'max:16',
+                'unique:users,nik,' . $request->nik,
+                'fullname' => 'required',
+                'max:255',
+                'motto' => 'max:255',
+                'email' => 'max:255',
+                'nullable',
+                'email:rfc,dns',
+                'email_address',
+                'unique:users,email,' . $request->email,
+                'telepon' => 'max:12',
+                'nullable',
+                'min:11',
+                'username' => 'required',
+                'max:255',
+                'nullable',
+                'unique:users,username,' . $request->username,
+                'password' => 'required',
+                'max:255',
+                'tempat_lahir' => 'required',
+                'max:255',
+                'tgl_lahir' => 'required',
+                'max:255',
+                'tgl_join' => 'required',
+                'max:255',
+                'gender' => 'required',
+                'status_nikah' => 'required',
+                'kategori' => 'required',
+                'kontrak_kerja' => 'required',
+                'max:255',
+                'lama_kontrak_kerja' => 'max:255',
+                'tgl_mulai_kontrak' => 'required',
+                'max:25',
+                'tgl_selesai_kontrak' => 'max:25',
+                'kuota_cuti' => 'required',
+                'max:11',
+                'is_admin' => 'required',
+                'provinsi' => 'required',
+                'kabupaten' => 'required',
+                'kecamatan' => 'required',
+                'desa' => 'required',
+                'rt' => 'required',
+                'max:255',
+                'rw' => 'required',
+                'max:255',
+                'alamat' => 'required',
+                'max:255',
+                'site_job' => 'required',
+                'penempatan_kerja' => 'required',
+                'max:255',
+                'departemen_id' => 'required',
+                'max:255',
+                'divisi_id' => 'required',
+                'max:255',
+                'bagian_id' => 'required',
+                'max:255',
+                'jabatan_id' => 'required',
+                'max:255',
+                'nama_bank' => 'required',
+                'nomor_rekening' => 'required',
+                'npwp' => 'nullable',
+                'max:16',
+                'unique:users,npwp,' . $request->npwp,
+                'no_bpjs_ketenagakerjaan' => 'max:16',
+                'no_bpjs_kesehatan' => 'max:16',
+                'bpjs_ketenagakerjaan' => 'max:16',
+                'bpjs_kesehatan' => 'max:16',
+                'bpjs_pensiun' => 'max:16',
+                'kelas_bpjs' => 'max:16',
+                'ptkp' => 'max:16',
+                'status_npwp' => 'max:16',
+                'file_cv' => 'max:255',
+                'kategori_jabatan' => 'max:255'
+            ];
         }
 
 
@@ -965,7 +1045,7 @@ class karyawanController extends Controller
         $customMessages = [
             'required' => ':attribute tidak boleh kosong.',
             'unique' => ':attribute tidak boleh sama',
-            // 'email' => ':attribute format email salah',
+            'email' => ':attribute format email salah',
             'min' => ':attribute Kurang',
             'max' => ':attribute Melebihi Batas Maksimal'
         ];
@@ -976,79 +1056,80 @@ class karyawanController extends Controller
             Alert::error('Gagal', $errors);
             return back()->withInput();
         }
-        if ($validasi['kategori'] == 'Karyawan Harian') {
+        // dd($request['lama_kontrak_kerja']);
+        if ($request['kategori'] == 'Karyawan Harian') {
             $site_job = NULL;
             $kontrak_kerja = $request['kontrak_kerja'];
             $tgl_mulai_kontrak = NULL;
             $tgl_selesai_kontrak = NULL;
             $lama_kontrak_kerja = NULL;
-        } else if ($validasi['kategori'] == 'Karyawan Bulanan') {
-            if ($validasi['lama_kontrak_kerja'] == 'tetap') {
+        } else if ($request['kategori'] == 'Karyawan Bulanan') {
+            if ($request['lama_kontrak_kerja'] == 'tetap') {
                 // dd('ok');
                 $tgl_mulai_kontrak = NULL;
                 $tgl_selesai_kontrak = NULL;
                 $lama_kontrak_kerja = NULL;
                 if ($request->status_npwp) {
-                    $status_npwp = $validasi['status_npwp'];
+                    $status_npwp = $request['status_npwp'];
                 } else {
                     $status_npwp = NULL;
                 }
                 if ($request->kategori_jabatan) {
-                    $kategori_jabatan = $validasi['kategori_jabatan'];
+                    $kategori_jabatan = $request['kategori_jabatan'];
                 } else {
                     $kategori_jabatan = NULL;
                 }
                 if ($request->bpjs_ketenagakerjaan) {
-                    $bpjs_ketenagakerjaan = $validasi['bpjs_ketenagakerjaan'];
+                    $bpjs_ketenagakerjaan = $request['bpjs_ketenagakerjaan'];
                 } else {
                     $bpjs_ketenagakerjaan = NULL;
                 }
                 if ($request->bpjs_pensiun) {
-                    $bpjs_pensiun = $validasi['bpjs_pensiun'];
+                    $bpjs_pensiun = $request['bpjs_pensiun'];
                 } else {
                     $bpjs_pensiun = NULL;
                 }
                 if ($request->bpjs_kesehatan) {
-                    $bpjs_kesehatan = $validasi['bpjs_kesehatan'];
-                    $kelas_bpjs = $validasi['kelas_bpjs'];
+                    $bpjs_kesehatan = $request['bpjs_kesehatan'];
+                    $kelas_bpjs = $request['kelas_bpjs'];
                 } else {
                     $bpjs_kesehatan = NULL;
                     $kelas_bpjs = NULL;
                 }
             } else {
                 if ($request->kategori_jabatan) {
-                    $kategori_jabatan = $validasi['kategori_jabatan'];
+                    $kategori_jabatan = $request['kategori_jabatan'];
                 } else {
                     $kategori_jabatan = NULL;
                 }
                 if ($request->status_npwp) {
-                    $status_npwp = $validasi['status_npwp'];
+                    $status_npwp = $request['status_npwp'];
                 } else {
                     $status_npwp = NULL;
                 }
                 if ($request->bpjs_ketenagakerjaan) {
-                    $bpjs_ketenagakerjaan = $validasi['bpjs_ketenagakerjaan'];
+                    $bpjs_ketenagakerjaan = $request['bpjs_ketenagakerjaan'];
                 } else {
                     $bpjs_ketenagakerjaan = NULL;
                 }
                 if ($request->bpjs_pensiun) {
-                    $bpjs_pensiun = $validasi['bpjs_pensiun'];
+                    $bpjs_pensiun = $request['bpjs_pensiun'];
                 } else {
                     $bpjs_pensiun = NULL;
                 }
                 if ($request->bpjs_kesehatan) {
-                    $bpjs_kesehatan = $validasi['bpjs_kesehatan'];
-                    $kelas_bpjs = $validasi['kelas_bpjs'];
+                    $bpjs_kesehatan = $request['bpjs_kesehatan'];
+                    $kelas_bpjs = $request['kelas_bpjs'];
                 } else {
                     $bpjs_kesehatan = NULL;
                     $kelas_bpjs = NULL;
                 }
-                $tgl_mulai_kontrak = $validasi['tgl_mulai_kontrak'];
-                $tgl_selesai_kontrak = $validasi['tgl_selesai_kontrak'];
+                $tgl_mulai_kontrak = $request['tgl_mulai_kontrak'];
+                $tgl_selesai_kontrak = $request['tgl_selesai_kontrak'];
             }
-            $site_job = $validasi['site_job'];
-            $kontrak_kerja = $validasi['kontrak_kerja'];
-            $lama_kontrak_kerja = $validasi['lama_kontrak_kerja'];
+            $site_job = $request['site_job'];
+            $kontrak_kerja = $request['kontrak_kerja'];
+            $lama_kontrak_kerja = $request['lama_kontrak_kerja'];
         }
         if ($request['foto_karyawan']) {
             // dd('ok');
@@ -1091,25 +1172,25 @@ class karyawanController extends Controller
         $holding = request()->segment(count(request()->segments()));
         User::where('id', $id)->update(
             [
-                'name' => $validasi['name'],
-                'nik' => $validasi['nik'],
-                'npwp' => $validasi['npwp'],
-                'fullname' => $validasi['fullname'],
+                'name' => $request['name'],
+                'nik' => $request['nik'],
+                'npwp' => $request['npwp'],
+                'fullname' => $request['fullname'],
                 'motto' => $request['motto'],
                 'foto_karyawan' => $img_name,
                 'file_cv' => $file_cv_name,
-                'email' => $validasi['email'],
-                'telepon' => $validasi['telepon'],
-                'username' => $validasi['username'],
-                'password' => $validasi['password'],
-                'tempat_lahir' => $validasi['tempat_lahir'],
-                'tgl_lahir' => $validasi['tgl_lahir'],
-                'gender' => $validasi['gender'],
-                'tgl_join' => $validasi['tgl_join'],
-                'status_nikah' => $validasi['status_nikah'],
-                'nama_bank' => $validasi['nama_bank'],
-                'nomor_rekening' => $validasi['nomor_rekening'],
-                'kuota_cuti_tahunan' => $validasi['kuota_cuti'],
+                'email' => $request['email'],
+                'telepon' => $request['telepon'],
+                'username' => $request['username'],
+                'password' => $request['password'],
+                'tempat_lahir' => $request['tempat_lahir'],
+                'tgl_lahir' => $request['tgl_lahir'],
+                'gender' => $request['gender'],
+                'tgl_join' => $request['tgl_join'],
+                'status_nikah' => $request['status_nikah'],
+                'nama_bank' => $request['nama_bank'],
+                'nomor_rekening' => $request['nomor_rekening'],
+                'kuota_cuti_tahunan' => $request['kuota_cuti'],
                 'is_admin' => $request['is_admin'],
                 'site_job' => $site_job,
                 'kategori' => $request['kategori'],
@@ -1118,23 +1199,23 @@ class karyawanController extends Controller
                 'tgl_mulai_kontrak' => $tgl_mulai_kontrak,
                 'tgl_selesai_kontrak' => $tgl_selesai_kontrak,
                 'kontrak_kerja' => $kontrak_kerja,
-                'penempatan_kerja' => $validasi['penempatan_kerja'],
-                'provinsi' => Provincies::where('code', $validasi['provinsi'])->value('code'),
-                'kabupaten' => Cities::where('code', $validasi['kabupaten'])->value('code'),
-                'kecamatan' => District::where('code', $validasi['kecamatan'])->value('code'),
-                'desa' => Village::where('code', $validasi['desa'])->value('code'),
-                'rt' => $validasi['rt'],
-                'rw' => $validasi['rw'],
-                'alamat' => $validasi['alamat'],
+                'penempatan_kerja' => $request['penempatan_kerja'],
+                'provinsi' => Provincies::where('code', $request['provinsi'])->value('code'),
+                'kabupaten' => Cities::where('code', $request['kabupaten'])->value('code'),
+                'kecamatan' => District::where('code', $request['kecamatan'])->value('code'),
+                'desa' => Village::where('code', $request['desa'])->value('code'),
+                'rt' => $request['rt'],
+                'rw' => $request['rw'],
+                'alamat' => $request['alamat'],
                 'bpjs_ketenagakerjaan' => $bpjs_ketenagakerjaan,
                 'bpjs_pensiun' => $bpjs_pensiun,
                 'bpjs_kesehatan' => $bpjs_kesehatan,
-                'no_bpjs_ketenagakerjaan' => $validasi['no_bpjs_ketenagakerjaan'],
-                'no_bpjs_kesehatan' => $validasi['no_bpjs_kesehatan'],
-                'ptkp' => $validasi['ptkp'],
+                'no_bpjs_ketenagakerjaan' => $request['no_bpjs_ketenagakerjaan'],
+                'no_bpjs_kesehatan' => $request['no_bpjs_kesehatan'],
+                'ptkp' => $request['ptkp'],
                 'status_npwp' => $status_npwp,
                 'kelas_bpjs' => $kelas_bpjs,
-                'detail_alamat' => Provincies::where('code', $validasi['provinsi'])->value('name') . ' , ' . Cities::where('code', $validasi['kabupaten'])->value('name') . ' , ' . District::where('code', $validasi['kecamatan'])->value('name') . ' , ' . Village::where('code', $validasi['desa'])->value('name') . ' , RT. ' . $validasi['rt'] . ' , RW. ' . $validasi['rw'] . ' , ' . $validasi['alamat'],
+                'detail_alamat' => Provincies::where('code', $request['provinsi'])->value('name') . ' , ' . Cities::where('code', $request['kabupaten'])->value('name') . ' , ' . District::where('code', $request['kecamatan'])->value('name') . ' , ' . Village::where('code', $request['desa'])->value('name') . ' , RT. ' . $request['rt'] . ' , RW. ' . $request['rw'] . ' , ' . $request['alamat'],
                 'dept_id' => Departemen::where('id', $request["departemen_id"])->value('id'),
                 'divisi_id' => Divisi::where('id', $request["divisi_id"])->value('id'),
                 'bagian_id' => Bagian::where('id', $request["bagian_id"])->value('id'),
@@ -1308,12 +1389,13 @@ class karyawanController extends Controller
     public function get_departemen(Request $request)
     {
         if ($request->holding == 'sp') {
-            $holding = 'CV. SUMBER PANGAN';
+            $holding_1 = 'CV. SUMBER PANGAN';
         } else if ($request->holding == 'sps') {
-            $holding = 'PT. SURYA PANGAN SEMESTA';
+            $holding_1 = 'PT. SURYA PANGAN SEMESTA';
         } else {
-            $holding = 'CV. SURYA INTI PANGAN';
+            $holding_1 = 'CV. SURYA INTI PANGAN';
         }
+        $holding = $holding_1;
         $departemen      = Departemen::where('holding', $request->holding)->orderBy('nama_departemen', 'ASC')->get();
         // dd($departemen);
         echo "<option value=''>Pilih Departemen...</option>";
@@ -1328,13 +1410,17 @@ class karyawanController extends Controller
         // dd($request->all());
         $id_departemen    = $request->id_departemen;
         if ($request->holding == 'sp') {
-            $holding = 'CV. SUMBER PANGAN';
+            $holding_1 = 'CV. SUMBER PANGAN';
+            // dd('ok2');
+        } else if ($request->holding == 'sps') {
+            $holding_1 = 'PT. SURYA PANGAN SEMESTA';
+            // dd('ok1');
+        } else if ($request->holding == 'sip') {
+            // dd('ok');
+            $holding_1 = 'CV. SURYA INTI PANGAN';
         }
-        if ($request->holding == 'sps') {
-            $holding = 'PT. SURYA PANGAN SEMESTA';
-        } else {
-            $holding = 'CV. SURYA INTI PANGAN';
-        }
+        $holding = $holding_1;
+        // dd($holding);
         $divisi      = Divisi::where('dept_id', $id_departemen)->where('holding', $request->holding)->orderBy('nama_divisi', 'ASC')->get();
         echo "<option value=''>Pilih Divisi...</option>";
         echo "<optgroup label='Daftar Divisi $holding'>";
@@ -1347,13 +1433,13 @@ class karyawanController extends Controller
     {
         $id_divisi    = $request->id_divisi;
         if ($request->holding == 'sp') {
-            $holding = 'CV. SUMBER PANGAN';
+            $holding_1 = 'CV. SUMBER PANGAN';
+        } else if ($request->holding == 'sps') {
+            $holding_1 = 'PT. SURYA PANGAN SEMESTA';
+        } else if ($request->holding == 'sip') {
+            $holding_1 = 'CV. SURYA INTI PANGAN';
         }
-        if ($request->holding == 'sps') {
-            $holding = 'PT. SURYA PANGAN SEMESTA';
-        } else {
-            $holding = 'CV. SURYA INTI PANGAN';
-        }
+        $holding = $holding_1;
         $bagian      = Bagian::where('divisi_id', $id_divisi)->where('holding', $request->holding)->orderBy('nama_bagian', 'ASC')->get();
         echo "<option value=''>Pilih Bagian...</option>";
         echo "<optgroup label='Daftar Bagian $holding'>";
@@ -1364,12 +1450,22 @@ class karyawanController extends Controller
     }
     public function get_jabatan(Request $request)
     {
+        if ($request->holding == 'sp') {
+            $holding_1 = 'CV. SUMBER PANGAN';
+        } else if ($request->holding == 'sps') {
+            $holding_1 = 'PT. SURYA PANGAN SEMESTA';
+        } else if ($request->holding == 'sip') {
+            $holding_1 = 'CV. SURYA INTI PANGAN';
+        }
+        $holding = $holding_1;
         $id_bagian    = $request->id_bagian;
         $jabatan      = Jabatan::where('bagian_id', $id_bagian)->where('holding', $request->holding)->orderBy('nama_jabatan', 'ASC')->get();
         echo "<option value=''>Pilih Jabatan...</option>";
+        echo "<optgroup label='Daftar Jabatan $holding'>";
         foreach ($jabatan as $jabatan) {
             echo "<option value='$jabatan->id'>$jabatan->nama_jabatan</option>";
         }
+        echo "</optgroup>";
     }
     public function prosesTambahShift(Request $request)
     {

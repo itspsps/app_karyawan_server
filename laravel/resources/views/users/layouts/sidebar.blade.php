@@ -38,7 +38,7 @@
 		</div>
 		<ul class="nav navbar-nav">
 			<li class="nav-label">Main Menu</li>
-			<li><a class="nav-link" href="{{ url('/home/absen') }}">
+			<li><a class="nav-link" id="btn_klik" href="{{ url('/home/absen') }}">
 					<span class="dz-icon bg-red light">
 						<svg xmlns="http://www.w3.org/2000/svg" class="ionicon s-ion-icon" viewBox="0 0 512 512">
 							<title>Scan</title>
@@ -48,7 +48,7 @@
 					<span>Absen</span>
 				</a></li>
 			<li>
-				<a class="nav-link" href="{{ url('/izin/dashboard/') }}">
+				<a class="nav-link" id="btn_klik" href="{{ url('/izin/dashboard/') }}">
 					<span class="dz-icon bg-pink light">
 						<svg xmlns="http://www.w3.org/2000/svg" class="ionicon s-ion-icon" viewBox="0 0 512 512">
 							<title>Documents</title>
@@ -62,7 +62,7 @@
 				</a>
 			</li>
 			<li>
-				<a class="nav-link" href="{{ url('/cuti/dashboard/') }}">
+				<a class="nav-link" id="btn_klik" href="{{ url('/cuti/dashboard/') }}">
 					<span class="dz-icon bg-orange light">
 						<svg fill="#000000" height="800px" width="800px" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 511.997 511.997" xml:space="preserve">
 							<g>
@@ -104,7 +104,7 @@
 				</a>
 			</li>
 			<li>
-				<a class="nav-link" href="{{ url('/penugasan/dashboard/') }}">
+				<a class="nav-link" id="btn_klik" href="{{ url('/penugasan/dashboard/') }}">
 					<span class="dz-icon bg-orange light">
 						<svg fill="#000000" width="800px" height="800px" viewBox="0 0 512 512" id="_x30_1" version="1.1" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
 							<g>
@@ -142,7 +142,7 @@
 				</a>
 			</li> -->
 			<li>
-				<a class="nav-link" href="{{route('profile')}}">
+				<a class="nav-link" id="btn_klik" href="{{route('profile')}}">
 					<span class="dz-icon bg-yellow light">
 						<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="18" height="18" viewBox="0 0 24 24" version="1.1" class="svg-main-icon">
 							<g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
@@ -189,7 +189,7 @@
 			@if(Auth::user()->access_1=='on')
 			<li class="nav-label">ACCESS</li>
 			<li class="nav-color">
-				<a class="nav-link" href="{{ url('/mapping_shift/dashboard/') }}">
+				<a class="nav-link" id="btn_klik" href="{{ url('/mapping_shift/dashboard/') }}">
 					<span class="dz-icon bg-blue light">
 						<i class="fa-solid fa-users"></i>
 					</span>

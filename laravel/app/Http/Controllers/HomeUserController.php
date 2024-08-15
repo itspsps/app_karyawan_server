@@ -3652,7 +3652,7 @@ class HomeUserController extends Controller
                 $image_parts = explode(";base64,", $foto_jam_absen);
                 if ($image_parts[0] == NULL) {
                     $request->session()->flash('cameraoff');
-                    return redirect('absen/dashboard');
+                    return redirect('home/absen');
                 }
 
                 $image_base64 = base64_decode($image_parts[1]);
@@ -3724,7 +3724,7 @@ class HomeUserController extends Controller
                                     ->orWhere('jabatan2_id', $IdLevelAtasan->atasan_id)
                                     ->orWhere('jabatan3_id', $IdLevelAtasan->atasan_id)
                                     ->orWhere('jabatan4_id', $IdLevelAtasan->atasan_id)
-                                    // ->orWhere('d.nama_jabatan', $get_name_jabatan->nama_jabatan)
+                                    ->whereIn('site_job', ['ALL SITES (SPS)', 'ALL SITES (SP, SPS, SIP)', $site_job])
                                     ->first();
                                 if ($atasan2 == NULL || $atasan2 == '') {
                                     $get_atasan_site = Jabatan::Join('divisis', 'divisis.id', 'jabatans.divisi_id')
@@ -3776,14 +3776,7 @@ class HomeUserController extends Controller
                                         $getUserAtasan  = $atasan;
                                     }
                                 } else {
-                                    $atasan = User::where('jabatan_id', $atasan2->id)
-                                        ->orWhere('jabatan1_id', $atasan2->id)
-                                        ->orWhere('jabatan2_id', $atasan2->id)
-                                        ->orWhere('jabatan3_id', $atasan2->id)
-                                        ->orWhere('jabatan4_id', $atasan2->id)
-                                        ->whereIn('site_job', ['ALL SITES (SPS)', 'ALL SITES (SP, SPS, SIP)', $site_job])
-                                        ->first();
-                                    $getUserAtasan  = $atasan;
+                                    $getUserAtasan  = $atasan2;
                                 }
                             } else {
                                 $getUserAtasan  = $get_nama_jabatan;
@@ -3803,7 +3796,7 @@ class HomeUserController extends Controller
                                     ->orWhere('jabatan2_id', $IdLevelAtasan->atasan_id)
                                     ->orWhere('jabatan3_id', $IdLevelAtasan->atasan_id)
                                     ->orWhere('jabatan4_id', $IdLevelAtasan->atasan_id)
-                                    // ->orWhere('d.nama_jabatan', $get_name_jabatan->nama_jabatan)
+                                    ->whereIn('site_job', ['ALL SITES (SP)', 'ALL SITES (SP, SPS, SIP)', $site_job])
                                     ->first();
                                 if ($atasan2 == NULL || $atasan2 == '') {
                                     $get_atasan_site = Jabatan::Join('divisis', 'divisis.id', 'jabatans.divisi_id')
@@ -3855,14 +3848,7 @@ class HomeUserController extends Controller
                                         $getUserAtasan  = $atasan;
                                     }
                                 } else {
-                                    $atasan = User::where('jabatan_id', $atasan2->id)
-                                        ->orWhere('jabatan1_id', $atasan2->id)
-                                        ->orWhere('jabatan2_id', $atasan2->id)
-                                        ->orWhere('jabatan3_id', $atasan2->id)
-                                        ->orWhere('jabatan4_id', $atasan2->id)
-                                        ->whereIn('site_job', ['ALL SITES (SP)', 'ALL SITES (SP, SPS, SIP)', $site_job])
-                                        ->first();
-                                    $getUserAtasan  = $atasan;
+                                    $getUserAtasan  = $atasan2;
                                 }
                             } else {
                                 $getUserAtasan  = $get_nama_jabatan;
@@ -3882,7 +3868,7 @@ class HomeUserController extends Controller
                                     ->orWhere('jabatan2_id', $IdLevelAtasan->atasan_id)
                                     ->orWhere('jabatan3_id', $IdLevelAtasan->atasan_id)
                                     ->orWhere('jabatan4_id', $IdLevelAtasan->atasan_id)
-                                    // ->orWhere('d.nama_jabatan', $get_name_jabatan->nama_jabatan)
+                                    ->whereIn('site_job', ['ALL SITES (SP, SPS, SIP)', $site_job])
                                     ->first();
                                 if ($atasan2 == NULL || $atasan2 == '') {
                                     $get_atasan_site = Jabatan::Join('divisis', 'divisis.id', 'jabatans.divisi_id')
@@ -3934,14 +3920,7 @@ class HomeUserController extends Controller
                                         $getUserAtasan  = $atasan;
                                     }
                                 } else {
-                                    $atasan = User::where('jabatan_id', $atasan2->id)
-                                        ->orWhere('jabatan1_id', $atasan2->id)
-                                        ->orWhere('jabatan2_id', $atasan2->id)
-                                        ->orWhere('jabatan3_id', $atasan2->id)
-                                        ->orWhere('jabatan4_id', $atasan2->id)
-                                        ->whereIn('site_job', ['ALL SITES (SP, SPS, SIP)', $site_job])
-                                        ->first();
-                                    $getUserAtasan  = $atasan;
+                                    $getUserAtasan  = $atasan2;
                                 }
                             } else {
                                 $getUserAtasan  = $get_nama_jabatan;
@@ -3962,7 +3941,7 @@ class HomeUserController extends Controller
                                     ->orWhere('jabatan2_id', $IdLevelAtasan->atasan_id)
                                     ->orWhere('jabatan3_id', $IdLevelAtasan->atasan_id)
                                     ->orWhere('jabatan4_id', $IdLevelAtasan->atasan_id)
-                                    // ->orWhere('d.nama_jabatan', $get_name_jabatan->nama_jabatan)
+                                    ->whereNotIn('site_job', ['ALL SITES (SP)', 'CV. SUMBER PANGAN - KEDIRI', 'CV. SUMBER PANGAN - TUBAN'])
                                     ->first();
                                 if ($atasan2 == NULL || $atasan2 == '') {
                                     $get_atasan_site = Jabatan::Join('divisis', 'divisis.id', 'jabatans.divisi_id')
@@ -4014,14 +3993,7 @@ class HomeUserController extends Controller
                                         $getUserAtasan  = $atasan;
                                     }
                                 } else {
-                                    $atasan = User::where('jabatan_id', $atasan2->id)
-                                        ->orWhere('jabatan1_id', $atasan2->id)
-                                        ->orWhere('jabatan2_id', $atasan2->id)
-                                        ->orWhere('jabatan3_id', $atasan2->id)
-                                        ->orWhere('jabatan4_id', $atasan2->id)
-                                        ->whereNotIn('site_job', ['ALL SITES (SP)', 'CV. SUMBER PANGAN - KEDIRI', 'CV. SUMBER PANGAN - TUBAN'])
-                                        ->first();
-                                    $getUserAtasan  = $atasan;
+                                    $getUserAtasan  = $atasan2;
                                 }
                             } else {
                                 $getUserAtasan  = $get_nama_jabatan;
@@ -4041,7 +4013,7 @@ class HomeUserController extends Controller
                                     ->orWhere('jabatan2_id', $IdLevelAtasan->atasan_id)
                                     ->orWhere('jabatan3_id', $IdLevelAtasan->atasan_id)
                                     ->orWhere('jabatan4_id', $IdLevelAtasan->atasan_id)
-                                    // ->orWhere('d.nama_jabatan', $get_name_jabatan->nama_jabatan)
+                                    ->whereNotIn('site_job', ['ALL SITES (SPS)', 'PT. SURYA PANGAN SEMESTA - KEDIRI', 'PT. SURYA PANGAN SEMESTA - NGAWI', 'PT. SURYA PANGAN SEMESTA - SUBANG'])
                                     ->first();
                                 if ($atasan2 == NULL || $atasan2 == '') {
                                     $get_atasan_site = Jabatan::Join('divisis', 'divisis.id', 'jabatans.divisi_id')
@@ -4093,14 +4065,7 @@ class HomeUserController extends Controller
                                         $getUserAtasan  = $atasan;
                                     }
                                 } else {
-                                    $atasan = User::where('jabatan_id', $atasan2->id)
-                                        ->orWhere('jabatan1_id', $atasan2->id)
-                                        ->orWhere('jabatan2_id', $atasan2->id)
-                                        ->orWhere('jabatan3_id', $atasan2->id)
-                                        ->orWhere('jabatan4_id', $atasan2->id)
-                                        ->whereNotIn('site_job', ['ALL SITES (SPS)', 'PT. SURYA PANGAN SEMESTA - KEDIRI', 'PT. SURYA PANGAN SEMESTA - NGAWI', 'PT. SURYA PANGAN SEMESTA - SUBANG'])
-                                        ->first();
-                                    $getUserAtasan  = $atasan;
+                                    $getUserAtasan  = $atasan2;
                                 }
                             } else {
                                 $getUserAtasan  = $get_nama_jabatan;
@@ -4177,15 +4142,7 @@ class HomeUserController extends Controller
                                         $getUserAtasan  = $atasan;
                                     }
                                 } else {
-                                    $atasan = User::where('jabatan_id', $atasan2->id)
-                                        ->orWhere('jabatan1_id', $atasan2->id)
-                                        ->orWhere('jabatan2_id', $atasan2->id)
-                                        ->orWhere('jabatan3_id', $atasan2->id)
-                                        ->orWhere('jabatan4_id', $atasan2->id)
-                                        // ->orWhere('d.nama_jabatan', $get_name_jabatan->nama_jabatan)
-                                        ->first();
-                                    dd($atasan);
-                                    $getUserAtasan  = $atasan;
+                                    $getUserAtasan  = $atasan2;
                                 }
                             } else {
                                 $getUserAtasan  = $get_nama_jabatan;

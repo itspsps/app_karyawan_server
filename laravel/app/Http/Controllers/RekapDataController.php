@@ -3,7 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Imports\AbsensiImport;
+use App\Models\Bagian;
 use App\Models\Cuti;
+use App\Models\Departemen;
+use App\Models\Divisi;
+use App\Models\Jabatan;
 use App\Models\Lembur;
 use App\Models\User;
 use App\Models\MappingShift;
@@ -39,11 +43,14 @@ class RekapDataController extends Controller
             $tanggal_akhir = $request["akhir"];
             $title = "Rekap Data Absensi Tanggal " . $tanggal_mulai . " s/d " . $tanggal_akhir;
         }
+        $departemen = Departemen::where('holding', $holding)->get();
+        // dd($departemen);
         // dd(Carbon::createFromFormat('H:i:s', '17:12:00'));
         return view('admin.rekapdata.index', [
             'title' => $title,
             'data_user' => $user,
             'tanggal_mulai' => $tanggal_mulai,
+            'departemen' => $departemen,
             'holding' => $holding,
             'tanggal_akhir' => $tanggal_akhir
         ]);
@@ -81,21 +88,55 @@ class RekapDataController extends Controller
     public function datatable(Request $request)
     {
         $holding = request()->segment(count(request()->segments()));
-
+        // dd($request->all());
         if (request()->ajax()) {
-            if (!empty($request->filter_month)) {
-                $jumlah_hari = explode(' ', $request->filter_month);
-                $startDate = trim($jumlah_hari[0]);
-                $endDate = trim($jumlah_hari[2]);
-                $date1 = date('Y-m-d', strtotime($startDate));
-                $date2 = date('Y-m-d', strtotime($endDate));
+            if (!empty($request->departemen_filter)) {
+                $date1 = Carbon::now()->startOfMonth();
+                $date2 = Carbon::now()->endOfMonth();
                 // dd($date1, $date2);
-                $table = User::with('Cuti')
-                    ->with('Izin')
-                    ->with('Mappingshift')
-                    ->where('kontrak_kerja', $holding)
-                    ->where('kategori', 'Karyawan Bulanan')
-                    ->get();
+                if (!empty($request->divisi_filter)) {
+                    if (!empty($request->bagian_filter)) {
+                        if (!empty($request->jabatan_filter)) {
+                            $table = User::with('Cuti')
+                                ->with('Izin')
+                                ->with('Mappingshift')
+                                ->where('dept_id', $request->departemen_filter)
+                                ->where('divisi_id', $request->divisi_filter)
+                                ->where('bagian_id', $request->bagian_filter)
+                                ->where('jabatan_id', $request->jabatan_filter)
+                                ->where('kontrak_kerja', $holding)
+                                ->where('kategori', 'Karyawan Bulanan')
+                                ->get();
+                        } else {
+                            $table = User::with('Cuti')
+                                ->with('Izin')
+                                ->with('Mappingshift')
+                                ->where('dept_id', $request->departemen_filter)
+                                ->where('divisi_id', $request->divisi_filter)
+                                ->where('bagian_id', $request->bagian_filter)
+                                ->where('kontrak_kerja', $holding)
+                                ->where('kategori', 'Karyawan Bulanan')
+                                ->get();
+                        }
+                    } else {
+                        $table = User::with('Cuti')
+                            ->with('Izin')
+                            ->with('Mappingshift')
+                            ->where('dept_id', $request->departemen_filter)
+                            ->where('divisi_id', $request->divisi_filter)
+                            ->where('kontrak_kerja', $holding)
+                            ->where('kategori', 'Karyawan Bulanan')
+                            ->get();
+                    }
+                } else {
+                    $table = User::with('Cuti')
+                        ->with('Izin')
+                        ->with('Mappingshift')
+                        ->where('dept_id', $request->departemen_filter)
+                        ->where('kontrak_kerja', $holding)
+                        ->where('kategori', 'Karyawan Bulanan')
+                        ->get();
+                }
                 return DataTables::of($table)
                     ->addColumn('btn_detail', function ($row) use ($holding) {
                         $btn_detail = '<a id="btn_detail" type="button" href="' . url('rekap-data/detail', ['id' => $row->id]) . '/' . $holding . '" class="btn btn-sm btn-info"><i class="menu-icon tf-icons mdi mdi-eye"></i> Detail</a>';
@@ -328,7 +369,36 @@ class RekapDataController extends Controller
                 ->make(true);
         }
     }
+    public function get_divisi(Request $request)
+    {
+        // dd($request->all());
+        $id_departemen    = $request->departemen_filter;
 
+        $divisi      = Divisi::where('dept_id', $id_departemen)->where('holding', $request->holding)->orderBy('nama_divisi', 'ASC')->get();
+        echo "<option value=''>Pilih Divisi...</option>";
+        foreach ($divisi as $divisi) {
+            echo "<option value='$divisi->id'>$divisi->nama_divisi</option>";
+        }
+    }
+    public function get_bagian(Request $request)
+    {
+        $id_divisi    = $request->divisi_filter;
+
+        $bagian      = Bagian::where('divisi_id', $id_divisi)->where('holding', $request->holding)->orderBy('nama_bagian', 'ASC')->get();
+        echo "<option value=''>Pilih Bagian...</option>";
+        foreach ($bagian as $bagian) {
+            echo "<option value='$bagian->id'>$bagian->nama_bagian</option>";
+        }
+    }
+    public function get_jabatan(Request $request)
+    {
+        $id_bagian    = $request->bagian_filter;
+        $jabatan      = Jabatan::where('bagian_id', $id_bagian)->where('holding', $request->holding)->orderBy('nama_jabatan', 'ASC')->get();
+        echo "<option value=''>Pilih Jabatan...</option>";
+        foreach ($jabatan as $jabatan) {
+            echo "<option value='$jabatan->id'>$jabatan->nama_jabatan</option>";
+        }
+    }
     public function ImportAbsensi(Request $request)
     {
         // dd('ok');

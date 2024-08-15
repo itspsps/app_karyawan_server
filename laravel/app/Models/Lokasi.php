@@ -11,4 +11,9 @@ class Lokasi extends Model
 
     protected $guarded = ['id'];
     protected $fillable = ['kode_kantor', 'kategori_kantor', 'lokasi_kantor', 'lat_kantor', 'long_kantor', 'radius'];
+
+    public function Titik()
+    {
+        return $this->belongsTo(Titik::class, 'id', 'lokasi_id');
+    }
 }

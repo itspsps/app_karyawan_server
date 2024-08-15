@@ -13,6 +13,9 @@
                 <li class="nav-item">
                     <a class="nav-link active" href="javascript:void(0);"><i class="mdi mdi-account-outline mdi-20px me-1"></i>{{$karyawan->fullname}}&nbsp;<b>[{{$karyawan->nomor_identitas_karyawan}}]</b></a>
                 </li>
+                <li class="nav-item">
+                    <a class="btn btn-info" href="{{url('/karyawan/shift/'.$karyawan->id.'/'.$holding)}}"><i class="mdi mdi-clock-outline mdi-20px me-1"></i>Mapping Jadwal&nbsp;</a>
+                </li>
             </ul>
             <div class="card mb-4">
                 <h4 class="card-header">Detail Profil</h4>
@@ -142,7 +145,7 @@
                                         </div>
                                         <div class="col-md-3">
                                             <div class="form-floating form-floating-outline">
-                                                <input class="form-control" type="date" id="tgl_lahir" value="{{$karyawan->tgl_lahir}}" name="tgl_lahir" placeholder="Tanggal Lahir" />
+                                                <input class="form-control" type="date" id="tgl_lahir" value="{{old('tgl_lahir',$karyawan->tgl_lahir)}}" name="tgl_lahir" placeholder="Tanggal Lahir" />
                                                 <label for="tgl_lahir">Tanggal Lahir</label>
                                             </div>
                                             @error('tgl_lahir')
@@ -375,7 +378,7 @@
                                                 <select class="form-control @error('provinsi') is-invalid @enderror" id="id_provinsi" name="provinsi">
                                                     <option value=""> Pilih Provinsi </option>
                                                     @foreach($data_provinsi as $data)
-                                                    <option value="{{$data->code}}" {{($data->code == $karyawan->provinsi) ? 'selected' : ''}}>{{$data->name}}</option>
+                                                    <option value="{{$data->code}}" {{($data->code == old('provinsi',$karyawan->provinsi)) ? 'selected' : ''}}>{{$data->name}}</option>
                                                     @endforeach
                                                 </select>
                                                 <label for="id_provinsi">Provinsi</label>
@@ -395,7 +398,7 @@
                                                 <select class="form-control @error('kabupaten') is-invalid @enderror" id="id_kabupaten" name="kabupaten">
                                                     <option value=""> Pilih Kabupaten / Kota</option>
                                                     @foreach ($kab as $kabupaten)
-                                                    <option value="{{$kabupaten->code}}" {{($kabupaten->code == $karyawan->kabupaten) ? 'selected' : ''}}>{{$kabupaten->name}}</option>
+                                                    <option value="{{$kabupaten->code}}" {{($kabupaten->code == old('kabupaten',$karyawan->kabupaten)) ? 'selected' : ''}}>{{$kabupaten->name}}</option>
                                                     @endforeach
                                                 </select>
                                                 <label for="id_kabupaten">Kabupaten</label>
@@ -409,7 +412,7 @@
                                                 <select class="form-control @error('kecamatan') is-invalid @enderror" id="id_kecamatan" name="kecamatan">
                                                     <option value=""> Pilih kecamatan</option>
                                                     @foreach($kec as $data)
-                                                    <option value="{{$data->code}}" {{($data->code == $karyawan->kecamatan) ? 'selected' : ''}}>{{$data->name}}</option>
+                                                    <option value="{{$data->code}}" {{($data->code == old('kecamatan',$karyawan->kecamatan)) ? 'selected' : ''}}>{{$data->name}}</option>
                                                     @endforeach
                                                 </select>
                                                 <label for="id_kecamatan">kecamatan</label>
@@ -423,7 +426,7 @@
                                                 <select class="form-control @error('desa') is-invalid @enderror" id="id_desa" name="desa">
                                                     <option value=""> Pilih Desa</option>
                                                     @foreach ($desa as $data)
-                                                    <option value="{{$data->code}}" {{($data->code == $karyawan->desa) ? 'selected' : ''}}>{{$data->name}}</option>
+                                                    <option value="{{$data->code}}" {{($data->code == old('desa',$karyawan->desa)) ? 'selected' : ''}}>{{$data->name}}</option>
                                                     @endforeach
                                                 </select>
                                                 <label for="id_desa">Desa</label>
@@ -545,31 +548,49 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <input type="hidden" id="kategori_jabatan" value="{{$holding}}">
+                                        <input type="hidden" name="kategori_jabatan" id="kategori_jabatan" value="{{old('kategori_jabatan',$karyawan->kategori_jabatan)}}">
                                     </div>
                                     <div class="row mt-2 gy-4">
                                         <div id="form_departemen" class="col-md-3">
                                             <?php
-                                            if ($karyawan->kategori_jabatan == '') {
+                                            if (old('kategori_jabatan', $karyawan->kategori_jabatan) == '') {
+                                                // echo 'ok';
                                                 $kategori_jabatan = $holding;
+                                                if (old('kategori_jabatan', $kategori_jabatan) == 'sp') {
+                                                    $holding_jabatan = 'CV. SUMBER PANGAN';
+                                                } else if (old('kategori_jabatan', $kategori_jabatan) == 'sps') {
+                                                    $holding_jabatan = 'PT. SURYA PANGAN SEMESTA';
+                                                } else {
+                                                    $holding_jabatan = 'CV. SURYA INTI PANGAN';
+                                                }
                                                 // echo 'ok';
                                             } else {
-                                                $kategori_jabatan = $karyawan->kategori_jabatan;
-                                                // echo 'ok1';
+                                                // echo 'ok2';
+                                                $kategori_jabatan = old('kategori_jabatan', $karyawan->kategori_jabatan);
+                                                if (old('kategori_jabatan', $karyawan->kategori_jabatan) == 'sp') {
+                                                    $holding_jabatan = 'CV. SUMBER PANGAN';
+                                                } else if (old('kategori_jabatan', $karyawan->kategori_jabatan) == 'sps') {
+                                                    $holding_jabatan = 'PT. SURYA PANGAN SEMESTA';
+                                                } else {
+                                                    $holding_jabatan = 'CV. SURYA INTI PANGAN';
+                                                }
+                                                // print_r($kategori_jabatan);
                                             }
                                             $data_departemen = App\Models\Departemen::where('holding', $kategori_jabatan)->orderBy('nama_departemen', 'ASC')->get();
-                                            // echo $kec;
+                                            // print_r($data_departemen);
                                             ?>
                                             <div class="form-floating form-floating-outline">
                                                 <select name="departemen_id" id="id_departemen" class="form-control @error('departemen_id') is-invalid @enderror">
                                                     <option value=""> Pilih Departemen</option>
-                                                    @foreach ($data_departemen as $dj)
-                                                    @if(old('departemen_id',$karyawan->dept_id) == $dj->id)
-                                                    <option value="{{ $dj->id }}" selected>{{ $dj->nama_departemen }}</option>
-                                                    @else
-                                                    <option value="{{ $dj->id }}">{{ $dj->nama_departemen }}</option>
-                                                    @endif
-                                                    @endforeach
+                                                    <optgroup label='Daftar Departemen {{$holding_jabatan}}'>
+                                                        @foreach ($data_departemen as $dj)
+                                                        @if(old('departemen_id',$karyawan->dept_id) == $dj->id)
+                                                        <option value="{{ $dj->id }}" selected>{{ $dj->nama_departemen }}</option>
+                                                        @else
+                                                        <option value="{{ $dj->id }}">{{ $dj->nama_departemen }}</option>
+                                                        @endif
+                                                        @endforeach
+                                                    </optgroup>
                                                 </select>
                                                 <label for="id_departemen">Departemen</label>
                                             </div>
@@ -584,18 +605,21 @@
                                             } else {
                                                 $kategori_jabatan = $karyawan->kategori_jabatan;
                                             }
-                                            $data_divisi = App\Models\Divisi::Where('dept_id', $karyawan->dept_id)->where('holding', $kategori_jabatan)->orderBy('nama_divisi', 'ASC')->get();
+                                            $data_divisi = App\Models\Divisi::Where('dept_id', old('departemen_id', $karyawan->dept_id))->where('holding', $kategori_jabatan)->orderBy('nama_divisi', 'ASC')->get();
                                             // echo $kec;
                                             ?>
                                             <div class="form-floating form-floating-outline">
                                                 <select name="divisi_id" id="id_divisi" class="form-control @error('divisi_id') is-invalid @enderror">
-                                                    @foreach ($data_divisi as $divisi)
-                                                    @if(old('divisi_id', $karyawan->divisi_id) == $divisi['id'])
-                                                    <option value="{{$divisi->id}}" selected>{{$divisi->nama_divisi}}</option>
-                                                    @else
-                                                    <option value="{{$divisi->id}}">{{$divisi->nama_divisi}}</option>
-                                                    @endif
-                                                    @endforeach
+                                                    <option selected disabled value="">Pilih Divisi</option>
+                                                    <optgroup label='Daftar Divisi {{$holding_jabatan}}'>
+                                                        @foreach ($data_divisi as $divisi)
+                                                        @if(old('divisi_id', $karyawan->divisi_id) == $divisi['id'])
+                                                        <option value="{{$divisi->id}}" selected>{{$divisi->nama_divisi}}</option>
+                                                        @else
+                                                        <option value="{{$divisi->id}}">{{$divisi->nama_divisi}}</option>
+                                                        @endif
+                                                        @endforeach
+                                                    </optgroup>
                                                 </select>
                                                 <label for="id_divisi">Divisi</label>
                                             </div>
@@ -610,18 +634,21 @@
                                             } else {
                                                 $kategori_jabatan = $karyawan->kategori_jabatan;
                                             }
-                                            $data_bagian = App\Models\Bagian::Where('divisi_id', $karyawan->divisi_id)->where('holding', $kategori_jabatan)->orderBy('nama_bagian', 'ASC')->get();
+                                            $data_bagian = App\Models\Bagian::Where('divisi_id', old('divisi_id', $karyawan->divisi_id))->where('holding', $kategori_jabatan)->orderBy('nama_bagian', 'ASC')->get();
                                             // echo $kec;
                                             ?>
                                             <div class="form-floating form-floating-outline">
                                                 <select name="bagian_id" id="id_bagian" class="form-control @error('bagian_id') is-invalid @enderror">
-                                                    @foreach ($data_bagian as $bagian)
-                                                    @if(old('bagian_id', $karyawan->bagian_id) == $bagian['id'])
-                                                    <option value="{{$bagian->id}}" selected>{{$bagian->nama_bagian}}</option>
-                                                    @else
-                                                    <option value="{{$bagian->id}}">{{$divisi->nama_bagian}}</option>
-                                                    @endif
-                                                    @endforeach
+                                                    <option selected disabled value="">Pilih Bagian</option>
+                                                    <optgroup label='Daftar Bagian {{$holding_jabatan}}'>
+                                                        @foreach ($data_bagian as $bagian)
+                                                        @if(old('bagian_id', $karyawan->bagian_id) == $bagian['id'])
+                                                        <option value="{{$bagian->id}}" selected>{{$bagian->nama_bagian}}</option>
+                                                        @else
+                                                        <option value="{{$bagian->id}}">{{$divisi->nama_bagian}}</option>
+                                                        @endif
+                                                        @endforeach
+                                                    </optgroup>
                                                 </select>
                                                 <label for="id_bagian">Bagian</label>
                                             </div>
@@ -637,24 +664,27 @@
                                             } else {
                                                 $kategori_jabatan = $karyawan->kategori_jabatan;
                                             }
-                                            $data_bagian = App\Models\Bagian::Where('divisi_id', $karyawan->divisi_id)->where('holding', $kategori_jabatan)->orderBy('nama_bagian', 'ASC')->get();
-                                            $data_bagian1 = App\Models\Bagian::Where('divisi_id', $karyawan->divisi1_id)->where('holding', $kategori_jabatan)->orderBy('nama_bagian', 'ASC')->get();
-                                            $data_bagian2 = App\Models\Bagian::Where('divisi_id', $karyawan->divisi2_id)->where('holding', $kategori_jabatan)->orderBy('nama_bagian', 'ASC')->get();
-                                            $data_bagian3 = App\Models\Bagian::Where('divisi_id', $karyawan->divisi3_id)->where('holding', $kategori_jabatan)->orderBy('nama_bagian', 'ASC')->get();
-                                            $data_bagian4 = App\Models\Bagian::Where('divisi_id', $karyawan->divisi4_id)->where('holding', $kategori_jabatan)->orderBy('nama_bagian', 'ASC')->get();
+                                            $data_bagian = App\Models\Bagian::Where('divisi_id', old('bagian_id', $karyawan->divisi_id))->where('holding', $kategori_jabatan)->orderBy('nama_bagian', 'ASC')->get();
+                                            $data_bagian1 = App\Models\Bagian::Where('divisi_id', old('bagian_id', $karyawan->divisi1_id))->where('holding', $kategori_jabatan)->orderBy('nama_bagian', 'ASC')->get();
+                                            $data_bagian2 = App\Models\Bagian::Where('divisi_id', old('bagian_id', $karyawan->divisi2_id))->where('holding', $kategori_jabatan)->orderBy('nama_bagian', 'ASC')->get();
+                                            $data_bagian3 = App\Models\Bagian::Where('divisi_id', old('bagian_id', $karyawan->divisi3_id))->where('holding', $kategori_jabatan)->orderBy('nama_bagian', 'ASC')->get();
+                                            $data_bagian4 = App\Models\Bagian::Where('divisi_id', old('bagian_id', $karyawan->divisi4_id))->where('holding', $kategori_jabatan)->orderBy('nama_bagian', 'ASC')->get();
                                             // Jabatan
-                                            $data_jabatan = App\Models\Jabatan::Where('bagian_id', $karyawan->bagian_id)->where($karyawan->disivi_id)->where('holding', $kategori_jabatan)->orderBy('nama_jabatan', 'ASC')->get();
-                                            $data_jabatan1 = App\Models\Jabatan::Where('bagian_id', $karyawan->bagian1_id)->where($karyawan->disivi1_id)->where('holding', $kategori_jabatan)->orderBy('nama_jabatan', 'ASC')->get();
-                                            $data_jabatan2 = App\Models\Jabatan::Where('bagian_id', $karyawan->bagian2_id)->where($karyawan->disivi2_id)->where('holding', $kategori_jabatan)->orderBy('nama_jabatan', 'ASC')->get();
-                                            $data_jabatan3 = App\Models\Jabatan::Where('bagian_id', $karyawan->bagian3_id)->where($karyawan->disivi3_id)->where('holding', $kategori_jabatan)->orderBy('nama_jabatan', 'ASC')->get();
-                                            $data_jabatan4 = App\Models\Jabatan::Where('bagian_id', $karyawan->bagian4_id)->where($karyawan->disivi4_id)->where('holding', $kategori_jabatan)->orderBy('nama_jabatan', 'ASC')->get();
+                                            $data_jabatan = App\Models\Jabatan::Where('bagian_id', old('bagian_id', $karyawan->bagian_id))->where(old('disivi_id', $karyawan->disivi_id))->where('holding', $kategori_jabatan)->orderBy('nama_jabatan', 'ASC')->get();
+                                            $data_jabatan1 = App\Models\Jabatan::Where('bagian_id', old('bagian1_id', $karyawan->bagian1_id))->where(old('disivi1_id', $karyawan->disivi1_id))->where('holding', $kategori_jabatan)->orderBy('nama_jabatan', 'ASC')->get();
+                                            $data_jabatan2 = App\Models\Jabatan::Where('bagian_id', old('bagian2_id', $karyawan->bagian2_id))->where(old('disivi2_id', $karyawan->disivi2_id))->where('holding', $kategori_jabatan)->orderBy('nama_jabatan', 'ASC')->get();
+                                            $data_jabatan3 = App\Models\Jabatan::Where('bagian_id', old('bagian3_id', $karyawan->bagian3_id))->where(old('disivi3_id', $karyawan->disivi3_id))->where('holding', $kategori_jabatan)->orderBy('nama_jabatan', 'ASC')->get();
+                                            $data_jabatan4 = App\Models\Jabatan::Where('bagian_id', old('bagian4_id', $karyawan->bagian4_id))->where(old('disivi4_id', $karyawan->disivi4_id))->where('holding', $kategori_jabatan)->orderBy('nama_jabatan', 'ASC')->get();
                                             // echo $kec;
                                             ?>
                                             <div class="form-floating form-floating-outline">
                                                 <select name="jabatan_id" id="id_jabatan" class="form-control @error('jabatan_id') is-invalid @enderror">
-                                                    @foreach ($data_jabatan as $jabatan)
-                                                    <option value="{{$jabatan->id}}" {{($jabatan->id == $karyawan->jabatan_id) ? 'selected' : ''}}>{{$jabatan->nama_jabatan}}</option>
-                                                    @endforeach
+                                                    <option value="">Pilih Jabatan</option>
+                                                    <optgroup label='Daftar Jabatan {{$holding_jabatan}}'>
+                                                        @foreach ($data_jabatan as $jabatan)
+                                                        <option value="{{$jabatan->id}}" {{($jabatan->id == $karyawan->jabatan_id) ? 'selected' : ''}}>{{$jabatan->nama_jabatan}}</option>
+                                                        @endforeach
+                                                    </optgroup>
                                                 </select>
                                                 <label for="id_jabatan">Jabatan</label>
                                             </div>
@@ -685,16 +715,18 @@
                                                                                 } else {
                                                                                     $kategori_jabatan = $karyawan->kategori_jabatan;
                                                                                 }
-                                                                                $departemen = App\Models\Departemen::where('holding', $kategori_jabatan)->get();
+                                                                                $departemen = App\Models\Departemen::where('holding', $kategori_jabatan)->orderBy('nama_departemen', 'ASC')->get();
                                                                                 ?>
-                                                                                @foreach($departemen as $departemen)
-                                                                                @if(old('departemen1_id',$karyawan->dept1_id) == $departemen->id)
-                                                                                <option value="{{ $departemen->id }}" selected>{{ $departemen->nama_departemen }}</option>
-                                                                                @else
-                                                                                <option value="{{ $departemen->id }}">{{ $departemen->nama_departemen }}</option>
-                                                                                <!-- <option value="{{$departemen->id}}">{{$departemen->nama_departemen}}</option> -->
-                                                                                @endif
-                                                                                @endforeach
+                                                                                <optgroup label='Daftar Departemen {{$holding_jabatan}}'>
+                                                                                    @foreach($departemen as $departemen)
+                                                                                    @if(old('departemen1_id',$karyawan->dept1_id) == $departemen->id)
+                                                                                    <option value="{{ $departemen->id }}" selected>{{ $departemen->nama_departemen }}</option>
+                                                                                    @else
+                                                                                    <option value="{{ $departemen->id }}">{{ $departemen->nama_departemen }}</option>
+                                                                                    <!-- <option value="{{$departemen->id}}">{{$departemen->nama_departemen}}</option> -->
+                                                                                    @endif
+                                                                                    @endforeach
+                                                                                </optgroup>
                                                                             </select>
                                                                             <label for=" id_departemen1">Departemen 2</label>
                                                                         </div>
@@ -703,22 +735,24 @@
                                                                         <div class="form-floating form-floating-outline">
                                                                             <select name="divisi1_id" id="id_divisi1" class="form-control">
                                                                                 <option value=""> Pilih Divisi</option>
-                                                                                <?php
-                                                                                if ($karyawan->kategori_jabatan == '') {
-                                                                                    $kategori_jabatan = $holding;
-                                                                                } else {
-                                                                                    $kategori_jabatan = $karyawan->kategori_jabatan;
-                                                                                }
-                                                                                $divisi = App\Models\Divisi::where('dept_id', old('departemen_id', $karyawan->dept_id))->where('holding', $kategori_jabatan)->get();
-                                                                                ?>
-                                                                                @foreach($divisi as $divisi)
-                                                                                @if(old('divisi1_id',$karyawan->divisi1_id) == $divisi->id)
-                                                                                <option value="{{ $divisi->id }}" selected>{{ $divisi->nama_divisi }}</option>
-                                                                                @else
-                                                                                <option value="{{ $divisi->id }}">{{ $divisi->nama_divisi }}</option>
-                                                                                <!-- <option value="{{$divisi->id}}">{{$divisi->nama_divisi}}</option> -->
-                                                                                @endif
-                                                                                @endforeach
+                                                                                <optgroup label='Daftar Divisi {{$holding_jabatan}}'>
+                                                                                    <?php
+                                                                                    if ($karyawan->kategori_jabatan == '') {
+                                                                                        $kategori_jabatan = $holding;
+                                                                                    } else {
+                                                                                        $kategori_jabatan = $karyawan->kategori_jabatan;
+                                                                                    }
+                                                                                    $divisi = App\Models\Divisi::where('dept_id', old('departemen1_id', $karyawan->dept1_id))->where('holding', $kategori_jabatan)->orderBy('nama_divisi', 'ASC')->get();
+                                                                                    ?>
+                                                                                    @foreach($divisi as $divisi)
+                                                                                    @if(old('divisi1_id',$karyawan->divisi1_id) == $divisi->id)
+                                                                                    <option value="{{ $divisi->id }}" selected>{{ $divisi->nama_divisi }}</option>
+                                                                                    @else
+                                                                                    <option value="{{ $divisi->id }}">{{ $divisi->nama_divisi }}</option>
+                                                                                    <!-- <option value="{{$divisi->id}}">{{$divisi->nama_divisi}}</option> -->
+                                                                                    @endif
+                                                                                    @endforeach
+                                                                                </optgroup>
                                                                             </select>
                                                                             <label for=" id_divisi1">Divisi 2</label>
                                                                         </div>
@@ -727,22 +761,24 @@
                                                                         <div class="form-floating form-floating-outline">
                                                                             <select name="bagian1_id" id="id_bagian1" class="form-control @error('bagian1_id') is-invalid @enderror">
                                                                                 <option value=""> Pilih Bagian</option>
-                                                                                <?php
-                                                                                if ($karyawan->kategori_jabatan == '') {
-                                                                                    $kategori_jabatan = $holding;
-                                                                                } else {
-                                                                                    $kategori_jabatan = $karyawan->kategori_jabatan;
-                                                                                }
-                                                                                $bagian = App\Models\Bagian::where('divisi_id', old('divisi1_id', $karyawan->divisi1_id))->where('holding', $kategori_jabatan)->get();
-                                                                                ?>
-                                                                                @foreach($bagian as $bagian)
-                                                                                @if(old('bagian1_id',$karyawan->bagian1_id) == $bagian->id)
-                                                                                <option value="{{ $bagian->id }}" selected>{{ $bagian->nama_bagian }}</option>
-                                                                                @else
-                                                                                <option value="{{ $bagian->id }}">{{ $bagian->nama_bagian }}</option>
-                                                                                <!-- <option value="{{$divisi->id}}">{{$divisi->nama_divisi}}</option> -->
-                                                                                @endif
-                                                                                @endforeach
+                                                                                <optgroup label='Daftar Bagian {{$holding_jabatan}}'>
+                                                                                    <?php
+                                                                                    if ($karyawan->kategori_jabatan == '') {
+                                                                                        $kategori_jabatan = $holding;
+                                                                                    } else {
+                                                                                        $kategori_jabatan = $karyawan->kategori_jabatan;
+                                                                                    }
+                                                                                    $bagian = App\Models\Bagian::where('divisi_id', old('divisi1_id', $karyawan->divisi1_id))->where('holding', $kategori_jabatan)->orderBy('nama_bagian', 'ASC')->get();
+                                                                                    ?>
+                                                                                    @foreach($bagian as $bagian)
+                                                                                    @if(old('bagian1_id',$karyawan->bagian1_id) == $bagian->id)
+                                                                                    <option value="{{ $bagian->id }}" selected>{{ $bagian->nama_bagian }}</option>
+                                                                                    @else
+                                                                                    <option value="{{ $bagian->id }}">{{ $bagian->nama_bagian }}</option>
+                                                                                    <!-- <option value="{{$divisi->id}}">{{$divisi->nama_divisi}}</option> -->
+                                                                                    @endif
+                                                                                    @endforeach
+                                                                                </optgroup>
                                                                             </select>
                                                                             <label for="id_bagian1">Bagian 2</label>
                                                                         </div>
@@ -751,22 +787,24 @@
                                                                         <div class="form-floating form-floating-outline">
                                                                             <select name="jabatan1_id" id="id_jabatan1" class="form-control">
                                                                                 <option value=""> Pilih Jabatan</option>
-                                                                                <?php
-                                                                                if ($karyawan->kategori_jabatan == '') {
-                                                                                    $kategori_jabatan = $holding;
-                                                                                } else {
-                                                                                    $kategori_jabatan = $karyawan->kategori_jabatan;
-                                                                                }
-                                                                                $jabatan = App\Models\Jabatan::where('bagian_id', old('bagian1_id', $karyawan->bagian1_id))->where('holding', $kategori_jabatan)->get();
-                                                                                ?>
-                                                                                @foreach($jabatan as $jabatan)
-                                                                                @if(old('jabatan1_id',$karyawan->jabatan1_id) == $jabatan->id)
-                                                                                <option value="{{ $jabatan->id }}" selected>{{ $jabatan->nama_jabatan }}</option>
-                                                                                @else
-                                                                                <option value="{{ $jabatan->id }}">{{ $jabatan->nama_jabatan }}</option>
-                                                                                <!-- <option value="{{$divisi->id}}">{{$divisi->nama_divisi}}</option> -->
-                                                                                @endif
-                                                                                @endforeach
+                                                                                <optgroup label='Daftar Jabatan {{$holding_jabatan}}'>
+                                                                                    <?php
+                                                                                    if ($karyawan->kategori_jabatan == '') {
+                                                                                        $kategori_jabatan = $holding;
+                                                                                    } else {
+                                                                                        $kategori_jabatan = $karyawan->kategori_jabatan;
+                                                                                    }
+                                                                                    $jabatan = App\Models\Jabatan::where('bagian_id', old('bagian1_id', $karyawan->bagian1_id))->where('holding', $kategori_jabatan)->orderBy('nama_jabatan', 'ASC')->get();
+                                                                                    ?>
+                                                                                    @foreach($jabatan as $jabatan)
+                                                                                    @if(old('jabatan1_id',$karyawan->jabatan1_id) == $jabatan->id)
+                                                                                    <option value="{{ $jabatan->id }}" selected>{{ $jabatan->nama_jabatan }}</option>
+                                                                                    @else
+                                                                                    <option value="{{ $jabatan->id }}">{{ $jabatan->nama_jabatan }}</option>
+                                                                                    <!-- <option value="{{$divisi->id}}">{{$divisi->nama_divisi}}</option> -->
+                                                                                    @endif
+                                                                                    @endforeach
+                                                                                </optgroup>
                                                                             </select>
                                                                             <label for=" id_jabatan1">Jabatan 2</label>
                                                                         </div>
@@ -777,22 +815,24 @@
                                                                         <div class="form-floating form-floating-outline">
                                                                             <select name="departemen2_id" id="id_departemen2" class="form-control">
                                                                                 <option value=""> Pilih Departemen</option>
-                                                                                <?php
-                                                                                if ($karyawan->kategori_jabatan == '') {
-                                                                                    $kategori_jabatan = $holding;
-                                                                                } else {
-                                                                                    $kategori_jabatan = $karyawan->kategori_jabatan;
-                                                                                }
-                                                                                $departemen = App\Models\Departemen::where('holding', $kategori_jabatan)->get();
-                                                                                ?>
-                                                                                @foreach($departemen as $departemen)
-                                                                                @if(old('departemen2_id',$karyawan->dept2_id) == $departemen->id)
-                                                                                <option value="{{ $departemen->id }}" selected>{{ $departemen->nama_departemen }}</option>
-                                                                                @else
-                                                                                <option value="{{ $departemen->id }}">{{ $departemen->nama_departemen }}</option>
-                                                                                <!-- <option value="{{$departemen->id}}">{{$departemen->nama_departemen}}</option> -->
-                                                                                @endif
-                                                                                @endforeach
+                                                                                <optgroup label='Daftar Departemen {{$holding_jabatan}}'>
+                                                                                    <?php
+                                                                                    if ($karyawan->kategori_jabatan == '') {
+                                                                                        $kategori_jabatan = $holding;
+                                                                                    } else {
+                                                                                        $kategori_jabatan = $karyawan->kategori_jabatan;
+                                                                                    }
+                                                                                    $departemen = App\Models\Departemen::where('holding', $kategori_jabatan)->orderBy('nama_departemen', 'ASC')->get();
+                                                                                    ?>
+                                                                                    @foreach($departemen as $departemen)
+                                                                                    @if(old('departemen2_id',$karyawan->dept2_id) == $departemen->id)
+                                                                                    <option value="{{ $departemen->id }}" selected>{{ $departemen->nama_departemen }}</option>
+                                                                                    @else
+                                                                                    <option value="{{ $departemen->id }}">{{ $departemen->nama_departemen }}</option>
+                                                                                    <!-- <option value="{{$departemen->id}}">{{$departemen->nama_departemen}}</option> -->
+                                                                                    @endif
+                                                                                    @endforeach
+                                                                                </optgroup>
                                                                             </select>
                                                                             <label for=" id_departemen2">Departemen 3</label>
                                                                         </div>
@@ -801,22 +841,24 @@
                                                                         <div class="form-floating form-floating-outline">
                                                                             <select name="divisi2_id" id="id_divisi2" class="form-control">
                                                                                 <option value=""> Pilih Divisi</option>
-                                                                                <?php
-                                                                                if ($karyawan->kategori_jabatan == '') {
-                                                                                    $kategori_jabatan = $holding;
-                                                                                } else {
-                                                                                    $kategori_jabatan = $karyawan->kategori_jabatan;
-                                                                                }
-                                                                                $divisi = App\Models\Divisi::where('dept_id', old('departemen_id', $karyawan->dept_id))->where('holding', $kategori_jabatan)->get();
-                                                                                ?>
-                                                                                @foreach($divisi as $divisi)
-                                                                                @if(old('divisi2_id',$karyawan->divisi2_id) == $divisi->id)
-                                                                                <option value="{{ $divisi->id }}" selected>{{ $divisi->nama_divisi }}</option>
-                                                                                @else
-                                                                                <option value="{{ $divisi->id }}">{{ $divisi->nama_divisi }}</option>
-                                                                                <!-- <option value="{{$divisi->id}}">{{$divisi->nama_divisi}}</option> -->
-                                                                                @endif
-                                                                                @endforeach
+                                                                                <optgroup label='Daftar Divisi {{$holding_jabatan}}'>
+                                                                                    <?php
+                                                                                    if ($karyawan->kategori_jabatan == '') {
+                                                                                        $kategori_jabatan = $holding;
+                                                                                    } else {
+                                                                                        $kategori_jabatan = $karyawan->kategori_jabatan;
+                                                                                    }
+                                                                                    $divisi = App\Models\Divisi::where('dept_id', old('departemen2_id', $karyawan->dept_id))->where('holding', $kategori_jabatan)->orderBy('nama_divisi', 'ASC')->get();
+                                                                                    ?>
+                                                                                    @foreach($divisi as $divisi)
+                                                                                    @if(old('divisi2_id',$karyawan->divisi2_id) == $divisi->id)
+                                                                                    <option value="{{ $divisi->id }}" selected>{{ $divisi->nama_divisi }}</option>
+                                                                                    @else
+                                                                                    <option value="{{ $divisi->id }}">{{ $divisi->nama_divisi }}</option>
+                                                                                    <!-- <option value="{{$divisi->id}}">{{$divisi->nama_divisi}}</option> -->
+                                                                                    @endif
+                                                                                    @endforeach
+                                                                                </optgroup>
                                                                             </select>
                                                                             <label for=" id_divisi2">Divisi 3</label>
                                                                         </div>
@@ -825,22 +867,24 @@
                                                                         <div class="form-floating form-floating-outline">
                                                                             <select name="bagian2_id" id="id_bagian2" class="form-control">
                                                                                 <option value=""> Pilih Bagian</option>
-                                                                                <?php
-                                                                                if ($karyawan->kategori_jabatan == '') {
-                                                                                    $kategori_jabatan = $holding;
-                                                                                } else {
-                                                                                    $kategori_jabatan = $karyawan->kategori_jabatan;
-                                                                                }
-                                                                                $bagian = App\Models\Bagian::where('divisi_id', old('divisi2_id', $karyawan->divisi2_id))->where('holding', $kategori_jabatan)->get();
-                                                                                ?>
-                                                                                @foreach($bagian as $bagian)
-                                                                                @if(old('bagian2_id',$karyawan->bagian2_id) == $bagian->id)
-                                                                                <option value="{{ $bagian->id }}" selected>{{ $bagian->nama_bagian }}</option>
-                                                                                @else
-                                                                                <option value="{{ $bagian->id }}">{{ $bagian->nama_bagian }}</option>
-                                                                                <!-- <option value="{{$divisi->id}}">{{$divisi->nama_divisi}}</option> -->
-                                                                                @endif
-                                                                                @endforeach
+                                                                                <optgroup label='Daftar Bagian {{$holding_jabatan}}'>
+                                                                                    <?php
+                                                                                    if ($karyawan->kategori_jabatan == '') {
+                                                                                        $kategori_jabatan = $holding;
+                                                                                    } else {
+                                                                                        $kategori_jabatan = $karyawan->kategori_jabatan;
+                                                                                    }
+                                                                                    $bagian = App\Models\Bagian::where('divisi_id', old('divisi2_id', $karyawan->divisi2_id))->where('holding', $kategori_jabatan)->orderBy('nama_bagian', 'ASC')->get();
+                                                                                    ?>
+                                                                                    @foreach($bagian as $bagian)
+                                                                                    @if(old('bagian2_id',$karyawan->bagian2_id) == $bagian->id)
+                                                                                    <option value="{{ $bagian->id }}" selected>{{ $bagian->nama_bagian }}</option>
+                                                                                    @else
+                                                                                    <option value="{{ $bagian->id }}">{{ $bagian->nama_bagian }}</option>
+                                                                                    <!-- <option value="{{$divisi->id}}">{{$divisi->nama_divisi}}</option> -->
+                                                                                    @endif
+                                                                                    @endforeach
+                                                                                </optgroup>
                                                                             </select>
                                                                             <label for="id_bagian2">Bagian 3</label>
                                                                         </div>
@@ -849,22 +893,24 @@
                                                                         <div class="form-floating form-floating-outline">
                                                                             <select name="jabatan2_id" id="id_jabatan2" class="form-control">
                                                                                 <option value=""> Pilih Jabatan</option>
-                                                                                <?php
-                                                                                if ($karyawan->kategori_jabatan == '') {
-                                                                                    $kategori_jabatan = $holding;
-                                                                                } else {
-                                                                                    $kategori_jabatan = $karyawan->kategori_jabatan;
-                                                                                }
-                                                                                $jabatan = App\Models\Jabatan::where('bagian_id', old('bagian2_id', $karyawan->bagian2_id))->where('holding', $kategori_jabatan)->get();
-                                                                                ?>
-                                                                                @foreach($jabatan as $jabatan)
-                                                                                @if(old('jabatan2_id',$karyawan->jabatan2_id) == $jabatan->id)
-                                                                                <option value="{{ $jabatan->id }}" selected>{{ $jabatan->nama_jabatan }}</option>
-                                                                                @else
-                                                                                <option value="{{ $jabatan->id }}">{{ $jabatan->nama_jabatan }}</option>
-                                                                                <!-- <option value="{{$divisi->id}}">{{$divisi->nama_divisi}}</option> -->
-                                                                                @endif
-                                                                                @endforeach
+                                                                                <optgroup label='Daftar Jabatan {{$holding_jabatan}}'>
+                                                                                    <?php
+                                                                                    if ($karyawan->kategori_jabatan == '') {
+                                                                                        $kategori_jabatan = $holding;
+                                                                                    } else {
+                                                                                        $kategori_jabatan = $karyawan->kategori_jabatan;
+                                                                                    }
+                                                                                    $jabatan = App\Models\Jabatan::where('bagian_id', old('bagian2_id', $karyawan->bagian2_id))->where('holding', $kategori_jabatan)->orderBy('nama_jabatan', 'ASC')->get();
+                                                                                    ?>
+                                                                                    @foreach($jabatan as $jabatan)
+                                                                                    @if(old('jabatan2_id',$karyawan->jabatan2_id) == $jabatan->id)
+                                                                                    <option value="{{ $jabatan->id }}" selected>{{ $jabatan->nama_jabatan }}</option>
+                                                                                    @else
+                                                                                    <option value="{{ $jabatan->id }}">{{ $jabatan->nama_jabatan }}</option>
+                                                                                    <!-- <option value="{{$divisi->id}}">{{$divisi->nama_divisi}}</option> -->
+                                                                                    @endif
+                                                                                    @endforeach
+                                                                                </optgroup>
                                                                             </select>
                                                                             <label for=" id_jabatan2">Jabatan 3</label>
                                                                         </div>
@@ -875,22 +921,24 @@
                                                                         <div class="form-floating form-floating-outline">
                                                                             <select name="departemen3_id" id="id_departemen3" class="form-control">
                                                                                 <option value=""> Pilih Departemen</option>
-                                                                                <?php
-                                                                                if ($karyawan->kategori_jabatan == '') {
-                                                                                    $kategori_jabatan = $holding;
-                                                                                } else {
-                                                                                    $kategori_jabatan = $karyawan->kategori_jabatan;
-                                                                                }
-                                                                                $departemen = App\Models\Departemen::where('holding', $kategori_jabatan)->get();
-                                                                                ?>
-                                                                                @foreach($departemen as $departemen)
-                                                                                @if(old('departemen3_id',$karyawan->dept3_id) == $departemen->id)
-                                                                                <option value="{{ $departemen->id }}" selected>{{ $departemen->nama_departemen }}</option>
-                                                                                @else
-                                                                                <option value="{{ $departemen->id }}">{{ $departemen->nama_departemen }}</option>
-                                                                                <!-- <option value="{{$departemen->id}}">{{$departemen->nama_departemen}}</option> -->
-                                                                                @endif
-                                                                                @endforeach
+                                                                                <optgroup label='Daftar Departemen {{$holding_jabatan}}'>
+                                                                                    <?php
+                                                                                    if ($karyawan->kategori_jabatan == '') {
+                                                                                        $kategori_jabatan = $holding;
+                                                                                    } else {
+                                                                                        $kategori_jabatan = $karyawan->kategori_jabatan;
+                                                                                    }
+                                                                                    $departemen = App\Models\Departemen::where('holding', $kategori_jabatan)->orderBy('nama_departemen', 'ASC')->get();
+                                                                                    ?>
+                                                                                    @foreach($departemen as $departemen)
+                                                                                    @if(old('departemen3_id',$karyawan->dept3_id) == $departemen->id)
+                                                                                    <option value="{{ $departemen->id }}" selected>{{ $departemen->nama_departemen }}</option>
+                                                                                    @else
+                                                                                    <option value="{{ $departemen->id }}">{{ $departemen->nama_departemen }}</option>
+                                                                                    <!-- <option value="{{$departemen->id}}">{{$departemen->nama_departemen}}</option> -->
+                                                                                    @endif
+                                                                                    @endforeach
+                                                                                </optgroup>
                                                                             </select>
                                                                             <label for=" id_departemen3">Departemen 4</label>
                                                                         </div>
@@ -899,22 +947,24 @@
                                                                         <div class="form-floating form-floating-outline">
                                                                             <select name="divisi3_id" id="id_divisi3" class="form-control">
                                                                                 <option value=""> Pilih Divisi</option>
-                                                                                <?php
-                                                                                if ($karyawan->kategori_jabatan == '') {
-                                                                                    $kategori_jabatan = $holding;
-                                                                                } else {
-                                                                                    $kategori_jabatan = $karyawan->kategori_jabatan;
-                                                                                }
-                                                                                $divisi = App\Models\Divisi::where('dept_id', old('departemen_id', $karyawan->dept_id))->where('holding', $kategori_jabatan)->get();
-                                                                                ?>
-                                                                                @foreach($divisi as $divisi)
-                                                                                @if(old('divisi3_id',$karyawan->divisi3_id) == $divisi->id)
-                                                                                <option value="{{ $divisi->id }}" selected>{{ $divisi->nama_divisi }}</option>
-                                                                                @else
-                                                                                <option value="{{ $divisi->id }}">{{ $divisi->nama_divisi }}</option>
-                                                                                <!-- <option value="{{$divisi->id}}">{{$divisi->nama_divisi}}</option> -->
-                                                                                @endif
-                                                                                @endforeach
+                                                                                <optgroup label='Daftar Divisi {{$holding_jabatan}}'>
+                                                                                    <?php
+                                                                                    if ($karyawan->kategori_jabatan == '') {
+                                                                                        $kategori_jabatan = $holding;
+                                                                                    } else {
+                                                                                        $kategori_jabatan = $karyawan->kategori_jabatan;
+                                                                                    }
+                                                                                    $divisi = App\Models\Divisi::where('dept_id', old('departemen3_id', $karyawan->dept_id))->where('holding', $kategori_jabatan)->orderBy('nama_divisi', 'ASC')->get();
+                                                                                    ?>
+                                                                                    @foreach($divisi as $divisi)
+                                                                                    @if(old('divisi3_id',$karyawan->divisi3_id) == $divisi->id)
+                                                                                    <option value="{{ $divisi->id }}" selected>{{ $divisi->nama_divisi }}</option>
+                                                                                    @else
+                                                                                    <option value="{{ $divisi->id }}">{{ $divisi->nama_divisi }}</option>
+                                                                                    <!-- <option value="{{$divisi->id}}">{{$divisi->nama_divisi}}</option> -->
+                                                                                    @endif
+                                                                                    @endforeach
+                                                                                </optgroup>
                                                                             </select>
                                                                             <label for=" id_divisi3">Divisi 4</label>
                                                                         </div>
@@ -923,22 +973,24 @@
                                                                         <div class="form-floating form-floating-outline">
                                                                             <select name="bagian3_id" id="id_bagian3" class="form-control">
                                                                                 <option value=""> Pilih Bagian</option>
-                                                                                <?php
-                                                                                if ($karyawan->kategori_jabatan == '') {
-                                                                                    $kategori_jabatan = $holding;
-                                                                                } else {
-                                                                                    $kategori_jabatan = $karyawan->kategori_jabatan;
-                                                                                }
-                                                                                $bagian = App\Models\Bagian::where('divisi_id', old('divisi3_id', $karyawan->divisi3_id))->where('holding', $kategori_jabatan)->get();
-                                                                                ?>
-                                                                                @foreach($bagian as $bagian)
-                                                                                @if(old('bagian3_id',$karyawan->bagian3_id) == $bagian->id)
-                                                                                <option value="{{ $bagian->id }}" selected>{{ $bagian->nama_bagian }}</option>
-                                                                                @else
-                                                                                <option value="{{ $bagian->id }}">{{ $bagian->nama_bagian }}</option>
-                                                                                <!-- <option value="{{$divisi->id}}">{{$divisi->nama_divisi}}</option> -->
-                                                                                @endif
-                                                                                @endforeach
+                                                                                <optgroup label='Daftar Bagian {{$holding_jabatan}}'>
+                                                                                    <?php
+                                                                                    if ($karyawan->kategori_jabatan == '') {
+                                                                                        $kategori_jabatan = $holding;
+                                                                                    } else {
+                                                                                        $kategori_jabatan = $karyawan->kategori_jabatan;
+                                                                                    }
+                                                                                    $bagian = App\Models\Bagian::where('divisi_id', old('divisi3_id', $karyawan->divisi3_id))->where('holding', $kategori_jabatan)->orderBy('nama_bagian', 'ASC')->get();
+                                                                                    ?>
+                                                                                    @foreach($bagian as $bagian)
+                                                                                    @if(old('bagian3_id',$karyawan->bagian3_id) == $bagian->id)
+                                                                                    <option value="{{ $bagian->id }}" selected>{{ $bagian->nama_bagian }}</option>
+                                                                                    @else
+                                                                                    <option value="{{ $bagian->id }}">{{ $bagian->nama_bagian }}</option>
+                                                                                    <!-- <option value="{{$divisi->id}}">{{$divisi->nama_divisi}}</option> -->
+                                                                                    @endif
+                                                                                    @endforeach
+                                                                                </optgroup>
                                                                             </select>
                                                                             <label for="id_bagian3">Bagian 4</label>
                                                                         </div>
@@ -947,22 +999,24 @@
                                                                         <div class="form-floating form-floating-outline">
                                                                             <select name="jabatan3_id" id="id_jabatan3" class="form-control">
                                                                                 <option value=""> Pilih Jabatan</option>
-                                                                                <?php
-                                                                                if ($karyawan->kategori_jabatan == '') {
-                                                                                    $kategori_jabatan = $holding;
-                                                                                } else {
-                                                                                    $kategori_jabatan = $karyawan->kategori_jabatan;
-                                                                                }
-                                                                                $jabatan = App\Models\Jabatan::where('bagian_id', old('bagian3_id', $karyawan->bagian3_id))->where('holding', $kategori_jabatan)->get();
-                                                                                ?>
-                                                                                @foreach($jabatan as $jabatan)
-                                                                                @if(old('jabatan3_id',$karyawan->jabatan3_id) == $jabatan->id)
-                                                                                <option value="{{ $jabatan->id }}" selected>{{ $jabatan->nama_jabatan }}</option>
-                                                                                @else
-                                                                                <option value="{{ $jabatan->id }}">{{ $jabatan->nama_jabatan }}</option>
-                                                                                <!-- <option value="{{$divisi->id}}">{{$divisi->nama_divisi}}</option> -->
-                                                                                @endif
-                                                                                @endforeach
+                                                                                <optgroup label='Daftar Jabatan {{$holding_jabatan}}'>
+                                                                                    <?php
+                                                                                    if ($karyawan->kategori_jabatan == '') {
+                                                                                        $kategori_jabatan = $holding;
+                                                                                    } else {
+                                                                                        $kategori_jabatan = $karyawan->kategori_jabatan;
+                                                                                    }
+                                                                                    $jabatan = App\Models\Jabatan::where('bagian_id', old('bagian3_id', $karyawan->bagian3_id))->where('holding', $kategori_jabatan)->orderBy('nama_jabatan', 'ASC')->get();
+                                                                                    ?>
+                                                                                    @foreach($jabatan as $jabatan)
+                                                                                    @if(old('jabatan3_id',$karyawan->jabatan3_id) == $jabatan->id)
+                                                                                    <option value="{{ $jabatan->id }}" selected>{{ $jabatan->nama_jabatan }}</option>
+                                                                                    @else
+                                                                                    <option value="{{ $jabatan->id }}">{{ $jabatan->nama_jabatan }}</option>
+                                                                                    <!-- <option value="{{$divisi->id}}">{{$divisi->nama_divisi}}</option> -->
+                                                                                    @endif
+                                                                                    @endforeach
+                                                                                </optgroup>
                                                                             </select>
                                                                             <label for=" id_jabatan3">Jabatan 4</label>
                                                                         </div>
@@ -973,22 +1027,24 @@
                                                                         <div class="form-floating form-floating-outline">
                                                                             <select name="departemen4_id" id="id_departemen4" class="form-control">
                                                                                 <option value=""> Pilih Departemen</option>
-                                                                                <?php
-                                                                                if ($karyawan->kategori_jabatan == '') {
-                                                                                    $kategori_jabatan = $holding;
-                                                                                } else {
-                                                                                    $kategori_jabatan = $karyawan->kategori_jabatan;
-                                                                                }
-                                                                                $departemen = App\Models\Departemen::where('holding', $kategori_jabatan)->get();
-                                                                                ?>
-                                                                                @foreach($departemen as $departemen)
-                                                                                @if(old('departemen4_id',$karyawan->dept4_id) == $departemen->id)
-                                                                                <option value="{{ $departemen->id }}" selected>{{ $departemen->nama_departemen }}</option>
-                                                                                @else
-                                                                                <option value="{{ $departemen->id }}">{{ $departemen->nama_departemen }}</option>
-                                                                                <!-- <option value="{{$departemen->id}}">{{$departemen->nama_departemen}}</option> -->
-                                                                                @endif
-                                                                                @endforeach
+                                                                                <optgroup label='Daftar Departemen {{$holding_jabatan}}'>
+                                                                                    <?php
+                                                                                    if ($karyawan->kategori_jabatan == '') {
+                                                                                        $kategori_jabatan = $holding;
+                                                                                    } else {
+                                                                                        $kategori_jabatan = $karyawan->kategori_jabatan;
+                                                                                    }
+                                                                                    $departemen = App\Models\Departemen::where('holding', $kategori_jabatan)->orderBy('nama_departemen', 'ASC')->get();
+                                                                                    ?>
+                                                                                    @foreach($departemen as $departemen)
+                                                                                    @if(old('departemen4_id',$karyawan->dept4_id) == $departemen->id)
+                                                                                    <option value="{{ $departemen->id }}" selected>{{ $departemen->nama_departemen }}</option>
+                                                                                    @else
+                                                                                    <option value="{{ $departemen->id }}">{{ $departemen->nama_departemen }}</option>
+                                                                                    <!-- <option value="{{$departemen->id}}">{{$departemen->nama_departemen}}</option> -->
+                                                                                    @endif
+                                                                                    @endforeach
+                                                                                </optgroup>
                                                                             </select>
                                                                             <label for=" id_departemen4">Departemen 5</label>
                                                                         </div>
@@ -997,22 +1053,24 @@
                                                                         <div class="form-floating form-floating-outline">
                                                                             <select name="divisi4_id" id="id_divisi4" class="form-control">
                                                                                 <option value=""> Pilih Divisi</option>
-                                                                                <?php
-                                                                                if ($karyawan->kategori_jabatan == '') {
-                                                                                    $kategori_jabatan = $holding;
-                                                                                } else {
-                                                                                    $kategori_jabatan = $karyawan->kategori_jabatan;
-                                                                                }
-                                                                                $divisi = App\Models\Divisi::where('dept_id', old('departemen_id', $karyawan->dept_id))->where('holding', $kategori_jabatan)->get();
-                                                                                ?>
-                                                                                @foreach($divisi as $divisi)
-                                                                                @if(old('divisi4_id',$karyawan->divisi4_id) == $divisi->id)
-                                                                                <option value="{{ $divisi->id }}" selected>{{ $divisi->nama_divisi }}</option>
-                                                                                @else
-                                                                                <option value="{{ $divisi->id }}">{{ $divisi->nama_divisi }}</option>
-                                                                                <!-- <option value="{{$divisi->id}}">{{$divisi->nama_divisi}}</option> -->
-                                                                                @endif
-                                                                                @endforeach
+                                                                                <optgroup label='Daftar Divisi {{$holding_jabatan}}'>
+                                                                                    <?php
+                                                                                    if ($karyawan->kategori_jabatan == '') {
+                                                                                        $kategori_jabatan = $holding;
+                                                                                    } else {
+                                                                                        $kategori_jabatan = $karyawan->kategori_jabatan;
+                                                                                    }
+                                                                                    $divisi = App\Models\Divisi::where('dept_id', old('departemen4_id', $karyawan->dept_id))->where('holding', $kategori_jabatan)->orderBy('nama_divisi', 'ASC')->get();
+                                                                                    ?>
+                                                                                    @foreach($divisi as $divisi)
+                                                                                    @if(old('divisi4_id',$karyawan->divisi4_id) == $divisi->id)
+                                                                                    <option value="{{ $divisi->id }}" selected>{{ $divisi->nama_divisi }}</option>
+                                                                                    @else
+                                                                                    <option value="{{ $divisi->id }}">{{ $divisi->nama_divisi }}</option>
+                                                                                    <!-- <option value="{{$divisi->id}}">{{$divisi->nama_divisi}}</option> -->
+                                                                                    @endif
+                                                                                    @endforeach
+                                                                                </optgroup>
                                                                             </select>
                                                                             <label for=" id_divisi4">Divisi 5</label>
                                                                         </div>
@@ -1021,22 +1079,24 @@
                                                                         <div class="form-floating form-floating-outline">
                                                                             <select name="bagian4_id" id="id_bagian4" class="form-control">
                                                                                 <option value=""> Pilih Bagian</option>
-                                                                                <?php
-                                                                                if ($karyawan->kategori_jabatan == '') {
-                                                                                    $kategori_jabatan = $holding;
-                                                                                } else {
-                                                                                    $kategori_jabatan = $karyawan->kategori_jabatan;
-                                                                                }
-                                                                                $bagian = App\Models\Bagian::where('divisi_id', old('divisi4_id', $karyawan->divisi4_id))->where('holding', $kategori_jabatan)->get();
-                                                                                ?>
-                                                                                @foreach($bagian as $bagian)
-                                                                                @if(old('bagian4_id') == $bagian->id)
-                                                                                <option value="{{ $bagian->id }}" selected>{{ $bagian->nama_bagian }}</option>
-                                                                                @else
-                                                                                <option value="{{ $bagian->id }}">{{ $bagian->nama_bagian }}</option>
-                                                                                <!-- <option value="{{$divisi->id}}">{{$divisi->nama_divisi}}</option> -->
-                                                                                @endif
-                                                                                @endforeach
+                                                                                <optgroup label='Daftar bagian {{$holding_jabatan}}'>
+                                                                                    <?php
+                                                                                    if ($karyawan->kategori_jabatan == '') {
+                                                                                        $kategori_jabatan = $holding;
+                                                                                    } else {
+                                                                                        $kategori_jabatan = $karyawan->kategori_jabatan;
+                                                                                    }
+                                                                                    $bagian = App\Models\Bagian::where('divisi_id', old('divisi4_id', $karyawan->divisi4_id))->where('holding', $kategori_jabatan)->orderBy('nama_bagian', 'ASC')->get();
+                                                                                    ?>
+                                                                                    @foreach($bagian as $bagian)
+                                                                                    @if(old('bagian4_id') == $bagian->id)
+                                                                                    <option value="{{ $bagian->id }}" selected>{{ $bagian->nama_bagian }}</option>
+                                                                                    @else
+                                                                                    <option value="{{ $bagian->id }}">{{ $bagian->nama_bagian }}</option>
+                                                                                    <!-- <option value="{{$divisi->id}}">{{$divisi->nama_divisi}}</option> -->
+                                                                                    @endif
+                                                                                    @endforeach
+                                                                                </optgroup>
                                                                             </select>
                                                                             <label for="id_bagian4">Bagian 5</label>
                                                                         </div>
@@ -1045,22 +1105,24 @@
                                                                         <div class="form-floating form-floating-outline">
                                                                             <select name="jabatan4_id" id="id_jabatan4" class="form-control">
                                                                                 <option value=""> Pilih Jabatan</option>
-                                                                                <?php
-                                                                                if ($karyawan->kategori_jabatan == '') {
-                                                                                    $kategori_jabatan = $holding;
-                                                                                } else {
-                                                                                    $kategori_jabatan = $karyawan->kategori_jabatan;
-                                                                                }
-                                                                                $jabatan = App\Models\Jabatan::where('bagian_id', old('bagian4_id', $karyawan->bagian4_id))->where('holding', $kategori_jabatan)->get();
-                                                                                ?>
-                                                                                @foreach($jabatan as $jabatan)
-                                                                                @if(old('jabatan4_id',$karyawan->jabatan4_id) == $jabatan->id)
-                                                                                <option value="{{ $jabatan->id }}" selected>{{ $jabatan->nama_jabatan }}</option>
-                                                                                @else
-                                                                                <option value="{{ $jabatan->id }}">{{ $jabatan->nama_jabatan }}</option>
-                                                                                <!-- <option value="{{$divisi->id}}">{{$divisi->nama_divisi}}</option> -->
-                                                                                @endif
-                                                                                @endforeach
+                                                                                <optgroup label='Daftar Jabatan {{$holding_jabatan}}'>
+                                                                                    <?php
+                                                                                    if ($karyawan->kategori_jabatan == '') {
+                                                                                        $kategori_jabatan = $holding;
+                                                                                    } else {
+                                                                                        $kategori_jabatan = $karyawan->kategori_jabatan;
+                                                                                    }
+                                                                                    $jabatan = App\Models\Jabatan::where('bagian_id', old('bagian4_id', $karyawan->bagian4_id))->where('holding', $kategori_jabatan)->orderBy('nama_jabatan', 'ASC')->get();
+                                                                                    ?>
+                                                                                    @foreach($jabatan as $jabatan)
+                                                                                    @if(old('jabatan4_id',$karyawan->jabatan4_id) == $jabatan->id)
+                                                                                    <option value="{{ $jabatan->id }}" selected>{{ $jabatan->nama_jabatan }}</option>
+                                                                                    @else
+                                                                                    <option value="{{ $jabatan->id }}">{{ $jabatan->nama_jabatan }}</option>
+                                                                                    <!-- <option value="{{$divisi->id}}">{{$divisi->nama_divisi}}</option> -->
+                                                                                    @endif
+                                                                                    @endforeach
+                                                                                </optgroup>
                                                                             </select>
                                                                             <label for=" id_jabatan4">Jabatan 5</label>
                                                                         </div>

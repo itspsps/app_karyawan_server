@@ -429,7 +429,7 @@
     <div class="col-lg-12">
         <div class="row">
             <div class="col-6" style="height: 80px;">
-                <a href="{{ url('/home/absen') }}">
+                <a id="btn_klik" href="{{ url('/home/absen') }}">
                     <div class="card card-bx card-content bg-primary" style="height: 100%; width: 100%;">
                         <div class="card-body" style="padding: 4px;">
                             <svg xmlns="http://www.w3.org/2000/svg" style="position: absolute; right: 0; bottom: 0;  margin-left: auto;  margin-right: 0;" xmlns:xlink="http://www.w3.org/1999/xlink" width="50" height="50" viewBox="0 0 24 24" version="1.1" class="svg-main-icon">
@@ -457,7 +457,7 @@
                 </a>
             </div>
             <div class="col-6" style="height: 80px;">
-                <a href="{{ url('/home/absen') }}" style="pointer-events: none">
+                <a id="btn_klik" href="{{ url('/home/absen') }}" style="pointer-events: none">
                     <div class="card card-bx card-content bg-secondary" style="height: 100%; width: 100%;">
                         <div class="card-body" style="padding: 4px;">
                             <svg xmlns="http://www.w3.org/2000/svg" style="position: absolute; right: 0; bottom: 0;  margin-left: auto;  margin-right: 0;" xmlns:xlink="http://www.w3.org/1999/xlink" width="50" height="50" viewBox="0 0 24 24" version="1.1" class="svg-main-icon">
@@ -481,7 +481,7 @@
     <div class="col-lg-12">
         <div class="row">
             <div class="col-6" style="height: 80px;">
-                <a href="{{ url('/home/absen') }}" style="pointer-events: none">
+                <a id="btn_klik" href="{{ url('/home/absen') }}" style="pointer-events: none">
                     <div class="card card-bx card-content bg-primary" style="height: 100%; width: 100%;">
                         <div class="card-body" style="padding: 4px;">
                             <svg xmlns="http://www.w3.org/2000/svg" style="position: absolute; right: 0; bottom: 0;  margin-left: auto;  margin-right: 0;" xmlns:xlink="http://www.w3.org/1999/xlink" width="50" height="50" viewBox="0 0 24 24" version="1.1" class="svg-main-icon">
@@ -498,7 +498,7 @@
                 </a>
             </div>
             <div class="col-6" style="height: 80px;">
-                <a href="{{ url('/home/absen') }}">
+                <a id="btn_klik" href="{{ url('/home/absen') }}">
                     <div class="card card-bx card-content bg-secondary" style="height: 100%; width: 100%;">
                         <div class="card-body" style="padding: 4px;">
                             <svg xmlns="http://www.w3.org/2000/svg" style="position: absolute; right: 0; bottom: 0;  margin-left: auto;  margin-right: 0;" xmlns:xlink="http://www.w3.org/1999/xlink" width="50" height="50" viewBox="0 0 24 24" version="1.1" class="svg-main-icon">
@@ -533,7 +533,7 @@
     <div class="col-lg-12">
         <div class="row">
             <div class="col-6" style="height: 80px;">
-                <a href="{{ url('/home/absen') }}" style="pointer-events: none">
+                <a id="btn_klik" href="{{ url('/home/absen') }}" style="pointer-events: none">
                     <div class="card card-bx card-content bg-primary" style="height: 100%; width: 100%;">
                         <div class="card-body" style="padding: 4px;">
                             <svg xmlns="http://www.w3.org/2000/svg" style="position: absolute; right: 0; bottom: 0;  margin-left: auto;  margin-right: 0;" xmlns:xlink="http://www.w3.org/1999/xlink" width="50" height="50" viewBox="0 0 24 24" version="1.1" class="svg-main-icon">
@@ -550,7 +550,7 @@
                 </a>
             </div>
             <div class="col-6" style="height: 80px;">
-                <a href="{{ url('/home/absen') }}" style="pointer-events: none">
+                <a id="btn_klik" href="{{ url('/home/absen') }}" style="pointer-events: none">
                     <div class="card card-bx card-content bg-secondary" style="height: 100%; width: 100%;">
                         <div class="card-body" style="padding: 4px;">
                             <svg xmlns="http://www.w3.org/2000/svg" style="position: absolute; right: 0; bottom: 0;  margin-left: auto;  margin-right: 0;" xmlns:xlink="http://www.w3.org/1999/xlink" width="50" height="50" viewBox="0 0 24 24" version="1.1" class="svg-main-icon">
@@ -622,7 +622,7 @@
     </div>
     <ul class="d-flex align-items-center">
         <li class="text-center">
-            <a class="nav-link " href="{{ url('/home/absen') }}">
+            <a id="btn_klik" class="nav-link " href="{{ url('/home/absen') }}">
                 <span class="dz-icon bg-green light" style="height: 50px; width: 50px; box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.2), 0 3px 10px 0 rgba(0, 0, 0, 0.1);">
                     <svg xmlns="http://www.w3.org/2000/svg" style="height: 30px; width: 30px;" viewBox="0 0 24 24" fill="none">
                         <path d="M7 3H5C3.89543 3 3 3.89543 3 5V7M3 17V19C3 20.1046 3.89543 21 5 21H7M17 21H19C20.1046 21 21 20.1046 21 19V17M21 7V5C21 3.89543 20.1046 3 19 3H17" stroke="#000000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" />
@@ -634,7 +634,7 @@
             <span>Absen</span>
         </li>
         <li class="text-center">
-            <a class="nav-link" href="{{ url('/izin/dashboard/') }}">
+            <a class="nav-link" id="btn_klik" href="{{ url('/izin/dashboard/') }}">
                 <span class="dz-icon bg-skyblue light" style="height: 50px; width: 50px; box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.2), 0 3px 10px 0 rgba(0, 0, 0, 0.1);">
                     <span id="notif_izin" class="badge badge-danger light" style="position: absolute; margin-top: -12%; margin-right: -12%; "></span>
                     <svg xmlns="http://www.w3.org/2000/svg" style="height: 30px; width: 30px;" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="Layer_1" viewBox="0 0 392.598 392.598" xml:space="preserve">
@@ -653,7 +653,7 @@
             <span>Izin</span>
         </li>
         <li class="text-center">
-            <a class="nav-link" href="{{ url('/cuti/dashboard/') }}">
+            <a class="nav-link" id="btn_klik" href="{{ url('/cuti/dashboard/') }}">
                 <span class="dz-icon bg-orange light" style="height: 50px; width: 50px;box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.2), 0 3px 10px 0 rgba(0, 0, 0, 0.1);">
                     <span id="notif_cuti" class="badge badge-danger light" style="position: absolute; margin-top: -12%; margin-right: -12%; "></span>
                     <svg xmlns="http://www.w3.org/2000/svg" style="height: 30px; width: 30px;" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="Layer_1" viewBox="0 0 393.568 393.568" xml:space="preserve">
@@ -694,7 +694,7 @@
             <span>Cuti</span>
         </li>
         <li class="text-center">
-            <a class="nav-link " href="{{ url('/penugasan/dashboard/') }}">
+            <a class="nav-link " id="btn_klik" href="{{ url('/penugasan/dashboard/') }}">
                 <span class="dz-icon bg-red light" style="height: 50px; width: 50px; box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.2), 0 3px 10px 0 rgba(0, 0, 0, 0.1);">
                     <span id="notif_penugasan" class="badge badge-danger light" style="position: absolute; margin-top: -12%; margin-right: -12%; "></span>
                     <svg fill="#000000" style="height: 30px; width: 30px;" viewBox="0 0 512 512" id="_x30_1" version="1.1" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
@@ -727,7 +727,7 @@
         <div class="swiper-container tag-group mt-4 dz-swiper recomand-swiper">
             <div class="swiper-wrapper">
                 @foreach ($dataizin as $dataizin)
-                <a href="{{ url('/izin/approve/'.$dataizin->id) }}">
+                <a id="btn_klik" href="{{ url('/izin/approve/'.$dataizin->id) }}">
                     <div class="swiper-slide">
                         <div class="card job-post" style="box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.2), 0 3px 10px 0 rgba(0, 0, 0, 0.1);">
                             <div class="card-body">
@@ -753,7 +753,7 @@
                 </a>
                 @endforeach
                 @foreach ($datacuti_tingkat1 as $datacuti)
-                <a href="{{ url('/cuti/approve/'.$datacuti->id) }}">
+                <a id="btn_klik" href="{{ url('/cuti/approve/'.$datacuti->id) }}">
                     <div class="swiper-slide">
                         <div class="card job-post">
                             <div class="card-body">
@@ -785,7 +785,7 @@
                 </a>
                 @endforeach
                 @foreach ($datacuti_tingkat2 as $datacuti)
-                <a href="{{ url('/cuti/approve/'.$datacuti->id) }}">
+                <a id="btn_klik" href="{{ url('/cuti/approve/'.$datacuti->id) }}">
                     <div class="swiper-slide">
                         <div class="card job-post">
                             <div class="card-body">
@@ -817,7 +817,7 @@
                 </a @endforeach @foreach ($datapenugasan as $datapenugasan) @if($datapenugasan->status_penugasan == 1)
                 @if($datapenugasan->id_user_atasan == auth::user()->id)
                 @if($datapenugasan->ttd_id_diminta_oleh == NULL)
-                <a href="{{ url('/penugasan/approve/diminta/show/'.$datapenugasan->id) }}">
+                <a id="btn_klik" href="{{ url('/penugasan/approve/diminta/show/'.$datapenugasan->id) }}">
                     <div class="swiper-slide swiper-slide-active">
                         <div class="card job-post">
                             <div class="card-body">
@@ -842,7 +842,7 @@
                 @elseif($datapenugasan->status_penugasan == 2)
                 @if($datapenugasan->id_user_atasan2 == auth::user()->id)
                 @if($datapenugasan->ttd_id_disahkan_oleh == NULL)
-                <a href="{{ url('/penugasan/approve/diminta/show/'.$datapenugasan->id) }}">
+                <a id="btn_klik" href="{{ url('/penugasan/approve/diminta/show/'.$datapenugasan->id) }}">
                     <div class="swiper-slide  swiper-slide-active">
                         <div class="card job-post">
                             <div class="card-body">
@@ -867,7 +867,7 @@
                 @elseif($datapenugasan->status_penugasan == 3)
                 @if($datapenugasan->id_user_hrd==Auth::user()->id)
                 @if($datapenugasan->ttd_proses_hrd == NULL)
-                <a href="{{ url('/penugasan/approve/diminta/show/'.$datapenugasan->id) }}">
+                <a id="btn_klik" href="{{ url('/penugasan/approve/diminta/show/'.$datapenugasan->id) }}">
                     <div class="swiper-slide  swiper-slide-active">
                         <div class="card job-post">
                             <div class="card-body">
@@ -892,7 +892,7 @@
                 @elseif($datapenugasan->status_penugasan == 4)
                 @if($datapenugasan->id_user_finance==Auth::user()->id)
                 @if($datapenugasan->ttd_proses_finance == NULL)
-                <a href="{{ url('/penugasan/approve/diminta/show/'.$datapenugasan->id) }}">
+                <a id="btn_klik" href="{{ url('/penugasan/approve/diminta/show/'.$datapenugasan->id) }}">
                     <div class="swiper-slide  swiper-slide-active">
                         <div class="card job-post">
                             <div class="card-body">
@@ -1159,6 +1159,7 @@
 <!-- Categorie End -->
 @endsection
 @section('js')
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
 <script type="text/javascript">
     $(document).ready(function() {
         load_data();
@@ -1226,6 +1227,20 @@
 
 
         })
+    });
+</script>
+<script>
+    $(document).on('click', '#btn_klik', function(e) {
+        Swal.fire({
+            allowOutsideClick: false,
+            background: 'transparent',
+            html: ' <div class="spinner-grow text-primary spinner-grow-sm me-2" role="status"></div><div class="spinner-grow text-primary spinner-grow-sm me-2" role="status"></div><div class="spinner-grow text-primary spinner-grow-sm me-2" role="status"></div>',
+            showCancelButton: false,
+            showConfirmButton: false,
+            onBeforeOpen: () => {
+                // Swal.showLoading()
+            },
+        });
     });
 </script>
 <script>

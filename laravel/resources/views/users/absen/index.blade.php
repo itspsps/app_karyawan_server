@@ -49,7 +49,7 @@
                                     <form action="{{url('home/my-location')}}" method="get">
                                         <input type="hidden" id="lat_location" name="lat_location" value="">
                                         <input type="hidden" id="long_location" name="long_location" value="">
-                                        <button type="submit" class="btn btn-sm btn-secondary" style="height:10px;">
+                                        <button id="btn_klik" type="submit" class="btn btn-sm btn-secondary" style="height:10px;">
                                             <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" fill="#FFFFFF" version="1.1" id="Capa_1" width="18" height="18" class="svg-main-icon" viewBox="0 0 395.71 395.71" xml:space="preserve">
                                                 <g>
                                                     <path d="M197.849,0C122.131,0,60.531,61.609,60.531,137.329c0,72.887,124.591,243.177,129.896,250.388l4.951,6.738   c0.579,0.792,1.501,1.255,2.471,1.255c0.985,0,1.901-0.463,2.486-1.255l4.948-6.738c5.308-7.211,129.896-177.501,129.896-250.388   C335.179,61.609,273.569,0,197.849,0z M197.849,88.138c27.13,0,49.191,22.062,49.191,49.191c0,27.115-22.062,49.191-49.191,49.191   c-27.114,0-49.191-22.076-49.191-49.191C148.658,110.2,170.734,88.138,197.849,88.138z" />
@@ -60,7 +60,7 @@
                                     </form>
                                 </div>
                                 <div class="col-6">
-                                    <a href="{{url('/absen/data-absensi')}}" class="btn btn-sm btn-secondary" style="height:10px;">
+                                    <a id="btn_klik" href="{{url('/absen/data-absensi')}}" class="btn btn-sm btn-secondary" style="height:10px;">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none">
                                             <path d="M12 10C16.4183 10 20 8.20914 20 6C20 3.79086 16.4183 2 12 2C7.58172 2 4 3.79086 4 6C4 8.20914 7.58172 10 12 10Z" fill="#1C274C" />
                                             <path opacity="0.5" d="M4 12V18C4 20.2091 7.58172 22 12 22C16.4183 22 20 20.2091 20 18V12C20 14.2091 16.4183 16 12 16C7.58172 16 4 14.2091 4 12Z" fill="#1C274C" />
@@ -210,6 +210,7 @@
 </div>
 @endsection
 @section('js')
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
 <script>
     getLocation();
 
@@ -232,5 +233,31 @@
         $('#long_location').val(position.coords.longitude);
         $('#btn_submit').show();
     }
+</script>
+<script>
+    $(document).on('click', '#btn_klik', function(e) {
+        Swal.fire({
+            allowOutsideClick: false,
+            background: 'transparent',
+            html: ' <div class="spinner-grow text-primary spinner-grow-sm me-2" role="status"></div><div class="spinner-grow text-primary spinner-grow-sm me-2" role="status"></div><div class="spinner-grow text-primary spinner-grow-sm me-2" role="status"></div>',
+            showCancelButton: false,
+            showConfirmButton: false,
+            onBeforeOpen: () => {
+                // Swal.showLoading()
+            },
+        });
+    });
+    $(document).on('click', '#btn_submit', function(e) {
+        Swal.fire({
+            allowOutsideClick: false,
+            background: 'transparent',
+            html: ' <div class="spinner-grow text-primary spinner-grow-sm me-2" role="status"></div><div class="spinner-grow text-primary spinner-grow-sm me-2" role="status"></div><div class="spinner-grow text-primary spinner-grow-sm me-2" role="status"></div>',
+            showCancelButton: false,
+            showConfirmButton: false,
+            onBeforeOpen: () => {
+                // Swal.showLoading()
+            },
+        });
+    });
 </script>
 @endsection

@@ -20,7 +20,42 @@ APPS | KARYAWAN - SP
         cursor: default;
     }
 </style>
+<div class="head-details">
+    <div class=" container">
+        <div class="dz-info">
+            <span class="location d-block">Form Penugasan
+                @if($user->kontrak_kerja == 'CV. SUMBER PANGAN')
+                CV. SUMBER PANGAN
+                @elseif($user->kontrak_kerja == 'PT. SURYA PANGAN SEMESTA')
+                PT. SURYA PANGAN SEMESTA
+                @endif
+            </span>
+            {{-- @foreach ($user  as $dep) --}}
+            <h5 class="title">Department of "{{ $user->nama_departemen }}"</h5>
+            {{-- @endforeach --}}
+        </div>
+        <div class="dz-media media-65">
+            <img src="assets/images/logo/logo.svg" alt="">
+        </div>
+    </div>
+</div>
 
+<div class="fixed-content p-0">
+    <div class="container">
+        <div class="main-content">
+            <div class="left-content">
+                <a id="btn_klik" href="{{url('/penugasan/dashboard')}}" class="btn-back">
+                    <svg width="18" height="18" viewBox="0 0 10 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M9.03033 0.46967C9.2966 0.735936 9.3208 1.1526 9.10295 1.44621L9.03033 1.53033L2.561 8L9.03033 14.4697C9.2966 14.7359 9.3208 15.1526 9.10295 15.4462L9.03033 15.5303C8.76406 15.7966 8.3474 15.8208 8.05379 15.6029L7.96967 15.5303L0.96967 8.53033C0.703403 8.26406 0.679197 7.8474 0.897052 7.55379L0.96967 7.46967L7.96967 0.46967C8.26256 0.176777 8.73744 0.176777 9.03033 0.46967Z" fill="#a19fa8" />
+                    </svg>
+                </a>
+                <h5 class="mb-0">Back</h5>
+            </div>
+            <div class="mid-content">
+            </div>
+        </div>
+    </div>
+</div>
 <div class="container">
     @if (Session::has('penugasansukses'))
     <div class="alert alert-success light alert-lg alert-dismissible fade show">
@@ -529,7 +564,7 @@ APPS | KARYAWAN - SP
             </div>
         </div>
         @else
-        <a href="{{url('penugasan/dashboard')}}" class="btn-sm btn btn-primary btn-rounded" style="width: 30%;margin-left: 35%;margin-right: 35%">
+        <a id="btn_klik" href="{{url('penugasan/dashboard')}}" class="btn-sm btn btn-primary btn-rounded" style="width: 30%;margin-left: 35%;margin-right: 35%">
             &nbsp; Kembali
         </a>
         @endif
@@ -539,6 +574,7 @@ APPS | KARYAWAN - SP
 
 @endsection
 @section('js')
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
 <script type="text/javascript">
     $(document).ready(function() {
         wilayah = $('#wilayah').val();
@@ -595,5 +631,19 @@ APPS | KARYAWAN - SP
     function my_function() {
         document.getElementById("note").innerHTML = "";
     }
+</script>
+<script>
+    $(document).on('click', '#btn_klik', function(e) {
+        Swal.fire({
+            allowOutsideClick: false,
+            background: 'transparent',
+            html: ' <div class="spinner-grow text-primary spinner-grow-sm me-2" role="status"></div><div class="spinner-grow text-primary spinner-grow-sm me-2" role="status"></div><div class="spinner-grow text-primary spinner-grow-sm me-2" role="status"></div>',
+            showCancelButton: false,
+            showConfirmButton: false,
+            onBeforeOpen: () => {
+                // Swal.showLoading()
+            },
+        });
+    });
 </script>
 @endsection

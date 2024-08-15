@@ -49,24 +49,32 @@ class CutiUserController extends Controller
             $request->session()->flash('jabatanNULL');
             return redirect('/home');
         } else {
-            $IdLevelAtasan = $user->atasan_id;
+            $IdLevelAtasan = Jabatan::where('id', $user->atasan_id)->first();
             $get_user_backup = User::where('dept_id', Auth::user()->dept_id)
                 ->where('id', '!=', Auth::user()->id)
                 ->where('is_admin', 'user')
                 ->get();
             if ($lokasi_site_job->kategori_kantor == 'sps') {
-                $get_nama_jabatan = User::where('jabatan_id', $IdLevelAtasan)
-                    ->orWhere('jabatan1_id', $IdLevelAtasan)
-                    ->orWhere('jabatan2_id', $IdLevelAtasan)
-                    ->orWhere('jabatan3_id', $IdLevelAtasan)
-                    ->orWhere('jabatan4_id', $IdLevelAtasan)
+                $get_nama_jabatan = User::where('jabatan_id', $IdLevelAtasan->id)
+                    ->orWhere('jabatan1_id', $IdLevelAtasan->id)
+                    ->orWhere('jabatan2_id', $IdLevelAtasan->id)
+                    ->orWhere('jabatan3_id', $IdLevelAtasan->id)
+                    ->orWhere('jabatan4_id', $IdLevelAtasan->id)
                     ->whereIn('site_job', ['ALL SITES (SPS)', 'ALL SITES (SP, SPS, SIP)', $site_job])
                     ->first();
                 // dd($get_nama_jabatan);
                 if ($get_nama_jabatan == NULL || $get_nama_jabatan == '') {
+                    $atasan2 = User::where('jabatan_id', $IdLevelAtasan->atasan_id)
+                        ->orWhere('jabatan1_id', $IdLevelAtasan->atasan_id)
+                        ->orWhere('jabatan2_id', $IdLevelAtasan->atasan_id)
+                        ->orWhere('jabatan3_id', $IdLevelAtasan->atasan_id)
+                        ->orWhere('jabatan4_id', $IdLevelAtasan->atasan_id)
+                        ->whereIn('site_job', ['ALL SITES (SPS)', 'ALL SITES (SP, SPS, SIP)', $site_job])
+                        ->first();
+                        if ($atasan2 == NULL || $atasan2 == '') {
                     $get_atasan_site = Jabatan::Join('divisis', 'divisis.id', 'jabatans.divisi_id')
                         ->Join('bagians', 'bagians.id', 'jabatans.bagian_id')
-                        ->where('jabatans.id', $IdLevelAtasan)
+                        ->where('jabatans.id', $IdLevelAtasan->id)
                         ->select('jabatans.id', 'divisis.nama_divisi', 'jabatans.nama_jabatan', 'bagians.nama_bagian', 'jabatans.holding')
                         ->first();
                     if ($get_atasan_site->holding == 'sps') {

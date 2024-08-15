@@ -6,6 +6,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
 use RealRashid\SweetAlert\Facades\Alert;
 use Symfony\Component\Console\Input\Input;
 
@@ -49,11 +50,17 @@ class authController extends Controller
         // }
         $remember = $request['remember'] ? true : false;
         // dd($remember);
+        $customMessages = [
+            'required' => ':attribute tidak boleh kosong.',
+            'unique' => ':attribute tidak boleh sama',
+            'email' => ':attribute format email salah',
+            'min' => ':attribute Kurang',
+            'max' => ':attribute Melebihi Batas Maksimal'
+        ];
         $credentials = $request->validate([
             'username' => 'required',
             'password' => 'required',
-        ]);
-
+        ], $customMessages);
         // dd('ok');
         $fieldType = filter_var($credentials['username'], FILTER_VALIDATE_EMAIL) ? 'email' : 'username';
         $array = $credentials['username'];

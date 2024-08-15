@@ -383,6 +383,10 @@ Route::get('/rekapdata-datatable_harian/sp', [RekapDataController::class, 'datat
 Route::get('/rekapdata-datatable_harian/sps', [RekapDataController::class, 'datatable_harian'])->middleware('admin');
 Route::get('/rekapdata-datatable_harian/sip', [RekapDataController::class, 'datatable_harian'])->middleware('admin');
 
+Route::get('/rekapdata/get_divisi', [RekapDataController::class, 'get_divisi'])->middleware('admin');
+Route::get('/rekapdata/get_bagian', [RekapDataController::class, 'get_bagian'])->middleware('admin');
+Route::get('/rekapdata/get_jabatan', [RekapDataController::class, 'get_jabatan'])->middleware('admin');
+
 // Import
 Route::post('/rekapdata/ImportAbsensi/sp', [RekapDataController::class, 'ImportAbsensi'])->middleware('admin');
 Route::post('/rekapdata/ImportAbsensi/sps', [RekapDataController::class, 'ImportAbsensi'])->middleware('admin');
@@ -406,6 +410,9 @@ Route::put('/data-cuti/edit-proses/{id}', [CutiController::class, 'editAdminPros
 Route::get('/lokasi-kantor/sp', [LokasiController::class, 'index'])->middleware('admin');
 Route::get('/lokasi-kantor/sps', [LokasiController::class, 'index'])->middleware('admin');
 Route::get('/lokasi-kantor/sip', [LokasiController::class, 'index'])->middleware('admin');
+Route::get('/lokasi-kantor/tambah_lokasi/sp', [LokasiController::class, 'tambah_lokasi'])->middleware('admin');
+Route::get('/lokasi-kantor/tambah_lokasi/sps', [LokasiController::class, 'tambah_lokasi'])->middleware('admin');
+Route::get('/lokasi-kantor/tambah_lokasi/sip', [LokasiController::class, 'tambah_lokasi'])->middleware('admin');
 Route::get('/lokasi-datatable/sp', [LokasiController::class, 'datatable'])->middleware('admin');
 Route::get('/lokasi-datatable/sps', [LokasiController::class, 'datatable'])->middleware('admin');
 Route::get('/lokasi-datatable/sip', [LokasiController::class, 'datatable'])->middleware('admin');
@@ -421,6 +428,9 @@ Route::get('/lokasi-kantor/delete/{id}/sip', [LokasiController::class, 'deleteLo
 Route::put('/lokasi-kantor/radius/{id}/sp', [LokasiController::class, 'updateRadiusLokasi'])->middleware('admin');
 Route::put('/lokasi-kantor/radius/{id}/sps', [LokasiController::class, 'updateRadiusLokasi'])->middleware('admin');
 Route::put('/lokasi-kantor/radius/{id}/sip', [LokasiController::class, 'updateRadiusLokasi'])->middleware('admin');
+Route::get('/lokasi_kantor/get_lokasi', [LokasiController::class, 'get_lokasi'])->middleware('admin');
+
+// reset Cuti
 Route::get('/reset-cuti/sp', [KaryawanController::class, 'resetCuti'])->middleware('admin');
 Route::get('/reset-cuti/sps', [KaryawanController::class, 'resetCuti'])->middleware('admin');
 Route::get('/reset-cuti/sip', [KaryawanController::class, 'resetCuti'])->middleware('admin');
