@@ -23,7 +23,7 @@
     <title>APPS KARYAWAN</title>
 
     <!-- Stylesheets -->
-    <link rel="stylesheet" type="text/css" href="{{ url('public/assets/assets_users/css/style.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('assets/assets_users/css/style.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/assets_users/vendor/swiper/swiper-bundle.min.css') }}">
 
 
