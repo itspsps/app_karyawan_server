@@ -1,5 +1,12 @@
 @extends('users.layouts.main')
 @section('title') APPS | KARYAWAN - SP @endsection
+@section('css')
+<style>
+    .modal-backdrop.show:nth-of-type(even) {
+        z-index: 1051 !important;
+    }
+</style>
+@endsection
 @section('alert')
 @if(Session::has('absenmasuksuccess'))
 <div id="alert_absen_masuk_success" class="container" style="margin-top:-5%">
@@ -814,7 +821,10 @@
                             </div>
                         </div>
                     </div>
-                </a @endforeach @foreach ($datapenugasan as $datapenugasan) @if($datapenugasan->status_penugasan == 1)
+                </a>
+                @endforeach
+                @foreach ($datapenugasan as $datapenugasan)
+                @if($datapenugasan->status_penugasan == 1)
                 @if($datapenugasan->id_user_atasan == auth::user()->id)
                 @if($datapenugasan->ttd_id_diminta_oleh == NULL)
                 <a id="btn_klik" href="{{ url('/penugasan/approve/diminta/show/'.$datapenugasan->id) }}">
@@ -1156,6 +1166,7 @@
         </div>
     </div>
 </div>
+
 <!-- Categorie End -->
 @endsection
 @section('js')

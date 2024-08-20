@@ -400,13 +400,10 @@
                 </a>
             </li>
             <li class="menu-item">
-                <form action="{{url('/logout')}}" method="post">
-                    @csrf
-                    <button type="submit" class="menu-link" style="border: none; background: none;">
-                        <i class="menu-icon tf-icons mdi mdi-logout"></i>
-                        <div style="font-size: 10pt;" data-i18n="Blank">Log Out</div>
-                    </button>
-                </form>
+                <a href="{{url('/logout')}}" class="menu-link" style="border: none; background: none;">
+                    <i class="menu-icon tf-icons mdi mdi-logout"></i>
+                    <div style="font-size: 10pt;" data-i18n="Blank">Log Out</div>
+                </a>
                 </a>
             </li>
     </ul>

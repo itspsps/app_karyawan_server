@@ -203,14 +203,14 @@ class AbsenUserController extends Controller
                 }
                 return DataTables::of($data)->addIndexColumn()
                     ->addColumn('tanggal_masuk', function ($row) {
-                        $result = Carbon::parse($row->tanggal)->isoFormat('D-MM-Y');;
+                        $result = Carbon::parse($row->tanggal)->isoFormat('D-MM-Y');
                         return $result;
                     })
                     ->addColumn('jam_absen', function ($row) {
                         if ($row->jam_absen == NULL) {
                             return $row->jam_absen;
                         } else {
-                            $result = Carbon::parse($row->jam_absen)->isoFormat('H:m');;
+                            $result = Carbon::parse($row->jam_absen)->format('H:m');
                             return $result;
                         }
                     })
@@ -218,7 +218,7 @@ class AbsenUserController extends Controller
                         if ($row->jam_pulang == NULL) {
                             return $row->jam_pulang;
                         } else {
-                            $result = Carbon::parse($row->jam_pulang)->isoFormat('H:m');;
+                            $result = Carbon::parse($row->jam_pulang)->format('H:m');
                             return $result;
                         }
                     })
@@ -228,14 +228,14 @@ class AbsenUserController extends Controller
                 $data = MappingShift::where('user_id', $user_login)->whereMonth('tanggal_masuk', $blnskrg)->whereBetween('tanggal_masuk', array($dateweek, $datenow))->orderBy('tanggal_masuk', 'DESC')->get();
                 return DataTables::of($data)->addIndexColumn()
                     ->addColumn('tanggal_masuk', function ($row) {
-                        $result = Carbon::parse($row->tanggal)->isoFormat('D-MM-Y');;
+                        $result = Carbon::parse($row->tanggal)->isoFormat('D-MM-Y');
                         return $result;
                     })
                     ->addColumn('jam_absen', function ($row) {
                         if ($row->jam_absen == NULL) {
                             return $row->jam_absen;
                         } else {
-                            $result = Carbon::parse($row->jam_absen)->isoFormat('H:m');;
+                            $result = Carbon::parse($row->jam_absen)->format('H:m');
                             return $result;
                         }
                     })
@@ -243,7 +243,7 @@ class AbsenUserController extends Controller
                         if ($row->jam_pulang == NULL) {
                             return $row->jam_pulang;
                         } else {
-                            $result = Carbon::parse($row->jam_pulang)->isoFormat('H:m');;
+                            $result = Carbon::parse($row->jam_pulang)->format('H:m');
                             return $result;
                         }
                     })

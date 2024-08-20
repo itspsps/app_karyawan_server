@@ -28,6 +28,7 @@ use App\Http\Controllers\ProfileUserController;
 use App\Http\Controllers\AbsenUserController;
 use App\Http\Controllers\AccessController;
 use App\Http\Controllers\ActivityLogController;
+use App\Http\Controllers\ApprovalController;
 use App\Http\Controllers\BagianController;
 use App\Http\Controllers\InventarisController;
 use App\Http\Controllers\IzinUserController;
@@ -123,6 +124,10 @@ Route::middleware('auth:sanctum', 'log.activity')->group(function () {
     Route::put('/penugasan/tambah-penugasan-proses', [PenugasanUserController::class, 'tambahPenugasan']);
     Route::put('/penugasan/approve/proses/{id}', [PenugasanUserController::class, 'penugasanApproveProses']);
     Route::get('/penugasan/cetak_form_penugasan/{id}', [PenugasanUserController::class, 'cetak_form_penugasan']);
+
+    // Approval
+    Route::get('/approval/dashboard', [ApprovalController::class, 'index']);
+
 
     // Menu bar
     Route::get('/history', [HistoryUserController::class, 'index'])->name('history');
@@ -617,3 +622,7 @@ Route::get('optimize', function () {
 
     echo 'optimize clear';
 });
+
+Auth::routes();
+
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

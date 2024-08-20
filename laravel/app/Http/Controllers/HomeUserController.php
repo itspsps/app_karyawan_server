@@ -3527,7 +3527,8 @@ class HomeUserController extends Controller
             'title' => 'Maps',
             'lat' => $request->lat_location,
             'long' => $request->long_location,
-            'lokasi_kantor' => Lokasi::first()
+            'lokasi_kantor' => Lokasi::first(),
+            'user' => Auth::user()->name
         ]);
     }
 
