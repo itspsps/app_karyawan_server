@@ -61,7 +61,7 @@
                             </div>
                             <div class="col-2">
                                 <div class="form-floating form-floating-outline">
-                                    <input type="text" class="form-control" name="date_filter" placeholder="Date Filter" id="date_filter" readonly>
+                                    <input type="month" class="form-control" name="date_filter" placeholder="Filter By Month:" id="date_filter" value="{{ date('Y-m') }}">
                                     <label for="date_filter">Date Range Filter</label>
                                 </div>
                             </div>
@@ -72,7 +72,7 @@
                                     <i class="menu-icon tf-icons mdi mdi-file-excel"></i> Excel
                                 </button>
                                 <ul class="dropdown-menu">
-                                    <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#modal_import_absensi" href="">Import Excel</a></li>
+                                    <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#modal_import_absensi" href="#">Import Excel</a></li>
                                     <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#modal_export_absensi" href="#">Eksport Excel</a></li>
                                 </ul>
                                 <button type="button" class="btn btn-sm btn-primary waves-effect waves-light"><i class="menu-icon tf-icons mdi mdi-printer"></i>cetak</button>
@@ -107,6 +107,32 @@
                                         Close
                                     </button>
                                     <button type="submit" class="btn btn-primary">Save</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="modal fade" id="modal_export_absensi" data-bs-backdrop="static" tabindex="-1">
+                        <div class="modal-dialog modal-dialog-scrollable modal-lg">
+                            <form method="post" action="{{url('rekap-data/ExportAbsensi/'.$holding)}}" class="modal-content" enctype="multipart/form-data">
+                                @csrf
+                                <div class="modal-header">
+                                    <h4 class="modal-title" id="backDropModalTitle">Export Excel Absensi</h4>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="row g-2 mt-2">
+                                        <div class="col mb-2">
+                                            <div class="form-floating form-floating-outline">
+                                                <h6>Download File Excel Data Absensi</h6>
+                                                <button type="submit" class="btn btn-sm btn-success"> Download Excel</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+                                        Close
+                                    </button>
                                 </div>
                             </form>
                         </div>
@@ -261,6 +287,7 @@
                 divisi_filter = $('#divisi_filter').val();
                 bagian_filter = $('#bagian_filter').val();
                 jabatan_filter = $('#jabatan_filter').val();
+                filter_month = $('#date_filter').val();
                 $('#table_rekapdata').DataTable().destroy();
                 $.ajax({
                     type: 'GET',
@@ -283,13 +310,14 @@
                     },
 
                 })
-                load_data(departemen_filter, divisi_filter, bagian_filter, jabatan_filter);
+                load_data(departemen_filter, divisi_filter, bagian_filter, jabatan_filter, filter_month);
             })
             $('#divisi_filter').change(function() {
                 divisi_filter = $(this).val();
                 departemen_filter = $('#departemen_filter').val();
                 bagian_filter = $('#bagian_filter').val();
                 jabatan_filter = $('#jabatan_filter').val();
+                filter_month = $('#date_filter').val();
                 $('#table_rekapdata').DataTable().destroy();
                 $.ajax({
                     type: 'GET',
@@ -311,13 +339,15 @@
                     },
 
                 })
-                load_data(departemen_filter, divisi_filter, bagian_filter, jabatan_filter);
+                load_data(departemen_filter, divisi_filter, bagian_filter, jabatan_filter, filter_month);
             })
             $('#bagian_filter').change(function() {
                 bagian_filter = $(this).val();
                 departemen_filter = $('#departemen_filter').val();
                 divisi_filter = $('#divisi_filter').val();
                 jabatan_filter = $('#jabatan_filter').val();
+                filter_month = $('#date_filter').val();
+
                 $('#table_rekapdata').DataTable().destroy();
                 $.ajax({
                     type: 'GET',
@@ -338,18 +368,20 @@
                     },
 
                 })
-                load_data(departemen_filter, divisi_filter, bagian_filter, jabatan_filter);
+                load_data(departemen_filter, divisi_filter, bagian_filter, jabatan_filter, filter_month);
             })
             $('#jabatan_filter').change(function() {
                 jabatan_filter = $(this).val();
                 departemen_filter = $('#departemen_filter').val();
                 divisi_filter = $('#divisi_filter').val();
                 bagian_filter = $('#bagian_filter').val();
+                filter_month = $('#date_filter').val();
                 $('#table_rekapdata').DataTable().destroy();
-                load_data(departemen_filter, divisi_filter, bagian_filter, jabatan_filter);
+                load_data(departemen_filter, divisi_filter, bagian_filter, jabatan_filter, filter_month);
             })
             $('#date_filter').change(function() {
                 filter_month = $(this).val();
+                // console.log(filter_month);
                 departemen_filter = $('#departemen_filter').val();
                 divisi_filter = $('#divisi_filter').val();
                 bagian_filter = $('#bagian_filter').val();
@@ -360,6 +392,7 @@
             load_data();
 
             function load_data(departemen_filter = '', divisi_filter = '', bagian_filter = '', jabatan_filter = '', filter_month = '') {
+                filter_month = $('#date_filter').val();
                 // console.log(filter_month);
                 var table = $('#table_rekapdata').DataTable({
                     pageLength: 50,
@@ -497,16 +530,16 @@
     </script>
     <script>
         // console.log(now);
-        $('input[id="date_filter"]').daterangepicker({
-            drops: 'auto',
-            autoUpdateInput: true,
-            locale: {
-                cancelLabel: 'Clear'
-            },
-            autoApply: false,
-        }, function(start, end, label) {
-            console.log("A new date selection was made: " + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD'));
-        });
+        // $('input[id="date_filter"]').daterangepicker({
+        //     drops: 'auto',
+        //     autoUpdateInput: true,
+        //     locale: {
+        //         cancelLabel: 'Clear'
+        //     },
+        //     autoApply: false,
+        // }, function(start, end, label) {
+        //     console.log("A new date selection was made: " + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD'));
+        // });
         $(document).on("click", "#btn_edit_shift", function() {
             let id = $(this).data('id');
             let shift = $(this).data("shift");

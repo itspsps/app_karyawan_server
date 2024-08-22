@@ -3020,12 +3020,24 @@ class HomeUserController extends Controller
         $user_login = auth()->user()->id;
         if ($request->ajax()) {
             if (!empty($request->filter_month)) {
-                $count_absen_hadir = MappingShift::where('user_id', $user_login)->whereMonth('tanggal_masuk', $request->filter_month)->where('status_absen', 'Masuk')->count();
+                $count_absen_hadir = MappingShift::where('user_id', $user_login)->whereMonth('tanggal_masuk', $request->filter_month)->where('status_absen', 'HADIR KERJA')->count();
+                $count_absen_telat = MappingShift::where('user_id', $user_login)->whereMonth('tanggal_masuk', $request->filter_month)->where('status_absen', 'HADIR KERJA')->where('keterangan_absensi', 'TELAT HADIR')->count();
+                $count_absen_izin = MappingShift::where('user_id', $user_login)->whereMonth('tanggal_masuk', $request->filter_month)->whereIn('keterangan_izin', ['Tidak Masuk (Mendadak)', 'Pulang Cepat', 'Keluar Kantor'])->count();
+                $count_absen_sakit = MappingShift::where('user_id', $user_login)->whereMonth('tanggal_masuk', $request->filter_month)->where('keterangan_izin', 'Sakit')->count();
             } else {
-                $count_absen_hadir = MappingShift::where('user_id', $user_login)->whereMonth('tanggal_masuk', $blnskrg)->where('status_absen', 'Masuk')->count();
+                $count_absen_hadir = MappingShift::where('user_id', $user_login)->whereMonth('tanggal_masuk', $blnskrg)->where('status_absen', 'HADIR KERJA')->count();
+                $count_absen_telat = MappingShift::where('user_id', $user_login)->whereMonth('tanggal_masuk', $blnskrg)->where('status_absen', 'HADIR KERJA')->where('keterangan_absensi', 'TELAT HADIR')->count();
+                $count_absen_izin = MappingShift::where('user_id', $user_login)->whereMonth('tanggal_masuk', $blnskrg)->whereIn('keterangan_izin', ['Tidak Masuk (Mendadak)', 'Pulang Cepat', 'Keluar Kantor'])->count();
+                $count_absen_sakit = MappingShift::where('user_id', $user_login)->whereMonth('tanggal_masuk', $blnskrg)->where('keterangan_izin', 'Sakit')->count();
             }
         }
-        return $count_absen_hadir;
+        $count = [
+            'count_absen_hadir' => $count_absen_hadir,
+            'count_absen_telat' => $count_absen_telat,
+            'count_absen_izin' => $count_absen_izin,
+            'count_absen_sakit' => $count_absen_sakit
+        ];
+        return $count;
     }
     public function datatableHome(Request $request)
     {
@@ -3315,7 +3327,7 @@ class HomeUserController extends Controller
                             return redirect('/izin/dashboard');
                         } else {
                             // No form
-                            $count_tbl_izin = Izin::where('izin', $request->izin)->count();
+                            $count_tbl_izin = Izin::where('izin', $request->izin)->where('tanggal', $request->tanggal)->count();
                             // dd($count_tbl_izin);
                             $countstr = strlen($count_tbl_izin + 1);
                             if ($countstr == '1') {
@@ -3401,6 +3413,8 @@ class HomeUserController extends Controller
                             $update->status_absen = 'HADIR KERJA';
                             $update->keterangan_absensi = 'TELAT HADIR';
                             $update->kelengkapan_absensi = 'BELUM PRESENSI PULANG';
+                            $update->izin_id = $data->id;
+                            $update->keterangan_izin = $request->izin;
                             $update->update();
 
                             ActivityLog::create([
@@ -3414,7 +3428,7 @@ class HomeUserController extends Controller
                         }
                     } else {
                         // No form
-                        $count_tbl_izin = Izin::where('izin', $request->izin)->count();
+                        $count_tbl_izin = Izin::where('izin', $request->izin)->where('tanggal', $request->tanggal)->count();
                         // dd($count_tbl_izin);
                         $countstr = strlen($count_tbl_izin + 1);
                         if ($countstr == '1') {
@@ -3503,6 +3517,8 @@ class HomeUserController extends Controller
                         $update->status_absen = 'HADIR KERJA';
                         $update->keterangan_absensi = 'TELAT HADIR';
                         $update->kelengkapan_absensi = 'BELUM PRESENSI PULANG';
+                        $update->izin_id = $data->id;
+                        $update->keterangan_izin = $request->izin;
                         $update->update();
 
                         ActivityLog::create([
@@ -7090,6 +7106,8 @@ class HomeUserController extends Controller
                     $update->total_jam_kerja         = $request['total_jam_kerja'];
                     $update->keterangan_absensi_pulang = 'PULANG CEPAT';
                     $update->kelengkapan_absensi  = 'PRESENSI LENGKAP';
+                    $update->izin_id = $data->id;
+                    $update->keterangan_izin = $request->izin;
                     $update->update();
                     $request->session()->flash('absenpulangsuccess', 'Berhasil Absen Pulang');
                     return redirect('/home');

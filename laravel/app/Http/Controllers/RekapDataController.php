@@ -89,10 +89,12 @@ class RekapDataController extends Controller
     {
         $holding = request()->segment(count(request()->segments()));
         // dd($request->all());
+        // $now = Carbon::parse($request->filter_month)->startOfMonth();
+        // dd($now);
         if (request()->ajax()) {
             if (!empty($request->departemen_filter)) {
-                $date1 = Carbon::now()->startOfMonth();
-                $date2 = Carbon::now()->endOfMonth();
+                $date1 = Carbon::parse($request->filter_month)->startOfMonth();
+                $date2 = Carbon::parse($request->filter_month)->endOfMonth();
                 // dd($date1, $date2);
                 if (!empty($request->divisi_filter)) {
                     if (!empty($request->bagian_filter)) {
@@ -176,9 +178,9 @@ class RekapDataController extends Controller
                     ->rawColumns(['total_hadir_tepat_waktu', 'btn_detail', 'total_hadir_telat_hadir', 'total_izin_true', 'total_cuti_true', 'total_dinas_true', 'total_pulang_cepat', 'tidak_hadir_kerja', 'total_semua'])
                     ->make(true);
             } else {
-                $now = Carbon::now()->startOfMonth();
-                $now1 = Carbon::now()->endOfMonth();
-
+                $now = Carbon::parse($request->filter_month)->startOfMonth();
+                $now1 = Carbon::parse($request->filter_month)->endOfMonth();
+                // dd($now1);
                 // dd($tgl_mulai, $tgl_selesai);
                 $table = User::with('Mappingshift')
                     ->where('kontrak_kerja', $holding)
@@ -406,5 +408,21 @@ class RekapDataController extends Controller
         Excel::import(new AbsensiImport, $request->file_excel);
 
         return redirect('/rekap-data/' . $holding)->with('success', 'Import Karyawan Sukses');
+    }
+
+    public function ExportAbsensi($kategori)
+    {
+        $date = date('YmdHis');
+        $holding = request()->segment(count(request()->segments()));
+        $data =  Izin::leftJoin('users', 'users.id', 'izins.user_id')
+            ->leftJoin('departemens', 'departemens.id', 'izins.departements_id')
+            ->leftJoin('divisis', 'divisis.id', 'izins.divisi_id')
+            ->leftJoin('jabatans', 'jabatans.id', 'izins.jabatan_id')
+            ->where('izins.izin', $kategori)
+            ->where('users.kontrak_kerja', $holding)
+            // ->select('izins.no_form_izin', 'users.name', 'departemens.nama_departemen', 'divisis.nama_divisi', 'jabatans.nama_jabatan', 'izins.tanggal', 'izins.jam_masuk_kerja', 'izins.jam', 'izins.terlambat', 'izins.keterangan_izin', 'izins.ttd_pengajuan', 'izins.approve_atasan', 'izins.waktu_approve', 'izins.catatan', 'izins.status_izin')
+            ->select('izins.*', 'users.name', 'departemens.nama_departemen', 'divisis.nama_divisi', 'jabatans.nama_jabatan')
+            ->get();
+        return Excel::download(new IzinExport($holding, $kategori, $data), 'Data Izin Karyawan_' . $kategori . '_' . $holding . '_' . $date . '.xlsx');
     }
 }

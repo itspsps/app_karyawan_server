@@ -1068,7 +1068,7 @@
                         <div class="col">
                             <h6 class="title"><a href="javascript:void(0);">Izin</a></h6>
                             <span class="">
-                                <h5>
+                                <h5 id="count_absen_izin">
                                     {{$count_absen_izin}}
                                 </h5>
                             </span>
@@ -1103,7 +1103,7 @@
                         <div class="col">
                             <h6 class="title"><a href="javascript:void(0);">Sakit</a></h6>
                             <span class="">
-                                <h5>
+                                <h5 id="count_absen_sakit">
                                     {{$count_absen_sakit}}
                                 </h5>
                             </span>
@@ -1133,7 +1133,7 @@
                         <div class="col">
                             <h6 class="title"><a href="javascript:void(0);">Telat</a></h6>
                             <span class="">
-                                <h5>
+                                <h5 id="count_absen_telat">
                                     {{$count_absen_telat}}
                                 </h5>
                             </span>
@@ -1176,7 +1176,7 @@
         load_data();
 
         function load_data(filter_month = '') {
-            console.log(filter_month);
+            // console.log(filter_month);
             var table1 = $('#datatableHome').DataTable({
                 processing: true,
                 serverSide: true,
@@ -1224,14 +1224,17 @@
                     alert('Something is wrong');
                 },
                 success: function(data) {
-                    $('#count_absen_hadir').html(data);
-                    console.log(data)
+                    // console.log(data);
+                    $('#count_absen_hadir').html(data.count_absen_hadir);
+                    $('#count_absen_izin').html(data.count_absen_izin);
+                    $('#count_absen_sakit').html(data.count_absen_sakit);
+                    $('#count_absen_telat').html(data.count_absen_telat);
                 }
             });
         }
         $('#month').change(function() {
             filter_month = $(this).val();
-            console.log(filter_month);
+            // console.log(filter_month);
             $('#datatableHome').DataTable().destroy();
             load_data(filter_month);
             load_absensi(filter_month);

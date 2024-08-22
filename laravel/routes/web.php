@@ -167,7 +167,7 @@ Route::middleware('auth:sanctum', 'log.activity')->group(function () {
     Route::post('/mapping_shift/prosesEditMappingShift', [MappingShiftController::class, 'prosesEditMappingShift']);
 });
 Route::get('/tes', [authController::class, 'tes'])->name('tes');
-Route::get('/', [authController::class, 'index'])->name('login')->middleware('guest');
+Route::get('/', [authController::class, 'index'])->name('login');
 Route::get('/register', [authController::class, 'register'])->middleware('guest');
 Route::post('/register-proses', [authController::class, 'registerProses'])->middleware('guest');
 Route::post('/login-proses', [authController::class, 'loginProses'])->middleware('guest');
@@ -378,6 +378,9 @@ Route::get('/rekap-data/sip', [RekapDataController::class, 'index'])->middleware
 Route::get('/rekap-data/detail/{id}/sp', [RekapDataController::class, 'detail_index'])->middleware('admin');
 Route::get('/rekap-data/detail/{id}/sps', [RekapDataController::class, 'detail_index'])->middleware('admin');
 Route::get('/rekap-data/detail/{id}/sip', [RekapDataController::class, 'detail_index'])->middleware('admin');
+Route::get('/rekap-data/ExportAbsensi/sp', [RekapDataController::class, 'ExportAbsensi'])->middleware('admin');
+Route::get('/rekap-data/ExportAbsensi/sps', [RekapDataController::class, 'ExportAbsensi'])->middleware('admin');
+Route::get('/rekap-data/ExportAbsensi/sip', [RekapDataController::class, 'ExportAbsensi'])->middleware('admin');
 Route::get('/rekapdata-datatable/sp', [RekapDataController::class, 'datatable'])->middleware('admin');
 Route::get('/rekapdata-datatable/sps', [RekapDataController::class, 'datatable'])->middleware('admin');
 Route::get('/rekapdata-datatable/sip', [RekapDataController::class, 'datatable'])->middleware('admin');

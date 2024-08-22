@@ -79,10 +79,40 @@
             [-6.989563, 112.122751],
             [-6.991437, 112.122061]
         ];
+        var latlngs_suryapangansemestakediri = [
+            [-7.811016, 112.079884],
+            [-7.810885, 112.080821],
+            [-7.808513, 112.081619],
+            [-7.808415, 112.081323],
+            [-7.810010, 112.080548]
+        ];
+        var latlngs_suryapangansemestangawi = [
+            [-7.503894, 111.429050],
+            [-7.503781, 111.425848],
+            [-7.505655, 111.425796],
+            [-7.505756, 111.428451],
+            [-7.504889, 111.428478],
+            [-7.504698, 111.429090]
+        ];
+        var latlngs_suryapangansemestasubang = [
+            [-6.295363, 107.906800],
+            [-6.293911, 107.906937],
+            [-6.293955, 107.907789],
+            [-6.295743, 107.907667]
+        ];
         var polygon = L.polygon(latlngs_sumberpangankediri, {
             color: 'purple'
         }).addTo(map);
         var polygon2 = L.polygon(latlngs_sumberpangantuban, {
+            color: 'purple'
+        }).addTo(map);
+        var polygon3 = L.polygon(latlngs_suryapangansemestakediri, {
+            color: 'purple'
+        }).addTo(map);
+        var polygon4 = L.polygon(latlngs_suryapangansemestangawi, {
+            color: 'purple'
+        }).addTo(map);
+        var polygon5 = L.polygon(latlngs_suryapangansemestasubang, {
             color: 'purple'
         }).addTo(map);
         L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
