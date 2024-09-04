@@ -1,9 +1,64 @@
 @extends('users.layouts.main')
 @section('title') APPS | KARYAWAN - SP @endsection
+@section('css')
+<style>
+    body {}
+
+    canvas {
+        position: absolute;
+    }
+</style>
+@endsection
 @section('content')
 
 <!-- Features -->
-@if(Session::has('jam_kerja_kurang'))
+<div id="alert_karyawan_tidaksesuai" class="alert alert-danger light alert-lg alert-dismissible fade show">
+    <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" class="me-2">
+        <polygon points="7.86 2 16.14 2 22 7.86 22 16.14 16.14 22 7.86 22 2 16.14 2 7.86 7.86 2"></polygon>
+        <line x1="15" y1="9" x2="9" y2="15"></line>
+        <line x1="9" y1="9" x2="15" y2="15"></line>
+    </svg>
+    <strong>&nbsp;Face tidak Sesuai.</strong>
+    <button class="btn-close" data-bs-dismiss="alert" aria-label="btn-close">
+        <i class="fa-solid fa-xmark"></i>
+    </button>
+</div>
+<div id="alert_karyawan_unknown" class="alert alert-danger light alert-lg alert-dismissible fade show">
+    <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" class="me-2">
+        <polygon points="7.86 2 16.14 2 22 7.86 22 16.14 16.14 22 7.86 22 2 16.14 2 7.86 7.86 2"></polygon>
+        <line x1="15" y1="9" x2="9" y2="15"></line>
+        <line x1="9" y1="9" x2="15" y2="15"></line>
+    </svg>
+    <strong>&nbsp;Face Tidak Diketahui.</strong>
+    <button class="btn-close" data-bs-dismiss="alert" aria-label="btn-close">
+        <i class="fa-solid fa-xmark"></i>
+    </button>
+</div>
+@if(Session::has('karyawan_tidaksesuai'))
+<div id="alert_karyawan_tidaksesuai" class="alert alert-danger light alert-lg alert-dismissible fade show">
+    <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" class="me-2">
+        <polygon points="7.86 2 16.14 2 22 7.86 22 16.14 16.14 22 7.86 22 2 16.14 2 7.86 7.86 2"></polygon>
+        <line x1="15" y1="9" x2="9" y2="15"></line>
+        <line x1="9" y1="9" x2="15" y2="15"></line>
+    </svg>
+    <strong>&nbsp;Face tidak Sesuai.</strong>
+    <button class="btn-close" data-bs-dismiss="alert" aria-label="btn-close">
+        <i class="fa-solid fa-xmark"></i>
+    </button>
+</div>
+@elseif(Session::has('karyawan_kosong'))
+<div id="alert_karyawan_unknown" class="alert alert-danger light alert-lg alert-dismissible fade show">
+    <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" class="me-2">
+        <polygon points="7.86 2 16.14 2 22 7.86 22 16.14 16.14 22 7.86 22 2 16.14 2 7.86 7.86 2"></polygon>
+        <line x1="15" y1="9" x2="9" y2="15"></line>
+        <line x1="9" y1="9" x2="15" y2="15"></line>
+    </svg>
+    <strong>&nbsp;Face Tidak Diketahui.</strong>
+    <button class="btn-close" data-bs-dismiss="alert" aria-label="btn-close">
+        <i class="fa-solid fa-xmark"></i>
+    </button>
+</div>
+@elseif(Session::has('jam_kerja_kurang'))
 <div class="alert alert-danger light alert-lg alert-dismissible fade show">
     <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" class="me-2">
         <polygon points="7.86 2 16.14 2 22 7.86 22 16.14 16.14 22 7.86 22 2 16.14 2 7.86 7.86 2"></polygon>
@@ -36,6 +91,7 @@
         <i class="fa-solid fa-xmark"></i>
     </button>
 </div>
+
 @endif
 <div class="">
     <div class="row m-b20 g-3">
@@ -43,7 +99,7 @@
             <div class="card card-bx card-content bg-primary">
                 <div class="card-body">
                     <div class="info">
-                        <div class="col-12">
+                        <!-- <div class="col-12">
                             <div class="row">
                                 <div class="col-6">
                                     <a href="{{url('home/my-location')}}" id="btn_klik" type="button" class="btn btn-sm btn-secondary" style="height:10px;">
@@ -66,7 +122,7 @@
                                     </a>
                                 </div>
                             </div>
-                        </div>
+                        </div> -->
                         <br><br>
                         <div class="row">
                             @if($shift_karyawan == NULL)
@@ -101,90 +157,74 @@
                             </div>
                             @else
                             @if($shift_karyawan->jam_absen == NULL && $shift_karyawan->jam_pulang== NULL)
-                            <form method="post" action="{{ url('/home/absen/masuk/'.$shift_karyawan->id) }}">
-                                @method('put')
+                            <form id="form" action="absenMasuk" method="post">
+                                <!-- @method('put')-->
                                 @csrf
-                                <div class="form">
-                                    <center>
-                                        <h2 style="color: white">Absen Masuk: </h2>
-                                        <div class="webcam" id="results"></div>
-                                    </center>
+                                <div class="text-center">
+                                    <h2 style="color: white">Absen Masuk: </h2>
+                                    <canvas id="canvas"></canvas>
+                                    <video id="video" class="webcam" width="300" height="400" autoplay muted>
+
+                                    </video>
+                                    <!-- <div class="webcam" id="results"></div> -->
                                     <input type="hidden" name="jam_absen" value="{{ date('H:i:s') }}">
                                     <input type="hidden" name="foto_jam_absen" class="image-tag">
+                                    <input type="hidden" id="shift_karyawan" name="shift_karyawan" value="{{$shift_karyawan->id}}">
                                     <input type="hidden" name="lat_absen" id="lat">
                                     <input type="hidden" name="long_absen" id="long">
+                                    <input type="hidden" name="name" id="name">
+                                    <input type="hidden" name="karyawan_id" id="karyawan_id">
                                     <input type="hidden" name="telat">
                                     <input type="hidden" name="jarak_masuk">
                                     <input type="hidden" name="status_absen">
                                     <input type="hidden" name="keterangan_absensi">
-                                    <center>
-                                        <button id="btn_submit" style="background-color: white; display: none;" type="submit" class="btn btn-lokasisaya" value="Ambil Foto" onClick="take_snapshot()">Masuk</button>
-                                    </center>
+                                    <button id="btn_submit" hidden style="background-color: white; display: none;" type="submit" class="btn btn-lokasisaya" value="Ambil Foto">Masuk</button>
                                 </div>
                             </form>
                             <script type="text/javascript" src="{{ asset('webcamjs/webcam.min.js') }}"></script>
                             <script language="JavaScript">
                                 Webcam.set({
-                                    width: 240,
-                                    height: 320,
+                                    width: 300,
+                                    height: 400,
                                     image_format: 'jpeg',
                                     jpeg_quality: 50
                                 });
                                 Webcam.attach('.webcam');
                             </script>
-                            <script language="JavaScript">
-                                function take_snapshot() {
-                                    // take snapshot and get image data
-                                    Webcam.snap(function(data_uri) {
-                                        $(".image-tag").val(data_uri);
-                                        // display results in page
-                                        document.getElementById('results').innerHTML =
-                                            '<img src="' + data_uri + '"/>';
-                                    });
-                                }
-                            </script>
                             @elseif($shift_karyawan->jam_absen != NULL && $shift_karyawan->jam_pulang == NULL)
-                            <form method="post" action="{{ url('/home/absen/pulang/'.$shift_karyawan->id) }}">
-                                @method('put')
+                            <form id="form" method="post" action="absenPulang">
+                                <!-- @method('put') -->
                                 @csrf
-                                <div class="form">
-                                    <center>
-                                        <h2 style="color: white">Absen Pulang: </h2>
-                                        <div class="webcam" id="results"></div>
-                                    </center>
+                                <div class="text-center">
+                                    <h2 style="color: white">Absen Pulang: </h2>
+                                    <canvas id="canvas"></canvas>
+                                    <video id="video" class="webcam" width="300" height="400" autoplay muted></video>
+                                    <!-- <div class="webcam" id="results"></div> -->
                                     <input type="hidden" name="jam_pulang" value="{{ date('H:i') }}">
                                     <input type="hidden" name="foto_jam_pulang" class="image-tag">
                                     <input type="hidden" name="lat_pulang" id="lat2" value="">
                                     <input type="hidden" name="long_pulang" id="long2" value="">
+                                    <input type="hidden" id="shift_karyawan" name="shift_karyawan" value="{{$shift_karyawan->id}}">
+                                    <input type="hidden" name="name" id="name">
+                                    <input type="hidden" name="karyawan_id" id="karyawan_id">
                                     <input type="hidden" name="pulang_cepat">
                                     <input type="hidden" name="jarak_pulang">
                                     <input type="hidden" name="keterangan_absensi">
                                     <input type="hidden" name="jam_masuk" value="{{$shift_karyawan->jam_absen}}">
-                                    <center>
-                                        <button id="btn_submit" type="submit" class="btn btn-lokasisaya" style="background-color: white; display: none;" value="Ambil Foto" onClick="take_snapshot()">Pulang</button>
-                                    </center>
+
+                                    <button id="btn_submit" type="submit" hidden class="btn btn-lokasisaya" style="background-color: white; display: none;" value="Ambil Foto" onClick="take_snapshot()">Pulang</button>
+
                                 </div>
                             </form>
                             <script type="text/javascript" src="{{ asset('webcamjs/webcam.min.js') }}"></script>
                             <script language="JavaScript">
                                 Webcam.set({
-                                    width: 240,
-                                    height: 320,
+                                    width: 300,
+                                    height: 400,
                                     image_format: 'jpeg',
                                     jpeg_quality: 50
                                 });
                                 Webcam.attach('.webcam');
-                            </script>
-                            <script language="JavaScript">
-                                function take_snapshot() {
-                                    // take snapshot and get image data
-                                    Webcam.snap(function(data_uri) {
-                                        $(".image-tag").val(data_uri);
-                                        // display results in page
-                                        document.getElementById('results').innerHTML =
-                                            '<img src="' + data_uri + '"/>';
-                                    });
-                                }
                             </script>
                             @else
                             <div class="card col-lg-12">
@@ -197,16 +237,221 @@
                             @endif
                             @endif
                         </div>
-
+                        <!--  -->
+                        <!--  -->
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
+@if($faceid==NULL)
+<div class="offcanvas offcanvas-bottom pwa-offcanvas">
+    <div class="container">
+        <div class="offcanvas-body small text-center">
+            <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" viewBox="0 0 48 48" fill="none">
+                <rect width="48" height="48" fill="white" fill-opacity="0.01" />
+                <path d="M34 3.99976H44V13.9998M44 33.9998V43.9998H34M14 43.9998H4V33.9998M4 13.9998V3.99976H14" stroke="#000000" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" />
+                <path d="M24 39.9998C31.732 39.9998 38 32.8363 38 23.9998C38 15.1632 31.732 7.99976 24 7.99976C16.268 7.99976 10 15.1632 10 23.9998C10 32.8363 16.268 39.9998 24 39.9998Z" stroke="#000000" stroke-width="4" />
+                <path d="M6 24.0081L42 23.9998" stroke="#000000" stroke-width="4" stroke-linecap="round" />
+                <path d="M20.0697 32.1057C21.3375 33.0429 22.6476 33.5115 24 33.5115C25.3523 33.5115 26.6983 33.0429 28.0381 32.1057" stroke="#000000" stroke-width="4" stroke-linecap="round" />
+            </svg>
+            <h5 class="title">FACE ID BELUM TERDAFTAR</h5>
+            <p class="text">SILAHKAN DAFTAR DAHULU</p>
+            <a href="{{route('create_face_id')}}" style="margin-top: -5%;" class="btn btn-sm btn-primary">DAFTAR FACE</a>
+        </div>
+    </div>
+</div>
+<div class="offcanvas-backdrop pwa-backdrop"></div>
+@endif
 @endsection
 @section('js')
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+<script defer src="{{ asset('assets/assets_users/js/face-api.js/face-api.min.js') }}"></script>
+<script defer src="{{ asset('assets/assets_users/js/absensi.js')}}" onload="onLoadData('{{ $face }}', '{{ $karyawan }}', '{{ $angka }}')"></script>
+<script defer src="{{ asset('assets/assets_users/js/submitFormAbsensi.js')}}" onload="onLoadDataAbsensi('{{ $absensi }}','{{$jumlah_absensi}}')"></script>
+<!-- <script defer type="module">
+        // onLoadData('{{$face}}', '{{$karyawan}}', '{{$angka}}');
+        onLoadData(<?php echo json_encode($face) ?>,<?php echo json_encode($karyawan) ?>,<?php echo json_encode($angka) ?>);
+        const video = document.getElementById('video');
+        const canvas = document.getElementById('canvas');
+        //masukan data db ke js dan di parsing 
+        var dataFaceJson
+        var dataKaryawanJson
+        var labelHasil
+        var nomorTable
+
+        function onLoadData(face, karyawan, angka) {
+            // console.log(face);
+            dataFaceJson = face;
+            // console.log(dataFaceJson);
+            dataKaryawanJson = karyawan;
+            nomorTable = angka;
+        }
+
+
+        navigator.getUserMedia = (navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia);
+
+        const startVideo = () => {
+            navigator.getUserMedia({
+                    video: {}
+                },
+                stream => video.srcObject = stream,
+                err => console.error(err)
+            )
+        }
+        import * as faceapi from '/public/assets/assets_users/js/face-api.js/face-api.min.js';
+        // var faceapi = require('public/assets/assets_users/js/face-api.min.js');
+        Promise.all([
+            console.log(faceapi),
+            await faceapi.nets.tinyFaceDetector.loadFromUri('/public/assets/assets_users/js/face-api.js/models'),
+            // await faceapi.nets.tinyFaceDetector.loadFromUri('/public/assets/assets_users/js/face-api.js/models'),
+            faceapi.nets.faceLandmark68Net.loadFromUri('/assets/assets_users/js/face-api.js/models'),
+            faceapi.nets.faceRecognitionNet.loadFromUri('/assets/assets_users/js/face-api.js/models'),
+            faceapi.nets.ssdMobilenetv1.loadFromUri('/assets/assets_users/js/face-api.js/models'),
+            faceapi.nets.faceExpressionNet.loadFromUri('/assets/assets_users/js/face-api.js/models'),
+        ]).then(startVideo);
+
+
+        video.addEventListener('play', () => {
+
+            // console.log(canvas);
+            // document.getElementById('container').appendChild(canvas)
+            const displaySize = {
+                width: video.width,
+                height: video.height
+            }
+            faceapi.matchDimensions(canvas, displaySize)
+
+
+            // membuat data sesuai format dari faceapi
+            const labeledFaceDescriptors = []
+            // console.log(dataFaceJson);
+            // console.log(JSON.parse(dataFaceJson[0].face_id));
+            // console.log(dataFaceJson[0].id);
+            // console.log(dataKaryawanJson.find(value => value.id));
+            for (let i = 0; i < dataFaceJson.length; i++) {
+                const data = dataKaryawanJson.find(value => value.id === dataFaceJson[i].id)
+                // console.log(data);  
+
+                // rubah dari array biasa menjadi float32Array
+                const array1 = JSON.parse(dataFaceJson[i].face_id)
+                // console.log(array1);
+                const float1 = Float32Array.from(array1)
+                // console.log(data.name);
+                // console.log(float1);
+
+                // memasukan data yang sesuai format ke array labeledFaceDescriptors
+                labeledFaceDescriptors.push(new faceapi.LabeledFaceDescriptors(
+                    data.name, [float1]))
+
+            }
+
+            const faceMatcher = new faceapi.FaceMatcher(labeledFaceDescriptors, 0.5)
+            // me load gambar
+            setInterval(async () => {
+                const detections = await faceapi.detectAllFaces(video, new faceapi.TinyFaceDetectorOptions())
+                    .withFaceLandmarks()
+                    .withFaceExpressions()
+                    .withFaceDescriptors()
+                const resizedDetections = faceapi.resizeResults(detections, displaySize)
+                canvas.getContext('2d').clearRect(0, 0, canvas.width, canvas.height)
+
+                //menambkan kan kotak pada muka sebagai tanda pendeteksian wajah berhasil
+                faceapi.draw.drawDetections(canvas, resizedDetections)
+                // digunakan untuk menampilkan faceLandmark
+                faceapi.draw.drawFaceLandmarks(canvas, resizedDetections)
+                //digunakan untuk menampilkan expresi wajah
+                // faceapi.draw.drawFaceExpressions(canvas, resizedDetections)
+
+                const results = resizedDetections.map(d => faceMatcher.findBestMatch(d.descriptor))
+                results.forEach((result, i) => {
+                    const box = resizedDetections[i].detection.box
+                    const drawBox = new faceapi.draw.DrawBox(box, {
+                        label: result.toString()
+                    })
+                    drawBox.draw(canvas)
+                    labelHasil = drawBox.options.label
+
+                })
+            }, 100)
+
+        })
+    // })
+</script>
+<script defer>
+    $(document).ready(function() {
+        onLoadDataAbsensi(<?php echo json_encode($absensi) ?> , <?php echo json_encode($jumlah_absensi) ?>);
+        const form = document.getElementById('form')
+        const name = document.getElementById('name')
+        const karyawan_id = document.getElementById('karyawan_id')
+        const button = document.getElementById('btn_submit')
+        const shift_karyawan = $('#shift_karyawan').val();
+
+        var alert_karyawan_tidaksesuai = document.getElementById('alert_karyawan_tidaksesuai')
+        var alert_karyawan_unknown = document.getElementById('alert_karyawan_unknown')
+        $('#alert_karyawan_tidaksesuai').hide();
+        $('#alert_karyawan_unknown').hide();
+        var absensi = []
+        var jumlahAbsensi
+        // untuk menyimpan variable array yang pertama di ambil
+        var allFirstMatches = []
+        // onload array absensi
+        function onLoadDataAbsensi(value , jmlAbsensi) {
+            absensi = value
+            jumlahAbsensi = jmlAbsensi
+        }
+
+        function take_snapshot() {
+            // take snapshot and get image data
+            Webcam.snap(function(data_uri) {
+                $(".image-tag").val(data_uri);
+                // display results in page
+                video.innerHTML =
+                    '<img src="' + data_uri + '"/>';
+            });
+        }
+
+        //membuat kondisi jika hasil pengenalan tidak sama dengan unknown
+        var labelHasil
+        setInterval(() => {
+            if (labelHasil !== undefined) {
+                if (labelHasil.split(" ")[0] !== "unknown") {
+                    const arrayLabel = labelHasil.split(" ")
+                    arrayLabel.pop()
+                    // nama label yang dikenali
+                    const labelName = arrayLabel.join(" ")
+                    submitButton = () => {
+                        // memasukan data pengenalan ke form
+                        const karyawan = dataKaryawanJson.find(value => value.name === labelName)
+                        name.value = labelName
+                        karyawan_id.value = karyawan.id
+                        // untuk mensubmit form
+                        take_snapshot()
+                        button.click()
+                    }
+                    submitButton();
+                } else {
+                    $('#alert_karyawan_unkwon').show();
+                    console.log('unknwon');
+                    // console.log('ok');
+                    setTimeout(function() {
+                        // console.log('ok1');
+                        $("#alert_karyawan_unkwon").hide();
+                    }, 2000); // 7 secs
+                }
+            } else {
+                $('#alert_karyawan_tidaksesuai').show();
+                console.log('tidak sesuai');
+                // console.log('ok');
+                setTimeout(function() {
+                    // console.log('ok1');
+                    $("#alert_karyawan_tidaksesuai").hide();
+                }, 2000); // 7 secs
+            }
+        }, 3000) // jarak tiap submit 3 detik satuan ms
+    });
+</script> -->
 <script>
     getLocation();
 
@@ -243,6 +488,18 @@
             },
         });
     });
+    window.onbeforeunload = function() {
+        Swal.fire({
+            allowOutsideClick: false,
+            background: 'transparent',
+            html: ' <div class="spinner-grow text-primary spinner-grow-sm me-2" role="status"></div><div class="spinner-grow text-primary spinner-grow-sm me-2" role="status"></div><div class="spinner-grow text-primary spinner-grow-sm me-2" role="status"></div>',
+            showCancelButton: false,
+            showConfirmButton: false,
+            onBeforeOpen: () => {
+                // Swal.showLoading()
+            },
+        });
+    };
     $(document).on('click', '#btn_submit', function(e) {
         Swal.fire({
             allowOutsideClick: false,

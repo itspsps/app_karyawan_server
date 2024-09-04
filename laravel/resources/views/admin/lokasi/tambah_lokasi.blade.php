@@ -175,7 +175,7 @@
             });
         });
         var typingTimer; //timer identifier
-        var doneTypingInterval = 2000;
+        var doneTypingInterval = 0;
         $(document).on('keyup', '#radius', function() {
             let value = $(this).val();
             let holding = '{{$holding}}';
@@ -210,7 +210,7 @@
             .setLatLng([lat_titik, long_titik])
             .setContent(lokasi_kantor)
             .openOn(map);
-
+        // SP
         if (lokasi_kantor == 'CV. SUMBER PANGAN - KEDIRI') {
             var latlngs = [
                 [-7.757852, 112.093890],
@@ -218,18 +218,155 @@
                 [-7.757866, 112.096507],
                 [-7.758657, 112.095336]
             ];
-        } else {
+            var polygon = L.polygon(latlngs, {
+                color: 'red'
+            }).addTo(map);
+        } else if (lokasi_kantor == 'CV. SUMBER PANGAN - TUBAN') {
             var latlngs = [
                 [-6.991185, 112.120763],
                 [-6.989174, 112.121394],
                 [-6.989563, 112.122751],
                 [-6.991437, 112.122061]
             ];
+            var polygon = L.polygon(latlngs, {
+                color: 'red'
+            }).addTo(map);
+        } else if (lokasi_kantor == 'DEPO SP SIDOARJO') {
+            var latlngs = [
+                [-7.361735, 112.784873],
+                [-7.361757, 112.785147],
+                [-7.362231, 112.785102],
+                [-7.362195, 112.784741]
+            ];
+            var polygon = L.polygon(latlngs, {
+                color: 'red'
+            }).addTo(map);
+        } else if (lokasi_kantor == 'DEPO SP SAMARINDA') {
+            var latlngs = [
+                [-0.46124004439708466, 117.1890440835615],
+                [-0.4612392469974343, 117.18918363302389],
+                [-0.46134587505367874, 117.18918108680002],
+                [-0.4613312150395592, 117.18903673736563]
+            ];
+            var polygon = L.polygon(latlngs, {
+                color: 'red'
+            }).addTo(map);
+        } else if (lokasi_kantor == 'DEPO SP DENPASAR') {
+            var latlngs = [
+                [-8.652895481207116, 115.20293696056507],
+                [-8.652912717125513, 115.2030294967747],
+                [-8.652755926596885, 115.20305008509402],
+                [-8.652733064463064, 115.2029671528421]
+            ];
+            var polygon = L.polygon(latlngs, {
+                color: 'red'
+            }).addTo(map);
+        } else if (lokasi_kantor == 'DEPO SP MALANG') {
+            var latlngs = [
+                [-7.967760845267797, 112.65873922458452],
+                [-7.967798033683292, 112.65879957428648],
+                [-7.967823932756354, 112.65878616324159],
+                [-7.967790064737394, 112.65872983685311]
+            ];
+            var polygon = L.polygon(latlngs, {
+                color: 'red'
+            }).addTo(map);
+        } else if (lokasi_kantor == 'DEPO SP MALANG') {
+            var latlngs = [
+                [-7.967760845267797, 112.65873922458452],
+                [-7.967798033683292, 112.65879957428648],
+                [-7.967823932756354, 112.65878616324159],
+                [-7.967790064737394, 112.65872983685311]
+            ];
+            var polygon = L.polygon(latlngs, {
+                color: 'red'
+            }).addTo(map);
+        } else if (lokasi_kantor == 'DEPO SP PALANGKARAYA') {
+            var latlngs = [
+                [-2.1739101807413506, 113.864207945572],
+                [-2.1737446735313326, 113.86422269772137],
+                [-2.173735292555323, 113.86412814985499],
+                [-2.1739061603235093, 113.86411876212357]
+            ];
+            var polygon = L.polygon(latlngs, {
+                color: 'red'
+            }).addTo(map);
+        } else if (lokasi_kantor == 'DEPO SP SEMARANG') {
+            var latlngs = [
+                [-7.003762008571239, 110.4547271253569],
+                [-7.003741376561739, 110.4546278836248],
+                [-7.003783306128471, 110.45461983699788],
+                [-7.003805934781971, 110.4547117026553]
+            ];
+            // SPS
+            var polygon = L.polygon(latlngs, {
+                color: 'red'
+            }).addTo(map);
+        } else if (lokasi_kantor == 'PT. SURYA PANGAN SEMESTA - KEDIRI') {
+            var latlngs = [
+                [-7.811054254338505, 112.07984213086016],
+                [-7.810839096224432, 112.08081884380057],
+                [-7.808489981554889, 112.08161649876598],
+                [-7.808405068773745, 112.08133682173685],
+                [-7.810097668835231, 112.08055007648335],
+                [-7.810057948477162, 112.08030628208806]
+            ];
+            var polygon = L.polygon(latlngs, {
+                color: 'red'
+            }).addTo(map);
+        } else if (lokasi_kantor == 'PT. SURYA PANGAN SEMESTA - NGAWI') {
+            var latlngs = [
+                [-7.503903124866787, 111.42901333909559],
+                [-7.503780799880943, 111.42583760362271],
+                [-7.505630060242543, 111.4257993236654],
+                [-7.505712281925328, 111.4285105703631],
+                [-7.504871090128984, 111.4285169497671],
+                [-7.504637074058243, 111.42896350806065]
+            ];
+            var polygon = L.polygon(latlngs, {
+                color: 'red'
+            }).addTo(map);
+        } else if (lokasi_kantor == 'PT. SURYA PANGAN SEMESTA - SUBANG') {
+            var latlngs = [
+                [-6.29533870949617, 107.90681938912391],
+                [-6.295727870479563, 107.90769375045888],
+                [-6.293953207394033, 107.9077779126219],
+                [-6.293911897422521, 107.9069474641808]
+            ];
+            var polygon = L.polygon(latlngs, {
+                color: 'red'
+            }).addTo(map);
+        } else if (lokasi_kantor == 'DEPO SPS BANDUNG') {
+            var latlngs = [
+                [-6.887528841438018, 107.60032030611694],
+                [-6.887538161422427, 107.60048257975994],
+                [-6.887629364117361, 107.60047855644646],
+                [-6.887622041273895, 107.60032164722143]
+            ];
+            var polygon = L.polygon(latlngs, {
+                color: 'red'
+            }).addTo(map);
+        } else if (lokasi_kantor == 'DEPO SPS CIPINANG (JAKARTA)') {
+            var latlngs = [
+                [-6.21311187156196, 106.88544203302257],
+                [-6.2120446956529545, 106.88543065337363],
+                [-6.212025840935464, 106.88472511513999],
+                [-6.213168435595694, 106.88476684051939]
+            ];
+            var latlngs1 = [
+                [-6.211847347299506, 106.8808114012799],
+                [-6.211852680220818, 106.88181991185459],
+                [-6.212351308125068, 106.88182795848152],
+                [-6.212327310001449, 106.88079799023502]
+            ];
+            var polygon = L.polygon(latlngs, {
+                color: 'red'
+            }).addTo(map);
+            var polygon1 = L.polygon(latlngs1, {
+                color: 'red'
+            }).addTo(map);
 
         }
-        var polygon = L.polygon(latlngs, {
-            color: 'red'
-        }).addTo(map);
 
         // console.log(circle);
 

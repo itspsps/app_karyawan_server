@@ -2,10 +2,6 @@
 @section('title') APPS | KARYAWAN - SP @endsection
 @section('content')
 <style>
-    body {
-        padding: 15px;
-    }
-
     #note {
         position: absolute;
         left: 50px;
@@ -13,6 +9,10 @@
         padding: 0px;
         margin: 0px;
         cursor: default;
+    }
+
+    .daterangepicker.ltr.show-calendar {
+        top: 0px !important;
     }
 </style>
 <div class="head-details">
@@ -149,15 +149,22 @@
         </button>
     </div>
     <div class="alert alert-danger light alert-dismissible fade show">
-        <span class="text-center">
-            {{$get_cuti->catatan}}
+        <span>Catatan Permintaan Ditolak :
+            <br>
+            <span class="text-center">
+                @if($get_cuti->catatan != NULL)
+                {{$get_cuti->catatan}}
+                @else
+                {{$get_cuti->catatan2}}
+                @endif
+            </span>
         </span>
         <button class="btn-close" data-bs-dismiss="alert" aria-label="btn-close">
             <i class="fa-solid fa-xmark"></i>
         </button>
     </div>
     @endif
-    <form class="my-2" method="post" action="{{ url('/cuti/edit-cuti-proses/') }}" enctype="multipart/form-data">
+    <form id="form_edit_cuti" class="my-2" method="post" action="{{ url('/cuti/edit-cuti-proses/') }}" enctype="multipart/form-data">
         @csrf
         <div class="input-group">
             <input type="hidden" name="id" value="{{$get_cuti->id}}">
@@ -299,7 +306,8 @@
         <div class="input-group">
             @if ($get_cuti->status_cuti == 0)
             <input type="text" class="form-control" id="name_form_tanggal" value="Tanggal Mulai" readonly>
-            <input type="text" id="date_range_cuti" name="tanggal_cuti" value="{{$get_cuti->tanggal_mulai}}-{{$get_cuti->tanggal_selesai}}" style="font-weight: bold" required placeholder="Tanggal Cuti" class="form-control">
+            <input type="text" id="date_range_cuti" name="tanggal_cuti" value="{{$get_cuti->tanggal_mulai}}-{{$get_cuti->tanggal_selesai}}" style="font-weight: bold" required placeholder="Tanggal Cuti" class="form-control" readonly>
+            <input type="hidden" name="tanggal_cuti_old" value="{{$get_cuti->tanggal_mulai}}" readonly>
             @else
             <input type="text" class="form-control" value="Tanggal Mulai" readonly>
             <input type="text" value="{{ \Carbon\Carbon::parse($get_cuti->tanggal_mulai)->format('d/m/Y')}}" style="font-weight: bold" readonly placeholder="Tanggal Cuti" class="form-control">
@@ -431,7 +439,7 @@
                     <div class="text-center">
                         <input type="hidden" id="signature" name="signature">
                         <button type="button" id="clear_btn" class="btn btn-sm btn-danger btn-rounded" data-action="clear"><i class="fa fa-refresh" aria-hidden="true"> </i> &nbsp; Clear</button>
-                        <button type="submit" id="save_btn" class="btn btn-sm btn-primary btn-rounded" data-action="save-png"><i class="fa fa-save" aria-hidden="true"> </i> &nbsp; Update</button>
+                        <button type="button" id="save_btn" class="btn btn-sm btn-primary btn-rounded" data-action="save-png"><i class="fa fa-save" aria-hidden="true"> </i> &nbsp; Update</button>
                     </div>
 
                 </div>
@@ -486,13 +494,15 @@
             var selesai = '{{$get_cuti->tanggal_selesai}}';
             $('#name_form_tanggal').val('Tanggal Mulai Cuti');
             var start = moment(mulai);
+            var min = moment().subtract(-14, 'days');
             var end = moment(selesai);
             $('input[id="date_range_cuti"]').daterangepicker({
-                drops: 'auto',
-                minDate: start,
+                drops: 'bottom',
+                opens: 'left',
+                minDate: min,
                 startDate: start,
                 endDate: end,
-                autoApply: true,
+                autoApply: false,
             }, function(start, end, label) {
                 console.log("A new date selection was made: " + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD'));
             });
@@ -559,11 +569,12 @@
                 $('#name_form_tanggal').val('Tanggal Cuti');
                 var start = moment().subtract(-14, 'days');
                 $('input[id="date_range_cuti"]').daterangepicker({
-                    drops: 'auto',
+                    drops: 'bottom',
+                    opens: 'left',
                     minDate: start,
                     startDate: start,
                     endDate: start,
-                    autoApply: true,
+                    autoApply: false,
                 }, function(start, end, label) {
                     console.log("A new date selection was made: " + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD'));
                 });
@@ -586,12 +597,26 @@
     });
     savePNGButton.addEventListener("click", function(event) {
         if (signaturePad.isEmpty()) {
-            alert("Please provide signature first.");
+            Swal.fire({
+                title: "Info",
+                text: "Tanda Tangan Tidak Boleh Kosong",
+                icon: "info"
+            });
             event.preventDefault();
         } else {
             var canvas = document.getElementById("the_canvas");
             var dataUrl = canvas.toDataURL();
             document.getElementById("signature").value = dataUrl;
+            Swal.fire({
+                allowOutsideClick: false,
+                background: 'transparent',
+                html: ' <div class="spinner-grow text-primary spinner-grow-sm me-2" role="status"></div><div class="spinner-grow text-primary spinner-grow-sm me-2" role="status"></div><div class="spinner-grow text-primary spinner-grow-sm me-2" role="status"></div>',
+                showCancelButton: false,
+                showConfirmButton: false,
+                onBeforeOpen: () => {
+                    $('#form_edit_cuti').submit();
+                },
+            });
         }
     });
 
@@ -612,5 +637,17 @@
             },
         });
     });
+    window.onbeforeunload = function() {
+        Swal.fire({
+            allowOutsideClick: false,
+            background: 'transparent',
+            html: ' <div class="spinner-grow text-primary spinner-grow-sm me-2" role="status"></div><div class="spinner-grow text-primary spinner-grow-sm me-2" role="status"></div><div class="spinner-grow text-primary spinner-grow-sm me-2" role="status"></div>',
+            showCancelButton: false,
+            showConfirmButton: false,
+            onBeforeOpen: () => {
+                // Swal.showLoading()
+            },
+        });
+    };
 </script>
 @endsection

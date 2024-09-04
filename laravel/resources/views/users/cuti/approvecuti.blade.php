@@ -1,4 +1,4 @@
-@extends('users.izin.layout.main')
+@extends('users.cuti.layout.main')
 @section('title') APPS | KARYAWAN - SP @endsection
 @section('content')
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
@@ -24,7 +24,43 @@
         height: auto;
     }
 </style>
-
+<div class="head-details">
+    <div class=" container">
+        <div class="dz-info">
+            <span class="location d-block">Form Cuti
+                @if($user->kontrak_kerja == 'sp')
+                CV. SUMBER PANGAN
+                @elseif($user->kontrak_kerja == 'sps')
+                PT. SURYA PANGAN SEMESTA
+                @elseif($user->kontrak_kerja == 'sip')
+                CV. SURYA INTI PANGAN
+                @endif
+            </span>
+            {{-- @foreach ($user  as $dep) --}}
+            <h5 class="title">Department of "{{ $user->nama_departemen }}"</h5>
+            {{-- @endforeach --}}
+        </div>
+        <div class="dz-media media-65">
+            <img src="assets/images/logo/logo.svg" alt="">
+        </div>
+    </div>
+</div>
+<div class="fixed-content p-0">
+    <div class="container">
+        <div class="main-content">
+            <div class="left-content">
+                <a id="btn_klik" href="{{url('home')}}" class="btn-back">
+                    <svg width="18" height="18" viewBox="0 0 10 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M9.03033 0.46967C9.2966 0.735936 9.3208 1.1526 9.10295 1.44621L9.03033 1.53033L2.561 8L9.03033 14.4697C9.2966 14.7359 9.3208 15.1526 9.10295 15.4462L9.03033 15.5303C8.76406 15.7966 8.3474 15.8208 8.05379 15.6029L7.96967 15.5303L0.96967 8.53033C0.703403 8.26406 0.679197 7.8474 0.897052 7.55379L0.96967 7.46967L7.96967 0.46967C8.26256 0.176777 8.73744 0.176777 9.03033 0.46967Z" fill="#a19fa8" />
+                    </svg>
+                </a>
+                <h5 class="mb-0">Back</h5>
+            </div>
+            <div class="mid-content">
+            </div>
+        </div>
+    </div>
+</div>
 <div class="container">
     <!-- Modal -->
     <div class="container">
@@ -147,10 +183,12 @@
 @endsection
 @section('js')
 <script type="text/javascript" src="{{ asset('assets_ttd/assets/signature.js') }}"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
 <script>
     var wrapper = document.getElementById("signature-pad");
     var clearButton = wrapper.querySelector("[data-action=clear]");
     var savePNGButton = wrapper.querySelector("[data-action=save-png]");
+    var noSavePNGButton = wrapper.querySelector("[data-action=not_save-png]");
     var canvas = wrapper.querySelector("canvas");
     var el_note = document.getElementById("note");
     var signaturePad;
@@ -162,23 +200,14 @@
     });
     savePNGButton.addEventListener("click", function(event) {
         if (signaturePad.isEmpty()) {
-            alert("Please provide signature first.");
+            Swal.fire({
+                title: "Info",
+                text: "Tanda Tangan Tidak Boleh Kosong",
+                icon: "info"
+            });
             event.preventDefault();
         } else {
-            var canvas = document.getElementById("the_canvas");
-            var dataUrl = canvas.toDataURL();
-            document.getElementById("signature").value = dataUrl;
-        }
-    });
-
-    function my_function() {
-        document.getElementById("note").innerHTML = "";
-    }
-</script>
-<script type="text/javascript">
-    $(function() {
-        $(document).on('click', '#approve_btn', function(e) {
-            e.preventDefault();
+            event.preventDefault();
             var canvas = document.getElementById("the_canvas");
             var dataUrl = canvas.toDataURL();
             var approve = 'approve';
@@ -203,19 +232,51 @@
                 type: "POST",
                 dataType: 'json',
                 success: function(data) {
+                    Swal.fire({
+                        allowOutsideClick: false,
+                        background: 'transparent',
+                        html: ' <div class="spinner-grow text-primary spinner-grow-sm me-2" role="status"></div><div class="spinner-grow text-primary spinner-grow-sm me-2" role="status"></div><div class="spinner-grow text-primary spinner-grow-sm me-2" role="status"></div>',
+                        showCancelButton: false,
+                        showConfirmButton: false,
+                        onBeforeOpen: () => {
+                            // Swal.showLoading()
+                        },
+                    });
                     console.log(data);
                     var url = "{{ url('/home') }}"; //the url I want to redirect to
                     $(location).attr('href', url);
 
                 },
                 error: function(data) {
+                    Swal.fire({
+                        allowOutsideClick: false,
+                        background: 'transparent',
+                        html: ' <div class="spinner-grow text-primary spinner-grow-sm me-2" role="status"></div><div class="spinner-grow text-primary spinner-grow-sm me-2" role="status"></div><div class="spinner-grow text-primary spinner-grow-sm me-2" role="status"></div>',
+                        showCancelButton: false,
+                        showConfirmButton: false,
+                        onBeforeOpen: () => {
+                            // Swal.showLoading()
+                        },
+                    });
                     var url = "{{ url('/home') }}"; //the url I want to redirect to
                     $(location).attr('href', url);
                 }
             });
-        });
-        $(document).on('click', '#not_approve_btn', function(e) {
-            e.preventDefault();
+        }
+    });
+    noSavePNGButton.addEventListener("click", function(event) {
+        if (signaturePad.isEmpty()) {
+            Swal.fire({
+                title: "Info",
+                text: "Tanda Tangan Tidak Boleh Kosong",
+                icon: "info"
+            });
+            event.preventDefault();
+        } else {
+            var canvas = document.getElementById("the_canvas");
+            var dataUrl = canvas.toDataURL();
+            document.getElementById("signature").value = dataUrl;
+
             var approve = 'not_approve';
             var canvas = document.getElementById("the_canvas");
             var dataUrl = canvas.toDataURL();
@@ -240,17 +301,41 @@
                 type: "POST",
                 dataType: 'json',
                 success: function(data) {
+                    Swal.fire({
+                        allowOutsideClick: false,
+                        background: 'transparent',
+                        html: ' <div class="spinner-grow text-primary spinner-grow-sm me-2" role="status"></div><div class="spinner-grow text-primary spinner-grow-sm me-2" role="status"></div><div class="spinner-grow text-primary spinner-grow-sm me-2" role="status"></div>',
+                        showCancelButton: false,
+                        showConfirmButton: false,
+                        onBeforeOpen: () => {
+                            // Swal.showLoading()
+                        },
+                    });
                     var url = "{{ url('/home') }}"; //the url I want to redirect to
                     $(location).attr('href', url);
 
                 },
                 error: function(data) {
+                    Swal.fire({
+                        allowOutsideClick: false,
+                        background: 'transparent',
+                        html: ' <div class="spinner-grow text-primary spinner-grow-sm me-2" role="status"></div><div class="spinner-grow text-primary spinner-grow-sm me-2" role="status"></div><div class="spinner-grow text-primary spinner-grow-sm me-2" role="status"></div>',
+                        showCancelButton: false,
+                        showConfirmButton: false,
+                        onBeforeOpen: () => {
+                            // Swal.showLoading()
+                        },
+                    });
                     var url = "{{ url('/home') }}"; //the url I want to redirect to
                     $(location).attr('href', url);
 
                 }
             });
-        });
+        }
     });
+
+    function my_function() {
+        document.getElementById("note").innerHTML = "";
+    }
 </script>
 @endsection

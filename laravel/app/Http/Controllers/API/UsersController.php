@@ -43,4 +43,9 @@ class UsersController extends Controller
             return ApiFormatter::createApi(400, 'Failed');
            }
     }
+    
+    public function recuitemt_user()
+    {
+        return view('users.recruitment.recruitment');
+    }
 }

@@ -1,12 +1,15 @@
 
 const video = document.getElementById('video');
+const canvas = document.getElementById('canvas');
 //masukan data db ke js dan di parsing 
 let dataFaceJson
 let dataKaryawanJson
 let labelHasil
 let nomorTable
 function onLoadData(face, karyawan, angka) {
+    console.log(face);
     dataFaceJson = JSON.parse(face);
+    console.log(dataFaceJson);
     dataKaryawanJson = JSON.parse(karyawan);
     nomorTable = angka;
 }
@@ -22,16 +25,18 @@ const startVideo = () => {
     )
 }
 
+console.log('as');
 Promise.all([
-    faceapi.nets.tinyFaceDetector.loadFromUri('../assets/assets_users/js/face-api.js/models'),
-    faceapi.nets.faceLandmark68Net.loadFromUri('../assets/assets_users/js/face-api.js/models'),
-    faceapi.nets.faceRecognitionNet.loadFromUri('../assets/assets_users/js/face-api.js/models'),
-    faceapi.nets.ssdMobilenetv1.loadFromUri('../assets/assets_users/js/face-api.js/models'),
+    faceapi.nets.tinyFaceDetector.loadFromUri('../public/assets/assets_users/js/face-api.js/models'),
+    faceapi.nets.faceLandmark68Net.loadFromUri('../public/assets/assets_users/js/face-api.js/models'),
+    faceapi.nets.faceRecognitionNet.loadFromUri('../public/assets/assets_users/js/face-api.js/models'),
+    faceapi.nets.ssdMobilenetv1.loadFromUri('../public/assets/assets_users/js/face-api.js/models'),
+    faceapi.nets.faceExpressionNet.loadFromUri('../public/assets/assets_users/js/face-api.js/models'),
 ]).then(startVideo);
 
 
 video.addEventListener('play', () => {
-    let canvas = faceapi.createCanvasFromMedia(video)
+   
     // console.log(canvas);
     // document.getElementById('container').appendChild(canvas)
     const displaySize = {width: video.width, height: video.height}
@@ -41,6 +46,7 @@ video.addEventListener('play', () => {
     // membuat data sesuai format dari faceapi
     const labeledFaceDescriptors = []
     // console.log(dataFaceJson);
+    // console.log(JSON.parse(dataFaceJson[0].face_id));
     // console.log(dataFaceJson[0].id);
     // console.log(dataKaryawanJson.find(value => value.id));
     for (let i = 0; i < dataFaceJson.length; i++) {
@@ -64,10 +70,19 @@ video.addEventListener('play', () => {
     const faceMatcher = new faceapi.FaceMatcher(labeledFaceDescriptors, 0.5)
     // me load gambar
     setInterval(async () => {
-        const detections = await faceapi.detectAllFaces(video, new faceapi.TinyFaceDetectorOptions()).withFaceLandmarks().withFaceDescriptors()
+        const detections = await faceapi.detectAllFaces(video, new faceapi.TinyFaceDetectorOptions())
+        .withFaceLandmarks()
+            .withFaceExpressions()
+            .withFaceDescriptors()
         const resizedDetections = faceapi.resizeResults(detections, displaySize)
-        canvas.willReadFrequently = true;
-        canvas.getContext('2d').clearRect(0,0, canvas.width, canvas.height)
+        canvas.getContext('2d').clearRect(0, 0, canvas.width, canvas.height)
+    
+        //menambkan kan kotak pada muka sebagai tanda pendeteksian wajah berhasil
+        faceapi.draw.drawDetections(canvas, resizedDetections)
+        // digunakan untuk menampilkan faceLandmark
+        faceapi.draw.drawFaceLandmarks(canvas, resizedDetections)
+        //digunakan untuk menampilkan expresi wajah
+        // faceapi.draw.drawFaceExpressions(canvas, resizedDetections)
 
         const results = resizedDetections.map(d => faceMatcher.findBestMatch(d.descriptor))
         results.forEach((result, i) => {
@@ -80,6 +95,7 @@ video.addEventListener('play', () => {
     }, 100)
 
 })
+
 
 
 

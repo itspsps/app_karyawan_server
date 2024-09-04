@@ -15,6 +15,8 @@
     <meta property="og:description" content="Jobie - Job Portal Mobile App Template ( Bootstrap 5 + PWA )" />
     <meta property="og:image" content="https://jobie.dexignzone.com/mobile-app/xhtml/social-image.png" />
     <meta name="format-detection" content="telephone=no">
+    <meta http-equiv="Cache-control" content="no-cache">
+    <meta http-equiv="Expires" content="-1">
 
     <!-- Favicons Icon -->
     <link rel="shortcut icon" type="image/x-icon" href="assets/images/favicon.png" />

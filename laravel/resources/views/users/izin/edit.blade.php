@@ -635,9 +635,7 @@
             },
         });
     });
-</script>
-<script>
-    $(document).on('click', '#btn_klik', function(e) {
+    window.onbeforeunload = function() {
         Swal.fire({
             allowOutsideClick: false,
             background: 'transparent',
@@ -648,6 +646,6 @@
                 // Swal.showLoading()
             },
         });
-    });
+    };
 </script>
 @endsection

@@ -6,6 +6,7 @@ const nik = document.getElementById('nik')
 const email = document.getElementById('emailFaceId')
 const departemen = document.getElementById('departemen')
 const form = document.getElementById('form')
+const canvas = document.getElementById('canvas')
 // memasukan data dari db php ke js
 const karyawan = []
 function onLoadDataDbKaryawan(value) {
@@ -17,26 +18,9 @@ function onLoadDataDbKaryawan(value) {
     }
 }
 
-const onChangeSelect = () => {
-    const selected = karyawan.find(user => user.name == select.value)
-    nik.value = selected.nik
-    email.value = selected.email
-    departemen.value = selected.departemen
-    form.setAttribute('action', `createfaceid/${selected.id}`)
-}
 
 // navigator usermedia has not supported
-navigator.getUserMedia = ( navigator.getUserMedia ||
-    navigator.webkitGetUserMedia ||
-    navigator.mozGetUserMedia ||
-    navigator.msGetUserMedia);
-// meload resource face-api.js
-Promise.all([
-    faceapi.nets.tinyFaceDetector.loadFromUri('../assets/assets_users/js/face-api.js/models'),
-    faceapi.nets.faceLandmark68Net.loadFromUri('../assets/assets_users/js/face-api.js/models'),
-    faceapi.nets.faceRecognitionNet.loadFromUri('../assets/assets_users/js/face-api.js/models'),
-    faceapi.nets.ssdMobilenetv1.loadFromUri('../assets/assets_users/js/face-api.js/models'),
-]).then(startVideo);
+navigator.getUserMedia = ( navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia);
 
 function startVideo() {
     navigator.getUserMedia(
@@ -45,22 +29,42 @@ function startVideo() {
         err => console.error(err)
     )
 }
+// meload resource face-api.js
+Promise.all([
+    faceapi.nets.tinyFaceDetector.loadFromUri('../public/assets/assets_users/js/face-api.js/models'),
+    faceapi.nets.faceLandmark68Net.loadFromUri('../public/assets/assets_users/js/face-api.js/models'),
+    faceapi.nets.faceRecognitionNet.loadFromUri('../public/assets/assets_users/js/face-api.js/models'),
+    faceapi.nets.ssdMobilenetv1.loadFromUri('../public/assets/assets_users/js/face-api.js/models'),
+]).then(startVideo);
+
 
 video.addEventListener('play', () => {
-    const canvas = faceapi.createCanvasFromMedia(video)
-    document.body.append(canvas)
     const displaySize = {width: video.width, height: video.height}
     faceapi.matchDimensions(canvas, displaySize)
-    setInterval(async () => {
 
-        const detections = await faceapi.detectAllFaces(video, new faceapi.TinyFaceDetectorOptions()).withFaceLandmarks().withFaceDescriptors()
-        const resizedDetections = faceapi.resizeResults(detections, displaySize)
-        canvas.getContext('2d').clearRect(0, 0, canvas.width, canvas.height)
-        faceapi.draw.drawDetections(canvas, resizedDetections)
-        const array = resizedDetections[0].descriptor
-        console.log(resizedDetections);
-        faceid.value = `[${array}]`
-    }, 1000)
+    setInterval(async () => {
+        const detections = await faceapi.detectAllFaces(video, new faceapi.TinyFaceDetectorOptions())
+            .withFaceLandmarks()
+            .withFaceDescriptors();
+        const resizedDetections = faceapi.resizeResults(detections, displaySize);
+        canvas.getContext('2d').clearRect(0, 0, canvas.width, canvas.height);
+    
+        //menambkan kan kotak pada muka sebagai tanda pendeteksian wajah berhasil
+        faceapi.draw.drawDetections(canvas, resizedDetections);
+        // digunakan untuk menampilkan faceLandmark
+        faceapi.draw.drawFaceLandmarks(canvas, resizedDetections);
+        
+        const array = resizedDetections[0].descriptor;
+        // console.log(array);
+        faceid.value = `[${array}]`;
+        if (faceid.value != null) {
+            // console.log('disable false');
+            $('.btn_simpan_face').removeAttr('disabled');
+            $('#loading').removeClass();
+            $('#loading').addClass('fa fa-save');
+            $('.btn_simpan_face').html('Simpan');
+        }
+    }, 100)
 })
 
 

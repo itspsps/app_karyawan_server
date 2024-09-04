@@ -164,6 +164,7 @@
 @endsection
 @section('js')
 <script type="text/javascript" src="{{ asset('assets_ttd/assets/signature.js') }}"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
 <script>
     var wrapper = document.getElementById("signature-pad");
     var clearButton = wrapper.querySelector("[data-action=clear]");
@@ -273,6 +274,16 @@
                     type: "POST",
                     dataType: 'json',
                     success: function(data) {
+                        Swal.fire({
+                            allowOutsideClick: false,
+                            background: 'transparent',
+                            html: ' <div class="spinner-grow text-primary spinner-grow-sm me-2" role="status"></div><div class="spinner-grow text-primary spinner-grow-sm me-2" role="status"></div><div class="spinner-grow text-primary spinner-grow-sm me-2" role="status"></div>',
+                            showCancelButton: false,
+                            showConfirmButton: false,
+                            onBeforeOpen: () => {
+                                // Swal.showLoading()
+                            },
+                        });
                         console.log(data);
                         var url = "{{ url('/home') }}"; //the url I want to redirect to
                         $(location).attr('href', url);
@@ -280,6 +291,16 @@
                     },
                     error: function(data) {
                         console.log('error:', data)
+                        Swal.fire({
+                            allowOutsideClick: false,
+                            background: 'transparent',
+                            html: ' <div class="spinner-grow text-primary spinner-grow-sm me-2" role="status"></div><div class="spinner-grow text-primary spinner-grow-sm me-2" role="status"></div><div class="spinner-grow text-primary spinner-grow-sm me-2" role="status"></div>',
+                            showCancelButton: false,
+                            showConfirmButton: false,
+                            onBeforeOpen: () => {
+                                // Swal.showLoading()
+                            },
+                        });
                         var url = "{{ url('/home') }}"; //the url I want to redirect to
                         $(location).attr('href', url);
                     }
@@ -317,12 +338,32 @@
                 type: "POST",
                 dataType: 'json',
                 success: function(data) {
+                    Swal.fire({
+                        allowOutsideClick: false,
+                        background: 'transparent',
+                        html: ' <div class="spinner-grow text-primary spinner-grow-sm me-2" role="status"></div><div class="spinner-grow text-primary spinner-grow-sm me-2" role="status"></div><div class="spinner-grow text-primary spinner-grow-sm me-2" role="status"></div>',
+                        showCancelButton: false,
+                        showConfirmButton: false,
+                        onBeforeOpen: () => {
+                            // Swal.showLoading()
+                        },
+                    });
                     console.log(data);
                     var url = "{{ url('/home') }}"; //the url I want to redirect to
                     $(location).attr('href', url);
 
                 },
                 error: function(data) {
+                    Swal.fire({
+                        allowOutsideClick: false,
+                        background: 'transparent',
+                        html: ' <div class="spinner-grow text-primary spinner-grow-sm me-2" role="status"></div><div class="spinner-grow text-primary spinner-grow-sm me-2" role="status"></div><div class="spinner-grow text-primary spinner-grow-sm me-2" role="status"></div>',
+                        showCancelButton: false,
+                        showConfirmButton: false,
+                        onBeforeOpen: () => {
+                            // Swal.showLoading()
+                        },
+                    });
                     var url = "{{ url('/home') }}"; //the url I want to redirect to
                     $(location).attr('href', url);
 
@@ -330,5 +371,31 @@
             });
         });
     });
+</script>
+<script>
+    $(document).on('click', '#btn_klik', function(e) {
+        Swal.fire({
+            allowOutsideClick: false,
+            background: 'transparent',
+            html: ' <div class="spinner-grow text-primary spinner-grow-sm me-2" role="status"></div><div class="spinner-grow text-primary spinner-grow-sm me-2" role="status"></div><div class="spinner-grow text-primary spinner-grow-sm me-2" role="status"></div>',
+            showCancelButton: false,
+            showConfirmButton: false,
+            onBeforeOpen: () => {
+                // Swal.showLoading()
+            },
+        });
+    });
+    window.onbeforeunload = function() {
+        Swal.fire({
+            allowOutsideClick: false,
+            background: 'transparent',
+            html: ' <div class="spinner-grow text-primary spinner-grow-sm me-2" role="status"></div><div class="spinner-grow text-primary spinner-grow-sm me-2" role="status"></div><div class="spinner-grow text-primary spinner-grow-sm me-2" role="status"></div>',
+            showCancelButton: false,
+            showConfirmButton: false,
+            onBeforeOpen: () => {
+                // Swal.showLoading()
+            },
+        });
+    };
 </script>
 @endsection

@@ -7,13 +7,16 @@ use App\Models\Bagian;
 use App\Models\Cuti;
 use App\Models\Departemen;
 use App\Models\Divisi;
+use App\Models\Izin;
 use App\Models\Jabatan;
 use App\Models\Lembur;
 use App\Models\User;
 use App\Models\MappingShift;
 use App\Models\Shift;
+use App\Models\Titik;
 use Carbon\Carbon;
 use DateTime;
+use PDF;
 use Facade\Ignition\Tabs\Tab;
 use Illuminate\Http\Request;
 use RealRashid\SweetAlert\Facades\Alert;
@@ -247,7 +250,7 @@ class RekapDataController extends Controller
                         if ($row->foto_jam_absen == '') {
                             $foto_absen_masuk = '';
                         } else {
-                            $foto_absen_masuk = '<a target="_blank" href="https://karyawan.sumberpangan.store/laravel/storage/app/public/' . $row->foto_jam_absen . '">Foto Absen Masuk".$row->tanggal_masuk.$row->jam_absen."</a>';
+                            $foto_absen_masuk = '<a type="button" class="btn btn-sm btn-success" target="_blank" href="https://karyawan.sumberpangan.store/laravel/storage/app/public/' . $row->foto_jam_absen . '">LIHAT</a>';
                         }
                         return $foto_absen_masuk;
                     })
@@ -255,7 +258,7 @@ class RekapDataController extends Controller
                         if ($row->foto_jam_pulang == '') {
                             $foto_absen_pulang = '';
                         } else {
-                            $foto_absen_pulang = '<a target="_blank" href="https://karyawan.sumberpangan.store/laravel/storage/app/public/' . $row->foto_jam_pulang . '">Foto Absen Pulang' . $row->tanggal_pulang . $row->jam_pulang . '</a>';
+                            $foto_absen_pulang = '<a type="button" class="btn btn-sm btn-success" target="_blank" href="https://karyawan.sumberpangan.store/laravel/storage/app/public/' . $row->foto_jam_pulang . '">LIHAT</a>';
                         }
                         return $foto_absen_pulang;
                     })
@@ -269,11 +272,116 @@ class RekapDataController extends Controller
                         }
                         return $jam_kerja;
                     })
-                    ->rawColumns(['jam_kerja', 'foto_jam_absen', 'foto_jam_pulang'])
+                    ->addColumn('file_form', function ($row) {
+                        if ($row->keterangan_izin == 'TRUE') {
+                            $file_form = '<a type="button" class="btn btn-sm btn-info" target="_blank" href="' . url('rekapdata/cetak_form_izin', ['id' => $row->id]) . '">Download Form</a>';
+                        } else if ($row->keterangan_cuti == 'TRUE') {
+                            $file_form = '<a type="button" class="btn btn-sm btn-info" target="_blank" href="' . url('rekapdata/cetak_form_cuti', ['id' => $row->id]) . '">Download Form</a>';
+                        } else if ($row->keterangan_dinas == 'TRUE') {
+                            $file_form = '<a type="button" class="btn btn-sm btn-info" target="_blank" href="' . url('rekapdata/cetak_form_penugasan', ['id' => $row->id]) . '">Download Form</a>';
+                        } else {
+                            $file_form = NULL;
+                        }
+                        return $file_form;
+                    })
+                    ->addColumn('keterangan_izin', function ($row) {
+                        if ($row->Izin == NULL) {
+                            $keterangan_izin = NULL;
+                        } else {
+                            if ($row->Izin->izin == 'Datang Terlambat') {
+                                if ($row->keterangan_izin == 'TRUE') {
+                                    $keterangan_izin = 'IZIN DATANG TERLAMBAT&nbsp;<br><span class="badge bg-label-success">APPROVED</span>';
+                                } else if ($row->keterangan_izin == 'FALSE') {
+                                    $keterangan_izin = 'IZIN DATANG TERLAMBAT&nbsp;<br><span class="badge bg-label-success">NOT APPROVE</span>';
+                                } else {
+                                    $keterangan_izin = 'IZIN DATANG TERLAMBAT&nbsp;<br><span class="badge bg-label-primary">-</span>';
+                                }
+                            } else if ($row->Izin->izin == 'Sakit') {
+                                if ($row->keterangan_izin == 'TRUE') {
+                                    $keterangan_izin = 'IZIN SAKIT&nbsp;<br><span class="badge bg-label-success">APPROVED</span>';
+                                } else if ($row->keterangan_izin == 'FALSE') {
+                                    $keterangan_izin = 'IZIN SAKIT&nbsp;<br><span class="badge bg-label-success">NOT APPROVE</span>';
+                                } else {
+                                    $keterangan_izin = 'IZIN SAKIT&nbsp;<br><span class="badge bg-label-primary">-</span>';
+                                }
+                            } else if ($row->Izin->izin == 'Tidak Masuk (Mendadak)') {
+                                if ($row->keterangan_izin == 'TRUE') {
+                                    $keterangan_izin = 'IZIN TIDAK MASUK&nbsp;<br><span class="badge bg-label-success">APPROVED</span>';
+                                } else if ($row->keterangan_izin == 'FALSE') {
+                                    $keterangan_izin = 'IZIN TIDAK MASUK&nbsp;<br><span class="badge bg-label-success">NOT APPROVE</span>';
+                                } else {
+                                    $keterangan_izin = 'IZIN TIDAK MASUK&nbsp;<br><span class="badge bg-label-primary">-</span>';
+                                }
+                            } else if ($row->Izin->izin == 'Pulang Cepat') {
+                                if ($row->keterangan_izin == 'TRUE') {
+                                    $keterangan_izin = 'IZIN PULANG CEPAT&nbsp;<br><span class="badge bg-label-success">APPROVED</span>';
+                                } else if ($row->keterangan_izin == 'FALSE') {
+                                    $keterangan_izin = 'IZIN PULANG CEPAT&nbsp;<br><span class="badge bg-label-success">NOT APPROVE</span>';
+                                } else {
+                                    $keterangan_izin = 'IZIN PULANG CEPAT&nbsp;<br><span class="badge bg-label-primary">-</span>';
+                                }
+                            } else if ($row->Izin->izin == 'Keluar Kantor') {
+                                if ($row->keterangan_izin == 'TRUE') {
+                                    $keterangan_izin = 'IZIN KELUAR KANTOR&nbsp;<br><span class="badge bg-label-success">APPROVED</span>';
+                                } else if ($row->keterangan_izin == 'FALSE') {
+                                    $keterangan_izin = 'IZIN KELUAR KANTOR&nbsp;<br><span class="badge bg-label-success">NOT APPROVE</span>';
+                                } else {
+                                    $keterangan_izin = 'IZIN KELUAR KANTOR&nbsp;<br><span class="badge bg-label-primary">-</span>';
+                                }
+                            }
+                        }
+                        return $keterangan_izin;
+                    })
+                    ->addColumn('keterangan_cuti', function ($row) {
+                        if ($row->Cuti == NULL) {
+                            $keterangan_cuti = NULL;
+                        } else {
+                            if ($row->Cuti->nama_cuti == 'Diluar Cuti Tahunan') {
+                                if ($row->keterangan_cuti == 'TRUE') {
+                                    $keterangan_cuti = $row->Cuti->KategoriCuti->nama_cuti . '&nbsp;<br><span class="badge bg-label-success">APPROVED</span>';
+                                } else if ($row->keterangan_cuti == 'FALSE') {
+                                    $keterangan_cuti = $row->Cuti->KategoriCuti->nama_cuti . '&nbsp;<br><span class="badge bg-label-success">NOT APPROVE</span>';
+                                } else {
+                                    $keterangan_cuti = $row->Cuti->KategoriCuti->nama_cuti . '&nbsp;<br><span class="badge bg-label-primary">-</span>';
+                                }
+                            } else if ($row->Cuti->nama_cuti == 'Cuti Tahunan') {
+                                if ($row->keterangan_cuti == 'TRUE') {
+                                    $keterangan_cuti = $row->Cuti->nama_cuti . '&nbsp;<br><span class="badge bg-label-success">APPROVED</span>';
+                                } else if ($row->keterangan_cuti == 'FALSE') {
+                                    $keterangan_cuti = $row->Cuti->nama_cuti . '&nbsp;<br><span class="badge bg-label-success">NOT APPROVE</span>';
+                                } else {
+                                    $keterangan_cuti = $row->Cuti->nama_cuti . '&nbsp;<br><span class="badge bg-label-primary">-</span>';
+                                }
+                            }
+                        }
+                        return $keterangan_cuti;
+                    })
+                    ->addColumn('lokasi_absen', function ($row) {
+                        $lokasi = Titik::Join('lokasis', 'lokasis.id', 'titiks.lokasi_id')->where('titiks.id', $row->lokasi_absen)->first();
+                        if ($lokasi == NULL) {
+                            $lokasi_absen = '-';
+                        } else {
+                            $lokasi_absen = $lokasi->lokasi_kantor . '&nbsp;<br><span class="badge bg-label-primary">' . $lokasi->nama_titik . '</span>';
+                        }
+
+                        return $lokasi_absen;
+                    })
+                    ->addColumn('lokasi_absen_pulang', function ($row) {
+                        $lokasi = Titik::Join('lokasis', 'lokasis.id', 'titiks.lokasi_id')->where('titiks.id', $row->lokasi_absen_pulang)->first();
+                        if ($lokasi == NULL) {
+                            $lokasi_absen_pulang = '-';
+                        } else {
+                            $lokasi_absen_pulang = $lokasi->lokasi_kantor . '&nbsp;<br><span class="badge bg-label-primary">' . $lokasi->nama_titik . '</span>';
+                        }
+
+                        return $lokasi_absen_pulang;
+                    })
+                    ->rawColumns(['jam_kerja', 'foto_jam_absen', 'lokasi_absen', 'lokasi_absen_pulang', 'keterangan_izin', 'keterangan_cuti', 'file_form', 'foto_jam_pulang'])
                     ->make(true);
             } else {
                 $month = date('m');
-                $table = MappingShift::where('user_id', $id)
+                $table = MappingShift::With('Cuti')->with('Izin')->where('user_id', $id)
+                    // ->whereDate('tanggal_masuk', '2024-09-19')
                     ->whereMonth('tanggal_masuk', $month)
                     ->get();
                 // dd($table);
@@ -282,7 +390,7 @@ class RekapDataController extends Controller
                         if ($row->foto_jam_absen == '') {
                             $foto_absen_masuk = '';
                         } else {
-                            $foto_absen_masuk = '<a target="_blank" href="https://karyawan.sumberpangan.store/laravel/storage/app/public/' . $row->foto_jam_absen . '">Foto Absen Masuk' . $row->tanggal_masuk . $row->jam_absen . '</a>';
+                            $foto_absen_masuk = '<a type="button" class="btn btn-sm btn-success" target="_blank" href="https://karyawan.sumberpangan.store/laravel/storage/app/public/' . $row->foto_jam_absen . '">LIHAT</a>';
                         }
                         return $foto_absen_masuk;
                     })
@@ -290,9 +398,113 @@ class RekapDataController extends Controller
                         if ($row->foto_jam_pulang == '') {
                             $foto_absen_pulang = '';
                         } else {
-                            $foto_absen_pulang = '<a target="_blank" href="https://karyawan.sumberpangan.store/laravel/storage/app/public/' . $row->foto_jam_pulang . '">Foto Absen Pulang' . $row->tanggal_pulang . $row->jam_pulang . '</a>';
+                            $foto_absen_pulang = '<a type="button" class="btn btn-sm btn-success" target="_blank" href="https://karyawan.sumberpangan.store/laravel/storage/app/public/' . $row->foto_jam_pulang . '">LIHAT</a>';
                         }
                         return $foto_absen_pulang;
+                    })
+                    ->addColumn('file_form', function ($row) {
+                        if ($row->keterangan_izin == 'TRUE') {
+                            $file_form = '<a type="button" class="btn btn-sm btn-info" target="_blank" href="' . url('rekapdata/cetak_form_izin', ['id' => $row->id]) . '">Download Form</a>';
+                        } else if ($row->keterangan_cuti == 'TRUE') {
+                            $file_form = '<a type="button" class="btn btn-sm btn-info" target="_blank" href="' . url('rekapdata/cetak_form_cuti', ['id' => $row->id]) . '">Download Form</a>';
+                        } else if ($row->keterangan_dinas == 'TRUE') {
+                            $file_form = '<a type="button" class="btn btn-sm btn-info" target="_blank" href="' . url('rekapdata/cetak_form_penugasan', ['id' => $row->id]) . '">Download Form</a>';
+                        } else {
+                            $file_form = NULL;
+                        }
+                        return $file_form;
+                    })
+                    ->addColumn('keterangan_izin', function ($row) {
+                        if ($row->Izin == NULL) {
+                            $keterangan_izin = NULL;
+                        } else {
+                            if ($row->Izin->izin == 'Datang Terlambat') {
+                                if ($row->keterangan_izin == 'TRUE') {
+                                    $keterangan_izin = 'IZIN DATANG TERLAMBAT&nbsp;<br><span class="badge bg-label-success">APPROVED</span>';
+                                } else if ($row->keterangan_izin == 'FALSE') {
+                                    $keterangan_izin = 'IZIN DATANG TERLAMBAT&nbsp;<br><span class="badge bg-label-success">NOT APPROVE</span>';
+                                } else {
+                                    $keterangan_izin = 'IZIN DATANG TERLAMBAT&nbsp;<br><span class="badge bg-label-primary">-</span>';
+                                }
+                            } else if ($row->Izin->izin == 'Sakit') {
+                                if ($row->keterangan_izin == 'TRUE') {
+                                    $keterangan_izin = 'IZIN SAKIT&nbsp;<br><span class="badge bg-label-success">APPROVED</span>';
+                                } else if ($row->keterangan_izin == 'FALSE') {
+                                    $keterangan_izin = 'IZIN SAKIT&nbsp;<br><span class="badge bg-label-success">NOT APPROVE</span>';
+                                } else {
+                                    $keterangan_izin = 'IZIN SAKIT&nbsp;<br><span class="badge bg-label-primary">-</span>';
+                                }
+                            } else if ($row->Izin->izin == 'Tidak Masuk (Mendadak)') {
+                                if ($row->keterangan_izin == 'TRUE') {
+                                    $keterangan_izin = 'IZIN TIDAK MASUK&nbsp;<br><span class="badge bg-label-success">APPROVED</span>';
+                                } else if ($row->keterangan_izin == 'FALSE') {
+                                    $keterangan_izin = 'IZIN TIDAK MASUK&nbsp;<br><span class="badge bg-label-success">NOT APPROVE</span>';
+                                } else {
+                                    $keterangan_izin = 'IZIN TIDAK MASUK&nbsp;<br><span class="badge bg-label-primary">-</span>';
+                                }
+                            } else if ($row->Izin->izin == 'Pulang Cepat') {
+                                if ($row->keterangan_izin == 'TRUE') {
+                                    $keterangan_izin = 'IZIN PULANG CEPAT&nbsp;<br><span class="badge bg-label-success">APPROVED</span>';
+                                } else if ($row->keterangan_izin == 'FALSE') {
+                                    $keterangan_izin = 'IZIN PULANG CEPAT&nbsp;<br><span class="badge bg-label-success">NOT APPROVE</span>';
+                                } else {
+                                    $keterangan_izin = 'IZIN PULANG CEPAT&nbsp;<br><span class="badge bg-label-primary">-</span>';
+                                }
+                            } else if ($row->Izin->izin == 'Keluar Kantor') {
+                                if ($row->keterangan_izin == 'TRUE') {
+                                    $keterangan_izin = 'IZIN KELUAR KANTOR&nbsp;<br><span class="badge bg-label-success">APPROVED</span>';
+                                } else if ($row->keterangan_izin == 'FALSE') {
+                                    $keterangan_izin = 'IZIN KELUAR KANTOR&nbsp;<br><span class="badge bg-label-success">NOT APPROVE</span>';
+                                } else {
+                                    $keterangan_izin = 'IZIN KELUAR KANTOR&nbsp;<br><span class="badge bg-label-primary">-</span>';
+                                }
+                            }
+                        }
+                        return $keterangan_izin;
+                    })
+                    ->addColumn('keterangan_cuti', function ($row) {
+                        if ($row->Cuti == NULL) {
+                            $keterangan_cuti = NULL;
+                        } else {
+                            if ($row->Cuti->nama_cuti == 'Diluar Cuti Tahunan') {
+                                if ($row->keterangan_cuti == 'TRUE') {
+                                    $keterangan_cuti = $row->Cuti->KategoriCuti->nama_cuti . '&nbsp;<br><span class="badge bg-label-success">APPROVED</span>';
+                                } else if ($row->keterangan_cuti == 'FALSE') {
+                                    $keterangan_cuti = $row->Cuti->KategoriCuti->nama_cuti . '&nbsp;<br><span class="badge bg-label-success">NOT APPROVE</span>';
+                                } else {
+                                    $keterangan_cuti = $row->Cuti->KategoriCuti->nama_cuti . '&nbsp;<br><span class="badge bg-label-primary">-</span>';
+                                }
+                            } else if ($row->Cuti->nama_cuti == 'Cuti Tahunan') {
+                                if ($row->keterangan_cuti == 'TRUE') {
+                                    $keterangan_cuti = $row->Cuti->nama_cuti . '&nbsp;<br><span class="badge bg-label-success">APPROVED</span>';
+                                } else if ($row->keterangan_cuti == 'FALSE') {
+                                    $keterangan_cuti = $row->Cuti->nama_cuti . '&nbsp;<br><span class="badge bg-label-success">NOT APPROVE</span>';
+                                } else {
+                                    $keterangan_cuti = $row->Cuti->nama_cuti . '&nbsp;<br><span class="badge bg-label-primary">-</span>';
+                                }
+                            }
+                        }
+                        return $keterangan_cuti;
+                    })
+                    ->addColumn('lokasi_absen', function ($row) {
+                        $lokasi = Titik::Join('lokasis', 'lokasis.id', 'titiks.lokasi_id')->where('titiks.id', $row->lokasi_absen)->first();
+                        if ($lokasi == NULL) {
+                            $lokasi_absen = '-';
+                        } else {
+                            $lokasi_absen = $lokasi->lokasi_kantor . '&nbsp;<br><span class="badge bg-label-primary">' . $lokasi->nama_titik . '</span>';
+                        }
+
+                        return $lokasi_absen;
+                    })
+                    ->addColumn('lokasi_absen_pulang', function ($row) {
+                        $lokasi = Titik::Join('lokasis', 'lokasis.id', 'titiks.lokasi_id')->where('titiks.id', $row->lokasi_absen_pulang)->first();
+                        if ($lokasi == NULL) {
+                            $lokasi_absen_pulang = '-';
+                        } else {
+                            $lokasi_absen_pulang = $lokasi->lokasi_kantor . '&nbsp;<br><span class="badge bg-label-primary">' . $lokasi->nama_titik . '</span>';
+                        }
+
+                        return $lokasi_absen_pulang;
                     })
                     ->addColumn('jam_kerja', function ($row) {
                         $jam_masuk = Shift::where('id', $row->shift_id)->value('jam_masuk');
@@ -300,7 +512,7 @@ class RekapDataController extends Controller
                         $jam_kerja = $jam_masuk . ' - ' . $jam_keluar;
                         return $jam_kerja;
                     })
-                    ->rawColumns(['jam_kerja', 'foto_jam_absen', 'foto_jam_pulang'])
+                    ->rawColumns(['jam_kerja', 'foto_jam_absen', 'file_form', 'foto_jam_pulang', 'lokasi_absen', 'lokasi_absen_pulang', 'keterangan_cuti', 'keterangan_izin'])
                     ->make(true);
             }
         }
@@ -400,6 +612,119 @@ class RekapDataController extends Controller
         foreach ($jabatan as $jabatan) {
             echo "<option value='$jabatan->id'>$jabatan->nama_jabatan</option>";
         }
+    }
+    public function cetak_form_izin($id)
+    {
+        $mapping_shift = MappingShift::where('id', $id)->first();
+        $jabatan = Jabatan::join('users', function ($join) {
+            $join->on('jabatans.id', '=', 'users.jabatan_id');
+            $join->orOn('jabatans.id', '=', 'users.jabatan1_id');
+            $join->orOn('jabatans.id', '=', 'users.jabatan2_id');
+            $join->orOn('jabatans.id', '=', 'users.jabatan3_id');
+            $join->orOn('jabatans.id', '=', 'users.jabatan4_id');
+        })->where('users.id', $mapping_shift->user_id)->get();
+        $divisi = Divisi::join('users', function ($join) {
+            $join->on('divisis.id', '=', 'users.divisi_id');
+            $join->orOn('divisis.id', '=', 'users.divisi1_id');
+            $join->orOn('divisis.id', '=', 'users.divisi2_id');
+            $join->orOn('divisis.id', '=', 'users.divisi3_id');
+            $join->orOn('divisis.id', '=', 'users.divisi4_id');
+        })->where('users.id', $mapping_shift->user_id)->get();
+        $izin = Izin::where('id', $mapping_shift->izin_id)->first();
+        $date1          = new DateTime($izin->tanggal);
+        $date2          = new DateTime($izin->tanggal_selesai);
+        $interval       = $date1->diff($date2);
+        $data_interval  = $interval->days;
+        // dd($data_interval);
+        $departemen = Departemen::where('id', $izin->departements_id)->first();
+        $user_backup = User::where('id', $izin->user_id_backup)->first();
+        // dd(Izin::with('User')->where('izins.id', $mapping_shift->izin_id)->where('izins.status_izin', '2')->first());
+        $jam_kerja = MappingShift::with('Shift')->where('user_id', $izin->user_id)->where('tanggal_masuk', date('Y-m-d'))->first();
+        $data = [
+            'data_izin' => Izin::with('User')->where('izins.id', $mapping_shift->izin_id)->where('izins.status_izin', '2')->first(),
+            'jabatan' => $jabatan,
+            'divisi' => $divisi,
+            'departemen' => $departemen,
+            'jam_kerja' => $jam_kerja,
+            'user_backup' => $user_backup,
+            'data_interval' => $data_interval,
+        ];
+        if ($izin->izin == 'Datang Terlambat') {
+            $pdf = PDF::loadView('admin/rekapdata/form_izin_terlambat', $data)->setPaper('A5', 'landscape');
+            return $pdf->download('FORM_KETERANGAN_DATANG_TERLAMBAT_' . $mapping_shift->nama_karyawan . '_' . date('Y-m-d H:i:s') . '.pdf');
+        } else if ($izin->izin == 'Tidak Masuk (Mendadak)') {
+            $pdf = PDF::loadView('admin/rekapdata/form_izin_tidak_masuk', $data);
+            return $pdf->stream('FORM_PENGAJUAN_IZIN_TIDAK_MASUK_' . $mapping_shift->nama_karyawan . '_' . date('Y-m-d H:i:s') . '.pdf');
+        } else if ($izin->izin == 'Pulang Cepat') {
+            $pdf = PDF::loadView('admin/rekapdata/form_izin_pulang_cepat', $data)->setPaper('A5', 'landscape');
+            return $pdf->stream('FORM_PENGAJUAN_IZIN_PULANG_CEPAT_' . $mapping_shift->nama_karyawan . '_' . date('Y-m-d H:i:s') . '.pdf');
+        } else if ($izin->izin == 'Keluar Kantor') {
+            $pdf = PDF::loadView('admin/rekapdata/form_izin_keluar', $data)->setPaper('A5', 'landscape');
+            return $pdf->stream('FORM_PENGAJUAN_IZIN_KELUAR_KANTOR_' . $mapping_shift->nama_karyawan . '_' . date('Y-m-d H:i:s') . '.pdf');
+        }
+    }
+    public function cetak_form_cuti($id)
+    {
+        $mapping_shift = MappingShift::where('id', $id)->first();
+        $jabatan = Jabatan::join('users', function ($join) {
+            $join->on('jabatans.id', '=', 'users.jabatan_id');
+            $join->orOn('jabatans.id', '=', 'users.jabatan1_id');
+            $join->orOn('jabatans.id', '=', 'users.jabatan2_id');
+            $join->orOn('jabatans.id', '=', 'users.jabatan3_id');
+            $join->orOn('jabatans.id', '=', 'users.jabatan4_id');
+        })->where('users.id', $mapping_shift->user_id)->get();
+        $divisi = Divisi::join('users', function ($join) {
+            $join->on('divisis.id', '=', 'users.divisi_id');
+            $join->orOn('divisis.id', '=', 'users.divisi1_id');
+            $join->orOn('divisis.id', '=', 'users.divisi2_id');
+            $join->orOn('divisis.id', '=', 'users.divisi3_id');
+            $join->orOn('divisis.id', '=', 'users.divisi4_id');
+        })->where('users.id', $mapping_shift->user_id)->get();
+        $cuti = Cuti::Join('users', 'cutis.user_id', 'users.id')->where('cutis.id', $mapping_shift->cuti_id)->first();
+        $departemen = Departemen::where('id', $cuti->dept_id)->first();
+        $pengganti = User::where('id', $cuti->user_id_backup)->first();
+        // dd(Cuti::with('KategoriCuti')->with('User')->where('cutis.id', $id)->where('cutis.status_cuti', '3')->first());
+        $data = [
+            'title' => 'domPDF in Laravel 10',
+            'data_cuti' => Cuti::with('KategoriCuti')->with('User')->where('cutis.id', $mapping_shift->cuti_id)->where('cutis.status_cuti', '3')->first(),
+            'jabatan' => $jabatan,
+            'divisi' => $divisi,
+            'departemen' => $departemen,
+            'pengganti' => $pengganti,
+        ];
+        $pdf = PDF::loadView('admin/rekapdata/form_cuti', $data);
+        return $pdf->download('FORM_PENGAJUAN_CUTI_' . $mapping_shift->nama_karyawan . '_' . date('Y-m-d H:i:s') . '.pdf');
+    }
+    public function cetak_form_penugasan($id)
+    {
+        $jabatan = Jabatan::join('users', function ($join) {
+            $join->on('jabatans.id', '=', 'users.jabatan_id');
+            $join->orOn('jabatans.id', '=', 'users.jabatan1_id');
+            $join->orOn('jabatans.id', '=', 'users.jabatan2_id');
+            $join->orOn('jabatans.id', '=', 'users.jabatan3_id');
+            $join->orOn('jabatans.id', '=', 'users.jabatan4_id');
+        })->where('users.id', Auth::user()->id)->get();
+        $divisi = Divisi::join('users', function ($join) {
+            $join->on('divisis.id', '=', 'users.divisi_id');
+            $join->orOn('divisis.id', '=', 'users.divisi1_id');
+            $join->orOn('divisis.id', '=', 'users.divisi2_id');
+            $join->orOn('divisis.id', '=', 'users.divisi3_id');
+            $join->orOn('divisis.id', '=', 'users.divisi4_id');
+        })->where('users.id', Auth::user()->id)->get();
+        $cuti = Pen::where('id', $id)->first();
+        $departemen = Departemen::where('id', Auth::user()->dept_id)->first();
+        $pengganti = User::where('id', $cuti->user_id_backup)->first();
+        // dd(Cuti::with('KategoriCuti')->with('User')->where('cutis.id', $id)->where('cutis.status_cuti', '3')->first());
+        $data = [
+            'title' => 'domPDF in Laravel 10',
+            'data_cuti' => Cuti::with('KategoriCuti')->with('User')->where('cutis.id', $id)->where('cutis.status_cuti', '3')->first(),
+            'jabatan' => $jabatan,
+            'divisi' => $divisi,
+            'departemen' => $departemen,
+            'pengganti' => $pengganti,
+        ];
+        $pdf = PDF::loadView('users/cuti/form_cuti', $data);
+        return $pdf->download('FORM_PENGAJUAN_CUTI_' . Auth::user()->name . '_' . date('Y-m-d H:i:s') . '.pdf');
     }
     public function ImportAbsensi(Request $request)
     {

@@ -742,7 +742,8 @@ class karyawanController extends Controller
             'title' => 'Detail Karyawan',
             'holding' => $holding,
             'karyawan' => User::find($id),
-            "data_lokasi" => Lokasi::orderBy('lokasi_kantor', 'ASC')->get(),
+            "data_lokasi" => Lokasi::whereNotIn('status_kantor', ['DEPO'])->orderBy('lokasi_kantor', 'ASC')->get(),
+            "data_lokasi1" => Lokasi::orderBy('lokasi_kantor', 'ASC')->get(),
             "data_provinsi" => Provincies::orderBy('name', 'ASC')->get(),
         ]);
     }

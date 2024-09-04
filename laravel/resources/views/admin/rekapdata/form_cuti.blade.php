@@ -17,13 +17,7 @@
     </div>
     <table border="0" style="margin-top: 3px;" class="kop" width="100%">
         <tr>
-            @if($data_cuti->User->kontrak_kerja=='SP')
             <td style="width:25%;"> <img src="{{ url('public/holding/assets/img/logosp.png') }}" width="100px" class="images"> </td>
-            @elseif($data_cuti->User->kontrak_kerja=='SPS')
-            <td style="width:25%;"> <img src="{{ url('public/holding/assets/img/logosps.png') }}" width="100px" class="images"> </td>
-            @else
-            <td style="width:25%;"> <img src="{{ url('public/holding/assets/img/logosip.png') }}" width="100px" class="images"> </td>
-            @endif
             <td>
                 <h4 style="text-align: center;">FORMULIR<br>PERMINTAAN CUTI</h4>
             </td>
@@ -136,7 +130,7 @@
             <tr style="font-weight: bold;">
                 <td style="text-align: center;">
                     <img src="{{ url('https://karyawan.sumberpangan.store/laravel/public/signature/'.$data_cuti->ttd_user.'.png') }}" width="100%" alt="">
-                    <p>{{Auth::user()->name}}</p>
+                    <p>{{$data_cuti->nama_user}}</p>
                 </td>
                 <td style="text-align: center;">
                     <img src="{{ url('https://karyawan.sumberpangan.store/laravel/public/signature/'.$data_cuti->ttd_atasan.'.png') }}" width="100%" alt="">

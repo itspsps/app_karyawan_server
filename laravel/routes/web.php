@@ -40,6 +40,7 @@ use App\Http\Controllers\MappingShiftController;
 use App\Http\Controllers\PenugasanController;
 use App\Http\Controllers\PenugasanUserController;
 use App\Http\Controllers\StrukturOrganisasiController;
+use App\Http\Controllers\RecruitmentController;
 use App\Models\Jabatan;
 use Carbon\Carbon;
 /*
@@ -53,7 +54,7 @@ use Carbon\Carbon;
 |
 */
 
-Route::middleware('auth:sanctum', 'log.activity')->group(function () {
+Route::middleware('auth:web', 'log.activity')->group(function () {
     Route::post('/logout', [authController::class, 'logout']);
     Route::put('/karyawan/proses-edit-shift/sp', [karyawanController::class, 'prosesEditShift']);
     Route::put('/karyawan/proses-edit-shift/sps', [karyawanController::class, 'prosesEditShift']);
@@ -66,22 +67,24 @@ Route::middleware('auth:sanctum', 'log.activity')->group(function () {
     Route::get('/tib', [TIBController::class, 'index']);
     Route::get('/my-division', [DivisionController::class, 'index']);
     Route::get('/my-location', [AbsenController::class, 'myLocation']);
-    Route::get('/absen', [AbsenController::class, 'index']);
+    // Route::get('/absen', [AbsenController::class, 'index']);
 
     Route::get('/home', [HomeUserController::class, 'index'])->name('home');
-    Route::put('/home/absen/masuk/{id}', [HomeUserController::class, 'absenMasuk']);
+    Route::post('/home/absenMasuk', [HomeUserController::class, 'absenMasuk'])->name('absenMasuk');
     Route::get('/datatableHome', [HomeUserController::class, 'datatableHome'])->name('datatableHome');
     Route::get('/get_count_absensi_home', [HomeUserController::class, 'get_count_absensi_home'])->name('get_count_absensi_home');
-    Route::get('/home/absen', [HomeUserController::class, 'HomeAbsen']);
-    Route::put('/home/absen/pulang/{id}', [HomeUserController::class, 'absenPulang']);
+    Route::get('/home/absen', [HomeUserController::class, 'HomeAbsen'])->name('absen');
+    Route::post('/home/absenPulang', [HomeUserController::class, 'absenPulang'])->name('absenPulang');
     Route::get('/home/maps/{lat}/{long}', [HomeUserController::class, 'maps']);
     Route::get('/home/my-absen', [HomeUserController::class, 'myAbsen']);
     Route::get('/home/my-location', [HomeUserController::class, 'myLocation']);
     Route::get('/home/form_datang_terlambat', [HomeUserController::class, 'form_datang_terlambat']);
     Route::post('/home/pulang_cepat_proses', [HomeUserController::class, 'proses_izin_pulang_cepats']);
-    Route::get('/home/get_notif_izin', [HomeUserController::class, 'get_notif_izin']);
+    Route::get('/home/get_notif', [HomeUserController::class, 'get_notif']);
     Route::get('/home/get_notif_cuti', [HomeUserController::class, 'get_notif_cuti']);
     Route::get('/home/get_notif_penugasan', [HomeUserController::class, 'get_notif_penugasan']);
+    Route::get('/home/create_face_id', [HomeUserController::class, 'create_face_id'])->name('create_face_id');
+    Route::post('/home/savefaceid', [HomeUserController::class, 'savefaceid'])->name('savefaceid');
 
     Route::get('/absen/dashboard', [AbsenUserController::class, 'index']);
     route::get('/absen/data-absensi', [AbsenUserController::class, 'recordabsen']);
@@ -104,7 +107,7 @@ Route::middleware('auth:sanctum', 'log.activity')->group(function () {
     Route::get('/cuti/approve/{id}', [CutiUserController::class, 'cutiApprove']);
     Route::put('/cuti/tambah-cuti-proses', [CutiUserController::class, 'cutiAbsen']);
     Route::post('/cuti/approve/proses', [CutiUserController::class, 'cutiApproveProses']);
-    Route::get('/cuti/cetak_form_cuti/{id}', [CutiUserController::class, 'cetak_form_cuti']);
+    Route::get('/cuti/cetak_form_cuti/cetak/{id}', [CutiUserController::class, 'cetak_form_cuti']);
     Route::get('/cuti/delete_cuti/{id}', [CutiUserController::class, 'delete_cuti']);
 
     Route::get('/penugasan/dashboard', [PenugasanUserController::class, 'index']);
@@ -132,7 +135,7 @@ Route::middleware('auth:sanctum', 'log.activity')->group(function () {
     // Menu bar
     Route::get('/history', [HistoryUserController::class, 'index'])->name('history');
 
-    Route::get('/absen', [HomeUserController::class, 'HomeAbsen'])->name('absen');
+    // Route::get('/absen', [HomeUserController::class, 'HomeAbsen'])->name('absen');
     Route::get('/profile', [ProfileUserController::class, 'index'])->name('profile');
 
     Route::put('/absen/masuk/{id}', [AbsenController::class, 'absenMasuk']);
@@ -280,7 +283,7 @@ Route::get('/penugasan/datatable-penugasan/sp', [PenugasanController::class, 'da
 Route::get('/penugasan/datatable-penugasan/sps', [PenugasanController::class, 'datatable_penugasan'])->middleware('admin');
 Route::get('/penugasan/datatable-penugasan/sip', [PenugasanController::class, 'datatable_penugasan'])->middleware('admin');
 // CETAK PENUGASAN
-Route::get('/penugasan/cetak_form_penugasan/{id}', [PenugasanController::class, 'cetak_form_penugasan']);
+Route::get('/penugasan/admin_cetak_form_penugasan/{id}', [PenugasanController::class, 'cetak_form_penugasan'])->middleware('admin');
 Route::get('/penugasan/ExportPenugasan/{kategori}/{holding}', [PenugasanController::class, 'ExportPenugasan']);
 
 // SHIFT
@@ -326,7 +329,7 @@ Route::get('/karyawan/get_divisi', [karyawanController::class, 'get_divisi'])->m
 Route::get('/karyawan/get_bagian', [karyawanController::class, 'get_bagian'])->middleware('admin');
 Route::get('/karyawan/get_jabatan', [karyawanController::class, 'get_jabatan'])->middleware('admin');
 
-// INVENTARIS 
+// INVENTARIS
 Route::get('/inventaris/sp', [InventarisController::class, 'index'])->middleware('admin');
 Route::get('/inventaris-datatable/sp', [InventarisController::class, 'datatable'])->middleware('admin');
 Route::get('/inventaris/sps', [InventarisController::class, 'index'])->middleware('admin');
@@ -390,6 +393,11 @@ Route::get('/rekapdata-detail_datatable/{id}/sip', [RekapDataController::class, 
 Route::get('/rekapdata-datatable_harian/sp', [RekapDataController::class, 'datatable_harian'])->middleware('admin');
 Route::get('/rekapdata-datatable_harian/sps', [RekapDataController::class, 'datatable_harian'])->middleware('admin');
 Route::get('/rekapdata-datatable_harian/sip', [RekapDataController::class, 'datatable_harian'])->middleware('admin');
+
+// CETAK FORM
+Route::get('/rekapdata/cetak_form_izin/{id}', [RekapDataController::class, 'cetak_form_izin']);
+Route::get('/rekapdata/cetak_form_cuti/{id}', [RekapDataController::class, 'cetak_form_cuti']);
+Route::get('/rekapdata/cetak_form_penugasan/{id}', [RekapDataController::class, 'cetak_form_penugasan']);
 
 Route::get('/rekapdata/get_divisi', [RekapDataController::class, 'get_divisi'])->middleware('admin');
 Route::get('/rekapdata/get_bagian', [RekapDataController::class, 'get_bagian'])->middleware('admin');
@@ -610,6 +618,35 @@ Route::delete('/dokumen/delete/{id}', [DokumenController::class, 'delete'])->mid
 // Route::delete('/my-dokumen/delete/{id}', [DokumenController::class, 'myDokumenDelete'])->middleware('auth');
 Route::get('/logout', [authController::class, 'logout'])->name('logout');
 
+// RECRUITMENT DASHBOARD ADMIN
+Route::get('/recruitment/sp', [RecruitmentController::class, 'index'])->middleware('admin');
+Route::get('/recruitment/sps', [RecruitmentController::class, 'index'])->middleware('admin');
+Route::get('/recruitment/sip', [RecruitmentController::class, 'index'])->middleware('admin');
+Route::get('/recruitment-datatable/sp', [RecruitmentController::class, 'datatable'])->middleware('admin');
+Route::get('/recruitment-datatable/sps', [RecruitmentController::class, 'datatable'])->middleware('admin');
+Route::get('/recruitment-datatable/sip', [RecruitmentController::class, 'datatable'])->middleware('admin');
+Route::get('/recruitment/create/sp', [RecruitmentController::class, 'create'])->middleware('admin');
+Route::get('/recruitment/create/sps', [RecruitmentController::class, 'create'])->middleware('admin');
+Route::get('/recruitment/create/sip', [RecruitmentController::class, 'create'])->middleware('admin');
+Route::post('/recruitment/insert/sp', [RecruitmentController::class, 'insert'])->middleware('admin');
+Route::post('/recruitment/insert/sps', [RecruitmentController::class, 'insert'])->middleware('admin');
+Route::post('/recruitment/insert/sip', [RecruitmentController::class, 'insert'])->middleware('admin');
+Route::get('/recruitment/edit/{id}/sp', [RecruitmentController::class, 'edit'])->middleware('admin');
+Route::get('/recruitment/edit/{id}/sps', [RecruitmentController::class, 'edit'])->middleware('admin');
+Route::get('/recruitment/edit/{id}/sip', [RecruitmentController::class, 'edit'])->middleware('admin');
+Route::post('/recruitment/update/sp', [RecruitmentController::class, 'update'])->middleware('admin');
+Route::post('/recruitment/update/sps', [RecruitmentController::class, 'update'])->middleware('admin');
+Route::post('/recruitment/update/sip', [RecruitmentController::class, 'update'])->middleware('admin');
+Route::get('/recruitment/delete/{id}/sp', [RecruitmentController::class, 'delete'])->middleware('admin');
+Route::get('/recruitment/delete/{id}/sps', [RecruitmentController::class, 'delete'])->middleware('admin');
+Route::get('/recruitment/delete/{id}/sip', [RecruitmentController::class, 'delete'])->middleware('admin');
+
+// RECRUITMENT DASHBOARD USER
+Route::get('/recruitment-user', [RecruitmentController::class, 'recruitment_user']);
+Route::get('/recruitment-user/add/{id}', [RecruitmentController::class, 'recruitment_user_add']);
+Route::post('/recruitment-user/add-proccess/{id}', [RecruitmentController::class, 'recruitment_user_add_proccess']);
+
+
 Route::get('optimize', function () {
     Artisan::call('cache:clear');
     Artisan::call('view:clear');
@@ -626,6 +663,6 @@ Route::get('optimize', function () {
     echo 'optimize clear';
 });
 
-Auth::routes();
+// Auth::routes();
 
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+// Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

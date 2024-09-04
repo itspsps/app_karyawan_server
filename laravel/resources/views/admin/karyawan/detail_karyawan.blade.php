@@ -491,7 +491,7 @@
                                             <div class="form-floating form-floating-outline">
                                                 <select class="form-control @error('penempatan_kerja') is-invalid @enderror" id="penempatan_kerja" name="penempatan_kerja">
                                                     <option selected disabled value=""> Pilih Lokasi Penempatan</option>
-                                                    @foreach ($data_lokasi as $a)
+                                                    @foreach ($data_lokasi1 as $a)
                                                     @if(old('penempatan_kerja',$karyawan->penempatan_kerja) == $a["lokasi_kantor"])
                                                     <option value="{{ $a["lokasi_kantor"] }}" selected>{{ $a["lokasi_kantor"] }}</option>
                                                     @else

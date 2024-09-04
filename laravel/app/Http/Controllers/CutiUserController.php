@@ -28,7 +28,7 @@ class CutiUserController extends Controller
 {
     public function index(Request $request)
     {
-        $user_id        = Auth()->user()->id;
+        $user_id = Auth()->user()->id;
         $kontrak = Auth::guard('web')->user()->kontrak_kerja;
         $site_job = Auth::guard('web')->user()->site_job;
         $lokasi_site_job = Lokasi::where('lokasi_kantor', $site_job)->first();
@@ -37,7 +37,7 @@ class CutiUserController extends Controller
             $request->session()->flash('kontrakkerjaNULL');
             return redirect('/home');
         }
-        $user = DB::table('users')->join('jabatans', 'jabatans.id', '=', 'users.jabatan_id')
+        $user = User::join('jabatans', 'jabatans.id', '=', 'users.jabatan_id')
             ->join('level_jabatans', 'jabatans.level_id', '=', 'level_jabatans.id')
             ->join('departemens', 'departemens.id', '=', 'users.dept_id')
             ->join('divisis', 'divisis.id', '=', 'users.divisi_id')
@@ -50,6 +50,7 @@ class CutiUserController extends Controller
             return redirect('/home');
         } else {
             $IdLevelAtasan = Jabatan::where('id', $user->atasan_id)->first();
+            // dd($IdLevelAtasan);
             $get_user_backup = User::where('dept_id', Auth::user()->dept_id)
                 ->where('id', '!=', Auth::user()->id)
                 ->where('is_admin', 'user')
@@ -64,394 +65,703 @@ class CutiUserController extends Controller
                     ->first();
                 // dd($get_nama_jabatan);
                 if ($get_nama_jabatan == NULL || $get_nama_jabatan == '') {
-                    $atasan2 = User::where('jabatan_id', $IdLevelAtasan->atasan_id)
-                        ->orWhere('jabatan1_id', $IdLevelAtasan->atasan_id)
-                        ->orWhere('jabatan2_id', $IdLevelAtasan->atasan_id)
-                        ->orWhere('jabatan3_id', $IdLevelAtasan->atasan_id)
-                        ->orWhere('jabatan4_id', $IdLevelAtasan->atasan_id)
-                        ->whereIn('site_job', ['ALL SITES (SPS)', 'ALL SITES (SP, SPS, SIP)', $site_job])
+                    $get_atasan_site = Jabatan::Join('divisis', 'divisis.id', 'jabatans.divisi_id')
+                        ->Join('bagians', 'bagians.id', 'jabatans.bagian_id')
+                        ->where('jabatans.id', $IdLevelAtasan->atasan_id)
+                        ->select('jabatans.id', 'divisis.nama_divisi', 'jabatans.nama_jabatan', 'bagians.nama_bagian', 'jabatans.holding')
                         ->first();
-                    if ($atasan2 == NULL || $atasan2 == '') {
-                        $get_atasan_site = Jabatan::Join('divisis', 'divisis.id', 'jabatans.divisi_id')
+                    if ($get_atasan_site->holding == 'sps') {
+                        $get_atasan_more = Jabatan::Join('divisis', 'divisis.id', 'jabatans.divisi_id')
                             ->Join('bagians', 'bagians.id', 'jabatans.bagian_id')
-                            ->where('jabatans.id', $IdLevelAtasan->id)
-                            ->select('jabatans.id', 'divisis.nama_divisi', 'jabatans.nama_jabatan', 'bagians.nama_bagian', 'jabatans.holding')
-                            ->first();
-                        if ($get_atasan_site->holding == 'sps') {
-                            $get_atasan_more = Jabatan::Join('divisis', 'divisis.id', 'jabatans.divisi_id')
-                                ->Join('bagians', 'bagians.id', 'jabatans.bagian_id')
-                                ->Join('departemens', 'departemens.id', 'divisis.dept_id')
-                                ->where('jabatans.nama_jabatan', $get_atasan_site->nama_jabatan)
-                                ->where('divisis.nama_divisi', $get_atasan_site->nama_divisi)
-                                ->where('bagians.nama_bagian', $get_atasan_site->nama_bagian)
-                                ->where('jabatans.holding', 'sp')
-                                ->select('jabatans.id', 'departemens.id as id_departemen', 'divisis.nama_divisi', 'jabatans.nama_jabatan', 'bagians.nama_bagian', 'jabatans.holding')
-                                ->first();
-                        } else {
-                            $get_atasan_more = Jabatan::Join('divisis', 'divisis.id', 'jabatans.divisi_id')
-                                ->Join('bagians', 'bagians.id', 'jabatans.bagian_id')
-                                ->Join('departemens', 'departemens.id', 'divisis.dept_id')
-                                ->where('jabatans.nama_jabatan', $get_atasan_site->nama_jabatan)
-                                ->where('divisis.nama_divisi', $get_atasan_site->nama_divisi)
-                                ->where('bagians.nama_bagian', $get_atasan_site->nama_bagian)
-                                ->where('jabatans.holding', 'sps')
-                                ->select('jabatans.id', 'departemens.id as id_departemen', 'divisis.nama_divisi', 'jabatans.nama_jabatan', 'bagians.nama_bagian', 'jabatans.holding')
-                                ->first();
-                        }
-                        // dd($get_atasan_more);
-
-                        $atasan = User::join('jabatans', 'jabatans.id', '=', 'users.jabatan_id')
-                            ->join('level_jabatans', 'jabatans.level_id', '=', 'level_jabatans.id')
-                            ->join('departemens', 'departemens.id', '=', 'users.dept_id')
-                            ->join('divisis', 'divisis.id', '=', 'users.divisi_id')
-                            ->where('users.jabatan_id', $get_atasan_more->id)
-                            ->orWhere('users.jabatan1_id', $get_atasan_more->id)
-                            ->orWhere('users.jabatan2_id', $get_atasan_more->id)
-                            ->orWhere('users.jabatan3_id', $get_atasan_more->id)
-                            ->orWhere('users.jabatan4_id', $get_atasan_more->id)
-                            ->whereIn('users.site_job', ['ALL SITES (SPS)', 'ALL SITES (SP, SPS, SIP)', $site_job])
-                            // ->orWhere('d.nama_jabatan', $get_name_jabatan->nama_jabatan)
+                            ->Join('departemens', 'departemens.id', 'divisis.dept_id')
+                            ->where('jabatans.nama_jabatan', $get_atasan_site->nama_jabatan)
+                            ->where('divisis.nama_divisi', $get_atasan_site->nama_divisi)
+                            ->where('bagians.nama_bagian', $get_atasan_site->nama_bagian)
+                            ->where('jabatans.holding', 'sp')
+                            ->select('jabatans.id', 'departemens.id as id_departemen', 'divisis.nama_divisi', 'jabatans.nama_jabatan', 'bagians.nama_bagian', 'jabatans.holding')
                             ->first();
                     } else {
-
-                        $atasan = User::join('jabatans', 'jabatans.id', '=', 'users.jabatan_id')
-                            ->join('level_jabatans', 'jabatans.level_id', '=', 'level_jabatans.id')
-                            ->join('departemens', 'departemens.id', '=', 'users.dept_id')
-                            ->join('divisis', 'divisis.id', '=', 'users.divisi_id')
-                            ->where('users.jabatan_id', $IdLevelAtasan)
-                            ->orWhere('users.jabatan1_id', $IdLevelAtasan)
-                            ->orWhere('users.jabatan2_id', $IdLevelAtasan)
-                            ->orWhere('users.jabatan3_id', $IdLevelAtasan)
-                            ->orWhere('users.jabatan4_id', $IdLevelAtasan)
-                            ->whereIn('users.site_job', ['ALL SITES (SPS)', 'ALL SITES (SP, SPS, SIP)', $site_job])
-                            // ->orWhere('d.nama_jabatan', $get_name_jabatan->nama_jabatan)
+                        $get_atasan_more = Jabatan::Join('divisis', 'divisis.id', 'jabatans.divisi_id')
+                            ->Join('bagians', 'bagians.id', 'jabatans.bagian_id')
+                            ->Join('departemens', 'departemens.id', 'divisis.dept_id')
+                            ->where('jabatans.nama_jabatan', $get_atasan_site->nama_jabatan)
+                            ->where('divisis.nama_divisi', $get_atasan_site->nama_divisi)
+                            ->where('bagians.nama_bagian', $get_atasan_site->nama_bagian)
+                            ->where('jabatans.holding', 'sps')
+                            ->select('jabatans.id', 'departemens.id as id_departemen', 'divisis.nama_divisi', 'jabatans.nama_jabatan', 'bagians.nama_bagian', 'jabatans.holding')
                             ->first();
                     }
-                    if ($atasan == '') {
-                        $getUserAtasan  = NULL;
-                    } else {
+
+                    $atasan = User::join('jabatans', 'jabatans.id', '=', 'users.jabatan_id')
+                        ->join('level_jabatans', 'jabatans.level_id', '=', 'level_jabatans.id')
+                        ->join('departemens', 'departemens.id', '=', 'users.dept_id')
+                        ->join('divisis', 'divisis.id', '=', 'users.divisi_id')
+                        ->where('users.jabatan_id', $get_atasan_more->id)
+                        ->orWhere('users.jabatan1_id', $get_atasan_more->id)
+                        ->orWhere('users.jabatan2_id', $get_atasan_more->id)
+                        ->orWhere('users.jabatan3_id', $get_atasan_more->id)
+                        ->orWhere('users.jabatan4_id', $get_atasan_more->id)
+                        ->select('users.*', 'jabatans.atasan_id')
+                        // ->orWhere('d.nama_jabatan', $get_name_jabatan->nama_jabatan)
+                        ->first();
+                    // dd($atasan);
+                } else {
+
+                    $atasan = User::join('jabatans', 'jabatans.id', '=', 'users.jabatan_id')
+                        ->join('level_jabatans', 'jabatans.level_id', '=', 'level_jabatans.id')
+                        ->join('departemens', 'departemens.id', '=', 'users.dept_id')
+                        ->join('divisis', 'divisis.id', '=', 'users.divisi_id')
+                        ->where('users.jabatan_id', $IdLevelAtasan->id)
+                        ->orWhere('users.jabatan1_id', $IdLevelAtasan->id)
+                        ->orWhere('users.jabatan2_id', $IdLevelAtasan->id)
+                        ->orWhere('users.jabatan3_id', $IdLevelAtasan->id)
+                        ->orWhere('users.jabatan4_id', $IdLevelAtasan->id)
+                        // ->orWhere('d.nama_jabatan', $get_name_jabatan->nama_jabatan)
+                        ->select('users.*', 'jabatans.atasan_id', 'level_jabatans.level_jabatan')
+                        ->first();
+                    // dd($atasan);
+                }
+                if ($atasan == '') {
+                    $getUserAtasan  = NULL;
+                    $getUserAtasan2  = NULL;
+                } else {
+                    if ($atasan->level_jabatan <= 2) {
                         $getUserAtasan  = $atasan;
+                        $getUserAtasan2  = $atasan;
+                    } else {
+                        if ($atasan->atasan_id) {
+                            $get_nama_jabatan1 = User::where('jabatan_id', $atasan->atasan_id)
+                                ->orWhere('jabatan1_id', $atasan->atasan_id)
+                                ->orWhere('jabatan2_id', $atasan->atasan_id)
+                                ->orWhere('jabatan3_id', $atasan->atasan_id)
+                                ->orWhere('jabatan4_id', $atasan->atasan_id)
+                                // ->orWhere('d.nama_jabatan', $get_name_jabatan->nama_jabatan)
+                                ->first();
+                            if ($get_nama_jabatan1 == NULL || $get_nama_jabatan1 == '') {
+                                $get_atasan_site1 = Jabatan::Join('divisis', 'divisis.id', 'jabatans.divisi_id')
+                                    ->Join('bagians', 'bagians.id', 'jabatans.bagian_id')
+                                    ->where('jabatans.id', $atasan->atasan_id)
+                                    ->select('jabatans.id', 'divisis.nama_divisi', 'jabatans.nama_jabatan', 'bagians.nama_bagian', 'jabatans.holding')
+                                    ->first();
+                                if ($get_atasan_site1->holding == 'sps') {
+                                    $get_atasan_more1 = Jabatan::Join('divisis', 'divisis.id', 'jabatans.divisi_id')
+                                        ->Join('bagians', 'bagians.id', 'jabatans.bagian_id')
+                                        ->Join('departemens', 'departemens.id', 'divisis.dept_id')
+                                        ->where('jabatans.nama_jabatan', $get_atasan_site1->nama_jabatan)
+                                        ->where('divisis.nama_divisi', $get_atasan_site1->nama_divisi)
+                                        ->where('bagians.nama_bagian', $get_atasan_site1->nama_bagian)
+                                        ->where('jabatans.holding', 'sp')
+                                        ->select('jabatans.id', 'departemens.id as id_departemen', 'divisis.nama_divisi', 'jabatans.nama_jabatan', 'bagians.nama_bagian', 'jabatans.holding')
+                                        ->first();
+                                } else {
+                                    $get_atasan_more1 = Jabatan::Join('divisis', 'divisis.id', 'jabatans.divisi_id')
+                                        ->Join('bagians', 'bagians.id', 'jabatans.bagian_id')
+                                        ->Join('departemens', 'departemens.id', 'divisis.dept_id')
+                                        ->where('jabatans.nama_jabatan', $get_atasan_site1->nama_jabatan)
+                                        ->where('divisis.nama_divisi', $get_atasan_site1->nama_divisi)
+                                        ->where('bagians.nama_bagian', $get_atasan_site1->nama_bagian)
+                                        ->where('jabatans.holding', 'sps')
+                                        ->select('jabatans.id', 'departemens.id as id_departemen', 'divisis.nama_divisi', 'jabatans.nama_jabatan', 'bagians.nama_bagian', 'jabatans.holding')
+                                        ->first();
+                                }
+
+                                $atasan1 = User::where('jabatan_id', $get_atasan_more1->id)
+                                    ->orWhere('jabatan1_id', $get_atasan_more1->id)
+                                    ->orWhere('jabatan2_id', $get_atasan_more1->id)
+                                    ->orWhere('jabatan3_id', $get_atasan_more1->id)
+                                    ->orWhere('jabatan4_id', $get_atasan_more1->id)
+                                    ->select('users.*')
+                                    // ->orWhere('d.nama_jabatan', $get_name_jabatan->nama_jabatan)
+                                    ->first();
+                                // dd($atasan);
+                            } else {
+
+                                $atasan1 = User::where('jabatan_id', $atasan->atasan_id)
+                                    ->orWhere('jabatan1_id', $atasan->atasan_id)
+                                    ->orWhere('jabatan2_id', $atasan->atasan_id)
+                                    ->orWhere('jabatan3_id', $atasan->atasan_id)
+                                    ->orWhere('jabatan4_id', $atasan->atasan_id)
+                                    ->select('users.*')
+                                    // ->orWhere('d.nama_jabatan', $get_name_jabatan->nama_jabatan)
+                                    ->first();
+                                // dd($atasan1);
+                            }
+                            if ($atasan1 == NULL) {
+                                $getUserAtasan  = $atasan;
+                                $getUserAtasan2  = $atasan;
+                            } else {
+                                $getUserAtasan  = $atasan;
+                                $getUserAtasan2  = $atasan1;
+                            }
+                        } else {
+                            $getUserAtasan  = $atasan;
+                            $getUserAtasan2  = $atasan;
+                        }
                     }
-                } else if ($lokasi_site_job->kategori_kantor == 'sp') {
-                    $get_nama_jabatan = User::where('jabatan_id', $IdLevelAtasan)
-                        ->orWhere('jabatan1_id', $IdLevelAtasan)
-                        ->orWhere('jabatan2_id', $IdLevelAtasan)
-                        ->orWhere('jabatan3_id', $IdLevelAtasan)
-                        ->orWhere('jabatan4_id', $IdLevelAtasan)
+                }
+            } else if ($lokasi_site_job->kategori_kantor == 'sp') {
+                $get_nama_jabatan = User::where('jabatan_id', $IdLevelAtasan->id)
+                    ->orWhere('jabatan1_id', $IdLevelAtasan->id)
+                    ->orWhere('jabatan2_id', $IdLevelAtasan->id)
+                    ->orWhere('jabatan3_id', $IdLevelAtasan->id)
+                    ->orWhere('jabatan4_id', $IdLevelAtasan->id)
+                    ->whereIn('site_job', ['ALL SITES (SP)', 'ALL SITES (SP, SPS, SIP)', $site_job])
+                    ->first();
+                // dd($get_nama_jabatan);
+                if ($get_nama_jabatan == NULL || $get_nama_jabatan == '') {
+                    $get_atasan_site = Jabatan::Join('divisis', 'divisis.id', 'jabatans.divisi_id')
+                        ->Join('bagians', 'bagians.id', 'jabatans.bagian_id')
+                        ->where('jabatans.id', $IdLevelAtasan)
+                        ->select('jabatans.id', 'divisis.nama_divisi', 'jabatans.nama_jabatan', 'bagians.nama_bagian', 'jabatans.holding')
+                        ->first();
+                    if ($get_atasan_site->holding == 'sps') {
+                        $get_atasan_more = Jabatan::Join('divisis', 'divisis.id', 'jabatans.divisi_id')
+                            ->Join('bagians', 'bagians.id', 'jabatans.bagian_id')
+                            ->Join('departemens', 'departemens.id', 'divisis.dept_id')
+                            ->where('jabatans.nama_jabatan', $get_atasan_site->nama_jabatan)
+                            ->where('divisis.nama_divisi', $get_atasan_site->nama_divisi)
+                            ->where('bagians.nama_bagian', $get_atasan_site->nama_bagian)
+                            ->where('jabatans.holding', 'sp')
+                            ->select('jabatans.id', 'departemens.id as id_departemen', 'divisis.nama_divisi', 'jabatans.nama_jabatan', 'bagians.nama_bagian', 'jabatans.holding')
+                            ->first();
+                    } else {
+                        $get_atasan_more = Jabatan::Join('divisis', 'divisis.id', 'jabatans.divisi_id')
+                            ->Join('bagians', 'bagians.id', 'jabatans.bagian_id')
+                            ->Join('departemens', 'departemens.id', 'divisis.dept_id')
+                            ->where('jabatans.nama_jabatan', $get_atasan_site->nama_jabatan)
+                            ->where('divisis.nama_divisi', $get_atasan_site->nama_divisi)
+                            ->where('bagians.nama_bagian', $get_atasan_site->nama_bagian)
+                            ->where('jabatans.holding', 'sps')
+                            ->select('jabatans.id', 'departemens.id as id_departemen', 'divisis.nama_divisi', 'jabatans.nama_jabatan', 'bagians.nama_bagian', 'jabatans.holding')
+                            ->first();
+                    }
+                    // dd($get_atasan_more);
+                    $atasan = User::join('jabatans', 'jabatans.id', '=', 'users.jabatan_id')
+                        ->join('level_jabatans', 'jabatans.level_id', '=', 'level_jabatans.id')
+                        ->join('departemens', 'departemens.id', '=', 'users.dept_id')
+                        ->join('divisis', 'divisis.id', '=', 'users.divisi_id')
+                        ->where('users.jabatan_id', $IdLevelAtasan->id)
+                        ->orWhere('users.jabatan1_id', $IdLevelAtasan->id)
+                        ->orWhere('users.jabatan2_id', $IdLevelAtasan->id)
+                        ->orWhere('users.jabatan3_id', $IdLevelAtasan->id)
+                        ->orWhere('users.jabatan4_id', $IdLevelAtasan->id)
                         ->whereIn('site_job', ['ALL SITES (SP)', 'ALL SITES (SP, SPS, SIP)', $site_job])
+                        // ->orWhere('d.nama_jabatan', $get_name_jabatan->nama_jabatan)
+                        ->select('users.*', 'jabatans.atasan_id', 'level_jabatans.level_jabatan')
                         ->first();
-                    // dd($get_nama_jabatan);
-                    if ($get_nama_jabatan == NULL || $get_nama_jabatan == '') {
-                        $get_atasan_site = Jabatan::Join('divisis', 'divisis.id', 'jabatans.divisi_id')
-                            ->Join('bagians', 'bagians.id', 'jabatans.bagian_id')
-                            ->where('jabatans.id', $IdLevelAtasan)
-                            ->select('jabatans.id', 'divisis.nama_divisi', 'jabatans.nama_jabatan', 'bagians.nama_bagian', 'jabatans.holding')
-                            ->first();
-                        if ($get_atasan_site->holding == 'sps') {
-                            $get_atasan_more = Jabatan::Join('divisis', 'divisis.id', 'jabatans.divisi_id')
-                                ->Join('bagians', 'bagians.id', 'jabatans.bagian_id')
-                                ->Join('departemens', 'departemens.id', 'divisis.dept_id')
-                                ->where('jabatans.nama_jabatan', $get_atasan_site->nama_jabatan)
-                                ->where('divisis.nama_divisi', $get_atasan_site->nama_divisi)
-                                ->where('bagians.nama_bagian', $get_atasan_site->nama_bagian)
-                                ->where('jabatans.holding', 'sp')
-                                ->select('jabatans.id', 'departemens.id as id_departemen', 'divisis.nama_divisi', 'jabatans.nama_jabatan', 'bagians.nama_bagian', 'jabatans.holding')
-                                ->first();
-                        } else {
-                            $get_atasan_more = Jabatan::Join('divisis', 'divisis.id', 'jabatans.divisi_id')
-                                ->Join('bagians', 'bagians.id', 'jabatans.bagian_id')
-                                ->Join('departemens', 'departemens.id', 'divisis.dept_id')
-                                ->where('jabatans.nama_jabatan', $get_atasan_site->nama_jabatan)
-                                ->where('divisis.nama_divisi', $get_atasan_site->nama_divisi)
-                                ->where('bagians.nama_bagian', $get_atasan_site->nama_bagian)
-                                ->where('jabatans.holding', 'sps')
-                                ->select('jabatans.id', 'departemens.id as id_departemen', 'divisis.nama_divisi', 'jabatans.nama_jabatan', 'bagians.nama_bagian', 'jabatans.holding')
-                                ->first();
-                        }
-                        // dd($get_atasan_more);
-                        $atasan = User::where('jabatan_id', $get_atasan_more->id)
-                            ->orWhere('jabatan1_id', $get_atasan_more->id)
-                            ->orWhere('jabatan2_id', $get_atasan_more->id)
-                            ->orWhere('jabatan3_id', $get_atasan_more->id)
-                            ->orWhere('jabatan4_id', $get_atasan_more->id)
-                            ->whereIn('site_job', ['ALL SITES (SP)', 'ALL SITES (SP, SPS, SIP)', $site_job])
-                            // ->orWhere('d.nama_jabatan', $get_name_jabatan->nama_jabatan)
-                            ->first();
-                    } else {
-                        $atasan = User::where('jabatan_id', $IdLevelAtasan)
-                            ->orWhere('jabatan1_id', $IdLevelAtasan)
-                            ->orWhere('jabatan2_id', $IdLevelAtasan)
-                            ->orWhere('jabatan3_id', $IdLevelAtasan)
-                            ->orWhere('jabatan4_id', $IdLevelAtasan)
-                            ->whereIn('site_job', ['ALL SITES (SP)', 'ALL SITES (SP, SPS, SIP)', $site_job])
-                            // ->orWhere('d.nama_jabatan', $get_name_jabatan->nama_jabatan)
-                            ->first();
-                    }
-                    if ($atasan == '') {
-                        $getUserAtasan  = NULL;
-                    } else {
+                } else {
+                    $atasan = User::join('jabatans', 'jabatans.id', '=', 'users.jabatan_id')
+                        ->join('level_jabatans', 'jabatans.level_id', '=', 'level_jabatans.id')
+                        ->join('departemens', 'departemens.id', '=', 'users.dept_id')
+                        ->join('divisis', 'divisis.id', '=', 'users.divisi_id')
+                        ->where('users.jabatan_id', $IdLevelAtasan->id)
+                        ->orWhere('users.jabatan1_id', $IdLevelAtasan->id)
+                        ->orWhere('users.jabatan2_id', $IdLevelAtasan->id)
+                        ->orWhere('users.jabatan3_id', $IdLevelAtasan->id)
+                        ->orWhere('users.jabatan4_id', $IdLevelAtasan->id)
+                        ->whereIn('site_job', ['ALL SITES (SP)', 'ALL SITES (SP, SPS, SIP)', $site_job])
+                        // ->orWhere('d.nama_jabatan', $get_name_jabatan->nama_jabatan)
+                        ->select('users.*', 'jabatans.atasan_id', 'level_jabatans.level_jabatan')
+                        ->first();
+                    // dd($atasan);
+                }
+                if ($atasan == '') {
+                    $getUserAtasan  = NULL;
+                    $getUserAtasan2  = NULL;
+                } else {
+                    if ($atasan->level_jabatan <= 2) {
                         $getUserAtasan  = $atasan;
+                        $getUserAtasan2  = $atasan;
+                    } else {
+                        if ($atasan->atasan_id) {
+                            $get_nama_jabatan1 = User::where('jabatan_id', $atasan->atasan_id)
+                                ->orWhere('jabatan1_id', $atasan->atasan_id)
+                                ->orWhere('jabatan2_id', $atasan->atasan_id)
+                                ->orWhere('jabatan3_id', $atasan->atasan_id)
+                                ->orWhere('jabatan4_id', $atasan->atasan_id)
+                                // ->orWhere('d.nama_jabatan', $get_name_jabatan->nama_jabatan)
+                                ->first();
+                            if ($get_nama_jabatan1 == NULL || $get_nama_jabatan1 == '') {
+                                $get_atasan_site1 = Jabatan::Join('divisis', 'divisis.id', 'jabatans.divisi_id')
+                                    ->Join('bagians', 'bagians.id', 'jabatans.bagian_id')
+                                    ->where('jabatans.id', $atasan->atasan_id)
+                                    ->select('jabatans.id', 'divisis.nama_divisi', 'jabatans.nama_jabatan', 'bagians.nama_bagian', 'jabatans.holding')
+                                    ->first();
+                                if ($get_atasan_site1->holding == 'sps') {
+                                    $get_atasan_more1 = Jabatan::Join('divisis', 'divisis.id', 'jabatans.divisi_id')
+                                        ->Join('bagians', 'bagians.id', 'jabatans.bagian_id')
+                                        ->Join('departemens', 'departemens.id', 'divisis.dept_id')
+                                        ->where('jabatans.nama_jabatan', $get_atasan_site1->nama_jabatan)
+                                        ->where('divisis.nama_divisi', $get_atasan_site1->nama_divisi)
+                                        ->where('bagians.nama_bagian', $get_atasan_site1->nama_bagian)
+                                        ->where('jabatans.holding', 'sp')
+                                        ->select('jabatans.id', 'departemens.id as id_departemen', 'divisis.nama_divisi', 'jabatans.nama_jabatan', 'bagians.nama_bagian', 'jabatans.holding')
+                                        ->first();
+                                } else {
+                                    $get_atasan_more1 = Jabatan::Join('divisis', 'divisis.id', 'jabatans.divisi_id')
+                                        ->Join('bagians', 'bagians.id', 'jabatans.bagian_id')
+                                        ->Join('departemens', 'departemens.id', 'divisis.dept_id')
+                                        ->where('jabatans.nama_jabatan', $get_atasan_site1->nama_jabatan)
+                                        ->where('divisis.nama_divisi', $get_atasan_site1->nama_divisi)
+                                        ->where('bagians.nama_bagian', $get_atasan_site1->nama_bagian)
+                                        ->where('jabatans.holding', 'sps')
+                                        ->select('jabatans.id', 'departemens.id as id_departemen', 'divisis.nama_divisi', 'jabatans.nama_jabatan', 'bagians.nama_bagian', 'jabatans.holding')
+                                        ->first();
+                                }
+
+                                $atasan1 = User::where('jabatan_id', $get_atasan_more1->id)
+                                    ->orWhere('jabatan1_id', $get_atasan_more1->id)
+                                    ->orWhere('jabatan2_id', $get_atasan_more1->id)
+                                    ->orWhere('jabatan3_id', $get_atasan_more1->id)
+                                    ->orWhere('jabatan4_id', $get_atasan_more1->id)
+                                    ->select('users.*')
+                                    // ->orWhere('d.nama_jabatan', $get_name_jabatan->nama_jabatan)
+                                    ->first();
+                                // dd($atasan);
+                            } else {
+
+                                $atasan1 = User::where('jabatan_id', $atasan->atasan_id)
+                                    ->orWhere('jabatan1_id', $atasan->atasan_id)
+                                    ->orWhere('jabatan2_id', $atasan->atasan_id)
+                                    ->orWhere('jabatan3_id', $atasan->atasan_id)
+                                    ->orWhere('jabatan4_id', $atasan->atasan_id)
+                                    ->select('users.*')
+                                    // ->orWhere('d.nama_jabatan', $get_name_jabatan->nama_jabatan)
+                                    ->first();
+                                // dd($atasan1);
+                            }
+                            if ($atasan1 == NULL) {
+                                $getUserAtasan  = $atasan;
+                                $getUserAtasan2  = $atasan;
+                            } else {
+                                $getUserAtasan  = $atasan;
+                                $getUserAtasan2  = $atasan1;
+                            }
+                        } else {
+                            $getUserAtasan  = $atasan;
+                            $getUserAtasan2  = $atasan;
+                        }
                     }
-                } else if ($lokasi_site_job->kategori_kantor == 'sip') {
-                    $get_nama_jabatan = User::where('jabatan_id', $IdLevelAtasan)
+                }
+            } else if ($lokasi_site_job->kategori_kantor == 'sip') {
+                $get_nama_jabatan = User::where('jabatan_id', $IdLevelAtasan)
+                    ->orWhere('jabatan1_id', $IdLevelAtasan)
+                    ->orWhere('jabatan2_id', $IdLevelAtasan)
+                    ->orWhere('jabatan3_id', $IdLevelAtasan)
+                    ->orWhere('jabatan4_id', $IdLevelAtasan)
+                    ->whereIn('site_job', ['ALL SITES (SP, SPS, SIP)', $site_job])
+                    ->first();
+                // dd($get_nama_jabatan);
+                if ($get_nama_jabatan == NULL || $get_nama_jabatan == '') {
+                    $get_atasan_site = Jabatan::Join('divisis', 'divisis.id', 'jabatans.divisi_id')
+                        ->Join('bagians', 'bagians.id', 'jabatans.bagian_id')
+                        ->where('jabatans.id', $IdLevelAtasan)
+                        ->select('jabatans.id', 'divisis.nama_divisi', 'jabatans.nama_jabatan', 'bagians.nama_bagian', 'jabatans.holding')
+                        ->first();
+                    if ($get_atasan_site->holding == 'sps') {
+                        $get_atasan_more = Jabatan::Join('divisis', 'divisis.id', 'jabatans.divisi_id')
+                            ->Join('bagians', 'bagians.id', 'jabatans.bagian_id')
+                            ->Join('departemens', 'departemens.id', 'divisis.dept_id')
+                            ->where('jabatans.nama_jabatan', $get_atasan_site->nama_jabatan)
+                            ->where('divisis.nama_divisi', $get_atasan_site->nama_divisi)
+                            ->where('bagians.nama_bagian', $get_atasan_site->nama_bagian)
+                            ->where('jabatans.holding', 'sp')
+                            ->select('jabatans.id', 'departemens.id as id_departemen', 'divisis.nama_divisi', 'jabatans.nama_jabatan', 'bagians.nama_bagian', 'jabatans.holding')
+                            ->first();
+                    } else {
+                        $get_atasan_more = Jabatan::Join('divisis', 'divisis.id', 'jabatans.divisi_id')
+                            ->Join('bagians', 'bagians.id', 'jabatans.bagian_id')
+                            ->Join('departemens', 'departemens.id', 'divisis.dept_id')
+                            ->where('jabatans.nama_jabatan', $get_atasan_site->nama_jabatan)
+                            ->where('divisis.nama_divisi', $get_atasan_site->nama_divisi)
+                            ->where('bagians.nama_bagian', $get_atasan_site->nama_bagian)
+                            ->where('jabatans.holding', 'sps')
+                            ->select('jabatans.id', 'departemens.id as id_departemen', 'divisis.nama_divisi', 'jabatans.nama_jabatan', 'bagians.nama_bagian', 'jabatans.holding')
+                            ->first();
+                    }
+                    // dd($get_atasan_more);
+
+                    $atasan = User::where('jabatan_id', $get_atasan_more->id)
+                        ->orWhere('jabatan1_id', $get_atasan_more->id)
+                        ->orWhere('jabatan2_id', $get_atasan_more->id)
+                        ->orWhere('jabatan3_id', $get_atasan_more->id)
+                        ->orWhere('jabatan4_id', $get_atasan_more->id)
+                        ->whereIn('site_job', ['ALL SITES (SP, SPS, SIP)', $site_job])
+                        // ->orWhere('d.nama_jabatan', $get_name_jabatan->nama_jabatan)
+                        ->first();
+                } else {
+
+                    $atasan = User::where('jabatan_id', $IdLevelAtasan)
                         ->orWhere('jabatan1_id', $IdLevelAtasan)
                         ->orWhere('jabatan2_id', $IdLevelAtasan)
                         ->orWhere('jabatan3_id', $IdLevelAtasan)
                         ->orWhere('jabatan4_id', $IdLevelAtasan)
                         ->whereIn('site_job', ['ALL SITES (SP, SPS, SIP)', $site_job])
-                        ->first();
-                    // dd($get_nama_jabatan);
-                    if ($get_nama_jabatan == NULL || $get_nama_jabatan == '') {
-                        $get_atasan_site = Jabatan::Join('divisis', 'divisis.id', 'jabatans.divisi_id')
-                            ->Join('bagians', 'bagians.id', 'jabatans.bagian_id')
-                            ->where('jabatans.id', $IdLevelAtasan)
-                            ->select('jabatans.id', 'divisis.nama_divisi', 'jabatans.nama_jabatan', 'bagians.nama_bagian', 'jabatans.holding')
-                            ->first();
-                        if ($get_atasan_site->holding == 'sps') {
-                            $get_atasan_more = Jabatan::Join('divisis', 'divisis.id', 'jabatans.divisi_id')
-                                ->Join('bagians', 'bagians.id', 'jabatans.bagian_id')
-                                ->Join('departemens', 'departemens.id', 'divisis.dept_id')
-                                ->where('jabatans.nama_jabatan', $get_atasan_site->nama_jabatan)
-                                ->where('divisis.nama_divisi', $get_atasan_site->nama_divisi)
-                                ->where('bagians.nama_bagian', $get_atasan_site->nama_bagian)
-                                ->where('jabatans.holding', 'sp')
-                                ->select('jabatans.id', 'departemens.id as id_departemen', 'divisis.nama_divisi', 'jabatans.nama_jabatan', 'bagians.nama_bagian', 'jabatans.holding')
-                                ->first();
-                        } else {
-                            $get_atasan_more = Jabatan::Join('divisis', 'divisis.id', 'jabatans.divisi_id')
-                                ->Join('bagians', 'bagians.id', 'jabatans.bagian_id')
-                                ->Join('departemens', 'departemens.id', 'divisis.dept_id')
-                                ->where('jabatans.nama_jabatan', $get_atasan_site->nama_jabatan)
-                                ->where('divisis.nama_divisi', $get_atasan_site->nama_divisi)
-                                ->where('bagians.nama_bagian', $get_atasan_site->nama_bagian)
-                                ->where('jabatans.holding', 'sps')
-                                ->select('jabatans.id', 'departemens.id as id_departemen', 'divisis.nama_divisi', 'jabatans.nama_jabatan', 'bagians.nama_bagian', 'jabatans.holding')
-                                ->first();
-                        }
-                        // dd($get_atasan_more);
-
-                        $atasan = User::where('jabatan_id', $get_atasan_more->id)
-                            ->orWhere('jabatan1_id', $get_atasan_more->id)
-                            ->orWhere('jabatan2_id', $get_atasan_more->id)
-                            ->orWhere('jabatan3_id', $get_atasan_more->id)
-                            ->orWhere('jabatan4_id', $get_atasan_more->id)
-                            ->whereIn('site_job', ['ALL SITES (SP, SPS, SIP)', $site_job])
-                            // ->orWhere('d.nama_jabatan', $get_name_jabatan->nama_jabatan)
-                            ->first();
-                    } else {
-
-                        $atasan = User::where('jabatan_id', $IdLevelAtasan)
-                            ->orWhere('jabatan1_id', $IdLevelAtasan)
-                            ->orWhere('jabatan2_id', $IdLevelAtasan)
-                            ->orWhere('jabatan3_id', $IdLevelAtasan)
-                            ->orWhere('jabatan4_id', $IdLevelAtasan)
-                            ->whereIn('site_job', ['ALL SITES (SP, SPS, SIP)', $site_job])
-                            // ->orWhere('d.nama_jabatan', $get_name_jabatan->nama_jabatan)
-                            ->first();
-                    }
-                    if ($atasan == '') {
-                        $getUserAtasan  = NULL;
-                    } else {
-                        $getUserAtasan  = $atasan;
-                    }
-                } else if ($lokasi_site_job->kategori_kantor == 'all sps') {
-
-                    $get_nama_jabatan = User::where('jabatan_id', $IdLevelAtasan)
-                        ->orWhere('jabatan1_id', $IdLevelAtasan)
-                        ->orWhere('jabatan2_id', $IdLevelAtasan)
-                        ->orWhere('jabatan3_id', $IdLevelAtasan)
-                        ->orWhere('jabatan4_id', $IdLevelAtasan)
-                        ->whereNotIn('site_job', ['ALL SITES (SP)', 'CV. SUMBER PANGAN - KEDIRI', 'CV. SUMBER PANGAN - TUBAN'])
-                        ->first();
-                    // dd($get_nama_jabatan);
-                    if ($get_nama_jabatan == NULL || $get_nama_jabatan == '') {
-                        $get_atasan_site = Jabatan::Join('divisis', 'divisis.id', 'jabatans.divisi_id')
-                            ->Join('bagians', 'bagians.id', 'jabatans.bagian_id')
-                            ->where('jabatans.id', $IdLevelAtasan)
-                            ->select('jabatans.id', 'divisis.nama_divisi', 'jabatans.nama_jabatan', 'bagians.nama_bagian', 'jabatans.holding')
-                            ->first();
-                        if ($get_atasan_site->holding == 'sps') {
-                            $get_atasan_more = Jabatan::Join('divisis', 'divisis.id', 'jabatans.divisi_id')
-                                ->Join('bagians', 'bagians.id', 'jabatans.bagian_id')
-                                ->Join('departemens', 'departemens.id', 'divisis.dept_id')
-                                ->where('jabatans.nama_jabatan', $get_atasan_site->nama_jabatan)
-                                ->where('divisis.nama_divisi', $get_atasan_site->nama_divisi)
-                                ->where('bagians.nama_bagian', $get_atasan_site->nama_bagian)
-                                ->where('jabatans.holding', 'sp')
-                                ->select('jabatans.id', 'departemens.id as id_departemen', 'divisis.nama_divisi', 'jabatans.nama_jabatan', 'bagians.nama_bagian', 'jabatans.holding')
-                                ->first();
-                        } else {
-                            $get_atasan_more = Jabatan::Join('divisis', 'divisis.id', 'jabatans.divisi_id')
-                                ->Join('bagians', 'bagians.id', 'jabatans.bagian_id')
-                                ->Join('departemens', 'departemens.id', 'divisis.dept_id')
-                                ->where('jabatans.nama_jabatan', $get_atasan_site->nama_jabatan)
-                                ->where('divisis.nama_divisi', $get_atasan_site->nama_divisi)
-                                ->where('bagians.nama_bagian', $get_atasan_site->nama_bagian)
-                                ->where('jabatans.holding', 'sps')
-                                ->select('jabatans.id', 'departemens.id as id_departemen', 'divisis.nama_divisi', 'jabatans.nama_jabatan', 'bagians.nama_bagian', 'jabatans.holding')
-                                ->first();
-                        }
-                        // dd($get_atasan_more);
-
-                        $atasan = User::where('jabatan_id', $get_atasan_more->id)
-                            ->orWhere('jabatan1_id', $get_atasan_more->id)
-                            ->orWhere('jabatan2_id', $get_atasan_more->id)
-                            ->orWhere('jabatan3_id', $get_atasan_more->id)
-                            ->orWhere('jabatan4_id', $get_atasan_more->id)
-                            ->whereNotIn('site_job', ['ALL SITES (SP)', 'CV. SUMBER PANGAN - KEDIRI', 'CV. SUMBER PANGAN - TUBAN'])
-                            // ->orWhere('d.nama_jabatan', $get_name_jabatan->nama_jabatan)
-                            ->first();
-                    } else {
-
-                        $atasan = User::where('jabatan_id', $IdLevelAtasan)
-                            ->orWhere('jabatan1_id', $IdLevelAtasan)
-                            ->orWhere('jabatan2_id', $IdLevelAtasan)
-                            ->orWhere('jabatan3_id', $IdLevelAtasan)
-                            ->orWhere('jabatan4_id', $IdLevelAtasan)
-                            ->whereNotIn('site_job', ['ALL SITES (SP)', 'CV. SUMBER PANGAN - KEDIRI', 'CV. SUMBER PANGAN - TUBAN'])
-                            // ->orWhere('d.nama_jabatan', $get_name_jabatan->nama_jabatan)
-                            ->first();
-                    }
-                    if ($atasan == '') {
-                        $getUserAtasan  = NULL;
-                    } else {
-                        $getUserAtasan  = $atasan;
-                    }
-                } else if ($lokasi_site_job->kategori_kantor == 'all sp') {
-
-                    $get_nama_jabatan = User::where('jabatan_id', $IdLevelAtasan)
-                        ->orWhere('jabatan1_id', $IdLevelAtasan)
-                        ->orWhere('jabatan2_id', $IdLevelAtasan)
-                        ->orWhere('jabatan3_id', $IdLevelAtasan)
-                        ->orWhere('jabatan4_id', $IdLevelAtasan)
-                        ->whereNotIn('site_job', ['ALL SITES (SPS)', 'PT. SURYA PANGAN SEMESTA - KEDIRI', 'PT. SURYA PANGAN SEMESTA - NGAWI', 'PT. SURYA PANGAN SEMESTA - SUBANG'])
-                        ->first();
-                    // dd($get_nama_jabatan);
-                    if ($get_nama_jabatan == NULL || $get_nama_jabatan == '') {
-                        $get_atasan_site = Jabatan::Join('divisis', 'divisis.id', 'jabatans.divisi_id')
-                            ->Join('bagians', 'bagians.id', 'jabatans.bagian_id')
-                            ->where('jabatans.id', $IdLevelAtasan)
-                            ->select('jabatans.id', 'divisis.nama_divisi', 'jabatans.nama_jabatan', 'bagians.nama_bagian', 'jabatans.holding')
-                            ->first();
-                        if ($get_atasan_site->holding == 'sps') {
-                            $get_atasan_more = Jabatan::Join('divisis', 'divisis.id', 'jabatans.divisi_id')
-                                ->Join('bagians', 'bagians.id', 'jabatans.bagian_id')
-                                ->Join('departemens', 'departemens.id', 'divisis.dept_id')
-                                ->where('jabatans.nama_jabatan', $get_atasan_site->nama_jabatan)
-                                ->where('divisis.nama_divisi', $get_atasan_site->nama_divisi)
-                                ->where('bagians.nama_bagian', $get_atasan_site->nama_bagian)
-                                ->where('jabatans.holding', 'sp')
-                                ->select('jabatans.id', 'departemens.id as id_departemen', 'divisis.nama_divisi', 'jabatans.nama_jabatan', 'bagians.nama_bagian', 'jabatans.holding')
-                                ->first();
-                        } else {
-                            $get_atasan_more = Jabatan::Join('divisis', 'divisis.id', 'jabatans.divisi_id')
-                                ->Join('bagians', 'bagians.id', 'jabatans.bagian_id')
-                                ->Join('departemens', 'departemens.id', 'divisis.dept_id')
-                                ->where('jabatans.nama_jabatan', $get_atasan_site->nama_jabatan)
-                                ->where('divisis.nama_divisi', $get_atasan_site->nama_divisi)
-                                ->where('bagians.nama_bagian', $get_atasan_site->nama_bagian)
-                                ->where('jabatans.holding', 'sps')
-                                ->select('jabatans.id', 'departemens.id as id_departemen', 'divisis.nama_divisi', 'jabatans.nama_jabatan', 'bagians.nama_bagian', 'jabatans.holding')
-                                ->first();
-                        }
-                        // dd($get_atasan_more);
-
-                        $atasan = User::where('jabatan_id', $get_atasan_more->id)
-                            ->orWhere('jabatan1_id', $get_atasan_more->id)
-                            ->orWhere('jabatan2_id', $get_atasan_more->id)
-                            ->orWhere('jabatan3_id', $get_atasan_more->id)
-                            ->orWhere('jabatan4_id', $get_atasan_more->id)
-                            ->whereNotIn('site_job', ['ALL SITES (SPS)', 'PT. SURYA PANGAN SEMESTA - KEDIRI', 'PT. SURYA PANGAN SEMESTA - NGAWI', 'PT. SURYA PANGAN SEMESTA - SUBANG'])
-                            // ->orWhere('d.nama_jabatan', $get_name_jabatan->nama_jabatan)
-                            ->first();
-                    } else {
-                        $atasan = User::where('jabatan_id', $IdLevelAtasan)
-                            ->orWhere('jabatan1_id', $IdLevelAtasan)
-                            ->orWhere('jabatan2_id', $IdLevelAtasan)
-                            ->orWhere('jabatan3_id', $IdLevelAtasan)
-                            ->orWhere('jabatan4_id', $IdLevelAtasan)
-                            ->whereNotIn('site_job', ['ALL SITES (SPS)', 'PT. SURYA PANGAN SEMESTA - KEDIRI', 'PT. SURYA PANGAN SEMESTA - NGAWI', 'PT. SURYA PANGAN SEMESTA - SUBANG'])
-                            // ->orWhere('d.nama_jabatan', $get_name_jabatan->nama_jabatan)
-                            ->first();
-                    }
-                    // jika atasan tingkat 1 
-                    // dd($atasan);
-                    if ($atasan == '') {
-                        $getUserAtasan  = NULL;
-                    } else {
-                        $getUserAtasan  = $atasan;
-                    }
-                } else if ($lokasi_site_job->kategori_kantor == 'all') {
-                    $get_nama_jabatan = User::where('jabatan_id', $IdLevelAtasan)
-                        ->orWhere('jabatan1_id', $IdLevelAtasan)
-                        ->orWhere('jabatan2_id', $IdLevelAtasan)
-                        ->orWhere('jabatan3_id', $IdLevelAtasan)
-                        ->orWhere('jabatan4_id', $IdLevelAtasan)
                         // ->orWhere('d.nama_jabatan', $get_name_jabatan->nama_jabatan)
                         ->first();
-                    // dd($get_nama_jabatan);
-                    if ($get_nama_jabatan == NULL || $get_nama_jabatan == '') {
-                        $get_atasan_site = Jabatan::Join('divisis', 'divisis.id', 'jabatans.divisi_id')
+                }
+                if ($atasan == '') {
+                    $getUserAtasan  = NULL;
+                } else {
+                    $getUserAtasan  = $atasan;
+                }
+            } else if ($lokasi_site_job->kategori_kantor == 'all sps') {
+
+                $get_nama_jabatan = User::where('jabatan_id', $IdLevelAtasan->id)
+                    ->orWhere('jabatan1_id', $IdLevelAtasan->id)
+                    ->orWhere('jabatan2_id', $IdLevelAtasan->id)
+                    ->orWhere('jabatan3_id', $IdLevelAtasan->id)
+                    ->orWhere('jabatan4_id', $IdLevelAtasan->id)
+                    ->whereNotIn('site_job', ['ALL SITES (SP)', 'CV. SUMBER PANGAN - KEDIRI', 'CV. SUMBER PANGAN - TUBAN'])
+                    ->first();
+                // dd($get_nama_jabatan);
+                if ($get_nama_jabatan == NULL || $get_nama_jabatan == '') {
+                    $get_atasan_site = Jabatan::Join('divisis', 'divisis.id', 'jabatans.divisi_id')
+                        ->Join('bagians', 'bagians.id', 'jabatans.bagian_id')
+                        ->where('jabatans.id', $IdLevelAtasan->id)
+                        ->select('jabatans.id', 'divisis.nama_divisi', 'jabatans.nama_jabatan', 'bagians.nama_bagian', 'jabatans.holding')
+                        ->first();
+                    if ($get_atasan_site->holding == 'sps') {
+                        $get_atasan_more = Jabatan::Join('divisis', 'divisis.id', 'jabatans.divisi_id')
                             ->Join('bagians', 'bagians.id', 'jabatans.bagian_id')
-                            ->where('jabatans.id', $IdLevelAtasan)
-                            ->select('jabatans.id', 'divisis.nama_divisi', 'jabatans.nama_jabatan', 'bagians.nama_bagian', 'jabatans.holding')
+                            ->Join('departemens', 'departemens.id', 'divisis.dept_id')
+                            ->where('jabatans.nama_jabatan', $get_atasan_site->nama_jabatan)
+                            ->where('divisis.nama_divisi', $get_atasan_site->nama_divisi)
+                            ->where('bagians.nama_bagian', $get_atasan_site->nama_bagian)
+                            ->where('jabatans.holding', 'sp')
+                            ->select('jabatans.id', 'departemens.id as id_departemen', 'divisis.nama_divisi', 'jabatans.nama_jabatan', 'bagians.nama_bagian', 'jabatans.holding')
                             ->first();
-                        if ($get_atasan_site->holding == 'sps') {
-                            $get_atasan_more = Jabatan::Join('divisis', 'divisis.id', 'jabatans.divisi_id')
-                                ->Join('bagians', 'bagians.id', 'jabatans.bagian_id')
-                                ->Join('departemens', 'departemens.id', 'divisis.dept_id')
-                                ->where('jabatans.nama_jabatan', $get_atasan_site->nama_jabatan)
-                                ->where('divisis.nama_divisi', $get_atasan_site->nama_divisi)
-                                ->where('bagians.nama_bagian', $get_atasan_site->nama_bagian)
-                                ->where('jabatans.holding', 'sp')
-                                ->select('jabatans.id', 'departemens.id as id_departemen', 'divisis.nama_divisi', 'jabatans.nama_jabatan', 'bagians.nama_bagian', 'jabatans.holding')
-                                ->first();
-                        } else {
-                            $get_atasan_more = Jabatan::Join('divisis', 'divisis.id', 'jabatans.divisi_id')
-                                ->Join('bagians', 'bagians.id', 'jabatans.bagian_id')
-                                ->Join('departemens', 'departemens.id', 'divisis.dept_id')
-                                ->where('jabatans.nama_jabatan', $get_atasan_site->nama_jabatan)
-                                ->where('divisis.nama_divisi', $get_atasan_site->nama_divisi)
-                                ->where('bagians.nama_bagian', $get_atasan_site->nama_bagian)
-                                ->where('jabatans.holding', 'sps')
-                                ->select('jabatans.id', 'departemens.id as id_departemen', 'divisis.nama_divisi', 'jabatans.nama_jabatan', 'bagians.nama_bagian', 'jabatans.holding')
-                                ->first();
-                        }
-
-                        $atasan = User::join('jabatans', 'jabatans.id', '=', 'users.jabatan_id')
-                            ->join('level_jabatans', 'jabatans.level_id', '=', 'level_jabatans.id')
-                            ->join('departemens', 'departemens.id', '=', 'users.dept_id')
-                            ->join('divisis', 'divisis.id', '=', 'users.divisi_id')
-                            ->where('users.jabatan_id', $get_atasan_more->id)
-                            ->orWhere('users.jabatan1_id', $get_atasan_more->id)
-                            ->orWhere('users.jabatan2_id', $get_atasan_more->id)
-                            ->orWhere('users.jabatan3_id', $get_atasan_more->id)
-                            ->orWhere('users.jabatan4_id', $get_atasan_more->id)
-                            ->select('users.*', 'jabatans.atasan_id')
-                            // ->orWhere('d.nama_jabatan', $get_name_jabatan->nama_jabatan)
-                            ->first();
-                        // dd($atasan);
                     } else {
-
-                        $atasan = User::join('jabatans', 'jabatans.id', '=', 'users.jabatan_id')
-                            ->join('level_jabatans', 'jabatans.level_id', '=', 'level_jabatans.id')
-                            ->join('departemens', 'departemens.id', '=', 'users.dept_id')
-                            ->join('divisis', 'divisis.id', '=', 'users.divisi_id')
-                            ->where('users.jabatan_id', $IdLevelAtasan)
-                            ->orWhere('users.jabatan1_id', $IdLevelAtasan)
-                            ->orWhere('users.jabatan2_id', $IdLevelAtasan)
-                            ->orWhere('users.jabatan3_id', $IdLevelAtasan)
-                            ->orWhere('users.jabatan4_id', $IdLevelAtasan)
-                            // ->orWhere('d.nama_jabatan', $get_name_jabatan->nama_jabatan)
-                            ->select('users.*', 'jabatans.atasan_id')
+                        $get_atasan_more = Jabatan::Join('divisis', 'divisis.id', 'jabatans.divisi_id')
+                            ->Join('bagians', 'bagians.id', 'jabatans.bagian_id')
+                            ->Join('departemens', 'departemens.id', 'divisis.dept_id')
+                            ->where('jabatans.nama_jabatan', $get_atasan_site->nama_jabatan)
+                            ->where('divisis.nama_divisi', $get_atasan_site->nama_divisi)
+                            ->where('bagians.nama_bagian', $get_atasan_site->nama_bagian)
+                            ->where('jabatans.holding', 'sps')
+                            ->select('jabatans.id', 'departemens.id as id_departemen', 'divisis.nama_divisi', 'jabatans.nama_jabatan', 'bagians.nama_bagian', 'jabatans.holding')
                             ->first();
-                        // dd($atasan);
                     }
+                    // dd($get_atasan_more);
+
+                    $atasan = User::where('jabatan_id', $get_atasan_more->id)
+                        ->orWhere('jabatan1_id', $get_atasan_more->id)
+                        ->orWhere('jabatan2_id', $get_atasan_more->id)
+                        ->orWhere('jabatan3_id', $get_atasan_more->id)
+                        ->orWhere('jabatan4_id', $get_atasan_more->id)
+                        ->whereNotIn('site_job', ['ALL SITES (SP)', 'CV. SUMBER PANGAN - KEDIRI', 'CV. SUMBER PANGAN - TUBAN'])
+                        // ->orWhere('d.nama_jabatan', $get_name_jabatan->nama_jabatan)
+                        ->first();
+                } else {
+
+                    $atasan = User::join('jabatans', 'jabatans.id', '=', 'users.jabatan_id')
+                        ->join('level_jabatans', 'jabatans.level_id', '=', 'level_jabatans.id')
+                        ->join('departemens', 'departemens.id', '=', 'users.dept_id')
+                        ->join('divisis', 'divisis.id', '=', 'users.divisi_id')
+                        ->where('users.jabatan_id', $IdLevelAtasan->id)
+                        ->orWhere('users.jabatan1_id', $IdLevelAtasan->id)
+                        ->orWhere('users.jabatan2_id', $IdLevelAtasan->id)
+                        ->orWhere('users.jabatan3_id', $IdLevelAtasan->id)
+                        ->orWhere('users.jabatan4_id', $IdLevelAtasan->id)
+                        // ->orWhere('d.nama_jabatan', $get_name_jabatan->nama_jabatan)
+                        ->select('users.*', 'jabatans.atasan_id', 'level_jabatans.level_jabatan')
+                        ->first();
+                }
+                if ($atasan == '') {
+                    $getUserAtasan  = NULL;
+                    $getUserAtasan2  = NULL;
+                } else {
+                    if ($atasan->level_jabatan <= 2) {
+                        $getUserAtasan  = $atasan;
+                        $getUserAtasan2  = $atasan;
+                    } else {
+                        if ($atasan->atasan_id) {
+                            $get_nama_jabatan1 = User::where('jabatan_id', $atasan->atasan_id)
+                                ->orWhere('jabatan1_id', $atasan->atasan_id)
+                                ->orWhere('jabatan2_id', $atasan->atasan_id)
+                                ->orWhere('jabatan3_id', $atasan->atasan_id)
+                                ->orWhere('jabatan4_id', $atasan->atasan_id)
+                                // ->orWhere('d.nama_jabatan', $get_name_jabatan->nama_jabatan)
+                                ->first();
+                            if ($get_nama_jabatan1 == NULL || $get_nama_jabatan1 == '') {
+                                $get_atasan_site1 = Jabatan::Join('divisis', 'divisis.id', 'jabatans.divisi_id')
+                                    ->Join('bagians', 'bagians.id', 'jabatans.bagian_id')
+                                    ->where('jabatans.id', $atasan->atasan_id)
+                                    ->select('jabatans.id', 'divisis.nama_divisi', 'jabatans.nama_jabatan', 'bagians.nama_bagian', 'jabatans.holding')
+                                    ->first();
+                                if ($get_atasan_site1->holding == 'sps') {
+                                    $get_atasan_more1 = Jabatan::Join('divisis', 'divisis.id', 'jabatans.divisi_id')
+                                        ->Join('bagians', 'bagians.id', 'jabatans.bagian_id')
+                                        ->Join('departemens', 'departemens.id', 'divisis.dept_id')
+                                        ->where('jabatans.nama_jabatan', $get_atasan_site1->nama_jabatan)
+                                        ->where('divisis.nama_divisi', $get_atasan_site1->nama_divisi)
+                                        ->where('bagians.nama_bagian', $get_atasan_site1->nama_bagian)
+                                        ->where('jabatans.holding', 'sp')
+                                        ->select('jabatans.id', 'departemens.id as id_departemen', 'divisis.nama_divisi', 'jabatans.nama_jabatan', 'bagians.nama_bagian', 'jabatans.holding')
+                                        ->first();
+                                } else {
+                                    $get_atasan_more1 = Jabatan::Join('divisis', 'divisis.id', 'jabatans.divisi_id')
+                                        ->Join('bagians', 'bagians.id', 'jabatans.bagian_id')
+                                        ->Join('departemens', 'departemens.id', 'divisis.dept_id')
+                                        ->where('jabatans.nama_jabatan', $get_atasan_site1->nama_jabatan)
+                                        ->where('divisis.nama_divisi', $get_atasan_site1->nama_divisi)
+                                        ->where('bagians.nama_bagian', $get_atasan_site1->nama_bagian)
+                                        ->where('jabatans.holding', 'sps')
+                                        ->select('jabatans.id', 'departemens.id as id_departemen', 'divisis.nama_divisi', 'jabatans.nama_jabatan', 'bagians.nama_bagian', 'jabatans.holding')
+                                        ->first();
+                                }
+
+                                $atasan1 = User::where('jabatan_id', $get_atasan_more1->id)
+                                    ->orWhere('jabatan1_id', $get_atasan_more1->id)
+                                    ->orWhere('jabatan2_id', $get_atasan_more1->id)
+                                    ->orWhere('jabatan3_id', $get_atasan_more1->id)
+                                    ->orWhere('jabatan4_id', $get_atasan_more1->id)
+                                    ->select('users.*')
+                                    // ->orWhere('d.nama_jabatan', $get_name_jabatan->nama_jabatan)
+                                    ->first();
+                                // dd($atasan);
+                            } else {
+
+                                $atasan1 = User::where('jabatan_id', $atasan->atasan_id)
+                                    ->orWhere('jabatan1_id', $atasan->atasan_id)
+                                    ->orWhere('jabatan2_id', $atasan->atasan_id)
+                                    ->orWhere('jabatan3_id', $atasan->atasan_id)
+                                    ->orWhere('jabatan4_id', $atasan->atasan_id)
+                                    ->select('users.*')
+                                    // ->orWhere('d.nama_jabatan', $get_name_jabatan->nama_jabatan)
+                                    ->first();
+                                // dd($atasan1);
+                            }
+                            if ($atasan1 == NULL) {
+                                $getUserAtasan  = $atasan;
+                                $getUserAtasan2  = $atasan;
+                            } else {
+                                $getUserAtasan  = $atasan;
+                                $getUserAtasan2  = $atasan1;
+                            }
+                        } else {
+                            $getUserAtasan  = $atasan;
+                            $getUserAtasan2  = $atasan;
+                        }
+                    }
+                }
+            } else if ($lokasi_site_job->kategori_kantor == 'all sp') {
+
+                $get_nama_jabatan = User::where('jabatan_id', $IdLevelAtasan->id)
+                    ->orWhere('jabatan1_id', $IdLevelAtasan->id)
+                    ->orWhere('jabatan2_id', $IdLevelAtasan->id)
+                    ->orWhere('jabatan3_id', $IdLevelAtasan->id)
+                    ->orWhere('jabatan4_id', $IdLevelAtasan->id)
+                    ->whereNotIn('site_job', ['ALL SITES (SPS)', 'PT. SURYA PANGAN SEMESTA - KEDIRI', 'PT. SURYA PANGAN SEMESTA - NGAWI', 'PT. SURYA PANGAN SEMESTA - SUBANG'])
+                    ->first();
+                // dd($get_nama_jabatan);
+                if ($get_nama_jabatan == NULL || $get_nama_jabatan == '') {
+                    $get_atasan_site = Jabatan::Join('divisis', 'divisis.id', 'jabatans.divisi_id')
+                        ->Join('bagians', 'bagians.id', 'jabatans.bagian_id')
+                        ->where('jabatans.id', $IdLevelAtasan->id)
+                        ->select('jabatans.id', 'divisis.nama_divisi', 'jabatans.nama_jabatan', 'bagians.nama_bagian', 'jabatans.holding')
+                        ->first();
+                    if ($get_atasan_site->holding == 'sps') {
+                        $get_atasan_more = Jabatan::Join('divisis', 'divisis.id', 'jabatans.divisi_id')
+                            ->Join('bagians', 'bagians.id', 'jabatans.bagian_id')
+                            ->Join('departemens', 'departemens.id', 'divisis.dept_id')
+                            ->where('jabatans.nama_jabatan', $get_atasan_site->nama_jabatan)
+                            ->where('divisis.nama_divisi', $get_atasan_site->nama_divisi)
+                            ->where('bagians.nama_bagian', $get_atasan_site->nama_bagian)
+                            ->where('jabatans.holding', 'sp')
+                            ->select('jabatans.id', 'departemens.id as id_departemen', 'divisis.nama_divisi', 'jabatans.nama_jabatan', 'bagians.nama_bagian', 'jabatans.holding')
+                            ->first();
+                    } else {
+                        $get_atasan_more = Jabatan::Join('divisis', 'divisis.id', 'jabatans.divisi_id')
+                            ->Join('bagians', 'bagians.id', 'jabatans.bagian_id')
+                            ->Join('departemens', 'departemens.id', 'divisis.dept_id')
+                            ->where('jabatans.nama_jabatan', $get_atasan_site->nama_jabatan)
+                            ->where('divisis.nama_divisi', $get_atasan_site->nama_divisi)
+                            ->where('bagians.nama_bagian', $get_atasan_site->nama_bagian)
+                            ->where('jabatans.holding', 'sps')
+                            ->select('jabatans.id', 'departemens.id as id_departemen', 'divisis.nama_divisi', 'jabatans.nama_jabatan', 'bagians.nama_bagian', 'jabatans.holding')
+                            ->first();
+                    }
+                    // dd($get_atasan_more);
+
+                    $atasan = User::where('jabatan_id', $get_atasan_more->id)
+                        ->orWhere('jabatan1_id', $get_atasan_more->id)
+                        ->orWhere('jabatan2_id', $get_atasan_more->id)
+                        ->orWhere('jabatan3_id', $get_atasan_more->id)
+                        ->orWhere('jabatan4_id', $get_atasan_more->id)
+                        ->whereNotIn('site_job', ['ALL SITES (SPS)', 'PT. SURYA PANGAN SEMESTA - KEDIRI', 'PT. SURYA PANGAN SEMESTA - NGAWI', 'PT. SURYA PANGAN SEMESTA - SUBANG'])
+                        // ->orWhere('d.nama_jabatan', $get_name_jabatan->nama_jabatan)
+                        ->select('users.*', 'jabatans.atasan_id', 'level_jabatans.level_jabatan')
+                        ->first();
+                } else {
+                    $atasan = User::join('jabatans', 'jabatans.id', '=', 'users.jabatan_id')
+                        ->join('level_jabatans', 'jabatans.level_id', '=', 'level_jabatans.id')
+                        ->join('departemens', 'departemens.id', '=', 'users.dept_id')
+                        ->join('divisis', 'divisis.id', '=', 'users.divisi_id')
+                        ->where('users.jabatan_id', $IdLevelAtasan->id)
+                        ->orWhere('users.jabatan1_id', $IdLevelAtasan->id)
+                        ->orWhere('users.jabatan2_id', $IdLevelAtasan->id)
+                        ->orWhere('users.jabatan3_id', $IdLevelAtasan->id)
+                        ->orWhere('users.jabatan4_id', $IdLevelAtasan->id)
+                        ->whereNotIn('site_job', ['ALL SITES (SPS)', 'PT. SURYA PANGAN SEMESTA - KEDIRI', 'PT. SURYA PANGAN SEMESTA - NGAWI', 'PT. SURYA PANGAN SEMESTA - SUBANG'])
+                        // ->orWhere('d.nama_jabatan', $get_name_jabatan->nama_jabatan)
+                        ->first();
+                }
+                // jika atasan tingkat 1 
+                // dd($atasan);
+                if ($atasan == '') {
+                    $getUserAtasan  = NULL;
+                    $getUserAtasan2  = NULL;
+                } else {
+                    if ($atasan->level_jabatan <= 2) {
+                        $getUserAtasan  = $atasan;
+                        $getUserAtasan2  = $atasan;
+                    } else {
+                        if ($atasan->atasan_id) {
+                            $get_nama_jabatan1 = User::where('jabatan_id', $atasan->atasan_id)
+                                ->orWhere('jabatan1_id', $atasan->atasan_id)
+                                ->orWhere('jabatan2_id', $atasan->atasan_id)
+                                ->orWhere('jabatan3_id', $atasan->atasan_id)
+                                ->orWhere('jabatan4_id', $atasan->atasan_id)
+                                // ->orWhere('d.nama_jabatan', $get_name_jabatan->nama_jabatan)
+                                ->first();
+                            if ($get_nama_jabatan1 == NULL || $get_nama_jabatan1 == '') {
+                                $get_atasan_site1 = Jabatan::Join('divisis', 'divisis.id', 'jabatans.divisi_id')
+                                    ->Join('bagians', 'bagians.id', 'jabatans.bagian_id')
+                                    ->where('jabatans.id', $atasan->atasan_id)
+                                    ->select('jabatans.id', 'divisis.nama_divisi', 'jabatans.nama_jabatan', 'bagians.nama_bagian', 'jabatans.holding')
+                                    ->first();
+                                if ($get_atasan_site1->holding == 'sps') {
+                                    $get_atasan_more1 = Jabatan::Join('divisis', 'divisis.id', 'jabatans.divisi_id')
+                                        ->Join('bagians', 'bagians.id', 'jabatans.bagian_id')
+                                        ->Join('departemens', 'departemens.id', 'divisis.dept_id')
+                                        ->where('jabatans.nama_jabatan', $get_atasan_site1->nama_jabatan)
+                                        ->where('divisis.nama_divisi', $get_atasan_site1->nama_divisi)
+                                        ->where('bagians.nama_bagian', $get_atasan_site1->nama_bagian)
+                                        ->where('jabatans.holding', 'sp')
+                                        ->select('jabatans.id', 'departemens.id as id_departemen', 'divisis.nama_divisi', 'jabatans.nama_jabatan', 'bagians.nama_bagian', 'jabatans.holding')
+                                        ->first();
+                                } else {
+                                    $get_atasan_more1 = Jabatan::Join('divisis', 'divisis.id', 'jabatans.divisi_id')
+                                        ->Join('bagians', 'bagians.id', 'jabatans.bagian_id')
+                                        ->Join('departemens', 'departemens.id', 'divisis.dept_id')
+                                        ->where('jabatans.nama_jabatan', $get_atasan_site1->nama_jabatan)
+                                        ->where('divisis.nama_divisi', $get_atasan_site1->nama_divisi)
+                                        ->where('bagians.nama_bagian', $get_atasan_site1->nama_bagian)
+                                        ->where('jabatans.holding', 'sps')
+                                        ->select('jabatans.id', 'departemens.id as id_departemen', 'divisis.nama_divisi', 'jabatans.nama_jabatan', 'bagians.nama_bagian', 'jabatans.holding')
+                                        ->first();
+                                }
+
+                                $atasan1 = User::where('jabatan_id', $get_atasan_more1->id)
+                                    ->orWhere('jabatan1_id', $get_atasan_more1->id)
+                                    ->orWhere('jabatan2_id', $get_atasan_more1->id)
+                                    ->orWhere('jabatan3_id', $get_atasan_more1->id)
+                                    ->orWhere('jabatan4_id', $get_atasan_more1->id)
+                                    ->select('users.*')
+                                    // ->orWhere('d.nama_jabatan', $get_name_jabatan->nama_jabatan)
+                                    ->first();
+                                // dd($atasan);
+                            } else {
+
+                                $atasan1 = User::where('jabatan_id', $atasan->atasan_id)
+                                    ->orWhere('jabatan1_id', $atasan->atasan_id)
+                                    ->orWhere('jabatan2_id', $atasan->atasan_id)
+                                    ->orWhere('jabatan3_id', $atasan->atasan_id)
+                                    ->orWhere('jabatan4_id', $atasan->atasan_id)
+                                    ->select('users.*')
+                                    // ->orWhere('d.nama_jabatan', $get_name_jabatan->nama_jabatan)
+                                    ->first();
+                                // dd($atasan1);
+                            }
+                            if ($atasan1 == NULL) {
+                                $getUserAtasan  = $atasan;
+                                $getUserAtasan2  = $atasan;
+                            } else {
+                                $getUserAtasan  = $atasan;
+                                $getUserAtasan2  = $atasan1;
+                            }
+                        } else {
+                            $getUserAtasan  = $atasan;
+                            $getUserAtasan2  = $atasan;
+                        }
+                    }
+                }
+            } else if ($lokasi_site_job->kategori_kantor == 'all') {
+                $get_nama_jabatan = User::where('jabatan_id', $IdLevelAtasan->id)
+                    ->orWhere('jabatan1_id', $IdLevelAtasan->id)
+                    ->orWhere('jabatan2_id', $IdLevelAtasan->id)
+                    ->orWhere('jabatan3_id', $IdLevelAtasan->id)
+                    ->orWhere('jabatan4_id', $IdLevelAtasan->id)
+                    // ->orWhere('d.nama_jabatan', $get_name_jabatan->nama_jabatan)
+                    ->first();
+                // dd($get_nama_jabatan);
+                if ($get_nama_jabatan == NULL || $get_nama_jabatan == '') {
+                    $get_atasan_site = Jabatan::Join('divisis', 'divisis.id', 'jabatans.divisi_id')
+                        ->Join('bagians', 'bagians.id', 'jabatans.bagian_id')
+                        ->where('jabatans.id', $IdLevelAtasan->atasan_id)
+                        ->select('jabatans.id', 'divisis.nama_divisi', 'jabatans.nama_jabatan', 'bagians.nama_bagian', 'jabatans.holding')
+                        ->first();
+                    if ($get_atasan_site->holding == 'sps') {
+                        $get_atasan_more = Jabatan::Join('divisis', 'divisis.id', 'jabatans.divisi_id')
+                            ->Join('bagians', 'bagians.id', 'jabatans.bagian_id')
+                            ->Join('departemens', 'departemens.id', 'divisis.dept_id')
+                            ->where('jabatans.nama_jabatan', $get_atasan_site->nama_jabatan)
+                            ->where('divisis.nama_divisi', $get_atasan_site->nama_divisi)
+                            ->where('bagians.nama_bagian', $get_atasan_site->nama_bagian)
+                            ->where('jabatans.holding', 'sp')
+                            ->select('jabatans.id', 'departemens.id as id_departemen', 'divisis.nama_divisi', 'jabatans.nama_jabatan', 'bagians.nama_bagian', 'jabatans.holding')
+                            ->first();
+                    } else {
+                        $get_atasan_more = Jabatan::Join('divisis', 'divisis.id', 'jabatans.divisi_id')
+                            ->Join('bagians', 'bagians.id', 'jabatans.bagian_id')
+                            ->Join('departemens', 'departemens.id', 'divisis.dept_id')
+                            ->where('jabatans.nama_jabatan', $get_atasan_site->nama_jabatan)
+                            ->where('divisis.nama_divisi', $get_atasan_site->nama_divisi)
+                            ->where('bagians.nama_bagian', $get_atasan_site->nama_bagian)
+                            ->where('jabatans.holding', 'sps')
+                            ->select('jabatans.id', 'departemens.id as id_departemen', 'divisis.nama_divisi', 'jabatans.nama_jabatan', 'bagians.nama_bagian', 'jabatans.holding')
+                            ->first();
+                    }
+
+                    $atasan = User::join('jabatans', 'jabatans.id', '=', 'users.jabatan_id')
+                        ->join('level_jabatans', 'jabatans.level_id', '=', 'level_jabatans.id')
+                        ->join('departemens', 'departemens.id', '=', 'users.dept_id')
+                        ->join('divisis', 'divisis.id', '=', 'users.divisi_id')
+                        ->where('users.jabatan_id', $get_atasan_more->id)
+                        ->orWhere('users.jabatan1_id', $get_atasan_more->id)
+                        ->orWhere('users.jabatan2_id', $get_atasan_more->id)
+                        ->orWhere('users.jabatan3_id', $get_atasan_more->id)
+                        ->orWhere('users.jabatan4_id', $get_atasan_more->id)
+                        ->select('users.*', 'jabatans.atasan_id')
+                        // ->orWhere('d.nama_jabatan', $get_name_jabatan->nama_jabatan)
+                        ->first();
                     // dd($atasan);
-                    // jika atasan tingkat 1 
-                    if ($atasan == '') {
-                        $getUserAtasan  = NULL;
-                        $getUserAtasan2  = NULL;
+                } else {
+
+                    $atasan = User::join('jabatans', 'jabatans.id', '=', 'users.jabatan_id')
+                        ->join('level_jabatans', 'jabatans.level_id', '=', 'level_jabatans.id')
+                        ->join('departemens', 'departemens.id', '=', 'users.dept_id')
+                        ->join('divisis', 'divisis.id', '=', 'users.divisi_id')
+                        ->where('users.jabatan_id', $IdLevelAtasan->id)
+                        ->orWhere('users.jabatan1_id', $IdLevelAtasan->id)
+                        ->orWhere('users.jabatan2_id', $IdLevelAtasan->id)
+                        ->orWhere('users.jabatan3_id', $IdLevelAtasan->id)
+                        ->orWhere('users.jabatan4_id', $IdLevelAtasan->id)
+                        // ->orWhere('d.nama_jabatan', $get_name_jabatan->nama_jabatan)
+                        ->select('users.*', 'jabatans.atasan_id', 'level_jabatans.level_jabatan')
+                        ->first();
+                    // dd($atasan);
+                }
+                // dd($atasan);
+                // jika atasan tingkat 1 
+                if ($atasan == '') {
+                    $getUserAtasan  = NULL;
+                    $getUserAtasan2  = NULL;
+                } else {
+                    if ($atasan->level_jabatan <= 2) {
+                        $getUserAtasan  = $atasan;
+                        $getUserAtasan2  = $atasan;
                     } else {
                         if ($atasan->atasan_id) {
                             $get_nama_jabatan1 = User::where('jabatan_id', $atasan->atasan_id)
@@ -586,6 +896,7 @@ class CutiUserController extends Controller
     public function cutiUpdateProses(Request $request)
     {
         // dd($request->all());
+        $no_form = NULL;
         if ($request->cuti == 'Diluar Cuti Tahunan') {
             $jumlah_hari = explode(' ', $request->jumlah_cuti);
             $jumlah_kuota = explode(' ', $request->kuota_cuti);
@@ -595,6 +906,13 @@ class CutiUserController extends Controller
             $data_interval  = $hari;
             $startDate = $request->tanggal_cuti;
             $endDate = $hitung_end_date;
+            $cek_tgl = Cuti::where('tanggal_mulai', date('Y-m-d', strtotime($startDate)))->where('user_id', Auth::user()->id)->count();
+            if ($request->tanggal_cuti_old != date('Y-m-d', strtotime($startDate))) {
+                if ($cek_tgl > 0) {
+                    $request->session()->flash('tgldigunakan', 'Anda Tidak Memiliki Kuota Cuti');
+                    return redirect('cuti/dashboard');
+                }
+            }
             $date1          = new DateTime($request->tanggal_cuti);
             $date2          = new DateTime($hitung_end_date);
             $kategori_cuti = $request->kategori_cuti;
@@ -635,6 +953,7 @@ class CutiUserController extends Controller
             $data->waktu_approve2           = NULL;
             $data->catatan                  = NULL;
             $data->catatan2                 = NULL;
+            $data->no_form_cuti             = $no_form;
             $data->update();
 
             $request->session()->flash('statuscutieditsuccess', 'Berhasil');
@@ -644,6 +963,13 @@ class CutiUserController extends Controller
             $date_range = explode(' - ', $request->tanggal_cuti);
             $startDate = trim($date_range[0]);
             $endDate = trim($date_range[1]);
+            $cek_tgl = Cuti::where('tanggal_mulai', date('Y-m-d', strtotime($startDate)))->where('user_id', Auth::user()->id)->count();
+            if ($request->tanggal_cuti_old != date('Y-m-d', strtotime($startDate))) {
+                if ($cek_tgl > 0) {
+                    $request->session()->flash('tgldigunakan', 'Anda Tidak Memiliki Kuota Cuti');
+                    return redirect('cuti/dashboard');
+                }
+            }
             $date1          = new DateTime($startDate);
             $date2          = new DateTime($endDate);
             $interval       = $date1->diff($date2);
@@ -694,6 +1020,7 @@ class CutiUserController extends Controller
                 $data->waktu_approve2           = NULL;
                 $data->catatan                  = NULL;
                 $data->catatan2                 = NULL;
+                $data->no_form_cuti             = $no_form;
                 $data->update();
 
                 $request->session()->flash('statuscutieditsuccess', 'Berhasil');
@@ -735,20 +1062,7 @@ class CutiUserController extends Controller
         } else {
         }
         // No form
-        $count_tbl_cuti = Cuti::count();
-        $countstr = strlen($count_tbl_cuti + 1);
-        if ($countstr == '1') {
-            $no = '0000' . $count_tbl_cuti + 1;
-        } else if ($countstr == '2') {
-            $no = '000' . $count_tbl_cuti + 1;
-        } else if ($countstr == '3') {
-            $no = '00' . $count_tbl_cuti + 1;
-        } else if ($countstr == '4') {
-            $no = '0' . $count_tbl_cuti + 1;
-        } else {
-            $no = $count_tbl_cuti + 1;
-        }
-        $no_form = Auth::user()->kontrak_kerja . '/FCT/' . date('Y/m/d') . '/' . $no;
+        $no_form = NULL;
         // dd($no_form);
         if ($request->cuti == 'Diluar Cuti Tahunan') {
             $jumlah_hari = explode(' ', $request->jumlah_cuti);
@@ -759,6 +1073,11 @@ class CutiUserController extends Controller
             $data_interval  = $hari;
             $startDate = $request->tanggal_cuti;
             $endDate = $hitung_end_date;
+            $cek_tgl = Cuti::where('tanggal_mulai', date('Y-m-d', strtotime($startDate)))->where('user_id', Auth::user()->id)->count();
+            if ($cek_tgl > 0) {
+                $request->session()->flash('tgldigunakan', 'Anda Tidak Memiliki Kuota Cuti');
+                return redirect('cuti/dashboard');
+            }
             // dd($hitung_end_date);
             $date1          = new DateTime($request->tanggal_cuti);
             $date2          = new DateTime($hitung_end_date);
@@ -804,12 +1123,18 @@ class CutiUserController extends Controller
             $kategori_cuti = NULL;
             $hMin14         = now()->parse($request->startDate)->addDays(14); //2024-04-18
             $format_startDate = date('Y-m-d', strtotime($startDate));
+            $cek_tgl = Cuti::where('tanggal_mulai', $format_startDate)->where('user_id', Auth::user()->id)->count();
+            if ($cek_tgl > 0) {
+                $request->session()->flash('tgldigunakan', 'Anda Tidak Memiliki Kuota Cuti');
+                return redirect('cuti/dashboard');
+            }
             $format_hmin14 = date('Y-m-d', strtotime($hMin14));
-            $kuota_cuti     = DB::table('users')->where('id', $request->id_user)->first();
+            $kuota_cuti     = User::where('id', $request->id_user)->first();
             if ($format_startDate >= $format_hmin14) {
                 if ($kuota_cuti->kuota_cuti_tahunan >= $data_interval) {
                     Cuti::create([
                         'user_id' => User::where('id', Auth::user()->id)->value('id'),
+                        'nama_user' => User::where('id', Auth::user()->id)->value('name'),
                         'kategori_cuti_id' => KategoriCuti::where('id', $kategori_cuti)->value('id'),
                         'nama_cuti' => $request->cuti,
                         'tanggal' => date('Y-m-d H:i:s'),
@@ -851,11 +1176,33 @@ class CutiUserController extends Controller
     public function cutiApproveProses(Request $request)
     {
         if ($request->approve == 'not_approve') {
-            $data = Cuti::where('id', $request->id)->first();
-            $data->status_cuti  = 'NOT APPROVE';
-            $data->catatan      = $request->catatan;
-            $data->waktu_approve = date('Y-m-d H:i:s');
-            $data->update();
+            if ($request->signature != null) {
+                $folderPath     = public_path('signature/');
+                $image_parts    = explode(";base64,", $request->signature);
+                $image_type_aux = explode("image/", $image_parts[0]);
+                $image_type     = $image_type_aux[1];
+                $image_base64   = base64_decode($image_parts[1]);
+                $uniqid         = date('y-m-d') . '-' . uniqid();
+                $file           = $folderPath . $uniqid . '.' . $image_type;
+                file_put_contents($file, $image_base64);
+            } else {
+                $uniqid = NULL;
+            }
+            if ($request->status_cuti == '2') {
+                $data = Cuti::where('id', $request->id)->first();
+                $data->status_cuti  = 'NOT APPROVE';
+                $data->ttd_atasan2  = $uniqid;
+                $data->catatan2      = $request->catatan;
+                $data->waktu_approve = date('Y-m-d H:i:s');
+                $data->update();
+            } else if ($request->status_cuti == '1') {
+                $data = Cuti::where('id', $request->id)->first();
+                $data->status_cuti  = 'NOT APPROVE';
+                $data->catatan      = $request->catatan;
+                $data->ttd_atasan  = $uniqid;
+                $data->waktu_approve = date('Y-m-d H:i:s');
+                $data->update();
+            }
             $alert = $request->session()->flash('approvecuti_not_approve');
             return response()->json($alert);
         } else {
@@ -873,22 +1220,103 @@ class CutiUserController extends Controller
             }
             if ($request->status_cuti == '2') {
                 $data = Cuti::where('id', $request->id)->first();
+                $count_tbl_cuti = Cuti::whereDate('tanggal', $data->tanggal)->whereNotNull('no_form_cuti')->count();
+                // dd($count_tbl_cuti);
+                $countstr = strlen($count_tbl_cuti + 1);
+                if ($countstr == '1') {
+                    $no = '0000' . $count_tbl_cuti + 1;
+                } else if ($countstr == '2') {
+                    $no = '000' . $count_tbl_cuti + 1;
+                } else if ($countstr == '3') {
+                    $no = '00' . $count_tbl_cuti + 1;
+                } else if ($countstr == '4') {
+                    $no = '0' . $count_tbl_cuti + 1;
+                } else {
+                    $no = $count_tbl_cuti + 1;
+                }
+                $no_form = Auth::user()->kontrak_kerja . '/FCT/' . date('Y/m/d') . '/' . $no;
                 $data->status_cuti  = 3;
                 $data->ttd_atasan2  = $uniqid;
+                $data->no_form_cuti  = $no_form;
                 $data->catatan2      = $request->catatan;
                 $data->waktu_approve2 = date('Y-m-d H:i:s');
                 $data->update();
 
+                $begin = new \DateTime($data->tanggal_mulai);
+                $end = new \DateTime($data->tanggal_selesai);
+                $end = $end->modify('+1 day');
+
+                $interval = new \DateInterval('P1D'); //referensi : https://en.wikipedia.org/wiki/ISO_8601#Durations
+                $daterange = new \DatePeriod($begin, $interval, $end);
+
+
+                foreach ($daterange as $date) {
+                    $tanggal = $date->format("Y-m-d");
+                    $update_mapping_cuti = MappingShift::where('user_id', $data->user_id)->where('tanggal_masuk', $tanggal)->first();
+                    $update_mapping_cuti->status_absen = 'TIDAK HADIR KERJA';
+                    $update_mapping_cuti->keterangan_cuti = 'TRUE';
+                    $update_mapping_cuti->cuti_id = $data->id;
+                    $update_mapping_cuti->update();
+                }
                 $user_cuti = User::where('id', $data->user_id)->first();
                 $user_cuti->kuota_cuti_tahunan = ($user_cuti->kuota_cuti_tahunan) - ($data->total_cuti);
                 $user_cuti->update();
             } else if ($request->status_cuti == '1') {
                 $data = Cuti::where('id', $request->id)->first();
-                $data->status_cuti  = 2;
-                $data->ttd_atasan  = $uniqid;
-                $data->catatan      = $request->catatan;
-                $data->waktu_approve = date('Y-m-d H:i:s');
-                $data->update();
+                if (Auth::user()->id == $data->id_user_atasan && Auth::user()->id == $data->id_user_atasan2) {
+                    $count_tbl_cuti = Cuti::whereDate('tanggal', $data->tanggal)->whereNotNull('no_form_cuti')->count();
+                    // dd($count_tbl_cuti);
+                    $countstr = strlen($count_tbl_cuti + 1);
+                    if ($countstr == '1') {
+                        $no = '0000' . $count_tbl_cuti + 1;
+                    } else if ($countstr == '2') {
+                        $no = '000' . $count_tbl_cuti + 1;
+                    } else if ($countstr == '3') {
+                        $no = '00' . $count_tbl_cuti + 1;
+                    } else if ($countstr == '4') {
+                        $no = '0' . $count_tbl_cuti + 1;
+                    } else {
+                        $no = $count_tbl_cuti + 1;
+                    }
+                    $no_form = Auth::user()->kontrak_kerja . '/FCT/' . date('Y/m/d') . '/' . $no;
+                    $data->status_cuti  = 3;
+                    $data->ttd_atasan  = $uniqid;
+                    $data->ttd_atasan2  = $uniqid;
+                    $data->catatan      = $request->catatan;
+                    $data->catatan2      = $request->catatan;
+                    $data->no_form_cuti  = $no_form;
+                    $data->waktu_approve = date('Y-m-d H:i:s');
+                    $data->waktu_approve2 = date('Y-m-d H:i:s');
+                    $data->update();
+
+                    $user_cuti = User::where('id', $data->user_id)->first();
+                    $user_cuti->kuota_cuti_tahunan = ($user_cuti->kuota_cuti_tahunan) - ($data->total_cuti);
+                    $user_cuti->update();
+
+                    $begin = new \DateTime($data->tanggal_mulai);
+                    $end = new \DateTime($data->tanggal_selesai);
+                    $end = $end->modify('+1 day');
+
+                    $interval = new \DateInterval('P1D'); //referensi : https://en.wikipedia.org/wiki/ISO_8601#Durations
+                    $daterange = new \DatePeriod($begin, $interval, $end);
+
+
+                    foreach ($daterange as $date) {
+                        $tanggal = $date->format("Y-m-d");
+                        $update_mapping_cuti = MappingShift::where('user_id', $data->user_id)->where('tanggal_masuk', $tanggal)->first();
+                        $update_mapping_cuti->status_absen = 'TIDAK HADIR KERJA';
+                        $update_mapping_cuti->keterangan_cuti = 'TRUE';
+                        $update_mapping_cuti->cuti_id = $data->id;
+                        $update_mapping_cuti->update();
+                    }
+                } else {
+
+                    $data->status_cuti  = 2;
+                    $data->ttd_atasan  = $uniqid;
+                    $data->catatan      = $request->catatan;
+                    $data->waktu_approve = date('Y-m-d H:i:s');
+                    $data->update();
+                }
             }
             $alert = $request->session()->flash('approvecuti_success');
             return response()->json($alert);
@@ -904,6 +1332,7 @@ class CutiUserController extends Controller
     }
     public function cetak_form_cuti($id)
     {
+        // dd($id);
         $jabatan = Jabatan::join('users', function ($join) {
             $join->on('jabatans.id', '=', 'users.jabatan_id');
             $join->orOn('jabatans.id', '=', 'users.jabatan1_id');

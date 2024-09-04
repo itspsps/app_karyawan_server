@@ -159,6 +159,7 @@
                         <input type="hidden" name="lat_absen" value="{{ $lat_absen}}">
                         <input type="hidden" name="long_absen" value="{{ $long_absen}}">
                         <input type="hidden" name="jarak_masuk" value="{{ $jarak_masuk}}">
+                        <input type="hidden" name="lokasi_absen" value="{{ $lokasi_absen}}">
                     </div>
                     <div class="input-group">
                         <input type="text" class="form-control" value="Name" readonly>

@@ -926,6 +926,7 @@ class CutiController extends Controller
     }
     public function cetak_form_cuti($id)
     {
+        // dd('ok');
         $cuti = Cuti::With('User')->where('id', $id)->first();
         $jabatan = Jabatan::join('users', function ($join) {
             $join->on('jabatans.id', '=', 'users.jabatan_id');

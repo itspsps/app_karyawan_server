@@ -441,7 +441,7 @@ class PenugasanController extends Controller
             'departemen2' => $departemen2,
             'pengganti' => $pengganti,
         ];
-        $pdf = PDF::loadView('admin/penugasan/form_penugasan', $data)->setPaper('F4', 'landscape');;
+        $pdf = PDF::loadView('admin/penugasan/form_admin_penugasan', $data)->setPaper('F4', 'landscape');;
         return $pdf->stream('FORM_PENGAJUAN_PENUGASAN_' . Auth::user()->name . '_' . date('Y-m-d H:i:s') . '.pdf');
     }
 }

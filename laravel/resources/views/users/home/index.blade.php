@@ -1,9 +1,339 @@
 @extends('users.layouts.main')
 @section('title') APPS | KARYAWAN - SP @endsection
 @section('css')
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.8.0/dist/leaflet.css" integrity="sha512-hoalWLoI8r4UszCkZ5kL8vayOGVae1oxXe/2A4AO6J9+580uKHDO3JdHb7NzwwzK5xr/Fs0W40kiNHxM9vyTtQ==" crossorigin="" />
 <style>
     .modal-backdrop.show:nth-of-type(even) {
         z-index: 1051 !important;
+    }
+
+    .garis {
+        border-left: 0.1px solid gray;
+        height: 80%;
+    }
+
+    .leaflet-container {
+        height: 400px;
+        width: 600px;
+        max-width: 100%;
+        max-height: 100%;
+    }
+
+    .penempatan_text {
+        font-size: 8pt;
+        font-weight: bold;
+
+    }
+
+
+    .jamkerja_text {
+        font-size: 8pt;
+        font-weight: bold;
+        text-align: right;
+    }
+
+    .jamkerja_text_main {
+        font-size: 8pt;
+        font-weight: bold;
+        /* margin-top: -50%; */
+    }
+
+    .absen_title {
+        font-size: 23pt;
+        text-align: center;
+    }
+
+    .icon_kategori {
+        height: 40;
+        width: 40;
+    }
+
+    .icon_text {
+        font-size: 12pt;
+    }
+
+    .leaflet-popup-content {
+        font-size: small;
+    }
+
+    @media only screen and (max-width: 600px) {
+
+        /* styles for browsers larger than 960px; */
+        .icon_kategori {
+            height: 40;
+            width: 40;
+        }
+
+        .icon_text {
+            font-size: 12pt;
+        }
+
+        .absen_title {
+            font-size: 23pt;
+            text-align: center;
+        }
+
+        .jamkerja_text {
+            font-size: 8pt;
+            font-weight: bold;
+            text-align: right;
+        }
+
+        .penempatan_text {
+            font-size: 8pt;
+            font-weight: bold;
+
+        }
+
+        .garis_content {
+            width: max-content;
+        }
+
+        .garis {
+            border-left: 0.1px solid gray;
+            height: 50%;
+        }
+
+        .jamkerja_content {
+            width: max-content;
+            margin-left: auto;
+            margin-right: 0;
+        }
+
+        .jamkerja_content .jamkerja_text_main {
+            font-size: 8pt;
+            font-weight: bold;
+            margin-top: -5%;
+        }
+
+    }
+
+    @media only screen and (max-width: 390px) {
+
+        /* styles for browsers larger than 960px; */
+        .icon_kategori {
+            height: 40;
+            width: 40;
+        }
+
+        .icon_text {
+            font-size: 12pt;
+        }
+
+        .absen_title {
+            font-size: 23pt;
+            text-align: center;
+        }
+
+        .jamkerja_text {
+            font-size: 8pt;
+            font-weight: bold;
+            text-align: right;
+        }
+
+        .penempatan_text {
+            font-size: 8pt;
+            font-weight: bold;
+
+        }
+
+        .garis_content {
+            width: max-content;
+        }
+
+        .garis {
+            border-left: 0.1px solid gray;
+            height: 50%;
+        }
+
+        .jamkerja_content {
+            width: max-content;
+            margin-left: auto;
+            margin-right: 0;
+        }
+
+        .jamkerja_content .jamkerja_text_main {
+            font-size: 8pt;
+            font-weight: bold;
+            margin-top: -5%;
+        }
+
+    }
+
+    @media only screen and (max-width: 380px) {
+
+        /* styles for browsers larger than 960px; */
+
+
+        .absen_title {
+            font-size: 22pt;
+            text-align: center;
+        }
+
+        .jamkerja_text {
+            font-size: 8pt;
+            font-weight: bold;
+            text-align: right;
+        }
+
+        .penempatan_text {
+            font-size: 8pt;
+            font-weight: bold;
+
+        }
+
+        .garis_content {
+            width: max-content;
+        }
+
+        .garis {
+            border-left: 0.1px solid gray;
+            height: 50%;
+        }
+
+        .jamkerja_content {
+            width: max-content;
+            margin-left: auto;
+            margin-right: 0;
+        }
+
+        .jamkerja_content .jamkerja_text_main {
+            font-size: 8pt;
+            font-weight: bold;
+            margin-top: -5%;
+        }
+
+    }
+
+    @media only screen and (max-width: 373px) {
+
+        /* styles for browsers larger than 960px; */
+        .absen_title {
+            font-size: 22pt;
+            text-align: center;
+        }
+
+        .jamkerja_text {
+            font-size: 7pt;
+            font-weight: bold;
+            text-align: right;
+        }
+
+        .penempatan_text {
+            font-size: 7pt;
+            font-weight: bold;
+
+        }
+
+        .garis_content {
+            width: max-content;
+        }
+
+        .garis {
+            border-left: 0.1px solid gray;
+            height: 50%;
+        }
+
+        .jamkerja_content {
+            width: max-content;
+            margin-left: auto;
+            margin-right: 0;
+        }
+
+        .jamkerja_content .jamkerja_text_main {
+            font-size: 7pt;
+            font-weight: bold;
+            margin-top: -5%;
+        }
+
+    }
+
+    @media only screen and (max-width: 360px) {
+
+        /* styles for browsers larger than 960px; */
+        .jamkerja_content {
+            width: max-content;
+            margin-left: auto;
+            margin-right: 0;
+        }
+
+        .absen_title {
+            font-size: 20pt;
+            text-align: center;
+        }
+
+        .jamkerja_content .jamkerja_text_main {
+            font-size: 6pt;
+            font-weight: bold;
+            margin-top: -10%;
+        }
+
+        .jamkerja_text {
+            font-size: 6pt;
+            font-weight: bold;
+            text-align: right;
+        }
+
+        .penempatan_text {
+            font-size: 6pt;
+            font-weight: bold;
+
+        }
+
+        .garis {
+            border-left: 0.1px solid gray;
+            height: 50%;
+        }
+
+        .garis_content {
+            width: max-content;
+        }
+    }
+
+    @media only screen and (max-width: 330px) {
+
+        /* styles for browsers larger than 960px; */
+        .jamkerja_content {
+            width: max-content;
+            margin-left: auto;
+            margin-right: 0;
+        }
+
+        .absen_title {
+            font-size: 16pt;
+            text-align: center;
+        }
+
+        .jamkerja_content .jamkerja_text_main {
+            font-size: 6pt;
+            font-weight: bold;
+            margin-top: -5%;
+        }
+
+        .jamkerja_text {
+            font-size: 6pt;
+            font-weight: bold;
+            text-align: right;
+        }
+
+        .penempatan_text {
+            font-size: 6pt;
+            font-weight: bold;
+
+        }
+
+        .garis {
+            border-left: 0.1px solid gray;
+            height: 50%;
+        }
+
+        .garis_content {
+            width: max-content;
+        }
+
+        .penempatan_content {
+            width: max-content;
+        }
     }
 </style>
 @endsection
@@ -65,18 +395,8 @@
             <i class="fa-solid fa-xmark"></i>
         </button>
     </div>
-    <div class="alert alert-info light alert-dismissible fade show">
-        <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" class="me-2">
-            <circle cx="12" cy="12" r="10"></circle>
-            <line x1="12" y1="16" x2="12" y2="12"></line>
-            <line x1="12" y1="8" x2="12.01" y2="8"></line>
-        </svg>
-        <strong>Info!</strong> Lokasi Kantor Anda di {{$lokasi_kantor}}
-        <button class="btn-close" data-bs-dismiss="alert" aria-label="btn-close">
-            <i class="fa-solid fa-xmark"></i>
-        </button>
-    </div>
 </div>
+
 @elseif(Session::has('absenpulangoutradius'))
 <div id="alert_absenpulangoutradius" class="container" style="margin-top:-5%">
     <div class="alert alert-danger light alert-lg alert-dismissible fade show">
@@ -304,6 +624,36 @@
         </button>
     </div>
 </div>
+@elseif(Session::has('simpanface_success'))
+<div id="alert_simpanface_success" class="container" style="margin-top:-5%">
+    <div class="alert alert-success light alert-lg alert-dismissible fade show">
+        <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" class="me-2">
+            <circle cx="12" cy="12" r="10"></circle>
+            <path d="M8 14s1.5 2 4 2 4-2 4-2"></path>
+            <line x1="9" y1="9" x2="9.01" y2="9"></line>
+            <line x1="15" y1="9" x2="15.01" y2="9"></line>
+        </svg>
+        <strong>Success!</strong> Anda Berhasil Menyimpan Face
+        <button class="btn-close" data-bs-dismiss="alert" aria-label="btn-close">
+            <i class="fa-solid fa-xmark"></i>
+        </button>
+    </div>
+</div>
+@elseif(Session::has('simpanface_error'))
+<div id="alert_simpanface_danger" class="container" style="margin-top:-5%">
+    <div class="alert alert-danger light alert-lg alert-dismissible fade show">
+        <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" class="me-2">
+            <circle cx="12" cy="12" r="10"></circle>
+            <path d="M8 14s1.5 2 4 2 4-2 4-2"></path>
+            <line x1="9" y1="9" x2="9.01" y2="9"></line>
+            <line x1="15" y1="9" x2="15.01" y2="9"></line>
+        </svg>
+        <strong>Success!</strong> Anda Gagal Menyimpan Face
+        <button class="btn-close" data-bs-dismiss="alert" aria-label="btn-close">
+            <i class="fa-solid fa-xmark"></i>
+        </button>
+    </div>
+</div>
 @endif
 @if($status_absen_skrg==NULL)
 <div class="container" style="margin-top:-5%">
@@ -391,7 +741,7 @@
 @section('content_top')
 <div class="container">
     <div class="row" style="margin-top: -2%;">
-        <div class="col-7">
+        <div class="penempatan_content col-7">
             <div class="main-content">
                 <svg xmlns="http://www.w3.org/2000/svg" style="margin-top: -5%;" width="20" height="20" viewBox="0 0 1024 1024" class="icon" version="1.1">
                     <path d="M309.2 584.776h105.5l-49 153.2H225.8c-7.3 0-13.3-6-13.3-13.3 0-2.6 0.8-5.1 2.2-7.3l83.4-126.7c2.5-3.6 6.7-5.9 11.1-5.9z" fill="#FFFFFF" />
@@ -405,16 +755,16 @@
                     <path d="M516.7 348m-97.5 0a97.5 97.5 0 1 0 195 0 97.5 97.5 0 1 0-195 0Z" fill="#FFFFFF" />
                     <path d="M516.7 472.1c-68.4 0-124.1-55.7-124.1-124.1s55.7-124.1 124.1-124.1S640.8 279.5 640.8 348 585.1 472.1 516.7 472.1z m0-195.1c-39.1 0-70.9 31.8-70.9 70.9 0 39.1 31.8 70.9 70.9 70.9s70.9-31.8 70.9-70.9c0-39.1-31.8-70.9-70.9-70.9z" fill="#333333" />
                 </svg>
-                <p style="font-size: 8pt; font-weight: bold;">{{Auth::user()->penempatan_kerja}}</p>
+                <p class="penempatan_text">{{Auth::user()->penempatan_kerja}}</p>
             </div>
         </div>
-        <div class="col-1">
-            <div class="vl" style="border-left: 0.1px solid gray;  height: 80%;"></div>
+        <div class="garis_content col-1">
+            <div class="garis vl"></div>
         </div>
-        <div class="col-4">
-            <p style="font-size: 8pt; font-weight: bold; text-align: right;">Jam Kerja : </p>
+        <div class="jamkerja_content col-5">
+            <p class="jamkerja_text">Jam Kerja : </p>
             <div class="main-content" style="margin-top: -22%; float: right;">
-                <p style="font-size: 8pt; font-weight:bold;" style="margin-top: -50%;">@if($jam_kerja=='')__-__ @else {{$jam_kerja->shift->jam_masuk}}-{{$jam_kerja->shift->jam_keluar}}@endif&nbsp;</p>
+                <p class="jamkerja_text_main">@if($jam_kerja=='')__-__ @else {{$jam_kerja->shift->jam_masuk}}-{{$jam_kerja->shift->jam_keluar}}@endif&nbsp;</p>
                 <svg xmlns="http://www.w3.org/2000/svg" style="margin-top: -20%;" width="17" height="17" viewBox="-4.52 0 69.472 69.472">
                     <g id="Group_4" data-name="Group 4" transform="translate(-651.45 -155.8)">
                         <circle id="Ellipse_4" data-name="Ellipse 4" cx="28.716" cy="28.716" r="28.716" transform="translate(652.95 157.3)" fill="none" stroke="#000000" stroke-miterlimit="10" stroke-width="3" />
@@ -432,7 +782,7 @@
 @if($status_absen_skrg==NULL)
 @else
 @if ($status_absen_skrg->jam_absen == null && $status_absen_skrg->jam_pulang==null)
-<div class=" container" style="margin-top: -5%;">
+<div class="absen_masuk_content container" style="margin-top: -5%;">
     <div class="col-lg-12">
         <div class="row">
             <div class="col-6" style="height: 80px;">
@@ -446,7 +796,7 @@
                                 </g>
                             </svg>
                             <div class="info" style="color: white;">
-                                <p>Absen Masuk <br> <span class="title" style="font-size: 23pt; text-align: center;" id="jam_masuk"></span></p>
+                                <p>Absen Masuk <br> <span class="absen_title title" id="jam_masuk"></span></p>
                                 <script>
                                     setInterval(customClock, 500);
 
@@ -474,7 +824,7 @@
                                 </g>
                             </svg>
                             <div class="info" style="color: white;">
-                                <p>Absen Pulang <br> <span class="title" style="font-size: 23pt; text-align: center;">-</span></p>
+                                <p>Absen Pulang <br> <span class="absen_title title">-</span></p>
                             </div>
                         </div>
                     </div>
@@ -498,7 +848,7 @@
                                 </g>
                             </svg>
                             <div class="info" style="color: white;">
-                                <p>Sudah Absen <br> <span class="title" style="font-size: 23pt; text-align: center;">{{ $status_absen_skrg->jam_absen }}</span></p>
+                                <p>Sudah Absen <br> <span class="absen_title title">{{ $status_absen_skrg->jam_absen }}</span></p>
                             </div>
                         </div>
                     </div>
@@ -515,7 +865,7 @@
                                 </g>
                             </svg>
                             <div class="info" style="color: white;">
-                                <p>Absen Pulang <br> <span class="title" style="font-size: 23pt;text-align: center;" id="jam_pulang"></span></p>
+                                <p>Absen Pulang <br> <span class="absen_title title" id="jam_pulang"></span></p>
                                 <script>
                                     setInterval(customClock, 500);
 
@@ -550,7 +900,7 @@
                                 </g>
                             </svg>
                             <div class="info" style="color: white;">
-                                <p>Sudah Absen <br> <span class="title" style="font-size: 23pt; text-align: center;">{{ $status_absen_skrg->jam_absen }}</span></p>
+                                <p>Sudah Absen <br> <span class="absen_title title">{{ $status_absen_skrg->jam_absen }}</span></p>
                             </div>
                         </div>
                     </div>
@@ -567,7 +917,7 @@
                                 </g>
                             </svg>
                             <div class="info" style="color: white;">
-                                <p>Sudah Absen <br> <span class="title" style="font-size: 23pt; text-align: center;">{{ $status_absen_skrg->jam_pulang }}</span></p>
+                                <p>Sudah Absen <br> <span class="absen_title title">{{ $status_absen_skrg->jam_pulang }}</span></p>
                             </div>
                         </div>
                     </div>
@@ -611,6 +961,51 @@
             </svg>
             <h5 class="title">MAPPING SHIFT BELUM TERSEDIA</h5>
             <p class="text">Hubungi HRD atau Admin</p>
+        </div>
+    </div>
+</div>
+<div class="offcanvas-backdrop pwa-backdrop"></div>
+@endif
+@if(Session::has('absenmasukoutradius'))
+<div id="canvas_absenmasukoutradius" class="offcanvas offcanvas-bottom pwa-offcanvas">
+    <input type="hidden" name="home_index" id="home_index" value="{{Session::has('homeindex')}}">
+    <div class="container">
+        <div class="offcanvas-body small text-center">
+            <img src="{{asset('assets/assets_users/images/location.gif')}}" width="70" height="70" alt="">
+            <h4>
+                LOKASI SAYA
+            </h4>
+            <div id="maps"></div>
+        </div>
+    </div>
+</div>
+<div class="offcanvas-backdrop pwa-backdrop"></div>
+@elseif(Session::has('absenpulangoutradius'))
+
+<div class="offcanvas offcanvas-bottom pwa-offcanvas">
+    <div class="container">
+        <div class="offcanvas-body small text-center">
+            <img src="{{asset('assets/assets_users/images/location.gif')}}" width="70" height="70" alt="">
+            <div id="maps_pulang"></div>
+        </div>
+    </div>
+</div>
+<div class="offcanvas-backdrop pwa-backdrop"></div>
+@endif
+@if($faceid==NULL)
+<div class="offcanvas offcanvas-bottom pwa-offcanvas">
+    <div class="container">
+        <div class="offcanvas-body small text-center">
+            <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" viewBox="0 0 48 48" fill="none">
+                <rect width="48" height="48" fill="white" fill-opacity="0.01" />
+                <path d="M34 3.99976H44V13.9998M44 33.9998V43.9998H34M14 43.9998H4V33.9998M4 13.9998V3.99976H14" stroke="#000000" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" />
+                <path d="M24 39.9998C31.732 39.9998 38 32.8363 38 23.9998C38 15.1632 31.732 7.99976 24 7.99976C16.268 7.99976 10 15.1632 10 23.9998C10 32.8363 16.268 39.9998 24 39.9998Z" stroke="#000000" stroke-width="4" />
+                <path d="M6 24.0081L42 23.9998" stroke="#000000" stroke-width="4" stroke-linecap="round" />
+                <path d="M20.0697 32.1057C21.3375 33.0429 22.6476 33.5115 24 33.5115C25.3523 33.5115 26.6983 33.0429 28.0381 32.1057" stroke="#000000" stroke-width="4" stroke-linecap="round" />
+            </svg>
+            <h5 class="title">FACE ID BELUM TERDAFTAR</h5>
+            <p class="text">SILAHKAN DAFTAR DAHULU</p>
+            <a href="{{route('create_face_id')}}" style="margin-top: -5%;" id="btn_klik" class="btn btn-sm btn-primary">DAFTAR FACE</a>
         </div>
     </div>
 </div>
@@ -718,125 +1113,212 @@
     </ul>
 </div>
 <!-- Categorie End -->
-@if ($datacuti_tingkat1->count() > 0 || $datacuti_tingkat2->count() > 0|| $dataizin->count() > 0 || $datapenugasan->count() > 0)
+
+
+@if($data_count > 0)
 <div class="m-b10">
     <div class="title-bar">
-        <h5 class="dz-title">List Pengajuan</h5>
-        <div class="swiper-default-pagination pagination-dots style-1 p-0">
-            @foreach($datapenugasan as $countpenugasan)
-            <span class="swiper-pagination-bullet  @if($loop->iteration == 1) swiper-pagination-bullet-active @endif" tabindex="0" role="button" aria-label="Go to slide 2"></span>
-            @endforeach
-            <!-- <span class="swiper-pagination-bullet swiper-pagination-bullet-active" tabindex="0" role="button" aria-label="Go to slide 1"></span>
-            <span class="swiper-pagination-bullet" tabindex="0" role="button" aria-label="Go to slide 2"></span> -->
+        <h5 class="dz-title">Approval</h5>
+        <div class="swiper-defult-pagination pagination-dots style-1 p-0 swiper-pagination-clickable swiper-pagination-bullets">
+
+            @for ($i = 0; $i <= $data_count; $i++)
+                <span class="swiper-pagination-bullet" tabindex="0" role="button" aria-label="Go to slide {{$i++;}}"></span>
+                @endfor
         </div>
     </div>
     <div class="swiper-btn-center-lr">
-        <div class="swiper-container tag-group mt-4 dz-swiper recomand-swiper">
-            <div class="swiper-wrapper">
-                @foreach ($dataizin as $dataizin)
-                <a id="btn_klik" href="{{ url('/izin/approve/'.$dataizin->id) }}">
-                    <div class="swiper-slide">
+        <div class="swiper-container tag-group mt-4 dz-swiper recomand-swiper swiper-container-initialized swiper-container-horizontal swiper-container-pointer-events">
+            <div class="swiper-wrapper" id="swiper-wrapper-6276e666ffdae1dc" aria-live="polite" style="transform: translate3d(-325px, 0px, 0px); transition-duration: 0ms;">
+                @foreach ($dataizin as $a)
+                <div class="swiper-slide swiper-slide-prev" role="group" aria-label="1 / 4" style="margin-right: 10px;">
+                    <a id="btn_klik" href="{{ url('/izin/approve/'.$a->id) }}">
                         <div class="card job-post" style="box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.2), 0 3px 10px 0 rgba(0, 0, 0, 0.1);">
                             <div class="card-body">
                                 <div class="media media-80">
-                                    @if($dataizin->User->foto_karyawan != '')
+                                    @if($a->User->foto_karyawan != '')
                                     <img src="https://karyawan.sumberpangan.store/laravel/storage/app/public/foto_karyawan/{{$dataizin->User->foto_karyawan}}" alt="/">
                                     @else
-                                    <img src="{{ asset('assets/assets_users/images/users/user_icon.jpg') }}" alt="/">
+                                    <img src="{{ asset('admin/assets/img/avatars/1.png') }}" alt="/">
                                     @endif
                                 </div>
                                 <div class="card-info">
-                                    <h6 class="title">{{ $dataizin->fullname }}</h6>
-                                    <span class="">{{ $dataizin->izin }}</span>
+                                    <h6 class="title" style="font-size: 9pt;">{{ $a->fullname }}</h6>
+                                    <span class="location">{{ $a->izin }}</span>
                                     <div class="d-flex align-items-center">
-                                        @if ($dataizin->status_izin == 1)
-                                        <small class="badge badge-danger"><i class="fa fa-spinner"></i>&nbsp;Pending</small>
-                                        @endif
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="Layer_1" viewBox="0 0 460 460" xml:space="preserve">
+                                            <g id="XMLID_1011_">
+                                                <path id="XMLID_1012_" style="fill:#354A67;" d="M230,0c127.03,0,230,102.97,230,230S357.03,460,230,460l-60-230L230,0z" />
+                                                <path id="XMLID_1013_" style="fill:#466289;" d="M230,460C102.97,460,0,357.03,0,230S102.97,0,230,0V460z" />
+                                                <path id="XMLID_1014_" style="fill:#BEC8D6;" d="M230,420l-20-200l210,10C420,334.77,334.77,420,230,420z" />
+                                                <path id="XMLID_1015_" style="fill:#DAE0E7;" d="M230,40c104.77,0,190,85.23,190,190H210L230,40z" />
+                                                <path id="XMLID_1016_" style="fill:#DAE0E7;" d="M230,230v190c-104.77,0-190-85.23-190-190l95-30L230,230z" />
+                                                <path id="XMLID_1017_" style="fill:#FFFFFF;" d="M230,40v190H40C40,125.23,125.23,40,230,40z" />
+
+                                                <rect id="XMLID_1018_" x="142.496" y="89.424" transform="matrix(-0.866 0.5 -0.5 -0.866 346.103 116.1065)" style="fill:#DAE0E7;" width="29.999" height="29.999" />
+
+                                                <rect id="XMLID_1019_" x="89.423" y="142.503" transform="matrix(-0.5 0.866 -0.866 -0.5 293.0349 145.8244)" style="fill:#DAE0E7;" width="29.999" height="29.999" />
+
+                                                <rect id="XMLID_1020_" x="89.419" y="287.503" transform="matrix(0.5 0.866 -0.866 0.5 314.1816 60.8195)" style="fill:#BEC8D6;" width="29.999" height="29.999" />
+
+                                                <rect id="XMLID_1021_" x="142.505" y="340.583" transform="matrix(0.866 0.5 -0.5 0.866 198.8977 -31.1126)" style="fill:#BEC8D6;" width="29.999" height="29.999" />
+
+                                                <rect id="XMLID_1022_" x="287.508" y="340.583" transform="matrix(0.866 -0.5 0.5 0.866 -137.2649 198.8984)" style="fill:#A3B1C4;" width="29.999" height="29.999" />
+
+                                                <rect id="XMLID_1023_" x="340.582" y="287.492" transform="matrix(0.5 -0.866 0.866 0.5 -84.1765 459.1824)" style="fill:#A3B1C4;" width="29.999" height="29.999" />
+                                                <polygon id="XMLID_1024_" style="fill:#354A67;" points="333.241,106.256 230.711,208.787 230.711,251.213 354.454,127.47  " />
+                                                <polygon id="XMLID_1025_" style="fill:#466289;" points="181.213,159.289 160,180.502 230.711,251.213 230.711,208.787  " />
+                                                <rect id="XMLID_1026_" x="230" y="360" style="fill:#A3B1C4;" width="15" height="30" />
+                                                <rect id="XMLID_1027_" x="230" y="70" style="fill:#BEC8D6;" width="15" height="30" />
+                                                <rect id="XMLID_1028_" x="215" y="360" style="fill:#BEC8D6;" width="15" height="30" />
+                                                <rect id="XMLID_1029_" x="215" y="70" style="fill:#DAE0E7;" width="15" height="30" />
+                                                <rect id="XMLID_1030_" x="360" y="230" style="fill:#A3B1C4;" width="30" height="15" />
+                                                <rect id="XMLID_1031_" x="360" y="215" style="fill:#BEC8D6;" width="30" height="15" />
+                                                <rect id="XMLID_1032_" x="70" y="230" style="fill:#BEC8D6;" width="30" height="15" />
+                                                <rect id="XMLID_1033_" x="70" y="215" style="fill:#DAE0E7;" width="30" height="15" />
+                                            </g>
+                                        </svg>
+                                        <span style="font-size: 9pt;" class="ms-2 price-item">{{\Carbon\Carbon::parse($a->tanggal)->format('d-m-Y')}}</span>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                </a>
+                    </a>
+                </div>
                 @endforeach
-                @foreach ($datacuti_tingkat1 as $datacuti)
-                <a id="btn_klik" href="{{ url('/cuti/approve/'.$datacuti->id) }}">
-                    <div class="swiper-slide">
-                        <div class="card job-post">
+                @foreach($datacuti_tingkat1 as $a)
+                <div class="swiper-slide swiper-slide-prev" role="group" aria-label="1 / 4" style="margin-right: 10px;">
+                    <a id="btn_klik" href="{{ url('/cuti/approve/'.$a->id) }}">
+                        <div class="card job-post" style="box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.2), 0 3px 10px 0 rgba(0, 0, 0, 0.1);">
                             <div class="card-body">
                                 <div class="media media-80">
-                                    @if($datacuti->foto_karyawan!='')
-                                    <img src="https://karyawan.sumberpangan.store/laravel/storage/app/public/foto_karyawan/{{$datacuti->foto_karyawan}}" alt="/">
+                                    @if($a->User->foto_karyawan != '')
+                                    <img src="https://karyawan.sumberpangan.store/laravel/storage/app/public/foto_karyawan/{{$dataizin->User->foto_karyawan}}" alt="/">
                                     @else
-                                    <img src="{{ asset('assets/assets_users/images/users/user_icon.jpg') }}" alt="/">
+                                    <img src="{{ asset('admin/assets/img/avatars/1.png') }}" alt="/">
                                     @endif
                                 </div>
                                 <div class="card-info">
-                                    <h6 class="title">{{ $datacuti->name }}</h6>
-                                    @if($datacuti->nama_cuti=='Diluar Cuti Tahunan')
-                                    <span class="">{{ $datacuti->KategoriCuti->nama_cuti }}</span>
+                                    <h6 class="title" style="font-size: 9pt;"><a href="javascript:void(0);">{{$a->name}}</a></h6>
+                                    @if($a->nama_cuti=='Diluar Cuti Tahunan')
+                                    <span class="location">{{ $a->KategoriCuti->nama_cuti }}</span>
                                     @else
-                                    <span class="">{{ $datacuti->nama_cuti }}</span>
+                                    <span class="location">{{ $a->nama_cuti }}</span>
                                     @endif
                                     <div class="d-flex align-items-center">
-                                        @if ($datacuti->status_cuti == 1)
-                                        <small class="badge badge-danger"><i class="fa fa-spinner"></i>&nbsp;Pending</small>
-                                        @elseif ($datacuti->status_cuti == 0)
-                                        <small class="badge badge-danger"><i class="fa fa-spinner"></i>&nbsp;Pending</small>
-                                        @endif
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="Layer_1" viewBox="0 0 460 460" xml:space="preserve">
+                                            <g id="XMLID_1011_">
+                                                <path id="XMLID_1012_" style="fill:#354A67;" d="M230,0c127.03,0,230,102.97,230,230S357.03,460,230,460l-60-230L230,0z" />
+                                                <path id="XMLID_1013_" style="fill:#466289;" d="M230,460C102.97,460,0,357.03,0,230S102.97,0,230,0V460z" />
+                                                <path id="XMLID_1014_" style="fill:#BEC8D6;" d="M230,420l-20-200l210,10C420,334.77,334.77,420,230,420z" />
+                                                <path id="XMLID_1015_" style="fill:#DAE0E7;" d="M230,40c104.77,0,190,85.23,190,190H210L230,40z" />
+                                                <path id="XMLID_1016_" style="fill:#DAE0E7;" d="M230,230v190c-104.77,0-190-85.23-190-190l95-30L230,230z" />
+                                                <path id="XMLID_1017_" style="fill:#FFFFFF;" d="M230,40v190H40C40,125.23,125.23,40,230,40z" />
+
+                                                <rect id="XMLID_1018_" x="142.496" y="89.424" transform="matrix(-0.866 0.5 -0.5 -0.866 346.103 116.1065)" style="fill:#DAE0E7;" width="29.999" height="29.999" />
+
+                                                <rect id="XMLID_1019_" x="89.423" y="142.503" transform="matrix(-0.5 0.866 -0.866 -0.5 293.0349 145.8244)" style="fill:#DAE0E7;" width="29.999" height="29.999" />
+
+                                                <rect id="XMLID_1020_" x="89.419" y="287.503" transform="matrix(0.5 0.866 -0.866 0.5 314.1816 60.8195)" style="fill:#BEC8D6;" width="29.999" height="29.999" />
+
+                                                <rect id="XMLID_1021_" x="142.505" y="340.583" transform="matrix(0.866 0.5 -0.5 0.866 198.8977 -31.1126)" style="fill:#BEC8D6;" width="29.999" height="29.999" />
+
+                                                <rect id="XMLID_1022_" x="287.508" y="340.583" transform="matrix(0.866 -0.5 0.5 0.866 -137.2649 198.8984)" style="fill:#A3B1C4;" width="29.999" height="29.999" />
+
+                                                <rect id="XMLID_1023_" x="340.582" y="287.492" transform="matrix(0.5 -0.866 0.866 0.5 -84.1765 459.1824)" style="fill:#A3B1C4;" width="29.999" height="29.999" />
+                                                <polygon id="XMLID_1024_" style="fill:#354A67;" points="333.241,106.256 230.711,208.787 230.711,251.213 354.454,127.47  " />
+                                                <polygon id="XMLID_1025_" style="fill:#466289;" points="181.213,159.289 160,180.502 230.711,251.213 230.711,208.787  " />
+                                                <rect id="XMLID_1026_" x="230" y="360" style="fill:#A3B1C4;" width="15" height="30" />
+                                                <rect id="XMLID_1027_" x="230" y="70" style="fill:#BEC8D6;" width="15" height="30" />
+                                                <rect id="XMLID_1028_" x="215" y="360" style="fill:#BEC8D6;" width="15" height="30" />
+                                                <rect id="XMLID_1029_" x="215" y="70" style="fill:#DAE0E7;" width="15" height="30" />
+                                                <rect id="XMLID_1030_" x="360" y="230" style="fill:#A3B1C4;" width="30" height="15" />
+                                                <rect id="XMLID_1031_" x="360" y="215" style="fill:#BEC8D6;" width="30" height="15" />
+                                                <rect id="XMLID_1032_" x="70" y="230" style="fill:#BEC8D6;" width="30" height="15" />
+                                                <rect id="XMLID_1033_" x="70" y="215" style="fill:#DAE0E7;" width="30" height="15" />
+                                            </g>
+                                        </svg>
+                                        <span style="font-size: 9pt;" class="ms-2 price-item">{{\Carbon\Carbon::parse($a->tanggal)->format('d-m-Y')}}</span>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                </a>
+                    </a>
+                </div>
                 @endforeach
-                @foreach ($datacuti_tingkat2 as $datacuti)
-                <a id="btn_klik" href="{{ url('/cuti/approve/'.$datacuti->id) }}">
-                    <div class="swiper-slide">
-                        <div class="card job-post">
+                @foreach($datacuti_tingkat2 as $a)
+                <div class="swiper-slide swiper-slide-prev" role="group" aria-label="1 / 4" style="margin-right: 10px;">
+                    <a id="btn_klik" href="{{ url('/cuti/approve/'.$a->id) }}">
+                        <div class="card job-post" style="box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.2), 0 3px 10px 0 rgba(0, 0, 0, 0.1);">
                             <div class="card-body">
                                 <div class="media media-80">
-                                    @if($datacuti->foto_karyawan!='')
-                                    <img src="https://karyawan.sumberpangan.store/laravel/storage/app/public/foto_karyawan/{{$datacuti->foto_karyawan}}" alt="/">
+                                    @if($a->User->foto_karyawan != '')
+                                    <img src="https://karyawan.sumberpangan.store/laravel/storage/app/public/foto_karyawan/{{$dataizin->User->foto_karyawan}}" alt="/">
                                     @else
-                                    <img src="{{ asset('assets/assets_users/images/users/user_icon.jpg') }}" alt="/">
+                                    <img src="{{ asset('admin/assets/img/avatars/1.png') }}" alt="/">
                                     @endif
                                 </div>
                                 <div class="card-info">
-                                    <h6 class="title">{{ $datacuti->name }}</h6>
-                                    @if($datacuti->nama_cuti=='Diluar Cuti Tahunan')
-                                    <span class="">{{ $datacuti->KategoriCuti->nama_cuti }}</span>
+                                    <h6 class="title" style="font-size: 9pt;"><a href="javascript:void(0);">{{$a->name}}</a></h6>
+                                    @if($a->nama_cuti=='Diluar Cuti Tahunan')
+                                    <span class="location">{{ $a->KategoriCuti->nama_cuti }}</span>
                                     @else
-                                    <span class="">{{ $datacuti->nama_cuti }}</span>
+                                    <span class="location">{{ $a->nama_cuti }}</span>
                                     @endif
                                     <div class="d-flex align-items-center">
-                                        @if ($datacuti->status_cuti == 2)
-                                        <small class="badge badge-danger"><i class="fa fa-spinner"></i>&nbsp;Pending</small>
-                                        @elseif ($datacuti->status_cuti == 3)
-                                        <small class="badge badge-success"><i class="fa fa-spinner"></i>&nbsp;Selesai</small>
-                                        @endif
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="Layer_1" viewBox="0 0 460 460" xml:space="preserve">
+                                            <g id="XMLID_1011_">
+                                                <path id="XMLID_1012_" style="fill:#354A67;" d="M230,0c127.03,0,230,102.97,230,230S357.03,460,230,460l-60-230L230,0z" />
+                                                <path id="XMLID_1013_" style="fill:#466289;" d="M230,460C102.97,460,0,357.03,0,230S102.97,0,230,0V460z" />
+                                                <path id="XMLID_1014_" style="fill:#BEC8D6;" d="M230,420l-20-200l210,10C420,334.77,334.77,420,230,420z" />
+                                                <path id="XMLID_1015_" style="fill:#DAE0E7;" d="M230,40c104.77,0,190,85.23,190,190H210L230,40z" />
+                                                <path id="XMLID_1016_" style="fill:#DAE0E7;" d="M230,230v190c-104.77,0-190-85.23-190-190l95-30L230,230z" />
+                                                <path id="XMLID_1017_" style="fill:#FFFFFF;" d="M230,40v190H40C40,125.23,125.23,40,230,40z" />
+
+                                                <rect id="XMLID_1018_" x="142.496" y="89.424" transform="matrix(-0.866 0.5 -0.5 -0.866 346.103 116.1065)" style="fill:#DAE0E7;" width="29.999" height="29.999" />
+
+                                                <rect id="XMLID_1019_" x="89.423" y="142.503" transform="matrix(-0.5 0.866 -0.866 -0.5 293.0349 145.8244)" style="fill:#DAE0E7;" width="29.999" height="29.999" />
+
+                                                <rect id="XMLID_1020_" x="89.419" y="287.503" transform="matrix(0.5 0.866 -0.866 0.5 314.1816 60.8195)" style="fill:#BEC8D6;" width="29.999" height="29.999" />
+
+                                                <rect id="XMLID_1021_" x="142.505" y="340.583" transform="matrix(0.866 0.5 -0.5 0.866 198.8977 -31.1126)" style="fill:#BEC8D6;" width="29.999" height="29.999" />
+
+                                                <rect id="XMLID_1022_" x="287.508" y="340.583" transform="matrix(0.866 -0.5 0.5 0.866 -137.2649 198.8984)" style="fill:#A3B1C4;" width="29.999" height="29.999" />
+
+                                                <rect id="XMLID_1023_" x="340.582" y="287.492" transform="matrix(0.5 -0.866 0.866 0.5 -84.1765 459.1824)" style="fill:#A3B1C4;" width="29.999" height="29.999" />
+                                                <polygon id="XMLID_1024_" style="fill:#354A67;" points="333.241,106.256 230.711,208.787 230.711,251.213 354.454,127.47  " />
+                                                <polygon id="XMLID_1025_" style="fill:#466289;" points="181.213,159.289 160,180.502 230.711,251.213 230.711,208.787  " />
+                                                <rect id="XMLID_1026_" x="230" y="360" style="fill:#A3B1C4;" width="15" height="30" />
+                                                <rect id="XMLID_1027_" x="230" y="70" style="fill:#BEC8D6;" width="15" height="30" />
+                                                <rect id="XMLID_1028_" x="215" y="360" style="fill:#BEC8D6;" width="15" height="30" />
+                                                <rect id="XMLID_1029_" x="215" y="70" style="fill:#DAE0E7;" width="15" height="30" />
+                                                <rect id="XMLID_1030_" x="360" y="230" style="fill:#A3B1C4;" width="30" height="15" />
+                                                <rect id="XMLID_1031_" x="360" y="215" style="fill:#BEC8D6;" width="30" height="15" />
+                                                <rect id="XMLID_1032_" x="70" y="230" style="fill:#BEC8D6;" width="30" height="15" />
+                                                <rect id="XMLID_1033_" x="70" y="215" style="fill:#DAE0E7;" width="30" height="15" />
+                                            </g>
+                                        </svg>
+                                        <span style="font-size: 9pt;" class="ms-2 price-item">{{\Carbon\Carbon::parse($a->tanggal)->format('d-m-Y')}}</span>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                </a>
+                    </a>
+                </div>
                 @endforeach
                 @foreach ($datapenugasan as $datapenugasan)
                 @if($datapenugasan->status_penugasan == 1)
                 @if($datapenugasan->id_user_atasan == auth::user()->id)
                 @if($datapenugasan->ttd_id_diminta_oleh == NULL)
-                <a id="btn_klik" href="{{ url('/penugasan/approve/diminta/show/'.$datapenugasan->id) }}">
-                    <div class="swiper-slide swiper-slide-active">
-                        <div class="card job-post">
+                <div class="swiper-slide swiper-slide-prev" role="group" aria-label="1 / 4" style="margin-right: 10px;">
+                    <a id="btn_klik" href="{{ url('/penugasan/approve/diminta/show/'.$datapenugasan->id) }}">
+                        <div class="card job-post" style="box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.2), 0 3px 10px 0 rgba(0, 0, 0, 0.1);">
                             <div class="card-body">
                                 <div class="media media-80">
                                     <img src="{{ asset('assets/assets_users/images/users/user_icon.jpg') }}" alt="/">
                                 </div>
                                 <div class="card-info">
                                     <h6 class="title">{{ $datapenugasan->fullname }}</h6>
-                                    <span class="" style="font-size: 12px">Penugasan {{ $datapenugasan->penugasan }}</span>
+                                    <span class="location" style="font-size: 12px">Penugasan {{ $datapenugasan->penugasan }}</span>
                                     <div class="d-flex align-items-center">
                                         {{-- @if ($datapenugasan->status_penugasan = 1) --}}
                                         <small class="badge badge-danger">Pending</small>
@@ -845,23 +1327,23 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
-                </a>
+                    </a>
+                </div>
                 @endif
                 @endif
                 @elseif($datapenugasan->status_penugasan == 2)
                 @if($datapenugasan->id_user_atasan2 == auth::user()->id)
                 @if($datapenugasan->ttd_id_disahkan_oleh == NULL)
-                <a id="btn_klik" href="{{ url('/penugasan/approve/diminta/show/'.$datapenugasan->id) }}">
-                    <div class="swiper-slide  swiper-slide-active">
-                        <div class="card job-post">
+                <div class="swiper-slide swiper-slide-prev" role="group" aria-label="1 / 4" style="margin-right: 10px;">
+                    <a id="btn_klik" href="{{ url('/penugasan/approve/diminta/show/'.$datapenugasan->id) }}">
+                        <div class="card job-post" style="box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.2), 0 3px 10px 0 rgba(0, 0, 0, 0.1);">
                             <div class="card-body">
                                 <div class="media media-80">
                                     <img src="{{ asset('assets/assets_users/images/users/user_icon.jpg') }}" alt="/">
                                 </div>
                                 <div class="card-info">
                                     <h6 class="title">{{ $datapenugasan->fullname }}</h6>
-                                    <span class="" style="font-size: 12px">Penugasan {{ $datapenugasan->penugasan }}</span>
+                                    <span class="location" style="font-size: 12px">Penugasan {{ $datapenugasan->penugasan }}</span>
                                     <div class="d-flex align-items-center">
                                         {{-- @if ($datapenugasan->status_penugasan = 1) --}}
                                         <small class="badge badge-danger">Pending</small>
@@ -870,23 +1352,23 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
-                </a>
+                    </a>
+                </div>
                 @endif
                 @endif
                 @elseif($datapenugasan->status_penugasan == 3)
                 @if($datapenugasan->id_user_hrd==Auth::user()->id)
                 @if($datapenugasan->ttd_proses_hrd == NULL)
-                <a id="btn_klik" href="{{ url('/penugasan/approve/diminta/show/'.$datapenugasan->id) }}">
-                    <div class="swiper-slide  swiper-slide-active">
-                        <div class="card job-post">
+                <div class="swiper-slide swiper-slide-prev" role="group" aria-label="1 / 4" style="margin-right: 10px;">
+                    <a id="btn_klik" href="{{ url('/penugasan/approve/diminta/show/'.$datapenugasan->id) }}">
+                        <div class="card job-post" style="box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.2), 0 3px 10px 0 rgba(0, 0, 0, 0.1);">
                             <div class="card-body">
                                 <div class="media media-80">
                                     <img src="{{ asset('assets/assets_users/images/users/user_icon.jpg') }}" alt="/">
                                 </div>
                                 <div class="card-info">
                                     <h6 class="title">{{ $datapenugasan->fullname }}</h6>
-                                    <span class="" style="font-size: 12px">Penugasan {{ $datapenugasan->penugasan }}</span>
+                                    <span class="location" style="font-size: 12px">Penugasan {{ $datapenugasan->penugasan }}</span>
                                     <div class="d-flex align-items-center">
                                         {{-- @if ($datapenugasan->status_penugasan = 1) --}}
                                         <small class="badge badge-danger">Pending</small>
@@ -895,23 +1377,23 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
-                </a>
+                    </a>
+                </div>
                 @endif
                 @endif
                 @elseif($datapenugasan->status_penugasan == 4)
                 @if($datapenugasan->id_user_finance==Auth::user()->id)
                 @if($datapenugasan->ttd_proses_finance == NULL)
-                <a id="btn_klik" href="{{ url('/penugasan/approve/diminta/show/'.$datapenugasan->id) }}">
-                    <div class="swiper-slide  swiper-slide-active">
-                        <div class="card job-post">
+                <div class="swiper-slide swiper-slide-prev" role="group" aria-label="1 / 4" style="margin-right: 10px;">
+                    <a id="btn_klik" href="{{ url('/penugasan/approve/diminta/show/'.$datapenugasan->id) }}">
+                        <div class="card job-post" style="box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.2), 0 3px 10px 0 rgba(0, 0, 0, 0.1);">
                             <div class="card-body">
                                 <div class="media media-80">
                                     <img src="{{ asset('assets/assets_users/images/users/user_icon.jpg') }}" alt="/">
                                 </div>
                                 <div class="card-info">
                                     <h6 class="title">{{ $datapenugasan->fullname }}</h6>
-                                    <span class="" style="font-size: 12px">Penugasan {{ $datapenugasan->penugasan }}</span>
+                                    <span class="location" style="font-size: 12px">Penugasan {{ $datapenugasan->penugasan }}</span>
                                     <div class="d-flex align-items-center">
                                         {{-- @if ($datapenugasan->status_penugasan = 1) --}}
                                         <small class="badge badge-danger">Pending</small>
@@ -920,8 +1402,8 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
-                </a>
+                    </a>
+                </div>
                 @endif
                 @endif
                 @endif
@@ -972,7 +1454,7 @@
                 <div class="card-body">
                     <div class="row">
                         <div class="col">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" viewBox="0 0 64 64" data-name="Layer 1" id="Layer_1">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon_kategori" viewBox="0 0 64 64" data-name="Layer 1" id="Layer_1">
                                 <defs>
                                     <style>
                                         .cls-1 {
@@ -1030,7 +1512,7 @@
                             </svg>
                         </div>
                         <div class="col">
-                            <h6 class="title"><a href="javascript:void(0);">Hadir</a></h6>
+                            <h6 class="icon_text title"><a href="javascript:void(0);">Hadir</a></h6>
                             <span class="">
                                 <h5 id="count_absen_hadir">
                                     {{$count_absen_hadir}}
@@ -1046,7 +1528,7 @@
                 <div class="card-body">
                     <div class="row">
                         <div class="col">
-                            <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" height="50" width="50" version="1.1" id="Capa_1" viewBox="0 0 512 512" xml:space="preserve">
+                            <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" class="icon_kategori" version="1.1" id="Capa_1" viewBox="0 0 512 512" xml:space="preserve">
                                 <path style="fill:#F5CDB3;" d="M65.782,447.977c-26.082,0.131-47.724-20.174-49.271-46.224L0.089,125.22  C-0.69,112.118,3.68,99.498,12.394,89.682c8.714-9.815,20.729-15.649,33.832-16.426l197.075-11.705  c27.292-1.634,50.364,19.195,51.964,46.14l16.424,276.531c1.608,27.046-19.092,50.358-46.137,51.965L68.477,447.889  C67.576,447.943,66.674,447.973,65.782,447.977z" />
                                 <path style="fill:#F0A479;" d="M295.266,107.69c-1.6-26.944-24.672-47.774-51.964-46.14l-96.81,5.75l21.531,374.677l97.531-5.793  c27.046-1.607,47.744-24.918,46.137-51.965L295.266,107.69z" />
                                 <path style="fill:#707070;" d="M101.305,139.914c-18.99,0-34.673-14.861-35.705-33.832l-1.902-35.013  C62.63,51.372,77.783,34.477,97.477,33.406l92.497-5.026c19.821-1.088,36.597,14.159,37.663,33.78l1.902,35.012  c1.07,19.695-14.083,36.59-33.78,37.661l-92.497,5.026C102.608,139.896,101.954,139.914,101.305,139.914z" />
@@ -1066,9 +1548,9 @@
                             </svg>
                         </div>
                         <div class="col">
-                            <h6 class="title"><a href="javascript:void(0);">Izin</a></h6>
+                            <h6 class="icon_text title"><a href="javascript:void(0);">Izin</a></h6>
                             <span class="">
-                                <h5 id="count_absen_izin">
+                                <h5>
                                     {{$count_absen_izin}}
                                 </h5>
                             </span>
@@ -1082,7 +1564,7 @@
                 <div class="card-body">
                     <div class="row">
                         <div class="col">
-                            <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="Layer_1" viewBox="0 0 496 496" xml:space="preserve" width="50" height="50">
+                            <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="Layer_1" viewBox="0 0 496 496" xml:space="preserve" class="icon_kategori">
                                 <path style="fill:#50BB75;" d="M416,462.4c0,19.2-12.8,33.6-32.8,33.6H112.8c-20,0-32.8-14.4-32.8-33.6V52.8  C80,33.6,92.8,16,112.8,16h269.6c20.8,0,33.6,17.6,33.6,36.8V462.4z" />
                                 <path style="fill:#0AA06E;" d="M80,52.8C80,33.6,92.8,16,112.8,16h269.6c20.8,0,33.6,17.6,33.6,36.8v409.6  c0,19.2-14.4,33.6-35.2,33.6" />
                                 <path style="fill:#40406B;" d="M320,36c0,3.2-4.8,4-8,4H184c-3.2,0-8-0.8-8-4V4.8c0-2.4,4.8-4.8,8-4.8h128c3.2,0,8,2.4,8,4.8V36z" />
@@ -1101,9 +1583,9 @@
                             </svg>
                         </div>
                         <div class="col">
-                            <h6 class="title"><a href="javascript:void(0);">Sakit</a></h6>
+                            <h6 class="icon_text title"><a href="javascript:void(0);">Sakit</a></h6>
                             <span class="">
-                                <h5 id="count_absen_sakit">
+                                <h5>
                                     {{$count_absen_sakit}}
                                 </h5>
                             </span>
@@ -1117,7 +1599,7 @@
                 <div class="card-body">
                     <div class="row">
                         <div class="col">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" viewBox="-10.98 0 84.878 84.878">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon_kategori" viewBox="-10.98 0 84.878 84.878">
                                 <g id="time_cronometer" data-name="time cronometer" transform="translate(-873.556 -236.194)">
                                     <path id="Path_120" data-name="Path 120" d="M905.016,262.253a27.362,27.362,0,1,0,27.358,27.358A27.357,27.357,0,0,0,905.016,262.253Z" fill="#f4f4f4" />
                                     <path id="Path_121" data-name="Path 121" d="M905.016,236.194a10.863,10.863,0,1,0,10.859,10.862A10.869,10.869,0,0,0,905.016,236.194Zm0,19.774a8.912,8.912,0,1,1,8.91-8.912A8.91,8.91,0,0,1,905.016,255.968Z" fill="#163844" />
@@ -1131,9 +1613,9 @@
                             </svg>
                         </div>
                         <div class="col">
-                            <h6 class="title"><a href="javascript:void(0);">Telat</a></h6>
+                            <h6 class="icon_text title"><a href="javascript:void(0);">Telat</a></h6>
                             <span class="">
-                                <h5 id="count_absen_telat">
+                                <h5>
                                     {{$count_absen_telat}}
                                 </h5>
                             </span>
@@ -1171,12 +1653,13 @@
 @endsection
 @section('js')
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+<script src="https://unpkg.com/leaflet@1.8.0/dist/leaflet.js" integrity="sha512-BB3hKbKWOc9Ez/TAwyWxNXeoV9c1v6FIeYiBieIWkpLjauysF18NzgR1MBNBXf8/KABdlkX68nAhlwcDFLGPCQ==" crossorigin=""></script>
 <script type="text/javascript">
     $(document).ready(function() {
         load_data();
 
         function load_data(filter_month = '') {
-            // console.log(filter_month);
+            console.log(filter_month);
             var table1 = $('#datatableHome').DataTable({
                 processing: true,
                 serverSide: true,
@@ -1224,17 +1707,14 @@
                     alert('Something is wrong');
                 },
                 success: function(data) {
-                    // console.log(data);
-                    $('#count_absen_hadir').html(data.count_absen_hadir);
-                    $('#count_absen_izin').html(data.count_absen_izin);
-                    $('#count_absen_sakit').html(data.count_absen_sakit);
-                    $('#count_absen_telat').html(data.count_absen_telat);
+                    $('#count_absen_hadir').html(data);
+                    console.log(data)
                 }
             });
         }
         $('#month').change(function() {
             filter_month = $(this).val();
-            // console.log(filter_month);
+            console.log(filter_month);
             $('#datatableHome').DataTable().destroy();
             load_data(filter_month);
             load_absensi(filter_month);
@@ -1242,6 +1722,831 @@
 
         })
     });
+</script>
+<script>
+    var offcanvasEl = document.getElementById('home_index')
+    oke();
+
+    function oke() {
+        // e.preventDefault();
+        // console.log($('#home_index').val());
+        if ($('#home_index').val() == '1') {
+            console.log('hidden')
+            window.scrollTo(0, 15);
+        }
+    }
+    // offcanvasEl.show()
+</script>
+<script>
+    getLocation();
+
+    function getLocation() {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(showPosition);
+            navigator.geolocation.getCurrentPosition(showPosition1);
+        } else {
+            x.innerHTML = "Geolocation is not supported by this browser.";
+        }
+    }
+
+    function showPosition(position) {
+        //   x.innerHTML = "Latitude: " + position.coords.latitude +
+        //   "<br>Longitude: " + position.coords.longitude;
+        var lat_saya = position.coords.latitude;
+        var long_saya = position.coords.longitude;
+        var lokasi_kantor = '{{Auth()->user()->penempatan_kerja}}';
+        var nama_saya = '{{Auth()->user()->name}}';
+        // console.log(lat_saya, long_saya);
+        // console.log(lokasi_kantor);
+
+        var map = L.map('maps').setView([lat_saya, long_saya], 16);
+
+        L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 25,
+            attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+        }).addTo(map);
+        const popupContent =
+            '<p style="font-size:9pt;">' +
+            nama_saya +
+            '</p>';
+
+        if (lokasi_kantor == 'CV. SUMBER PANGAN - KEDIRI') {
+            var latlngs = [
+                [-7.757852, 112.093890],
+                [-7.756964, 112.094195],
+                [-7.757866, 112.096507],
+                [-7.758657, 112.095336]
+            ];
+            var polygon = L.polygon(latlngs, {
+                color: 'red'
+            }).addTo(map);
+            var label = new L.Label()
+            label.setContent("CV. SUMBER PANGAN - KEDIRI")
+            label.setLatLng(polygon.getBounds().getCenter())
+            mymap.showLabel(label);
+        } else if (lokasi_kantor == 'CV. SUMBER PANGAN - TUBAN') {
+            var latlngs = [
+                [-6.991185, 112.120763],
+                [-6.989174, 112.121394],
+                [-6.989563, 112.122751],
+                [-6.991437, 112.122061]
+            ];
+            var polygon = L.polygon(latlngs, {
+                color: 'red'
+            }).addTo(map);
+        } else if (lokasi_kantor == 'ALL SITES (SP)') {
+            var latlngs = [
+                [-7.757852, 112.093890],
+                [-7.756964, 112.094195],
+                [-7.757866, 112.096507],
+                [-7.758657, 112.095336]
+            ];
+            var latlngs1 = [
+                [-6.991185, 112.120763],
+                [-6.989174, 112.121394],
+                [-6.989563, 112.122751],
+                [-6.991437, 112.122061]
+            ];
+            var polygon = L.polygon(latlngs, {
+                color: 'red'
+            }).addTo(map);
+            var polygon1 = L.polygon(latlngs1, {
+                color: 'red'
+            }).addTo(map);
+        } else if (lokasi_kantor == 'PT. SURYA PANGAN SEMESTA - KEDIRI') {
+            var latlngs = [
+                [-7.811054254338505, 112.07984213086016],
+                [-7.810839096224432, 112.08081884380057],
+                [-7.808489981554889, 112.08161649876598],
+                [-7.808405068773745, 112.08133682173685],
+                [-7.810097668835231, 112.08055007648335],
+                [-7.810057948477162, 112.08030628208806]
+            ];
+            var polygon = L.polygon(latlngs, {
+                color: 'red'
+            }).addTo(map);
+        } else if (lokasi_kantor == 'PT. SURYA PANGAN SEMESTA - NGAWI') {
+            var latlngs = [
+                [-7.503903124866787, 111.42901333909559],
+                [-7.503780799880943, 111.42583760362271],
+                [-7.505630060242543, 111.4257993236654],
+                [-7.505712281925328, 111.4285105703631],
+                [-7.504871090128984, 111.4285169497671],
+                [-7.504637074058243, 111.42896350806065]
+            ];
+            var polygon = L.polygon(latlngs, {
+                color: 'red'
+            }).addTo(map);
+        } else if (lokasi_kantor == 'PT. SURYA PANGAN SEMESTA - SUBANG') {
+            var latlngs = [
+                [-6.29533870949617, 107.90681938912391],
+                [-6.295727870479563, 107.90769375045888],
+                [-6.293953207394033, 107.9077779126219],
+                [-6.293911897422521, 107.9069474641808]
+            ];
+            var polygon = L.polygon(latlngs, {
+                color: 'red'
+            }).addTo(map);
+        } else if (lokasi_kantor == 'ALL SITES (SPS)') {
+            // sps kediri
+            var latlngs = [
+                [-7.811054254338505, 112.07984213086016],
+                [-7.810839096224432, 112.08081884380057],
+                [-7.808489981554889, 112.08161649876598],
+                [-7.808405068773745, 112.08133682173685],
+                [-7.810097668835231, 112.08055007648335],
+                [-7.810057948477162, 112.08030628208806]
+            ];
+            var polygon = L.polygon(latlngs, {
+                color: 'red'
+            }).addTo(map);
+            // sps ngawi
+            var latlngs1 = [
+                [-7.503903124866787, 111.42901333909559],
+                [-7.503780799880943, 111.42583760362271],
+                [-7.505630060242543, 111.4257993236654],
+                [-7.505712281925328, 111.4285105703631],
+                [-7.504871090128984, 111.4285169497671],
+                [-7.504637074058243, 111.42896350806065]
+            ];
+            var polygon1 = L.polygon(latlngs1, {
+                color: 'red'
+            }).addTo(map);
+            // sps subang
+            var latlngs2 = [
+                [-6.29533870949617, 107.90681938912391],
+                [-6.295727870479563, 107.90769375045888],
+                [-6.293953207394033, 107.9077779126219],
+                [-6.293911897422521, 107.9069474641808]
+            ];
+            var polygon2 = L.polygon(latlngs2, {
+                color: 'red'
+            }).addTo(map);
+        } else if (lokasi_kantor == 'ALL SITES (SP, SPS, SIP)') {
+            //    SP KEDIRI
+            var latlngs = [
+                [-7.757852, 112.093890],
+                [-7.756964, 112.094195],
+                [-7.757866, 112.096507],
+                [-7.758657, 112.095336]
+            ];
+            var polygon = L.polygon(latlngs, {
+                color: 'red'
+            }).addTo(map).bindTooltip("CV. SUMBER PANGAN - KEDIRI", {
+                permanent: true,
+                direction: "above"
+            }).openTooltip();
+
+            // SP TUBAN
+            var latlngs1 = [
+                [-6.991185, 112.120763],
+                [-6.989174, 112.121394],
+                [-6.989563, 112.122751],
+                [-6.991437, 112.122061]
+            ];
+            var polygon1 = L.polygon(latlngs1, {
+                color: 'red'
+            }).addTo(map);
+
+            // sps kediri
+            var latlngs2 = [
+                [-7.811054254338505, 112.07984213086016],
+                [-7.810839096224432, 112.08081884380057],
+                [-7.808489981554889, 112.08161649876598],
+                [-7.808405068773745, 112.08133682173685],
+                [-7.810097668835231, 112.08055007648335],
+                [-7.810057948477162, 112.08030628208806]
+            ];
+            var polygon2 = L.polygon(latlngs2, {
+                color: 'red'
+            }).addTo(map);
+            // sps ngawi
+            var latlngs3 = [
+                [-7.503903124866787, 111.42901333909559],
+                [-7.503780799880943, 111.42583760362271],
+                [-7.505630060242543, 111.4257993236654],
+                [-7.505712281925328, 111.4285105703631],
+                [-7.504871090128984, 111.4285169497671],
+                [-7.504637074058243, 111.42896350806065]
+            ];
+            var polygon3 = L.polygon(latlngs3, {
+                color: 'red'
+            }).addTo(map);
+            // sps subang
+            var latlngs4 = [
+                [-6.29533870949617, 107.90681938912391],
+                [-6.295727870479563, 107.90769375045888],
+                [-6.293953207394033, 107.9077779126219],
+                [-6.293911897422521, 107.9069474641808]
+            ];
+            var polygon4 = L.polygon(latlngs4, {
+                color: 'red'
+            }).addTo(map);
+
+            // DEPO SIDOARJO
+            var latlngs5 = [
+                [-7.361735, 112.784873],
+                [-7.361757, 112.785147],
+                [-7.362231, 112.785102],
+                [-7.362195, 112.784741]
+            ];
+            var polygon5 = L.polygon(latlngs5, {
+                color: 'red'
+            }).addTo(map);
+
+            // DEPO SAMARINDA
+            var latlngs6 = [
+                [-0.46124004439708466, 117.1890440835615],
+                [-0.4612392469974343, 117.18918363302389],
+                [-0.46134587505367874, 117.18918108680002],
+                [-0.4613312150395592, 117.18903673736563]
+            ];
+            var polygon6 = L.polygon(latlngs6, {
+                color: 'red'
+            }).addTo(map);
+
+            // DEPO DENPASAR
+            var latlngs7 = [
+                [-8.652895481207116, 115.20293696056507],
+                [-8.652912717125513, 115.2030294967747],
+                [-8.652755926596885, 115.20305008509402],
+                [-8.652733064463064, 115.2029671528421]
+            ];
+            var polygon7 = L.polygon(latlngs7, {
+                color: 'red'
+            }).addTo(map);
+
+            // DEPO MALANG
+            var latlngs8 = [
+                [-7.967760845267797, 112.65873922458452],
+                [-7.967798033683292, 112.65879957428648],
+                [-7.967823932756354, 112.65878616324159],
+                [-7.967790064737394, 112.65872983685311]
+            ];
+            var polygon8 = L.polygon(latlngs8, {
+                color: 'red'
+            }).addTo(map);
+            // DEPO PALANGKARAYA
+            var latlngs9 = [
+                [-2.1739101807413506, 113.864207945572],
+                [-2.1737446735313326, 113.86422269772137],
+                [-2.173735292555323, 113.86412814985499],
+                [-2.1739061603235093, 113.86411876212357]
+            ];
+            var polygon9 = L.polygon(latlngs9, {
+                color: 'red'
+            }).addTo(map);
+            // DEPO SEMARANG
+            var latlngs10 = [
+                [-7.003762008571239, 110.4547271253569],
+                [-7.003741376561739, 110.4546278836248],
+                [-7.003783306128471, 110.45461983699788],
+                [-7.003805934781971, 110.4547117026553]
+            ];
+            var polygon10 = L.polygon(latlngs10, {
+                color: 'red'
+            }).addTo(map);
+            // DEPO BANDUNG
+            var latlngs11 = [
+                [-6.887528841438018, 107.60032030611694],
+                [-6.887538161422427, 107.60048257975994],
+                [-6.887629364117361, 107.60047855644646],
+                [-6.887622041273895, 107.60032164722143]
+            ];
+            var polygon11 = L.polygon(latlngs11, {
+                color: 'red'
+            }).addTo(map);
+            // DEPO SPS CIPINANG (JAKARTA)
+            var latlngs12 = [
+                [-6.21311187156196, 106.88544203302257],
+                [-6.2120446956529545, 106.88543065337363],
+                [-6.212025840935464, 106.88472511513999],
+                [-6.213168435595694, 106.88476684051939]
+            ];
+            var latlngs13 = [
+                [-6.211847347299506, 106.8808114012799],
+                [-6.211852680220818, 106.88181991185459],
+                [-6.212351308125068, 106.88182795848152],
+                [-6.212327310001449, 106.88079799023502]
+            ];
+            var polygon12 = L.polygon(latlngs12, {
+                color: 'red'
+            }).addTo(map);
+            var polygon13 = L.polygon(latlngs13, {
+                color: 'red'
+            }).addTo(map);
+        } else if (lokasi_kantor == 'DEPO SP SIDOARJO') {
+            var latlngs = [
+                [-7.361735, 112.784873],
+                [-7.361757, 112.785147],
+                [-7.362231, 112.785102],
+                [-7.362195, 112.784741]
+            ];
+            var polygon = L.polygon(latlngs, {
+                color: 'red'
+            }).addTo(map);
+        } else if (lokasi_kantor == 'DEPO SP SAMARINDA') {
+            var latlngs = [
+                [-0.46124004439708466, 117.1890440835615],
+                [-0.4612392469974343, 117.18918363302389],
+                [-0.46134587505367874, 117.18918108680002],
+                [-0.4613312150395592, 117.18903673736563]
+            ];
+            var polygon = L.polygon(latlngs, {
+                color: 'red'
+            }).addTo(map);
+        } else if (lokasi_kantor == 'DEPO SP DENPASAR') {
+            var latlngs = [
+                [-8.652895481207116, 115.20293696056507],
+                [-8.652912717125513, 115.2030294967747],
+                [-8.652755926596885, 115.20305008509402],
+                [-8.652733064463064, 115.2029671528421]
+            ];
+            var polygon = L.polygon(latlngs, {
+                color: 'red'
+            }).addTo(map);
+        } else if (lokasi_kantor == 'DEPO SP MALANG') {
+            var latlngs = [
+                [-7.967760845267797, 112.65873922458452],
+                [-7.967798033683292, 112.65879957428648],
+                [-7.967823932756354, 112.65878616324159],
+                [-7.967790064737394, 112.65872983685311]
+            ];
+            var polygon = L.polygon(latlngs, {
+                color: 'red'
+            }).addTo(map);
+        } else if (lokasi_kantor == 'DEPO SP PALANGKARAYA') {
+            var latlngs = [
+                [-2.1739101807413506, 113.864207945572],
+                [-2.1737446735313326, 113.86422269772137],
+                [-2.173735292555323, 113.86412814985499],
+                [-2.1739061603235093, 113.86411876212357]
+            ];
+            var polygon = L.polygon(latlngs, {
+                color: 'red'
+            }).addTo(map);
+        } else if (lokasi_kantor == 'DEPO SP SEMARANG') {
+            var latlngs = [
+                [-7.003762008571239, 110.4547271253569],
+                [-7.003741376561739, 110.4546278836248],
+                [-7.003783306128471, 110.45461983699788],
+                [-7.003805934781971, 110.4547117026553]
+            ];
+            // SPS
+            var polygon = L.polygon(latlngs, {
+                color: 'red'
+            }).addTo(map);
+        } else if (lokasi_kantor == 'DEPO SPS BANDUNG') {
+            var latlngs = [
+                [-6.887528841438018, 107.60032030611694],
+                [-6.887538161422427, 107.60048257975994],
+                [-6.887629364117361, 107.60047855644646],
+                [-6.887622041273895, 107.60032164722143]
+            ];
+            var polygon = L.polygon(latlngs, {
+                color: 'red'
+            }).addTo(map);
+        } else if (lokasi_kantor == 'DEPO SPS CIPINANG (JAKARTA)') {
+            var latlngs = [
+                [-6.21311187156196, 106.88544203302257],
+                [-6.2120446956529545, 106.88543065337363],
+                [-6.212025840935464, 106.88472511513999],
+                [-6.213168435595694, 106.88476684051939]
+            ];
+            var latlngs1 = [
+                [-6.211847347299506, 106.8808114012799],
+                [-6.211852680220818, 106.88181991185459],
+                [-6.212351308125068, 106.88182795848152],
+                [-6.212327310001449, 106.88079799023502]
+            ];
+            var polygon = L.polygon(latlngs, {
+                color: 'red'
+            }).addTo(map);
+            var polygon1 = L.polygon(latlngs1, {
+                color: 'red'
+            }).addTo(map);
+
+        }
+        var location = <?php echo json_encode($location); ?>;
+        // console.log(location);
+        // console.log(location[1].nama_titik);
+        location.forEach(function(obj) {
+            radius = obj.radius_titik;
+            var m = L.circle([obj.lat_titik, obj.long_titik], {
+                    color: 'purple',
+                    fillColor: 'purple',
+                    fillOpacity: 0.5,
+                    radius: radius
+                }).addTo(map),
+                p = new L.Popup({
+                    autoClose: false,
+                    closeOnClick: false
+                })
+                .setContent(obj.nama_titik)
+                .setLatLng([obj.lat_titik, obj.long_titik]);
+            m.bindPopup(p).openPopup();
+        });
+        var marker = L.marker([lat_saya, long_saya]).addTo(map)
+            .bindPopup(popupContent).openPopup();
+
+
+    }
+
+    function showPosition1(position) {
+        //   x.innerHTML = "Latitude: " + position.coords.latitude +
+        //   "<br>Longitude: " + position.coords.longitude;
+
+        var lat_saya1 = position.coords.latitude;
+        var long_saya1 = position.coords.longitude;
+        var lokasi_kantor1 = '{{Auth()->user()->penempatan_kerja}}';
+        var nama_saya1 = '{{Auth()->user()->name}}';
+        // console.log(lat_saya1, long_saya1);
+        // console.log(lokasi_kantor1);
+
+        var map1 = L.map('maps_pulang').setView([lat_saya1, long_saya1], 16);
+
+        L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 25,
+            attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+        }).addTo(map1);
+        const popupContent_pulang =
+            '<p style="font-size:9pt;">' +
+            nama_saya1 +
+            '</p>';
+
+        if (lokasi_kantor1 == 'CV. SUMBER PANGAN - KEDIRI') {
+            var latlngs_pulang = [
+                [-7.757852, 112.093890],
+                [-7.756964, 112.094195],
+                [-7.757866, 112.096507],
+                [-7.758657, 112.095336]
+            ];
+            var polygon_pulang = L.polygon(latlngs_pulang, {
+                color: 'red'
+            }).addTo(map1);
+        } else if (lokasi_kantor1 == 'CV. SUMBER PANGAN - TUBAN') {
+            var latlngs_pulang = [
+                [-6.991185, 112.120763],
+                [-6.989174, 112.121394],
+                [-6.989563, 112.122751],
+                [-6.991437, 112.122061]
+            ];
+            var polygon_pulang = L.polygon(latlngs_pulang, {
+                color: 'red'
+            }).addTo(map1);
+        } else if (lokasi_kantor1 == 'ALL SITES (SP)') {
+            var latlngs_pulang = [
+                [-7.757852, 112.093890],
+                [-7.756964, 112.094195],
+                [-7.757866, 112.096507],
+                [-7.758657, 112.095336]
+            ];
+            var latlngs_pulang1 = [
+                [-6.991185, 112.120763],
+                [-6.989174, 112.121394],
+                [-6.989563, 112.122751],
+                [-6.991437, 112.122061]
+            ];
+            var polygon_pulang = L.polygon(latlngs_pulang, {
+                color: 'red'
+            }).addTo(map1);
+            var polygon_pulang1 = L.polygon(latlngs_pulang1, {
+                color: 'red'
+            }).addTo(map1);
+        } else if (lokasi_kantor1 == 'PT. SURYA PANGAN SEMESTA - KEDIRI') {
+            var latlngs_pulang = [
+                [-7.811054254338505, 112.07984213086016],
+                [-7.810839096224432, 112.08081884380057],
+                [-7.808489981554889, 112.08161649876598],
+                [-7.808405068773745, 112.08133682173685],
+                [-7.810097668835231, 112.08055007648335],
+                [-7.810057948477162, 112.08030628208806]
+            ];
+            var polygon_pulang = L.polygon(latlngs_pulang, {
+                color: 'red'
+            }).addTo(map1);
+        } else if (lokasi_kantor1 == 'PT. SURYA PANGAN SEMESTA - NGAWI') {
+            var latlngs_pulang = [
+                [-7.503903124866787, 111.42901333909559],
+                [-7.503780799880943, 111.42583760362271],
+                [-7.505630060242543, 111.4257993236654],
+                [-7.505712281925328, 111.4285105703631],
+                [-7.504871090128984, 111.4285169497671],
+                [-7.504637074058243, 111.42896350806065]
+            ];
+            var polygon_pulang = L.polygon(latlngs_pulang, {
+                color: 'red'
+            }).addTo(map1);
+        } else if (lokasi_kantor1 == 'PT. SURYA PANGAN SEMESTA - SUBANG') {
+            var latlngs_pulang = [
+                [-6.29533870949617, 107.90681938912391],
+                [-6.295727870479563, 107.90769375045888],
+                [-6.293953207394033, 107.9077779126219],
+                [-6.293911897422521, 107.9069474641808]
+            ];
+            var polygon_pulang = L.polygon(latlngs_pulang, {
+                color: 'red'
+            }).addTo(map1);
+        } else if (lokasi_kantor1 == 'ALL SITES (SPS)') {
+            // sps kediri
+            var latlngs_pulang = [
+                [-7.811054254338505, 112.07984213086016],
+                [-7.810839096224432, 112.08081884380057],
+                [-7.808489981554889, 112.08161649876598],
+                [-7.808405068773745, 112.08133682173685],
+                [-7.810097668835231, 112.08055007648335],
+                [-7.810057948477162, 112.08030628208806]
+            ];
+            var polygon_pulang = L.polygon(latlngs_pulang, {
+                color: 'red'
+            }).addTo(map1);
+            // sps ngawi
+            var latlngs_pulang1 = [
+                [-7.503903124866787, 111.42901333909559],
+                [-7.503780799880943, 111.42583760362271],
+                [-7.505630060242543, 111.4257993236654],
+                [-7.505712281925328, 111.4285105703631],
+                [-7.504871090128984, 111.4285169497671],
+                [-7.504637074058243, 111.42896350806065]
+            ];
+            var polygon_pulang1 = L.polygon(latlngs_pulang1, {
+                color: 'red'
+            }).addTo(map1);
+            // sps subang
+            var latlngs_pulang2 = [
+                [-6.29533870949617, 107.90681938912391],
+                [-6.295727870479563, 107.90769375045888],
+                [-6.293953207394033, 107.9077779126219],
+                [-6.293911897422521, 107.9069474641808]
+            ];
+            var polygon_pulang2 = L.polygon(latlngs_pulang2, {
+                color: 'red'
+            }).addTo(map1);
+        } else if (lokasi_kantor1 == 'ALL SITES (SP, SPS, SIP)') {
+            //    SP KEDIRI
+            var latlngs_pulang = [
+                [-7.757852, 112.093890],
+                [-7.756964, 112.094195],
+                [-7.757866, 112.096507],
+                [-7.758657, 112.095336]
+            ];
+            var polygon_pulang = L.polygon(latlngs_pulang, {
+                color: 'red'
+            }).addTo(map1);
+            // SP TUBAN
+            var latlngs_pulang1 = [
+                [-6.991185, 112.120763],
+                [-6.989174, 112.121394],
+                [-6.989563, 112.122751],
+                [-6.991437, 112.122061]
+            ];
+            var polygon_pulang1 = L.polygon(latlngs_pulang1, {
+                color: 'red'
+            }).addTo(map1);
+
+            // sps kediri
+            var latlngs_pulang2 = [
+                [-7.811054254338505, 112.07984213086016],
+                [-7.810839096224432, 112.08081884380057],
+                [-7.808489981554889, 112.08161649876598],
+                [-7.808405068773745, 112.08133682173685],
+                [-7.810097668835231, 112.08055007648335],
+                [-7.810057948477162, 112.08030628208806]
+            ];
+            var polygon_pulang2 = L.polygon(latlngs_pulang2, {
+                color: 'red'
+            }).addTo(map1);
+            // sps ngawi
+            var latlngs_pulang3 = [
+                [-7.503903124866787, 111.42901333909559],
+                [-7.503780799880943, 111.42583760362271],
+                [-7.505630060242543, 111.4257993236654],
+                [-7.505712281925328, 111.4285105703631],
+                [-7.504871090128984, 111.4285169497671],
+                [-7.504637074058243, 111.42896350806065]
+            ];
+            var polygon_pulang3 = L.polygon(latlngs_pulang3, {
+                color: 'red'
+            }).addTo(map1);
+            // sps subang
+            var latlngs_pulang4 = [
+                [-6.29533870949617, 107.90681938912391],
+                [-6.295727870479563, 107.90769375045888],
+                [-6.293953207394033, 107.9077779126219],
+                [-6.293911897422521, 107.9069474641808]
+            ];
+            var polygon_pulang4 = L.polygon(latlngs_pulang4, {
+                color: 'red'
+            }).addTo(map1);
+
+            // DEPO SIDOARJO
+            var latlngs_pulang5 = [
+                [-7.361735, 112.784873],
+                [-7.361757, 112.785147],
+                [-7.362231, 112.785102],
+                [-7.362195, 112.784741]
+            ];
+            var polygon_pulang5 = L.polygon(latlngs_pulang5, {
+                color: 'red'
+            }).addTo(map1);
+
+            // DEPO SAMARINDA
+            var latlngs_pulang6 = [
+                [-0.46124004439708466, 117.1890440835615],
+                [-0.4612392469974343, 117.18918363302389],
+                [-0.46134587505367874, 117.18918108680002],
+                [-0.4613312150395592, 117.18903673736563]
+            ];
+            var polygon_pulang6 = L.polygon(latlngs_pulang6, {
+                color: 'red'
+            }).addTo(map1);
+
+            // DEPO DENPASAR
+            var latlngs_pulang7 = [
+                [-8.652895481207116, 115.20293696056507],
+                [-8.652912717125513, 115.2030294967747],
+                [-8.652755926596885, 115.20305008509402],
+                [-8.652733064463064, 115.2029671528421]
+            ];
+            var polygon_pulang7 = L.polygon(latlngs_pulang7, {
+                color: 'red'
+            }).addTo(map1);
+
+            // DEPO MALANG
+            var latlngs_pulang8 = [
+                [-7.967760845267797, 112.65873922458452],
+                [-7.967798033683292, 112.65879957428648],
+                [-7.967823932756354, 112.65878616324159],
+                [-7.967790064737394, 112.65872983685311]
+            ];
+            var polygon_pulang8 = L.polygon(latlngs_pulang8, {
+                color: 'red'
+            }).addTo(map1);
+            // DEPO PALANGKARAYA
+            var latlngs_pulang9 = [
+                [-2.1739101807413506, 113.864207945572],
+                [-2.1737446735313326, 113.86422269772137],
+                [-2.173735292555323, 113.86412814985499],
+                [-2.1739061603235093, 113.86411876212357]
+            ];
+            var polygon_pulang9 = L.polygon(latlngs_pulang9, {
+                color: 'red'
+            }).addTo(map1);
+            // DEPO SEMARANG
+            var latlngs_pulang10 = [
+                [-7.003762008571239, 110.4547271253569],
+                [-7.003741376561739, 110.4546278836248],
+                [-7.003783306128471, 110.45461983699788],
+                [-7.003805934781971, 110.4547117026553]
+            ];
+            var polygon_pulang10 = L.polygon(latlngs_pulang10, {
+                color: 'red'
+            }).addTo(map1);
+            // DEPO BANDUNG
+            var latlngs_pulang11 = [
+                [-6.887528841438018, 107.60032030611694],
+                [-6.887538161422427, 107.60048257975994],
+                [-6.887629364117361, 107.60047855644646],
+                [-6.887622041273895, 107.60032164722143]
+            ];
+            var polygon_pulang11 = L.polygon(latlngs_pulang11, {
+                color: 'red'
+            }).addTo(map1);
+            // DEPO SPS CIPINANG (JAKARTA)
+            var latlngs_pulang12 = [
+                [-6.21311187156196, 106.88544203302257],
+                [-6.2120446956529545, 106.88543065337363],
+                [-6.212025840935464, 106.88472511513999],
+                [-6.213168435595694, 106.88476684051939]
+            ];
+            var latlngs_pulang13 = [
+                [-6.211847347299506, 106.8808114012799],
+                [-6.211852680220818, 106.88181991185459],
+                [-6.212351308125068, 106.88182795848152],
+                [-6.212327310001449, 106.88079799023502]
+            ];
+            var polygon_pulang12 = L.polygon(latlngs_pulang12, {
+                color: 'red'
+            }).addTo(map1);
+            var polygon_pulang13 = L.polygon(latlngs_pulang13, {
+                color: 'red'
+            }).addTo(map1);
+        } else if (lokasi_kantor1 == 'DEPO SP SIDOARJO') {
+            var latlngs_pulang = [
+                [-7.361735, 112.784873],
+                [-7.361757, 112.785147],
+                [-7.362231, 112.785102],
+                [-7.362195, 112.784741]
+            ];
+            var polygon_pulang = L.polygon(latlngs_pulang, {
+                color: 'red'
+            }).addTo(map1);
+        } else if (lokasi_kantor1 == 'DEPO SP SAMARINDA') {
+            var latlngs_pulang = [
+                [-0.46124004439708466, 117.1890440835615],
+                [-0.4612392469974343, 117.18918363302389],
+                [-0.46134587505367874, 117.18918108680002],
+                [-0.4613312150395592, 117.18903673736563]
+            ];
+            var polygon_pulang = L.polygon(latlngs_pulang, {
+                color: 'red'
+            }).addTo(map1);
+        } else if (lokasi_kantor1 == 'DEPO SP DENPASAR') {
+            var latlngs_pulang = [
+                [-8.652895481207116, 115.20293696056507],
+                [-8.652912717125513, 115.2030294967747],
+                [-8.652755926596885, 115.20305008509402],
+                [-8.652733064463064, 115.2029671528421]
+            ];
+            var polygon_pulang = L.polygon(latlngs_pulang, {
+                color: 'red'
+            }).addTo(map1);
+        } else if (lokasi_kantor1 == 'DEPO SP MALANG') {
+            var latlngs_pulang = [
+                [-7.967760845267797, 112.65873922458452],
+                [-7.967798033683292, 112.65879957428648],
+                [-7.967823932756354, 112.65878616324159],
+                [-7.967790064737394, 112.65872983685311]
+            ];
+            var polygon_pulang = L.polygon(latlngs_pulang, {
+                color: 'red'
+            }).addTo(map1);
+        } else if (lokasi_kantor1 == 'DEPO SP PALANGKARAYA') {
+            var latlngs_pulang = [
+                [-2.1739101807413506, 113.864207945572],
+                [-2.1737446735313326, 113.86422269772137],
+                [-2.173735292555323, 113.86412814985499],
+                [-2.1739061603235093, 113.86411876212357]
+            ];
+            var polygon_pulang = L.polygon(latlngs_pulang, {
+                color: 'red'
+            }).addTo(map1);
+        } else if (lokasi_kantor1 == 'DEPO SP SEMARANG') {
+            var latlngs_pulang = [
+                [-7.003762008571239, 110.4547271253569],
+                [-7.003741376561739, 110.4546278836248],
+                [-7.003783306128471, 110.45461983699788],
+                [-7.003805934781971, 110.4547117026553]
+            ];
+            // SPS
+            var polygon_pulang = L.polygon(latlngs_pulang, {
+                color: 'red'
+            }).addTo(map1);
+        } else if (lokasi_kantor1 == 'DEPO SPS BANDUNG') {
+            var latlngs_pulang = [
+                [-6.887528841438018, 107.60032030611694],
+                [-6.887538161422427, 107.60048257975994],
+                [-6.887629364117361, 107.60047855644646],
+                [-6.887622041273895, 107.60032164722143]
+            ];
+            var polygon_pulang = L.polygon(latlngs_pulang, {
+                color: 'red'
+            }).addTo(map1);
+        } else if (lokasi_kantor1 == 'DEPO SPS CIPINANG (JAKARTA)') {
+            var latlngs_pulang = [
+                [-6.21311187156196, 106.88544203302257],
+                [-6.2120446956529545, 106.88543065337363],
+                [-6.212025840935464, 106.88472511513999],
+                [-6.213168435595694, 106.88476684051939]
+            ];
+            var latlngs_pulang1 = [
+                [-6.211847347299506, 106.8808114012799],
+                [-6.211852680220818, 106.88181991185459],
+                [-6.212351308125068, 106.88182795848152],
+                [-6.212327310001449, 106.88079799023502]
+            ];
+            var polygon_pulang = L.polygon(latlngs_pulang, {
+                color: 'red'
+            }).addTo(map1);
+            var polygon_pulang1 = L.polygon(latlngs_pulang1, {
+                color: 'red'
+            }).addTo(map1);
+
+        }
+        var location1 = <?php echo json_encode($location); ?>;
+        // console.log(location);
+        // console.log(location[1].nama_titik);
+        location1.forEach(function(obj) {
+            radius_pulang = obj.radius_titik;
+            var m_pulang = L.circle([obj.lat_titik, obj.long_titik], {
+                    color: 'purple',
+                    fillColor: 'purple',
+                    fillOpacity: 0.5,
+                    radius: radius_pulang
+                }).addTo(map1),
+                p_pulang = new L.Popup({
+                    autoClose: false,
+                    closeOnClick: false
+                })
+                .setContent(obj.nama_titik)
+                .setLatLng([obj.lat_titik, obj.long_titik]);
+            m_pulang.bindPopup(p_pulang).openPopup();
+        });
+        var marker_pulang = L.marker([lat_saya1, long_saya1]).addTo(map1)
+            .bindPopup(popupContent_pulang).openPopup();
+
+
+    }
 </script>
 <script>
     $(document).on('click', '#btn_klik', function(e) {
@@ -1256,6 +2561,18 @@
             },
         });
     });
+    window.onbeforeunload = function() {
+        Swal.fire({
+            allowOutsideClick: false,
+            background: 'transparent',
+            html: ' <div class="spinner-grow text-primary spinner-grow-sm me-2" role="status"></div><div class="spinner-grow text-primary spinner-grow-sm me-2" role="status"></div><div class="spinner-grow text-primary spinner-grow-sm me-2" role="status"></div>',
+            showCancelButton: false,
+            showConfirmButton: false,
+            onBeforeOpen: () => {
+                // Swal.showLoading()
+            },
+        });
+    };
 </script>
 <script>
     $("document").ready(function() {
@@ -1404,55 +2721,32 @@
     });
 </script>
 <script>
-    function get_notif_izin() {
+    function get_notif() {
         $.ajax({
             type: "GET",
-            url: "{{url('home/get_notif_izin')}}",
+            url: "{{url('home/get_notif')}}",
             success: function(data) {
                 $("#notif_izin").empty();
-                var izin = JSON.parse(data);
-                if (izin == 0) {
+                $("#notif_cuti").empty();
+                $("#notif_penugasan").empty();
+                if (data.count_izin == 0) {
                     $("#notif_izin").empty();
                 } else {
-                    $("#notif_izin").html(izin);
+                    $("#notif_izin").html(data.count_izin);
                 }
-            }
-        });
-    }
-
-    function get_notif_cuti() {
-        $.ajax({
-            type: "GET",
-            url: "{{url('home/get_notif_cuti')}}",
-            success: function(data) {
-                $("#notif_cuti").empty();
-                var cuti = JSON.parse(data);
-                if (cuti == 0) {
-                    $("#notif_cuti").empty();
+                if (data.count_cuti == 0) {
+                    $("#notif_izin").empty();
                 } else {
-                    $("#notif_cuti").html(cuti);
+                    $("#notif_izin").html(data.count_cuti);
                 }
-            }
-        });
-    }
-
-    function get_notif_penugasan() {
-        $.ajax({
-            type: "GET",
-            url: "{{url('home/get_notif_penugasan')}}",
-            success: function(data) {
-                $("#notif_penugasan").empty();
-                var penugasan = JSON.parse(data);
-                if (penugasan == 0) {
-                    $("#notif_penugasan").empty();
+                if (data.count_penugasan == 0) {
+                    $("#notif_izin").empty();
                 } else {
-                    $("#notif_penugasan").html(penugasan);
+                    $("#notif_izin").html(data.count_penugasan);
                 }
             }
         });
     }
-    setInterval(get_notif_cuti, 2000);
-    setInterval(get_notif_penugasan, 2000);
-    setInterval(get_notif_izin, 2000);
+    setInterval(get_notif, 2000);
 </script>
 @endsection

@@ -131,6 +131,18 @@
             <i class="fa-solid fa-xmark"></i>
         </button>
     </div>
+    @elseif(Session::has('tgldigunakan'))
+    <div id="alert_statuscutiediterror" class="alert alert-danger light alert-lg alert-dismissible fade show">
+        <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" class="me-2">
+            <polygon points="7.86 2 16.14 2 22 7.86 22 16.14 16.14 22 7.86 22 2 16.14 2 7.86 7.86 2"></polygon>
+            <line x1="15" y1="9" x2="9" y2="15"></line>
+            <line x1="9" y1="9" x2="15" y2="15"></line>
+        </svg>
+        <strong>Warning!</strong> Tanggal Sudah Kamu Gunakan.
+        <button class="btn-close" data-bs-dismiss="alert" aria-label="btn-close">
+            <i class="fa-solid fa-xmark"></i>
+        </button>
+    </div>
     @elseif(Session::has('statuscutiediterror'))
     <div id="alert_statuscutiediterror" class="alert alert-danger light alert-lg alert-dismissible fade show">
         <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" class="me-2">
@@ -281,7 +293,7 @@
                             </select>
                             @else
                             <input type="text" class="form-control" value="Pengganti" readonly>
-                            <select class="form-control" name="user_backup" required>
+                            <select class="form-control" name="user_backup">
                                 <option value="">Pilih Pengganti...</option>
                                 @foreach($get_user_backup as $data)
                                 <option value="{{$data->id}}">{{$data->fullname}}
@@ -307,7 +319,7 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="submit" class="btn btn-sm btn-primary float-right">Simpan</button>
+                        <button type="submit" id="btn_klik" class="btn btn-sm btn-primary float-right">Simpan</button>
                         <button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal">Close</button>
                     </div>
                 </form>
@@ -366,7 +378,7 @@
                 <div class="offcanvas-body text-center small">
                     <h5 class="title">FORM PENGAJUAN CUTI</h5>
                     <p>Apakah Anda Ingin Download Form Pengajuan Cuti?</p>
-                    <a id="btn_klik" href="{{url('/cuti/cetak_form_cuti/'.$record_data->id)}}" class="btn btn-sm btn-danger light pwa-btn">
+                    <a href="{{url('/cuti/cetak_form_cuti/cetak/'.$record_data->id)}}" class="btn btn-sm btn-danger light pwa-btn">
                         <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" fill="#000000" height="18" width="18" version="1.1" id="Capa_1" viewBox="0 0 48 48" xml:space="preserve">
                             <g>
                                 <g>
@@ -591,5 +603,17 @@
             },
         });
     });
+    window.onbeforeunload = function() {
+        Swal.fire({
+            allowOutsideClick: false,
+            background: 'transparent',
+            html: ' <div class="spinner-grow text-primary spinner-grow-sm me-2" role="status"></div><div class="spinner-grow text-primary spinner-grow-sm me-2" role="status"></div><div class="spinner-grow text-primary spinner-grow-sm me-2" role="status"></div>',
+            showCancelButton: false,
+            showConfirmButton: false,
+            onBeforeOpen: () => {
+                // Swal.showLoading()
+            },
+        });
+    };
 </script>
 @endsection

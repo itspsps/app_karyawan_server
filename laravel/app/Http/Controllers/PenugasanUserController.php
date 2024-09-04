@@ -969,33 +969,35 @@ class PenugasanUserController extends Controller
     }
     public function cetak_form_penugasan($id)
     {
-        $jabatan = Jabatan::join('users', function ($join) {
-            $join->on('jabatans.id', '=', 'users.jabatan_id');
-            $join->orOn('jabatans.id', '=', 'users.jabatan1_id');
-            $join->orOn('jabatans.id', '=', 'users.jabatan2_id');
-            $join->orOn('jabatans.id', '=', 'users.jabatan3_id');
-            $join->orOn('jabatans.id', '=', 'users.jabatan4_id');
-        })->where('users.id', Auth::user()->id)->get();
-        $divisi = Divisi::join('users', function ($join) {
-            $join->on('divisis.id', '=', 'users.divisi_id');
-            $join->orOn('divisis.id', '=', 'users.divisi1_id');
-            $join->orOn('divisis.id', '=', 'users.divisi2_id');
-            $join->orOn('divisis.id', '=', 'users.divisi3_id');
-            $join->orOn('divisis.id', '=', 'users.divisi4_id');
-        })->where('users.id', Auth::user()->id)->get();
-        $cuti = Pen::where('id', $id)->first();
-        $departemen = Departemen::where('id', Auth::user()->dept_id)->first();
-        $pengganti = User::where('id', $cuti->user_id_backup)->first();
+        $penugasan = Penugasan::join('users', 'users.id', 'penugasans.id_user')->where('penugasans.id', $id)->first();
+        $penugasan1 = Penugasan::join('users', 'users.id', 'penugasans.id_diminta_oleh')->where('penugasans.id', $id)->first();
+        $penugasan2 = Penugasan::join('users', 'users.id', 'penugasans.id_disahkan_oleh')->where('penugasans.id', $id)->first();
+        $departemen = Departemen::where('id', $penugasan->id_departemen)->first();
+        $divisi = Divisi::where('id', $penugasan->id_divisi)->first();
+        $jabatan = Jabatan::where('id', $penugasan->id_jabatan)->first();
+        $departemen1 = Departemen::where('id', $penugasan1->dept_id)->first();
+        $divisi1 = Divisi::where('id', $penugasan1->divisi_id)->first();
+        $jabatan1 = Jabatan::where('id', $penugasan1->jabatan_id)->first();
+        $departemen2 = Departemen::where('id', $penugasan2->dept_id)->first();
+        $divisi2 = Divisi::where('id', $penugasan2->divisi_id)->first();
+        $jabatan2 = Jabatan::where('id', $penugasan2->jabatan_id)->first();
+        $pengganti = User::where('id', $penugasan->user_id_backup)->first();
         // dd(Cuti::with('KategoriCuti')->with('User')->where('cutis.id', $id)->where('cutis.status_cuti', '3')->first());
         $data = [
             'title' => 'domPDF in Laravel 10',
-            'data_cuti' => Cuti::with('KategoriCuti')->with('User')->where('cutis.id', $id)->where('cutis.status_cuti', '3')->first(),
+            'data_penugasan' => Penugasan::with('User')->where('penugasans.id', $id)->where('penugasans.status_penugasan', '5')->first(),
             'jabatan' => $jabatan,
             'divisi' => $divisi,
             'departemen' => $departemen,
+            'jabatan1' => $jabatan1,
+            'divisi1' => $divisi1,
+            'departemen1' => $departemen1,
+            'jabatan2' => $jabatan2,
+            'divisi2' => $divisi2,
+            'departemen2' => $departemen2,
             'pengganti' => $pengganti,
         ];
-        $pdf = PDF::loadView('users/cuti/form_cuti', $data);
-        return $pdf->download('FORM_PENGAJUAN_CUTI_' . Auth::user()->name . '_' . date('Y-m-d H:i:s') . '.pdf');
+        $pdf = PDF::loadView('users/penugasan/form_penugasan', $data)->setPaper('F4', 'landscape');;
+        return $pdf->stream('FORM_PENGAJUAN_PENUGASAN_' . Auth::user()->name . '_' . date('Y-m-d H:i:s') . '.pdf');
     }
 }

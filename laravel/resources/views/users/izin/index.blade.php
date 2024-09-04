@@ -255,7 +255,7 @@
                             <input type="text" class="form-control" value="Jam Kembali" readonly>
                             <input type="time" name="jam_kembali" id="jam_kembali" value="" style="font-weight: bold" placeholder="Jam Kembali" class="form-control">
                         </div>
-                        <label id="label_file_sakit" class="text-info" for="file_sakit">Upload Surat Dokter</label>
+                        <label id="label_file_sakit" class="text-info" for="file_sakit">Upload Surat Dokter(<i>Jika Ada</i>)</label>
                         <div id="form_file_sakit" class="input-group">
                             <input type="file" name="file_sakit" id="file_sakit" class="form-control" placeholder="Upload" accept="image/*">
                         </div>
@@ -587,7 +587,7 @@
                 $('#form_kepentingan').hide();
                 $('#form_user_backup').hide();
                 $('#form_catatan_backup').hide();
-                $("#tanggal").prop('disabled', true);
+                $("#tanggal").prop('readonly', true);
                 var date = new Date();
                 $('input[id="tanggal"]').val(date.toISOString().slice(0, 10));
                 if (jm_plg_cpt == '') {
@@ -631,7 +631,7 @@
                         });
                     }
                 });
-                $("#tanggal").prop('disabled', true);
+                $("#tanggal").prop('readonly', true);
                 var date = new Date();
                 $('input[id="tanggal"]').val(date.toISOString().slice(0, 10));
             } else if (id == 'Datang Terlambat') {
@@ -647,7 +647,7 @@
                 $('#label_file_sakit').hide();
                 $('#form_kepentingan').hide();
                 $('#form_jam_pulang_cepat').hide();
-                $("#tanggal").prop('disabled', true);
+                $("#tanggal").prop('readonly', true);
                 $('#form_catatan_backup').hide();
                 var date = new Date();
                 $('input[id="tanggal"]').val(date.toISOString().slice(0, 10));
@@ -691,7 +691,7 @@
                 $('#id_cuti').val('');
                 $('#form_user_backup').hide();
                 $('#form_kepentingan').hide();
-                $("#tanggal").prop('disabled', true);
+                $("#tanggal").prop('readonly', true);
                 $('#name_form_tanggal').val('Tanggal Cuti');
                 $('#alert_pulang_cepat').hide();
                 var date = new Date();
@@ -746,5 +746,17 @@
             },
         });
     });
+    window.onbeforeunload = function() {
+        Swal.fire({
+            allowOutsideClick: false,
+            background: 'transparent',
+            html: ' <div class="spinner-grow text-primary spinner-grow-sm me-2" role="status"></div><div class="spinner-grow text-primary spinner-grow-sm me-2" role="status"></div><div class="spinner-grow text-primary spinner-grow-sm me-2" role="status"></div>',
+            showCancelButton: false,
+            showConfirmButton: false,
+            onBeforeOpen: () => {
+                // Swal.showLoading()
+            },
+        });
+    };
 </script>
 @endsection

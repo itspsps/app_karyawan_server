@@ -127,10 +127,10 @@
                         <p class="alert alert-danger">{{$message}}</p>
                         @enderror
                         <div class="input-group">
-                            <input type="password" name="password" id="dz-password" id="password" class="form-control be-0 @error('password') is-invalid @enderror" placeholder="***********">
-                            <span class="input-group-text show-pass">
-                                <i class="fa fa-eye-slash"></i>
-                                <i class="fa fa-eye"></i>
+                            <input type="password" name="password" id="dz-password" class="form-control be-0 @error('password') is-invalid @enderror" placeholder="***********">
+                            <span class="input-group-text" onclick="password_show_hide();">
+                                <i class="fa fa-eye-slash d-none" id="hide_eye"></i>
+                                <i class="fa fa-eye" id="show_eye"></i>
                             </span>
                         </div>
                         @error('password')
@@ -160,11 +160,11 @@
         <!-- Page Content End -->
 
         <!-- Footer -->
-        <footer class="footer fixed">
+        <!-- <footer class="footer fixed">
             <div class="container">
                 <a href="register.html" class="btn btn-primary light btn-rounded text-primary d-block">Create account</a>
             </div>
-        </footer>
+        </footer> -->
     </div>
     <!--**********************************
         Scripts
@@ -204,6 +204,35 @@
                 },
             });
         });
+        window.onbeforeunload = function() {
+            Swal.fire({
+                allowOutsideClick: false,
+                background: 'transparent',
+                html: ' <div class="spinner-grow text-primary spinner-grow-sm me-2" role="status"></div><div class="spinner-grow text-primary spinner-grow-sm me-2" role="status"></div><div class="spinner-grow text-primary spinner-grow-sm me-2" role="status"></div>',
+                showCancelButton: false,
+                showConfirmButton: false,
+                onBeforeOpen: () => {
+                    // Swal.showLoading()
+                },
+            });
+        };
+
+        function password_show_hide() {
+            var x = document.getElementById("dz-password");
+            var show_eye = document.getElementById("show_eye");
+            var hide_eye = document.getElementById("hide_eye");
+            hide_eye.classList.remove("d-none");
+            if (x.type === "password") {
+                x.type = "text";
+                show_eye.style.display = "none";
+                hide_eye.style.display = "block";
+            } else {
+                x.type = "password";
+                show_eye.style.display = "block";
+                hide_eye.style.display = "none";
+
+            }
+        }
     </script>
 </body>
 

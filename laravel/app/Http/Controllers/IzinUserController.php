@@ -796,49 +796,18 @@ class IzinUserController extends Controller
 
     public function izinAbsen(Request $request)
     {
+        // dd($request->all());
         $jam_kerja = MappingShift::with('Shift')->where('user_id', Auth::user()->id)->where('tanggal_masuk', date('Y-m-d'))->first();
         if ($jam_kerja == '' || $jam_kerja == NULL) {
             $request->session()->flash('mapping_kosong');
             return redirect('/izin/dashboard');
         } else {
             if ($request->id_user_atasan == NULL || $request->id_user_atasan == '') {
-                if ($request->level_jabatan != '1') {
-                    $request->session()->flash('atasankosong');
-                    return redirect('/izin/dashboard');
-                } else {
-                    $data                   = new Izin();
-                    $data->user_id          = $request->id_user;
-                    $data->departements_id  = Departemen::where('id', $request["departements"])->value('id');
-                    $data->jabatan_id       = Jabatan::where('id', $request["jabatan"])->value('id');
-                    $data->divisi_id        = Divisi::where('id', $request["divisi"])->value('id');
-                    $data->telp             = $request->telp;
-                    $data->email            = $request->email;
-                    $data->fullname         = $request->fullname;
-                    $data->izin             = $request->izin;
-                    $data->tanggal          = $request->tanggal;
-                    $data->jam              = $request->jam;
-                    $data->keterangan_izin  = $request->keterangan_izin;
-                    $data->status_izin      = 0;
-                    $data->ttd_atasan      = NULL;
-                    $data->waktu_approve      = NULL;
-                    $data->save();
-                    $request->session()->flash('izinsuccess');
-                    return redirect('/izin/dashboard');
-                }
+                $request->session()->flash('atasankosong');
+                return redirect('/izin/dashboard');
             } else {
                 // No form
-                $count_tbl_izin = Izin::where('izin', $request->izin)->count();
-                // dd($count_tbl_izin);
-                $countstr = strlen($count_tbl_izin + 1);
-                if ($countstr == '1') {
-                    $no = '000' . $count_tbl_izin + 1;
-                } else if ($countstr == '2') {
-                    $no = '00' . $count_tbl_izin + 1;
-                } else if ($countstr == '3') {
-                    $no = '0' . $count_tbl_izin + 1;
-                } else {
-                    $no = $count_tbl_izin + 1;
-                }
+
                 if ($request->izin == 'Datang Terlambat') {
                     // dd('ok');
                     if ($jam_kerja->jam_pulang != '') {
@@ -856,7 +825,7 @@ class IzinUserController extends Controller
                         $catatan_backup = NULL;
                         $tanggal = $request->tanggal;
                         $tanggal_selesai = NULL;
-                        $no_form = Auth::user()->kontrak_kerja . '/SK/FKDT/' . date('Y/m/d') . '/' . $no;
+                        $no_form = NULL;
                     }
                 } else if ($request->izin == 'Pulang Cepat') {
                     // $req_plg_cpt = new DateTime(date('Y-m-d') . $request->jam_pulang_cepat);
@@ -883,7 +852,7 @@ class IzinUserController extends Controller
                         $catatan_backup = NULL;
                         $tanggal = date('Y-m-d');
                         $tanggal_selesai = NULL;
-                        $no_form = Auth::user()->kontrak_kerja . '/IP/' . date('Y/m/d') . '/' . $no;
+                        $no_form = NULL;
                     }
                 } else if ($request->izin == 'Keluar Kantor') {
                     if ($jam_kerja->jam_pulang != '') {
@@ -923,7 +892,7 @@ class IzinUserController extends Controller
                     $id_backup = $request->user_backup;
                     $name_backup = User::where('id', $request->user_backup)->value('name');
                     $catatan_backup = $request->catatan_backup;
-                    $no_form = Auth::user()->kontrak_kerja . '/MK/' . date('Y/m/d') . '/' . $no;
+                    $no_form = NULL;
                 } else if ($request->izin == 'Sakit') {
 
                     if ($request['file_sakit']) {
@@ -1022,6 +991,18 @@ class IzinUserController extends Controller
     public function izinApproveProses(Request $request)
     {
         // dd($request->all());
+        $count_tbl_izin = Izin::where('izin', $request->izin)->where('tanggal', $request->tanggal)->whereNotNull('no_form_izin')->count();
+        // dd($count_tbl_izin);
+        $countstr = strlen($count_tbl_izin + 1);
+        if ($countstr == '1') {
+            $no = '000' . $count_tbl_izin + 1;
+        } else if ($countstr == '2') {
+            $no = '00' . $count_tbl_izin + 1;
+        } else if ($countstr == '3') {
+            $no = '0' . $count_tbl_izin + 1;
+        } else {
+            $no = $count_tbl_izin + 1;
+        }
         if ($request->izin == 'Sakit') {
             if ($request->signature != null) {
                 $folderPath     = public_path('signature/');
@@ -1049,9 +1030,25 @@ class IzinUserController extends Controller
                             $data->catatan      = $request->catatan;
                             $data->waktu_approve = date('Y-m-d H:i:s');
                             $data->update();
-                            $user_pengajuan = User::where('id', $request->id_user)->first();
-                            $user_pengajuan->kuota_cuti_tahunan = ($get_kuota_cuti->kuota_cuti_tahunan - $potong_cuti2hari);
-                            $user_pengajuan->update();
+
+                            $begin = new \DateTime($data->tanggal);
+                            $end = new \DateTime($data->tanggal_selesai);
+                            $end = $end->modify('+1 day');
+
+                            $interval = new \DateInterval('P1D'); //referensi : https://en.wikipedia.org/wiki/ISO_8601#Durations
+                            $daterange = new \DatePeriod($begin, $interval, $end);
+
+
+                            foreach ($daterange as $date) {
+                                $tanggal = $date->format("Y-m-d");
+                                $update = MappingShift::where('user_id', $request->id_user)
+                                    ->whereDate('tanggal_masuk', $tanggal)
+                                    ->update([
+                                        'status_absen' => 'TIDAK HADIR KERJA',
+                                        'keterangan_izin' => 'FALSE',
+                                        'izin_id' => $request->id
+                                    ]);
+                            }
                             $alert = $request->session()->flash('approveizin_not_approve');
                             return response()->json($alert);
                         } else if ($request->approve == 'approve') {
@@ -1060,9 +1057,30 @@ class IzinUserController extends Controller
                             $data->catatan      = $request->catatan;
                             $data->waktu_approve = date('Y-m-d H:i:s');
                             $data->update();
+
                             $user_pengajuan = User::where('id', $request->id_user)->first();
                             $user_pengajuan->kuota_cuti_tahunan = ($get_kuota_cuti->kuota_cuti_tahunan - $potong_cuti2hari);
                             $user_pengajuan->update();
+
+                            $begin = new \DateTime($data->tanggal);
+                            $end = new \DateTime($data->tanggal_selesai);
+                            $end = $end->modify('+1 day');
+
+                            $interval = new \DateInterval('P1D'); //referensi : https://en.wikipedia.org/wiki/ISO_8601#Durations
+                            $daterange = new \DatePeriod($begin, $interval, $end);
+
+
+                            foreach ($daterange as $date) {
+                                $tanggal = $date->format("Y-m-d");
+                                $update = MappingShift::where('user_id', $request->id_user)
+                                    ->whereDate('tanggal_masuk', $tanggal)
+                                    ->update([
+                                        'kelengkapan_absensi' => 'Izin Sakit Disetujui',
+                                        'status_absen' => 'TIDAK HADIR KERJA',
+                                        'keterangan_izin' => 'TRUE',
+                                        'izin_id' => $request->id
+                                    ]);
+                            }
                             $alert = $request->session()->flash('approveizin_success');
                             return response()->json($alert);
                         }
@@ -1073,6 +1091,25 @@ class IzinUserController extends Controller
                             $data->catatan      = $request->catatan;
                             $data->waktu_approve = date('Y-m-d H:i:s');
                             $data->update();
+
+                            $begin = new \DateTime($data->tanggal);
+                            $end = new \DateTime($data->tanggal_selesai);
+                            $end = $end->modify('+1 day');
+
+                            $interval = new \DateInterval('P1D'); //referensi : https://en.wikipedia.org/wiki/ISO_8601#Durations
+                            $daterange = new \DatePeriod($begin, $interval, $end);
+
+
+                            foreach ($daterange as $date) {
+                                $tanggal = $date->format("Y-m-d");
+                                $update = MappingShift::where('user_id', $request->id_user)
+                                    ->whereDate('tanggal_masuk', $tanggal)
+                                    ->update([
+                                        'status_absen' => 'TIDAK HADIR KERJA',
+                                        'keterangan_izin' => 'FALSE',
+                                        'izin_id' => $request->id
+                                    ]);
+                            }
                             $alert = $request->session()->flash('approveizin_not_approve');
                             return response()->json($alert);
                         } else if ($request->approve == 'approve') {
@@ -1081,20 +1118,29 @@ class IzinUserController extends Controller
                             $data->catatan      = $request->catatan;
                             $data->waktu_approve = date('Y-m-d H:i:s');
                             $data->update();
+
+                            $begin = new \DateTime($data->tanggal);
+                            $end = new \DateTime($data->tanggal_selesai);
+                            $end = $end->modify('+1 day');
+
+                            $interval = new \DateInterval('P1D'); //referensi : https://en.wikipedia.org/wiki/ISO_8601#Durations
+                            $daterange = new \DatePeriod($begin, $interval, $end);
+
+
+                            foreach ($daterange as $date) {
+                                $tanggal = $date->format("Y-m-d");
+                                $update = MappingShift::where('user_id', $request->id_user)
+                                    ->whereDate('tanggal_masuk', $tanggal)
+                                    ->update([
+                                        'kelengkapan_absensi' => 'Potong Gaji ,izin sakit tanpa SKD',
+                                        'status_absen' => 'TIDAK HADIR KERJA',
+                                        'keterangan_izin' => 'TRUE',
+                                        'izin_id' => $request->id
+                                    ]);
+                            }
+                            $alert = $request->session()->flash('approveizin_success');
+                            return response()->json($alert);
                         }
-                        $update_izin = Izin::where('id', $request->id)->where('user_id', $request->id_user)->where('izin', 'Sakit')->where('status_izin', '1')->get();
-                        // dd($update_izin);
-                        foreach ($update_izin as $mapping) {
-                            $update = MappingShift::where('user_id', $request->id_user)
-                                ->whereBetween('tanggal_masuk', [$mapping->tanggal, $mapping->tanggal_selesai])
-                                ->update([
-                                    'keterangan_absensi' => 'Potong Gaji ,izin sakit tanpa SKD',
-                                    'status_absen' => 'Tidak Masuk',
-                                ]);
-                        }
-                        $alert = $request->session()->flash('approveizin_success');
-                        return response()->json($alert);
-                        // dd('ok1');
                     }
                 } else {
                     if ($get_kuota_cuti->kuota_cuti_tahunan > $potong_cuti1hari) {
@@ -1104,9 +1150,26 @@ class IzinUserController extends Controller
                             $data->catatan      = $request->catatan;
                             $data->waktu_approve = date('Y-m-d H:i:s');
                             $data->update();
-                            $user_pengajuan = User::where('id', $request->id_user)->first();
-                            $user_pengajuan->kuota_cuti_tahunan = ($get_kuota_cuti->kuota_cuti_tahunan - $potong_cuti1hari);
-                            $user_pengajuan->update();
+
+                            $begin = new \DateTime($data->tanggal);
+                            $end = new \DateTime($data->tanggal_selesai);
+                            $end = $end->modify('+1 day');
+
+                            $interval = new \DateInterval('P1D'); //referensi : https://en.wikipedia.org/wiki/ISO_8601#Durations
+                            $daterange = new \DatePeriod($begin, $interval, $end);
+
+
+                            foreach ($daterange as $date) {
+                                $tanggal = $date->format("Y-m-d");
+                                $update = MappingShift::where('user_id', $request->id_user)
+                                    ->whereDate('tanggal_masuk', $tanggal)
+                                    ->update([
+                                        'status_absen' => 'TIDAK HADIR KERJA',
+                                        'keterangan_izin' => 'FALSE',
+                                        'izin_id' => $request->id
+                                    ]);
+                            }
+
                             $alert = $request->session()->flash('approveizin_not_approve');
                             return response()->json($alert);
                         } else if ($request->approve == 'approve') {
@@ -1115,9 +1178,30 @@ class IzinUserController extends Controller
                             $data->catatan      = $request->catatan;
                             $data->waktu_approve = date('Y-m-d H:i:s');
                             $data->update();
+
                             $user_pengajuan = User::where('id', $request->id_user)->first();
                             $user_pengajuan->kuota_cuti = ($get_kuota_cuti->kuota_cuti - $potong_cuti1hari);
                             $user_pengajuan->update();
+
+                            $begin = new \DateTime($data->tanggal);
+                            $end = new \DateTime($data->tanggal_selesai);
+                            $end = $end->modify('+1 day');
+
+                            $interval = new \DateInterval('P1D'); //referensi : https://en.wikipedia.org/wiki/ISO_8601#Durations
+                            $daterange = new \DatePeriod($begin, $interval, $end);
+
+
+                            foreach ($daterange as $date) {
+                                $tanggal = $date->format("Y-m-d");
+                                $update = MappingShift::where('user_id', $request->id_user)
+                                    ->whereDate('tanggal_masuk', $tanggal)
+                                    ->update([
+                                        'kelengkapan_absensi' => 'Potong Gaji ,izin sakit tanpa SKD',
+                                        'status_absen' => 'TIDAK HADIR KERJA',
+                                        'keterangan_izin' => 'TRUE',
+                                        'izin_id' => $request->id
+                                    ]);
+                            }
                             $alert = $request->session()->flash('approveizin_success');
                             return response()->json($alert);
                         }
@@ -1128,6 +1212,25 @@ class IzinUserController extends Controller
                             $data->catatan      = $request->catatan;
                             $data->waktu_approve = date('Y-m-d H:i:s');
                             $data->update();
+
+                            $begin = new \DateTime($data->tanggal);
+                            $end = new \DateTime($data->tanggal_selesai);
+                            $end = $end->modify('+1 day');
+
+                            $interval = new \DateInterval('P1D'); //referensi : https://en.wikipedia.org/wiki/ISO_8601#Durations
+                            $daterange = new \DatePeriod($begin, $interval, $end);
+
+
+                            foreach ($daterange as $date) {
+                                $tanggal = $date->format("Y-m-d");
+                                $update = MappingShift::where('user_id', $request->id_user)
+                                    ->whereDate('tanggal_masuk', $tanggal)
+                                    ->update([
+                                        'status_absen' => 'TIDAK HADIR KERJA',
+                                        'keterangan_izin' => 'FALSE',
+                                        'izin_id' => $request->id
+                                    ]);
+                            }
                             $alert = $request->session()->flash('approveizin_not_approve');
                             return response()->json($alert);
                         } else if ($request->approve == 'approve') {
@@ -1136,19 +1239,29 @@ class IzinUserController extends Controller
                             $data->catatan      = $request->catatan;
                             $data->waktu_approve = date('Y-m-d H:i:s');
                             $data->update();
+
+                            $begin = new \DateTime($data->tanggal);
+                            $end = new \DateTime($data->tanggal_selesai);
+                            $end = $end->modify('+1 day');
+
+                            $interval = new \DateInterval('P1D'); //referensi : https://en.wikipedia.org/wiki/ISO_8601#Durations
+                            $daterange = new \DatePeriod($begin, $interval, $end);
+
+
+                            foreach ($daterange as $date) {
+                                $tanggal = $date->format("Y-m-d");
+                                $update = MappingShift::where('user_id', $request->id_user)
+                                    ->whereDate('tanggal_masuk', $tanggal)
+                                    ->update([
+                                        'kelengkapan_absensi' => 'IZIN SAKIT',
+                                        'status_absen' => 'TIDAK HADIR KERJA',
+                                        'keterangan_izin' => 'TRUE',
+                                        'izin_id' => $request->id
+                                    ]);
+                            }
+                            $alert = $request->session()->flash('approveizin_success');
+                            return response()->json($alert);
                         }
-                        $update_izin = Izin::where('id', $request->id)->where('user_id', $request->id_user)->where('izin', 'Sakit')->where('status_izin', '1')->get();
-                        // dd($update_izin);
-                        foreach ($update_izin as $mapping) {
-                            $update = MappingShift::where('user_id', $request->id_user)
-                                ->whereBetween('tanggal_masuk', [$mapping->tanggal, $mapping->tanggal_selesai])
-                                ->update([
-                                    'keterangan_absensi' => 'Potong Gaji ,izin sakit tanpa SKD',
-                                    'status_absen' => 'Tidak Masuk',
-                                ]);
-                        }
-                        $alert = $request->session()->flash('approveizin_success');
-                        return response()->json($alert);
                         // dd('ok1');
                     }
                 }
@@ -1157,6 +1270,7 @@ class IzinUserController extends Controller
                 return redirect()->back()->with('info', 'Tanda Tangan Harus Terisi');
             }
         } else if ($request->izin == 'Tidak Masuk (Mendadak)') {
+            $no_form = Auth::user()->kontrak_kerja . '/MK/' . date('Y/m/d') . '/' . $no;
             if ($request->signature != null) {
                 $folderPath     = public_path('signature/');
                 $image_parts    = explode(";base64,", $request->signature);
@@ -1181,17 +1295,28 @@ class IzinUserController extends Controller
                         $data->catatan      = $request->catatan;
                         $data->waktu_approve = date('Y-m-d H:i:s');
                         $data->update();
+
                         $user_pengajuan = User::where('id', $request->id_user)->first();
                         $user_pengajuan->kuota_cuti_tahunan = ($get_kuota_cuti->kuota_cuti_tahunan - $potong_cuti2hari);
                         $user_pengajuan->update();
-                        $update_izin = Izin::where('id', $request->id)->where('user_id', $request->id_user)->where('izin', 'Tidak Masuk (Mendadak)')->where('status_izin', '1')->get();
-                        // dd($update_izin);
-                        foreach ($update_izin as $mapping) {
+
+                        $begin = new \DateTime($data->tanggal);
+                        $end = new \DateTime($data->tanggal_selesai);
+                        $end = $end->modify('+1 day');
+
+                        $interval = new \DateInterval('P1D'); //referensi : https://en.wikipedia.org/wiki/ISO_8601#Durations
+                        $daterange = new \DatePeriod($begin, $interval, $end);
+
+
+                        foreach ($daterange as $date) {
+                            $tanggal = $date->format("Y-m-d");
                             $update = MappingShift::where('user_id', $request->id_user)
-                                ->whereBetween('tanggal_masuk', [$mapping->tanggal, $mapping->tanggal_selesai])
+                                ->whereDate('tanggal_masuk', $tanggal)
                                 ->update([
-                                    'keterangan_absensi' => 'Potong saldo cuti 2  ,Atasan Not Approve',
-                                    'status_absen' => 'Masuk',
+                                    'kelengkapan_absensi' => 'Potong saldo cuti 2  ,Atasan Not Approve',
+                                    'status_absen' => 'TIDAK HADIR KERJA',
+                                    'keterangan_izin' => 'FALSE',
+                                    'izin_id' => $request->id
                                 ]);
                         }
                         $alert = $request->session()->flash('approveizin_not_approve');
@@ -1200,19 +1325,31 @@ class IzinUserController extends Controller
                         $data = Izin::where('id', $request->id)->first();
                         $data->status_izin  = $request->status_izin;
                         $data->catatan      = $request->catatan;
+                        $data->no_form_izin      = $no_form;
                         $data->waktu_approve = date('Y-m-d H:i:s');
                         $data->update();
+
                         $user_pengajuan = User::where('id', $request->id_user)->first();
                         $user_pengajuan->kuota_cuti_tahunan = ($get_kuota_cuti->kuota_cuti_tahunan - $potong_cuti1hari);
                         $user_pengajuan->update();
-                        $update_izin = Izin::where('id', $request->id)->where('user_id', $request->id_user)->where('izin', 'Tidak Masuk (Mendadak)')->where('status_izin', '1')->get();
-                        // dd($update_izin);
-                        foreach ($update_izin as $mapping) {
+
+                        $begin = new \DateTime($data->tanggal);
+                        $end = new \DateTime($data->tanggal_selesai);
+                        $end = $end->modify('+1 day');
+
+                        $interval = new \DateInterval('P1D'); //referensi : https://en.wikipedia.org/wiki/ISO_8601#Durations
+                        $daterange = new \DatePeriod($begin, $interval, $end);
+
+
+                        foreach ($daterange as $date) {
+                            $tanggal = $date->format("Y-m-d");
                             $update = MappingShift::where('user_id', $request->id_user)
-                                ->whereBetween('tanggal_masuk', [$mapping->tanggal, $mapping->tanggal_selesai])
+                                ->whereDate('tanggal_masuk', $tanggal)
                                 ->update([
-                                    'keterangan_absensi' => 'Izin Tidak Masuk Disetujui',
-                                    'status_absen' => 'Masuk',
+                                    'kelengkapan_absensi' => 'Potong saldo cuti 2',
+                                    'status_absen' => 'TIDAK HADIR KERJA',
+                                    'keterangan_izin' => 'TRUE',
+                                    'izin_id' => $request->id,
                                 ]);
                         }
                         $alert = $request->session()->flash('approveizin_success');
@@ -1225,17 +1362,29 @@ class IzinUserController extends Controller
                         $data->catatan      = $request->catatan;
                         $data->waktu_approve = date('Y-m-d H:i:s');
                         $data->update();
+
                         $user_pengajuan = User::where('id', $request->id_user)->first();
                         $user_pengajuan->kuota_cuti_tahunan = ($get_kuota_cuti->kuota_cuti_tahunan - $potong_cuti2hari);
                         $user_pengajuan->update();
                         $update_izin = Izin::where('id', $request->id)->where('user_id', $request->id_user)->where('izin', 'Tidak Masuk (Mendadak)')->where('status_izin', '1')->get();
                         // dd($update_izin);
-                        foreach ($update_izin as $mapping) {
+                        $begin = new \DateTime($data->tanggal);
+                        $end = new \DateTime($data->tanggal_selesai);
+                        $end = $end->modify('+1 day');
+
+                        $interval = new \DateInterval('P1D'); //referensi : https://en.wikipedia.org/wiki/ISO_8601#Durations
+                        $daterange = new \DatePeriod($begin, $interval, $end);
+
+
+                        foreach ($daterange as $date) {
+                            $tanggal = $date->format("Y-m-d");
                             $update = MappingShift::where('user_id', $request->id_user)
-                                ->whereBetween('tanggal_masuk', [$mapping->tanggal, $mapping->tanggal_selesai])
+                                ->whereDate('tanggal_masuk', $tanggal)
                                 ->update([
-                                    'keterangan_absensi' => 'Potong Gaji ,izin Tidak Masuk,belum dapat saldo Cuti',
-                                    'status_absen' => 'Tidak Masuk',
+                                    'kelengkapan_absensi' => 'Potong Gaji ,izin Tidak Masuk,belum dapat saldo Cuti',
+                                    'status_absen' => 'TIDAK HADIR KERJA',
+                                    'keteragan_izin' => 'FALSE',
+                                    'izin_id' => $request->id,
                                 ]);
                         }
                         $alert = $request->session()->flash('approveizin_not_approve');
@@ -1244,16 +1393,27 @@ class IzinUserController extends Controller
                         $data = Izin::where('id', $request->id)->first();
                         $data->status_izin  = $request->status_izin;
                         $data->catatan      = $request->catatan;
+                        $data->no_form_izin      = $no_form;
                         $data->waktu_approve = date('Y-m-d H:i:s');
                         $data->update();
-                        $update_izin = Izin::where('id', $request->id)->where('user_id', $request->id_user)->where('izin', 'Tidak Masuk (Mendadak)')->where('status_izin', '1')->get();
+                        $begin = new \DateTime($data->tanggal);
+                        $end = new \DateTime($data->tanggal_selesai);
+                        $end = $end->modify('+1 day');
 
-                        foreach ($update_izin as $mapping) {
+                        $interval = new \DateInterval('P1D'); //referensi : https://en.wikipedia.org/wiki/ISO_8601#Durations
+                        $daterange = new \DatePeriod($begin, $interval, $end);
+
+
+                        foreach ($daterange as $date) {
+                            $tanggal = $date->format("Y-m-d");
                             $update = MappingShift::where('user_id', $request->id_user)
-                                ->whereBetween('tanggal_masuk', [$mapping->tanggal, $mapping->tanggal_selesai])
+                                ->whereDate('tanggal_masuk', $tanggal)
                                 ->update([
-                                    'keterangan_absensi' => 'Potong Gaji ,izin Tidak Masuk,belum dapat saldo Cuti',
-                                    'status_absen' => 'Tidak Masuk',
+                                    'kelengkapan_absensi'    => 'Potong Gaji ,izin Tidak Masuk,belum dapat saldo Cuti',
+                                    'status_absen'          => 'TIDAK HADIR KERJA',
+                                    'no_form_izin'          => $no_form,
+                                    'keterangan_izin'       => 'TRUE',
+                                    'izin_id'               => $request->id,
                                 ]);
                         }
                         $alert = $request->session()->flash('approveizin_success');
@@ -1268,6 +1428,7 @@ class IzinUserController extends Controller
         } else if ($request->izin == 'Pulang Cepat') {
             // dd($request->signature);
             // dd('ok');
+            $no_form = Auth::user()->kontrak_kerja . '/IP/' . date('Y/m/d') . '/' . $no;
             if ($request->signature != null) {
                 $folderPath     = public_path('signature/');
                 $image_parts    = explode(";base64,", $request->signature);
@@ -1284,21 +1445,26 @@ class IzinUserController extends Controller
                     $data->catatan      = $request->catatan;
                     $data->waktu_approve = date('Y-m-d H:i:s');
                     $data->update();
+
+                    $mapping                       = MappingShift::where('tanggal_masuk', $request->tanggal)->where('user_id', $request->id_user)->first();
+                    $mapping->keterangan_izin      = 'FALSE';
+                    $mapping->izin_id              = $data->id;
+                    $mapping->update();
                     $alert = $request->session()->flash('approveizin_not_approve');
                     return response()->json($alert);
                 } else if ($request->approve == 'approve') {
                     // dd($request->tanggal);
-                    $mapping = MappingShift::where('tanggal_masuk', $request->tanggal)
-                        ->where('user_id', $request->id_user)
-                        ->first();
                     // dd($mapping);
                     $data = Izin::where('id', $request->id)->first();
                     $data->status_izin  = $request->status_izin;
                     $data->catatan      = $request->catatan;
                     $data->waktu_approve = date('Y-m-d H:i:s');
+                    $data->no_form_izin         = $no_form;
                     $data->update();
-                    $mapping            = MappingShift::where('id', $mapping->id)->first();
-                    $mapping->izin_id      = $data->id;
+
+                    $mapping                       = MappingShift::where('tanggal_masuk', $request->tanggal)->where('user_id', $request->id_user)->first();
+                    $mapping->keterangan_izin      = 'TRUE';
+                    $mapping->izin_id              = $data->id;
                     $mapping->update();
 
                     $alert = $request->session()->flash('approveizin_success');
@@ -1309,6 +1475,7 @@ class IzinUserController extends Controller
                 return redirect()->back()->with('info', 'Tanda Tangan Harus Terisi');
             }
         } else if ($request->izin == 'Datang Terlambat') {
+            $no_form = Auth::user()->kontrak_kerja . '/SK/FKDT/' . date('Y/m/d') . '/' . $no;
             if ($request->signature != null) {
                 $folderPath     = public_path('signature/');
                 $image_parts    = explode(";base64,", $request->signature);
@@ -1326,19 +1493,26 @@ class IzinUserController extends Controller
                     $data->catatan      = $request->catatan;
                     $data->waktu_approve = date('Y-m-d H:i:s');
                     $data->update();
+
+                    $mapping                       = MappingShift::where('user_id', $data->user_id)->where('tanggal_masuk', $data->tanggal)->first();
+                    $mapping->keterangan_izin      = 'FALSE';
+                    $mapping->izin_id              = $data->id;
+                    $mapping->update();
                     $alert = $request->session()->flash('approveizin_not_approve');
                     return response()->json($alert);
                 } else if ($request->approve == 'approve') {
                     $data = Izin::where('id', $request->id)->first();
                     $data->status_izin  = $request->status_izin;
                     $data->ttd_atasan      = $uniqid;
+                    $data->no_form_izin      = $no_form;
                     $data->catatan      = $request->catatan;
                     $data->waktu_approve = date('Y-m-d H:i:s');
                     $data->update();
 
-                    $mapping = MappingShift::where('tanggal_masuk', $request->tanggal)
-                        ->orWhere('user_id', $request->id_user)
-                        ->get();
+                    $mapping                       = MappingShift::where('user_id', $request->id_user)->where('tanggal_masuk', $request->tanggal)->first();
+                    $mapping->keterangan_izin      = 'TRUE';
+                    $mapping->izin_id              = $data->id;
+                    $mapping->update();
                     // dd($mapping);
                     $alert = $request->session()->flash('approveizin_success');
                     return response()->json($alert);

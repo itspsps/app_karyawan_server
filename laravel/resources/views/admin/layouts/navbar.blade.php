@@ -7,16 +7,16 @@
 
     <div class="col-lg-12">
         <div class="row">
-            <div class="col-lg-4">
+            <div class="col-lg-3">
             </div>
-            <div class="col-lg-4">
+            <div class="col-lg-6">
                 <button type="button" class="btn btn-outline-primary waves-effect">
                     <span class="tf-icons mdi mdi-calendar-clock-outline me-1"></span>
                     <span class="text-center" style="font-size: 13pt; text-align: center;">{{\Carbon\Carbon::now()->isoFormat('DD MMMM YYYY');}}&nbsp;&nbsp;</span><br>
                     <span class="text-center" style="font-size: 13pt; text-align: center;" id="jam_sekarang"></span>
                 </button>
             </div>
-            <div class="col-lg-4">
+            <div class="col-lg-3">
                 <div class="navbar-nav-right d-flex align-items-center" id="navbar-collapse">
                     <!-- Search -->
                     <script>

@@ -20,8 +20,9 @@ class User extends Authenticatable
      *
      * @var array<int, string>
      */
+    protected $guard = 'web';
     public $incrementing = false;
-    protected $guarded = ['id'];
+    // protected $guarded = ['id'];
     protected $fillable = [
         'nomor_identitas_karyawan',
         'name',
@@ -83,6 +84,7 @@ class User extends Authenticatable
         'atasan_1',
         'atasan_2',
         'access_1',
+        'face_id',
         'no_bpjs_ketenagakerjaan',
         'no_bpjs_kesehatan',
         'bpjs_ketenagakerjaan',

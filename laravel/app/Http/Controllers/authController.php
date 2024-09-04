@@ -14,9 +14,17 @@ class authController extends Controller
 {
     public function index()
     {
-        return view('auth.login', [
-            "title" => "Log In"
-        ]);
+        if (!auth()->check()) {
+            return view('auth.login', [
+                "title" => "Log In"
+            ]);
+        } else {
+            if (auth()->user()->is_admin == 'admin') {
+                return redirect('dashboard/holding');
+            } else {
+                return redirect('home');
+            }
+        }
     }
 
     public function register()

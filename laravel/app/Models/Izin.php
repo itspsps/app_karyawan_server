@@ -31,6 +31,7 @@ class Izin extends Model
         'catatan_backup',
         'tanggal',
         'jam',
+        'tanggal_selesai',
         'keterangan_izin',
         'foto_izin',
         'ttd_pengajuan',

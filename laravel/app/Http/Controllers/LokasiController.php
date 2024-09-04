@@ -45,36 +45,27 @@ class LokasiController extends Controller
     {
         $holding = request()->segment(count(request()->segments()));
         // $table = Titik::get();
-        $table = Titik::with(['Lokasi' => function ($query) use ($holding) {
-            $query->where('kategori_kantor', $holding);
-        }])->get();
+        $table = Titik::Join('lokasis', 'lokasis.id', 'titiks.lokasi_id')->where('lokasis.kategori_kantor', $holding)
+            ->select('titiks.*', 'lokasis.lokasi_kantor')
+            ->get();
         // dd($table);
         if (request()->ajax()) {
             return DataTables::of($table)
                 ->addColumn('lokasi_kantor', function ($row) use ($holding) {
-                    if ($row->Lokasi == '') {
-                        return NULL;
-                    } else {
-                        return $row->Lokasi->lokasi_kantor;
-                    }
+
+                    return $row->lokasi_kantor;
                 })
 
                 ->addColumn('lihat_maps', function ($row) use ($holding) {
-                    if ($row->Lokasi == '') {
-                        return NULL;
-                    } else {
-                        $btn = '<button id="btn_lihat_lokasi" data-id="' . $row->id . '" data-lokasi="' . $row->Lokasi->lokasi_kantor . '" data-nama_titik="' . $row->nama_titik . '" data-lat="' . $row->lat_titik . '" data-long="' . $row->long_titik . '"  data-radius="' . $row->radius_titik . '" data-holding="' . $holding . '" type="button" class="btn btn-sm btn-success "><i class="menu-icon tf-icons mdi mdi-file-image-marker-outline"></i>Lihat Maps</button>';
-                        return $btn;
-                    }
+
+                    $btn = '<button id="btn_lihat_lokasi" data-id="' . $row->id . '" data-lokasi="' . $row->lokasi_kantor . '" data-nama_titik="' . $row->nama_titik . '" data-lat="' . $row->lat_titik . '" data-long="' . $row->long_titik . '"  data-radius="' . $row->radius_titik . '" data-holding="' . $holding . '" type="button" class="btn btn-sm btn-success "><i class="menu-icon tf-icons mdi mdi-file-image-marker-outline"></i>Lihat Maps</button>';
+                    return $btn;
                 })
                 ->addColumn('option', function ($row) use ($holding) {
-                    if ($row->Lokasi == '') {
-                        return NULL;
-                    } else {
-                        $btn = '<button id="btn_edit_lokasi" data-id="' . $row->id . '" data-lokasi="' . $row->Lokasi->lokasi_kantor . '" data-nama_titik="' . $row->nama_titik . '" data-lat="' . $row->lat_titik . '" data-long="' . $row->long_titik . '"  data-radius="' . $row->radius_titik . '" data-holding="' . $holding . '" type="button" class="btn btn-icon btn-warning waves-effect waves-light"><span class="tf-icons mdi mdi-pencil-outline"></span></button>';
-                        $btn = $btn . '<button type="button" id="btn_delete_lokasi" data-id="' . $row->id . '" data-holding="' . $holding . '" class="btn btn-icon btn-danger waves-effect waves-light"><span class="tf-icons mdi mdi-delete-outline"></span></button>';
-                        return $btn;
-                    }
+
+                    $btn = '<button id="btn_edit_lokasi" data-id="' . $row->id . '" data-lokasi="' . $row->lokasi_kantor . '" data-nama_titik="' . $row->nama_titik . '" data-lat="' . $row->lat_titik . '" data-long="' . $row->long_titik . '"  data-radius="' . $row->radius_titik . '" data-holding="' . $holding . '" type="button" class="btn btn-icon btn-warning waves-effect waves-light"><span class="tf-icons mdi mdi-pencil-outline"></span></button>';
+                    $btn = $btn . '<button type="button" id="btn_delete_lokasi" data-id="' . $row->id . '" data-holding="' . $holding . '" class="btn btn-icon btn-danger waves-effect waves-light"><span class="tf-icons mdi mdi-delete-outline"></span></button>';
+                    return $btn;
                 })
                 ->rawColumns(['lokasi_kantor', 'lihat_maps', 'nama_titik', 'lat_titik', 'long_titik', 'radius_titik', 'option'])
                 ->make(true);

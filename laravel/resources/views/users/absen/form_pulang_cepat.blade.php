@@ -160,6 +160,7 @@
                         <input type="hidden" name="lat_pulang" value="{{ $lat_pulang}}">
                         <input type="hidden" name="long_pulang" value="{{ $long_pulang}}">
                         <input type="hidden" name="jarak_pulang" value="{{ $jarak_pulang}}">
+                        <input type="hidden" name="lokasi_absen_pulang" value="{{ $lokasi_absen_pulang}}">
                     </div>
                     <div class="input-group">
                         <input type="text" class="form-control" value="Name" readonly>

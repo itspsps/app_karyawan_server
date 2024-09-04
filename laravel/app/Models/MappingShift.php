@@ -25,6 +25,7 @@ class MappingShift extends Model
         'lat_absen',
         'long_absen',
         'jarak_masuk',
+        'lokasi_absen',
         'foto_jam_absen',
         'keterangan_absensi',
         'tanggal_pulang',
@@ -35,6 +36,7 @@ class MappingShift extends Model
         'lat_pulang',
         'long_pulang',
         'jarak_pulang',
+        'lokasi_absen_pulang',
         'keterangan_absensi_pulang',
         'total_jam_kerja',
         'status_absen',
@@ -59,5 +61,13 @@ class MappingShift extends Model
     public function Shift()
     {
         return $this->belongsTo(Shift::class);
+    }
+    public function Izin()
+    {
+        return $this->belongsTo(Izin::class, 'izin_id', 'id');
+    }
+    public function Cuti()
+    {
+        return $this->belongsTo(Cuti::class, 'cuti_id', 'id');
     }
 }
