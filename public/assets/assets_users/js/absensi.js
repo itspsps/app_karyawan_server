@@ -25,13 +25,13 @@ const startVideo = () => {
     )
 }
 
-console.log('as');
+// console.log('as');
 Promise.all([
-    faceapi.nets.tinyFaceDetector.loadFromUri('../public/assets/assets_users/js/face-api.js/models'),
-    faceapi.nets.faceLandmark68Net.loadFromUri('../public/assets/assets_users/js/face-api.js/models'),
-    faceapi.nets.faceRecognitionNet.loadFromUri('../public/assets/assets_users/js/face-api.js/models'),
-    faceapi.nets.ssdMobilenetv1.loadFromUri('../public/assets/assets_users/js/face-api.js/models'),
-    faceapi.nets.faceExpressionNet.loadFromUri('../public/assets/assets_users/js/face-api.js/models'),
+    faceapi.nets.tinyFaceDetector.loadFromUri('../assets/assets_users/js/face-api.js/models'),
+    faceapi.nets.faceLandmark68Net.loadFromUri('../assets/assets_users/js/face-api.js/models'),
+    faceapi.nets.faceRecognitionNet.loadFromUri('../assets/assets_users/js/face-api.js/models'),
+    faceapi.nets.ssdMobilenetv1.loadFromUri('../assets/assets_users/js/face-api.js/models'),
+    faceapi.nets.faceExpressionNet.loadFromUri('../assets/assets_users/js/face-api.js/models'),
 ]).then(startVideo);
 
 
