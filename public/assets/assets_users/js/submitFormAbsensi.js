@@ -34,7 +34,7 @@ function take_snapshot() {
 
 //membuat kondisi jika hasil pengenalan tidak sama dengan unknown
 setInterval(() => {
-    if (labelHasil !== undefined) {
+    if (labelHasil != undefined) {
         if (labelHasil.split(" ")[0] !== "unknown") {
             const arrayLabel = labelHasil.split(" ")
             arrayLabel.pop()
@@ -59,9 +59,9 @@ setInterval(() => {
                     $("#alert_karyawan_unkwon").hide();
                 }, 2000); // 7 secs
         }
-    } else {
+    } else if(labelHasil == undefined) {
         $('#alert_karyawan_tidaksesuai').show();
-        console.log('tidak sesuai');
+        console.log(labelHasil);
             // console.log('ok');
             setTimeout(function() {
                 // console.log('ok1');
