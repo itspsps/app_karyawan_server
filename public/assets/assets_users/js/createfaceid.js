@@ -36,12 +36,30 @@ Promise.all([
     faceapi.nets.faceRecognitionNet.loadFromUri('../assets/assets_users/js/face-api.js/models'),
     faceapi.nets.ssdMobilenetv1.loadFromUri('../assets/assets_users/js/face-api.js/models'),
 ]).then(startVideo);
-
+Swal.fire({
+    allowOutsideClick: false,
+    // background: 'transparent',
+    position: 'top',
+    html: '<div class="me-2 mb-2 d-flex align-items-center text-center"><span class="spinner-border me-3 spinner-border-sm text-primary" role="status" aria-hidden="true"></span>Camera Loading...</div>',
+    showCancelButton: false,
+    showConfirmButton: false,
+  
+});
 
 video.addEventListener('play', () => {
     const displaySize = {width: video.width, height: video.height}
     faceapi.matchDimensions(canvas, displaySize)
-
+    
+    swal.close();
+    Swal.fire({
+        allowOutsideClick: false,
+        // background: 'transparent',
+        position: 'top',
+        html: '<div style="width:50%;" class="me-2 mb-2 d-flex align-items-center text-center"><span class="spinner-border me-3 spinner-border-sm text-primary" role="status" aria-hidden="true"></span>Persiapan...</div>',
+        showCancelButton: false,
+        showConfirmButton: false,
+      
+    });
     setInterval(async () => {
         const detections = await faceapi.detectAllFaces(video, new faceapi.TinyFaceDetectorOptions())
             .withFaceLandmarks()
@@ -58,6 +76,7 @@ video.addEventListener('play', () => {
         // console.log(array);
         faceid.value = `[${array}]`;
         if (faceid.value != null) {
+            Swal.close();
             // console.log('disable false');
             $('.btn_simpan_face').removeAttr('disabled');
             $('#loading').removeClass();

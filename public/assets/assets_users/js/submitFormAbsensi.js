@@ -35,14 +35,7 @@ function take_snapshot() {
 
 
 
-Swal.fire({
-    allowOutsideClick: false,
-    // background: 'transparent',
-    html: '<div class="me-2 mb-2 d-flex align-items-center text-center"><span class="spinner-border me-3 spinner-border-sm text-primary" role="status" aria-hidden="true"></span>Camera Loading...</div>',
-    showCancelButton: false,
-    showConfirmButton: false,
-  
-});
+
 //membuat kondisi jika hasil pengenalan tidak sama dengan unknown
 var interval = setInterval(() => {
     if (labelHasil != undefined) {

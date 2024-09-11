@@ -34,9 +34,26 @@ Promise.all([
     faceapi.nets.faceExpressionNet.loadFromUri('../assets/assets_users/js/face-api.js/models'),
 ]).then(startVideo);
 
-
+Swal.fire({
+    allowOutsideClick: false,
+    // background: 'transparent',
+    position: 'top',
+    html: '<div class="me-2 mb-2 d-flex align-items-center text-center"><span class="spinner-border me-3 spinner-border-sm text-primary" role="status" aria-hidden="true"></span>Camera Loading...</div>',
+    showCancelButton: false,
+    showConfirmButton: false,
+  
+});
 video.addEventListener('play', () => {
-   
+    Swal.close()
+    Swal.fire({
+        allowOutsideClick: false,
+        // background: 'transparent',
+        position: 'top',
+        html: '<div style="width:50%;" class="me-2 mb-2 d-flex align-items-center text-center"><span class="spinner-border me-3 spinner-border-sm text-primary" role="status" aria-hidden="true"></span>Persiapan...</div>',
+        showCancelButton: false,
+        showConfirmButton: false,
+      
+    });
     // console.log(canvas);
     // document.getElementById('container').appendChild(canvas)
     const displaySize = {width: video.width, height: video.height}
@@ -89,6 +106,7 @@ video.addEventListener('play', () => {
             const box = resizedDetections[i].detection.box
             const drawBox = new faceapi.draw.DrawBox(box, {label: result.toString()})
             drawBox.draw(canvas)
+            // console.log(drawBox);
             labelHasil = drawBox.options.label
 
         })
