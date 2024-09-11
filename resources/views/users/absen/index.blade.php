@@ -327,6 +327,9 @@
             onBeforeOpen: () => {
                 // Swal.showLoading()
             },
+            onAfterClose() {
+                Swal.close()
+            }
         });
     };
     $(document).on('click', '#btn_submit', function(e) {
@@ -339,6 +342,9 @@
             onBeforeOpen: () => {
                 // Swal.showLoading()
             },
+            onAfterClose() {
+                Swal.close()
+            }
         });
     });
 </script>

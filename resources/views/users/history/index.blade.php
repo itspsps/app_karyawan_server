@@ -158,8 +158,11 @@
             showCancelButton: false,
             showConfirmButton: false,
             onBeforeOpen: () => {
-                // Swal.showLoading()
+                Swal.showLoading()
             },
+            onAfterClose() {
+                Swal.close()
+            }
         });
     });
     window.onbeforeunload = function() {

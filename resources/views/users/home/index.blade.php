@@ -2559,6 +2559,9 @@
             onBeforeOpen: () => {
                 // Swal.showLoading()
             },
+            onAfterClose() {
+                Swal.close()
+            }
         });
     });
     window.onbeforeunload = function() {

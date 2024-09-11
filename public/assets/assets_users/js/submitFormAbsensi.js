@@ -33,9 +33,20 @@ function take_snapshot() {
     });
 }
 
+
+
+Swal.fire({
+    allowOutsideClick: false,
+    // background: 'transparent',
+    html: '<div class="me-2 mb-2 d-flex align-items-center text-center"><span class="spinner-border me-3 spinner-border-sm text-primary" role="status" aria-hidden="true"></span>Camera Loading...</div>',
+    showCancelButton: false,
+    showConfirmButton: false,
+  
+});
 //membuat kondisi jika hasil pengenalan tidak sama dengan unknown
 var interval = setInterval(() => {
     if (labelHasil != undefined) {
+        Swal.close()
         if (labelHasil.split(" ")[0] !== "unknown") {
             clearInterval(interval);
             const arrayLabel = labelHasil.split(" ")
@@ -69,14 +80,15 @@ var interval = setInterval(() => {
                 //     $("#alert_karyawan_unknown").hide();
                 // }, 2000); // 7 secs
             }
-        } else if(labelHasil == undefined) {
+    } else if (labelHasil == undefined) {
+
             $('#alert_karyawan_unknown').hide();
             $("#alert_karyawan_absen_sukses").hide();
-            $('#alert_karyawan_tidaksesuai').show();
+            $('#alert_karyawan_tidaksesuai').hide();
         console.log(labelHasil);
             // console.log('ok');
             // setTimeout(function() {
             //     // console.log('ok1');
             // }, 2000); // 7 secs
     }
-},200) // jarak tiap submit 3 detik satuan ms
+},500) // jarak tiap submit 3 detik satuan ms
