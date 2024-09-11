@@ -23,6 +23,16 @@
         <i class="fa-solid fa-xmark"></i>
     </button>
 </div>
+<div id="alert_karyawan_absen_sukses" class="alert alert-success light alert-dismissible fade show">
+    <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" class="me-2">
+        <polyline points="9 11 12 14 22 4"></polyline>
+        <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path>
+    </svg>
+    <strong id="content_alert">Success!</strong>
+    <button class="btn-close" data-bs-dismiss="alert" aria-label="btn-close">
+        <i class="fa-solid fa-xmark"></i>
+    </button>
+</div>
 <div id="alert_karyawan_unknown" class="alert alert-danger light alert-lg alert-dismissible fade show">
     <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" class="me-2">
         <polygon points="7.86 2 16.14 2 22 7.86 22 16.14 16.14 22 7.86 22 2 16.14 2 7.86 7.86 2"></polygon>
@@ -270,188 +280,7 @@
 <script defer src="{{ asset('assets/assets_users/js/face-api.js/face-api.min.js') }}"></script>
 <script defer src="{{ asset('assets/assets_users/js/absensi.js')}}" onload="onLoadData('{{ $face }}', '{{ $karyawan }}', '{{ $angka }}')"></script>
 <script defer src="{{ asset('assets/assets_users/js/submitFormAbsensi.js')}}" onload="onLoadDataAbsensi('{{ $absensi }}','{{$jumlah_absensi}}')"></script>
-<!-- <script defer type="module">
-        // onLoadData('{{$face}}', '{{$karyawan}}', '{{$angka}}');
-        onLoadData(<?php echo json_encode($face) ?>,<?php echo json_encode($karyawan) ?>,<?php echo json_encode($angka) ?>);
-        const video = document.getElementById('video');
-        const canvas = document.getElementById('canvas');
-        //masukan data db ke js dan di parsing 
-        var dataFaceJson
-        var dataKaryawanJson
-        var labelHasil
-        var nomorTable
 
-        function onLoadData(face, karyawan, angka) {
-            // console.log(face);
-            dataFaceJson = face;
-            // console.log(dataFaceJson);
-            dataKaryawanJson = karyawan;
-            nomorTable = angka;
-        }
-
-
-        navigator.getUserMedia = (navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia);
-
-        const startVideo = () => {
-            navigator.getUserMedia({
-                    video: {}
-                },
-                stream => video.srcObject = stream,
-                err => console.error(err)
-            )
-        }
-        import * as faceapi from '/public/assets/assets_users/js/face-api.js/face-api.min.js';
-        // var faceapi = require('public/assets/assets_users/js/face-api.min.js');
-        Promise.all([
-            console.log(faceapi),
-            await faceapi.nets.tinyFaceDetector.loadFromUri('/public/assets/assets_users/js/face-api.js/models'),
-            // await faceapi.nets.tinyFaceDetector.loadFromUri('/public/assets/assets_users/js/face-api.js/models'),
-            faceapi.nets.faceLandmark68Net.loadFromUri('/assets/assets_users/js/face-api.js/models'),
-            faceapi.nets.faceRecognitionNet.loadFromUri('/assets/assets_users/js/face-api.js/models'),
-            faceapi.nets.ssdMobilenetv1.loadFromUri('/assets/assets_users/js/face-api.js/models'),
-            faceapi.nets.faceExpressionNet.loadFromUri('/assets/assets_users/js/face-api.js/models'),
-        ]).then(startVideo);
-
-
-        video.addEventListener('play', () => {
-
-            // console.log(canvas);
-            // document.getElementById('container').appendChild(canvas)
-            const displaySize = {
-                width: video.width,
-                height: video.height
-            }
-            faceapi.matchDimensions(canvas, displaySize)
-
-
-            // membuat data sesuai format dari faceapi
-            const labeledFaceDescriptors = []
-            // console.log(dataFaceJson);
-            // console.log(JSON.parse(dataFaceJson[0].face_id));
-            // console.log(dataFaceJson[0].id);
-            // console.log(dataKaryawanJson.find(value => value.id));
-            for (let i = 0; i < dataFaceJson.length; i++) {
-                const data = dataKaryawanJson.find(value => value.id === dataFaceJson[i].id)
-                // console.log(data);  
-
-                // rubah dari array biasa menjadi float32Array
-                const array1 = JSON.parse(dataFaceJson[i].face_id)
-                // console.log(array1);
-                const float1 = Float32Array.from(array1)
-                // console.log(data.name);
-                // console.log(float1);
-
-                // memasukan data yang sesuai format ke array labeledFaceDescriptors
-                labeledFaceDescriptors.push(new faceapi.LabeledFaceDescriptors(
-                    data.name, [float1]))
-
-            }
-
-            const faceMatcher = new faceapi.FaceMatcher(labeledFaceDescriptors, 0.5)
-            // me load gambar
-            setInterval(async () => {
-                const detections = await faceapi.detectAllFaces(video, new faceapi.TinyFaceDetectorOptions())
-                    .withFaceLandmarks()
-                    .withFaceExpressions()
-                    .withFaceDescriptors()
-                const resizedDetections = faceapi.resizeResults(detections, displaySize)
-                canvas.getContext('2d').clearRect(0, 0, canvas.width, canvas.height)
-
-                //menambkan kan kotak pada muka sebagai tanda pendeteksian wajah berhasil
-                faceapi.draw.drawDetections(canvas, resizedDetections)
-                // digunakan untuk menampilkan faceLandmark
-                faceapi.draw.drawFaceLandmarks(canvas, resizedDetections)
-                //digunakan untuk menampilkan expresi wajah
-                // faceapi.draw.drawFaceExpressions(canvas, resizedDetections)
-
-                const results = resizedDetections.map(d => faceMatcher.findBestMatch(d.descriptor))
-                results.forEach((result, i) => {
-                    const box = resizedDetections[i].detection.box
-                    const drawBox = new faceapi.draw.DrawBox(box, {
-                        label: result.toString()
-                    })
-                    drawBox.draw(canvas)
-                    labelHasil = drawBox.options.label
-
-                })
-            }, 100)
-
-        })
-    // })
-</script>
-<script defer>
-    $(document).ready(function() {
-        onLoadDataAbsensi(<?php echo json_encode($absensi) ?> , <?php echo json_encode($jumlah_absensi) ?>);
-        const form = document.getElementById('form')
-        const name = document.getElementById('name')
-        const karyawan_id = document.getElementById('karyawan_id')
-        const button = document.getElementById('btn_submit')
-        const shift_karyawan = $('#shift_karyawan').val();
-
-        var alert_karyawan_tidaksesuai = document.getElementById('alert_karyawan_tidaksesuai')
-        var alert_karyawan_unknown = document.getElementById('alert_karyawan_unknown')
-        $('#alert_karyawan_tidaksesuai').hide();
-        $('#alert_karyawan_unknown').hide();
-        var absensi = []
-        var jumlahAbsensi
-        // untuk menyimpan variable array yang pertama di ambil
-        var allFirstMatches = []
-        // onload array absensi
-        function onLoadDataAbsensi(value , jmlAbsensi) {
-            absensi = value
-            jumlahAbsensi = jmlAbsensi
-        }
-
-        function take_snapshot() {
-            // take snapshot and get image data
-            Webcam.snap(function(data_uri) {
-                $(".image-tag").val(data_uri);
-                // display results in page
-                video.innerHTML =
-                    '<img src="' + data_uri + '"/>';
-            });
-        }
-
-        //membuat kondisi jika hasil pengenalan tidak sama dengan unknown
-        var labelHasil
-        setInterval(() => {
-            if (labelHasil !== undefined) {
-                if (labelHasil.split(" ")[0] !== "unknown") {
-                    const arrayLabel = labelHasil.split(" ")
-                    arrayLabel.pop()
-                    // nama label yang dikenali
-                    const labelName = arrayLabel.join(" ")
-                    submitButton = () => {
-                        // memasukan data pengenalan ke form
-                        const karyawan = dataKaryawanJson.find(value => value.name === labelName)
-                        name.value = labelName
-                        karyawan_id.value = karyawan.id
-                        // untuk mensubmit form
-                        take_snapshot()
-                        button.click()
-                    }
-                    submitButton();
-                } else {
-                    $('#alert_karyawan_unkwon').show();
-                    console.log('unknwon');
-                    // console.log('ok');
-                    setTimeout(function() {
-                        // console.log('ok1');
-                        $("#alert_karyawan_unkwon").hide();
-                    }, 2000); // 7 secs
-                }
-            } else {
-                $('#alert_karyawan_tidaksesuai').show();
-                console.log('tidak sesuai');
-                // console.log('ok');
-                setTimeout(function() {
-                    // console.log('ok1');
-                    $("#alert_karyawan_tidaksesuai").hide();
-                }, 2000); // 7 secs
-            }
-        }, 3000) // jarak tiap submit 3 detik satuan ms
-    });
-</script> -->
 <script>
     getLocation();
 

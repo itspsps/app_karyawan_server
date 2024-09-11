@@ -13,6 +13,7 @@ var alert_karyawan_tidaksesuai = document.getElementById('alert_karyawan_tidakse
 var alert_karyawan_unknown = document.getElementById('alert_karyawan_unknown')
 $('#alert_karyawan_tidaksesuai').hide();
 $('#alert_karyawan_unknown').hide();
+$('#alert_karyawan_absen_sukses').hide();
 let absensi = []
 let jumlahAbsensi
 // untuk menyimpan variable array yang pertama di ambil
@@ -33,9 +34,10 @@ function take_snapshot() {
 }
 
 //membuat kondisi jika hasil pengenalan tidak sama dengan unknown
-setInterval(() => {
+var interval = setInterval(() => {
     if (labelHasil != undefined) {
         if (labelHasil.split(" ")[0] !== "unknown") {
+            clearInterval(interval);
             const arrayLabel = labelHasil.split(" ")
             arrayLabel.pop()
             // nama label yang dikenali
@@ -46,26 +48,35 @@ setInterval(() => {
                 name.value = labelName
                 karyawan_id.value = karyawan.id
                 // untuk mensubmit form
-                take_snapshot()
-                button.click()
+                $("#alert_karyawan_unknown").hide();
+                $("#alert_karyawan_tidaksesuai").hide();
+                $("#alert_karyawan_absen_sukses").show();
+                $("#content_alert").text(labelName);
+                setTimeout(function() {
+                    take_snapshot()
+                    button.click()
+                     }, 2000); 
             }
             submitButton();
         } else {
-            $('#alert_karyawan_unkwon').show();
-            console.log('unknwon');
-                // console.log('ok');
-                setTimeout(function() {
-                    // console.log('ok1');
-                    $("#alert_karyawan_unkwon").hide();
-                }, 2000); // 7 secs
-        }
-    } else if(labelHasil == undefined) {
-        $('#alert_karyawan_tidaksesuai').show();
+            $("#alert_karyawan_absen_sukses").hide();
+            $('#alert_karyawan_tidaksesuai').hide();
+            $('#alert_karyawan_unknown').show();
+                console.log('unknwon');
+            // console.log('ok');
+            // setTimeout(function() {
+                //     // console.log('ok1');
+                //     $("#alert_karyawan_unknown").hide();
+                // }, 2000); // 7 secs
+            }
+        } else if(labelHasil == undefined) {
+            $('#alert_karyawan_unknown').hide();
+            $("#alert_karyawan_absen_sukses").hide();
+            $('#alert_karyawan_tidaksesuai').show();
         console.log(labelHasil);
             // console.log('ok');
-            setTimeout(function() {
-                // console.log('ok1');
-                $("#alert_karyawan_tidaksesuai").hide();
-            }, 2000); // 7 secs
+            // setTimeout(function() {
+            //     // console.log('ok1');
+            // }, 2000); // 7 secs
     }
-},3000) // jarak tiap submit 3 detik satuan ms
+},200) // jarak tiap submit 3 detik satuan ms

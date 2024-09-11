@@ -7,9 +7,9 @@ let dataKaryawanJson
 let labelHasil
 let nomorTable
 function onLoadData(face, karyawan, angka) {
-    console.log(face);
+    // console.log(face);
     dataFaceJson = JSON.parse(face);
-    console.log(dataFaceJson);
+    // console.log(dataFaceJson);
     dataKaryawanJson = JSON.parse(karyawan);
     nomorTable = angka;
 }
