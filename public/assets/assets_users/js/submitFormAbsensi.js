@@ -84,4 +84,4 @@ var interval = setInterval(() => {
             //     // console.log('ok1');
             // }, 2000); // 7 secs
     }
-},500) // jarak tiap submit 3 detik satuan ms
+},700) // jarak tiap submit 3 detik satuan ms
