@@ -38,7 +38,7 @@ Swal.fire({
     allowOutsideClick: false,
     // background: 'transparent',
     position: 'bottom',
-    html: '<div class="me-2 mb-2 d-flex align-items-center text-center"><span class="spinner-border me-3 spinner-border-sm text-primary" role="status" aria-hidden="true"></span>Camera Loading...</div>',
+    html: '<div class="me-2 mb-2 d-flex align-items-center text-center"><span class="spinner-border me-3 spinner-border-sm text-primary" role="status" aria-hidden="true"></span>Camera&nbsp;Loading...</div>',
     showCancelButton: false,
     showConfirmButton: false,
   
@@ -49,7 +49,7 @@ video.addEventListener('play', () => {
         allowOutsideClick: false,
         // background: 'transparent',
         position: 'bottom',
-        html: '<div style="width:50%;" class="me-2 mb-2 d-flex align-items-center text-center"><span class="spinner-border me-3 spinner-border-sm text-primary" role="status" aria-hidden="true"></span>Letakkan Wajah Didepan Kamera..</div>',
+        html: '<div style="width:100%; font-size:9pt" class="me-2 mb-2 d-flex align-items-center text-center"><span class="spinner-border me-3 spinner-border-sm text-primary" role="status" aria-hidden="true"></span>Letakkan&nbsp;Wajah&nbsp;Didepan&nbsp;Kamera..</div>',
         showCancelButton: false,
         showConfirmButton: false,
       
