@@ -37,7 +37,7 @@ Promise.all([
 Swal.fire({
     allowOutsideClick: false,
     // background: 'transparent',
-    position: 'top',
+    position: 'bottom',
     html: '<div class="me-2 mb-2 d-flex align-items-center text-center"><span class="spinner-border me-3 spinner-border-sm text-primary" role="status" aria-hidden="true"></span>Camera Loading...</div>',
     showCancelButton: false,
     showConfirmButton: false,
@@ -48,7 +48,7 @@ video.addEventListener('play', () => {
     Swal.fire({
         allowOutsideClick: false,
         // background: 'transparent',
-        position: 'top',
+        position: 'bottom',
         html: '<div style="width:50%;" class="me-2 mb-2 d-flex align-items-center text-center"><span class="spinner-border me-3 spinner-border-sm text-primary" role="status" aria-hidden="true"></span>Persiapan...</div>',
         showCancelButton: false,
         showConfirmButton: false,

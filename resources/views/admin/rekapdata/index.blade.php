@@ -210,14 +210,15 @@
                                             <th rowspan="2" class="text-center">No.</th>
                                             <th rowspan="2" class="text-center">ID&nbsp;Karyawan</th>
                                             <th rowspan="2" class="text-center">Nama&nbsp;Karyawan</th>
-                                            <th colspan="2" class="text-center">Hadir&nbsp;Kerja</th>
+                                            <th colspan="3" class="text-center">Hadir&nbsp;Kerja</th>
                                             <th colspan="3" class="text-center">Keterangan</th>
                                             <th colspan="1" class="text-center">Tidak&nbsp;Hadir&nbsp;Kerja</th>
                                             <th rowspan="2" class="text-center">Total&nbsp;Keseluruhan</th>
                                         </tr>
                                         <tr>
                                             <th>Tepat&nbsp;Waktu</th>
-                                            <th>Telat&nbsp;Hadir</th>
+                                            <th>Telat&nbsp;Hadir(>15 Menit)</th>
+                                            <th>Telat&nbsp;Hadir(<15 Menit)</th>
                                             <th>Izin</th>
                                             <th>Cuti</th>
                                             <th>Dinas</th>
@@ -235,14 +236,15 @@
                                             <th rowspan="2" class="text-center">No.</th>
                                             <th rowspan="2" class="text-center">ID&nbsp;Karyawan</th>
                                             <th rowspan="2" class="text-center">Nama&nbsp;Karyawan</th>
-                                            <th colspan="2" class="text-center">Hadir&nbsp;Kerja</th>
+                                            <th colspan="3" class="text-center">Hadir&nbsp;Kerja</th>
                                             <th colspan="3" class="text-center">Keterangan</th>
                                             <th colspan="1" class="text-center">Tidak&nbsp;Hadir&nbsp;Kerja</th>
                                             <th rowspan="2" class="text-center">Total&nbsp;Keseluruhan</th>
                                         </tr>
                                         <tr>
                                             <th>Tepat&nbsp;Waktu</th>
-                                            <th>Telat&nbsp;Hadir</th>
+                                            <th>Telat&nbsp;Hadir(>15 Menit)</th>
+                                            <th>Telat&nbsp;Hadir(<15 Menit)</th>
                                             <th>Izin</th>
                                             <th>Cuti</th>
                                             <th>Dinas</th>
@@ -525,6 +527,10 @@
                         {
                             data: 'total_hadir_telat_hadir',
                             name: 'total_hadir_telat_hadir'
+                        },
+                        {
+                            data: 'total_hadir_telat_hadir1',
+                            name: 'total_hadir_telat_hadir1'
                         },
                         {
                             data: 'total_izin_true',

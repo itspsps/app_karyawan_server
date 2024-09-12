@@ -152,8 +152,12 @@ class RekapDataController extends Controller
                         return $jumlah_hadir_tepat_waktu . " x";
                     })
                     ->addColumn('total_hadir_telat_hadir', function ($row) use ($date1, $date2) {
-                        $jumlah_hadir_telat_hadir = $row->MappingShift->whereBetween('tanggal_masuk', [$date1, $date2])->where('status_absen', 'HADIR KERJA')->where('keterangan_absensi', 'TELAT HADIR')->count();
+                        $jumlah_hadir_telat_hadir = $row->MappingShift->whereBetween('tanggal_masuk', [$date1, $date2])->where('status_absen', 'HADIR KERJA')->where('keterangan_absensi', 'TELAT HADIR')->where('telat', '<', '00:10:59')->count();
                         return $jumlah_hadir_telat_hadir . " x";
+                    })
+                    ->addColumn('total_hadir_telat_hadir1', function ($row) use ($date1, $date2) {
+                        $total_hadir_telat_hadir1 = $row->MappingShift->whereBetween('tanggal_masuk', [$date1, $date2])->where('status_absen', 'HADIR KERJA')->where('keterangan_absensi', 'TELAT HADIR')->where('telat', '>', '00:10:59')->count();
+                        return $total_hadir_telat_hadir1 . " x";
                     })
                     ->addColumn('total_izin_true', function ($row) use ($date1, $date2) {
                         $total_izin_true = $row->MappingShift->whereBetween('tanggal_masuk', [$date1, $date2])->where('status_absen', 'TIDAK HADIR KERJA')->where('keterangan_izin', 'TRUE')->count();
@@ -178,7 +182,7 @@ class RekapDataController extends Controller
                         $total_semua = ($total_hadir + $total_tidak_hadir) . ' x';
                         return $total_semua;
                     })
-                    ->rawColumns(['total_hadir_tepat_waktu', 'btn_detail', 'total_hadir_telat_hadir', 'total_izin_true', 'total_cuti_true', 'total_dinas_true', 'total_pulang_cepat', 'tidak_hadir_kerja', 'total_semua'])
+                    ->rawColumns(['total_hadir_tepat_waktu', 'btn_detail', 'total_hadir_telat_hadir', 'total_hadir_telat_hadir1', 'total_izin_true', 'total_cuti_true', 'total_dinas_true', 'total_pulang_cepat', 'tidak_hadir_kerja', 'total_semua'])
                     ->make(true);
             } else {
                 $now = Carbon::parse($request->filter_month)->startOfMonth();
@@ -201,8 +205,12 @@ class RekapDataController extends Controller
                         return $jumlah_hadir_tepat_waktu . " x";
                     })
                     ->addColumn('total_hadir_telat_hadir', function ($row) use ($now, $now1) {
-                        $jumlah_hadir_telat_hadir = $row->MappingShift->whereBetween('tanggal_masuk', [$now, $now1])->where('keterangan_absensi', 'TELAT HADIR')->count();
+                        $jumlah_hadir_telat_hadir = $row->MappingShift->whereBetween('tanggal_masuk', [$now, $now1])->where('status_absen', 'HADIR KERJA')->where('keterangan_absensi', 'TELAT HADIR')->where('telat', '<', '00:10:59')->count();
                         return $jumlah_hadir_telat_hadir . " x";
+                    })
+                    ->addColumn('total_hadir_telat_hadir1', function ($row) use ($now, $now1) {
+                        $total_hadir_telat_hadir1 = $row->MappingShift->whereBetween('tanggal_masuk', [$now, $now1])->where('status_absen', 'HADIR KERJA')->where('keterangan_absensi', 'TELAT HADIR')->where('telat', '>', '00:10:59')->count();
+                        return $total_hadir_telat_hadir1 . " x";
                     })
                     ->addColumn('total_izin_true', function ($row) use ($now, $now1) {
                         $total_izin_true = $row->MappingShift->whereBetween('tanggal_masuk', [$now, $now1])->where('status_absen', 'TIDAK HADIR KERJA')->where('keterangan_izin', 'TRUE')->count();
@@ -227,7 +235,7 @@ class RekapDataController extends Controller
                         $total_semua = ($total_hadir + $total_tidak_hadir) . ' x';
                         return $total_semua;
                     })
-                    ->rawColumns(['total_hadir_tepat_waktu', 'btn_detail', 'total_hadir_telat_hadir', 'total_izin_true', 'total_cuti_true', 'total_dinas_true', 'total_pulang_cepat', 'tidak_hadir_kerja', 'total_semua'])
+                    ->rawColumns(['total_hadir_tepat_waktu', 'btn_detail', 'total_hadir_telat_hadir', 'total_hadir_telat_hadir1', 'total_izin_true', 'total_cuti_true', 'total_dinas_true', 'total_pulang_cepat', 'tidak_hadir_kerja', 'total_semua'])
                     ->make(true);
             }
         }

@@ -3402,7 +3402,7 @@ class HomeUserController extends Controller
                             $tanggal = $request->tanggal;
                             $tanggal_selesai = NULL;
                             $no_form = Auth::user()->kontrak_kerja . '/SK/FKDT/' . date('Y/m/d') . '/' . $no;
-                            $folderPath     = public_path('signature/');
+                            $folderPath     = public_path('signature/izin/');
                             $image_parts    = explode(";base64,", $request->signature);
                             $image_type_aux = explode("image/", $image_parts[0]);
                             $image_type     = $image_type_aux[1];
@@ -3502,7 +3502,7 @@ class HomeUserController extends Controller
                         $tanggal = $request->tanggal;
                         $tanggal_selesai = NULL;
                         $no_form = Auth::user()->kontrak_kerja . '/SK/FKDT/' . date('Y/m/d') . '/' . $no;
-                        $folderPath     = public_path('signature/');
+                        $folderPath     = public_path('signature/izin/');
                         $image_parts    = explode(";base64,", $request->signature);
                         $image_type_aux = explode("image/", $image_parts[0]);
                         $image_type     = $image_type_aux[1];
@@ -4974,7 +4974,7 @@ class HomeUserController extends Controller
                     $second = $diff->format('%S');
                     $hitung_pulang_cepat = ($hours . ':' . $minutes . ':' . $second);
                     // dd($hitung_pulang_cepat);
-                    $folderPath     = public_path('signature/');
+                    $folderPath     = public_path('signature/izin');
                     $image_parts    = explode(";base64,", $request->signature);
                     $image_type_aux = explode("image/", $image_parts[0]);
                     $image_type     = $image_type_aux[1];
@@ -5067,7 +5067,7 @@ class HomeUserController extends Controller
                 $second = $diff->format('%S');
                 $hitung_pulang_cepat = ($hours . ':' . $minutes . ':' . $second);
                 // dd($hitung_pulang_cepat);
-                $folderPath     = public_path('signature/');
+                $folderPath     = public_path('signature/izin');
                 $image_parts    = explode(";base64,", $request->signature);
                 $image_type_aux = explode("image/", $image_parts[0]);
                 $image_type     = $image_type_aux[1];

@@ -20,7 +20,6 @@ use App\Models\ResetCuti;
 use PDF;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
-use DB;
 use Carbon\CarbonPeriod;
 use DateTime;
 
@@ -836,7 +835,7 @@ class CutiUserController extends Controller
             }
 
             // dd($getUseratasan2);
-            // $getUserAtasan  = DB::table('users')->where('jabatan_id', $getAsatan->id)->first();
+            // $getUserAtasan  = User::where('jabatan_id', $getAsatan->id)->first();
             $record_data    = Cuti::with('KategoriCuti')->where('user_id', Auth::user()->id)
                 // ->select('cutis.*', '_cuti')
                 ->orderBy('tanggal', 'DESC')->get();
@@ -866,7 +865,7 @@ class CutiUserController extends Controller
     }
     public function cutiEdit($id)
     {
-        $user = DB::table('users')->join('jabatans', 'jabatans.id', '=', 'users.jabatan_id')
+        $user = User::join('jabatans', 'jabatans.id', '=', 'users.jabatan_id')
             ->join('level_jabatans', 'jabatans.level_id', '=', 'level_jabatans.id')
             ->join('departemens', 'departemens.id', '=', 'users.dept_id')
             ->join('divisis', 'divisis.id', '=', 'users.divisi_id')
@@ -918,7 +917,7 @@ class CutiUserController extends Controller
             $kategori_cuti = $request->kategori_cuti;
 
             if ($request->signature !== null) {
-                $folderPath     = public_path('signature/');
+                $folderPath     = public_path('signature/cuti/');
                 $image_parts    = explode(";base64,", $request->signature);
                 $image_type_aux = explode("image/", $image_parts[0]);
                 $image_type     = $image_type_aux[1];
@@ -978,13 +977,13 @@ class CutiUserController extends Controller
             $hMin14         = now()->parse($request->startDate)->addDays(14); //2024-04-18
             $format_startDate = date('Y-m-d', strtotime($startDate));
             $format_hmin14 = date('Y-m-d', strtotime($hMin14));
-            $kuota_cuti     = DB::table('users')->where('id', $request->id_user)->first();
+            $kuota_cuti     = User::where('id', $request->id_user)->first();
             // dd($data_interval);
             $hMin14         = date('Y-m-d', strtotime("+14 day", strtotime($request->tgl_pengajuan))); //2024-04-18
-            $kuota_cuti     = DB::table('users')->where('id', $request->id_user)->first();
+            $kuota_cuti     = User::where('id', $request->id_user)->first();
             // dd($file_save);
             if ($request->signature !== null) {
-                $folderPath     = public_path('signature/');
+                $folderPath     = public_path('signature/cuti/');
                 $image_parts    = explode(";base64,", $request->signature);
                 $image_type_aux = explode("image/", $image_parts[0]);
                 $image_type     = $image_type_aux[1];
@@ -1033,7 +1032,7 @@ class CutiUserController extends Controller
     }
     public function cutiApprove($id)
     {
-        $user = DB::table('users')->join('jabatans', 'jabatans.id', '=', 'users.jabatan_id')
+        $user = User::join('jabatans', 'jabatans.id', '=', 'users.jabatan_id')
             ->join('level_jabatans', 'jabatans.level_id', '=', 'level_jabatans.id')
             ->join('departemens', 'departemens.id', '=', 'users.dept_id')
             ->join('divisis', 'divisis.id', '=', 'users.divisi_id')
@@ -1177,7 +1176,7 @@ class CutiUserController extends Controller
     {
         if ($request->approve == 'not_approve') {
             if ($request->signature != null) {
-                $folderPath     = public_path('signature/');
+                $folderPath     = public_path('signature/cuti/');
                 $image_parts    = explode(";base64,", $request->signature);
                 $image_type_aux = explode("image/", $image_parts[0]);
                 $image_type     = $image_type_aux[1];
@@ -1207,7 +1206,7 @@ class CutiUserController extends Controller
             return response()->json($alert);
         } else {
             if ($request->signature != null) {
-                $folderPath     = public_path('signature/');
+                $folderPath     = public_path('signature/cuti/');
                 $image_parts    = explode(";base64,", $request->signature);
                 $image_type_aux = explode("image/", $image_parts[0]);
                 $image_type     = $image_type_aux[1];

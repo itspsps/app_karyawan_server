@@ -17,7 +17,6 @@ use App\Models\LevelJabatan;
 use App\Models\Lokasi;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
-use DB;
 use Carbon\CarbonPeriod;
 use DateTime;
 use PDF;
@@ -27,8 +26,7 @@ class PenugasanUserController extends Controller
     public function index()
     {
         $user_id        = Auth()->user()->id;
-        $user           = DB::table('users')
-            ->join('jabatans', 'jabatans.id', '=', 'users.jabatan_id')
+        $user           = User::join('jabatans', 'jabatans.id', '=', 'users.jabatan_id')
             ->join('departemens', 'departemens.id', '=', 'users.dept_id')
             ->join('divisis', 'divisis.id', '=', 'users.divisi_id')
             ->leftJoin('level_jabatans', 'level_jabatans.id', '=', 'jabatans.level_id')
@@ -594,7 +592,7 @@ class PenugasanUserController extends Controller
             }
         }
         $departemen = Departemen::groupBy('nama_departemen')->get();
-        $record_data        = DB::table('penugasans')->join('users', 'users.id', 'penugasans.id_user')->where('id_user', Auth::user()->id)
+        $record_data        = Penugasan::join('users', 'users.id', 'penugasans.id_user')->where('id_user', Auth::user()->id)
             ->select('penugasans.*', 'users.fullname')->orderBy('tanggal_pengajuan', 'DESC')->get();
         // dd($record_data);
         $lokasi_kantor = Lokasi::whereNotIn('kategori_kantor', ['all', 'all sp', 'all sps', 'all sip'])->where('lokasi_kantor', '!=', $user->penempatan_kerja)->get();
@@ -884,7 +882,7 @@ class PenugasanUserController extends Controller
         } else {
             $alamat_dikunjungi = $request->alamat_dikunjungi;
         }
-        $folderPath     = public_path('signature/');
+        $folderPath     = public_path('signature/penugasan/');
         $image_parts    = explode(";base64,", $request->signature);
         $image_type_aux = explode("image/", $image_parts[0]);
         $image_type     = $image_type_aux[1];
@@ -920,11 +918,11 @@ class PenugasanUserController extends Controller
 
     public function approveShow($id)
     {
-        $user       = DB::table('users')->join('jabatans', 'jabatans.id', '=', 'users.jabatan_id')
+        $user       = User::join('jabatans', 'jabatans.id', '=', 'users.jabatan_id')
             ->join('departemens', 'departemens.id', '=', 'users.dept_id')
             ->join('divisis', 'divisis.id', '=', 'users.divisi_id')
             ->where('users.id', Auth()->user()->id)->first();
-        $penugasan  = DB::table('penugasans')->join('jabatans', 'jabatans.id', 'penugasans.id_jabatan')
+        $penugasan  = Penugasan::join('jabatans', 'jabatans.id', 'penugasans.id_jabatan')
             ->join('departemens', 'departemens.id', 'penugasans.id_departemen')
             ->join('users', 'users.id', 'penugasans.id_user')
             ->join('divisis', 'divisis.id', 'penugasans.id_divisi')
@@ -941,7 +939,7 @@ class PenugasanUserController extends Controller
             // diana sps
             $finance = User::where('id', 'b709b754-7b00-4118-ab3f-e9b2760b08cf')->first();
         }
-        $id_penugasan   = DB::table('penugasans')->where('id', $id)->first();
+        $id_penugasan   = Penugasan::where('id', $id)->first();
         return view('users.penugasan.approve', [
             'penugasan' => $penugasan,
             'user'      => $user,
@@ -956,7 +954,7 @@ class PenugasanUserController extends Controller
     public function approvePenugasan(Request $request, $id)
     {
         // dd($request->all());
-        $folderPath     = public_path('signature/');
+        $folderPath     = public_path('signature/penugasan/');
         $image_parts    = explode(";base64,", $request->signature);
         $image_type_aux = explode("image/", $image_parts[0]);
         $image_type     = $image_type_aux[1];

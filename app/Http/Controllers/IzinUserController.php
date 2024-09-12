@@ -20,7 +20,6 @@ use App\Models\KategoriIzin;
 use App\Models\LevelJabatan;
 use App\Models\Lokasi;
 use DateTime;
-use DB;
 use Maatwebsite\Excel\Excel;
 use Ramsey\Uuid\Uuid;
 
@@ -38,7 +37,7 @@ class IzinUserController extends Controller
             return redirect('/home');
         }
         if (Auth::user()->kategori == 'Karyawan Bulanan') {
-            $user = DB::table('users')->join('jabatans', 'jabatans.id', '=', 'users.jabatan_id')
+            $user = User::Join('jabatans', 'jabatans.id', '=', 'users.jabatan_id')
                 ->join('level_jabatans', 'jabatans.level_id', '=', 'level_jabatans.id')
                 ->join('departemens', 'departemens.id', '=', 'users.dept_id')
                 ->join('divisis', 'divisis.id', '=', 'users.divisi_id')
@@ -505,11 +504,10 @@ class IzinUserController extends Controller
                 }
             }
         } else if (Auth::user()->kategori == 'Karyawan Harian') {
-            $user = DB::table('users')->where('id', Auth()->user()->id)->first();
-            $atasan = DB::table('users')
-                ->join('mapping_shifts', function ($join) {
-                    $join->on('mapping_shifts.koordinator_id', '=', 'users.id');
-                })
+            $user = User::where('id', Auth()->user()->id)->first();
+            $atasan = User::Join('mapping_shifts', function ($join) {
+                $join->on('mapping_shifts.koordinator_id', '=', 'users.id');
+            })
                 ->select('users.*', 'mapping_shifts.koordinator_id')
                 ->first();
             $get_user_backup = NULL;
@@ -517,7 +515,7 @@ class IzinUserController extends Controller
         }
         // dd($getUserAtasan);
         $jam_kerja = MappingShift::with('Shift')->where('user_id', Auth::user()->id)->where('tanggal_masuk', date('Y-m-d'))->first();
-        $record_data    = DB::table('izins')->where('user_id', Auth::user()->id)->orderBy('created_at', 'DESC')->get();
+        $record_data    = Izin::where('user_id', Auth::user()->id)->orderBy('created_at', 'DESC')->get();
         $kategori_izin = KategoriIzin::orderBy('id', 'ASC')->get();
         if ($jam_kerja == '' || $jam_kerja == NULL) {
             $req_jm_klr = NULL;
@@ -552,13 +550,13 @@ class IzinUserController extends Controller
     public function izinEdit($id)
     {
         if (Auth::user()->kategori == 'Karyawan Bulanan') {
-            $user = DB::table('users')->join('jabatans', 'jabatans.id', '=', 'users.jabatan_id')
+            $user = User::Join('jabatans', 'jabatans.id', '=', 'users.jabatan_id')
                 ->join('level_jabatans', 'jabatans.level_id', '=', 'level_jabatans.id')
                 ->join('departemens', 'departemens.id', '=', 'users.dept_id')
                 ->join('divisis', 'divisis.id', '=', 'users.divisi_id')
                 ->where('users.id', Auth()->user()->id)->first();
         } else if (Auth::user()->kategori == 'Karyawan Harian') {
-            $user = DB::table('users')->where('users.id', Auth()->user()->id)->first();
+            $user = User::where('users.id', Auth()->user()->id)->first();
         }
         $get_izin_id = Izin::where('id', $id)->first();
         $get_user_backup = User::where('dept_id', Auth::user()->dept_id)
@@ -746,7 +744,7 @@ class IzinUserController extends Controller
                 $terlambat  = NULL;
                 $jam_masuk = NULL;
             }
-            $folderPath     = public_path('signature/');
+            $folderPath     = public_path('signature/izin/');
             $image_parts    = explode(";base64,", $request->signature);
             $image_type_aux = explode("image/", $image_parts[0]);
             $image_type     = $image_type_aux[1];
@@ -975,11 +973,11 @@ class IzinUserController extends Controller
 
     public function izinApprove($id)
     {
-        $user   = DB::table('users')->join('jabatans', 'jabatans.id', '=', 'users.jabatan_id')
+        $user   = User::Join('jabatans', 'jabatans.id', '=', 'users.jabatan_id')
             ->join('departemens', 'departemens.id', '=', 'users.dept_id')
             ->join('divisis', 'divisis.id', '=', 'users.divisi_id')
             ->where('users.id', Auth()->user()->id)->first();
-        $data   = DB::table('izins')->where('id', $id)->first();
+        $data   = Izin::where('id', $id)->first();
         $jam_kerja = MappingShift::with('Shift')->where('user_id', $data->user_id)->where('tanggal_masuk', date('Y-m-d'))->first();
         return view('users.izin.approveizin', [
             'user'  => $user,
@@ -1005,7 +1003,7 @@ class IzinUserController extends Controller
         }
         if ($request->izin == 'Sakit') {
             if ($request->signature != null) {
-                $folderPath     = public_path('signature/');
+                $folderPath     = public_path('signature/izin/');
                 $image_parts    = explode(";base64,", $request->signature);
                 $image_type_aux = explode("image/", $image_parts[0]);
                 $image_type     = $image_type_aux[1];
@@ -1272,7 +1270,7 @@ class IzinUserController extends Controller
         } else if ($request->izin == 'Tidak Masuk (Mendadak)') {
             $no_form = Auth::user()->kontrak_kerja . '/MK/' . date('Y/m/d') . '/' . $no;
             if ($request->signature != null) {
-                $folderPath     = public_path('signature/');
+                $folderPath     = public_path('signature/izin/');
                 $image_parts    = explode(";base64,", $request->signature);
                 $image_type_aux = explode("image/", $image_parts[0]);
                 $image_type     = $image_type_aux[1];
@@ -1430,7 +1428,7 @@ class IzinUserController extends Controller
             // dd('ok');
             $no_form = Auth::user()->kontrak_kerja . '/IP/' . date('Y/m/d') . '/' . $no;
             if ($request->signature != null) {
-                $folderPath     = public_path('signature/');
+                $folderPath     = public_path('signature/izin/');
                 $image_parts    = explode(";base64,", $request->signature);
                 $image_type_aux = explode("image/", $image_parts[0]);
                 $image_type     = $image_type_aux[1];
@@ -1477,7 +1475,7 @@ class IzinUserController extends Controller
         } else if ($request->izin == 'Datang Terlambat') {
             $no_form = Auth::user()->kontrak_kerja . '/SK/FKDT/' . date('Y/m/d') . '/' . $no;
             if ($request->signature != null) {
-                $folderPath     = public_path('signature/');
+                $folderPath     = public_path('signature/izin/');
                 $image_parts    = explode(";base64,", $request->signature);
                 $image_type_aux = explode("image/", $image_parts[0]);
                 $image_type     = $image_type_aux[1];
