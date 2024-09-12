@@ -59,7 +59,7 @@ var interval = setInterval(() => {
                 setTimeout(function() {
                     take_snapshot()
                     button.click()
-                     }, 2000); 
+                     }, 3000); 
             }
             submitButton();
         } else {

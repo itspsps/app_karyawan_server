@@ -49,7 +49,7 @@ video.addEventListener('play', () => {
         allowOutsideClick: false,
         // background: 'transparent',
         position: 'bottom',
-        html: '<div style="width:100%; font-size:10pt" class="me-2 mb-2 d-flex align-items-center text-center"><span class="spinner-border me-3 spinner-border-sm text-primary" role="status" aria-hidden="true"></span>Letakkan&nbsp;Wajah&nbsp;Didepan&nbsp;Kamera..</div>',
+        html: '<div style="width:100%; font-size:10pt;" class="me-2 mb-2 d-flex align-items-center text-center"><span class="spinner-border me-3 spinner-border-sm text-primary" role="status" aria-hidden="true"></span>Letakkan&nbsp;Wajah&nbsp;Anda&nbsp;Didepan&nbsp;Kamera..</div>',
         showCancelButton: false,
         showConfirmButton: false,
       
