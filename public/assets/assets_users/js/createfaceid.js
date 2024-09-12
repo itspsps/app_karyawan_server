@@ -55,7 +55,7 @@ video.addEventListener('play', () => {
         allowOutsideClick: false,
         // background: 'transparent',
         position: 'bottom',
-        html: '<div style="width:50%;" class="me-2 mb-2 d-flex align-items-center text-center"><span class="spinner-border me-3 spinner-border-sm text-primary" role="status" aria-hidden="true"></span>Persiapan...</div>',
+        html: '<div style="width:50%;" class="me-2 mb-2 d-flex align-items-center text-center"><span class="spinner-border me-3 spinner-border-sm text-primary" role="status" aria-hidden="true"></span>Letakkan Wajah Didepan Kamera..</div>',
         showCancelButton: false,
         showConfirmButton: false,
       
