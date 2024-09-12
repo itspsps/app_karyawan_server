@@ -409,7 +409,7 @@
                 <h5 class="title">FORM PENGAJUAN IZIN TIDAK MASUK</h5>
                 @endif
                 <p>Apakah Anda Ingin Download Form Pengajuan Izin?</p>
-                <a id="btn_klik" href="{{url('/izin/cetak_form_izin/'.$record_data->id)}}" class="btn btn-sm btn-danger light pwa-btn">
+                <a id="btn_klik" href="{{url('/izin/cetak_form_izin_user/'.$record_data->id)}}" class="btn btn-sm btn-danger light pwa-btn">
                     <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" fill="#000000" height="18" width="18" version="1.1" id="Capa_1" viewBox="0 0 48 48" xml:space="preserve">
                         <g>
                             <g>

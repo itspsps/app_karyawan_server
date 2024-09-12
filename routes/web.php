@@ -96,7 +96,7 @@ Route::middleware('auth:web', 'log.activity')->group(function () {
     Route::get('/izin/detail/edit/{id}', [IzinUserController::class, 'izinEdit']);
     Route::get('/izin/approve/{id}', [IzinUserController::class, 'izinApprove']);
     Route::post('/izin/approve/proses', [IzinUserController::class, 'izinApproveProses']);
-    Route::get('/izin/cetak_form_izin/{id}', [IzinUserController::class, 'cetak_form_izin']);
+    Route::get('/izin/cetak_form_izin_user/{id}', [IzinUserController::class, 'cetak_form_izin_user']);
     Route::get('/izin/delete_izin/{id}', [IzinUserController::class, 'delete_izin']);
     Route::post('/izin/datang_terlambat_proses', [HomeUserController::class, 'proses_izin_datang_terlambat']);
 

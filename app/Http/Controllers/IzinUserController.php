@@ -20,6 +20,7 @@ use App\Models\KategoriIzin;
 use App\Models\LevelJabatan;
 use App\Models\Lokasi;
 use DateTime;
+use Illuminate\Support\Facades\App;
 use Maatwebsite\Excel\Excel;
 use Ramsey\Uuid\Uuid;
 
@@ -1528,8 +1529,9 @@ class IzinUserController extends Controller
         $request->session()->flash('hapus_izin_sukses');
         return redirect('izin/dashboard');
     }
-    public function cetak_form_izin($id)
+    public function cetak_form_izin_user($id)
     {
+        // dd('ok');
         $jabatan = Jabatan::join('users', function ($join) {
             $join->on('jabatans.id', '=', 'users.jabatan_id');
             $join->orOn('jabatans.id', '=', 'users.jabatan1_id');
@@ -1564,8 +1566,9 @@ class IzinUserController extends Controller
             'data_interval' => $data_interval,
         ];
         if ($izin->izin == 'Datang Terlambat') {
-            $pdf = PDF::loadView('users/izin/form_izin_terlambat', $data)->setPaper('A5', 'landscape');
-            return $pdf->download('FORM_KETERANGAN_DATANG_TERLAMBAT_' . Auth::user()->name . '_' . date('Y-m-d H:i:s') . '.pdf');
+            // dd($data);
+            $pdf = PDF::loadView('users/izin/form_izin_terlambat', $data)->setPaper('A5', 'landscape')->setOptions(['isRemoteEnabled' => true]);
+            return $pdf->stream('FORM_KETERANGAN_DATANG_TERLAMBAT_' . Auth::user()->name . '_' . date('Y-m-d H:i:s') . '.pdf');
         } else if ($izin->izin == 'Tidak Masuk (Mendadak)') {
             $pdf = PDF::loadView('users/izin/form_izin_tidak_masuk', $data);
             return $pdf->stream('FORM_PENGAJUAN_IZIN_TIDAK_MASUK_' . Auth::user()->name . '_' . date('Y-m-d H:i:s') . '.pdf');

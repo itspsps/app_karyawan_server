@@ -1,6 +1,6 @@
 @extends('users.izin.layout.main')
 @section('title') APPS | KARYAWAN - SP @endsection
-@section('content')
+@section('css')
 <script type="text/javascript" src="{{ asset('assets_ttd/assets/signature.js') }}"></script>
 <style>
     #note {
@@ -12,6 +12,51 @@
         cursor: default;
     }
 </style>
+@endsection
+@section('content')
+<div class="head-details">
+    <div class="container">
+        <div class="dz-info col-12">
+            <span class="location d-block text-left">Form Izin&nbsp;
+            </span>
+            @if(auth()->user()->kategori=='Karyawan Bulanan')
+            <h6 class="title">@if($user->kontrak_kerja == 'SP')
+                CV. SUMBER PANGAN
+                @elseif($user->kontrak_kerja == 'SPS')
+                PT. SURYA PANGAN SEMESTA
+                @elseif($user->kontrak_kerja == 'SIP')
+                CV. SURYA INTI PANGAN
+                @endif</h6>
+            {{-- @foreach ($user  as $dep) --}}
+            <h6 class="title">Department of "{{ $user->nama_departemen }}"</h6>
+            {{-- @endforeach --}}
+            @elseif(auth()->user()->kategori=='Karyawan Harian')
+            <h6 class="title">{{auth()->user()->penempatan_kerja}}
+            </h6>
+            @endif
+        </div>
+        <div class="dz-media media-65">
+            <img src="assets/images/logo/logo.svg" alt="">
+        </div>
+    </div>
+</div>
+
+<div class="fixed-content p-0">
+    <div class="container">
+        <div class="main-content">
+            <div class="left-content">
+                <a id="btn_klik" href="{{url('home')}}" class="btn-back">
+                    <svg width="18" height="18" viewBox="0 0 10 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M9.03033 0.46967C9.2966 0.735936 9.3208 1.1526 9.10295 1.44621L9.03033 1.53033L2.561 8L9.03033 14.4697C9.2966 14.7359 9.3208 15.1526 9.10295 15.4462L9.03033 15.5303C8.76406 15.7966 8.3474 15.8208 8.05379 15.6029L7.96967 15.5303L0.96967 8.53033C0.703403 8.26406 0.679197 7.8474 0.897052 7.55379L0.96967 7.46967L7.96967 0.46967C8.26256 0.176777 8.73744 0.176777 9.03033 0.46967Z" fill="#a19fa8" />
+                    </svg>
+                </a>
+                <h5 class="mb-0">Back</h5>
+            </div>
+            <div class="mid-content">
+            </div>
+        </div>
+    </div>
+</div>
 <div class="container">
     <form id="form_approve" class="my-2" method="post" enctype="multipart/form-data">
         @csrf
@@ -40,7 +85,7 @@
                         @if($data->ttd_pengajuan=='')
                         <h6 class="text-center">kosong</h6>
                         @else
-                        <img src="{{ url('https://karyawan.sumberpangan.store/laravel/public/signature/'.$data->ttd_pengajuan.'.png') }}" style="width: 100%;" alt="">
+                        <img src="{{ asset('public/signature/izin/'.$data->ttd_pengajuan.'.png') }}" style="width: 100%;" alt="">
                         @endif
                         <p style="text-align: center;font-weight: bold">{{ \Carbon\Carbon::parse($data->waktu_ttd_pengajuan)->isoFormat('D MMMM Y HH:mm')}} WIB</p>
                     </div>
@@ -95,7 +140,7 @@
                         <h5 class="modal-title">SURAT KETERANGAN SAKIT </h5>
                     </div>
                     <div class="modal-body">
-                        <img src="https://karyawan.sumberpangan.store/laravel/storage/app/public/foto_izin/{{$data->foto_izin}}" alt="" id="">
+                        <img src="{{url('../storage/app/public/foto_izin/',$data->foto_izin)}}" alt="" id="">
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-sm btn-danger light" data-bs-dismiss="modal">Close</button>
