@@ -79,11 +79,11 @@ video.addEventListener('play',renderVideo, () => {
         
     }
     
-    const faceMatcher = new faceapi.FaceMatcher(labeledFaceDescriptors, 0.5)
     // me load gambar
     
 })
 async function renderVideo() {
+    const faceMatcher = new faceapi.FaceMatcher(labeledFaceDescriptors, 0.5)
     const displaySize = {width: video.width, height: video.height}
     faceapi.matchDimensions(canvas, displaySize)
     const detections = await faceapi.detectAllFaces(video, new faceapi.TinyFaceDetectorOptions())
