@@ -21,7 +21,11 @@ const startVideo = () => {
     navigator.getUserMedia(
         {video: {}},
         stream => video.srcObject = stream,
-        err => console.error(err)
+        err => Swal.fire({
+           title: 'Error',
+            icon: 'error',
+            text: err,
+        })
     )
 }
 
@@ -62,20 +66,13 @@ video.addEventListener('play', () => {
     
     // membuat data sesuai format dari faceapi
     const labeledFaceDescriptors = []
-    // console.log(dataFaceJson);
-    // console.log(JSON.parse(dataFaceJson[0].face_id));
-    // console.log(dataFaceJson[0].id);
-    // console.log(dataKaryawanJson.find(value => value.id));
     for (let i = 0; i < dataFaceJson.length; i++) {
         const data = dataKaryawanJson.find(value => value.id === dataFaceJson[i].id)
-        // console.log(data);  
         
-        // rubah dari array biasa menjadi float32Array
         const array1 = JSON.parse(dataFaceJson[i].face_id)
-        // console.log(array1);
+        
         const float1 = Float32Array.from(array1)
-        // console.log(data.name);
-        // console.log(float1);
+    
         
         // memasukan data yang sesuai format ke array labeledFaceDescriptors
         labeledFaceDescriptors.push(new faceapi.LabeledFaceDescriptors(
@@ -95,10 +92,7 @@ video.addEventListener('play', () => {
     
         //menambkan kan kotak pada muka sebagai tanda pendeteksian wajah berhasil
         faceapi.draw.drawDetections(canvas, resizedDetections)
-        // digunakan untuk menampilkan faceLandmark
         faceapi.draw.drawFaceLandmarks(canvas, resizedDetections)
-        //digunakan untuk menampilkan expresi wajah
-        // faceapi.draw.drawFaceExpressions(canvas, resizedDetections)
 
         const results = resizedDetections.map(d => faceMatcher.findBestMatch(d.descriptor))
         results.forEach((result, i) => {
@@ -109,7 +103,7 @@ video.addEventListener('play', () => {
             labelHasil = drawBox.options.label
 
         })
-    }, 2000)
+    }, 3000)
 
 })
 

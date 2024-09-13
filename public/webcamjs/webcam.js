@@ -575,7 +575,11 @@ var Webcam = {
 			}
 
 			// default error handler if no custom one specified
-			alert("Webcam.js Error: " + message);
+			Swal.fire({
+				title: 'error',
+				text: "Webcam.js Error: " + message,
+				icon:'error',
+			});
 		}
 		
 		return false; // no hook defined
