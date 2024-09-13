@@ -664,7 +664,7 @@ Route::get('optimize', function () {
     Artisan::call('optimize');
 
     Alert::success('success', 'Optimization Success..');
-    return redirect()->back()->with('success', 'Optimization Success..');
+    return redirect('/home')->with('success', 'Optimization Success..');
 });
 
 // Auth::routes();
