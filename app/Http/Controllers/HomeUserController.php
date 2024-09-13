@@ -4207,6 +4207,26 @@ class HomeUserController extends Controller
                         ]);
                     } else if ($jml_all > 180) {
                         // dd('ok1');
+                        $telat = $jml_all;
+                        $update = MappingShift::where('id', $request->shift_karyawan)->first();
+                        $update->jam_absen = date('H:i:s');
+                        $update->telat = $telat;
+                        $update->foto_jam_absen = $request['foto_jam_absen'];
+                        $update->lat_absen = $request['lat_absen'];
+                        $update->long_absen = $request['long_absen'];
+                        $update->jarak_masuk = $request['jarak_masuk'];
+                        $update->lokasi_absen = $request['lokasi_absen'];
+                        $update->status_absen = 'TIDAK HADIR KERJA';
+                        $update->keterangan_absensi = 'TIDAK HADIR KERJA';
+                        $update->kelengkapan_absensi = 'BELUM PRESENSI PULANG';
+                        $update->update();
+
+                        ActivityLog::create([
+                            'user_id' => Auth::user()->id,
+                            'activity' => 'tambah',
+                            'description' => 'Absen Masuk Pada Tanggal ' . $tanggal,
+                            'status_absen_skrg' => MappingShift::where('user_id', $user_login)->where('tanggal_masuk', $tglskrg)->get(),
+                        ]);
                         $request->session()->flash('absen_tidak_masuk');
                         return redirect('/home');
                     }

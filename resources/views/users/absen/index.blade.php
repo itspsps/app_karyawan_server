@@ -277,9 +277,9 @@
 @endsection
 @section('js')
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
-<script defer src="{{ asset('assets/assets_users/js/face-api.js/face-api.min.js') }}"></script>
-<script defer src="{{ asset('assets/assets_users/js/absensi.js')}}" onload="onLoadData('{{ $face }}', '{{ $karyawan }}', '{{ $angka }}')"></script>
-<script defer src="{{ asset('assets/assets_users/js/submitFormAbsensi.js')}}" onload="onLoadDataAbsensi('{{ $absensi }}','{{$jumlah_absensi}}')"></script>
+<script defer src="{{ asset('assets/assets_users/js/face-api.js/face-api.min.js?123') }}"></script>
+<script defer src="{{ asset('assets/assets_users/js/absensi.js?123')}}" onload="onLoadData('{{ $face }}', '{{ $karyawan }}', '{{ $angka }}')"></script>
+<script defer src="{{ asset('assets/assets_users/js/submitFormAbsensi.js?123')}}" onload="onLoadDataAbsensi('{{ $absensi }}','{{$jumlah_absensi}}')"></script>
 
 <script>
     getLocation();

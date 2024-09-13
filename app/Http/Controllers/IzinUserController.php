@@ -1568,16 +1568,16 @@ class IzinUserController extends Controller
         if ($izin->izin == 'Datang Terlambat') {
             // dd($data);
             $pdf = PDF::loadView('users/izin/form_izin_terlambat', $data)->setPaper('A5', 'landscape')->setOptions(['isRemoteEnabled' => true]);
-            return $pdf->stream('FORM_KETERANGAN_DATANG_TERLAMBAT_' . Auth::user()->name . '_' . date('Y-m-d H:i:s') . '.pdf');
+            return $pdf->download('FORM_KETERANGAN_DATANG_TERLAMBAT_' . Auth::user()->name . '_' . date('Y-m-d H:i:s') . '.pdf');
         } else if ($izin->izin == 'Tidak Masuk (Mendadak)') {
             $pdf = PDF::loadView('users/izin/form_izin_tidak_masuk', $data);
-            return $pdf->stream('FORM_PENGAJUAN_IZIN_TIDAK_MASUK_' . Auth::user()->name . '_' . date('Y-m-d H:i:s') . '.pdf');
+            return $pdf->download('FORM_PENGAJUAN_IZIN_TIDAK_MASUK_' . Auth::user()->name . '_' . date('Y-m-d H:i:s') . '.pdf');
         } else if ($izin->izin == 'Pulang Cepat') {
             $pdf = PDF::loadView('users/izin/form_izin_pulang_cepat', $data)->setPaper('A5', 'landscape');
-            return $pdf->stream('FORM_PENGAJUAN_IZIN_PULANG_CEPAT_' . Auth::user()->name . '_' . date('Y-m-d H:i:s') . '.pdf');
+            return $pdf->download('FORM_PENGAJUAN_IZIN_PULANG_CEPAT_' . Auth::user()->name . '_' . date('Y-m-d H:i:s') . '.pdf');
         } else if ($izin->izin == 'Keluar Kantor') {
             $pdf = PDF::loadView('users/izin/form_izin_keluar', $data)->setPaper('A5', 'landscape');
-            return $pdf->stream('FORM_PENGAJUAN_IZIN_KELUAR_KANTOR_' . Auth::user()->name . '_' . date('Y-m-d H:i:s') . '.pdf');
+            return $pdf->download('FORM_PENGAJUAN_IZIN_KELUAR_KANTOR_' . Auth::user()->name . '_' . date('Y-m-d H:i:s') . '.pdf');
         }
     }
 }

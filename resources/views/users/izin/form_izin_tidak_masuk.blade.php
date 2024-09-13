@@ -5,7 +5,7 @@
     <title>FORM PERMINTAAN CUTI</title>
     <!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous"> -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-    <link rel="stylesheet" href="{{asset('public/kpi/bower_components/font-awesome/css/font-awesome.min.css')}}">
+    <link rel="stylesheet" href="https://portal-sp.my.id/kpi/bower_components/font-awesome/css/font-awesome.min.css">
 </head>
 
 
@@ -18,11 +18,11 @@
     <table border="0" style="margin-top: 3px;" class="kop" width="100%">
         <tr>
             @if($data_izin->User->kontrak_kerja=='SP')
-            <td style="width:20%;"> <img src="{{ url('public/holding/assets/img/logosp.png') }}" width="80px" class="images"> </td>
+            <td style="width:20%;"> <img src="https://portal-sp.my.id/holding/assets/img/logosp.png" width="80px" class="images"> </td>
             @elseif($data_izin->User->kontrak_kerja=='SPS')
-            <td style="width:20%;"> <img src="{{ url('public/holding/assets/img/logosps.png') }}" width="80px" class="images"> </td>
+            <td style="width:20%;"> <img src="https://portal-sp.my.id/holding/assets/img/logosps.png" width="80px" class="images"> </td>
             @elseif($data_izin->User->kontrak_kerja=='SIP')
-            <td style="width:20%;"> <img src="{{ url('public/holding/assets/img/logosip.png') }}" width="80px" class="images"> </td>
+            <td style="width:20%;"> <img src="https://portal-sp.my.id/holding/assets/img/logosip.png" width="80px" class="images"> </td>
             @endif
             <td style="width:40%;">
                 @if($data_izin->User->kontrak_kerja=='SP')
@@ -180,13 +180,13 @@
         <tbody>
             <tr style="font-weight: bold;">
                 <td>
-                    <img style="text-align: center;" src="{{ url('https://karyawan.sumberpangan.store/laravel/public/signature/'.$data_izin->ttd_pengajuan.'.png') }}" width="100%" alt="">
+                    <img style="text-align: center;" src="https://portal-sp.my.id/signature/'.$data_izin->ttd_pengajuan.'.png" width="100%" alt="">
                 </td>
                 <td>
-                    <img style="text-align: center;" src="{{ url('https://karyawan.sumberpangan.store/laravel/public/signature/'.$data_izin->ttd_atasan.'.png') }}" width="100%" alt="">
+                    <img style="text-align: center;" src="https://portal-sp.my.id/signature/'.$data_izin->ttd_atasan.'.png" width="100%" alt="">
                 </td>
                 <td>
-                    <img style="text-align: center;" src="{{ url('https://karyawan.sumberpangan.store/laravel/public/signature/'.$data_izin->ttd_atasan.'.png') }}" width="100%" alt="">
+                    <img style="text-align: center;" src="https://portal-sp.my.id/signature/'.$data_izin->ttd_atasan.'.png" width="100%" alt="">
                 </td>
             </tr>
         </tbody>
