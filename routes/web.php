@@ -43,6 +43,8 @@ use App\Http\Controllers\StrukturOrganisasiController;
 use App\Http\Controllers\RecruitmentController;
 use App\Models\Jabatan;
 use Carbon\Carbon;
+use RealRashid\SweetAlert\Facades\Alert;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -74,7 +76,6 @@ Route::middleware('auth:web', 'log.activity')->group(function () {
     Route::get('/datatableHome', [HomeUserController::class, 'datatableHome'])->name('datatableHome');
     Route::get('/get_count_absensi_home', [HomeUserController::class, 'get_count_absensi_home'])->name('get_count_absensi_home');
     Route::get('/home/absen', [HomeUserController::class, 'HomeAbsen'])->name('absen');
-    Route::get('/home/camera2', [HomeUserController::class, 'camera2'])->name('camera2');
     Route::post('/home/absenPulang', [HomeUserController::class, 'absenPulang'])->name('absenPulang');
     Route::get('/home/maps/{lat}/{long}', [HomeUserController::class, 'maps']);
     Route::get('/home/my-absen', [HomeUserController::class, 'myAbsen']);
@@ -662,7 +663,8 @@ Route::get('optimize', function () {
     Artisan::call('config:cache');
     Artisan::call('optimize');
 
-    echo 'optimize clear';
+    Alert::success('success', 'Optimization Success..');
+    return redirect()->back()->with('success', 'Optimization Success..');
 });
 
 // Auth::routes();

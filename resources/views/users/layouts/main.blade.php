@@ -42,7 +42,7 @@
 
 <body>
     <div class="page-wraper" style="overflow-y: hidden;">
-
+        @include('sweetalert::alert')
         <!-- Header -->
         <header class="header transparent">
             <div class="main-bar">
