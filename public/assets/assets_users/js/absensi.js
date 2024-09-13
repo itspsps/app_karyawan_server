@@ -47,7 +47,7 @@ Swal.fire({
     showConfirmButton: false,
   
 });
-video.addEventListener('play',renderVideo, () => {
+video.addEventListener('play', () => {
     Swal.close()
     Swal.fire({
         allowOutsideClick: false,
@@ -60,7 +60,9 @@ video.addEventListener('play',renderVideo, () => {
     });
     // console.log(canvas);
     // document.getElementById('container').appendChild(canvas)
-    
+    const displaySize = {width: video.width, height: video.height}
+    faceapi.matchDimensions(canvas, displaySize)
+
     
     // membuat data sesuai format dari faceapi
     const labeledFaceDescriptors = []
@@ -76,37 +78,34 @@ video.addEventListener('play',renderVideo, () => {
         labeledFaceDescriptors.push(new faceapi.LabeledFaceDescriptors(
             data.name,[ float1])
         )
-        
+
     }
-    
-    // me load gambar
-    
-})
-async function renderVideo() {
+
     const faceMatcher = new faceapi.FaceMatcher(labeledFaceDescriptors, 0.5)
-    const displaySize = {width: video.width, height: video.height}
-    faceapi.matchDimensions(canvas, displaySize)
-    const detections = await faceapi.detectAllFaces(video, new faceapi.TinyFaceDetectorOptions())
-    .withFaceLandmarks()
-        .withFaceDescriptors()
-    const resizedDetections = faceapi.resizeResults(detections, displaySize)
-    canvas.getContext('2d').clearRect(0, 0, canvas.width, canvas.height)
+    // me load gambar
+    setInterval(async () => {
+        const detections = await faceapi.detectAllFaces(video, new faceapi.TinyFaceDetectorOptions())
+        .withFaceLandmarks()
+            .withFaceDescriptors()
+        const resizedDetections = faceapi.resizeResults(detections, displaySize)
+        canvas.getContext('2d').clearRect(0, 0, canvas.width, canvas.height)
+    
+        //menambkan kan kotak pada muka sebagai tanda pendeteksian wajah berhasil
+        faceapi.draw.drawDetections(canvas, resizedDetections)
+        faceapi.draw.drawFaceLandmarks(canvas, resizedDetections)
 
-    //menambkan kan kotak pada muka sebagai tanda pendeteksian wajah berhasil
-    faceapi.draw.drawDetections(canvas, resizedDetections)
-    faceapi.draw.drawFaceLandmarks(canvas, resizedDetections)
+        const results = resizedDetections.map(d => faceMatcher.findBestMatch(d.descriptor))
+        results.forEach((result, i) => {
+            const box = resizedDetections[i].detection.box
+            const drawBox = new faceapi.draw.DrawBox(box, {label: result.toString()})
+            drawBox.draw(canvas)
+            // console.log(drawBox);
+            labelHasil = drawBox.options.label
 
-    const results = resizedDetections.map(d => faceMatcher.findBestMatch(d.descriptor))
-    results.forEach((result, i) => {
-        const box = resizedDetections[i].detection.box
-        const drawBox = new faceapi.draw.DrawBox(box, {label: result.toString()})
-        drawBox.draw(canvas)
-        // console.log(drawBox);
-        labelHasil = drawBox.options.label
+        })
+    }, 2000)
 
-    })
-    setTimeout(() => renderVideo(),3000)
-}
+})
 
 
 
