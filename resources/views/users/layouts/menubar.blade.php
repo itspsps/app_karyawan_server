@@ -241,6 +241,15 @@
             </li>
             @endif
             <li class="text-center">
+                <a class="nav-link " id="btn_klik" href="{{ url('/home/camera2') }}">
+                    <span class="dz-icon bg-info light" style="height: 50px; width: 50px; box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.2), 0 3px 10px 0 rgba(0, 0, 0, 0.1);">
+                        <span class="badge badge-danger light" style="position: absolute; margin-top: -12%; margin-right: -12%; "></span>
+                        <i class="fa fa-camera"></i>
+                    </span>
+                </a>
+                <span>Camera2</span>
+            </li>
+            <li class="text-center">
                 <a class="nav-link" id="btn_klik" href="javascript:void(0);" onclick="event.preventDefault();document.getElementById('logout-form').submit();">
                     <span class="dz-icon bg-red light">
                         <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="18" height="18" viewBox="0 0 24 24" version="1.1" class="svg-main-icon">

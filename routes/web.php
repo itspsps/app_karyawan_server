@@ -74,6 +74,7 @@ Route::middleware('auth:web', 'log.activity')->group(function () {
     Route::get('/datatableHome', [HomeUserController::class, 'datatableHome'])->name('datatableHome');
     Route::get('/get_count_absensi_home', [HomeUserController::class, 'get_count_absensi_home'])->name('get_count_absensi_home');
     Route::get('/home/absen', [HomeUserController::class, 'HomeAbsen'])->name('absen');
+    Route::get('/home/camera2', [HomeUserController::class, 'camera2'])->name('camera2');
     Route::post('/home/absenPulang', [HomeUserController::class, 'absenPulang'])->name('absenPulang');
     Route::get('/home/maps/{lat}/{long}', [HomeUserController::class, 'maps']);
     Route::get('/home/my-absen', [HomeUserController::class, 'myAbsen']);
