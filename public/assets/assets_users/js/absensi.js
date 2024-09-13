@@ -31,7 +31,7 @@ Promise.all([
     faceapi.nets.faceLandmark68Net.loadFromUri('../assets/assets_users/js/face-api.js/models'),
     faceapi.nets.faceRecognitionNet.loadFromUri('../assets/assets_users/js/face-api.js/models'),
     faceapi.nets.ssdMobilenetv1.loadFromUri('../assets/assets_users/js/face-api.js/models'),
-    faceapi.nets.faceExpressionNet.loadFromUri('../assets/assets_users/js/face-api.js/models'),
+    // faceapi.nets.faceExpressionNet.loadFromUri('../assets/assets_users/js/face-api.js/models'),
 ]).then(startVideo);
 
 Swal.fire({
@@ -89,7 +89,6 @@ video.addEventListener('play', () => {
     setInterval(async () => {
         const detections = await faceapi.detectAllFaces(video, new faceapi.TinyFaceDetectorOptions())
         .withFaceLandmarks()
-            .withFaceExpressions()
             .withFaceDescriptors()
         const resizedDetections = faceapi.resizeResults(detections, displaySize)
         canvas.getContext('2d').clearRect(0, 0, canvas.width, canvas.height)
@@ -110,7 +109,7 @@ video.addEventListener('play', () => {
             labelHasil = drawBox.options.label
 
         })
-    }, 100)
+    }, 2000)
 
 })
 
