@@ -23,7 +23,7 @@ class HomeController extends Controller
      */
     public function index()
     {
-        dd('ok');
+        // dd('ok');
         if (!auth()->check()) {
             return view('auth.login', [
                 "title" => "Log In"

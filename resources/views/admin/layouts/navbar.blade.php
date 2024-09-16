@@ -51,8 +51,8 @@
                                                 </div>
                                             </div>
                                             <div class="flex-grow-1">
-                                                <h6 class="mb-0">ADMIN</h6>
-                                                <small class="text-muted">Admin</small>
+                                                <h6 class="mb-0">{{Auth::user()->fullname}}</h6>
+                                                <small class="text-muted">{{Auth::user()->name}}</small>
                                             </div>
                                         </div>
                                     </a>

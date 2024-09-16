@@ -21,6 +21,8 @@ class authController extends Controller
         } else {
             if (auth()->user()->is_admin == 'admin') {
                 return redirect('dashboard/holding');
+            } else if (auth()->user()->is_admin == 'superadmin') {
+                return redirect('dashboard/holding');
             } else {
                 return redirect('home');
             }
@@ -81,6 +83,10 @@ class authController extends Controller
         }
         if (Auth::guard('web')->attempt(array($fieldType => $credentials['username'], 'password' => $credentials['password'], 'is_admin' => 'admin'), $remember)) {
             // dd('admin');
+            Alert::success('Berhasil', 'Selamat Datang ' . $data->name);
+            return redirect('/dashboard/holding')->with('Berhasil', 'Selamat Datang ' . $data->name);
+        } else if (Auth::guard('web')->attempt(array($fieldType => $credentials['username'], 'password' => $credentials['password'], 'is_admin' => 'superadmin'), $remember)) {
+            // dd('superadmin');
             Alert::success('Berhasil', 'Selamat Datang ' . $data->name);
             return redirect('/dashboard/holding')->with('Berhasil', 'Selamat Datang ' . $data->name);
         } else if (Auth::guard('web')->attempt(array($fieldType => $credentials['username'], 'password' => $credentials['password'], 'is_admin' => 'user'), $remember)) {

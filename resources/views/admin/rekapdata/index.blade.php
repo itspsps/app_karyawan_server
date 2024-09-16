@@ -217,8 +217,8 @@
                                         </tr>
                                         <tr>
                                             <th>Tepat&nbsp;Waktu</th>
-                                            <th>Telat&nbsp;Hadir(>15 Menit)</th>
-                                            <th>Telat&nbsp;Hadir(<15 Menit)</th>
+                                            <th>Telat&nbsp;Hadir(>&nbsp;15&nbsp;Menit)</th>
+                                            <th>Telat&nbsp;Hadir(<&nbsp;15&nbsp;Menit)</th>
                                             <th>Izin</th>
                                             <th>Cuti</th>
                                             <th>Dinas</th>
