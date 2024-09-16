@@ -18,6 +18,7 @@ class RoleAndPermissionSeeder extends Seeder
         Permission::create(['name' => 'create-karyawan']);
         Permission::create(['name' => 'edit-karyawan']);
         Permission::create(['name' => 'delete-karyawan']);
+        Permission::create(['name' => 'mappingshift-karyawan']);
 
 
         $adminRole = Role::create(['name' => 'Admin']);
