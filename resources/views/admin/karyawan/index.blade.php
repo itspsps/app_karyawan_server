@@ -20,7 +20,9 @@
                     </div>
                 </div>
                 <div class="card-body">
+                    @can('edit posts', Post::class)
                     <a type="button" href="{{url('karyawan/tambah-karyawan/'.$holding)}}" class="btn btn-sm btn-primary waves-effect waves-light"><i class="menu-icon tf-icons mdi mdi-plus"></i>Tambah</a>
+                    @endcan
                     <button class="btn btn-sm btn-success waves-effect waves-light dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                         <i class="menu-icon tf-icons mdi mdi-file-excel"></i> Excel
                     </button>

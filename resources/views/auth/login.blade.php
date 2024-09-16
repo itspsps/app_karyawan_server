@@ -20,7 +20,7 @@
     <link rel="shortcut icon" type="image/x-icon" href="{{ asset('holding/assets/img/logosp.png') }}" />
 
     <!-- Title -->
-    <title>APPS KARYAWAN</title>
+    <title>HRD-APPS</title>
 
     <!-- Stylesheets -->
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/assets_users/css/style.css') }}">
