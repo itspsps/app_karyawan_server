@@ -23,8 +23,8 @@
     <title>HRD-APPS</title>
 
     <!-- Stylesheets -->
-    <link rel="stylesheet" type="text/css" href="{{ asset('public/assets/assets_users/css/style.css') }}">
-    <link rel="stylesheet" href="{{ asset('public/assets/assets_users/vendor/swiper/swiper-bundle.min.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('assets/assets_users/css/style.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/assets_users/vendor/swiper/swiper-bundle.min.css') }}">
 
 
     <!-- Google Fonts -->
@@ -151,8 +151,8 @@
                         <span class="saprate">Or sign in with</span>
                     </div>
                     <div class="social-btn-group text-center">
-                        <a href="https://www.google.com/" target="_blank" class="social-btn"><img src="{{ asset('public/assets/assets_users/images/social/google.png') }}" alt="socila-image"></a>
-                        <a href="https://www.facebook.com/" target="_blank" class="social-btn ms-3"><img src="{{ asset('public/assets/assets_users/images/social/facebook.png') }}" alt="social-image"></a>
+                        <a href="https://www.google.com/" target="_blank" class="social-btn"><img src="{{ asset('assets/assets_users/images/social/google.png') }}" alt="socila-image"></a>
+                        <a href="https://www.facebook.com/" target="_blank" class="social-btn ms-3"><img src="{{ asset('assets/assets_users/images/social/facebook.png') }}" alt="social-image"></a>
                     </div>
                 </div>
             </div>
@@ -169,11 +169,11 @@
     <!--**********************************
         Scripts
     ***********************************-->
-    <script src="{{ asset('public/assets/assets_users/js/jquery.js') }}"></script>
-    <script src="{{ asset('public/assets/assets_users/vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
-    <!-- <script src="{{ asset('public/assets/assets_users/js/settings.js') }}"></script>
-    <script src="{{ asset('public/assets/assets_users/js/custom.js') }}"></script> -->
-    <script src="{{asset('public/assets/assets_users/vendor/swiper/swiper-bundle.min.js')}}"></script>
+    <script src="{{ asset('assets/assets_users/js/jquery.js') }}"></script>
+    <script src="{{ asset('assets/assets_users/vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+    <!-- <script src="{{ asset('assets/assets_users/js/settings.js') }}"></script>
+    <script src="{{ asset('assets/assets_users/js/custom.js') }}"></script> -->
+    <script src="{{asset('assets/assets_users/vendor/swiper/swiper-bundle.min.js')}}"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
     <script>
         $("document").ready(function() {
