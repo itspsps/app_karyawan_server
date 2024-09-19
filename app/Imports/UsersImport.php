@@ -24,6 +24,8 @@ class UsersImport implements ToModel
      */
     public function model(array $row)
     {
+        $holding = request()->segment(count(request()->segments()));
+        if ($row[]);
         $divisi = Divisi::where('nama_divisi', $row[38])->value('id');
         if ($row[13] == NULL) {
             $tgl_lahir = NULL;

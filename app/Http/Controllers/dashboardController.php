@@ -10,6 +10,7 @@ use App\Models\Lembur;
 use App\Models\ResetCuti;
 use App\Models\ActivityLog;
 use App\Models\Jabatan;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Ramsey\Uuid\Uuid;
 
@@ -35,8 +36,28 @@ class dashboardController extends Controller
         $tgl_skrg = date("Y-m-d");
 
         $logs = ActivityLog::query();
-
+        $date_30day = Carbon::now()->addDay('30');
+        $date_now = Carbon::now()->addDay('-30');
+        $date_now1 = Carbon::now();
+        // dd($date_30day);
         $logs = $logs->orderBy('created_at', 'desc')->limit(5)->get();
+        $count_karyawan_habis_kontrak = User::with('Divisi')
+            ->with('Jabatan')->where('status_aktif', 'AKTIF')
+            ->where('kategori', 'Karyawan Bulanan')
+            ->where('kontrak_kerja', $holding)
+            ->whereBetween('tgl_selesai_kontrak', [$date_now, $date_30day])
+            ->count();
+        $karyawan_habis_kontrak = User::with('Divisi')
+            ->with('Jabatan')
+            ->where('status_aktif', 'AKTIF')
+            ->where('kategori', 'Karyawan Bulanan')
+            ->where('kontrak_kerja', $holding)
+            ->whereBetween('tgl_selesai_kontrak', [$date_now, $date_30day])
+            ->orderBy('tgl_selesai_kontrak', 'asc')
+            ->take(6)
+            ->get();
+
+        // dd($count_karyawan_habis_kontrak);
         // chart karyawan departemen
         $count_karyawan_departemen = User::Join('departemens', 'departemens.id', 'users.dept_id')
             ->where('users.kontrak_kerja', $holding)
@@ -128,6 +149,9 @@ class dashboardController extends Controller
             // 'arr' => $arr,
             'labels' => $nama_departemen,
             'data' => str_replace('"', '', $jumlah_karyawan_departemen),
+            'count_karyawan_habis_kontrak' => $count_karyawan_habis_kontrak,
+            'karyawan_habis_kontrak' => $karyawan_habis_kontrak,
+            'date_now1' => $date_now1,
             'labels_jabatan' => $nama_jabatan,
             'data_karyawan_jabatan' => str_replace(['"', '[', ']'], '', $jumlah_karyawan_jabatan),
             'labels_jabatan1' => $nama_jabatan1,

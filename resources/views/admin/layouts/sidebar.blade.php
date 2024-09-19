@@ -40,51 +40,79 @@
         <li class="menu-header fw-medium mt-4">
             <span class="menu-header-text">MAIN MENU</span>
         </li>
-        <li class="menu-item {{ Request::is('karyawan*') ? 'active open' : '' }}{{ Request::is('detail_jabatan*') ? 'active open' : '' }} {{ Request::is('struktur_organisasi*') ? 'active open' : '' }}{{ Request::is('shift*') ? 'active open' : '' }}{{ Request::is('rekap-data*') ? 'active open' : '' }} {{ Request::is('lokasi-kantor*') ? 'active open' : '' }}{{ Request::is('reset-cuti*') ? 'active open' : '' }}{{ Request::is('departemen*') ? 'active open' : '' }}{{ Request::is('divisi*') ? 'active open' : '' }} {{ Request::is('bagian*') ? 'active open' : '' }} {{ Request::is('jabatan*') ? 'active open' : '' }}">
+        <li class="menu-item {{ Request::is('karyawan*') ? 'active open' : '' }} {{ Request::is('karyawan_masa_tenggang_kontrak*') ? 'active open' : '' }} {{ Request::is('karyawan_non_aktif*') ? 'active open' : '' }}{{ Request::is('detail_jabatan*') ? 'active open' : '' }} {{ Request::is('struktur_organisasi*') ? 'active open' : '' }}{{ Request::is('shift*') ? 'active open' : '' }}{{ Request::is('rekap-data*') ? 'active open' : '' }} {{ Request::is('lokasi-kantor*') ? 'active open' : '' }}{{ Request::is('reset-cuti*') ? 'active open' : '' }}{{ Request::is('departemen*') ? 'active open' : '' }}{{ Request::is('divisi*') ? 'active open' : '' }} {{ Request::is('bagian*') ? 'active open' : '' }} {{ Request::is('jabatan*') ? 'active open' : '' }}">
             <a href="javascript:void(0);" class="menu-link menu-toggle">
                 <i class="menu-icon tf-icons mdi mdi-database-outline"></i>
                 <div style="font-size: 10pt;" data-i18n="Data Master">Data&nbsp;Master&nbsp;Karyawan</div>
             </a>
 
             <ul class="menu-sub">
-                <li class="menu-item {{ Request::is('karyawan*') ? 'active' : '' }}">
-                    <a href="{{ url('/karyawan/'.$holding) }}" class="menu-link">
-                        <div style="font-size: 10pt;" data-i18n="Data Karyawan"> Master&nbsp;Karyawan</div>
+                <li class="menu-item {{ Request::is('karyawan*') ? 'active open' : '' }} {{ Request::is('karyawan_non_aktif*') ? 'active open' : '' }} {{ Request::is('karyawan_masa_tenggang_kontrak*') ? 'active open' : '' }}">
+                    <a href="javascript:void(0);" class="menu-link menu-toggle">
+                        <i class="menu-icon tf-icons mdi mdi-account-group-outline"></i>
+                        <div style="font-size: 10pt;" data-i18n="Data Master">&nbsp;Karyawan</div>
                     </a>
+                    <ul class="menu-sub">
+                        <li class="menu-item {{ Request::is('karyawan/'.$holding) ? 'active' : '' }}">
+                            <a href="{{ url('/karyawan/'.$holding) }}" class="menu-link">
+                                <i class="menu-icon tf-icons mdi mdi-database-outline"></i>
+                                <div style="font-size: 10pt;" data-i18n="Data Karyawan">&nbsp;Database&nbsp;Karyawan</div>
+                            </a>
+                        </li>
+                        <li class="menu-item {{ Request::is('karyawan_ingin_bergabung*') ? 'active' : '' }}">
+                            <a href="{{ url('/karyawan_ingin_bergabung/'.$holding) }}" class="menu-link">
+                                <i class="menu-icon tf-icons mdi mdi-account-clock-outline"></i>
+                                <div style="font-size: 10pt;" data-i18n="Karyawan Non Aktif">&nbsp;Karyawan&nbsp;Yang&nbsp;Ingin&nbsp;Bergabung</div>
+                            </a>
+                        </li>
+                        <li class="menu-item {{ Request::is('karyawan/karyawan_masa_tenggang_kontrak*') ? 'active' : '' }}">
+                            <a href="{{ url('/karyawan/karyawan_masa_tenggang_kontrak/'.$holding) }}" class="menu-link">
+                                <i class="menu-icon tf-icons mdi mdi-account-alert"></i>
+                                <div style="font-size: 10pt;" data-i18n="Karyawan Masa Tenggang Kontrak">&nbsp;Karyawan&nbsp;Masa&nbsp;Tenggang&nbsp;Kontrak</div>
+                            </a>
+                        </li>
+                        <li class="menu-item {{ Request::is('karyawan_non_aktif*') ? 'active' : '' }}">
+                            <a href="{{ url('/karyawan_non_aktif/'.$holding) }}" class="menu-link">
+                                <i class="menu-icon tf-icons mdi mdi-account-multiple-remove-outline"></i>
+                                <div style="font-size: 10pt;" data-i18n="Karyawan Non Aktif">&nbsp;Karyawan&nbsp;Non&nbsp;Aktif</div>
+                            </a>
+                        </li>
+                    </ul>
                 </li>
                 <li class="menu-item {{ Request::is('struktur_organisasi*') ? 'active' : '' }}">
                     <a href="{{ url('/struktur_organisasi/'.$holding) }}" class="menu-link">
-                        <div style="font-size: 10pt;" data-i18n="Struktur Organisasi"> Struktur&nbsp;Organisasi</div>
+                        <i class="menu-icon tf-icons mdi mdi-family-tree"></i>
+                        <div style="font-size: 10pt;" data-i18n="Struktur Organisasi">&nbsp;Struktur&nbsp;Organisasi</div>
                     </a>
                 </li>
                 <li class="menu-item {{ Request::is('lokasi-kantor*') ? 'active' : '' }}">
                     <a href="{{ url('/lokasi-kantor/'.$holding) }}" class="menu-link">
-                        <div style="font-size: 10pt;" data-i18n="Fluid"> Master&nbsp;Lokasi</div>
+                        <i class="menu-icon tf-icons mdi mdi-database-marker-outline"></i>
+                        <div style="font-size: 10pt;" data-i18n="Fluid">&nbsp;Master&nbsp;Lokasi</div>
                     </a>
                 </li>
-                <!-- <li class="menu-item {{ Request::is('reset-cuti*') ? 'active' : '' }}">
-                    <a href="{{ url('/reset-cuti/'.$holding) }}" class="menu-link">
-                        <div style="font-size: 10pt;" data-i18n="Blank">Reset Cuti</div>
-                    </a>
-                </li> -->
                 <li class="menu-item {{ Request::is('departemen*') ? 'active' : '' }}">
                     <a href="{{ url('/departemen/'.$holding) }}" class="menu-link">
-                        <div style="font-size: 10pt;" data-i18n="Blank"> Master&nbsp;Departmen</div>
+                        <i class="menu-icon tf-icons mdi mdi-database-cog-outline"></i>
+                        <div style="font-size: 10pt;" data-i18n="Blank">&nbsp;Master&nbsp;Departmen</div>
                     </a>
                 </li>
                 <li class="menu-item {{ Request::is('divisi*') ? 'active' : '' }}">
                     <a href="{{ url('/divisi/'.$holding) }}" class="menu-link">
-                        <div style="font-size: 10pt;" data-i18n="Blank"> Master&nbsp;Divisi</div>
+                        <i class="menu-icon tf-icons mdi mdi-database-cog-outline"></i>
+                        <div style="font-size: 10pt;" data-i18n="Blank">&nbsp;Master&nbsp;Divisi</div>
                     </a>
                 </li>
                 <li class="menu-item {{ Request::is('bagian*') ? 'active' : '' }}">
                     <a href="{{ url('/bagian/'.$holding) }}" class="menu-link">
-                        <div style="font-size: 10pt;" data-i18n="Blank"> Master&nbsp;Bagian</div>
+                        <i class="menu-icon tf-icons mdi mdi-database-cog-outline"></i>
+                        <div style="font-size: 10pt;" data-i18n="Blank">&nbsp;Master&nbsp;Bagian</div>
                     </a>
                 </li>
                 <li class="menu-item {{ Request::is('jabatan*') ? 'active' : '' }} {{ Request::is('detail_jabatan*') ? 'active' : '' }}">
                     <a href="{{ url('/jabatan/'.$holding) }}" class="menu-link">
-                        <div style="font-size: 10pt;" data-i18n="Blank">Master&nbsp;Jabatan</div>
+                        <i class="menu-icon tf-icons mdi mdi-database-cog-outline"></i>
+                        <div style="font-size: 10pt;" data-i18n="Blank">&nbsp;Master&nbsp;Jabatan</div>
                     </a>
                 </li>
             </ul>
@@ -148,51 +176,79 @@
         <li class="menu-header fw-medium mt-4">
             <span class="menu-header-text">MAIN MENU</span>
         </li>
-        <li class="menu-item {{ Request::is('karyawan*') ? 'active open' : '' }}{{ Request::is('detail_jabatan*') ? 'active open' : '' }} {{ Request::is('struktur_organisasi*') ? 'active open' : '' }}{{ Request::is('shift*') ? 'active open' : '' }}{{ Request::is('rekap-data*') ? 'active open' : '' }} {{ Request::is('lokasi-kantor*') ? 'active open' : '' }}{{ Request::is('reset-cuti*') ? 'active open' : '' }}{{ Request::is('departemen*') ? 'active open' : '' }}{{ Request::is('divisi*') ? 'active open' : '' }} {{ Request::is('bagian*') ? 'active open' : '' }} {{ Request::is('jabatan*') ? 'active open' : '' }}">
+        <li class="menu-item {{ Request::is('karyawan*') ? 'active open' : '' }}{{ Request::is('detail_jabatan*') ? 'active open' : '' }} {{ Request::is('karyawan_masa_tenggang_kontrak*') ? 'active open' : '' }} {{ Request::is('struktur_organisasi*') ? 'active open' : '' }}{{ Request::is('shift*') ? 'active open' : '' }}{{ Request::is('rekap-data*') ? 'active open' : '' }} {{ Request::is('lokasi-kantor*') ? 'active open' : '' }}{{ Request::is('reset-cuti*') ? 'active open' : '' }}{{ Request::is('departemen*') ? 'active open' : '' }}{{ Request::is('divisi*') ? 'active open' : '' }} {{ Request::is('bagian*') ? 'active open' : '' }} {{ Request::is('jabatan*') ? 'active open' : '' }}">
             <a href="javascript:void(0);" class="menu-link menu-toggle">
                 <i class="menu-icon tf-icons mdi mdi-database-outline"></i>
                 <div style="font-size: 10pt;" data-i18n="Data Master">Data&nbsp;Master&nbsp;Karyawan</div>
             </a>
 
             <ul class="menu-sub">
-                <li class="menu-item {{ Request::is('karyawan*') ? 'active' : '' }}">
-                    <a href="{{ url('/karyawan/'.$holding) }}" class="menu-link">
-                        <div style="font-size: 10pt;" data-i18n="Data Karyawan"> Master&nbsp;Karyawan</div>
+                <li class="menu-item {{ Request::is('karyawan*') ? 'active open' : '' }} {{ Request::is('karyawan_non_aktif*') ? 'active open' : '' }} {{ Request::is('karyawan_masa_tenggang_kontrak*') ? 'active open' : '' }}">
+                    <a href="javascript:void(0);" class="menu-link menu-toggle">
+                        <i class="menu-icon tf-icons mdi mdi-account-group-outline"></i>
+                        <div style="font-size: 10pt;" data-i18n="Data Master">&nbsp;Karyawan</div>
                     </a>
+                    <ul class="menu-sub">
+                        <li class="menu-item {{ Request::is('karyawan/'.$holding) ? 'active' : '' }}">
+                            <a href="{{ url('/karyawan/'.$holding) }}" class="menu-link">
+                                <i class="menu-icon tf-icons mdi mdi-database-outline"></i>
+                                <div style="font-size: 10pt;" data-i18n="Data Karyawan">&nbsp;Database&nbsp;Karyawan</div>
+                            </a>
+                        </li>
+                        <li class="menu-item {{ Request::is('karyawan_ingin_bergabung*') ? 'active' : '' }}">
+                            <a href="{{ url('/karyawan_ingin_bergabung/'.$holding) }}" class="menu-link">
+                                <i class="menu-icon tf-icons mdi mdi-account-clock-outline"></i>
+                                <div style="font-size: 10pt;" data-i18n="Karyawan Non Aktif">&nbsp;Karyawan&nbsp;Yang&nbsp;Ingin&nbsp;Bergabung</div>
+                            </a>
+                        </li>
+                        <li class="menu-item {{ Request::is('karyawan/karyawan_masa_tenggang_kontrak*') ? 'active' : '' }}">
+                            <a href="{{ url('/karyawan/karyawan_masa_tenggang_kontrak/'.$holding) }}" class="menu-link">
+                                <i class="menu-icon tf-icons mdi mdi-account-alert"></i>
+                                <div style="font-size: 10pt;" data-i18n="Karyawan Masa Tenggang Kontrak">&nbsp;Karyawan&nbsp;Masa&nbsp;Tenggang&nbsp;Kontrak</div>
+                            </a>
+                        </li>
+                        <li class="menu-item {{ Request::is('karyawan_non_aktif*') ? 'active' : '' }}">
+                            <a href="{{ url('/karyawan_non_aktif/'.$holding) }}" class="menu-link">
+                                <i class="menu-icon tf-icons mdi mdi-account-multiple-remove-outline"></i>
+                                <div style="font-size: 10pt;" data-i18n="Karyawan Non Aktif">&nbsp;Karyawan&nbsp;Non&nbsp;Aktif</div>
+                            </a>
+                        </li>
+                    </ul>
                 </li>
                 <li class="menu-item {{ Request::is('struktur_organisasi*') ? 'active' : '' }}">
                     <a href="{{ url('/struktur_organisasi/'.$holding) }}" class="menu-link">
-                        <div style="font-size: 10pt;" data-i18n="Struktur Organisasi"> Struktur&nbsp;Organisasi</div>
+                        <i class="menu-icon tf-icons mdi mdi-family-tree"></i>
+                        <div style="font-size: 10pt;" data-i18n="Struktur Organisasi">&nbsp;Struktur&nbsp;Organisasi</div>
                     </a>
                 </li>
                 <li class="menu-item {{ Request::is('lokasi-kantor*') ? 'active' : '' }}">
                     <a href="{{ url('/lokasi-kantor/'.$holding) }}" class="menu-link">
-                        <div style="font-size: 10pt;" data-i18n="Fluid"> Master&nbsp;Lokasi</div>
+                        <i class="menu-icon tf-icons mdi mdi-database-marker-outline"></i>
+                        <div style="font-size: 10pt;" data-i18n="Fluid">&nbsp;Master&nbsp;Lokasi</div>
                     </a>
                 </li>
-                <!-- <li class="menu-item {{ Request::is('reset-cuti*') ? 'active' : '' }}">
-                    <a href="{{ url('/reset-cuti/'.$holding) }}" class="menu-link">
-                        <div style="font-size: 10pt;" data-i18n="Blank">Reset Cuti</div>
-                    </a>
-                </li> -->
                 <li class="menu-item {{ Request::is('departemen*') ? 'active' : '' }}">
                     <a href="{{ url('/departemen/'.$holding) }}" class="menu-link">
-                        <div style="font-size: 10pt;" data-i18n="Blank"> Master&nbsp;Departmen</div>
+                        <i class="menu-icon tf-icons mdi mdi-database-cog-outline"></i>
+                        <div style="font-size: 10pt;" data-i18n="Blank">&nbsp;Master&nbsp;Departmen</div>
                     </a>
                 </li>
                 <li class="menu-item {{ Request::is('divisi*') ? 'active' : '' }}">
                     <a href="{{ url('/divisi/'.$holding) }}" class="menu-link">
-                        <div style="font-size: 10pt;" data-i18n="Blank"> Master&nbsp;Divisi</div>
+                        <i class="menu-icon tf-icons mdi mdi-database-cog-outline"></i>
+                        <div style="font-size: 10pt;" data-i18n="Blank">&nbsp;Master&nbsp;Divisi</div>
                     </a>
                 </li>
                 <li class="menu-item {{ Request::is('bagian*') ? 'active' : '' }}">
                     <a href="{{ url('/bagian/'.$holding) }}" class="menu-link">
-                        <div style="font-size: 10pt;" data-i18n="Blank"> Master&nbsp;Bagian</div>
+                        <i class="menu-icon tf-icons mdi mdi-database-cog-outline"></i>
+                        <div style="font-size: 10pt;" data-i18n="Blank">&nbsp;Master&nbsp;Bagian</div>
                     </a>
                 </li>
                 <li class="menu-item {{ Request::is('jabatan*') ? 'active' : '' }} {{ Request::is('detail_jabatan*') ? 'active' : '' }}">
                     <a href="{{ url('/jabatan/'.$holding) }}" class="menu-link">
-                        <div style="font-size: 10pt;" data-i18n="Blank">Master&nbsp;Jabatan</div>
+                        <i class="menu-icon tf-icons mdi mdi-database-cog-outline"></i>
+                        <div style="font-size: 10pt;" data-i18n="Blank">&nbsp;Master&nbsp;Jabatan</div>
                     </a>
                 </li>
             </ul>

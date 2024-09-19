@@ -30,9 +30,11 @@ use Illuminate\Support\Str;
 use Laravolt\Indonesia\IndonesiaService;
 use App\Models\Provincies;
 use App\Models\Regencies;
+use App\Models\UserNonActive;
 use App\Models\Village;
 use Barryvdh\DomPDF\PDF as DomPDFPDF;
 use Carbon\Carbon;
+use DateTime;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
@@ -53,18 +55,405 @@ class karyawanController extends Controller
             'title' => 'Karyawan',
             "data_departemen" => Departemen::orderBy('nama_departemen', 'ASC')->where('holding', $holding)->get(),
             'holding' => $holding,
-            'data_user' => User::where('kontrak_kerja', $holding)->get(),
+            'data_user' => User::where('kontrak_kerja', $holding)->where('status_aktif', 'AKTIF')->get(),
             "data_jabatan" => Jabatan::orderBy('nama_jabatan', 'ASC')->where('holding', $holding)->get(),
             "data_provinsi" => Provincies::orderBy('name', 'ASC')->get(),
             "data_kabupaten" => Cities::orderBy('name', 'ASC')->get(),
             "data_kecamatan" => District::orderBy('name', 'ASC')->get(),
             "data_desa" => Village::orderBy('name', 'ASC')->get(),
             "data_lokasi" => Lokasi::orderBy('lokasi_kantor', 'ASC')->get(),
-            "karyawan_laki" => User::where('gender', 'Laki-Laki')->where('kontrak_kerja', $holding)->count(),
-            "karyawan_perempuan" => User::where('gender', 'Perempuan')->where('kontrak_kerja', $holding)->count(),
-            "karyawan_office" => User::where('kategori', 'Karyawan Bulanan')->where('kontrak_kerja', $holding)->count(),
-            "karyawan_shift" => User::where('kategori', 'Karyawan Harian')->where('kontrak_kerja', $holding)->count(),
+            "karyawan_laki" => User::where('gender', 'Laki-Laki')->where('kontrak_kerja', $holding)->where('status_aktif', 'AKTIF')->count(),
+            "karyawan_perempuan" => User::where('gender', 'Perempuan')->where('kontrak_kerja', $holding)->where('status_aktif', 'AKTIF')->count(),
+            "karyawan_office" => User::where('kategori', 'Karyawan Bulanan')->where('kontrak_kerja', $holding)->where('status_aktif', 'AKTIF')->count(),
+            "karyawan_shift" => User::where('kategori', 'Karyawan Harian')->where('kontrak_kerja', $holding)->where('status_aktif', 'AKTIF')->count(),
         ]);
+    }
+    public function karyawan_non_aktif()
+    {
+
+        $holding = request()->segment(count(request()->segments()));
+        return view('admin.karyawan.karyawan_non_aktif', [
+            // return view('karyawan.index', [
+            'title' => 'Karyawan',
+            "data_departemen" => Departemen::orderBy('nama_departemen', 'ASC')->where('holding', $holding)->get(),
+            'holding' => $holding,
+            'data_user' => User::where('kontrak_kerja', $holding)->where('status_aktif', 'NON AKTIF')->get(),
+            "data_jabatan" => Jabatan::orderBy('nama_jabatan', 'ASC')->where('holding', $holding)->get(),
+            "data_provinsi" => Provincies::orderBy('name', 'ASC')->get(),
+            "data_kabupaten" => Cities::orderBy('name', 'ASC')->get(),
+            "data_kecamatan" => District::orderBy('name', 'ASC')->get(),
+            "data_desa" => Village::orderBy('name', 'ASC')->get(),
+            "data_lokasi" => Lokasi::orderBy('lokasi_kantor', 'ASC')->get(),
+            "karyawan_laki" => User::where('gender', 'Laki-Laki')->where('kontrak_kerja', $holding)->where('status_aktif', 'NON AKTIF')->count(),
+            "karyawan_perempuan" => User::where('gender', 'Perempuan')->where('kontrak_kerja', $holding)->where('status_aktif', 'NON AKTIF')->count(),
+            "karyawan_office" => User::where('kategori', 'Karyawan Bulanan')->where('kontrak_kerja', $holding)->where('status_aktif', 'NON AKTIF')->count(),
+            "karyawan_shift" => User::where('kategori', 'Karyawan Harian')->where('kontrak_kerja', $holding)->where('status_aktif', 'NON AKTIF')->count(),
+        ]);
+    }
+    public function karyawan_ingin_bergabung()
+    {
+
+        $holding = request()->segment(count(request()->segments()));
+        return view('admin.karyawan.karyawan_ingin_bergabung', [
+            // return view('karyawan.index', [
+            'title' => 'Karyawan',
+            "data_departemen" => Departemen::orderBy('nama_departemen', 'ASC')->where('holding', $holding)->get(),
+            'holding' => $holding,
+            'data_user' => User::where('kontrak_kerja', $holding)->where('status_aktif', 'NON AKTIF')->get(),
+            "data_jabatan" => Jabatan::orderBy('nama_jabatan', 'ASC')->where('holding', $holding)->get(),
+            "data_provinsi" => Provincies::orderBy('name', 'ASC')->get(),
+            "data_kabupaten" => Cities::orderBy('name', 'ASC')->get(),
+            "data_kecamatan" => District::orderBy('name', 'ASC')->get(),
+            "data_desa" => Village::orderBy('name', 'ASC')->get(),
+            "data_lokasi" => Lokasi::orderBy('lokasi_kantor', 'ASC')->get(),
+            "karyawan_laki" => User::where('gender', 'Laki-Laki')->where('kontrak_kerja', $holding)->where('status_aktif', 'NON AKTIF')->count(),
+            "karyawan_perempuan" => User::where('gender', 'Perempuan')->where('kontrak_kerja', $holding)->where('status_aktif', 'NON AKTIF')->count(),
+            "karyawan_office" => User::where('kategori', 'Karyawan Bulanan')->where('kontrak_kerja', $holding)->where('status_aktif', 'NON AKTIF')->count(),
+            "karyawan_shift" => User::where('kategori', 'Karyawan Harian')->where('kontrak_kerja', $holding)->where('status_aktif', 'NON AKTIF')->count(),
+        ]);
+    }
+    public function database_karyawan_non_aktif(Request $request)
+    {
+        $holding = request()->segment(count(request()->segments()));
+        $table = UserNonActive::with(['User' => function ($query) use ($holding) {
+            $query->with('Divisi');
+            $query->with('Jabatan');
+            $query->where('kontrak_kerja', $holding);
+            $query->where('status_aktif', 'NON AKTIF');
+            $query->where('kategori', 'Karyawan Bulanan');
+        }])
+            ->orderBy('id', 'DESC')
+            ->get();
+        if (request()->ajax()) {
+            return DataTables::of($table)
+                ->addColumn('nomor_identitas_karyawan', function ($row) use ($holding) {
+                    if ($row->User == '' || $row->User == NULL) {
+                        $nomor_identitas_karyawan = NULL;
+                    } else {
+                        $nomor_identitas_karyawan = $row->User->nomor_identitas_karyawan;
+                    }
+                    return $nomor_identitas_karyawan;
+                })
+                ->addColumn('name', function ($row) use ($holding) {
+                    if ($row->User == '' || $row->User == NULL) {
+                        $name = NULL;
+                    } else {
+                        $name = $row->User->name;
+                    }
+                    return $name;
+                })
+                ->addColumn('telepon', function ($row) use ($holding) {
+                    if ($row->User == '' || $row->User == NULL) {
+                        $telepon = NULL;
+                    } else {
+                        $telepon = $row->User->telepon;
+                    }
+                    return $telepon;
+                })
+                ->addColumn('tgl_mulai_kontrak', function ($row) use ($holding) {
+                    if ($row->User == '' || $row->User == NULL) {
+                        $tgl_mulai_kontrak = NULL;
+                    } else {
+                        $tgl_mulai_kontrak = $row->User->tgl_mulai_kontrak;
+                    }
+                    return $tgl_mulai_kontrak;
+                })
+                ->addColumn('tgl_selesai_kontrak', function ($row) use ($holding) {
+                    if ($row->User == '' || $row->User == NULL) {
+                        $tgl_selesai_kontrak = NULL;
+                    } else {
+                        $tgl_selesai_kontrak = $row->User->tgl_selesai_kontrak;
+                    }
+                    return $tgl_selesai_kontrak;
+                })
+                ->addColumn('penempatan_kerja', function ($row) use ($holding) {
+                    if ($row->User == '' || $row->User == NULL) {
+                        $penempatan_kerja = NULL;
+                    } else {
+                        $penempatan_kerja = $row->User->penempatan_kerja;
+                    }
+                    return $penempatan_kerja;
+                })
+                ->addColumn('kontrak_kerja', function ($row) use ($holding) {
+                    if ($row->User == '' || $row->User == NULL) {
+                        $kontrak_kerja = NULL;
+                    } else {
+                        if ($row->User->kontrak_kerja == 'SP') {
+                            $kontrak_kerja = 'CV. SUMBER PANGAN';
+                        } else if ($row->User->kontrak_kerja == 'SPS') {
+                            $kontrak_kerja = 'PT. SURYA PANGAN SEMESTA';
+                        } else {
+                            $kontrak_kerja = 'CV. SURYA INTI PANGAN';
+                        }
+                    }
+                    return $kontrak_kerja;
+                })
+                ->addColumn('email', function ($row) use ($holding) {
+                    if ($row->User == '' || $row->User == NULL) {
+                        $email = NULL;
+                    } else {
+                        $email = $row->User->email;
+                    }
+                    return $email;
+                })
+                ->addColumn('nama_divisi', function ($row) use ($holding) {
+                    if ($row->User->divisi_id == '' || $row->User->divisi_id == NULL) {
+                        $divisi = NULL;
+                    } else {
+                        $divisi = $row->User->Divisi->nama_divisi;
+                    }
+                    return $divisi;
+                })
+                ->addColumn('nama_jabatan', function ($row) use ($holding) {
+                    if ($row->User->jabatan_id == '' || $row->User->jabatan_id == NULL) {
+                        $jabatan = NULL;
+                    } else {
+                        $jabatan = $row->User->Jabatan->nama_jabatan;
+                    }
+                    return $jabatan;
+                })
+
+                ->rawColumns(['nama_jabatan', 'tgl_mulai_kontrak', 'tgl_selesai_kontrak', 'kontrak_kerja', 'penempatan_kerja', 'telepon', 'email', 'nomor_identitas_karyawan', 'nama_divisi', 'name'])
+                ->make(true);
+        }
+    }
+    public function database_karyawan_masa_tenggang_kontrak(Request $request)
+    {
+        $date_30day = Carbon::now()->addDay('30');
+        $date_now = Carbon::now()->addDay('-30');
+        $date_now1 = Carbon::now();
+        $holding = request()->segment(count(request()->segments()));
+        $table = User::with('Divisi')
+            ->with('Jabatan')
+            ->where('status_aktif', 'AKTIF')
+            ->where('kategori', 'Karyawan Bulanan')
+            ->where('kontrak_kerja', $holding)
+            ->whereBetween('tgl_selesai_kontrak', [$date_now, $date_30day])
+            ->orderBy('name', 'asc')
+            ->get();
+        if (request()->ajax()) {
+            return DataTables::of($table)
+                ->addColumn('nama_divisi', function ($row) use ($holding) {
+                    if ($row->Divisi == '' || $row->Divisi == NULL) {
+                        $divisi = NULL;
+                    } else {
+                        $divisi = $row->Divisi->nama_divisi;
+                    }
+                    return $divisi;
+                })
+                ->addColumn('nama_jabatan', function ($row) use ($holding) {
+                    if ($row->Jabatan == '' || $row->Jabatan == NULL) {
+                        $jabatan = NULL;
+                    } else {
+                        $jabatan = $row->Jabatan->nama_jabatan;
+                    }
+                    return $jabatan;
+                })
+                ->addColumn('tgl_kontrak', function ($row) use ($holding) {
+                    if ($row->tgl_mulai_kontrak == NULL || $row->tgl_selesai_kontrak == NULL) {
+                        $tgl_kontrak = NULL;
+                    } else {
+                        $tgl_kontrak = Carbon::parse($row->tgl_mulai_kontrak)->format('d-m-Y') . '&nbsp;-&nbsp;' . Carbon::parse($row->tgl_selesai_kontrak)->format('d-m-Y');
+                    }
+                    return $tgl_kontrak;
+                })
+                ->addColumn('status', function ($row) use ($holding) {
+                    $date1 = new DateTime();
+                    $date2 = new DateTime($row->tgl_selesai_kontrak);
+                    $interval = $date1->diff($date2);
+                    $date_now1 = Carbon::now();
+                    if ($row->tgl_selesai_kontrak <= $date_now1) {
+                        $status =  '<span class="badge bg-label-danger"><i class="mdi mdi-close-octagon-outline"></i> Melebihi Masa Kontrak ' . $interval->format('%a') . ' Hari </span>';
+                    } else {
+                        $status = '<span class="badge bg-label-warning"><i class="mdi mdi-alert-octagon-outline"></i> Kontrak Kurang ' . $interval->format('%a') . ' Hari </span>';
+                    }
+                    return $status;
+                })
+                ->addColumn('option', function ($row) use ($holding) {
+                    if ($row->Divisi == NULL) {
+                        $divisi = NULL;
+                    } else {
+                        $divisi = $row->Divisi->nama_divisi;
+                    }
+                    if ($row->Jabatan == NULL) {
+                        $jabatan = NULL;
+                    } else {
+                        $jabatan = $row->Jabatan->nama_jabatan;
+                    }
+                    if ($row->kontrak_kerja == 'SP') {
+                        $kontrak_kerja = 'CV. SUMBER PANGAN';
+                    } else if ($row->kontrak_kerja == 'SPS') {
+                        $kontrak_kerja = 'PT. SURYA PANGAN SEMESTA';
+                    } else {
+                        $kontrak_kerja = 'CV. SURYA INTI PANGAN';
+                    }
+
+                    $option = '<button id="btn_perbarui_kontrak" data-id="' . $row->id . '" data-nama="' . $row->name . '" data-divisi="' . $divisi . '" data-jabatan="' . $jabatan . '" data-foto="' . $row->foto_karyawan . '" data-tgl_mulai_kontrak="' . $row->tgl_mulai_kontrak . '" data-tgl_selesai_kontrak="' . $row->tgl_selesai_kontrak . '" data-penempatan_kerja="' . $row->penempatan_kerja . '" data-kontrak_kerja="' . $kontrak_kerja . '" type="button" class="btn btn-xs btn-info waves-effect waves-light"><i class="mdi mdi-update"></i>&nbsp;Perbarui</button></td>';
+
+                    return $option;
+                })
+
+                ->rawColumns(['nama_jabatan', 'nama_divisi', 'tgl_kontrak', 'option', 'status'])
+                ->make(true);
+        }
+    }
+    public function non_aktif_proses(Request $request)
+    {
+        $data = new UserNonActive();
+        $data->user_id = $request->id_nonactive;
+        $data->tanggal_non_active = $request->date_now;
+        $data->alasan = $request->alasan_non_aktif;
+        $data->save();
+
+        $update_user = User::where('id', $request->id_nonactive)->first();
+        $update_user->status_aktif = 'NON AKTIF';
+        $update_user->update();
+
+        return redirect()->back()->with('success', 'Data Berhasil di Simpan');
+    }
+    public function karyawan_masa_tenggang_kontrak()
+    {
+
+        $holding = request()->segment(count(request()->segments()));
+        $date_30day = Carbon::now()->addDay('30');
+        $date_now = Carbon::now()->addDay('-30');
+        $date_now1 = Carbon::now();
+        return view('admin.karyawan.karyawan_masa_tenggang_kontrak', [
+            // return view('karyawan.index', [
+            'title' => 'Karyawan',
+            "data_departemen" => Departemen::orderBy('nama_departemen', 'ASC')->where('holding', $holding)->get(),
+            'holding' => $holding,
+            'data_user' => User::where('kontrak_kerja', $holding)->where('status_aktif', 'NON AKTIF')->get(),
+            "data_jabatan" => Jabatan::orderBy('nama_jabatan', 'ASC')->where('holding', $holding)->get(),
+            "karyawan_laki" => User::where('gender', 'Laki-Laki')->where('kontrak_kerja', $holding)->where('status_aktif', 'AKTIF')->where('kategori', 'Karyawan Bulanan')->whereBetween('tgl_selesai_kontrak', [$date_now, $date_30day])->count(),
+            "karyawan_perempuan" => User::where('gender', 'Perempuan')->where('kontrak_kerja', $holding)->where('status_aktif', 'AKTIF')->where('kategori', 'Karyawan Bulanan')->whereBetween('tgl_selesai_kontrak', [$date_now, $date_30day])->count(),
+            "karyawan_lebih_kontrak" => User::where('kategori', 'Karyawan Bulanan')->where('kontrak_kerja', $holding)->where('status_aktif', 'AKTIF')->whereBetween('tgl_selesai_kontrak', [$date_now, $date_30day])->where('tgl_selesai_kontrak', '<=', $date_now1)->count(),
+            "karyawan_akan_habis_kontrak" => User::where('kategori', 'Karyawan Bulanan')->where('kontrak_kerja', $holding)->where('status_aktif', 'AKTIF')->whereBetween('tgl_selesai_kontrak', [$date_now, $date_30day])->where('tgl_selesai_kontrak', '>=', $date_now1)->count(),
+        ]);
+    }
+    public function database_karyawan_ingin_bergabung(Request $request)
+    {
+        $holding = request()->segment(count(request()->segments()));
+        $table = UserNonActive::with(['User' => function ($query) use ($holding) {
+            $query->with('Divisi');
+            $query->with('Jabatan');
+            $query->where('kontrak_kerja', $holding);
+            $query->where('status_aktif', 'NON AKTIF');
+            $query->where('kategori', 'Karyawan Bulanan');
+        }])
+            ->orderBy('id', 'DESC')
+            ->get();
+        if (request()->ajax()) {
+            return DataTables::of($table)
+                ->addColumn('nomor_identitas_karyawan', function ($row) use ($holding) {
+                    if ($row->User == '' || $row->User == NULL) {
+                        $nomor_identitas_karyawan = NULL;
+                    } else {
+                        $nomor_identitas_karyawan = $row->User->nomor_identitas_karyawan;
+                    }
+                    return $nomor_identitas_karyawan;
+                })
+                ->addColumn('name', function ($row) use ($holding) {
+                    if ($row->User == '' || $row->User == NULL) {
+                        $name = NULL;
+                    } else {
+                        $name = $row->User->name;
+                    }
+                    return $name;
+                })
+                ->addColumn('telepon', function ($row) use ($holding) {
+                    if ($row->User == '' || $row->User == NULL) {
+                        $telepon = NULL;
+                    } else {
+                        $telepon = $row->User->telepon;
+                    }
+                    return $telepon;
+                })
+                ->addColumn('tgl_mulai_kontrak', function ($row) use ($holding) {
+                    if ($row->User == '' || $row->User == NULL) {
+                        $tgl_mulai_kontrak = NULL;
+                    } else {
+                        $tgl_mulai_kontrak = $row->User->tgl_mulai_kontrak;
+                    }
+                    return $tgl_mulai_kontrak;
+                })
+                ->addColumn('tgl_selesai_kontrak', function ($row) use ($holding) {
+                    if ($row->User == '' || $row->User == NULL) {
+                        $tgl_selesai_kontrak = NULL;
+                    } else {
+                        $tgl_selesai_kontrak = $row->User->tgl_selesai_kontrak;
+                    }
+                    return $tgl_selesai_kontrak;
+                })
+                ->addColumn('penempatan_kerja', function ($row) use ($holding) {
+                    if ($row->User == '' || $row->User == NULL) {
+                        $penempatan_kerja = NULL;
+                    } else {
+                        $penempatan_kerja = $row->User->penempatan_kerja;
+                    }
+                    return $penempatan_kerja;
+                })
+                ->addColumn('kontrak_kerja', function ($row) use ($holding) {
+                    if ($row->User == '' || $row->User == NULL) {
+                        $kontrak_kerja = NULL;
+                    } else {
+                        if ($row->User->kontrak_kerja == 'SP') {
+                            $kontrak_kerja = 'CV. SUMBER PANGAN';
+                        } else if ($row->User->kontrak_kerja == 'SPS') {
+                            $kontrak_kerja = 'PT. SURYA PANGAN SEMESTA';
+                        } else {
+                            $kontrak_kerja = 'CV. SURYA INTI PANGAN';
+                        }
+                    }
+                    return $kontrak_kerja;
+                })
+                ->addColumn('email', function ($row) use ($holding) {
+                    if ($row->User == '' || $row->User == NULL) {
+                        $email = NULL;
+                    } else {
+                        $email = $row->User->email;
+                    }
+                    return $email;
+                })
+                ->addColumn('nama_divisi', function ($row) use ($holding) {
+                    if ($row->User->divisi_id == '' || $row->User->divisi_id == NULL) {
+                        $divisi = NULL;
+                    } else {
+                        $divisi = $row->User->Divisi->nama_divisi;
+                    }
+                    return $divisi;
+                })
+                ->addColumn('nama_jabatan', function ($row) use ($holding) {
+                    if ($row->User->jabatan_id == '' || $row->User->jabatan_id == NULL) {
+                        $jabatan = NULL;
+                    } else {
+                        $jabatan = $row->User->Jabatan->nama_jabatan;
+                    }
+                    return $jabatan;
+                })
+
+                ->rawColumns(['nama_jabatan', 'tgl_mulai_kontrak', 'tgl_selesai_kontrak', 'kontrak_kerja', 'penempatan_kerja', 'telepon', 'email', 'nomor_identitas_karyawan', 'nama_divisi', 'name'])
+                ->make(true);
+        }
+    }
+    public function upddate_kontrak_proses(Request $request)
+    {
+        // dd($request->all());
+        if ($request->file_kontrak_kerja == '' || $request->file_kontrak_kerja == NULL) {
+            return redirect()->back()->with('error', 'Data Harus Terisi Semua', 1500);
+        }
+        $extension     = $request->file('file_kontrak_kerja')->extension();
+        $file_cv_name         = 'KONTAK_KERJA-' . $request->tgl_mulai_kontrak_baru . '-' . $request->tgl_selesai_kontrak_baru . '_' . $request->id_karyawan . '.' . $extension;
+        $path           = Storage::putFileAs('file_kontrak_kerja/', $request->file('file_kontrak_kerja'), $file_cv_name);
+
+        $update_user = User::where('id', $request->id_karyawan)->first();
+        $update_user->tgl_mulai_kontrak = $request->tgl_mulai_kontrak_baru;
+        $update_user->tgl_selesai_kontrak = $request->tgl_selesai_kontrak_baru;
+        $update_user->lama_kontrak_kerja = $request->lama_kontrak_baru;
+        $update_user->file_kontrak_kerja = $file_cv_name;
+        $update_user->update();
+
+        return redirect()->back()->with('success', 'Data Berhasil di Simpan');
     }
     public function ImportKaryawan(Request $request)
     {
@@ -137,7 +526,7 @@ class karyawanController extends Controller
     public function datatable_bulanan(Request $request)
     {
         $holding = request()->segment(count(request()->segments()));
-        $table = User::with('Divisi')->with('Jabatan')->where('kontrak_kerja', $holding)
+        $table = User::with('Divisi')->with('Jabatan')->where('kontrak_kerja', $holding)->where('status_aktif', 'AKTIF')
             ->where('kategori', 'Karyawan Bulanan')
             ->orderBy('id', 'DESC')
             ->get();
@@ -160,10 +549,20 @@ class karyawanController extends Controller
                     return $jabatan;
                 })
                 ->addColumn('option', function ($row) use ($holding) {
+                    if ($row->Divisi == 'NULL' || $row->Divisi == '') {
+                        $divisi = '-';
+                    } else {
+                        $divisi = $row->Divisi->nama_divisi;
+                    }
+                    if ($row->Jabatan == 'NULL' || $row->Jabatan == '') {
+                        $jabatan = '-';
+                    } else {
+                        $jabatan = $row->Jabatan->nama_jabatan;
+                    }
                     $btn = '<button id="btndetail_karyawan" data-id="' . $row->id . '" data-holding="' . $holding . '" class="btn btn-icon btn-success waves-effect waves-light"><span class="tf-icons mdi mdi-eye-outline"></span></button>';
                     $btn = $btn . '<button id="btn_mapping_shift" data-id="' . $row->id . '" data-holding="' . $holding . '" type="button" class="btn btn-icon btn-info waves-effect waves-light"><span class="tf-icons mdi mdi-clock-outline"></span></button>';
                     $btn = $btn . '<button id="btn_edit_password" data-id="' . $row->id . '" data-holding="' . $holding . '" type="button" class="btn btn-icon btn-secondary waves-effect waves-light"><span class="tf-icons mdi mdi-key-outline"></span></button>';
-                    $btn = $btn . '<button type="button" id="btn_delete_karyawan" data-id="' . $row->id . '" data-holding="' . $holding . '" class="btn btn-icon btn-danger waves-effect waves-light"><span class="tf-icons mdi mdi-delete-outline"></span></button>';
+                    $btn = $btn . '<button type="button" id="btn_non_aktif_karyawan" data-foto="' . $row->foto . '" data-id="' . $row->id . '" data-tgl_mulai_kontrak="' . $row->tgl_mulai_kontrak . '" data-tgl_selesai_kontrak="' . $row->tgl_selesai_kontrak . '" data-nama="' . $row->name . '" data-divisi="' . $divisi . '" data-jabatan="' . $jabatan . '" data-bagian="' . $row->bagian . '"  data-holding="' . $holding . '" data-penempatan_kerja="' . $row->penempatan_kerja . '" data-kontrak_kerja="' . $row->kontrak_kerja . '"  class="btn btn-icon btn-danger waves-effect waves-light"><span class="tf-icons mdi mdi-account-remove-outline"></span></button>';
                     return $btn;
                 })
                 ->rawColumns(['nama_jabatan', 'nama_divisi', 'option'])
@@ -173,7 +572,7 @@ class karyawanController extends Controller
     public function datatable_harian(Request $request)
     {
         $holding = request()->segment(count(request()->segments()));
-        $table = User::where('kontrak_kerja', $holding)->where('kategori', 'Karyawan Harian')->orderBy('id', 'DESC')->get();
+        $table = User::where('kontrak_kerja', $holding)->where('kategori', 'Karyawan Harian')->where('status_aktif', 'AKTIF')->orderBy('id', 'DESC')->get();
         if (request()->ajax()) {
             return DataTables::of($table)
                 ->addColumn('option', function ($row) use ($holding) {
@@ -1160,7 +1559,6 @@ class karyawanController extends Controller
                 // dd('ok');
             }
             $extension     = $request->file('file_cv')->extension();
-            // dd($extension);
             $file_cv_name         = 'CV-' . date('y-m-d') . '-' . Uuid::uuid4() . '.' . $extension;
             $path           = Storage::putFileAs('file_cv/', $request->file('file_cv'), $file_cv_name);
         } else {

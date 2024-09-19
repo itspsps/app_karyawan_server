@@ -232,6 +232,27 @@ Route::get('/karyawan/ExportKaryawan/sip', [karyawanController::class, 'ExportKa
 Route::get('/karyawan/pdfKaryawan/sps', [karyawanController::class, 'download_pdf_karyawan'])->middleware('admin');
 Route::get('/karyawan/pdfKaryawan/sp', [karyawanController::class, 'download_pdf_karyawan'])->middleware('admin');
 Route::get('/karyawan/pdfKaryawan/sip', [karyawanController::class, 'download_pdf_karyawan'])->middleware('admin');
+
+Route::get('/karyawan_non_aktif/sp', [karyawanController::class, 'karyawan_non_aktif'])->middleware('admin');
+Route::get('/karyawan_non_aktif/sps', [karyawanController::class, 'karyawan_non_aktif'])->middleware('admin');
+Route::get('/karyawan_non_aktif/sip', [karyawanController::class, 'karyawan_non_aktif'])->middleware('admin');
+Route::get('/database_karyawan_non_aktif/sp', [karyawanController::class, 'database_karyawan_non_aktif'])->middleware('admin');
+Route::get('/database_karyawan_non_aktif/sps', [karyawanController::class, 'database_karyawan_non_aktif'])->middleware('admin');
+Route::get('/database_karyawan_non_aktif/sip', [karyawanController::class, 'database_karyawan_non_aktif'])->middleware('admin');
+Route::post('/karyawan/non_aktif_proses', [karyawanController::class, 'non_aktif_proses'])->middleware('admin');
+
+Route::get('/karyawan_ingin_bergabung/sp', [karyawanController::class, 'karyawan_ingin_bergabung'])->middleware('admin');
+Route::get('/karyawan_ingin_bergabung/sps', [karyawanController::class, 'karyawan_ingin_bergabung'])->middleware('admin');
+Route::get('/karyawan_ingin_bergabung/sip', [karyawanController::class, 'karyawan_ingin_bergabung'])->middleware('admin');
+
+Route::get('/karyawan/karyawan_masa_tenggang_kontrak/sp', [karyawanController::class, 'karyawan_masa_tenggang_kontrak'])->middleware('admin');
+Route::get('/karyawan/karyawan_masa_tenggang_kontrak/sps', [karyawanController::class, 'karyawan_masa_tenggang_kontrak'])->middleware('admin');
+Route::get('/karyawan/karyawan_masa_tenggang_kontrak/sip', [karyawanController::class, 'karyawan_masa_tenggang_kontrak'])->middleware('admin');
+Route::get('/karyawan/database_karyawan_masa_tenggang_kontrak/sp', [karyawanController::class, 'database_karyawan_masa_tenggang_kontrak'])->middleware('admin');
+Route::get('/karyawan/database_karyawan_masa_tenggang_kontrak/sps', [karyawanController::class, 'database_karyawan_masa_tenggang_kontrak'])->middleware('admin');
+Route::get('/karyawan/database_karyawan_masa_tenggang_kontrak/sip', [karyawanController::class, 'database_karyawan_masa_tenggang_kontrak'])->middleware('admin');
+Route::post('/karyawan/upddate_kontrak_proses', [karyawanController::class, 'upddate_kontrak_proses'])->middleware('admin');
+
 // STRUKTUR ORGANISASI
 Route::get('/struktur_organisasi/sp', [StrukturOrganisasiController::class, 'index'])->middleware('admin');
 Route::get('/struktur_organisasi/sps', [StrukturOrganisasiController::class, 'index'])->middleware('admin');

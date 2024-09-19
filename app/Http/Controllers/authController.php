@@ -83,18 +83,39 @@ class authController extends Controller
         }
         if (Auth::guard('web')->attempt(array($fieldType => $credentials['username'], 'password' => $credentials['password'], 'is_admin' => 'admin'), $remember)) {
             // dd('admin');
-            Alert::success('Berhasil', 'Selamat Datang ' . $data->name);
-            return redirect('/dashboard/holding')->with('Berhasil', 'Selamat Datang ' . $data->name);
+            // dd(Auth::guard('web'));
+            if (Auth::guard('web')->user()->status_aktif == 'NON AKTIF') {
+                Auth::logout();
+                $request->session()->flash('user_nonaktif');
+                return redirect('/');
+            } else {
+                Alert::success('Berhasil', 'Selamat Datang ' . $data->name);
+                return redirect('/dashboard/holding')->with('Berhasil', 'Selamat Datang ' . $data->name);
+            }
         } else if (Auth::guard('web')->attempt(array($fieldType => $credentials['username'], 'password' => $credentials['password'], 'is_admin' => 'superadmin'), $remember)) {
             // dd('superadmin');
-            Alert::success('Berhasil', 'Selamat Datang ' . $data->name);
-            return redirect('/dashboard/holding')->with('Berhasil', 'Selamat Datang ' . $data->name);
+            // dd(Auth::guard('web'));
+            if (Auth::guard('web')->user()->status_aktif == 'NON AKTIF') {
+                Auth::logout();
+                $request->session()->flash('user_nonaktif');
+                return redirect('/');
+            } else {
+                Alert::success('Berhasil', 'Selamat Datang ' . $data->name);
+                return redirect('/dashboard/holding')->with('Berhasil', 'Selamat Datang ' . $data->name);
+            }
         } else if (Auth::guard('web')->attempt(array($fieldType => $credentials['username'], 'password' => $credentials['password'], 'is_admin' => 'user'), $remember)) {
             // dd('user');
-            Alert::success('Berhasil', 'Selamat Datang ' . $data->name);
-            return redirect('/home')->with('Berhasil', 'Selamat Datang ' . $data->name);
+            // dd(Auth::guard('web')->user()->status_aktif);
+            if (Auth::guard('web')->user()->status_aktif == 'NON AKTIF') {
+                Auth::logout();
+                $request->session()->flash('user_nonaktif');
+                return redirect('/');
+            } else {
+                Alert::success('Berhasil', 'Selamat Datang ' . $data->name);
+                return redirect('/home')->with('Berhasil', 'Selamat Datang ' . $data->name);
+            }
         } else {
-            // dd('gagal');
+
             $request->session()->flash('login_error');
             return redirect('/');
         }

@@ -20,9 +20,8 @@
                     </div>
                 </div>
                 <div class="card-body">
-                    @can('edit posts', Post::class)
                     <a type="button" href="{{url('karyawan/tambah-karyawan/'.$holding)}}" class="btn btn-sm btn-primary waves-effect waves-light"><i class="menu-icon tf-icons mdi mdi-plus"></i>Tambah</a>
-                    @endcan
+
                     <button class="btn btn-sm btn-success waves-effect waves-light dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                         <i class="menu-icon tf-icons mdi mdi-file-excel"></i> Excel
                     </button>
@@ -174,6 +173,152 @@
                             </form>
                         </div>
                     </div>
+                    <div class="modal fade" id="modal_non_aktif_karyawan" data-bs-backdrop="static" tabindex="-1">
+                        <div class="modal-dialog modal-dialog-scrollable modal-lg">
+                            <form method="post" action="{{ url('karyawan/non_aktif_proses') }}" class="modal-content" enctype="multipart/form-data">
+                                @csrf
+                                <div class="modal-header">
+                                    <h4 class="modal-title" id="backDropModalTitle">Form Non Aktif Karyawan</h4>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="row g-2 mt-2">
+                                        <div class="col-md-12">
+                                            <div class="card mb-4">
+                                                <!-- Account -->
+                                                <div class="card-body">
+                                                    <div class="d-flex align-items-start align-items-sm-center gap-4">
+                                                        <input type="hidden" name="id_nonactive" id="id_nonactive" value="">
+                                                        <img src="{{asset('admin/assets/img/avatars/1.png')}}" alt="user-avatar" class="d-block w-px-120 h-px-120 rounded" id="template_foto_karyawan" />
+                                                        <table>
+                                                            <tr>
+                                                                <th>Nama</th>
+                                                                <td>&nbsp;</td>
+                                                                <td>:</td>
+                                                                <td id="td_nama"></td>
+                                                            </tr>
+                                                            <tr>
+                                                                <th>Divisi</th>
+                                                                <td>&nbsp;</td>
+                                                                <td>:</td>
+                                                                <td id="td_divisi"></td>
+                                                            </tr>
+                                                            <tr>
+                                                                <th>Jabatan</th>
+                                                                <td>&nbsp;</td>
+                                                                <td>:</td>
+                                                                <td id="td_jabatan"></td>
+                                                            <tr>
+                                                                <th>Kontrak Kerja</th>
+                                                                <td>&nbsp;</td>
+                                                                <td>:</td>
+                                                                <td id="td_kontrak_kerja"></td>
+                                                            </tr>
+                                                            <tr>
+                                                                <th>Penempatan Kerja</th>
+                                                                <td>&nbsp;</td>
+                                                                <td>:</td>
+                                                                <td id="td_penempatan_kerja"> </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <th>Tgl Mulai Kontrak</th>
+                                                                <td>&nbsp;</td>
+                                                                <td>:</td>
+                                                                <td id="td_mulai_kontrak"> </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <th>Tgl Selesai Kontrak</th>
+                                                                <td>&nbsp;</td>
+                                                                <td>:</td>
+                                                                <td id="td_selesai_kontrak"></td>
+                                                            </tr>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <div class="form-floating form-floating-outline">
+                                                <input type="text" id="date_now" name="date_now" readonly value="{{date('Y-m-d')}}" class="form-control @error('date_now') is-invalid @enderror" placeholder="Tanggal" />
+                                                <label for="date_now">Tanggal Non Aktif</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <div class="form-floating form-floating-outline">
+                                                <textarea rows="10" id="alasan_non_aktif" name="alasan_non_aktif" class="form-control @error('alasan_non_aktif') is-invalid @enderror" placeholder="Alasan"></textarea>
+                                                <label for="alasan_non_aktif">Alasan</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="submit" class="btn btn-sm btn-success">
+                                        Save
+                                    </button>
+                                    <button type="button" class="btn btn-sm btn-outline-secondary" data-bs-dismiss="modal">
+                                        Close
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="modal fade" id="modal_non_aktif_karyawan1" data-bs-backdrop="static" tabindex="-1">
+                        <div class="modal-dialog modal-dialog-scrollable modal-lg">
+                            <form method="post" action="{{ url('/karyawan/non_aktif_proses/'.$holding) }}" class="modal-content" enctype="multipart/form-data">
+                                @csrf
+                                <div class="modal-header">
+                                    <h4 class="modal-title" id="backDropModalTitle">Form Non Aktif Karyawan</h4>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="row g-2 mt-2">
+                                        <div class="col-md-12">
+                                            <div class="card mb-4">
+                                                <h4 class="card-header"><a href="{{url('karyawan/'.$holding)}}"><i class="mdi mdi-arrow-left-bold"></i></a>&nbsp;Profil</h4>
+                                                <!-- Account -->
+                                                <div class="card-body">
+                                                    <div class="d-flex align-items-start align-items-sm-center gap-4">
+                                                        <img src="{{asset('admin/assets/img/avatars/1.png')}}" alt="user-avatar" class="d-block w-px-120 h-px-120 rounded" id="template_foto_karyawan" />
+
+                                                        <table>
+                                                            <tr>
+                                                                <th>Nama</th>
+                                                                <td>&nbsp;</td>
+                                                                <td>:</td>
+                                                                <td id="td_nama"></td>
+                                                            </tr>
+                                                            <tr>
+                                                                <th>Jabatan</th>
+                                                                <td>&nbsp;</td>
+                                                                <td>:</td>
+                                                                <td>Karyawan Harian</td>
+                                                            <tr>
+                                                                <th>Penempatan Kerja</th>
+                                                                <td>&nbsp;</td>
+                                                                <td>:</td>
+                                                                <td id="td_penempatan_kerja"></td>
+                                                            </tr>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-floating form-floating-outline">
+                                                <input type="text" id="alasan_non_aktif" name="alasan_non_aktif" class="form-control @error('alasan_non_aktif') is-invalid @enderror" placeholder="Alasan" />
+                                                <label for="alasan_non_aktif">Alasan</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+                                        Close
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
                     <div class="nav-align-top">
                         <div class="row">
                             <div class="col-6">
@@ -193,7 +338,7 @@
                         </div>
                         <div class="tab-content">
                             <div class="tab-pane fade show active" id="navs-pills-justified-home" role="tabpanel">
-                                <table class="table" id="table_karyawan_bulanan" style="width: 100%;">
+                                <table class="table" id="table_karyawan_bulanan" style="width: 100%; font-size: smaller;">
                                     <thead class="table-primary">
                                         <tr>
                                             <th>No.</th>
@@ -822,6 +967,35 @@
             },
 
         })
+    });
+    $(document).on('click', '#btn_non_aktif_karyawan', function() {
+        var id = $(this).data('id');
+        var holding = $(this).data("holding");
+        var nama = $(this).data('nama');
+        var divisi = $(this).data('divisi');
+        var jabatan = $(this).data('jabatan');
+        var bagian = $(this).data('bagian');
+        var foto = $(this).data('foto');
+        var tgl_mulai_kontrak = $(this).data('tgl_mulai_kontrak');
+        var tgl_selesai_kontrak = $(this).data('tgl_selesai_kontrak');
+        var kontrak_kerja = $(this).data('kontrak_kerja');
+        var penempatan_kerja = $(this).data('penempatan_kerja');
+        if (foto == '' | foto == null) {
+            $('#template_foto_karyawan').attr('src', "{{asset('admin/assets/img/avatars/1.png')}}");
+        } else {
+            $('#template_foto_karyawan').attr('src', "{{url('storage/app/public/foto_karyawan/')}}" + foto);
+        }
+        $('#td_nama').html(nama);
+        $('#td_divisi').html(divisi);
+        $('#td_jabatan').html(jabatan);
+        $('#td_bagian').html(bagian);
+        $('#td_jabatan').html(jabatan);
+        $('#td_mulai_kontrak').html(tgl_mulai_kontrak);
+        $('#td_selesai_kontrak').html(tgl_selesai_kontrak);
+        $('#td_kontrak_kerja').html(kontrak_kerja);
+        $('#td_penempatan_kerja').html(penempatan_kerja);
+        $('#id_nonactive').val(id);
+        $('#modal_non_aktif_karyawan').modal('show');
     });
     $(document).on("click", "#btn_mapping_shift", function() {
         // console.log('ok');

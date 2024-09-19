@@ -49,6 +49,7 @@ class User extends Authenticatable
         'tgl_mulai_kontrak',
         'tgl_selesai_kontrak',
         'kontrak_kerja',
+        'file_kontrak_kerja',
         'lama_kontrak_kerja',
         'kontrak_site',
         'penempatan_kerja',
@@ -94,6 +95,7 @@ class User extends Authenticatable
         'kelas_bpjs',
         'ptkp',
         'status_npwp',
+        'status_aktif',
     ];
 
 
