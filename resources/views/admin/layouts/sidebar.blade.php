@@ -53,7 +53,7 @@
                         <div style="font-size: 10pt;" data-i18n="Data Master">&nbsp;Karyawan</div>
                     </a>
                     <ul class="menu-sub">
-                        <li class="menu-item {{ Request::is('karyawan/'.$holding) ? 'active' : '' }}">
+                        <li class="menu-item {{ Request::is('karyawan/'.$holding) ? 'active' : '' }} {{ Request::is('karyawan/tambah-karyawan/'.$holding) ? 'active' : '' }} {{ Request::is('karyawan/detail*') ? 'active' : '' }} {{ Request::is('karyawan/shift*') ? 'active' : '' }}">
                             <a href="{{ url('/karyawan/'.$holding) }}" class="menu-link">
                                 <i class="menu-icon tf-icons mdi mdi-database-outline"></i>
                                 <div style="font-size: 10pt;" data-i18n="Data Karyawan">&nbsp;Database&nbsp;Karyawan</div>
@@ -189,7 +189,7 @@
                         <div style="font-size: 10pt;" data-i18n="Data Master">&nbsp;Karyawan</div>
                     </a>
                     <ul class="menu-sub">
-                        <li class="menu-item {{ Request::is('karyawan/'.$holding) ? 'active' : '' }}">
+                        <li class="menu-item {{ Request::is('karyawan/'.$holding) ? 'active' : '' }} {{ Request::is('karyawan/tambah-karyawan/'.$holding) ? 'active' : '' }} {{ Request::is('karyawan/detail*') ? 'active' : '' }} {{ Request::is('karyawan/shift*') ? 'active' : '' }}">
                             <a href="{{ url('/karyawan/'.$holding) }}" class="menu-link">
                                 <i class="menu-icon tf-icons mdi mdi-database-outline"></i>
                                 <div style="font-size: 10pt;" data-i18n="Data Karyawan">&nbsp;Database&nbsp;Karyawan</div>
