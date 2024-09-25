@@ -68,6 +68,28 @@ class karyawanController extends Controller
             "karyawan_shift" => User::where('kategori', 'Karyawan Harian')->where('kontrak_kerja', $holding)->where('status_aktif', 'AKTIF')->count(),
         ]);
     }
+    public function index_users()
+    {
+
+        $holding = request()->segment(count(request()->segments()));
+        return view('admin.karyawan.index_users', [
+            // return view('karyawan.index', [
+            'title' => 'Karyawan',
+            "data_departemen" => Departemen::orderBy('nama_departemen', 'ASC')->where('holding', $holding)->get(),
+            'holding' => $holding,
+            'data_user' => User::where('kontrak_kerja', $holding)->where('status_aktif', 'AKTIF')->get(),
+            "data_jabatan" => Jabatan::orderBy('nama_jabatan', 'ASC')->where('holding', $holding)->get(),
+            "data_provinsi" => Provincies::orderBy('name', 'ASC')->get(),
+            "data_kabupaten" => Cities::orderBy('name', 'ASC')->get(),
+            "data_kecamatan" => District::orderBy('name', 'ASC')->get(),
+            "data_desa" => Village::orderBy('name', 'ASC')->get(),
+            "data_lokasi" => Lokasi::orderBy('lokasi_kantor', 'ASC')->get(),
+            "karyawan_laki" => User::where('gender', 'Laki-Laki')->where('kontrak_kerja', $holding)->where('status_aktif', 'AKTIF')->count(),
+            "karyawan_perempuan" => User::where('gender', 'Perempuan')->where('kontrak_kerja', $holding)->where('status_aktif', 'AKTIF')->count(),
+            "karyawan_office" => User::where('kategori', 'Karyawan Bulanan')->where('kontrak_kerja', $holding)->where('status_aktif', 'AKTIF')->count(),
+            "karyawan_shift" => User::where('kategori', 'Karyawan Harian')->where('kontrak_kerja', $holding)->where('status_aktif', 'AKTIF')->count(),
+        ]);
+    }
     public function karyawan_non_aktif()
     {
 
@@ -84,10 +106,10 @@ class karyawanController extends Controller
             "data_kecamatan" => District::orderBy('name', 'ASC')->get(),
             "data_desa" => Village::orderBy('name', 'ASC')->get(),
             "data_lokasi" => Lokasi::orderBy('lokasi_kantor', 'ASC')->get(),
-            "karyawan_laki" => User::where('gender', 'Laki-Laki')->where('kontrak_kerja', $holding)->where('status_aktif', 'NON AKTIF')->count(),
-            "karyawan_perempuan" => User::where('gender', 'Perempuan')->where('kontrak_kerja', $holding)->where('status_aktif', 'NON AKTIF')->count(),
-            "karyawan_office" => User::where('kategori', 'Karyawan Bulanan')->where('kontrak_kerja', $holding)->where('status_aktif', 'NON AKTIF')->count(),
-            "karyawan_shift" => User::where('kategori', 'Karyawan Harian')->where('kontrak_kerja', $holding)->where('status_aktif', 'NON AKTIF')->count(),
+            "karyawan_laki" => User::Join('usernonactive', 'usernonactive.user_id', 'users.id')->where('gender', 'Laki-Laki')->where('kontrak_kerja', $holding)->where('status_aktif', 'NON AKTIF')->count(),
+            "karyawan_perempuan" => User::Join('usernonactive', 'usernonactive.user_id', 'users.id')->where('gender', 'Perempuan')->where('kontrak_kerja', $holding)->where('status_aktif', 'NON AKTIF')->count(),
+            "karyawan_office" => User::Join('usernonactive', 'usernonactive.user_id', 'users.id')->where('kategori', 'Karyawan Bulanan')->where('kontrak_kerja', $holding)->where('status_aktif', 'NON AKTIF')->count(),
+            "karyawan_shift" => User::Join('usernonactive', 'usernonactive.user_id', 'users.id')->where('kategori', 'Karyawan Harian')->where('kontrak_kerja', $holding)->where('status_aktif', 'NON AKTIF')->count(),
         ]);
     }
     public function karyawan_ingin_bergabung()
@@ -99,17 +121,17 @@ class karyawanController extends Controller
             'title' => 'Karyawan',
             "data_departemen" => Departemen::orderBy('nama_departemen', 'ASC')->where('holding', $holding)->get(),
             'holding' => $holding,
-            'data_user' => User::where('kontrak_kerja', $holding)->where('status_aktif', 'NON AKTIF')->get(),
+            'data_user' => User::where('kontrak_kerja', $holding)->where('status_aktif', 'WAITING')->get(),
             "data_jabatan" => Jabatan::orderBy('nama_jabatan', 'ASC')->where('holding', $holding)->get(),
             "data_provinsi" => Provincies::orderBy('name', 'ASC')->get(),
             "data_kabupaten" => Cities::orderBy('name', 'ASC')->get(),
             "data_kecamatan" => District::orderBy('name', 'ASC')->get(),
             "data_desa" => Village::orderBy('name', 'ASC')->get(),
             "data_lokasi" => Lokasi::orderBy('lokasi_kantor', 'ASC')->get(),
-            "karyawan_laki" => User::where('gender', 'Laki-Laki')->where('kontrak_kerja', $holding)->where('status_aktif', 'NON AKTIF')->count(),
-            "karyawan_perempuan" => User::where('gender', 'Perempuan')->where('kontrak_kerja', $holding)->where('status_aktif', 'NON AKTIF')->count(),
-            "karyawan_office" => User::where('kategori', 'Karyawan Bulanan')->where('kontrak_kerja', $holding)->where('status_aktif', 'NON AKTIF')->count(),
-            "karyawan_shift" => User::where('kategori', 'Karyawan Harian')->where('kontrak_kerja', $holding)->where('status_aktif', 'NON AKTIF')->count(),
+            "karyawan_laki" => User::where('gender', 'Laki-Laki')->where('kontrak_kerja', $holding)->where('status_aktif', 'WAITING')->count(),
+            "karyawan_perempuan" => User::where('gender', 'Perempuan')->where('kontrak_kerja', $holding)->where('status_aktif', 'WAITING')->count(),
+            "karyawan_office" => User::where('kategori', 'Karyawan Bulanan')->where('kontrak_kerja', $holding)->where('status_aktif', 'WAITING')->count(),
+            "karyawan_shift" => User::where('kategori', 'Karyawan Harian')->where('kontrak_kerja', $holding)->where('status_aktif', 'WAITING')->count(),
         ]);
     }
     public function database_karyawan_non_aktif(Request $request)
@@ -323,7 +345,7 @@ class karyawanController extends Controller
             'title' => 'Karyawan',
             "data_departemen" => Departemen::orderBy('nama_departemen', 'ASC')->where('holding', $holding)->get(),
             'holding' => $holding,
-            'data_user' => User::where('kontrak_kerja', $holding)->where('status_aktif', 'NON AKTIF')->get(),
+            'data_user' => User::where('kontrak_kerja', $holding)->where('status_aktif', 'AKTIF')->get(),
             "data_jabatan" => Jabatan::orderBy('nama_jabatan', 'ASC')->where('holding', $holding)->get(),
             "karyawan_laki" => User::where('gender', 'Laki-Laki')->where('kontrak_kerja', $holding)->where('status_aktif', 'AKTIF')->where('kategori', 'Karyawan Bulanan')->whereBetween('tgl_selesai_kontrak', [$date_now, $date_30day])->count(),
             "karyawan_perempuan" => User::where('gender', 'Perempuan')->where('kontrak_kerja', $holding)->where('status_aktif', 'AKTIF')->where('kategori', 'Karyawan Bulanan')->whereBetween('tgl_selesai_kontrak', [$date_now, $date_30day])->count(),
@@ -466,11 +488,15 @@ class karyawanController extends Controller
     public function ImportUpdateKaryawan(Request $request)
     {
         $holding = request()->segment(count(request()->segments()));
-        $query = Excel::import(new UserUpdateImport, $request->file_excel);
-        if ($query) {
-            return redirect('/karyawan/' . $holding)->with('success', 'Import Update Karyawan Sukses');
+        try {
+            $query = Excel::import(new UserUpdateImport, $request->file_excel);
+            if ($query) {
+
+                return redirect('/karyawan/' . $holding)->with('success', 'Import Update Karyawan Sukses');
+            }
+        } catch (\Exception $exception) {
+            return redirect('/karyawan/' . $holding)->withErrors(["msq" => $exception->getMessage()]);
         }
-        return redirect('/karyawan/' . $holding)->with('error', 'Import Update Karyawan Error');
     }
     public function ExportKaryawan(Request $request)
     {
@@ -512,6 +538,7 @@ class karyawanController extends Controller
                 ->leftJoin('indonesia_villages as t', 't.code', 'users.desa')
                 ->where('users.kontrak_kerja', $cek_holding)
                 ->where('users.is_admin', 'user')
+                ->where('users.status_aktif', 'AKTIF')
                 ->select('nomor_identitas_karyawan', 'users.name', 'nik', 'npwp', 'fullname', 'motto', 'email', 'telepon', 'username', 'tempat_lahir', 'tgl_lahir', 'gender', 'tgl_join', 'status_nikah', 'q.name as nama_provinsi', 'r.name as nama_kabupaten', 's.name as nama_kecamatan', 't.name as nama_desa', 'rt', 'rw', 'alamat', 'kuota_cuti_tahunan', 'kategori', 'lama_kontrak_kerja', 'tgl_mulai_kontrak', 'tgl_selesai_kontrak', 'kontrak_kerja', 'penempatan_kerja', 'site_job', 'nama_bank', 'nomor_rekening', 'a.nama_departemen', 'b.nama_divisi', 'c.nama_bagian', 'd.nama_jabatan', 'e.nama_divisi as nama_divisi1', 'f.nama_bagian as nama_bagian1', 'g.nama_jabatan as nama_jabatan1', 'h.nama_divisi as nama_divisi2', 'i.nama_bagian as nama_bagian2', 'j.nama_jabatan as nama_jabatan2', 'k.nama_divisi as nama_divisi3', 'l.nama_bagian as nama_bagian3', 'm.nama_jabatan as nama_jabatan3', 'n.nama_divisi as nama_divisi4', 'o.nama_bagian as nama_bagian4', 'p.nama_jabatan as nama_jabatan4')
                 ->orderBy('name', 'ASC')
                 ->take(100)
@@ -561,8 +588,6 @@ class karyawanController extends Controller
                     }
                     $btn = '<button id="btndetail_karyawan" data-id="' . $row->id . '" data-holding="' . $holding . '" class="btn btn-icon btn-success waves-effect waves-light"><span class="tf-icons mdi mdi-eye-outline"></span></button>';
                     $btn = $btn . '<button id="btn_mapping_shift" data-id="' . $row->id . '" data-holding="' . $holding . '" type="button" class="btn btn-icon btn-info waves-effect waves-light"><span class="tf-icons mdi mdi-clock-outline"></span></button>';
-                    $btn = $btn . '<button id="btn_edit_password" data-id="' . $row->id . '" data-holding="' . $holding . '" type="button" class="btn btn-icon btn-secondary waves-effect waves-light"><span class="tf-icons mdi mdi-key-outline"></span></button>';
-                    $btn = $btn . '<button type="button" id="btn_non_aktif_karyawan" data-foto="' . $row->foto . '" data-id="' . $row->id . '" data-tgl_mulai_kontrak="' . $row->tgl_mulai_kontrak . '" data-tgl_selesai_kontrak="' . $row->tgl_selesai_kontrak . '" data-nama="' . $row->name . '" data-divisi="' . $divisi . '" data-jabatan="' . $jabatan . '" data-bagian="' . $row->bagian . '"  data-holding="' . $holding . '" data-penempatan_kerja="' . $row->penempatan_kerja . '" data-kontrak_kerja="' . $row->kontrak_kerja . '"  class="btn btn-icon btn-danger waves-effect waves-light"><span class="tf-icons mdi mdi-account-remove-outline"></span></button>';
                     return $btn;
                 })
                 ->rawColumns(['nama_jabatan', 'nama_divisi', 'option'])
@@ -583,6 +608,100 @@ class karyawanController extends Controller
                     return $btn;
                 })
                 ->rawColumns(['option'])
+                ->make(true);
+        }
+    }
+    public function datatable_users_bulanan(Request $request)
+    {
+        $holding = request()->segment(count(request()->segments()));
+        $table = User::with('Divisi')->with('Jabatan')->where('kontrak_kerja', $holding)->where('status_aktif', 'AKTIF')
+            ->where('kategori', 'Karyawan Bulanan')
+            ->orderBy('id', 'DESC')
+            ->get();
+        if (request()->ajax()) {
+            return DataTables::of($table)
+                ->addColumn('nama_divisi', function ($row) use ($holding) {
+                    if ($row->divisi_id == '' || $row->divisi_id == NULL) {
+                        $divisi = NULL;
+                    } else {
+                        $divisi = $row->Divisi->nama_divisi;
+                    }
+                    return $divisi;
+                })
+                ->addColumn('nama_jabatan', function ($row) use ($holding) {
+                    if ($row->jabatan_id == '' || $row->jabatan_id == NULL) {
+                        $jabatan = NULL;
+                    } else {
+                        $jabatan = $row->Jabatan->nama_jabatan;
+                    }
+                    return $jabatan;
+                })
+                ->addColumn('akses', function ($row) use ($holding) {
+                    if ($row->is_admin == '' || $row->is_admin == NULL) {
+                        $akses = NULL;
+                    } else {
+                        $akses = $row->is_admin;
+                    }
+                    return $akses;
+                })
+                ->addColumn('status', function ($row) use ($holding) {
+                    if ($row->status_aktif == '' || $row->status_aktif == NULL) {
+                        $status = NULL;
+                    } else if ($row->status_aktif == 'AKTIF' || $row->status_aktif == 'AKTIF') {
+                        $status = '<span class="badge bg-label-success">' . $row->status_aktif . '</span>';
+                    } else if ($row->status_aktif == 'AKTIF' || $row->status_aktif == 'NON AKTIF') {
+                        $status = '<span class="badge bg-label-danger">' . $row->status_aktif . '</span>';
+                    }
+                    return $status;
+                })
+                ->addColumn('option', function ($row) use ($holding) {
+                    if ($row->Divisi == 'NULL' || $row->Divisi == '') {
+                        $divisi = '-';
+                    } else {
+                        $divisi = $row->Divisi->nama_divisi;
+                    }
+                    if ($row->Jabatan == 'NULL' || $row->Jabatan == '') {
+                        $jabatan = '-';
+                    } else {
+                        $jabatan = $row->Jabatan->nama_jabatan;
+                    }
+
+                    $btn = '<button id="btn_edit_password" data-id="' . $row->id . '" data-holding="' . $holding . '" type="button" class="btn btn-icon btn-secondary waves-effect waves-light"><span class="tf-icons mdi mdi-key-outline"></span></button>';
+                    $btn = $btn . '<button type="button" id="btn_non_aktif_karyawan" data-foto="' . $row->foto . '" data-id="' . $row->id . '" data-tgl_mulai_kontrak="' . $row->tgl_mulai_kontrak . '" data-tgl_selesai_kontrak="' . $row->tgl_selesai_kontrak . '" data-nama="' . $row->name . '" data-divisi="' . $divisi . '" data-jabatan="' . $jabatan . '" data-bagian="' . $row->bagian . '"  data-holding="' . $holding . '" data-penempatan_kerja="' . $row->penempatan_kerja . '" data-kontrak_kerja="' . $row->kontrak_kerja . '"  class="btn btn-icon btn-danger waves-effect waves-light"><span class="tf-icons mdi mdi-account-remove-outline"></span></button>';
+                    return $btn;
+                })
+                ->rawColumns(['nama_jabatan', 'nama_divisi', 'akses', 'status', 'option'])
+                ->make(true);
+        }
+    }
+    public function datatable_users_harian(Request $request)
+    {
+        $holding = request()->segment(count(request()->segments()));
+        $table = User::where('kontrak_kerja', $holding)->where('kategori', 'Karyawan Harian')->where('status_aktif', 'AKTIF')->orderBy('id', 'DESC')->get();
+        if (request()->ajax()) {
+            return DataTables::of($table)
+                ->addColumn('akses', function ($row) use ($holding) {
+                    $akses = $row->is_admin;
+                    return $akses;
+                })
+                ->addColumn('status', function ($row) use ($holding) {
+                    if ($row->status_aktif == '' || $row->status_aktif == NULL) {
+                        $status = NULL;
+                    } else if ($row->status_aktif == 'AKTIF' || $row->status_aktif == 'AKTIF') {
+                        $status = '<span class="badge bg-label-success">' . $row->status_aktif . '</span>';
+                    } else if ($row->status_aktif == 'AKTIF' || $row->status_aktif == 'NON AKTIF') {
+                        $status = '<span class="badge bg-label-danger">' . $row->status_aktif . '</span>';
+                    }
+                    return $status;
+                })
+                ->addColumn('option', function ($row) use ($holding) {
+                    $btn = '<button id="btndetail_karyawan" data-id="' . $row->id . '" data-holding="' . $holding . '" class="btn btn-icon btn-success waves-effect waves-light"><span class="tf-icons mdi mdi-eye-outline"></span></button>';
+                    $btn = $btn . '<button id="btn_mapping_shift" data-id="' . $row->id . '" data-holding="' . $holding . '" type="button" class="btn btn-icon btn-info waves-effect waves-light"><span class="tf-icons mdi mdi-clock-outline"></span></button>';
+                    $btn = $btn . '<button id="btn_edit_password" data-id="' . $row->id . '" data-holding="' . $holding . '" type="button" class="btn btn-icon btn-secondary waves-effect waves-light"><span class="tf-icons mdi mdi-key-outline"></span></button>';
+                    $btn = $btn . '<button type="button" id="btn_delete_karyawan" data-id="' . $row->id . '" data-holding="' . $holding . '" class="btn btn-icon btn-danger waves-effect waves-light"><span class="tf-icons mdi mdi-delete-outline"></span></button>';
+                    return $btn;
+                })
+                ->rawColumns(['option', 'akses', 'status'])
                 ->make(true);
         }
     }
@@ -635,6 +754,7 @@ class karyawanController extends Controller
                 ->Join('bagians', 'bagians.id', 'jabatans.bagian_id')
                 ->Join('level_jabatans', 'level_jabatans.id', 'jabatans.level_id')
                 // ->where('users.penempatan_kerja', $get_user->penempatan_kerja)
+                ->where('users.status_aktif', 'AKTIF')
                 ->where('users.dept_id', $get_user->dept_id)
                 ->where('level_jabatans.level_jabatan', '<', $get_level->level_jabatan)
                 ->select('users.*', 'jabatans.nama_jabatan', 'bagians.nama_bagian')
@@ -645,6 +765,7 @@ class karyawanController extends Controller
                 ->Join('divisis', 'divisis.id', 'jabatans.divisi_id')
                 ->Join('level_jabatans', 'level_jabatans.id', 'jabatans.level_id')
                 ->Join('bagians', 'bagians.id', 'jabatans.bagian_id')
+                ->where('users.status_aktif', 'AKTIF')
                 // ->where('users.penempatan_kerja', $get_user->penempatan_kerja)
                 // ->where('divisis.id', $request->id_divisi)
                 ->where('level_jabatans.level_jabatan', '<', $get_level->level_jabatan)
@@ -675,6 +796,7 @@ class karyawanController extends Controller
                 ->Join('divisis', 'divisis.id', 'jabatans.divisi_id')
                 ->Join('bagians', 'bagians.id', 'jabatans.bagian_id')
                 ->Join('level_jabatans', 'level_jabatans.id', 'jabatans.level_id')
+                ->where('users.status_aktif', 'AKTIF')
                 ->where('users.penempatan_kerja', $get_user->penempatan_kerja)
                 ->where('users.dept_id', $get_user->dept_id)
                 ->where('level_jabatans.level_jabatan', '<', 2)
@@ -685,6 +807,7 @@ class karyawanController extends Controller
                 $get_atasan = User::Join('jabatans', 'jabatans.id', 'users.jabatan_id')
                     ->Join('divisis', 'divisis.id', 'jabatans.divisi_id')
                     ->Join('bagians', 'bagians.id', 'jabatans.bagian_id')
+                    ->where('users.status_aktif', 'AKTIF')
                     ->where('users.penempatan_kerja', $get_user->penempatan_kerja)
                     ->where('users.dept_id', $get_user->dept_id)
                     ->Join('level_jabatans', 'level_jabatans.id', 'jabatans.level_id')
@@ -696,6 +819,7 @@ class karyawanController extends Controller
                     ->Join('divisis', 'divisis.id', 'jabatans.divisi_id')
                     ->Join('level_jabatans', 'level_jabatans.id', 'jabatans.level_id')
                     ->Join('bagians', 'bagians.id', 'jabatans.bagian_id')
+                    ->where('users.status_aktif', 'AKTIF')
                     ->where('users.penempatan_kerja', $get_user->penempatan_kerja)
                     ->where('users.dept_id', $get_user->dept_id)
                     // ->where('divisis.id', $request->id_divisi)
@@ -722,10 +846,10 @@ class karyawanController extends Controller
             "data_kecamatan" => District::orderBy('name', 'ASC')->get(),
             "data_desa" => Village::orderBy('name', 'ASC')->get(),
             "data_lokasi" => Lokasi::orderBy('lokasi_kantor', 'ASC')->get(),
-            "karyawan_laki" => User::where('gender', 'Laki-Laki')->where('kontrak_kerja', $holding)->count(),
-            "karyawan_perempuan" => User::where('gender', 'Perempuan')->where('kontrak_kerja', $holding)->count(),
-            "karyawan_office" => User::where('kategori', 'Karyawan Bulanan')->where('kontrak_kerja', $holding)->count(),
-            "karyawan_shift" => User::where('kategori', 'Karyawan Harian')->where('kontrak_kerja', $holding)->count(),
+            "karyawan_laki" => User::where('gender', 'Laki-Laki')->where('kontrak_kerja', $holding)->where('users.status_aktif', 'AKTIF')->count(),
+            "karyawan_perempuan" => User::where('gender', 'Perempuan')->where('kontrak_kerja', $holding)->where('users.status_aktif', 'AKTIF')->count(),
+            "karyawan_office" => User::where('kategori', 'Karyawan Bulanan')->where('kontrak_kerja', $holding)->where('users.status_aktif', 'AKTIF')->count(),
+            "karyawan_shift" => User::where('kategori', 'Karyawan Harian')->where('kontrak_kerja', $holding)->where('users.status_aktif', 'AKTIF')->count(),
         ]);
     }
 
@@ -1069,57 +1193,58 @@ class karyawanController extends Controller
         // dd($no_karyawan);
         $insert = User::create(
             [
-                'nomor_identitas_karyawan' => $no_karyawan,
-                'name' => $validatedData['name'],
-                'nik' => $validatedData['nik'],
-                'npwp' => $validatedData['npwp'],
-                'fullname' => $validatedData['fullname'],
-                'motto' => $validatedData['motto'],
-                'foto_karyawan' => $img_name,
-                'email' => $validatedData['email'],
-                'telepon' => $validatedData['telepon'],
-                'username' => $validatedData['username'],
-                'password' => Hash::make($validatedData['password']),
-                'tempat_lahir' => $validatedData['tempat_lahir'],
-                'tgl_lahir' => $validatedData['tgl_lahir'],
-                'gender' => $validatedData['gender'],
-                'tgl_join' => $validatedData['tgl_join'],
-                'status_nikah' => $validatedData['status_nikah'],
-                'nama_bank' => $validatedData['nama_bank'],
-                'nomor_rekening' => $validatedData['nomor_rekening'],
-                'kuota_cuti_tahunan' => $validatedData['kuota_cuti'],
-                'is_admin' => $request['is_admin'],
-                'kategori' => $validatedData['kategori'],
-                'kontrak_kerja' => $kontrak_kerja,
-                'lama_kontrak_kerja' => $lama_kontrak_kerja,
-                'tgl_mulai_kontrak' => $tgl_mulai_kontrak,
-                'tgl_selesai_kontrak' => $tgl_selesai_kontrak,
-                'penempatan_kerja' => $validatedData['penempatan_kerja'],
-                'site_job' => $site_job,
-                'provinsi' => Provincies::where('code', $validatedData['provinsi'])->value('code'),
-                'kabupaten' => Cities::where('code', $validatedData['kabupaten'])->value('code'),
-                'kecamatan' => District::where('code', $validatedData['kecamatan'])->value('code'),
-                'desa' => Village::where('code', $validatedData['desa'])->value('code'),
-                'rt' => $validatedData['rt'],
-                'rw' => $validatedData['rw'],
-                'alamat' => $validatedData['alamat'],
-                'detail_alamat' => Provincies::where('code', $validatedData['provinsi'])->value('name') . ' , ' . Cities::where('code', $validatedData['kabupaten'])->value('name') . ' , ' . District::where('code', $validatedData['kecamatan'])->value('name') . ' , ' . Village::where('code', $validatedData['desa'])->value('name') . ' , RT. ' . $validatedData['rt'] . ' , RW. ' . $validatedData['rw'] . ' , ' . $validatedData['alamat'],
-                'dept_id' => $departemen,
-                'divisi_id' => $divisi,
-                'bagian_id' => $bagian,
-                'jabatan_id' => $jabatan,
-                'divisi1_id' => $divisi1,
-                'bagian1_id' => $bagian1,
-                'jabatan1_id' => $jabatan1,
-                'divisi2_id' => $divisi2,
-                'bagian2_id' => $bagian2,
-                'jabatan2_id' => $jabatan2,
-                'divisi3_id' => $divisi3,
-                'bagian3_id' => $bagian3,
-                'jabatan3_id' => $jabatan3,
-                'divisi4_id' => $divisi4,
-                'bagian4_id' => $bagian4,
-                'jabatan4_id' => $jabatan4,
+                'nomor_identitas_karyawan'          => $no_karyawan,
+                'name'                              => $validatedData['name'],
+                'nik'                               => $validatedData['nik'],
+                'npwp'                              => $validatedData['npwp'],
+                'fullname'                          => $validatedData['fullname'],
+                'motto'                             => $validatedData['motto'],
+                'foto_karyawan'                     => $img_name,
+                'email'                             => $validatedData['email'],
+                'telepon'                           => $validatedData['telepon'],
+                'username'                          => $validatedData['username'],
+                'password'                          => Hash::make($validatedData['password']),
+                'tempat_lahir'                      => $validatedData['tempat_lahir'],
+                'tgl_lahir'                         => $validatedData['tgl_lahir'],
+                'gender'                            => $validatedData['gender'],
+                'tgl_join'                          => $validatedData['tgl_join'],
+                'status_nikah'                      => $validatedData['status_nikah'],
+                'nama_bank'                         => $validatedData['nama_bank'],
+                'nomor_rekening'                    => $validatedData['nomor_rekening'],
+                'kuota_cuti_tahunan'                => $validatedData['kuota_cuti'],
+                'is_admin'                          => $request['is_admin'],
+                'kategori'                          => $validatedData['kategori'],
+                'kontrak_kerja'                     => $kontrak_kerja,
+                'lama_kontrak_kerja'                => $lama_kontrak_kerja,
+                'tgl_mulai_kontrak'                 => $tgl_mulai_kontrak,
+                'tgl_selesai_kontrak'               => $tgl_selesai_kontrak,
+                'penempatan_kerja'                  => $validatedData['penempatan_kerja'],
+                'site_job'                          => $site_job,
+                'status_aktif'                      => 'AKTIF',
+                'provinsi'                          => Provincies::where('code', $validatedData['provinsi'])->value('code'),
+                'kabupaten'                         => Cities::where('code', $validatedData['kabupaten'])->value('code'),
+                'kecamatan'                         => District::where('code', $validatedData['kecamatan'])->value('code'),
+                'desa'                              => Village::where('code', $validatedData['desa'])->value('code'),
+                'rt'                                => $validatedData['rt'],
+                'rw'                                => $validatedData['rw'],
+                'alamat'                            => $validatedData['alamat'],
+                'detail_alamat'                     => Provincies::where('code', $validatedData['provinsi'])->value('name') . ' , ' . Cities::where('code', $validatedData['kabupaten'])->value('name') . ' , ' . District::where('code', $validatedData['kecamatan'])->value('name') . ' , ' . Village::where('code', $validatedData['desa'])->value('name') . ' , RT. ' . $validatedData['rt'] . ' , RW. ' . $validatedData['rw'] . ' , ' . $validatedData['alamat'],
+                'dept_id'                           => $departemen,
+                'divisi_id'                         => $divisi,
+                'bagian_id'                         => $bagian,
+                'jabatan_id'                        => $jabatan,
+                'divisi1_id'                        => $divisi1,
+                'bagian1_id'                        => $bagian1,
+                'jabatan1_id'                       => $jabatan1,
+                'divisi2_id'                        => $divisi2,
+                'bagian2_id'                        => $bagian2,
+                'jabatan2_id'                       => $jabatan2,
+                'divisi3_id'                        => $divisi3,
+                'bagian3_id'                        => $bagian3,
+                'jabatan3_id'                       => $jabatan3,
+                'divisi4_id'                        => $divisi4,
+                'bagian4_id'                        => $bagian4,
+                'jabatan4_id'                       => $jabatan4,
             ]
         );
         // 
@@ -1161,7 +1286,7 @@ class karyawanController extends Controller
                 'motto' => 'max:255',
                 'email' => 'max:255|nullable|unique:users',
                 'telepon' => 'max:12|nullable|min:11',
-                'username' => 'required|max:255|unique:users',
+                // 'username' => 'required|max:255|unique:users',
                 'password' => 'required|max:255',
                 'tempat_lahir' => 'required|max:255',
                 'tgl_lahir' => 'required|max:255',
@@ -1199,10 +1324,10 @@ class karyawanController extends Controller
                     'telepon' => 'max:12',
                     'nullable',
                     'min:11',
-                    'username' => 'required',
-                    'max:255',
-                    'nullable',
-                    'unique:users,username,' . $request->username,
+                    // 'username' => 'required',
+                    // 'max:255',
+                    // 'nullable',
+                    // 'unique:users,username,' . $request->username,
                     'password' => 'required',
                     'max:255',
                     'tempat_lahir' => 'required',
@@ -1424,15 +1549,15 @@ class karyawanController extends Controller
         }
 
 
-        $userId = User::find($id);
+        // $userId = User::find($id);
 
         // if ($request->email != $userId->email) {
         //     $rules['email'] = 'required|unique:users';
         // }
 
-        if ($request->username != $userId->username) {
-            $rules['username'] = 'required|max:255|unique:users';
-        }
+        // if ($request->username != $userId->username) {
+        //     $rules['username'] = 'required|max:255|unique:users';
+        // }
         if ($request->status_npwp == 'on') {
             $rules['npwp'] = 'required|max:255';
         }
@@ -1580,7 +1705,7 @@ class karyawanController extends Controller
                 'file_cv' => $file_cv_name,
                 'email' => $request['email'],
                 'telepon' => $request['telepon'],
-                'username' => $request['username'],
+                // 'username' => $request['username'],
                 'password' => $request['password'],
                 'tempat_lahir' => $request['tempat_lahir'],
                 'tgl_lahir' => $request['tgl_lahir'],
@@ -1702,21 +1827,45 @@ class karyawanController extends Controller
 
     public function editPasswordProses(Request $request, $id)
     {
+        // dd('ok');
         $holding = request()->segment(count(request()->segments()));
-        $validatedData = $request->validate([
-            'password' => 'required|min:6|max:255',
+        if ($request->username == $request->username_old) {
+            $rules = [
+                'username' => 'required|max:255',
+                'password' => 'required|min:6|max:18',
+            ];
+        } else {
+            $rules = [
+                'username' => 'required|unique:users|max:255',
+                'password' => 'required|min:6|max:18',
+            ];
+        }
+        $customMessages = [
+            'required' => ':attribute tidak boleh kosong.',
+            'unique' => ':attribute tidak boleh sama',
+            // 'email' => ':attribute format email salah',
+            'min' => ':attribute Kurang',
+        ];
+        $validasi = Validator::make($request->all(), $rules, $customMessages);
+        if ($validasi->fails()) {
+            $errors = $validasi->errors()->first();
+            // dd($errors);
+            Alert::error('Gagal', $errors);
+            return back()->withInput();
+        }
+        $validatedData = $request->validate($rules, $customMessages);
+        User::where('id', $id)->update([
+            'username' => $validatedData['username'],
+            'password_show' => $validatedData['password'],
+            'password' => Hash::make($validatedData['password'])
         ]);
-
-        $validatedData['password'] = Hash::make($request->password);
-
-        User::where('id', $id)->update($validatedData);
         ActivityLog::create([
             'user_id' => $request->user()->id,
             'activity' => 'update',
-            'description' => 'Mengubah password karyawan ' . $request->name,
+            'description' => 'Mengubah Ubah User karyawan ' . $request->name,
         ]);
-        $request->session()->flash('success', 'Password Berhasil Diganti');
-        return redirect()->back();
+        Alert::success('success', 'User Berhasil Diganti');
+        return back();
     }
 
     public function shift($id)

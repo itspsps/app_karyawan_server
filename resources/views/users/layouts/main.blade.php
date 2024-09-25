@@ -27,8 +27,8 @@
     <!-- PWA Version -->
     {{-- <link rel="manifest" href="{{ asset('assets/assets_users/manifest.json') }}"> --}}
 
-    <!-- Stylesheets -->
     @include('users.layouts.css')
+    <!-- Stylesheets -->
     @yield('css')
 
     <!-- Google Fonts -->

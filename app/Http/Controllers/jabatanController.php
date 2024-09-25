@@ -122,6 +122,7 @@ class jabatanController extends Controller
                             ->orWhere('jabatan3_id', $row->id)
                             ->orWhere('jabatan4_id', $row->id)
                             ->where('is_admin', 'user')
+                            ->where('status_aktif', 'AKTIF')
                             ->count();
                     } else if ($holding == 'sps') {
                         $karyawan = User::where('jabatan_id', $row->id)
@@ -129,6 +130,7 @@ class jabatanController extends Controller
                             ->orWhere('jabatan2_id', $row->id)
                             ->orWhere('jabatan3_id', $row->id)
                             ->orWhere('jabatan4_id', $row->id)
+                            ->where('status_aktif', 'AKTIF')
                             ->where('is_admin', 'user')
                             ->count();
                     } else {
@@ -137,6 +139,7 @@ class jabatanController extends Controller
                             ->orWhere('jabatan2_id', $row->id)
                             ->orWhere('jabatan3_id', $row->id)
                             ->orWhere('jabatan4_id', $row->id)
+                            ->where('status_aktif', 'AKTIF')
                             ->where('is_admin', 'user')
                             ->count();
                     }
@@ -213,6 +216,7 @@ class jabatanController extends Controller
                             ->orWhere('jabatan2_id', $row->id)
                             ->orWhere('jabatan3_id', $row->id)
                             ->orWhere('jabatan4_id', $row->id)
+                            ->where('status_aktif', 'AKTIF')
                             ->where('is_admin', 'user')
                             ->count();
                     } else if ($holding == 'sps') {
@@ -221,6 +225,7 @@ class jabatanController extends Controller
                             ->orWhere('jabatan2_id', $row->id)
                             ->orWhere('jabatan3_id', $row->id)
                             ->orWhere('jabatan4_id', $row->id)
+                            ->where('status_aktif', 'AKTIF')
                             ->where('is_admin', 'user')
                             ->count();
                     } else {
@@ -229,6 +234,7 @@ class jabatanController extends Controller
                             ->orWhere('jabatan2_id', $row->id)
                             ->orWhere('jabatan3_id', $row->id)
                             ->orWhere('jabatan4_id', $row->id)
+                            ->where('status_aktif', 'AKTIF')
                             ->where('is_admin', 'user')
                             ->count();
                     }
@@ -254,6 +260,7 @@ class jabatanController extends Controller
             ->orWhere('jabatan2_id', $id)
             ->orWhere('jabatan3_id', $id)
             ->orWhere('jabatan4_id', $id)
+            ->where('status_aktif', 'AKTIF')
             ->where('is_admin', 'user')
             ->get();
         // dd($table);
@@ -629,6 +636,7 @@ class jabatanController extends Controller
                 ->orWhere('jabatan2_id', $id)
                 ->orWhere('jabatan3_id', $id)
                 ->orWhere('jabatan4_id', $id)
+                ->where('status_aktif', 'AKTIF')
                 ->where('is_admin', 'user')
                 ->count();
         } else if ($request->holding == 'sps') {
@@ -637,6 +645,7 @@ class jabatanController extends Controller
                 ->orWhere('jabatan2_id', $id)
                 ->orWhere('jabatan3_id', $id)
                 ->orWhere('jabatan4_id', $id)
+                ->where('status_aktif', 'AKTIF')
                 ->where('is_admin', 'user')
                 ->count();
         } else {
@@ -645,6 +654,7 @@ class jabatanController extends Controller
                 ->orWhere('jabatan2_id', $id)
                 ->orWhere('jabatan3_id', $id)
                 ->orWhere('jabatan4_id', $id)
+                ->where('status_aktif', 'AKTIF')
                 ->where('is_admin', 'user')
                 ->count();
         }

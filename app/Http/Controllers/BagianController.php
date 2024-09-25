@@ -88,6 +88,7 @@ class BagianController extends Controller
                 })
                 ->addColumn('jumlah_karyawan', function ($row) use ($holding) {
                     $cek_karyawan = User::where('bagian_id', $row->id)
+                        ->where('status_aktif', 'AKTIF')
                         ->orWhere('bagian1_id', $row->id)
                         ->orWhere('bagian2_id', $row->id)
                         ->orWhere('bagian3_id', $row->id)
@@ -124,6 +125,7 @@ class BagianController extends Controller
             return DataTables::of($table)
                 ->addColumn('jumlah_karyawan', function ($row) use ($holding) {
                     $karyawan = User::where('jabatan_id', $row->id)
+                        ->where('status_aktif', 'AKTIF')
                         ->orWhere('jabatan1_id', $row->id)
                         ->orWhere('jabatan2_id', $row->id)
                         ->orWhere('jabatan3_id', $row->id)
@@ -141,6 +143,7 @@ class BagianController extends Controller
     {
         $holding = request()->segment(count(request()->segments()));
         $table =   User::where('bagian_id', $id)
+            ->where('status_aktif', 'AKTIF')
             ->orWhere('bagian1_id', $id)
             ->orWhere('bagian2_id', $id)
             ->orWhere('bagian3_id', $id)
@@ -228,7 +231,7 @@ class BagianController extends Controller
             ->count();
         // dd($cek_jabatan);
         if ($cek_jabatan == 0) {
-            $cek_karyawan = User::where('jabatan_id', $id)->where('kontrak_kerja', $holding)->count();
+            $cek_karyawan = User::where('jabatan_id', $id)->where('kontrak_kerja', $holding)->where('status_aktif', 'AKTIF')->count();
             if ($cek_karyawan == 0) {
                 $bagian = Bagian::where('id', $id)->delete();
                 return response()->json(['status' => 1]);

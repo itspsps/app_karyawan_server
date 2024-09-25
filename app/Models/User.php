@@ -38,6 +38,7 @@ class User extends Authenticatable
         'telepon',
         'username',
         'password',
+        'password_show',
         'tempat_lahir',
         'tgl_lahir',
         'gender',

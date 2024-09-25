@@ -2,6 +2,7 @@
 
 namespace App\Exceptions;
 
+use Exception;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Throwable;
 
@@ -32,7 +33,7 @@ class Handler extends ExceptionHandler
      *
      * @return void
      */
-    public function handler($exception)
+    public function handler($request, Exception $exception)
     {
         if ($exception instanceof \Illuminate\Session\TokenMismatchException) {
             return redirect()->route('login');

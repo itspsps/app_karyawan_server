@@ -161,7 +161,7 @@
                                             <p class="alert alert-danger">{{$message}}</p>
                                             @enderror
                                         </div>
-                                        <div class="col-md-6">
+                                        <!-- <div class="col-md-6">
                                             <div class="form-floating form-floating-outline">
                                                 <input type="text" class="form-control @error('username') is-invalid @enderror" id="username" name="username" value="{{ old('username', $karyawan->username) }}">
                                                 <input type="hidden" name="password" value="{{ $karyawan->password }}">
@@ -170,7 +170,7 @@
                                             @error('username')
                                             <p class="alert alert-danger">{{$message}}</p>
                                             @enderror
-                                        </div>
+                                        </div> -->
                                         <div class="col-md-6">
                                             <div class="form-floating form-floating-outline">
                                                 <input type="text" class="form-control" id="motto" name="motto" value="{{old('motto', $karyawan->motto) }}" placeholder="Motto" />
@@ -344,8 +344,9 @@
                                         </div>
                                         <div id="form_tgl_mulai_kontrak" class="col-md-3">
                                             <div class="form-floating form-floating-outline">
-                                                <input type="date" class="form-control @error('tgl_mulai_kontrak') is-invalid @enderror" id="tgl_mulai_kontrak" name="tgl_mulai_kontrak" value="{{old('tgl_mulai_kontrak', $karyawan->tgl_mulai_kontrak) }}" />
+                                                <input type="date" readonly class="form-control @error('tgl_mulai_kontrak') is-invalid @enderror" id="tgl_mulai_kontrak" name="tgl_mulai_kontrak" value="{{old('tgl_mulai_kontrak', $karyawan->tgl_mulai_kontrak) }}" />
                                                 <label for="tgl_mulai_kontrak">Tanggal Mulai Kontrak</label>
+                                                <span class="badge bg-label-danger">Tidak Dapat Di Ubah</span>
                                             </div>
                                             @error('tgl_mulai_kontrak')
                                             <p class="alert alert-danger">{{$message}}</p>
@@ -353,8 +354,9 @@
                                         </div>
                                         <div id="form_tgl_selesai_kontrak" class="col-md-3">
                                             <div class="form-floating form-floating-outline">
-                                                <input type="date" class="form-control @error('tgl_selesai_kontrak') is-invalid @enderror" id="tgl_selesai_kontrak" name="tgl_selesai_kontrak" value="{{old('tgl_selesai_kontrak', $karyawan->tgl_selesai_kontrak) }}" />
+                                                <input type="date" readonly class="form-control @error('tgl_selesai_kontrak') is-invalid @enderror" id="tgl_selesai_kontrak" name="tgl_selesai_kontrak" value="{{old('tgl_selesai_kontrak', $karyawan->tgl_selesai_kontrak) }}" />
                                                 <label for=" tgl_selesai_kontrak">Tanggal Selesai Kontrak</label>
+                                                <span class="badge bg-label-danger">Tidak Dapat Di Ubah</span>
                                             </div>
                                             @error('tgl_selesai_kontrak')
                                             <p class="alert alert-danger">{{$message}}</p>

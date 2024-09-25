@@ -19,6 +19,7 @@ use DateTime;
 use PDF;
 use Facade\Ignition\Tabs\Tab;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use RealRashid\SweetAlert\Facades\Alert;
 use Maatwebsite\Excel\Facades\Excel;
 use Yajra\DataTables\Facades\DataTables;
@@ -38,7 +39,7 @@ class RekapDataController extends Controller
 
         $title = "Rekap Data Absensi Tanggal " . date('Y-m-01') . " s/d " . date('Y-m-d');
 
-        $user = User::with('Cuti')->with('Izin')->get();
+        $user = User::with('Cuti')->with('Izin')->where('status_aktif', 'AKTIF')->get();
         // dd($user->Cuti->nama_cuti);
 
         if ($request["mulai"] && $request["akhir"]) {
@@ -71,7 +72,7 @@ class RekapDataController extends Controller
 
         $title = "Rekap Data Absensi Tanggal " . date('Y-m-01') . " s/d " . date('Y-m-d');
 
-        $user = User::where('id', $id)->first();
+        $user = User::where('id', $id)->where('status_aktif', 'AKTIF')->first();
         // dd($user->Cuti->nama_cuti);
 
         if ($request["mulai"] && $request["akhir"]) {
@@ -111,6 +112,7 @@ class RekapDataController extends Controller
                                 ->where('jabatan_id', $request->jabatan_filter)
                                 ->where('kontrak_kerja', $holding)
                                 ->where('kategori', 'Karyawan Bulanan')
+                                ->where('status_aktif', 'AKTIF')
                                 ->get();
                         } else {
                             $table = User::with('Cuti')
@@ -121,6 +123,7 @@ class RekapDataController extends Controller
                                 ->where('bagian_id', $request->bagian_filter)
                                 ->where('kontrak_kerja', $holding)
                                 ->where('kategori', 'Karyawan Bulanan')
+                                ->where('status_aktif', 'AKTIF')
                                 ->get();
                         }
                     } else {
@@ -131,6 +134,7 @@ class RekapDataController extends Controller
                             ->where('divisi_id', $request->divisi_filter)
                             ->where('kontrak_kerja', $holding)
                             ->where('kategori', 'Karyawan Bulanan')
+                            ->where('status_aktif', 'AKTIF')
                             ->get();
                     }
                 } else {
@@ -140,6 +144,7 @@ class RekapDataController extends Controller
                         ->where('dept_id', $request->departemen_filter)
                         ->where('kontrak_kerja', $holding)
                         ->where('kategori', 'Karyawan Bulanan')
+                        ->where('status_aktif', 'AKTIF')
                         ->get();
                 }
                 return DataTables::of($table)
@@ -192,6 +197,7 @@ class RekapDataController extends Controller
                 $table = User::with('Mappingshift')
                     ->where('kontrak_kerja', $holding)
                     ->where('kategori', 'Karyawan Bulanan')
+                    ->where('status_aktif', 'AKTIF')
                     // ->limit(210)
                     ->get();
                 return DataTables::of($table)
@@ -258,7 +264,7 @@ class RekapDataController extends Controller
                         if ($row->foto_jam_absen == '') {
                             $foto_absen_masuk = '';
                         } else {
-                            $foto_absen_masuk = '<a type="button" class="btn btn-sm btn-success" target="_blank" href="https://karyawan.sumberpangan.store/laravel/storage/app/public/' . $row->foto_jam_absen . '">LIHAT</a>';
+                            $foto_absen_masuk = '<a type="button" class="btn btn-sm btn-success" target="_blank" href="http://127.0.0.1:8000/storage/app/public/' . $row->foto_jam_absen . '">LIHAT</a>';
                         }
                         return $foto_absen_masuk;
                     })
@@ -266,7 +272,7 @@ class RekapDataController extends Controller
                         if ($row->foto_jam_pulang == '') {
                             $foto_absen_pulang = '';
                         } else {
-                            $foto_absen_pulang = '<a type="button" class="btn btn-sm btn-success" target="_blank" href="https://karyawan.sumberpangan.store/laravel/storage/app/public/' . $row->foto_jam_pulang . '">LIHAT</a>';
+                            $foto_absen_pulang = '<a type="button" class="btn btn-sm btn-success" target="_blank" href="http://127.0.0.1:8000/storage/app/public/' . $row->foto_jam_pulang . '">LIHAT</a>';
                         }
                         return $foto_absen_pulang;
                     })
@@ -398,7 +404,7 @@ class RekapDataController extends Controller
                         if ($row->foto_jam_absen == '') {
                             $foto_absen_masuk = '';
                         } else {
-                            $foto_absen_masuk = '<a type="button" class="btn btn-sm btn-success" target="_blank" href="https://karyawan.sumberpangan.store/laravel/storage/app/public/' . $row->foto_jam_absen . '">LIHAT</a>';
+                            $foto_absen_masuk = '<a type="button" class="btn btn-sm btn-success" target="_blank" href="http://127.0.0.1:8000/storage/app/public/' . $row->foto_jam_absen . '">LIHAT</a>';
                         }
                         return $foto_absen_masuk;
                     })
@@ -406,7 +412,7 @@ class RekapDataController extends Controller
                         if ($row->foto_jam_pulang == '') {
                             $foto_absen_pulang = '';
                         } else {
-                            $foto_absen_pulang = '<a type="button" class="btn btn-sm btn-success" target="_blank" href="https://karyawan.sumberpangan.store/laravel/storage/app/public/' . $row->foto_jam_pulang . '">LIHAT</a>';
+                            $foto_absen_pulang = '<a type="button" class="btn btn-sm btn-success" target="_blank" href="http://127.0.0.1:8000/storage/app/public/' . $row->foto_jam_pulang . '">LIHAT</a>';
                         }
                         return $foto_absen_pulang;
                     })
@@ -528,7 +534,7 @@ class RekapDataController extends Controller
     public function datatable_harian(Request $request)
     {
         $holding = request()->segment(count(request()->segments()));
-        $table = User::with('Cuti')->with('Izin')->with('Mappingshift')->where('users.kontrak_kerja', $holding)->where('kategori', 'Karyawan Harian')->get();
+        $table = User::with('Cuti')->with('Izin')->with('Mappingshift')->where('users.kontrak_kerja', $holding)->where('kategori', 'Karyawan Harian')->where('status_aktif', 'AKTIF')->get();
         if (request()->ajax()) {
             return DataTables::of($table)
                 ->addColumn('total_hadir_tepat_waktu', function ($row) {
@@ -719,7 +725,7 @@ class RekapDataController extends Controller
             $join->orOn('divisis.id', '=', 'users.divisi3_id');
             $join->orOn('divisis.id', '=', 'users.divisi4_id');
         })->where('users.id', Auth::user()->id)->get();
-        $cuti = Pen::where('id', $id)->first();
+        $cuti = Cuti::where('id', $id)->first();
         $departemen = Departemen::where('id', Auth::user()->dept_id)->first();
         $pengganti = User::where('id', $cuti->user_id_backup)->first();
         // dd(Cuti::with('KategoriCuti')->with('User')->where('cutis.id', $id)->where('cutis.status_cuti', '3')->first());

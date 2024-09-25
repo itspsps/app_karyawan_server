@@ -42,7 +42,8 @@ class dashboardController extends Controller
         // dd($date_30day);
         $logs = $logs->orderBy('created_at', 'desc')->limit(5)->get();
         $count_karyawan_habis_kontrak = User::with('Divisi')
-            ->with('Jabatan')->where('status_aktif', 'AKTIF')
+            ->with('Jabatan')
+            ->where('status_aktif', 'AKTIF')
             ->where('kategori', 'Karyawan Bulanan')
             ->where('kontrak_kerja', $holding)
             ->whereBetween('tgl_selesai_kontrak', [$date_now, $date_30day])
@@ -61,6 +62,7 @@ class dashboardController extends Controller
         // chart karyawan departemen
         $count_karyawan_departemen = User::Join('departemens', 'departemens.id', 'users.dept_id')
             ->where('users.kontrak_kerja', $holding)
+            ->where('status_aktif', 'AKTIF')
             ->where('is_admin', 'user')
             ->select(DB::raw("COUNT(*) as jumlah"), 'departemens.nama_departemen')
             ->groupBy('departemens.nama_departemen')
@@ -71,6 +73,7 @@ class dashboardController extends Controller
         // chart karyawan jabatan
         $count_karyawan_jabatan = User::Join('jabatans as a', 'a.id', 'users.jabatan_id')
             ->where('users.is_admin', 'user')
+            ->where('status_aktif', 'AKTIF')
             ->where('users.kontrak_kerja', $holding)
             ->select(DB::raw("COUNT(*) as jumlah"), 'a.nama_jabatan as nama_jabatan')
             ->groupBy('a.nama_jabatan')
@@ -81,6 +84,7 @@ class dashboardController extends Controller
         // chart karyawan jabatan1
         $count_karyawan_jabatan1 = User::Join('jabatans as a', 'a.id', 'users.jabatan1_id')
             ->where('users.is_admin', 'user')
+            ->where('status_aktif', 'AKTIF')
             ->where('users.kontrak_kerja', $holding)
             ->select(DB::raw("COUNT(*) as jumlah"), 'a.nama_jabatan as nama_jabatan')
             ->groupBy('a.nama_jabatan')
@@ -91,6 +95,7 @@ class dashboardController extends Controller
         // chart karyawan jabatan2
         $count_karyawan_jabatan2 = User::Join('jabatans as a', 'a.id', 'users.jabatan2_id')
             ->where('users.is_admin', 'user')
+            ->where('status_aktif', 'AKTIF')
             ->where('users.kontrak_kerja', $holding)
             ->select(DB::raw("COUNT(*) as jumlah"), 'a.nama_jabatan as nama_jabatan')
             ->groupBy('a.nama_jabatan')
@@ -102,6 +107,7 @@ class dashboardController extends Controller
         $count_karyawan_jabatan3 = User::Join('jabatans as a', 'a.id', 'users.jabatan3_id')
             ->where('users.is_admin', 'user')
             ->where('users.kontrak_kerja', $holding)
+            ->where('status_aktif', 'AKTIF')
             ->select(DB::raw("COUNT(*) as jumlah"), 'a.nama_jabatan as nama_jabatan')
             ->groupBy('a.nama_jabatan')
             ->pluck('jumlah', 'nama_jabatan');
@@ -112,6 +118,7 @@ class dashboardController extends Controller
         $count_karyawan_jabatan4 = User::Join('jabatans as a', 'a.id', 'users.jabatan4_id')
             ->where('users.is_admin', 'user')
             ->where('users.kontrak_kerja', $holding)
+            ->where('status_aktif', 'AKTIF')
             ->select(DB::raw("COUNT(*) as jumlah"), 'a.nama_jabatan as nama_jabatan')
             ->groupBy('a.nama_jabatan')
             ->pluck('jumlah', 'nama_jabatan');
@@ -121,6 +128,7 @@ class dashboardController extends Controller
         // chart karyawan gender
         $count_karyawan_gender = User::where('is_admin', 'user')
             ->where('users.kontrak_kerja', $holding)
+            ->where('status_aktif', 'AKTIF')
             ->select(DB::raw("COUNT(*) as jumlah"), 'gender')
             ->groupBy('gender')
             ->pluck('jumlah', 'gender');
@@ -130,6 +138,7 @@ class dashboardController extends Controller
         // chart karyawan kontrak
         $count_karyawan_kontrak = User::where('is_admin', 'user')
             ->where('users.kontrak_kerja', $holding)
+            ->where('status_aktif', 'AKTIF')
             ->select(DB::raw("COUNT(*) as jumlah"), 'lama_kontrak_kerja')
             ->groupBy('lama_kontrak_kerja')
             ->pluck('jumlah', 'lama_kontrak_kerja');
@@ -139,6 +148,7 @@ class dashboardController extends Controller
         // chart karyawan Status Penikahan
         $count_karyawan_status = User::where('is_admin', 'user')
             ->where('users.kontrak_kerja', $holding)
+            ->where('status_aktif', 'AKTIF')
             ->select(DB::raw("COUNT(*) as jumlah"), 'status_nikah')
             ->groupBy('status_nikah')
             ->pluck('jumlah', 'status_nikah');
@@ -169,11 +179,11 @@ class dashboardController extends Controller
             'labels_status' => $nama_status,
             'data_karyawan_status' => str_replace('"', '', $jumlah_karyawan_status),
             'title' => 'Dashboard',
-            "karyawan_laki" => User::where('gender', 'Laki-Laki')->where('kontrak_kerja', $holding)->count(),
-            "karyawan_perempuan" => User::where('gender', 'Perempuan')->where('kontrak_kerja', $holding)->count(),
-            "karyawan_office" => User::where('kategori', 'Karyawan Bulanan')->where('kontrak_kerja', $holding)->count(),
-            "karyawan_shift" => User::where('kategori', 'Karyawan Harian')->where('kontrak_kerja', $holding)->count(),
-            'jumlah_user' => User::where('kontrak_kerja', $holding)->where('is_admin', 'user')->whereNotNull('dept_id')->count(),
+            "karyawan_laki" => User::where('gender', 'Laki-Laki')->where('status_aktif', 'AKTIF')->where('kontrak_kerja', $holding)->count(),
+            "karyawan_perempuan" => User::where('gender', 'Perempuan')->where('status_aktif', 'AKTIF')->where('kontrak_kerja', $holding)->count(),
+            "karyawan_office" => User::where('kategori', 'Karyawan Bulanan')->where('status_aktif', 'AKTIF')->where('kontrak_kerja', $holding)->count(),
+            "karyawan_shift" => User::where('kategori', 'Karyawan Harian')->where('status_aktif', 'AKTIF')->where('kontrak_kerja', $holding)->count(),
+            'jumlah_user' => User::where('kontrak_kerja', $holding)->where('status_aktif', 'AKTIF')->where('is_admin', 'user')->whereNotNull('dept_id')->count(),
             'jumlah_masuk' => MappingShift::where('tanggal_masuk', $tgl_skrg)->where('status_absen', 'HADIR KERJA')->count(),
             'jumlah_tidak_masuk' => MappingShift::where('tanggal_masuk', $tgl_skrg)->where('status_absen', 'TIDAK HADIR KERJA')->count(),
             'jumlah_libur' => MappingShift::where('tanggal_masuk', $tgl_skrg)->where('status_absen', 'Libur')->count(),

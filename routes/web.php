@@ -72,6 +72,7 @@ Route::middleware('auth:web', 'log.activity')->group(function () {
     // Route::get('/absen', [AbsenController::class, 'index']);
 
     Route::get('/home', [HomeUserController::class, 'index'])->name('home');
+    Route::get('/pusher', [HomeUserController::class, 'pusher'])->name('pusher');
     Route::post('/home/absenMasuk', [HomeUserController::class, 'absenMasuk'])->name('absenMasuk');
     Route::get('/datatableHome', [HomeUserController::class, 'datatableHome'])->name('datatableHome');
     Route::get('/get_count_absensi_home', [HomeUserController::class, 'get_count_absensi_home'])->name('get_count_absensi_home');
@@ -217,9 +218,9 @@ Route::get('/karyawan/delete/{id}/sip', [karyawanController::class, 'deleteKarya
 Route::get('/karyawan/edit-password/{id}/sp', [karyawanController::class, 'editPassword'])->middleware('admin');
 Route::get('/karyawan/edit-password/{id}/sps', [karyawanController::class, 'editPassword'])->middleware('admin');
 Route::get('/karyawan/edit-password/{id}/sip', [karyawanController::class, 'editPassword'])->middleware('admin');
-Route::put('/karyawan/edit-password-proses/{id}/sp', [karyawanController::class, 'editPasswordProses'])->middleware('admin');
-Route::put('/karyawan/edit-password-proses/{id}/sps', [karyawanController::class, 'editPasswordProses'])->middleware('admin');
-Route::put('/karyawan/edit-password-proses/{id}/sip', [karyawanController::class, 'editPasswordProses'])->middleware('admin');
+Route::post('/karyawan/edit-password-proses/{id}/sp', [karyawanController::class, 'editPasswordProses'])->middleware('admin');
+Route::post('/karyawan/edit-password-proses/{id}/sps', [karyawanController::class, 'editPasswordProses'])->middleware('admin');
+Route::post('/karyawan/edit-password-proses/{id}/sip', [karyawanController::class, 'editPasswordProses'])->middleware('admin');
 Route::post('/karyawan/ImportKaryawan/sp', [karyawanController::class, 'ImportKaryawan'])->middleware('admin');
 Route::post('/karyawan/ImportKaryawan/sps', [karyawanController::class, 'ImportKaryawan'])->middleware('admin');
 Route::post('/karyawan/ImportKaryawan/sip', [karyawanController::class, 'ImportKaryawan'])->middleware('admin');
@@ -252,6 +253,17 @@ Route::get('/karyawan/database_karyawan_masa_tenggang_kontrak/sp', [karyawanCont
 Route::get('/karyawan/database_karyawan_masa_tenggang_kontrak/sps', [karyawanController::class, 'database_karyawan_masa_tenggang_kontrak'])->middleware('admin');
 Route::get('/karyawan/database_karyawan_masa_tenggang_kontrak/sip', [karyawanController::class, 'database_karyawan_masa_tenggang_kontrak'])->middleware('admin');
 Route::post('/karyawan/upddate_kontrak_proses', [karyawanController::class, 'upddate_kontrak_proses'])->middleware('admin');
+
+Route::get('/users/sp', [karyawanController::class, 'index_users'])->middleware('admin');
+Route::get('/users/sps', [karyawanController::class, 'index_users'])->middleware('admin');
+Route::get('/users/sip', [karyawanController::class, 'index_users'])->middleware('admin');
+Route::get('/users_bulanan-datatable/sp', [karyawanController::class, 'datatable_users_bulanan'])->middleware('admin');
+Route::get('/users_harian-datatable/sp', [karyawanController::class, 'datatable_users_harian'])->middleware('admin');
+Route::get('/users_bulanan-datatable/sps', [karyawanController::class, 'datatable_users_bulanan'])->middleware('admin');
+Route::get('/users_harian-datatable/sps', [karyawanController::class, 'datatable_users_harian'])->middleware('admin');
+Route::get('/users_bulanan-datatable/sip', [karyawanController::class, 'datatable_users_bulanan'])->middleware('admin');
+Route::get('/users_harian-datatable/sip', [karyawanController::class, 'datatable_users_harian'])->middleware('admin');
+
 
 // STRUKTUR ORGANISASI
 Route::get('/struktur_organisasi/sp', [StrukturOrganisasiController::class, 'index'])->middleware('admin');
@@ -685,7 +697,8 @@ Route::get('optimize', function () {
     Artisan::call('optimize');
 
     Alert::success('success', 'Optimization Success..');
-    return redirect('/home')->with('success', 'Optimization Success..');
+    echo 'ok';
+    // return redirect('/home')->with('success', 'Optimization Success..');
 });
 
 // Auth::routes();

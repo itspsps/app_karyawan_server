@@ -1668,12 +1668,13 @@
 @section('js')
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
 <script src="https://unpkg.com/leaflet@1.8.0/dist/leaflet.js" integrity="sha512-BB3hKbKWOc9Ez/TAwyWxNXeoV9c1v6FIeYiBieIWkpLjauysF18NzgR1MBNBXf8/KABdlkX68nAhlwcDFLGPCQ==" crossorigin=""></script>
+
 <script type="text/javascript">
     $(document).ready(function() {
         load_data();
 
         function load_data(filter_month = '') {
-            console.log(filter_month);
+            // console.log(filter_month);
             var table1 = $('#datatableHome').DataTable({
                 processing: true,
                 serverSide: true,
@@ -1722,13 +1723,13 @@
                 },
                 success: function(data) {
                     $('#count_absen_hadir').html(data);
-                    console.log(data)
+                    // console.log(data)
                 }
             });
         }
         $('#month').change(function() {
             filter_month = $(this).val();
-            console.log(filter_month);
+            // console.log(filter_month);
             $('#datatableHome').DataTable().destroy();
             load_data(filter_month);
             load_absensi(filter_month);
@@ -1746,7 +1747,7 @@
         // console.log($('#home_index').val());
         if ($('#home_index').val() == '1') {
             console.log('hidden')
-            window.scrollTo(0, 20);
+            window.scrollTo(0, 30);
         }
     }
     // offcanvasEl.show()
@@ -2597,141 +2598,22 @@
         setTimeout(function() {
             // console.log('ok1');
             $("#alert_kontrak_kerja_null").remove();
-        }, 7000); // 7 secs
-
-    });
-    $("document").ready(function() {
-        // console.log('ok');
-        setTimeout(function() {
-            // console.log('ok1');
             $("#alert_jabatan_null").remove();
-        }, 7000); // 7 secs
-
-    });
-    $("document").ready(function() {
-        // console.log('ok');
-        setTimeout(function() {
-            // console.log('ok1');
             $("#alert_absen_tidak_masuk").remove();
-        }, 7000); // 7 secs
-
-    });
-    $("document").ready(function() {
-        // console.log('ok');
-        setTimeout(function() {
-            // console.log('ok1');
             $("#alert_absen_tidak_masuk1").remove();
-        }, 7000); // 7 secs
-
-    });
-    $("document").ready(function() {
-        // console.log('ok');
-        setTimeout(function() {
-            // console.log('ok1');
             $("#alert_absenpulangsuccess").remove();
-        }, 7000); // 7 secs
-
-    });
-    $("document").ready(function() {
-        // console.log('ok');
-        setTimeout(function() {
-            // console.log('ok1');
             $("#alert_approve_cuti_success").remove();
-        }, 7000); // 7 secs
-
-    });
-    $("document").ready(function() {
-        // console.log('ok');
-        setTimeout(function() {
-            // console.log('ok1');
             $("#alert_approve_cuti_not_approve").remove();
-        }, 7000); // 7 secs
-
-    });
-    $("document").ready(function() {
-        // console.log('ok');
-        setTimeout(function() {
-            // console.log('ok1');
             $("#alert_approve_izin_success").remove();
-        }, 7000); // 7 secs
-
-    });
-    $("document").ready(function() {
-        // console.log('ok');
-        setTimeout(function() {
-            // console.log('ok1');
             $("#alert_approve_izin_not_approve").remove();
-        }, 7000); // 7 secs
-
-    });
-    $("document").ready(function() {
-        // console.log('ok');
-        setTimeout(function() {
-            // console.log('ok1');
             $("#alert_login_success").remove();
-        }, 7000); // 7 secs
-
-    });
-    $("document").ready(function() {
-        // console.log('ok');
-        setTimeout(function() {
-            // console.log('ok1');
             $("#alert_approve_penugasan_sukses").remove();
-        }, 7000); // 7 secs
-
-    });
-    $("document").ready(function() {
-        // console.log('ok');
-        setTimeout(function() {
-            // console.log('ok1');
             $("#alert_lokasikerjanull").remove();
-        }, 7000); // 7 secs
-
-    });
-    $("document").ready(function() {
-        // console.log('ok');
-        setTimeout(function() {
-            // console.log('ok1');
             $("#alert_latlongnull").remove();
-        }, 7000); // 7 secs
-
-    });
-    $("document").ready(function() {
-        // console.log('ok');
-        setTimeout(function() {
-            // console.log('ok1');
             $("#alert_absenkeluarerror").remove();
-        }, 7000); // 7 secs
-
-    });
-    $("document").ready(function() {
-        // console.log('ok');
-        setTimeout(function() {
-            // console.log('ok1');
             $("#alert_absen_masuk_success").remove();
-        }, 7000); // 7 secs
-
-    });
-    $("document").ready(function() {
-        // console.log('ok');
-        setTimeout(function() {
-            // console.log('ok1');
             $("#alert_absen_masuk_error").remove();
-        }, 7000); // 7 secs
-
-    });
-    $("document").ready(function() {
-        // console.log('ok');
-        setTimeout(function() {
-            // console.log('ok1');
             $("#alert_absenpulangoutradius").remove();
-        }, 7000); // 7 secs
-
-    });
-    $("document").ready(function() {
-        // console.log('ok');
-        setTimeout(function() {
-            // console.log('ok1');
             $("#alert_absenmasukoutradius").remove();
         }, 7000); // 7 secs
 

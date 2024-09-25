@@ -15,6 +15,10 @@
     <meta property="og:description" content="Jobie - Job Portal Mobile App Template ( Bootstrap 5 + PWA )" />
     <meta property="og:image" content="https://jobie.dexignzone.com/mobile-app/xhtml/social-image.png" />
     <meta name="format-detection" content="telephone=no">
+    <!-- PWA  -->
+    <meta name="theme-color" content="#6777ef" />
+    <link rel="apple-touch-icon" href="{{ asset('holding/assets/img/logosp.png') }}">
+    <link rel="manifest" href="{{ asset('/manifest.json') }}">
 
     <!-- Favicons Icon -->
     <link rel="shortcut icon" type="image/x-icon" href="{{ asset('holding/assets/img/logosp.png') }}" />
@@ -224,6 +228,23 @@
     <script src="{{ asset('assets/assets_users/js/custom.js') }}"></script> -->
     <script src="{{asset('assets/assets_users/vendor/swiper/swiper-bundle.min.js')}}"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+    <script src="{{ asset('/sw.js') }}"></script>
+    <script>
+        if ("serviceWorker" in navigator) {
+            // Register a service worker hosted at the root of the
+            // site using the default scope.
+            navigator.serviceWorker.register("/sw.js").then(
+                (registration) => {
+                    console.log("Service worker registration succeeded:", registration);
+                },
+                (error) => {
+                    console.error(`Service worker registration failed: ${error}`);
+                },
+            );
+        } else {
+            console.error("Service workers are not supported.");
+        }
+    </script>
     <script>
         $("document").ready(function() {
             // console.log('ok');
