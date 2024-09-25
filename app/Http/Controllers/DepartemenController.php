@@ -49,7 +49,7 @@ class DepartemenController extends Controller
                     return $jumlah_divisi;
                 })
                 ->addColumn('jumlah_karyawan', function ($row) use ($holding) {
-                    $cek_karyawan = User::where('dept_id', $row->id)->where('kontrak_kerja', $holding)->count();
+                    $cek_karyawan = User::where('dept_id', $row->id)->where('kontrak_kerja', $holding)->where('status_aktif', 'AKTIF')->count();
                     if ($cek_karyawan == 0) {
                         $jumlah_karyawan = $cek_karyawan;
                     } else {
@@ -60,7 +60,7 @@ class DepartemenController extends Controller
                     return $jumlah_karyawan;
                 })
                 ->addColumn('option', function ($row) use ($holding) {
-                    $user_count = User::where('dept_id', $row->id)->count();
+                    $user_count = User::where('dept_id', $row->id)->where('status_aktif', 'AKTIF')->count();
                     $btn = '<button id="btn_edit_dept" data-id="' . $row->id . '" data-dept="' . $row->nama_departemen . '" data-holding="' . $holding . '" type="button" class="btn btn-icon btn-warning waves-effect waves-light"><span class="tf-icons mdi mdi-pencil-outline"></span></button>';
                     $btn = $btn . '<button type="button" id="btn_delete_dept" data-usercount="' . $user_count . '" data-id="' . $row->id . '" data-holding="' . $holding . '" class="btn btn-icon btn-danger waves-effect waves-light"><span class="tf-icons mdi mdi-delete-outline"></span></button>';
                     return $btn;
@@ -81,6 +81,7 @@ class DepartemenController extends Controller
                 ->addColumn('jumlah_karyawan', function ($row) use ($holding) {
                     if ($holding == 'sp') {
                         $karyawan = User::where('divisi_id', $row->id)
+                            ->where('status_aktif', 'AKTIF')
                             ->orWhere('divisi1_id', $row->id)
                             ->orWhere('divisi2_id', $row->id)
                             ->orWhere('divisi3_id', $row->id)
@@ -89,6 +90,7 @@ class DepartemenController extends Controller
                             ->count();
                     } else if ($holding == 'sps') {
                         $karyawan = User::where('divisi_id', $row->id)
+                            ->where('status_aktif', 'AKTIF')
                             ->orWhere('divisi1_id', $row->id)
                             ->orWhere('divisi2_id', $row->id)
                             ->orWhere('divisi3_id', $row->id)
@@ -97,6 +99,7 @@ class DepartemenController extends Controller
                             ->count();
                     } else {
                         $karyawan = User::where('divisi_id', $row->id)
+                            ->where('status_aktif', 'AKTIF')
                             ->orWhere('divisi1_id', $row->id)
                             ->orWhere('divisi2_id', $row->id)
                             ->orWhere('divisi3_id', $row->id)
@@ -188,7 +191,7 @@ class DepartemenController extends Controller
         $holding = request()->segment(count(request()->segments()));
         $cek_divisi = Divisi::where('dept_id', $id)->where('holding', $holding)->count();
         if ($cek_divisi == 0) {
-            $cek_karyawan = User::where('dept_id', $id)->where('kontrak_kerja', $holding)->count();
+            $cek_karyawan = User::where('dept_id', $id)->where('kontrak_kerja', $holding)->where('status_aktif', 'AKTIF')->count();
             if ($cek_karyawan == 0) {
                 $departemen = Departemen::where('id', $id)->delete();
                 return response()->json(['status' => 1]);

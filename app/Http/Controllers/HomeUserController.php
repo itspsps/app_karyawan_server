@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\IzinPost;
 use App\Models\User;
 use App\Models\Lokasi;
 use App\Models\MappingShift;
@@ -17,6 +18,7 @@ use App\Models\Jabatan;
 use App\Models\LevelJabatan;
 use App\Models\Penugasan;
 use App\Models\Titik;
+use App\Notifications\TestPusherNotification;
 use Carbon\Carbon;
 use DateTime;
 use Facade\FlareClient\Time\Time;
@@ -27,8 +29,20 @@ use Yajra\DataTables\Facades\DataTables;
 
 class HomeUserController extends Controller
 {
+    public function pusher(Request $request)
+    {
+        return view('users.home.pushertes', ['cek_user_id' => Auth::user()->id]);
+    }
     public function index(Request $request)
     {
+        // $user = [
+        //     'user_id' => Auth::user()->id,
+        //     'message' => 'Anda' . Auth::user()->name,
+        // ];
+        // dd($user);
+        // event(new IzinPost($user));
+
+        // dd('notification sent');
         if (auth()->user()->is_admin == 'admin') {
             return redirect('/dashboard/holding');
         } else {
@@ -132,6 +146,7 @@ class HomeUserController extends Controller
                 return view('users.home.index', [
                     'title'             => 'Absen',
                     'jam_kerja'         => $jam_kerja,
+                    'cek_user_id'       => Auth::user()->id,
                     'shift_karyawan'    => MappingShift::where('user_id', $user_login)->where('tanggal_masuk', $tglskrg)->first(),
                     'count_absen_hadir' => $count_absen_hadir,
                     'thnskrg'           => $thnskrg,
@@ -143,12 +158,12 @@ class HomeUserController extends Controller
                     'datacuti_tingkat1' => $datacuti_tingkat1,
                     'datacuti_tingkat2' => $datacuti_tingkat2,
                     'datapenugasan'     => $datapenugasan,
-                    // 'data_notif'          => $data_notif,
-                    'count_absen_izin'     => $count_absen_izin,
-                    'count_absen_sakit'     => $count_absen_sakit,
-                    'count_absen_telat'     => $count_absen_telat,
-                    'kantor_penugasan'     => $kantor_penugasan,
-                    'location'     => Titik::all(),
+                    // 'data_notif'     => $data_notif,
+                    'count_absen_izin'  => $count_absen_izin,
+                    'count_absen_sakit' => $count_absen_sakit,
+                    'count_absen_telat' => $count_absen_telat,
+                    'kantor_penugasan'  => $kantor_penugasan,
+                    'location'          => Titik::all(),
                 ]);
             } else {
                 $jam_absen = $mapping_shift->jam_absen;
@@ -181,6 +196,7 @@ class HomeUserController extends Controller
 
                 return view('users.home.index', [
                     'title'             => 'Absen',
+                    'cek_user_id'       => Auth::user()->id,
                     'shift_karyawan'    => MappingShift::where('user_id', $user_login)->where('tanggal_masuk', $tglskrg)->first(),
                     'count_absen_hadir' => $count_absen_hadir,
                     'thnskrg'           => $thnskrg,

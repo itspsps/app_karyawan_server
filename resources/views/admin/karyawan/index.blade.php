@@ -105,7 +105,7 @@
                                         </div>
                                     </div>
                                     <div class="row g-2 mt-2">
-                                        <a href="{{asset('')}}" type="button" download="" class="btn btn-sm btn-primary"> Download Format Excel</a>
+                                        <a href="{{asset('admin/template_import/TEMPLATE IMPORT TAMBAH KARYAWAN BULANAN SP_SPS.xlsx')}}" type="button" download="" class="btn btn-sm btn-primary"> Download Format Excel</a>
                                     </div>
                                 </div>
                                 <div class="modal-footer">
@@ -135,7 +135,7 @@
                                         </div>
                                     </div>
                                     <div class="row g-2 mt-2">
-                                        <a href="{{asset('')}}" type="button" download="" class="btn btn-sm btn-primary"> Download Format Excel</a>
+                                        <a href="{{asset('admin/template_import/TEMPLATE IMPORT UPDATE KARYAWAN BULANAN SP_SPS.xlsx')}}" type="button" download="" class="btn btn-sm btn-primary"> Download Format Excel</a>
                                     </div>
                                 </div>
                                 <div class="modal-footer">
@@ -1017,72 +1017,6 @@
             },
 
         })
-    });
-    $(document).on("click", "#btn_edit_password", function() {
-        let id = $(this).data('id');
-        let holding = $(this).data("holding");
-        // console.log(holding);
-        let url = "{{ url('/karyawan/edit-password/')}}" + '/' + id + '/' + holding;
-        $.ajax({
-            url: url,
-            method: 'GET',
-            contentType: false,
-            cache: false,
-            processData: false,
-            // data: {
-            //     id_kecamatan: id_kecamatan
-            // },
-            success: function(response) {
-                // console.log(response);
-                window.location.assign(url);
-            },
-            error: function(data) {
-                console.log('error:', data)
-            },
-
-        })
-    });
-    $(document).on('click', '#btn_delete_karyawan', function() {
-        var id = $(this).data('id');
-        let holding = $(this).data("holding");
-        console.log(id);
-        Swal.fire({
-            title: 'Apakah kamu yakin?',
-            text: "Kamu tidak dapat mengembalikan data ini",
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Yes!'
-        }).then((result) => {
-            if (result.value) {
-                $.ajax({
-                    url: "{{ url('/karyawan/delete/') }}" + '/' + id + '/' + holding,
-                    type: "GET",
-                    error: function() {
-                        alert('Something is wrong');
-                    },
-                    success: function(data) {
-                        Swal.fire({
-                            title: 'Terhapus!',
-                            text: 'Data anda berhasil di hapus.',
-                            icon: 'success',
-                            timer: 1500
-                        })
-                        $('#table_karyawan_bulanan').DataTable().ajax.reload();
-                        $('#table_karyawan_harian').DataTable().ajax.reload();
-                    }
-                });
-            } else {
-                Swal.fire({
-                    title: 'Cancelled!',
-                    text: 'Your data is safe :',
-                    icon: 'error',
-                    timer: 1500
-                })
-            }
-        });
-
     });
 </script>
 @endsection

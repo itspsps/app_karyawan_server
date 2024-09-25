@@ -244,7 +244,7 @@
                                         <tr>
                                             <th>Tepat&nbsp;Waktu</th>
                                             <th>Telat&nbsp;Hadir(>15 Menit)</th>
-                                            <th>Telat&nbsp;Hadir(<15 Menit)</th>
+                                            <th>Telat&nbsp;Hadir('<'15 Menit)</th>
                                             <th>Izin</th>
                                             <th>Cuti</th>
                                             <th>Dinas</th>
@@ -438,6 +438,7 @@
                     processing: true,
                     autoWidth: false,
                     serverSide: true,
+                    deferRender: true,
                     dom: 'Blfrtip',
                     buttons: [{
 
@@ -564,6 +565,7 @@
                 autoWidth: false,
                 processing: true,
                 serverSide: true,
+                deferRender: true,
                 ajax: {
                     url: "{{ url('rekapdata-datatable_harian') }}" + '/' + holding,
                 },

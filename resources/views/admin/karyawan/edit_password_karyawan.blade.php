@@ -10,93 +10,108 @@
 @section('isi')
 @include('sweetalert::alert')
 <div class="container-xxl flex-grow-1 container-p-y">
-    <h4 class="py-3 mb-4"><span class="text-muted fw-light">KARYAWAN /</span> UBAH PASSWORD</h4>
+    <h4 class="py-3 mb-4"><span class="text-muted fw-light">KARYAWAN /</span> UBAH USER</h4>
 
     <div class="row">
         <div class="col-md-12">
             <div class="card mb-4">
-                <h4 class="card-header"><a href="{{url('karyawan/'.$holding)}}"><i class="mdi mdi-arrow-left-bold"></i></a>&nbsp;Profil Karyawan</h4>
+                <h4 class="card-header"><a href="{{url('users/'.$holding)}}"><i class="mdi mdi-arrow-left-bold"></i></a>&nbsp;Profil Karyawan</h4>
                 <!-- Account -->
                 <div class="card-body">
-                    <div class="d-flex align-items-start align-items-sm-center gap-4">
-                        @if($karyawan->foto_karyawan == null)
-                        <img src="{{asset('admin/assets/img/avatars/1.png')}}" alt="user-avatar" class="d-block w-px-120 h-px-120 rounded" id="template_foto_karyawan" />
-                        @else
-                        <img src="https://karyawan.sumberpangan.store/laravel/storage/app/public/foto_karyawan/{{$karyawan->foto_karyawan}}" alt="user-avatar" class="d-block w-px-120 h-px-120 rounded" id="template_foto_karyawan" />
-                        @endif
-                        <table>
-                            <tr>
-                                <th>Nama</th>
-                                <td>&nbsp;</td>
-                                <td>:</td>
-                                <td>{{$karyawan->fullname}}</td>
-                            </tr>
-                            <tr>
-                                <th>Divisi</th>
-                                <td>&nbsp;</td>
-                                <td>:</td>
-                                <td>
-                                    @if(count($divisi_karyawan)>1)
-                                    @foreach($divisi_karyawan as $dv)
-                                    {{$no++;}}. {{$dv->nama_divisi}} <br>
-                                    @endforeach
-                                    @else
-                                    {{$karyawan->Divisi->nama_divisi}} <br>
-                                    @endif
-                                </td>
-                            </tr>
-                            <tr>
-                                <th>Jabatan</th>
-                                <td>&nbsp;</td>
-                                <td>:</td>
-                                <td>
-                                    @if(count($jabatan_karyawan)>1)
-                                    @foreach($jabatan_karyawan as $jb)
-                                    {{$no1++;}}. {{$jb->nama_jabatan}} <br>
-                                    @endforeach
-                                    @else
-                                    {{$karyawan->Jabatan->nama_jabatan}} <br>
-                                    @endif
-                                </td>
-                            <tr>
-                                <th>Kontrak Kerja</th>
-                                <td>&nbsp;</td>
-                                <td>:</td>
-                                <td>
-                                    @if($karyawan->kontrak_kerja=='sp') CV. SUMBER PANGAN @elseif($karyawan->kontrak_kerja=='sps') PT. SURYA PANGAN SEMESTA @endif
-                                </td>
-                            </tr>
-                            <tr>
-                                <th>Username</th>
-                                <td>&nbsp;</td>
-                                <td>:</td>
-                                <td>
-                                    {{$karyawan->username}}
-                                </td>
-                            </tr>
-                            <tr>
-                                <th>Password Baru</th>
-                                <td>&nbsp;</td>
-                                <td>:</td>
-                                <td>
-                                    <form method="post" action="{{ url('/karyawan/edit-password-proses/'.$karyawan->id.'/'.$holding) }}">
-                                        @method('put')
-                                        @csrf
-                                        <div class="form-floating form-floating-outline">
-                                            <input type="password" class="form-control @error('password') is-invalid @enderror" id="password" name="password" placeholder="Masukkan Password Baru">
-                                            @error('password')
-                                            <div class="invalid-feedback">
-                                                {{ $message }}
-                                            </div>
-                                            @enderror
-                                            <label for="password"> Password Baru</label>
+                    <form method="post" action="{{ url('/karyawan/edit-password-proses/'.$karyawan->id.'/'.$holding) }}">
+                        @csrf
+                        <div class="d-flex align-items-start align-items-sm-center gap-4">
+                            @if($karyawan->foto_karyawan == null)
+                            <img src="{{asset('admin/assets/img/avatars/1.png')}}" alt="user-avatar" class="d-block w-px-120 h-px-120 rounded" id="template_foto_karyawan" />
+                            @else
+                            <img src="https://karyawan.sumberpangan.store/laravel/storage/app/public/foto_karyawan/{{$karyawan->foto_karyawan}}" alt="user-avatar" class="d-block w-px-120 h-px-120 rounded" id="template_foto_karyawan" />
+                            @endif
+                            <table>
+                                <tr>
+                                    <th>Nama</th>
+                                    <td>&nbsp;</td>
+                                    <td>:</td>
+                                    <td>{{$karyawan->fullname}}</td>
+                                </tr>
+                                <tr>
+                                    <th>Divisi</th>
+                                    <td>&nbsp;</td>
+                                    <td>:</td>
+                                    <td>
+                                        @if(count($divisi_karyawan)>1)
+                                        @foreach($divisi_karyawan as $dv)
+                                        {{$no++;}}. {{$dv->nama_divisi}} <br>
+                                        @endforeach
+                                        @else
+                                        {{$karyawan->Divisi->nama_divisi}} <br>
+                                        @endif
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>Jabatan</th>
+                                    <td>&nbsp;</td>
+                                    <td>:</td>
+                                    <td>
+                                        @if(count($jabatan_karyawan)>1)
+                                        @foreach($jabatan_karyawan as $jb)
+                                        {{$no1++;}}. {{$jb->nama_jabatan}} <br>
+                                        @endforeach
+                                        @else
+                                        {{$karyawan->Jabatan->nama_jabatan}} <br>
+                                        @endif
+                                    </td>
+                                <tr>
+                                    <th>Kontrak Kerja</th>
+                                    <td>&nbsp;</td>
+                                    <td>:</td>
+                                    <td>
+                                        @if($karyawan->kontrak_kerja=='SP') CV. SUMBER PANGAN @elseif($karyawan->kontrak_kerja=='SPS') PT. SURYA PANGAN SEMESTA @endif
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>Username</th>
+                                    <td>&nbsp;</td>
+                                    <td>:</td>
+                                    <td>
+                                        <div class="input-group input-group-sm">
+                                            <input type="text" class="form-control @error('username') is-invalid @enderror" value="{{$karyawan->username}}" id="username" name="username" placeholder="Username">
+                                            <input type="hidden" name="username_old" id="username_old" value="{{$karyawan->username}}">
                                         </div>
+                                    </td>
+                                </tr>
+                                <br>
+                                <tr>
+                                    <th>Password</th>
+                                    <td>&nbsp;</td>
+                                    <td>:</td>
+                                    <td>
+                                        <div class="form-floating form-floating-outline">
+                                            <div class="input-group input-group-sm">
+                                                <input type="password" class="form-control @error('password') is-invalid @enderror" value="{{$karyawan->password_show}}" id="password" name="password" placeholder="Password">
+                                                <span class="input-group-text" onclick="password_show_hide();">
+                                                    <i class="mdi mdi-eye-off-outline d-none" id="hide_eye"></i>
+                                                    <i class="mdi mdi-eye-outline" id="show_eye"></i>
+                                                </span>
+                                                @error('password')
+                                                <div class="invalid-feedback">
+                                                    {{ $message }}
+                                                </div>
+                                                @enderror
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td>
                                         <button type="submit" class="btn btn-sm btn-primary waves-effect waves-light mt-2"><i class=" mdi mdi-key-outline"></i>&nbsp;Ubah</button>
-                                    </form>
-                                </td>
-                            </tr>
-                        </table>
-                    </div>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
@@ -149,6 +164,22 @@
     });
 </script>
 <script>
+    function password_show_hide() {
+        var x = document.getElementById("password");
+        var show_eye = document.getElementById("show_eye");
+        var hide_eye = document.getElementById("hide_eye");
+        hide_eye.classList.remove("d-none");
+        if (x.type === "password") {
+            x.type = "text";
+            show_eye.style.display = "none";
+            hide_eye.style.display = "block";
+        } else {
+            x.type = "password";
+            show_eye.style.display = "block";
+            hide_eye.style.display = "none";
+
+        }
+    }
     $(document).on("click", "#btn_edit_mapping_shift", function() {
         let id = $(this).data('id');
         let user_id = $(this).data('userid');
