@@ -33,7 +33,7 @@ class Handler extends ExceptionHandler
      *
      * @return void
      */
-    public function handler($request, Exception $exception)
+    public function handler($exception)
     {
         if ($exception instanceof \Illuminate\Session\TokenMismatchException) {
             return redirect()->route('login');
