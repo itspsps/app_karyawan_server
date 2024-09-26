@@ -67,7 +67,7 @@
                         </div>
                     </form>
                     <hr class="my-5">
-                    <table class="table" id="table_mapping_shift" style="width: 100%;">
+                    <table class="table" id="table_mapping_shift" style="width: 100%; font-size: small;">
                         <thead class="table-primary">
                             <tr>
                                 <th class="text-center">No.</th>
@@ -101,6 +101,7 @@
                 bagian_filter = $('#bagian_filter').val();
                 jabatan_filter = $('#jabatan_filter').val();
                 filter_month = $('#date_filter').val();
+                $('#table_mapping_shift').show();
                 $('#table_mapping_shift').DataTable().destroy();
                 $.ajax({
                     type: 'GET',
@@ -215,7 +216,6 @@
                     autoWidth: false,
                     serverSide: true,
                     deferRender: true,
-                    dom: 'Blfrtip',
                     pageLength: 50,
                     ajax: {
                         url: "{{ url('karyawan/mapping_shift_datatable') }}" + '/' + holding,

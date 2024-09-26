@@ -182,9 +182,9 @@ class MappingShiftController extends Controller
         // dd($now);
         if (request()->ajax()) {
             if (!empty($request->departemen_filter)) {
-                $date1 = Carbon::parse($request->filter_month)->startOfMonth();
-                $date2 = Carbon::parse($request->filter_month)->endOfMonth();
-                // dd($date1, $date2);
+                $date1 = Carbon::now()->startOfWeek();
+                $date2 = Carbon::now()->endOfWeek();
+                dd($date1->addDays(1), $date2);
                 if (!empty($request->divisi_filter)) {
                     if (!empty($request->bagian_filter)) {
                         if (!empty($request->jabatan_filter)) {
@@ -231,11 +231,17 @@ class MappingShiftController extends Controller
                         return $jabatan;
                     })
                     ->addColumn('mapping_shift', function ($row) use ($date1, $date2) {
-                        $mapping_shift = $row->Mappingshift->whereBetween('tanggal_masuk', [$date1, $date2]);
-                        foreach ($mapping_shift as $mapping_shift) {
-                            $data[] = '<span class="badge bg-label-info">' . $mapping_shift->tanggal_masuk . '-' . $mapping_shift->tanggal_pulang . '</span>';
-                        }
-                        return $data;
+                        $mapping_senin = 'Senin:&nbsp;' . $row->Mappingshift->where('tanggal_masuk', $date1)->first();
+                        $mapping_selasa = 'Senin:&nbsp;' . $row->Mappingshift->where('tanggal_masuk', $date1->addDays(1))->first();
+                        $mapping_rabu = 'Senin:&nbsp;' . $row->Mappingshift->where('tanggal_masuk', $date1->addDays(2))->first();
+                        $mapping_kamis = 'Senin:&nbsp;' . $row->Mappingshift->where('tanggal_masuk', $date1->addDays(3))->first();
+                        $mapping_jumat = 'Senin:&nbsp;' . $row->Mappingshift->where('tanggal_masuk', $date1->addDays(4))->first();
+                        $mapping_sabtu = 'Senin:&nbsp;' . $row->Mappingshift->where('tanggal_masuk', $date1->addDays(5))->first();
+                        $mapping_minggu = 'Senin:&nbsp;' . $row->Mappingshift->where('tanggal_masuk', $date1->addDays(6))->first();
+                        $mapping_shift = '<li>';
+                        $mapping_shift = $mapping_shift . '';
+                        $mapping_shift = '</li>';
+                        // return $data;
                     })
                     ->rawColumns(['jabatan', 'mapping_shift'])
                     ->make(true);
