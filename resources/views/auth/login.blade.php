@@ -13,7 +13,7 @@
     <meta name="description" content="HRD-APPS - SUMBER PANGAN -SURYA PANGAN SEMESTA" />
     <meta property="og:title" content="HRD-APPS - SUMBER PANGAN -SURYA PANGAN SEMESTA" />
     <meta property="og:description" content="HRD-APPS - SUMBER PANGAN -SURYA PANGAN SEMESTA" />
-    <meta property="og:image" content="https://jobie.dexignzone.com/mobile-app/xhtml/social-image.png" />
+    <meta property="og:image" content="{{ asset('holding/assets/img/logosp.png') }}" />
     <meta name="format-detection" content="telephone=no">
     <!-- PWA  -->
     <meta name="theme-color" content="#6777ef" />
