@@ -10,9 +10,9 @@
     <meta name="author" content="DexignZone" />
     <meta name="keywords" content="" />
     <meta name="robots" content="" />
-    <meta name="description" content="Jobie - Job Portal Mobile App Template ( Bootstrap 5 + PWA )" />
-    <meta property="og:title" content="Jobie - Job Portal Mobile App Template ( Bootstrap 5 + PWA )" />
-    <meta property="og:description" content="Jobie - Job Portal Mobile App Template ( Bootstrap 5 + PWA )" />
+    <meta name="description" content="HRD-APPS - SUMBER PANGAN -SURYA PANGAN SEMESTA" />
+    <meta property="og:title" content="HRD-APPS - SUMBER PANGAN -SURYA PANGAN SEMESTA" />
+    <meta property="og:description" content="HRD-APPS - SUMBER PANGAN -SURYA PANGAN SEMESTA" />
     <meta property="og:image" content="https://jobie.dexignzone.com/mobile-app/xhtml/social-image.png" />
     <meta name="format-detection" content="telephone=no">
     <!-- PWA  -->
