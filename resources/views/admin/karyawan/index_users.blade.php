@@ -196,6 +196,7 @@
                                             <th>Divisi</th>
                                             <th>Jabatan</th>
                                             <th>username</th>
+                                            <th>Face&nbsp;ID</th>
                                             <th>Akses</th>
                                             <th>Status</th>
                                             <th>Opsi</th>
@@ -275,6 +276,10 @@
                 name: 'username'
             },
             {
+                data: 'face_id',
+                name: 'face_id'
+            },
+            {
                 data: 'akses',
                 name: 'akses'
             },
@@ -322,6 +327,10 @@
             {
                 data: 'username',
                 name: 'username'
+            },
+            {
+                data: 'face_id',
+                name: 'face_id'
             },
             {
                 data: 'akses',

@@ -43,6 +43,7 @@ use App\Http\Controllers\StrukturOrganisasiController;
 use App\Http\Controllers\RecruitmentController;
 use App\Models\Jabatan;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Artisan;
 use RealRashid\SweetAlert\Facades\Alert;
 
 /*
@@ -349,9 +350,9 @@ Route::get('/shift/delete/{id}/sip', [ShiftController::class, 'destroy'])->middl
 Route::get('/karyawan/shift/{id}/sp', [karyawanController::class, 'shift'])->middleware('admin');
 Route::get('/karyawan/shift/{id}/sps', [karyawanController::class, 'shift'])->middleware('admin');
 Route::get('/karyawan/shift/{id}/sip', [karyawanController::class, 'shift'])->middleware('admin');
-// Route::get('/karyawan/mapping_shift_datatable/{id}/sp', [karyawanController::class, 'mapping_shift_datatable'])->middleware('admin');
-// Route::get('/karyawan/mapping_shift_datatable/{id}/sps', [karyawanController::class, 'mapping_shift_datatable'])->middleware('admin');
-// Route::get('/karyawan/mapping_shift_datatable/{id}/sip', [karyawanController::class, 'mapping_shift_datatable'])->middleware('admin');
+Route::get('/karyawan/mapping_shift_datatable/{id}/sp', [karyawanController::class, 'mapping_shift_datatable'])->middleware('admin');
+Route::get('/karyawan/mapping_shift_datatable/{id}/sps', [karyawanController::class, 'mapping_shift_datatable'])->middleware('admin');
+Route::get('/karyawan/mapping_shift_datatable/{id}/sip', [karyawanController::class, 'mapping_shift_datatable'])->middleware('admin');
 Route::post('/karyawan/shift/proses-tambah-shift/sp', [karyawanController::class, 'prosesTambahShift'])->middleware('admin');
 Route::post('/karyawan/shift/proses-tambah-shift/sps', [karyawanController::class, 'prosesTambahShift'])->middleware('admin');
 Route::post('/karyawan/shift/proses-tambah-shift/sip', [karyawanController::class, 'prosesTambahShift'])->middleware('admin');
@@ -366,12 +367,12 @@ Route::get('/karyawan/edit-shift/{id}/sip', [karyawanController::class, 'editShi
 Route::get('/karyawan/mapping_shift/sp', [MappingShiftController::class, 'mapping_shift_index'])->middleware('admin');
 Route::get('/karyawan/mapping_shift/sps', [MappingShiftController::class, 'mapping_shift_index'])->middleware('admin');
 Route::get('/karyawan/mapping_shift/sip', [MappingShiftController::class, 'mapping_shift_index'])->middleware('admin');
-Route::get('/karyawan/mapping_shift_datatable/sp', [MappingShiftController::class, 'mapping_shift_datatable'])->middleware('admin');
-Route::get('/karyawan/mapping_shift_datatable/sps', [MappingShiftController::class, 'mapping_shift_datatable'])->middleware('admin');
-Route::get('/karyawan/mapping_shift_datatable/sip', [MappingShiftController::class, 'mapping_shift_datatable'])->middleware('admin');
-Route::post('/karyawan/shift/proses-tambah-shift/sp', [MappingShiftController::class, 'prosesTambahShift'])->middleware('admin');
-Route::post('/karyawan/shift/proses-tambah-shift/sps', [MappingShiftController::class, 'prosesTambahShift'])->middleware('admin');
-Route::post('/karyawan/shift/proses-tambah-shift/sip', [MappingShiftController::class, 'prosesTambahShift'])->middleware('admin');
+Route::get('/mapping_shift_datatable/sp', [MappingShiftController::class, 'mapping_shift_datatable'])->middleware('admin');
+Route::get('/mapping_shift_datatable/sps', [MappingShiftController::class, 'mapping_shift_datatable'])->middleware('admin');
+Route::get('/mapping_shift_datatable/sip', [MappingShiftController::class, 'mapping_shift_datatable'])->middleware('admin');
+Route::post('/shift/proses-tambah-shift/sp', [MappingShiftController::class, 'prosesTambahShift'])->middleware('admin');
+Route::post('/shift/proses-tambah-shift/sps', [MappingShiftController::class, 'prosesTambahShift'])->middleware('admin');
+Route::post('/shift/proses-tambah-shift/sip', [MappingShiftController::class, 'prosesTambahShift'])->middleware('admin');
 Route::get('/karyawan/delete-shift/sp', [MappingShiftController::class, 'deleteShift'])->middleware('admin');
 Route::get('/karyawan/delete-shift/sps', [MappingShiftController::class, 'deleteShift'])->middleware('admin');
 Route::get('/karyawan/delete-shift/sip', [MappingShiftController::class, 'deleteShift'])->middleware('admin');
@@ -720,8 +721,8 @@ Route::get('optimize', function () {
     Artisan::call('config:cache');
     Artisan::call('optimize');
 
-    Alert::success('success', 'Optimization Success..');
-    return 'ok';
+    // Alert::success('success', 'Optimization Success..');
+    echo 'ok';
     // return redirect('/home')->with('success', 'Optimization Success..');
 });
 

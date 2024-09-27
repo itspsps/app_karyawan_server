@@ -210,7 +210,7 @@
                                             <th>Telepon</th>
                                             <th>Divisi</th>
                                             <th>Jabatan</th>
-                                            <th>Tgl Kontrak</th>
+                                            <th>Tanggal&nbsp;Kontrak</th>
                                             <th>Status</th>
                                             <th>Opsi</th>
                                         </tr>
@@ -227,7 +227,7 @@
                                             <td>{{$karyawan_habis_kontrak->telepon}}</td>
                                             <td>@if($karyawan_habis_kontrak->Divisi==NULL)-@else{{$karyawan_habis_kontrak->Divisi->nama_divisi}}@endif</td>
                                             <td>@if($karyawan_habis_kontrak->Jabatan==NULL)-@else{{$karyawan_habis_kontrak->Jabatan->nama_jabatan}}@endif</td>
-                                            <td>{{ \Carbon\Carbon::parse($karyawan_habis_kontrak->tgl_mulai_kontrak)->format('d-m-Y') }} - {{\Carbon\Carbon::parse($karyawan_habis_kontrak->tgl_selesai_kontrak)->format('d-m-Y')}}</td>
+                                            <td>{{ \Carbon\Carbon::parse($karyawan_habis_kontrak->tgl_mulai_kontrak)->isoFormat('D MMMM YYYY') }}&nbsp;-&nbsp;{{\Carbon\Carbon::parse($karyawan_habis_kontrak->tgl_selesai_kontrak)->isoFormat('D MMMM YYYY')}}</td>
                                             <?php
                                             $date1 = new DateTime();
                                             $date2 = new DateTime($karyawan_habis_kontrak->tgl_selesai_kontrak);

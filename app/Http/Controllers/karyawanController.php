@@ -635,12 +635,20 @@ class karyawanController extends Controller
                     }
                     return $akses;
                 })
+                ->addColumn('face_id', function ($row) use ($holding) {
+                    if ($row->face_id == '' || $row->face_id == NULL) {
+                        $face_id = '-';
+                    } else {
+                        $face_id = '<button type="button" class="btn btn-sm btn-icon btn-outline-success waves-effect"><span class="tf-icons mdi mdi-checkbox-marked-circle-outline"></span></button>';
+                    }
+                    return $face_id;
+                })
                 ->addColumn('status', function ($row) use ($holding) {
                     if ($row->status_aktif == '' || $row->status_aktif == NULL) {
                         $status = NULL;
-                    } else if ($row->status_aktif == 'AKTIF' || $row->status_aktif == 'AKTIF') {
+                    } else if ($row->status_aktif == 'AKTIF') {
                         $status = '<span class="badge bg-label-success">' . $row->status_aktif . '</span>';
-                    } else if ($row->status_aktif == 'AKTIF' || $row->status_aktif == 'NON AKTIF') {
+                    } else if ($row->status_aktif == 'NON AKTIF') {
                         $status = '<span class="badge bg-label-danger">' . $row->status_aktif . '</span>';
                     }
                     return $status;
@@ -661,7 +669,7 @@ class karyawanController extends Controller
                     $btn = $btn . '<button type="button" id="btn_non_aktif_karyawan" data-foto="' . $row->foto . '" data-id="' . $row->id . '" data-tgl_mulai_kontrak="' . $row->tgl_mulai_kontrak . '" data-tgl_selesai_kontrak="' . $row->tgl_selesai_kontrak . '" data-nama="' . $row->name . '" data-divisi="' . $divisi . '" data-jabatan="' . $jabatan . '" data-bagian="' . $row->bagian . '"  data-holding="' . $holding . '" data-penempatan_kerja="' . $row->penempatan_kerja . '" data-kontrak_kerja="' . $row->kontrak_kerja . '"  class="btn btn-icon btn-danger waves-effect waves-light"><span class="tf-icons mdi mdi-account-remove-outline"></span></button>';
                     return $btn;
                 })
-                ->rawColumns(['nama_jabatan', 'nama_divisi', 'akses', 'status', 'option'])
+                ->rawColumns(['nama_jabatan', 'face_id', 'nama_divisi', 'akses', 'status', 'option'])
                 ->make(true);
         }
     }
@@ -1315,10 +1323,6 @@ class karyawanController extends Controller
                     'telepon' => 'max:12',
                     'nullable',
                     'min:11',
-                    // 'username' => 'required',
-                    // 'max:255',
-                    // 'nullable',
-                    // 'unique:users,username,' . $request->username,
                     'password' => 'required',
                     'max:255',
                     'tempat_lahir' => 'required',
@@ -1396,11 +1400,11 @@ class karyawanController extends Controller
                     'telepon' => 'max:12',
                     'nullable',
                     'min:11',
-                    'username' => 'required',
-                    'max:255',
-                    'nullable',
-                    'unique:users,username,' . $request->username,
-                    'password' => 'required',
+                    // 'username' => 'required',
+                    // 'max:255',
+                    // 'nullable',
+                    // 'unique:users,username,' . $request->username,
+                    // 'password' => 'required',
                     'max:255',
                     'tempat_lahir' => 'required',
                     'max:255',
@@ -1476,11 +1480,11 @@ class karyawanController extends Controller
                 'telepon' => 'max:12',
                 'nullable',
                 'min:11',
-                'username' => 'required',
-                'max:255',
-                'nullable',
-                'unique:users,username,' . $request->username,
-                'password' => 'required',
+                // 'username' => 'required',
+                // 'max:255',
+                // 'nullable',
+                // 'unique:users,username,' . $request->username,
+                // 'password' => 'required',
                 'max:255',
                 'tempat_lahir' => 'required',
                 'max:255',

@@ -40,14 +40,14 @@
         <li class="menu-header fw-medium mt-4">
             <span class="menu-header-text">MAIN MENU</span>
         </li>
-        <li class="menu-item {{ Request::is('karyawan/'.$holding) ? 'active open' : '' }} {{ Request::is('users*') ? 'active open' : '' }} {{ Request::is('karyawan_masa_tenggang_kontrak*') ? 'active open' : '' }} {{ Request::is('karyawan_non_aktif*') ? 'active open' : '' }}{{ Request::is('detail_jabatan*') ? 'active open' : '' }} {{ Request::is('struktur_organisasi*') ? 'active open' : '' }}{{ Request::is('reset-cuti*') ? 'active open' : '' }}{{ Request::is('departemen*') ? 'active open' : '' }}{{ Request::is('divisi*') ? 'active open' : '' }} {{ Request::is('bagian*') ? 'active open' : '' }} {{ Request::is('jabatan*') ? 'active open' : '' }}">
+        <li class="menu-item {{ Request::is('karyawan/karyawan_masa_tenggang_kontrak/'.$holding) ? 'active open' : '' }} {{ Request::is('karyawan_ingin_bergabung/'.$holding) ? 'active open' : '' }} {{ Request::is('karyawan/'.$holding) ? 'active open' : '' }} {{ Request::is('users*') ? 'active open' : '' }} {{ Request::is('karyawan_non_aktif*') ? 'active open' : '' }}{{ Request::is('detail_jabatan*') ? 'active open' : '' }} {{ Request::is('struktur_organisasi*') ? 'active open' : '' }}{{ Request::is('reset-cuti*') ? 'active open' : '' }}{{ Request::is('departemen*') ? 'active open' : '' }}{{ Request::is('divisi*') ? 'active open' : '' }} {{ Request::is('bagian*') ? 'active open' : '' }} {{ Request::is('jabatan*') ? 'active open' : '' }}">
             <a href="javascript:void(0);" class="menu-link menu-toggle">
                 <i class="menu-icon tf-icons mdi mdi-database-outline"></i>
                 <div style="font-size: 10pt;" data-i18n="Data Master">Data&nbsp;Master&nbsp;Karyawan</div>
             </a>
 
             <ul class="menu-sub">
-                <li class="menu-item {{ Request::is('karyawan/'.$holding) ? 'active open' : '' }} {{ Request::is('karyawan/edit-password/*') ? 'active' : '' }} {{ Request::is('users*') ? 'active open' : '' }} {{ Request::is('karyawan_non_aktif*') ? 'active open' : '' }} {{ Request::is('karyawan_masa_tenggang_kontrak*') ? 'active open' : '' }}">
+                <li class="menu-item {{ Request::is('karyawan/karyawan_masa_tenggang_kontrak/'.$holding) ? 'active open' : '' }} {{ Request::is('karyawan_ingin_bergabung/'.$holding) ? 'active open' : '' }} {{ Request::is('karyawan/'.$holding) ? 'active open' : '' }} {{ Request::is('karyawan/edit-password/*') ? 'active' : '' }} {{ Request::is('users*') ? 'active open' : '' }} {{ Request::is('karyawan_non_aktif*') ? 'active open' : '' }}">
                     <a href="javascript:void(0);" class="menu-link menu-toggle">
                         <i class="menu-icon tf-icons mdi mdi-account-group-outline"></i>
                         <div style="font-size: 10pt;" data-i18n="Data Master">&nbsp;Karyawan</div>
