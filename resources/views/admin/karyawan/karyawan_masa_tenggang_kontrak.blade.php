@@ -14,7 +14,7 @@
         <!-- Transactions -->
         <div class="modal fade" id="modal_perbarui_kontrak" data-bs-backdrop="static" tabindex="-1">
             <div class="modal-dialog modal-dialog-scrollable modal-lg">
-                <form id="form_update_kontrak" method="post" action="{{ url('karyawan/upddate_kontrak_proses') }}" class="modal-content" enctype="multipart/form-data">
+                <form id="form_update_kontrak" method="post" action="{{ url('karyawan/update_kontrak_proses') }}" class="modal-content" enctype="multipart/form-data">
                     @csrf
                     <div class="modal-header">
                         <h4 class="modal-title" id="backDropModalTitle">Form Pembaruan Kontrak Karyawan</h4>
@@ -84,7 +84,7 @@
                             </div>
                             <br>
                             <br>
-                            <div class="col-md-12">
+                            <div class="col-md-12" style="margin-top:2% ;">
                                 <div class="form-floating form-floating-outline">
                                     <input type="date" id="tgl_selesai_kontrak_baru" name="tgl_selesai_kontrak_baru" value="" class="form-control @error('tgl_selesai_kontrak_baru') is-invalid @enderror" placeholder="Tanggal" />
                                     <label for="tgl_selesai_kontrak_baru">Tanggal Selesai Kontrak Baru</label>
@@ -92,7 +92,7 @@
                             </div>
                             <br>
                             <br>
-                            <div class="col-md-12">
+                            <div class="col-md-12" style="margin-top:2% ;">
                                 <div class="form-floating form-floating-outline">
                                     <select id="lama_kontrak_baru" name="lama_kontrak_baru" class="form-control @error('lama_kontrak_baru') is-invalid @enderror" placeholder="Lama Kontrak">
                                         <option value="">- Select Lama Kontrak -</option>
@@ -228,7 +228,7 @@
                                 <th>Telepon</th>
                                 <th>Divisi</th>
                                 <th>Jabatan</th>
-                                <th>Tgl Kontrak</th>
+                                <th>Tanggal&nbsp;Kontrak</th>
                                 <th>Status</th>
                                 <th>Opsi</th>
                             </tr>

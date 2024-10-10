@@ -2,6 +2,7 @@
 
 namespace App\Exports;
 
+use App\Models\Karyawan;
 use App\Models\User;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\WithCustomStartCell;
@@ -24,16 +25,14 @@ class KaryawanExport implements FromCollection, WithEvents, WithHeadings, WithTi
     public function headings(): array
     {
         return [
-            'ID',
             'ID KARYAWAN',
-            'NAMA',
-            'NIK',
-            'NPWP',
             'NAMA LENGKAP',
-            'MOTTO',
+            'NIK',
+            'AGAMA',
+            'GOLONGAN DARAH',
             'EMAIL',
             'TELEPON',
-            'USERNAME',
+            'NOMOR WA',
             'TEMPAT LAHIR',
             'TANGGAL LAHIR',
             'KELAMIN',
@@ -55,6 +54,7 @@ class KaryawanExport implements FromCollection, WithEvents, WithHeadings, WithTi
             'PENEMPATAN KERJA',
             'SITE JOB',
             'BANK',
+            'NAMA PEMILIK REKENING',
             'NOMOR REKENING',
             'KATEGORI JABATAN',
             'DEPARTEMEN',
@@ -77,13 +77,16 @@ class KaryawanExport implements FromCollection, WithEvents, WithHeadings, WithTi
             'DIVISI 5',
             'BAGIAN 5',
             'JABATAN 5',
+            'PTKP',
+            'NPWP',
             'BPJS KETENAGAKERJAAN',
+            'NAMA PEMILIK BPJS KETENAGAKERJAAN',
             'NO BPJS KETENAGAKERJAAN',
             'BPJS PENSIUN',
+            'NAMA PEMILIK BPJS KESEHATAN',
             'BPJS KESEHATAN',
             'NO BPJS KESEHATAN',
-            'KELAS BPJS',
-            'PTKP'
+            'KELAS BPJS'
         ];
     }
     public function title(): string
@@ -92,47 +95,47 @@ class KaryawanExport implements FromCollection, WithEvents, WithHeadings, WithTi
     }
     public function startCell(): string
     {
-        return 'A4';
+        return 'A2';
     }
     public function collection()
     {
-        return User::leftJoin('departemens as a', 'a.id', 'users.dept_id')
-            ->leftJoin('divisis as b', 'b.id', 'users.divisi_id')
-            ->leftJoin('bagians as c', 'c.id', 'users.bagian_id')
-            ->leftJoin('jabatans as d', 'd.id', 'users.jabatan_id')
-            ->leftJoin('divisis as e', 'e.id', 'users.divisi1_id')
-            ->leftJoin('bagians as f', 'f.id', 'users.bagian1_id')
-            ->leftJoin('jabatans as g', 'g.id', 'users.jabatan1_id')
-            ->leftJoin('divisis as h', 'h.id', 'users.divisi2_id')
-            ->leftJoin('bagians as i', 'i.id', 'users.bagian2_id')
-            ->leftJoin('jabatans as j', 'j.id', 'users.jabatan2_id')
-            ->leftJoin('divisis as k', 'k.id', 'users.divisi3_id')
-            ->leftJoin('bagians as l', 'l.id', 'users.bagian3_id')
-            ->leftJoin('jabatans as m', 'm.id', 'users.jabatan3_id')
-            ->leftJoin('divisis as n', 'n.id', 'users.divisi4_id')
-            ->leftJoin('bagians as o', 'o.id', 'users.bagian4_id')
-            ->leftJoin('jabatans as p', 'p.id', 'users.jabatan4_id')
-            ->leftJoin('departemens as u', 'u.id', 'users.dept1_id')
-            ->leftJoin('departemens as v', 'v.id', 'users.dept2_id')
-            ->leftJoin('departemens as w', 'w.id', 'users.dept3_id')
-            ->leftJoin('departemens as x', 'x.id', 'users.dept4_id')
-            ->leftJoin('indonesia_provinces as q', 'q.code', 'users.provinsi')
-            ->leftJoin('indonesia_cities as r', 'r.code', 'users.kabupaten')
-            ->leftJoin('indonesia_districts as s', 's.code', 'users.kecamatan')
-            ->leftJoin('indonesia_villages as t', 't.code', 'users.desa')
-            ->where('users.kontrak_kerja', $this->holding)
-            ->where('users.is_admin', 'user')
+        return Karyawan::leftJoin('departemens as a', 'a.id', 'karyawans.dept_id')
+            ->leftJoin('divisis as b', 'b.id', 'karyawans.divisi_id')
+            ->leftJoin('bagians as c', 'c.id', 'karyawans.bagian_id')
+            ->leftJoin('jabatans as d', 'd.id', 'karyawans.jabatan_id')
+            ->leftJoin('divisis as e', 'e.id', 'karyawans.divisi1_id')
+            ->leftJoin('bagians as f', 'f.id', 'karyawans.bagian1_id')
+            ->leftJoin('jabatans as g', 'g.id', 'karyawans.jabatan1_id')
+            ->leftJoin('divisis as h', 'h.id', 'karyawans.divisi2_id')
+            ->leftJoin('bagians as i', 'i.id', 'karyawans.bagian2_id')
+            ->leftJoin('jabatans as j', 'j.id', 'karyawans.jabatan2_id')
+            ->leftJoin('divisis as k', 'k.id', 'karyawans.divisi3_id')
+            ->leftJoin('bagians as l', 'l.id', 'karyawans.bagian3_id')
+            ->leftJoin('jabatans as m', 'm.id', 'karyawans.jabatan3_id')
+            ->leftJoin('divisis as n', 'n.id', 'karyawans.divisi4_id')
+            ->leftJoin('bagians as o', 'o.id', 'karyawans.bagian4_id')
+            ->leftJoin('jabatans as p', 'p.id', 'karyawans.jabatan4_id')
+            ->leftJoin('departemens as u', 'u.id', 'karyawans.dept1_id')
+            ->leftJoin('departemens as v', 'v.id', 'karyawans.dept2_id')
+            ->leftJoin('departemens as w', 'w.id', 'karyawans.dept3_id')
+            ->leftJoin('departemens as x', 'x.id', 'karyawans.dept4_id')
+            ->leftJoin('indonesia_provinces as q', 'q.code', 'karyawans.provinsi')
+            ->leftJoin('indonesia_cities as r', 'r.code', 'karyawans.kabupaten')
+            ->leftJoin('indonesia_districts as s', 's.code', 'karyawans.kecamatan')
+            ->leftJoin('indonesia_villages as t', 't.code', 'karyawans.desa')
+            ->leftJoin('users as y', 'y.karyawan_id', 'karyawans.id')
+            ->where('karyawans.kontrak_kerja', $this->holding)
+            ->where('y.is_admin', 'user')
+            // ->where('karyawans.status_aktif', 'AKTIF')
             ->select(
-                'users.id',
-                'users.nomor_identitas_karyawan',
-                'users.name',
+                'karyawans.nomor_identitas_karyawan',
+                'karyawans.name',
                 'nik',
-                'npwp',
-                'fullname',
-                'motto',
+                'agama',
+                'golongan_darah',
                 'email',
                 'telepon',
-                'username',
+                'nomor_wa',
                 'tempat_lahir',
                 'tgl_lahir',
                 'gender',
@@ -154,8 +157,9 @@ class KaryawanExport implements FromCollection, WithEvents, WithHeadings, WithTi
                 'penempatan_kerja',
                 'site_job',
                 'nama_bank',
+                'nama_pemilik_rekening',
                 'nomor_rekening',
-                'users.kategori_jabatan',
+                'karyawans.kategori_jabatan',
                 'a.nama_departemen',
                 'b.nama_divisi',
                 'c.nama_bagian',
@@ -176,13 +180,16 @@ class KaryawanExport implements FromCollection, WithEvents, WithHeadings, WithTi
                 'n.nama_divisi as nama_divisi4',
                 'o.nama_bagian as nama_bagian4',
                 'p.nama_jabatan as nama_jabatan4',
-                'users.bpjs_ketenagakerjaan',
-                'users.no_bpjs_ketenagakerjaan',
-                'users.bpjs_pensiun',
-                'users.bpjs_kesehatan',
-                'users.no_bpjs_kesehatan',
-                'users.kelas_bpjs',
-                'users.ptkp'
+                'karyawans.ptkp',
+                'npwp',
+                'karyawans.bpjs_ketenagakerjaan',
+                'karyawans.nama_pemilik_bpjs_ketenagakerjaan',
+                'karyawans.no_bpjs_ketenagakerjaan',
+                'karyawans.bpjs_pensiun',
+                'karyawans.bpjs_kesehatan',
+                'karyawans.nama_pemilik_bpjs_kesehatan',
+                'karyawans.no_bpjs_kesehatan',
+                'karyawans.kelas_bpjs'
             )
             ->orderBy('name', 'ASC')
             ->get();
@@ -200,17 +207,17 @@ class KaryawanExport implements FromCollection, WithEvents, WithHeadings, WithTi
             AfterSheet::class    => function (AfterSheet $event) use ($holding) {
                 $event->sheet
                     ->getDelegate()
-                    ->getStyle('A4:BH4')
+                    ->getStyle('A2:BJ2')
                     ->getAlignment()
                     ->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
                 $event->sheet
-                    ->getDelegate()->getStyle('I2')->getFont()->setSize(14);
+                    ->getDelegate()->getStyle('I1')->getFont()->setSize(14);
                 $event->sheet
-                    ->getDelegate()->getStyle('I2')->getFont()->setBold(true);
+                    ->getDelegate()->getStyle('I1')->getFont()->setBold(true);
                 $event->sheet
-                    ->getDelegate()->getStyle('A4:BH4')->getFont()->setBold(true);
+                    ->getDelegate()->getStyle('A2:BJ2')->getFont()->setBold(true);
                 $event->sheet
-                    ->setCellValue('I2', 'DATA MASTER KARYAWAN ' . $holding);
+                    ->setCellValue('I1', 'DATA MASTER KARYAWAN ' . $holding);
             },
         ];
     }

@@ -6,6 +6,7 @@ use App\Imports\JabatanImport;
 use App\Models\Bagian;
 use App\Models\Divisi;
 use App\Models\Jabatan;
+use App\Models\Karyawan;
 use App\Models\LevelJabatan;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -116,31 +117,34 @@ class jabatanController extends Controller
                 })
                 ->addColumn('jumlah_karyawan', function ($row) use ($holding) {
                     if ($holding == 'sp') {
-                        $karyawan = User::where('jabatan_id', $row->id)
+                        $karyawan = Karyawan::leftJoin('users as b', 'b.karyawan_id', 'karyawans.id')
+                            ->where('status_aktif', 'AKTIF')
+                            ->where('jabatan_id', $row->id)
                             ->orWhere('jabatan1_id', $row->id)
                             ->orWhere('jabatan2_id', $row->id)
                             ->orWhere('jabatan3_id', $row->id)
                             ->orWhere('jabatan4_id', $row->id)
-                            ->where('is_admin', 'user')
-                            ->where('status_aktif', 'AKTIF')
+                            ->where('b.is_admin', 'user')
                             ->count();
                     } else if ($holding == 'sps') {
-                        $karyawan = User::where('jabatan_id', $row->id)
+                        $karyawan = Karyawan::leftJoin('users as b', 'b.karyawan_id', 'karyawans.id')
+                            ->where('status_aktif', 'AKTIF')
+                            ->where('jabatan_id', $row->id)
                             ->orWhere('jabatan1_id', $row->id)
                             ->orWhere('jabatan2_id', $row->id)
                             ->orWhere('jabatan3_id', $row->id)
                             ->orWhere('jabatan4_id', $row->id)
-                            ->where('status_aktif', 'AKTIF')
-                            ->where('is_admin', 'user')
+                            ->where('b.is_admin', 'user')
                             ->count();
                     } else {
-                        $karyawan = User::where('jabatan_id', $row->id)
+                        $karyawan = Karyawan::leftJoin('users as b', 'b.karyawan_id', 'karyawans.id')
+                            ->where('status_aktif', 'AKTIF')
+                            ->where('jabatan_id', $row->id)
                             ->orWhere('jabatan1_id', $row->id)
                             ->orWhere('jabatan2_id', $row->id)
                             ->orWhere('jabatan3_id', $row->id)
                             ->orWhere('jabatan4_id', $row->id)
-                            ->where('status_aktif', 'AKTIF')
-                            ->where('is_admin', 'user')
+                            ->where('b.is_admin', 'user')
                             ->count();
                     }
                     if ($karyawan == 0) {
@@ -211,31 +215,34 @@ class jabatanController extends Controller
                 })
                 ->addColumn('jumlah_karyawan', function ($row) use ($holding) {
                     if ($holding == 'sp') {
-                        $karyawan = User::where('jabatan_id', $row->id)
+                        $karyawan = Karyawan::leftJoin('users as b', 'b.karyawan_id', 'karyawans.id')
+                            ->where('status_aktif', 'AKTIF')
+                            ->where('jabatan_id', $row->id)
                             ->orWhere('jabatan1_id', $row->id)
                             ->orWhere('jabatan2_id', $row->id)
                             ->orWhere('jabatan3_id', $row->id)
                             ->orWhere('jabatan4_id', $row->id)
-                            ->where('status_aktif', 'AKTIF')
-                            ->where('is_admin', 'user')
+                            ->where('b.is_admin', 'user')
                             ->count();
                     } else if ($holding == 'sps') {
-                        $karyawan = User::where('jabatan_id', $row->id)
+                        $karyawan = Karyawan::leftJoin('users as b', 'b.karyawan_id', 'karyawans.id')
+                            ->where('status_aktif', 'AKTIF')
+                            ->where('jabatan_id', $row->id)
                             ->orWhere('jabatan1_id', $row->id)
                             ->orWhere('jabatan2_id', $row->id)
                             ->orWhere('jabatan3_id', $row->id)
                             ->orWhere('jabatan4_id', $row->id)
-                            ->where('status_aktif', 'AKTIF')
-                            ->where('is_admin', 'user')
+                            ->where('b.is_admin', 'user')
                             ->count();
                     } else {
-                        $karyawan = User::where('jabatan_id', $row->id)
+                        $karyawan = Karyawan::leftJoin('users as b', 'b.karyawan_id', 'karyawans.id')
+                            ->where('status_aktif', 'AKTIF')
+                            ->where('jabatan_id', $row->id)
                             ->orWhere('jabatan1_id', $row->id)
                             ->orWhere('jabatan2_id', $row->id)
                             ->orWhere('jabatan3_id', $row->id)
                             ->orWhere('jabatan4_id', $row->id)
-                            ->where('status_aktif', 'AKTIF')
-                            ->where('is_admin', 'user')
+                            ->where('b.is_admin', 'user')
                             ->count();
                     }
                     return $karyawan;
@@ -255,13 +262,14 @@ class jabatanController extends Controller
     public function karyawan_datatable(Request $request, $id)
     {
         $holding = request()->segment(count(request()->segments()));
-        $table =   User::where('jabatan_id', $id)
+        $table =   Karyawan::leftJoin('users as b', 'b.karyawan_id', 'karyawans.id')
+            ->where('status_aktif', 'AKTIF')
+            ->where('jabatan_id', $id)
             ->orWhere('jabatan1_id', $id)
             ->orWhere('jabatan2_id', $id)
             ->orWhere('jabatan3_id', $id)
             ->orWhere('jabatan4_id', $id)
-            ->where('status_aktif', 'AKTIF')
-            ->where('is_admin', 'user')
+            ->where('b.is_admin', 'user')
             ->get();
         // dd($table);
         if (request()->ajax()) {
@@ -631,31 +639,34 @@ class jabatanController extends Controller
     {
         // dd($request->all());
         if ($request->holding == 'sp') {
-            $cek_karyawan_jabatan = User::where('jabatan_id', $id)
+            $cek_karyawan_jabatan = Karyawan::where('jabatan_id', $id)
+                ->leftJoin('users as b', 'b.karyawan_id', 'karyawans.id')
                 ->orWhere('jabatan1_id', $id)
                 ->orWhere('jabatan2_id', $id)
                 ->orWhere('jabatan3_id', $id)
                 ->orWhere('jabatan4_id', $id)
                 ->where('status_aktif', 'AKTIF')
-                ->where('is_admin', 'user')
+                ->where('b.is_admin', 'user')
                 ->count();
         } else if ($request->holding == 'sps') {
-            $cek_karyawan_jabatan = User::where('jabatan_id', $id)
+            $cek_karyawan_jabatan = Karyawan::where('jabatan_id', $id)
+                ->leftJoin('users as b', 'b.karyawan_id', 'karyawans.id')
                 ->orWhere('jabatan1_id', $id)
                 ->orWhere('jabatan2_id', $id)
                 ->orWhere('jabatan3_id', $id)
                 ->orWhere('jabatan4_id', $id)
                 ->where('status_aktif', 'AKTIF')
-                ->where('is_admin', 'user')
+                ->where('b.is_admin', 'user')
                 ->count();
         } else {
-            $cek_karyawan_jabatan = User::where('jabatan_id', $id)
+            $cek_karyawan_jabatan = Karyawan::where('jabatan_id', $id)
+                ->leftJoin('users as b', 'b.karyawan_id', 'karyawans.id')
                 ->orWhere('jabatan1_id', $id)
                 ->orWhere('jabatan2_id', $id)
                 ->orWhere('jabatan3_id', $id)
                 ->orWhere('jabatan4_id', $id)
                 ->where('status_aktif', 'AKTIF')
-                ->where('is_admin', 'user')
+                ->where('b.is_admin', 'user')
                 ->count();
         }
         if ($cek_karyawan_jabatan == 0) {

@@ -12,6 +12,8 @@ use Illuminate\Support\Facades\Storage;
 use App\Models\MappingShift;
 use RealRashid\SweetAlert\Facades\Alert;
 use App\Models\ActivityLog;
+use App\Models\Cuti;
+use App\Models\Karyawan;
 use App\Models\KategoriCuti;
 use App\Models\LevelJabatan;
 use App\Models\Lokasi;
@@ -52,10 +54,10 @@ class PenugasanController extends Controller
                 $date2 = date('Y-m-d', strtotime($endDate));
                 // dd($date1, $date2);
                 // dd($tgl_mulai, $tgl_selesai);
-                $table = Cuti::leftJoin('users', 'users.id', 'cutis.user_id')->where('nama_cuti', 'Cuti Tahunan')
-                    ->where('users.kontrak_kerja', $holding)
+                $table = Penugasan::leftJoin('karyawans', 'karyawans.id', 'cutis.user_id')->where('nama_cuti', 'Cuti Tahunan')
+                    ->where('karyawans.kontrak_kerja', $holding)
                     ->whereBetween('tanggal', [$date1, $date2])
-                    ->select('users.kontrak_kerja', 'cutis.*')
+                    ->select('karyawans.kontrak_kerja', 'penugasans.*')
                     ->get();
                 // dd($table);
                 return DataTables::of($table)
@@ -64,7 +66,7 @@ class PenugasanController extends Controller
                         if ($row->status_cuti == 1) {
                             $status = '<a href="javascript:void(0);" id="btn_cuti_1"><h6 class="text-primary">' . $row->no_form_cuti . '</h6></a>';
                         } else if ($row->status_cuti == 3) {
-                            $status = '<a href="' . url("cuti/cetak_form_cuti/" . $row->id) . '" target="_blank"><h6 class="text-success">' . $row->no_form_cuti . '</h6></a>';
+                            $status = '<a href="' . url("penugasan/cetak_admin_form_penugasan/" . $row->id) . '" target="_blank"><h6 class="text-success">' . $row->no_form_cuti . '</h6></a>';
                         } else if ($row->status_cuti == 0) {
                             $status = '<a href="javascript:void(0);" id="btn_cuti_0"><h6 class="text-secondary">' . $row->no_form_cuti . '</h6></a>';
                         } else if ($row->status_cuti == 2) {
@@ -120,7 +122,7 @@ class PenugasanController extends Controller
                         return $total_cuti;
                     })
                     ->addColumn('nama_departemen', function ($row) {
-                        $user = User::where('id', $row->user_id)->first();
+                        $user = Karyawan::where('id', $row->user_id)->first();
                         $departemen = Departemen::where('id', $user->dept_id)->first();
                         if ($departemen == NULL) {
                             $nama_departemen = NULL;
@@ -130,7 +132,7 @@ class PenugasanController extends Controller
                         return $nama_departemen;
                     })
                     ->addColumn('nama_divisi', function ($row) {
-                        $user = User::where('id', $row->user_id)->first();
+                        $user = Karyawan::where('id', $row->user_id)->first();
                         $divisi = Divisi::where('id', $user->divisi_id)->first();
                         if ($divisi == NULL) {
                             $nama_divisi = NULL;
@@ -140,7 +142,7 @@ class PenugasanController extends Controller
                         return $nama_divisi;
                     })
                     ->addColumn('nama_jabatan', function ($row) {
-                        $user = User::where('id', $row->user_id)->first();
+                        $user = Karyawan::where('id', $row->user_id)->first();
                         $jabatan = Jabatan::where('id', $user->jabatan_id)->first();
                         if ($jabatan == NULL) {
                             $nama_jabatan = NULL;
@@ -224,11 +226,11 @@ class PenugasanController extends Controller
                 $now1 = Carbon::now()->endOfMonth();
 
                 // dd($tgl_mulai, $tgl_selesai);
-                $table = Penugasan::leftJoin('users', 'users.id', 'penugasans.id_diajukan_oleh')
-                    ->where('users.kontrak_kerja', $holding)
-                    ->select('users.kontrak_kerja', 'penugasans.*')
+                $table = Penugasan::leftJoin('karyawans', 'karyawans.id', 'penugasans.id_diajukan_oleh')
+                    ->where('karyawans.kontrak_kerja', $holding)
+                    ->select('karyawans.kontrak_kerja', 'penugasans.*')
                     ->get();
-                // dd($table);
+
                 return DataTables::of($table)
 
                     ->addColumn('no_form_penugasan', function ($row) {
@@ -243,7 +245,7 @@ class PenugasanController extends Controller
                         } else if ($row->status_penugasan == 4) {
                             $status = '<a href="javascript:void(0);" id="btn_cuti_2"><h6 class="text-primary">' . $row->no_form_penugasan . '</h6></a>';
                         } else if ($row->status_penugasan == 5) {
-                            $status = '<a href="' . url("penugasan/cetak_form_penugasan/" . $row->id) . '" target="_blank"><h6 class="text-success">' . $row->no_form_penugasan . '</h6></a>';
+                            $status = '<a href="' . url("penugasan/cetak_admin_form_penugasan/" . $row->id) . '" target="_blank"><h6 class="text-success">' . $row->no_form_penugasan . '</h6></a>';
                         } else if ($row->status_penugasan == 'NOT APPROVE') {
                             $status = '<a href="javascript:void(0);" id="btn_cuti_not_approve"><h6 class="text-danger">' . $row->no_form_penugasan . '</h6></a>';
                         }
@@ -278,7 +280,7 @@ class PenugasanController extends Controller
                         return $selesai_kunjungan;
                     })
                     ->addColumn('nama_departemen', function ($row) {
-                        $user = User::where('id', $row->id_diajukan_oleh)->first();
+                        $user = Karyawan::where('id', $row->id_diajukan_oleh)->first();
                         $departemen = Departemen::where('id', $user->dept_id)->first();
                         if ($departemen == NULL) {
                             $nama_departemen = NULL;
@@ -288,7 +290,7 @@ class PenugasanController extends Controller
                         return $nama_departemen;
                     })
                     ->addColumn('nama_divisi', function ($row) {
-                        $user = User::where('id', $row->id_diajukan_oleh)->first();
+                        $user = Karyawan::where('id', $row->id_diajukan_oleh)->first();
                         $divisi = Divisi::where('id', $user->divisi_id)->first();
                         if ($divisi == NULL) {
                             $nama_divisi = NULL;
@@ -298,7 +300,7 @@ class PenugasanController extends Controller
                         return $nama_divisi;
                     })
                     ->addColumn('nama_jabatan', function ($row) {
-                        $user = User::where('id', $row->id_diajukan_oleh)->first();
+                        $user = Karyawan::where('id', $row->id_diajukan_oleh)->first();
                         $jabatan = Jabatan::where('id', $user->jabatan_id)->first();
                         if ($jabatan == NULL) {
                             $nama_jabatan = NULL;
@@ -413,10 +415,11 @@ class PenugasanController extends Controller
     }
     public function cetak_admin_form_penugasan($id)
     {
-        $penugasan = Penugasan::join('users', 'users.id', 'penugasans.id_user')->where('penugasans.id', $id)->first();
-        $penugasan1 = Penugasan::join('users', 'users.id', 'penugasans.id_diminta_oleh')->where('penugasans.id', $id)->first();
-        $penugasan2 = Penugasan::join('users', 'users.id', 'penugasans.id_disahkan_oleh')->where('penugasans.id', $id)->first();
+        $penugasan = Penugasan::join('karyawans', 'karyawans.id', 'penugasans.id_user')->where('penugasans.id', $id)->first();
+        $penugasan1 = Penugasan::join('karyawans', 'karyawans.id', 'penugasans.id_diminta_oleh')->where('penugasans.id', $id)->first();
+        $penugasan2 = Penugasan::join('karyawans', 'karyawans.id', 'penugasans.id_disahkan_oleh')->where('penugasans.id', $id)->first();
         $departemen = Departemen::where('id', $penugasan->id_departemen)->first();
+        // dd($departemen);
         $divisi = Divisi::where('id', $penugasan->id_divisi)->first();
         $jabatan = Jabatan::where('id', $penugasan->id_jabatan)->first();
         $departemen1 = Departemen::where('id', $penugasan1->dept_id)->first();
@@ -425,7 +428,7 @@ class PenugasanController extends Controller
         $departemen2 = Departemen::where('id', $penugasan2->dept_id)->first();
         $divisi2 = Divisi::where('id', $penugasan2->divisi_id)->first();
         $jabatan2 = Jabatan::where('id', $penugasan2->jabatan_id)->first();
-        $pengganti = User::where('id', $penugasan->user_id_backup)->first();
+        $pengganti = Karyawan::where('id', $penugasan->user_id_backup)->first();
         // dd(Cuti::with('KategoriCuti')->with('User')->where('cutis.id', $id)->where('cutis.status_cuti', '3')->first());
         $data = [
             'title' => 'domPDF in Laravel 10',

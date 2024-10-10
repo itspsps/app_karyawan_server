@@ -79,11 +79,14 @@
                         @if($count_karyawan_habis_kontrak > 0)
                         <div class="alert alert-warning" role="alert">
                             <i class="mdi mdi-account-alert-outline "></i>
-                            <span>Karyawan Masa Tenggang Kontrak @if($holding=='sps') PT. SURYA PANGAN SEMESTA @elseif($holding=='sp') CV. SUMBER PANGAN @else CV. SURYA INTI PANGAN @endif </span><span>Total : {{$count_karyawan_habis_kontrak}} Orang</span>
+                            <span>Karyawan Masa Tenggang Kontrak @if($holding=='sps') PT. SURYA PANGAN SEMESTA @elseif($holding=='sp') CV. SUMBER PANGAN @else CV. SURYA INTI PANGAN @endif </span><span>Total : {{$count_karyawan_habis_kontrak}} Orang
+                                <a href="{{url('karyawan/karyawan_masa_tenggang_kontrak/'.$holding)}}">&nbsp;Lihat&nbsp;Semua&nbsp;. .</a>
+                            </span>
+
                         </div>
                         <div class="modal fade" id="modal_perbarui_kontrak" data-bs-backdrop="static" tabindex="-1">
                             <div class="modal-dialog modal-dialog-scrollable modal-lg">
-                                <form id="form_update_kontrak" method="post" action="{{ url('karyawan/upddate_kontrak_proses') }}" class="modal-content" enctype="multipart/form-data">
+                                <form id="form_update_kontrak" method="post" action="{{ url('karyawan/update_kontrak_proses') }}" class="modal-content" enctype="multipart/form-data">
                                     @csrf
                                     <div class="modal-header">
                                         <h4 class="modal-title" id="backDropModalTitle">Form Pembaruan Kontrak Karyawan</h4>
@@ -227,7 +230,7 @@
                                             <td>{{$karyawan_habis_kontrak->telepon}}</td>
                                             <td>@if($karyawan_habis_kontrak->Divisi==NULL)-@else{{$karyawan_habis_kontrak->Divisi->nama_divisi}}@endif</td>
                                             <td>@if($karyawan_habis_kontrak->Jabatan==NULL)-@else{{$karyawan_habis_kontrak->Jabatan->nama_jabatan}}@endif</td>
-                                            <td>{{ \Carbon\Carbon::parse($karyawan_habis_kontrak->tgl_mulai_kontrak)->isoFormat('D MMMM YYYY') }}&nbsp;-&nbsp;{{\Carbon\Carbon::parse($karyawan_habis_kontrak->tgl_selesai_kontrak)->isoFormat('D MMMM YYYY')}}</td>
+                                            <td>{{ \Carbon\Carbon::parse($karyawan_habis_kontrak->tgl_mulai_kontrak)->isoFormat('DD MMMM YYYY') }}&nbsp;-&nbsp;{{\Carbon\Carbon::parse($karyawan_habis_kontrak->tgl_selesai_kontrak)->isoFormat('DD MMMM YYYY')}}</td>
                                             <?php
                                             $date1 = new DateTime();
                                             $date2 = new DateTime($karyawan_habis_kontrak->tgl_selesai_kontrak);
@@ -241,7 +244,7 @@
                                     </tbody>
                                 </table>
                             </div>
-                            <div style="float: right; margin-right: 2px;" class="float-right">
+                            <div style="float: right; margin-right: 2px; margin-top: 2px;" class="float-right">
                                 <a href="{{url('karyawan/karyawan_masa_tenggang_kontrak/'.$holding)}}"><span class="badge bg-label-success">Lihat&nbsp;Semua&nbsp;<i class="mdi mdi-chevron-double-right"></i></span></a>
                             </div>
                         </div>

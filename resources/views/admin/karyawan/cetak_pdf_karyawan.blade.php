@@ -12,11 +12,11 @@
     <table border="0" style="margin-top: 3px;" class="kop" width="100%">
         <tr>
             @if($cek_holding=='sp')
-            <td style="width:20%;"> <img src="{{ url('public/holding/assets/img/logosp.png') }}" width="80px" class="images"> </td>
+            <td style="width:20%;"> <img src="{{ asset('holding/assets/img/logosp.png') }}" width="80px" class="images"> </td>
             @elseif($cek_holding=='sps')
-            <td style="width:20%;"> <img src="{{ url('public/holding/assets/img/logosps.png') }}" width="80px" class="images"> </td>
+            <td style="width:20%;"> <img src="{{ asset('holding/assets/img/logosps.png') }}" width="80px" class="images"> </td>
             @elseif($cek_holding=='sip')
-            <td style="width:20%;"> <img src="{{ url('public/holding/assets/img/logosip.png') }}" width="80px" class="images"> </td>
+            <td style="width:20%;"> <img src="{{ asset('holding/assets/img/logosip.png') }}" width="80px" class="images"> </td>
             @endif
             <td style="width:40%;">
                 @if($cek_holding=='sp')
@@ -81,18 +81,6 @@
                 <th>DIVISI</th>
                 <th>BAGIAN</th>
                 <th>JABATAN</th>
-                <th>DIVISI&nbsp;2</th>
-                <th>BAGIAN&nbsp;2</th>
-                <th>JABATAN&nbsp;2</th>
-                <th>DIVISI&nbsp;3</th>
-                <th>DIVISI&nbsp;3</th>
-                <th>JABATAN&nbsp;3</th>
-                <th>DIVISI&nbsp;4</th>
-                <th>DIVISI&nbsp;4</th>
-                <th>BAGIAN&nbsp;4</th>
-                <th>BAGIAN&nbsp;5</th>
-                <th>JABATAN&nbsp;5</th>
-                <th>JABATAN&nbsp;5</th>
             </tr>
         </thead>
         <tbody>
@@ -114,22 +102,10 @@
                 <td>{{$user->penempatan_kerja}}</td>
                 <td>{{$user->nama_bank}}</td>
                 <td>{{$user->nomor_rekening}}</td>
-                <td>{{$user->nama_departemen}}</td>
-                <td>{{$user->nama_divisi}}</td>
-                <td>{{$user->nama_bagian}}</td>
-                <td>{{$user->nama_jabatan}}</td>
-                <td>{{$user->nama_divisi1}}</td>
-                <td>{{$user->nama_bagian1}}</td>
-                <td>{{$user->nama_jabatan1}}</td>
-                <td>{{$user->nama_divisi2}}</td>
-                <td>{{$user->nama_bagian2}}</td>
-                <td>{{$user->nama_jabatan2}}</td>
-                <td>{{$user->nama_divisi3}}</td>
-                <td>{{$user->nama_bagian3}}</td>
-                <td>{{$user->nama_jabatan3}}</td>
-                <td>{{$user->nama_divisi4}}</td>
-                <td>{{$user->nama_bagian4}}</td>
-                <td>{{$user->nama_jabatan4}}</td>
+                <td>@if($user->Departemen==null)@else{{$user->Departemen->nama_departemen}}@endif</td>
+                <td>@if($user->Divisi==null)@else{{$user->Divisi->nama_divisi}}@endif</td>
+                <td>@if($user->Bagian==null)@else{{$user->Bagian->nama_bagian}}@endif</td>
+                <td>@if($user->Jabatan==null)@else{{$user->Jabatan->nama_jabatan}}@endif</td>
             </tr>
             @endforeach
         </tbody>

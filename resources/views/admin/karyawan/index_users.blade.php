@@ -5,6 +5,18 @@
     .my-swal {
         z-index: X;
     }
+
+    #card-profile::backdrop {
+        background-color: red;
+
+    }
+
+    .img_resign {
+        position: absolute;
+        top: 50%;
+        left: 80%;
+        transform: translate(-50%, -50%);
+    }
 </style>
 @endsection
 @section('isi')
@@ -13,18 +25,19 @@
     <div class="row gy-4">
         <!-- Transactions -->
         <div class="col-lg-12">
-            <div class="modal fade" id="modal_non_aktif_karyawan" data-bs-backdrop="static" tabindex="-1">
+            <div class="modal fade" id="modal_non_aktif_user" data-bs-backdrop="static" tabindex="-1">
                 <div class="modal-dialog modal-dialog-scrollable modal-lg">
-                    <form method="post" action="{{ url('karyawan/non_aktif_proses') }}" class="modal-content" enctype="multipart/form-data">
+                    <form method="post" action="{{ url('users/non_aktif_proses') }}" class="modal-content" enctype="multipart/form-data">
                         @csrf
                         <div class="modal-header">
-                            <h4 class="modal-title" id="backDropModalTitle">Form Non Aktif Karyawan</h4>
+                            <h4 class="modal-title" id="backDropModalTitle">Form Non Aktif User</h4>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
                             <div class="row g-2 mt-2">
-                                <div class="col-md-12">
-                                    <div class="card mb-4">
+                                <div class="col-md-12" style="position: relative;">
+                                    <div class="card mb-4" id="card-profile">
+                                        <img id="icon_resign" style="visibility: hidden;" src="{{asset('admin/assets/img/resign.png')}}" alt="" class="img_resign d-block w-px-150 h-px-120 rounded" />
                                         <!-- Account -->
                                         <div class="card-body">
                                             <div class="d-flex align-items-start align-items-sm-center gap-4">
@@ -77,32 +90,112 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-md-12">
-                                    <div class="form-floating form-floating-outline">
-                                        <input type="text" id="date_now" name="date_now" readonly value="{{date('Y-m-d')}}" class="form-control @error('date_now') is-invalid @enderror" placeholder="Tanggal" />
-                                        <label for="date_now">Tanggal Non Aktif</label>
-                                    </div>
-                                </div>
+
                                 <div class="col-md-12">
                                     <div class="form-floating form-floating-outline">
                                         <textarea rows="10" id="alasan_non_aktif" name="alasan_non_aktif" class="form-control @error('alasan_non_aktif') is-invalid @enderror" placeholder="Alasan"></textarea>
-                                        <label for="alasan_non_aktif">Alasan</label>
+                                        <label for="alasan_non_aktif">Alasan User Non Aktif</label>
                                     </div>
                                 </div>
                             </div>
                         </div>
                         <div class="modal-footer">
-                            <button type="submit" class="btn btn-sm btn-success">
+                            <button type="submit" class="btn btn-xs btn-success">
                                 Save
                             </button>
-                            <button type="button" class="btn btn-sm btn-outline-secondary" data-bs-dismiss="modal">
+                            <button type="button" class="btn btn-xs btn-outline-secondary" data-bs-dismiss="modal">
                                 Close
                             </button>
                         </div>
                     </form>
                 </div>
             </div>
-            <div class="modal fade" id="modal_non_aktif_karyawan1" data-bs-backdrop="static" tabindex="-1">
+            <div class="modal fade" id="modal_aktif_user" data-bs-backdrop="static" tabindex="-1">
+                <div class="modal-dialog modal-dialog-scrollable modal-lg">
+                    <form method="post" action="{{ url('users/aktif_proses') }}" class="modal-content" enctype="multipart/form-data">
+                        @csrf
+                        <div class="modal-header">
+                            <h4 class="modal-title" id="backDropModalTitle">Form Aktif User</h4>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="row g-2 mt-2">
+                                <div class="col-md-12" style="position: relative;">
+                                    <div class="card mb-4" id="card-profile">
+                                        <img id="icon_resign" style="visibility: hidden;" src="{{asset('admin/assets/img/resign.png')}}" alt="" class="img_resign d-block w-px-150 h-px-120 rounded" />
+                                        <!-- Account -->
+                                        <div class="card-body">
+                                            <div class="d-flex align-items-start align-items-sm-center gap-4">
+                                                <input type="hidden" name="id_active" id="id_active" value="">
+                                                <img src="{{asset('admin/assets/img/avatars/1.png')}}" alt="user-avatar" class="d-block w-px-120 h-px-120 rounded" id="template_foto_karyawan" />
+                                                <table>
+                                                    <tr>
+                                                        <th>Nama</th>
+                                                        <td>&nbsp;</td>
+                                                        <td>:</td>
+                                                        <td id="td_nama_active"></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th>Divisi</th>
+                                                        <td>&nbsp;</td>
+                                                        <td>:</td>
+                                                        <td id="td_divisi_active"></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th>Jabatan</th>
+                                                        <td>&nbsp;</td>
+                                                        <td>:</td>
+                                                        <td id="td_jabatan_active"></td>
+                                                    <tr>
+                                                        <th>Kontrak Kerja</th>
+                                                        <td>&nbsp;</td>
+                                                        <td>:</td>
+                                                        <td id="td_kontrak_kerja_active"></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th>Penempatan Kerja</th>
+                                                        <td>&nbsp;</td>
+                                                        <td>:</td>
+                                                        <td id="td_penempatan_kerja_active"> </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th>Tgl Mulai Kontrak</th>
+                                                        <td>&nbsp;</td>
+                                                        <td>:</td>
+                                                        <td id="td_mulai_kontrak_active"> </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th>Tgl Selesai Kontrak</th>
+                                                        <td>&nbsp;</td>
+                                                        <td>:</td>
+                                                        <td id="td_selesai_kontrak_active"></td>
+                                                    </tr>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-12">
+                                    <div class="form-floating form-floating-outline">
+                                        <textarea rows="10" id="alasan_aktif" name="alasan_aktif" class="form-control @error('alasan_aktif') is-invalid @enderror" placeholder="Alasan"></textarea>
+                                        <label for="alasan_aktif">Alasan User Aktif</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-xs btn-success">
+                                Save
+                            </button>
+                            <button type="button" class="btn btn-xs btn-outline-secondary" data-bs-dismiss="modal">
+                                Close
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="modal fade" id="modal_non_aktif_user1" data-bs-backdrop="static" tabindex="-1">
                 <div class="modal-dialog modal-dialog-scrollable modal-lg">
                     <form method="post" action="{{ url('/karyawan/non_aktif_proses/'.$holding) }}" class="modal-content" enctype="multipart/form-data">
                         @csrf
@@ -167,6 +260,77 @@
                     </div>
                 </div>
                 <div class="card-body">
+                    <a type="button" href="{{url('users/tambah-users/'.$holding)}}" class="btn btn-xs btn-primary waves-effect waves-light"><i class="menu-icon tf-icons mdi mdi-plus"></i>Tambah</a>
+
+                    <button class="btn btn-xs btn-success waves-effect waves-light dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="menu-icon tf-icons mdi mdi-file-excel"></i> Excel
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#modal_import_user_karyawan" href="">Import Add Excel</a></li>
+                        <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#modal_import_update_user_karyawan" href="">Import Update Excel</a></li>
+                        <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#modal_export_karyawan" href="#">Export Excel</a></li>
+                    </ul>
+                    <a type="button" href="{{url('users/pdfKaryawan/'.$holding)}}" class="btn btn-xs btn-danger waves-effect waves-light"><i class="menu-icon tf-icons mdi mdi-file-pdf-box"></i>PDF</a>
+                    <div class="modal fade" id="modal_import_user_karyawan" data-bs-backdrop="static" tabindex="-1">
+                        <div class="modal-dialog modal-dialog-scrollable modal-lg">
+                            <form method="post" action="{{ url('/users/ImportUser/'.$holding) }}" class="modal-content" enctype="multipart/form-data">
+                                @csrf
+                                <div class="modal-header">
+                                    <h4 class="modal-title" id="backDropModalTitle">Import Add User</h4>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="row g-2 mt-2">
+                                        <div class="col mb-2">
+                                            <div class="form-floating form-floating-outline">
+                                                <input type="file" id="file_excel" name="file_excel" accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel" class="form-control" placeholder="Masukkan File" />
+                                                <label for="file_excel">File Excel</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row g-2 mt-2">
+                                        <a href="{{asset('admin/template_import/TEMPLATE IMPORT TAMBAH KARYAWAN BULANAN SP_SPS.xlsx')}}" type="button" download="" class="btn btn-xs btn-primary"> Download Format Excel</a>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+                                        Close
+                                    </button>
+                                    <button type="submit" class="btn btn-primary">Save</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="modal fade" id="modal_import_update_user_karyawan" data-bs-backdrop="static" tabindex="-1">
+                        <div class="modal-dialog modal-dialog-scrollable modal-lg">
+                            <form method="post" action="{{ url('/users/ImportUpdateUser/'.$holding) }}" class="modal-content" enctype="multipart/form-data">
+                                @csrf
+                                <div class="modal-header">
+                                    <h4 class="modal-title" id="backDropModalTitle">Import Update Karyawan</h4>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="row g-2 mt-2">
+                                        <div class="col mb-2">
+                                            <div class="form-floating form-floating-outline">
+                                                <input type="file" id="file_excel" name="file_excel" accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel" class="form-control" placeholder="Masukkan File" />
+                                                <label for="file_excel">File Excel</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row g-2 mt-2">
+                                        <a href="{{asset('admin/template_import/TEMPLATE IMPORT UPDATE KARYAWAN BULANAN SP_SPS.xlsx')}}" type="button" download="" class="btn btn-xs btn-primary"> Download Format Excel</a>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+                                        Close
+                                    </button>
+                                    <button type="submit" class="btn btn-primary">Save</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
                     <hr class="my-5">
                     <div class="nav-align-top">
                         <div class="row">
@@ -196,7 +360,6 @@
                                             <th>Divisi</th>
                                             <th>Jabatan</th>
                                             <th>username</th>
-                                            <th>Face&nbsp;ID</th>
                                             <th>Akses</th>
                                             <th>Status</th>
                                             <th>Opsi</th>
@@ -207,14 +370,14 @@
                                 </table>
                             </div>
                             <div class="tab-pane fade" id="navs-pills-justified-profile" role="tabpanel">
-                                <table class="table" id="table_karyawan_harian" style="width: 100%;">
+                                <table class="table" id="table_karyawan_harian" style="width: 100%; font-size: smaller;">
                                     <thead class="table-primary">
                                         <tr>
                                             <th>No.</th>
                                             <th>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Nomor&nbsp;ID&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
                                             <th>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Nama&nbsp;Karyawan&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
-                                            <th>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Username&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
-                                            <th>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Akses&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
+                                            <th>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Username&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
+                                            <th>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Akses&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
                                             <th>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Status&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
                                             <th>Opsi</th>
                                         </tr>
@@ -276,16 +439,12 @@
                 name: 'username'
             },
             {
-                data: 'face_id',
-                name: 'face_id'
-            },
-            {
                 data: 'akses',
                 name: 'akses'
             },
             {
-                data: 'status',
-                name: 'status'
+                data: 'user_aktif',
+                name: 'user_aktif'
             },
             {
                 data: 'option',
@@ -329,16 +488,12 @@
                 name: 'username'
             },
             {
-                data: 'face_id',
-                name: 'face_id'
-            },
-            {
                 data: 'akses',
                 name: 'akses'
             },
             {
-                data: 'status',
-                name: 'status'
+                data: 'user_aktif',
+                name: 'user_aktif'
             },
             {
                 data: 'option',
@@ -359,25 +514,43 @@
         let id = $(this).data('id');
         let holding = $(this).data("holding");
         // console.log(holding);
-        let url = "{{ url('/karyawan/edit-password/')}}" + '/' + id + '/' + holding;
-        $.ajax({
-            url: url,
-            method: 'GET',
-            contentType: false,
-            cache: false,
-            processData: false,
-            // data: {
-            //     id_kecamatan: id_kecamatan
-            // },
-            success: function(response) {
-                // console.log(response);
-                window.location.assign(url);
-            },
-            error: function(data) {
-                console.log('error:', data)
-            },
+        let url = "{{ url('/users/edit-password/')}}" + '/' + id + '/' + holding;
+        Swal.fire({
+            allowOutsideClick: false,
+            background: 'transparent',
+            html: ' <div class="spinner-grow text-primary spinner-grow-sm me-2" role="status"></div><div class="spinner-grow text-primary spinner-grow-sm me-2" role="status"></div><div class="spinner-grow text-primary spinner-grow-sm me-2" role="status"></div>',
+            showCancelButton: false,
+            showConfirmButton: false,
+            onBeforeOpen: () => {
 
-        })
+                $.ajax({
+                    url: url,
+                    method: 'GET',
+                    contentType: false,
+                    cache: false,
+                    processData: false,
+                    // data: {
+                    //     id_kecamatan: id_kecamatan
+                    // },
+                    success: function(response) {
+                        // console.log(response);
+                        window.location.assign(url);
+                    },
+                    error: function(data) {
+                        Swal.fire({
+                            icon: 'warning',
+                            title: 'Error',
+                            text: 'Error : ' + data.responseJSON.message,
+                            showConfirmButton: true,
+                        });
+                    },
+
+                })
+            },
+            onAfterClose() {
+                Swal.close()
+            }
+        });
     });
     $(document).on('click', '#btn_non_aktif_karyawan', function() {
         var id = $(this).data('id');
@@ -391,6 +564,13 @@
         var tgl_selesai_kontrak = $(this).data('tgl_selesai_kontrak');
         var kontrak_kerja = $(this).data('kontrak_kerja');
         var penempatan_kerja = $(this).data('penempatan_kerja');
+        var status_aktif = $(this).data('status_aktif');
+        console.log(status_aktif);
+        if (status_aktif == 'NON AKTIF') {
+            $('.img_resign').show();
+        } else {
+            $('.img_resign').hide();
+        }
         if (foto == '' | foto == null) {
             $('#template_foto_karyawan').attr('src', "{{asset('admin/assets/img/avatars/1.png')}}");
         } else {
@@ -406,7 +586,51 @@
         $('#td_kontrak_kerja').html(kontrak_kerja);
         $('#td_penempatan_kerja').html(penempatan_kerja);
         $('#id_nonactive').val(id);
-        $('#modal_non_aktif_karyawan').modal('show');
+        $('#modal_non_aktif_user').modal('show');
+    });
+    $(document).on('click', '#btn_aktif_karyawan', function() {
+
+        var status_aktif = $(this).data('status_aktif');
+        if (status_aktif == 'NON AKTIF') {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Info',
+                text: 'Karyawan Non Aktif',
+                showConfirmButton: true,
+            });
+            $('.img_resign').show();
+        } else {
+            $('.img_resign').hide();
+            var id = $(this).data('id');
+            var holding = $(this).data("holding");
+            var nama = $(this).data('nama');
+            var divisi = $(this).data('divisi');
+            var jabatan = $(this).data('jabatan');
+            var bagian = $(this).data('bagian');
+            var foto = $(this).data('foto');
+            var tgl_mulai_kontrak = $(this).data('tgl_mulai_kontrak');
+            var tgl_selesai_kontrak = $(this).data('tgl_selesai_kontrak');
+            var kontrak_kerja = $(this).data('kontrak_kerja');
+            var penempatan_kerja = $(this).data('penempatan_kerja');
+            console.log(id);
+
+            if (foto == '' | foto == null) {
+                $('#template_foto_karyawan').attr('src', "{{asset('admin/assets/img/avatars/1.png')}}");
+            } else {
+                $('#template_foto_karyawan').attr('src', "{{url('storage/app/public/foto_karyawan/')}}" + foto);
+            }
+            $('#td_nama_active').html(nama);
+            $('#td_divisi_active').html(divisi);
+            $('#td_jabatan_active').html(jabatan);
+            $('#td_bagian_active').html(bagian);
+            $('#td_jabatan_active').html(jabatan);
+            $('#td_mulai_kontrak_active').html(tgl_mulai_kontrak);
+            $('#td_selesai_kontrak_active').html(tgl_selesai_kontrak);
+            $('#td_kontrak_kerja_active').html(kontrak_kerja);
+            $('#td_penempatan_kerja_active').html(penempatan_kerja);
+            $('#id_active').val(id);
+            $('#modal_aktif_user').modal('show');
+        }
     });
 </script>
 @endsection

@@ -362,7 +362,7 @@
                             </form>
                         </div>
                     </div>
-                    <table class="table" id="table_inventaris" style="width: 100%;">
+                    <table class="table" id="table_inventaris" style="width: 100%;font-size: smaller;">
                         <thead class="table-primary">
                             <tr>
                                 <th>No.</th>

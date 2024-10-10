@@ -29,22 +29,22 @@ class Jabatan extends Model
     }
     public function User(): HasMany
     {
-        return $this->hasMany(User::class);
+        return $this->hasMany(Karyawan::class);
     }
     public function User1(): HasMany
     {
-        return $this->hasMany(User::class, 'jabatan1_id', 'id');
+        return $this->hasMany(Karyawan::class, 'jabatan1_id', 'id');
     }
     public function User2(): HasMany
     {
-        return $this->hasMany(User::class, 'jabatan2_id', 'id');
+        return $this->hasMany(Karyawan::class, 'jabatan2_id', 'id');
     }
     public function User3(): HasMany
     {
-        return $this->hasMany(User::class, 'jabatan3_id', 'id');
+        return $this->hasMany(Karyawan::class, 'jabatan3_id', 'id');
     }
     public function User4(): HasMany
     {
-        return $this->hasMany(User::class, 'jabatan4_id', 'id');
+        return $this->hasMany(Karyawan::class, 'jabatan4_id', 'id');
     }
 }

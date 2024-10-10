@@ -42,7 +42,7 @@ class Cuti extends Model
 
     public function User()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(Karyawan::class, 'user_id', 'id');
     }
     public function Divisi(): BelongsTo
     {

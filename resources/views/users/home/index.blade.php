@@ -769,7 +769,7 @@
                     <path d="M516.7 348m-97.5 0a97.5 97.5 0 1 0 195 0 97.5 97.5 0 1 0-195 0Z" fill="#FFFFFF" />
                     <path d="M516.7 472.1c-68.4 0-124.1-55.7-124.1-124.1s55.7-124.1 124.1-124.1S640.8 279.5 640.8 348 585.1 472.1 516.7 472.1z m0-195.1c-39.1 0-70.9 31.8-70.9 70.9 0 39.1 31.8 70.9 70.9 70.9s70.9-31.8 70.9-70.9c0-39.1-31.8-70.9-70.9-70.9z" fill="#333333" />
                 </svg>
-                <p class="penempatan_text">{{Auth::user()->penempatan_kerja}}</p>
+                <p class="penempatan_text">{{ $user_karyawan->penempatan_kerja }}</p>
             </div>
         </div>
         <div class="garis_content col-1">
@@ -982,7 +982,7 @@
 @endif
 @if(Session::has('absenmasukoutradius'))
 <div id="canvas_absenmasukoutradius" class="offcanvas offcanvas-bottom pwa-offcanvas">
-    <input type="hidden" name="home_index" id="home_index" value="{{Session::has('homeindex')}}">
+    <input type="hidden" name="home_index" id="home_index" value="{{Session::has('absenmasukoutradius')}}">
     <div class="container">
         <div class="offcanvas-body small text-center">
             <img src="{{asset('assets/assets_users/images/location.gif')}}" width="70" height="70" alt="">
@@ -1747,7 +1747,7 @@
         // console.log($('#home_index').val());
         if ($('#home_index').val() == '1') {
             console.log('hidden')
-            window.scrollTo(0, 30);
+            window.scrollTo(0, 50);
         }
     }
     // offcanvasEl.show()
@@ -1769,8 +1769,8 @@
         //   "<br>Longitude: " + position.coords.longitude;
         var lat_saya = position.coords.latitude;
         var long_saya = position.coords.longitude;
-        var lokasi_kantor = '{{Auth()->user()->penempatan_kerja}}';
-        var nama_saya = '{{Auth()->user()->name}}';
+        var lokasi_kantor = '{{$user_karyawan->penempatan_kerja}}';
+        var nama_saya = '{{$user_karyawan->name}}';
         // console.log(lat_saya, long_saya);
         // console.log(lokasi_kantor);
 
@@ -1801,10 +1801,27 @@
             mymap.showLabel(label);
         } else if (lokasi_kantor == 'CV. SUMBER PANGAN - TUBAN') {
             var latlngs = [
-                [-6.991185, 112.120763],
-                [-6.989174, 112.121394],
-                [-6.989563, 112.122751],
-                [-6.991437, 112.122061]
+                [-6.991758822037412, 112.12048943252134],
+                [-6.992285922956118, 112.12087444394012],
+                [-6.991649636772762, 112.12126324857486],
+                [-6.9918209446766015, 112.12162739730593],
+                [-6.99158186659566, 112.12182464453525],
+                [-6.991630811724543, 112.12207689339583],
+                [-6.988976733872493, 112.12301030070874],
+                [-6.988841110863623, 112.1225521606721],
+                [-6.988496578083082, 112.12262012506571],
+                [-6.988366830934185, 112.12224502050286],
+                [-6.988087592439392, 112.12137545996293],
+                [-6.98793810105542, 112.1214266105829],
+                [-6.987859124455924, 112.12116801578183],
+                [-6.988502219235255, 112.1209008958774],
+                [-6.988694019261298, 112.12132146764182],
+                [-6.989663035162432, 112.12098199978163],
+                [-6.9897194468028525, 112.12109850952719],
+                [-6.990145354468302, 112.12087117343832],
+                [-6.989959196198711, 112.12060689523501],
+                [-6.990190483734605, 112.12045628507613],
+                [-6.990653058462982, 112.12096779127609]
             ];
             var polygon = L.polygon(latlngs, {
                 color: 'red'
@@ -2173,8 +2190,8 @@
 
         var lat_saya1 = position.coords.latitude;
         var long_saya1 = position.coords.longitude;
-        var lokasi_kantor1 = '{{Auth()->user()->penempatan_kerja}}';
-        var nama_saya1 = '{{Auth()->user()->name}}';
+        var lokasi_kantor1 = '{{$user_karyawan->penempatan_kerja}}';
+        var nama_saya1 = '{{$user_karyawan->name}}';
         // console.log(lat_saya1, long_saya1);
         // console.log(lokasi_kantor1);
 
@@ -2536,7 +2553,16 @@
             var polygon_pulang1 = L.polygon(latlngs_pulang1, {
                 color: 'red'
             }).addTo(map1);
-
+        } else if (lokasi_kantor == 'BULOG PARON - KEDIRI') {
+            var latlngs = [
+                [-7.813968757527632, 112.05662997145677],
+                [-7.81236784846995, 112.05722929959332],
+                [-7.813095022711804, 112.05940470904986],
+                [-7.815163768273714, 112.0587276399426]
+            ];
+            var polygon = L.polygon(latlngs, {
+                color: 'red'
+            }).addTo(map);
         }
         var location1 = <?php echo json_encode($location); ?>;
         // console.log(location);

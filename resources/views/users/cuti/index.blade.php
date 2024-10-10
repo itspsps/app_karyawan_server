@@ -238,7 +238,7 @@
                         @else
                         @endif
                         <div class="input-group">
-                            <input type="hidden" name="id_user" value="{{ Auth::user()->id }}">
+                            <input type="hidden" name="id_user" value="{{ $user_karyawan->id }}">
                             {{-- <input type="hidden" name="telp" value="{{ $data_user->telepon }}"> --}}
                             {{-- <input type="hidden" name="email" value="{{ $data_user->email }}"> --}}
                             {{-- <input type="hidden" name="departements" value="{{ $user->dept_id }}"> --}}
@@ -257,7 +257,7 @@
                         </div>
                         <div class="input-group">
                             <input type="text" class="form-control" value="Nama" readonly>
-                            <input type="text" class="form-control" name="fullname" value="{{ Auth::user()->fullname }}" style="font-weight: bold" readonly required>
+                            <input type="text" class="form-control" name="fullname" value="{{ $user_karyawan->fullname }}" style="font-weight: bold" readonly required>
                         </div>
                         <div class="input-group">
                             <input type="text" class="form-control" value="Kuota Cuti Tahunan" readonly>

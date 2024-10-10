@@ -13,6 +13,7 @@ use App\Models\ActivityLog;
 use App\Models\Departemen;
 use App\Models\Divisi;
 use App\Models\Jabatan;
+use App\Models\Karyawan;
 use App\Models\KategoriCuti;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
@@ -152,10 +153,10 @@ class CutiController extends Controller
                 $date2 = date('Y-m-d', strtotime($endDate));
                 // dd($date1, $date2);
                 // dd($tgl_mulai, $tgl_selesai);
-                $table = Cuti::leftJoin('users', 'users.id', 'cutis.user_id')->where('nama_cuti', 'Cuti Tahunan')
-                    ->where('users.kontrak_kerja', $holding)
+                $table = Cuti::leftJoin('karyawans', 'karyawans.id', 'cutis.user_id')->where('nama_cuti', 'Cuti Tahunan')
+                    ->where('karyawans.kontrak_kerja', $holding)
                     ->whereBetween('tanggal', [$date1, $date2])
-                    ->select('users.kontrak_kerja', 'cutis.*')
+                    ->select('karyawans.kontrak_kerja', 'cutis.*')
                     ->get();
                 // dd($table);
                 return DataTables::of($table)
@@ -220,7 +221,7 @@ class CutiController extends Controller
                         return $total_cuti;
                     })
                     ->addColumn('nama_departemen', function ($row) {
-                        $user = User::where('id', $row->user_id)->first();
+                        $user = Karyawan::where('id', $row->user_id)->first();
                         $departemen = Departemen::where('id', $user->dept_id)->first();
                         if ($departemen == NULL) {
                             $nama_departemen = NULL;
@@ -230,7 +231,7 @@ class CutiController extends Controller
                         return $nama_departemen;
                     })
                     ->addColumn('nama_divisi', function ($row) {
-                        $user = User::where('id', $row->user_id)->first();
+                        $user = Karyawan::where('id', $row->user_id)->first();
                         $divisi = Divisi::where('id', $user->divisi_id)->first();
                         if ($divisi == NULL) {
                             $nama_divisi = NULL;
@@ -240,7 +241,7 @@ class CutiController extends Controller
                         return $nama_divisi;
                     })
                     ->addColumn('nama_jabatan', function ($row) {
-                        $user = User::where('id', $row->user_id)->first();
+                        $user = Karyawan::where('id', $row->user_id)->first();
                         $jabatan = Jabatan::where('id', $user->jabatan_id)->first();
                         if ($jabatan == NULL) {
                             $nama_jabatan = NULL;
@@ -324,9 +325,9 @@ class CutiController extends Controller
                 $now1 = Carbon::now()->endOfMonth();
 
                 // dd($tgl_mulai, $tgl_selesai);
-                $table = Cuti::leftJoin('users', 'users.id', 'cutis.user_id')->where('nama_cuti', 'Cuti Tahunan')
-                    ->where('users.kontrak_kerja', $holding)
-                    ->select('users.kontrak_kerja', 'cutis.*')
+                $table = Cuti::leftJoin('karyawans', 'karyawans.id', 'cutis.user_id')->where('nama_cuti', 'Cuti Tahunan')
+                    ->where('karyawans.kontrak_kerja', $holding)
+                    ->select('karyawans.kontrak_kerja', 'cutis.*')
                     ->get();
                 // dd($table);
                 return DataTables::of($table)
@@ -391,7 +392,7 @@ class CutiController extends Controller
                         return $total_cuti;
                     })
                     ->addColumn('nama_departemen', function ($row) {
-                        $user = User::where('id', $row->user_id)->first();
+                        $user = Karyawan::where('id', $row->user_id)->first();
                         $departemen = Departemen::where('id', $user->dept_id)->first();
                         if ($departemen == NULL) {
                             $nama_departemen = NULL;
@@ -401,7 +402,7 @@ class CutiController extends Controller
                         return $nama_departemen;
                     })
                     ->addColumn('nama_divisi', function ($row) {
-                        $user = User::where('id', $row->user_id)->first();
+                        $user = Karyawan::where('id', $row->user_id)->first();
                         $divisi = Divisi::where('id', $user->divisi_id)->first();
                         if ($divisi == NULL) {
                             $nama_divisi = NULL;
@@ -411,7 +412,7 @@ class CutiController extends Controller
                         return $nama_divisi;
                     })
                     ->addColumn('nama_jabatan', function ($row) {
-                        $user = User::where('id', $row->user_id)->first();
+                        $user = Karyawan::where('id', $row->user_id)->first();
                         $jabatan = Jabatan::where('id', $user->jabatan_id)->first();
                         if ($jabatan == NULL) {
                             $nama_jabatan = NULL;
@@ -513,10 +514,10 @@ class CutiController extends Controller
                 $date2 = date('Y-m-d', strtotime($endDate));
                 // dd($date1, $date2);
                 // dd($tgl_mulai, $tgl_selesai);
-                $table = Cuti::leftJoin('users', 'users.id', 'cutis.user_id')->where('nama_cuti', 'Diluar Cuti Tahunan')
-                    ->where('users.kontrak_kerja', $holding)
+                $table = Cuti::leftJoin('karyawans', 'karyawans.id', 'cutis.user_id')->where('nama_cuti', 'Diluar Cuti Tahunan')
+                    ->where('karyawans.kontrak_kerja', $holding)
                     ->whereBetween('tanggal', [$date1, $date2])
-                    ->select('users.kontrak_kerja', 'cutis.*')
+                    ->select('karyawans.kontrak_kerja', 'cutis.*')
                     ->get();
                 // dd($table);
                 return DataTables::of($table)
@@ -581,7 +582,7 @@ class CutiController extends Controller
                         return $total_cuti;
                     })
                     ->addColumn('nama_departemen', function ($row) {
-                        $user = User::where('id', $row->user_id)->first();
+                        $user = Karyawan::where('id', $row->user_id)->first();
                         $departemen = Departemen::where('id', $user->dept_id)->first();
                         if ($departemen == NULL) {
                             $nama_departemen = NULL;
@@ -591,7 +592,7 @@ class CutiController extends Controller
                         return $nama_departemen;
                     })
                     ->addColumn('nama_divisi', function ($row) {
-                        $user = User::where('id', $row->user_id)->first();
+                        $user = Karyawan::where('id', $row->user_id)->first();
                         $divisi = Divisi::where('id', $user->divisi_id)->first();
                         if ($divisi == NULL) {
                             $nama_divisi = NULL;
@@ -601,7 +602,7 @@ class CutiController extends Controller
                         return $nama_divisi;
                     })
                     ->addColumn('nama_jabatan', function ($row) {
-                        $user = User::where('id', $row->user_id)->first();
+                        $user = Karyawan::where('id', $row->user_id)->first();
                         $jabatan = Jabatan::where('id', $user->jabatan_id)->first();
                         if ($jabatan == NULL) {
                             $nama_jabatan = NULL;
@@ -685,9 +686,9 @@ class CutiController extends Controller
                 $now1 = Carbon::now()->endOfMonth();
 
                 // dd($tgl_mulai, $tgl_selesai);
-                $table = Cuti::leftJoin('users', 'users.id', 'cutis.user_id')->where('nama_cuti', 'Diluar Cuti Tahunan')
-                    ->where('users.kontrak_kerja', $holding)
-                    ->select('users.kontrak_kerja', 'cutis.*')
+                $table = Cuti::leftJoin('karyawans', 'karyawans.id', 'cutis.user_id')->where('nama_cuti', 'Diluar Cuti Tahunan')
+                    ->where('karyawans.kontrak_kerja', $holding)
+                    ->select('karyawans.kontrak_kerja', 'cutis.*')
                     ->get();
                 // dd($table);
                 return DataTables::of($table)
@@ -761,7 +762,7 @@ class CutiController extends Controller
                         return $kategori_cuti;
                     })
                     ->addColumn('nama_departemen', function ($row) {
-                        $user = User::where('id', $row->user_id)->first();
+                        $user = Karyawan::where('id', $row->user_id)->first();
                         $departemen = Departemen::where('id', $user->dept_id)->first();
                         if ($departemen == NULL) {
                             $nama_departemen = NULL;
@@ -771,7 +772,7 @@ class CutiController extends Controller
                         return $nama_departemen;
                     })
                     ->addColumn('nama_divisi', function ($row) {
-                        $user = User::where('id', $row->user_id)->first();
+                        $user = Karyawan::where('id', $row->user_id)->first();
                         $divisi = Divisi::where('id', $user->divisi_id)->first();
                         if ($divisi == NULL) {
                             $nama_divisi = NULL;
@@ -781,7 +782,7 @@ class CutiController extends Controller
                         return $nama_divisi;
                     })
                     ->addColumn('nama_jabatan', function ($row) {
-                        $user = User::where('id', $row->user_id)->first();
+                        $user = Karyawan::where('id', $row->user_id)->first();
                         $jabatan = Jabatan::where('id', $user->jabatan_id)->first();
                         if ($jabatan == NULL) {
                             $nama_jabatan = NULL;
@@ -867,14 +868,14 @@ class CutiController extends Controller
     {
         return view('cuti.tambahadmin', [
             'title' => 'Tambah Cuti Karyawan',
-            'data_user' => User::select('id', 'name')->get()
+            'data_user' => Karyawan::select('id', 'name')->get()
         ]);
     }
 
     public function getUserId(Request $request)
     {
         $id = $request["id"];
-        $data_user = User::findOrfail($id);
+        $data_user = Karyawan::findOrfail($id);
 
         $cuti_dadakan = $data_user->cuti_dadakan;
         $cuti_bersama = $data_user->cuti_bersama;
@@ -927,27 +928,28 @@ class CutiController extends Controller
     public function cetak_form_cuti($id)
     {
         // dd('ok');
+        ini_set('max_execution_time', 300);
         $cuti = Cuti::With('User')->where('id', $id)->first();
-        $jabatan = Jabatan::join('users', function ($join) {
-            $join->on('jabatans.id', '=', 'users.jabatan_id');
-            $join->orOn('jabatans.id', '=', 'users.jabatan1_id');
-            $join->orOn('jabatans.id', '=', 'users.jabatan2_id');
-            $join->orOn('jabatans.id', '=', 'users.jabatan3_id');
-            $join->orOn('jabatans.id', '=', 'users.jabatan4_id');
-        })->where('users.id', $cuti->user_id)->get();
-        $divisi = Divisi::join('users', function ($join) {
-            $join->on('divisis.id', '=', 'users.divisi_id');
-            $join->orOn('divisis.id', '=', 'users.divisi1_id');
-            $join->orOn('divisis.id', '=', 'users.divisi2_id');
-            $join->orOn('divisis.id', '=', 'users.divisi3_id');
-            $join->orOn('divisis.id', '=', 'users.divisi4_id');
-        })->where('users.id', $cuti->user_id)->get();
-        $departemen = Departemen::join('users', function ($join) use ($cuti) {
-            $join->on('departemens.id', '=', 'users.dept_id');
-            $join->where('users.id', $cuti->user_id);
+        $jabatan = Jabatan::join('karyawans', function ($join) {
+            $join->on('jabatans.id', '=', 'karyawans.jabatan_id');
+            $join->orOn('jabatans.id', '=', 'karyawans.jabatan1_id');
+            $join->orOn('jabatans.id', '=', 'karyawans.jabatan2_id');
+            $join->orOn('jabatans.id', '=', 'karyawans.jabatan3_id');
+            $join->orOn('jabatans.id', '=', 'karyawans.jabatan4_id');
+        })->where('karyawans.id', $cuti->user_id)->get();
+        $divisi = Divisi::join('karyawans', function ($join) {
+            $join->on('divisis.id', '=', 'karyawans.divisi_id');
+            $join->orOn('divisis.id', '=', 'karyawans.divisi1_id');
+            $join->orOn('divisis.id', '=', 'karyawans.divisi2_id');
+            $join->orOn('divisis.id', '=', 'karyawans.divisi3_id');
+            $join->orOn('divisis.id', '=', 'karyawans.divisi4_id');
+        })->where('karyawans.id', $cuti->user_id)->get();
+        $departemen = Departemen::join('karyawans', function ($join) use ($cuti) {
+            $join->on('departemens.id', '=', 'karyawans.dept_id');
+            $join->where('karyawans.id', $cuti->user_id);
         })->first();
         // dd($departemen);
-        $pengganti = User::where('id', $cuti->user_id_backup)->first();
+        $pengganti = Karyawan::where('id', $cuti->user_id_backup)->first();
         // dd(Cuti::with('KategoriCuti')->with('User')->where('cutis.id', $id)->where('cutis.status_cuti', '3')->first());
         $data = [
             'title' => 'domPDF in Laravel 10',
@@ -1005,7 +1007,7 @@ class CutiController extends Controller
         ActivityLog::create([
             'user_id' => Auth::user()->id,
             'activity' => 'tambah',
-            'description' => 'Menambahkan data cuti karyawan dengan nama ' . User::findOrfail($request["user_id"])->name,
+            'description' => 'Menambahkan data cuti karyawan dengan nama ' . Karyawan::findOrfail($request["user_id"])->name,
             'time' => date('Y-m-d H:i:s')
         ]);
 
@@ -1020,7 +1022,7 @@ class CutiController extends Controller
         ActivityLog::create([
             'user_id' => Auth::user()->id,
             'activity' => 'hapus',
-            'description' => 'Menghapus data cuti karyawan dengan nama ' . User::findOrfail($delete->user_id)->name,
+            'description' => 'Menghapus data cuti karyawan dengan nama ' . Karyawan::findOrfail($delete->user_id)->name,
             'time' => date('Y-m-d H:i:s')
         ]);
         return redirect('/data-cuti')->with('success', 'Data Berhasil di Delete');
@@ -1190,7 +1192,7 @@ class CutiController extends Controller
 
 
             Cuti::where('id', $id)->update($validatedData);
-            User::where('id', $user_id)->update($validatedData2);
+            Karyawan::where('id', $user_id)->update($validatedData2);
             MappingShift::where('id', $mp_id)->update($validatedData3);
 
             ActivityLog::create([
@@ -1208,15 +1210,15 @@ class CutiController extends Controller
     {
         $date = date('YmdHis');
         $holding = request()->segment(count(request()->segments()));
-        $data =  Cuti::leftJoin('users', 'users.id', 'cutis.user_id')
-            ->leftJoin('departemens', 'departemens.id', 'users.dept_id')
-            ->leftJoin('divisis', 'divisis.id', 'users.divisi_id')
-            ->leftJoin('jabatans', 'jabatans.id', 'users.jabatan_id')
+        $data =  Cuti::leftJoin('karyawans', 'karyawans.id', 'cutis.user_id')
+            ->leftJoin('departemens', 'departemens.id', 'karyawans.dept_id')
+            ->leftJoin('divisis', 'divisis.id', 'karyawans.divisi_id')
+            ->leftJoin('jabatans', 'jabatans.id', 'karyawans.jabatan_id')
             ->leftJoin('kategori_cuti', 'kategori_cuti.id', 'cutis.kategori_cuti_id')
             ->where('cutis.nama_cuti', $kategori)
-            ->where('users.kontrak_kerja', $holding)
-            // ->select('cutis.no_form_izin', 'users.name', 'departemens.nama_departemen', 'divisis.nama_divisi', 'jabatans.nama_jabatan', 'cutis.tanggal', 'cutis.jam_masuk_kerja', 'cutis.jam', 'cutis.terlambat', 'cutis.keterangan_izin', 'cutis.ttd_pengajuan', 'cutis.approve_atasan', 'cutis.waktu_approve', 'cutis.catatan', 'cutis.status_izin')
-            ->select('cutis.*', 'users.name', 'departemens.nama_departemen', 'divisis.nama_divisi', 'jabatans.nama_jabatan', 'kategori_cuti.nama_cuti as kategori_cuti')
+            ->where('karyawans.kontrak_kerja', $holding)
+            // ->select('cutis.no_form_izin', 'karyawans.name', 'departemens.nama_departemen', 'divisis.nama_divisi', 'jabatans.nama_jabatan', 'cutis.tanggal', 'cutis.jam_masuk_kerja', 'cutis.jam', 'cutis.terlambat', 'cutis.keterangan_izin', 'cutis.ttd_pengajuan', 'cutis.approve_atasan', 'cutis.waktu_approve', 'cutis.catatan', 'cutis.status_izin')
+            ->select('cutis.*', 'karyawans.name', 'departemens.nama_departemen', 'divisis.nama_divisi', 'jabatans.nama_jabatan', 'kategori_cuti.nama_cuti as kategori_cuti')
             ->get();
         // dd($kategori);
         return Excel::download(new CutiExport($holding, $kategori, $data), 'Data Cuti Karyawan_' . $kategori . '_' . $holding . '_' . $date . '.xlsx');

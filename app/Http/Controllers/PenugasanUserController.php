@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Storage;
 use App\Models\MappingShift;
 use RealRashid\SweetAlert\Facades\Alert;
 use App\Models\ActivityLog;
+use App\Models\Karyawan;
 use App\Models\KategoriCuti;
 use App\Models\LevelJabatan;
 use App\Models\Lokasi;
@@ -25,92 +26,93 @@ class PenugasanUserController extends Controller
 {
     public function index()
     {
-        $user_id        = Auth()->user()->id;
-        $user           = User::join('jabatans', 'jabatans.id', '=', 'users.jabatan_id')
-            ->join('departemens', 'departemens.id', '=', 'users.dept_id')
-            ->join('divisis', 'divisis.id', '=', 'users.divisi_id')
+        $user_karyawan = Karyawan::where('id', Auth::user()->karyawan_id)->first();
+        $user_id        = $user_karyawan->id;
+        $user           = Karyawan::join('jabatans', 'jabatans.id', '=', 'karyawans.jabatan_id')
+            ->join('departemens', 'departemens.id', '=', 'karyawans.dept_id')
+            ->join('divisis', 'divisis.id', '=', 'karyawans.divisi_id')
             ->leftJoin('level_jabatans', 'level_jabatans.id', '=', 'jabatans.level_id')
-            ->where('users.id', Auth()->user()->id)->first();
+            ->where('karyawans.id', $user_karyawan->id)->first();
         // dd($user);
-        $site_job = Auth::guard('web')->user()->site_job;
+        $site_job = $user_karyawan->site_job;
         $master_lokasi = Lokasi::whereNotIn('kategori_kantor', ['all sps', 'all sp', 'all sip', 'all'])->get();
         $userLevel      = LevelJabatan::where('id', $user->level_id)->first();
         $lokasi_site_job = Lokasi::where('lokasi_kantor', $site_job)->first();
         // dd($user->kontrak_kerja);
         if ($user->kontrak_kerja == 'SP') {
             // Bu fitri
-            $hrd = User::join('jabatans', 'jabatans.id', '=', 'users.jabatan_id')
+            $hrd = Karyawan::join('jabatans', 'jabatans.id', '=', 'karyawans.jabatan_id')
                 ->join('bagians', 'bagians.id', '=', 'jabatans.bagian_id')
-                ->join('departemens', 'departemens.id', '=', 'users.dept_id')
-                ->join('divisis', 'divisis.id', '=', 'users.divisi_id')
+                ->join('departemens', 'departemens.id', '=', 'karyawans.dept_id')
+                ->join('divisis', 'divisis.id', '=', 'karyawans.divisi_id')
                 // ->where('jabatans.holding', 'sp')
                 ->where('jabatans.nama_jabatan', 'MANAGER')
                 ->where('bagians.nama_bagian', 'HRD & GA')
                 ->where('divisis.nama_divisi', 'HRD & GA')
                 ->where('departemens.nama_departemen', 'HRD & GA')
-                ->select('users.*')
+                ->select('karyawans.*')
                 ->get();
-            $finance = User::join('jabatans', 'jabatans.id', '=', 'users.jabatan_id')
+            $finance = Karyawan::join('jabatans', 'jabatans.id', '=', 'karyawans.jabatan_id')
                 ->join('bagians', 'bagians.id', '=', 'jabatans.bagian_id')
-                ->join('divisis', 'divisis.id', '=', 'users.divisi_id')
-                ->join('departemens', 'departemens.id', '=', 'users.dept_id')
+                ->join('divisis', 'divisis.id', '=', 'karyawans.divisi_id')
+                ->join('departemens', 'departemens.id', '=', 'karyawans.dept_id')
                 ->where('jabatans.holding', 'sp')
                 ->where('bagians.nama_bagian', 'CASH AND BANK (CASHIER)')
                 ->where('divisis.nama_divisi', 'FINANCE')
                 ->where('departemens.nama_departemen', 'FINANCE AND ACCOUNTING')
-                ->select('users.*')
+                ->select('karyawans.*')
                 ->get();
         } else if ($user->kontrak_kerja == 'SPS') {
-            $hrd = User::join('jabatans', 'jabatans.id', '=', 'users.jabatan_id')
+            $hrd = Karyawan::join('jabatans', 'jabatans.id', '=', 'karyawans.jabatan_id')
                 ->join('bagians', 'bagians.id', '=', 'jabatans.bagian_id')
-                ->join('departemens', 'departemens.id', '=', 'users.dept_id')
-                ->join('divisis', 'divisis.id', '=', 'users.divisi_id')
+                ->join('departemens', 'departemens.id', '=', 'karyawans.dept_id')
+                ->join('divisis', 'divisis.id', '=', 'karyawans.divisi_id')
                 // ->where('jabatans.holding', 'sp')
                 ->where('jabatans.nama_jabatan', 'MANAGER')
                 ->where('bagians.nama_bagian', 'HRD & GA')
                 ->where('divisis.nama_divisi', 'HRD & GA')
                 ->where('departemens.nama_departemen', 'HRD & GA')
-                ->select('users.*')
+                ->select('karyawans.*')
                 ->get();
             // diana sps
-            $finance = User::join('jabatans', 'jabatans.id', '=', 'users.jabatan_id')
+            $finance = Karyawan::join('jabatans', 'jabatans.id', '=', 'karyawans.jabatan_id')
                 ->join('bagians', 'bagians.id', '=', 'jabatans.bagian_id')
-                ->join('divisis', 'divisis.id', '=', 'users.divisi_id')
-                ->join('departemens', 'departemens.id', '=', 'users.dept_id')
+                ->join('divisis', 'divisis.id', '=', 'karyawans.divisi_id')
+                ->join('departemens', 'departemens.id', '=', 'karyawans.dept_id')
                 ->where('jabatans.holding', 'sps')
                 ->where('bagians.nama_bagian', 'CASH AND BANK (CASHIER)')
                 ->where('divisis.nama_divisi', 'FINANCE')
                 ->where('departemens.nama_departemen', 'FINANCE AND ACCOUNTING')
-                ->select('users.*')
+                ->select('karyawans.*')
                 ->get();
             // dd($finance);
         } else {
-            $hrd = User::join('jabatans', 'jabatans.id', '=', 'users.jabatan_id')
+            $hrd = Karyawan::join('jabatans', 'jabatans.id', '=', 'karyawans.jabatan_id')
                 ->join('bagians', 'bagians.id', '=', 'jabatans.bagian_id')
-                ->join('departemens', 'departemens.id', '=', 'users.dept_id')
-                ->join('divisis', 'divisis.id', '=', 'users.divisi_id')
+                ->join('departemens', 'departemens.id', '=', 'karyawans.dept_id')
+                ->join('divisis', 'divisis.id', '=', 'karyawans.divisi_id')
                 // ->where('jabatans.holding', 'sp')
                 ->where('jabatans.nama_jabatan', 'MANAGER')
                 ->where('bagians.nama_bagian', 'HRD & GA')
                 ->where('divisis.nama_divisi', 'HRD & GA')
                 ->where('departemens.nama_departemen', 'HRD & GA')
-                ->select('users.*')
+                ->select('karyawans.*')
                 ->get();
             // diana sps
-            $finance = User::join('jabatans', 'jabatans.id', '=', 'users.jabatan_id')
+            $finance = Karyawan::join('jabatans', 'jabatans.id', '=', 'karyawans.jabatan_id')
                 ->join('bagians', 'bagians.id', '=', 'jabatans.bagian_id')
-                ->join('divisis', 'divisis.id', '=', 'users.divisi_id')
-                ->join('departemens', 'departemens.id', '=', 'users.dept_id')
+                ->join('divisis', 'divisis.id', '=', 'karyawans.divisi_id')
+                ->join('departemens', 'departemens.id', '=', 'karyawans.dept_id')
                 ->where('jabatans.holding', 'sip')
                 ->where('bagians.nama_bagian', 'CASH AND BANK (CASHIER)')
                 ->where('divisis.nama_divisi', 'FINANCE')
                 ->where('departemens.nama_departemen', 'FINANCE AND ACCOUNTING')
-                ->select('users.*')
+                ->select('karyawans.*')
                 ->get();
         }
         $IdLevelAtasan = Jabatan::where('id', $user->atasan_id)->first();
         if ($lokasi_site_job->kategori_kantor == 'sps') {
-            $get_nama_jabatan = User::where('jabatan_id', $IdLevelAtasan->id)
+            $get_nama_jabatan = Karyawan::where('jabatan_id', $IdLevelAtasan->id)
                 ->orWhere('jabatan1_id', $IdLevelAtasan->id)
                 ->orWhere('jabatan2_id', $IdLevelAtasan->id)
                 ->orWhere('jabatan3_id', $IdLevelAtasan->id)
@@ -119,7 +121,7 @@ class PenugasanUserController extends Controller
                 ->first();
             // dd($get_nama_jabatan);
             if ($get_nama_jabatan == NULL || $get_nama_jabatan == '') {
-                $atasan2 = User::where('jabatan_id', $IdLevelAtasan->atasan_id)
+                $atasan2 = Karyawan::where('jabatan_id', $IdLevelAtasan->atasan_id)
                     ->orWhere('jabatan1_id', $IdLevelAtasan->atasan_id)
                     ->orWhere('jabatan2_id', $IdLevelAtasan->atasan_id)
                     ->orWhere('jabatan3_id', $IdLevelAtasan->atasan_id)
@@ -152,7 +154,7 @@ class PenugasanUserController extends Controller
                             ->first();
                     }
                     // dd($get_atasan_more);
-                    $atasan = User::where('jabatan_id', $get_atasan_more->id)
+                    $atasan = Karyawan::where('jabatan_id', $get_atasan_more->id)
                         ->orWhere('jabatan1_id', $get_atasan_more->id)
                         ->orWhere('jabatan2_id', $get_atasan_more->id)
                         ->orWhere('jabatan3_id', $get_atasan_more->id)
@@ -160,7 +162,7 @@ class PenugasanUserController extends Controller
                         ->whereIn('site_job', ['ALL SITES (SPS)', 'ALL SITES (SP, SPS, SIP)', $site_job])
                         ->first();
                     if ($atasan == NULL) {
-                        $atasan2 = User::where('jabatan_id', $get_atasan_more->atasan_id)
+                        $atasan2 = Karyawan::where('jabatan_id', $get_atasan_more->atasan_id)
                             ->orWhere('jabatan1_id', $get_atasan_more->atasan_id)
                             ->orWhere('jabatan2_id', $get_atasan_more->atasan_id)
                             ->orWhere('jabatan3_id', $get_atasan_more->atasan_id)
@@ -176,7 +178,7 @@ class PenugasanUserController extends Controller
                         $getUserAtasan  = $atasan;
                     }
                 } else {
-                    $atasan = User::where('jabatan_id', $atasan2->id)
+                    $atasan = Karyawan::where('jabatan_id', $atasan2->id)
                         ->orWhere('jabatan1_id', $atasan2->id)
                         ->orWhere('jabatan2_id', $atasan2->id)
                         ->orWhere('jabatan3_id', $atasan2->id)
@@ -189,7 +191,7 @@ class PenugasanUserController extends Controller
                 $getUserAtasan  = $get_nama_jabatan;
             }
         } else if ($lokasi_site_job->kategori_kantor == 'sp') {
-            $get_nama_jabatan = User::where('jabatan_id', $IdLevelAtasan->id)
+            $get_nama_jabatan = Karyawan::where('jabatan_id', $IdLevelAtasan->id)
                 ->orWhere('jabatan1_id', $IdLevelAtasan->id)
                 ->orWhere('jabatan2_id', $IdLevelAtasan->id)
                 ->orWhere('jabatan3_id', $IdLevelAtasan->id)
@@ -198,7 +200,7 @@ class PenugasanUserController extends Controller
                 ->first();
             // dd($get_nama_jabatan);
             if ($get_nama_jabatan == NULL || $get_nama_jabatan == '') {
-                $atasan2 = User::where('jabatan_id', $IdLevelAtasan->atasan_id)
+                $atasan2 = Karyawan::where('jabatan_id', $IdLevelAtasan->atasan_id)
                     ->orWhere('jabatan1_id', $IdLevelAtasan->atasan_id)
                     ->orWhere('jabatan2_id', $IdLevelAtasan->atasan_id)
                     ->orWhere('jabatan3_id', $IdLevelAtasan->atasan_id)
@@ -231,7 +233,7 @@ class PenugasanUserController extends Controller
                             ->first();
                     }
                     // dd($get_atasan_more);
-                    $atasan = User::where('jabatan_id', $get_atasan_more->id)
+                    $atasan = Karyawan::where('jabatan_id', $get_atasan_more->id)
                         ->orWhere('jabatan1_id', $get_atasan_more->id)
                         ->orWhere('jabatan2_id', $get_atasan_more->id)
                         ->orWhere('jabatan3_id', $get_atasan_more->id)
@@ -239,7 +241,7 @@ class PenugasanUserController extends Controller
                         ->whereIn('site_job', ['ALL SITES (SP)', 'ALL SITES (SP, SPS, SIP)', $site_job])
                         ->first();
                     if ($atasan == NULL) {
-                        $atasan2 = User::where('jabatan_id', $get_atasan_more->atasan_id)
+                        $atasan2 = Karyawan::where('jabatan_id', $get_atasan_more->atasan_id)
                             ->orWhere('jabatan1_id', $get_atasan_more->atasan_id)
                             ->orWhere('jabatan2_id', $get_atasan_more->atasan_id)
                             ->orWhere('jabatan3_id', $get_atasan_more->atasan_id)
@@ -255,7 +257,7 @@ class PenugasanUserController extends Controller
                         $getUserAtasan  = $atasan;
                     }
                 } else {
-                    $atasan = User::where('jabatan_id', $atasan2->id)
+                    $atasan = Karyawan::where('jabatan_id', $atasan2->id)
                         ->orWhere('jabatan1_id', $atasan2->id)
                         ->orWhere('jabatan2_id', $atasan2->id)
                         ->orWhere('jabatan3_id', $atasan2->id)
@@ -268,7 +270,7 @@ class PenugasanUserController extends Controller
                 $getUserAtasan  = $get_nama_jabatan;
             }
         } else if ($lokasi_site_job->kategori_kantor == 'sip') {
-            $get_nama_jabatan = User::where('jabatan_id', $IdLevelAtasan->id)
+            $get_nama_jabatan = Karyawan::where('jabatan_id', $IdLevelAtasan->id)
                 ->orWhere('jabatan1_id', $IdLevelAtasan->id)
                 ->orWhere('jabatan2_id', $IdLevelAtasan->id)
                 ->orWhere('jabatan3_id', $IdLevelAtasan->id)
@@ -277,7 +279,7 @@ class PenugasanUserController extends Controller
                 ->first();
             // dd($get_nama_jabatan);
             if ($get_nama_jabatan == NULL || $get_nama_jabatan == '') {
-                $atasan2 = User::where('jabatan_id', $IdLevelAtasan->atasan_id)
+                $atasan2 = Karyawan::where('jabatan_id', $IdLevelAtasan->atasan_id)
                     ->orWhere('jabatan1_id', $IdLevelAtasan->atasan_id)
                     ->orWhere('jabatan2_id', $IdLevelAtasan->atasan_id)
                     ->orWhere('jabatan3_id', $IdLevelAtasan->atasan_id)
@@ -310,7 +312,7 @@ class PenugasanUserController extends Controller
                             ->first();
                     }
                     // dd($get_atasan_more);
-                    $atasan = User::where('jabatan_id', $get_atasan_more->id)
+                    $atasan = Karyawan::where('jabatan_id', $get_atasan_more->id)
                         ->orWhere('jabatan1_id', $get_atasan_more->id)
                         ->orWhere('jabatan2_id', $get_atasan_more->id)
                         ->orWhere('jabatan3_id', $get_atasan_more->id)
@@ -318,7 +320,7 @@ class PenugasanUserController extends Controller
                         ->whereIn('site_job', ['ALL SITES (SP, SPS, SIP)', $site_job])
                         ->first();
                     if ($atasan == NULL) {
-                        $atasan2 = User::where('jabatan_id', $get_atasan_more->atasan_id)
+                        $atasan2 = Karyawan::where('jabatan_id', $get_atasan_more->atasan_id)
                             ->orWhere('jabatan1_id', $get_atasan_more->atasan_id)
                             ->orWhere('jabatan2_id', $get_atasan_more->atasan_id)
                             ->orWhere('jabatan3_id', $get_atasan_more->atasan_id)
@@ -334,7 +336,7 @@ class PenugasanUserController extends Controller
                         $getUserAtasan  = $atasan;
                     }
                 } else {
-                    $atasan = User::where('jabatan_id', $atasan2->id)
+                    $atasan = Karyawan::where('jabatan_id', $atasan2->id)
                         ->orWhere('jabatan1_id', $atasan2->id)
                         ->orWhere('jabatan2_id', $atasan2->id)
                         ->orWhere('jabatan3_id', $atasan2->id)
@@ -348,7 +350,7 @@ class PenugasanUserController extends Controller
             }
         } else if ($lokasi_site_job->kategori_kantor == 'all sps') {
 
-            $get_nama_jabatan = User::where('jabatan_id', $IdLevelAtasan->id)
+            $get_nama_jabatan = Karyawan::where('jabatan_id', $IdLevelAtasan->id)
                 ->orWhere('jabatan1_id', $IdLevelAtasan->id)
                 ->orWhere('jabatan2_id', $IdLevelAtasan->id)
                 ->orWhere('jabatan3_id', $IdLevelAtasan->id)
@@ -357,7 +359,7 @@ class PenugasanUserController extends Controller
                 ->first();
             // dd($get_nama_jabatan);
             if ($get_nama_jabatan == NULL || $get_nama_jabatan == '') {
-                $atasan2 = User::where('jabatan_id', $IdLevelAtasan->atasan_id)
+                $atasan2 = Karyawan::where('jabatan_id', $IdLevelAtasan->atasan_id)
                     ->orWhere('jabatan1_id', $IdLevelAtasan->atasan_id)
                     ->orWhere('jabatan2_id', $IdLevelAtasan->atasan_id)
                     ->orWhere('jabatan3_id', $IdLevelAtasan->atasan_id)
@@ -390,7 +392,7 @@ class PenugasanUserController extends Controller
                             ->first();
                     }
                     // dd($get_atasan_more);
-                    $atasan = User::where('jabatan_id', $get_atasan_more->id)
+                    $atasan = Karyawan::where('jabatan_id', $get_atasan_more->id)
                         ->orWhere('jabatan1_id', $get_atasan_more->id)
                         ->orWhere('jabatan2_id', $get_atasan_more->id)
                         ->orWhere('jabatan3_id', $get_atasan_more->id)
@@ -398,7 +400,7 @@ class PenugasanUserController extends Controller
                         ->whereNotIn('site_job', ['ALL SITES (SP)', 'CV. SUMBER PANGAN - KEDIRI', 'CV. SUMBER PANGAN - TUBAN'])
                         ->first();
                     if ($atasan == NULL) {
-                        $atasan2 = User::where('jabatan_id', $get_atasan_more->atasan_id)
+                        $atasan2 = Karyawan::where('jabatan_id', $get_atasan_more->atasan_id)
                             ->orWhere('jabatan1_id', $get_atasan_more->atasan_id)
                             ->orWhere('jabatan2_id', $get_atasan_more->atasan_id)
                             ->orWhere('jabatan3_id', $get_atasan_more->atasan_id)
@@ -414,7 +416,7 @@ class PenugasanUserController extends Controller
                         $getUserAtasan  = $atasan;
                     }
                 } else {
-                    $atasan = User::where('jabatan_id', $atasan2->id)
+                    $atasan = Karyawan::where('jabatan_id', $atasan2->id)
                         ->orWhere('jabatan1_id', $atasan2->id)
                         ->orWhere('jabatan2_id', $atasan2->id)
                         ->orWhere('jabatan3_id', $atasan2->id)
@@ -427,7 +429,7 @@ class PenugasanUserController extends Controller
                 $getUserAtasan  = $get_nama_jabatan;
             }
         } else if ($lokasi_site_job->kategori_kantor == 'all sp') {
-            $get_nama_jabatan = User::where('jabatan_id', $IdLevelAtasan->id)
+            $get_nama_jabatan = Karyawan::where('jabatan_id', $IdLevelAtasan->id)
                 ->orWhere('jabatan1_id', $IdLevelAtasan->id)
                 ->orWhere('jabatan2_id', $IdLevelAtasan->id)
                 ->orWhere('jabatan3_id', $IdLevelAtasan->id)
@@ -436,7 +438,7 @@ class PenugasanUserController extends Controller
                 ->first();
             // dd($get_nama_jabatan);
             if ($get_nama_jabatan == NULL || $get_nama_jabatan == '') {
-                $atasan2 = User::where('jabatan_id', $IdLevelAtasan->atasan_id)
+                $atasan2 = Karyawan::where('jabatan_id', $IdLevelAtasan->atasan_id)
                     ->orWhere('jabatan1_id', $IdLevelAtasan->atasan_id)
                     ->orWhere('jabatan2_id', $IdLevelAtasan->atasan_id)
                     ->orWhere('jabatan3_id', $IdLevelAtasan->atasan_id)
@@ -469,7 +471,7 @@ class PenugasanUserController extends Controller
                             ->first();
                     }
                     // dd($get_atasan_more);
-                    $atasan = User::where('jabatan_id', $get_atasan_more->id)
+                    $atasan = Karyawan::where('jabatan_id', $get_atasan_more->id)
                         ->orWhere('jabatan1_id', $get_atasan_more->id)
                         ->orWhere('jabatan2_id', $get_atasan_more->id)
                         ->orWhere('jabatan3_id', $get_atasan_more->id)
@@ -477,7 +479,7 @@ class PenugasanUserController extends Controller
                         ->whereNotIn('site_job', ['ALL SITES (SPS)', 'PT. SURYA PANGAN SEMESTA - KEDIRI', 'PT. SURYA PANGAN SEMESTA - NGAWI', 'PT. SURYA PANGAN SEMESTA - SUBANG'])
                         ->first();
                     if ($atasan == NULL) {
-                        $atasan2 = User::where('jabatan_id', $get_atasan_more->atasan_id)
+                        $atasan2 = Karyawan::where('jabatan_id', $get_atasan_more->atasan_id)
                             ->orWhere('jabatan1_id', $get_atasan_more->atasan_id)
                             ->orWhere('jabatan2_id', $get_atasan_more->atasan_id)
                             ->orWhere('jabatan3_id', $get_atasan_more->atasan_id)
@@ -493,7 +495,7 @@ class PenugasanUserController extends Controller
                         $getUserAtasan  = $atasan;
                     }
                 } else {
-                    $atasan = User::where('jabatan_id', $atasan2->id)
+                    $atasan = Karyawan::where('jabatan_id', $atasan2->id)
                         ->orWhere('jabatan1_id', $atasan2->id)
                         ->orWhere('jabatan2_id', $atasan2->id)
                         ->orWhere('jabatan3_id', $atasan2->id)
@@ -506,7 +508,7 @@ class PenugasanUserController extends Controller
                 $getUserAtasan  = $get_nama_jabatan;
             }
         } else if ($lokasi_site_job->kategori_kantor == 'all') {
-            $get_nama_jabatan = User::where('jabatan_id', $IdLevelAtasan->id)
+            $get_nama_jabatan = Karyawan::where('jabatan_id', $IdLevelAtasan->id)
                 ->orWhere('jabatan1_id', $IdLevelAtasan->id)
                 ->orWhere('jabatan2_id', $IdLevelAtasan->id)
                 ->orWhere('jabatan3_id', $IdLevelAtasan->id)
@@ -515,7 +517,7 @@ class PenugasanUserController extends Controller
                 ->first();
             // dd($get_nama_jabatan);
             if ($get_nama_jabatan == NULL || $get_nama_jabatan == '') {
-                $atasan2 = User::where('jabatan_id', $IdLevelAtasan->atasan_id)
+                $atasan2 = Karyawan::where('jabatan_id', $IdLevelAtasan->atasan_id)
                     ->orWhere('jabatan1_id', $IdLevelAtasan->atasan_id)
                     ->orWhere('jabatan2_id', $IdLevelAtasan->atasan_id)
                     ->orWhere('jabatan3_id', $IdLevelAtasan->atasan_id)
@@ -551,7 +553,7 @@ class PenugasanUserController extends Controller
                             ->first();
                     }
                     // dd($get_atasan_more);
-                    $atasan = User::where('jabatan_id', $get_atasan_more->id)
+                    $atasan = Karyawan::where('jabatan_id', $get_atasan_more->id)
                         ->orWhere('jabatan1_id', $get_atasan_more->id)
                         ->orWhere('jabatan2_id', $get_atasan_more->id)
                         ->orWhere('jabatan3_id', $get_atasan_more->id)
@@ -560,7 +562,7 @@ class PenugasanUserController extends Controller
                         ->first();
                     // dd($atasan);
                     if ($atasan == NULL) {
-                        $atasan2 = User::where('jabatan_id', $get_atasan_more->atasan_id)
+                        $atasan2 = Karyawan::where('jabatan_id', $get_atasan_more->atasan_id)
                             ->orWhere('jabatan1_id', $get_atasan_more->atasan_id)
                             ->orWhere('jabatan2_id', $get_atasan_more->atasan_id)
                             ->orWhere('jabatan3_id', $get_atasan_more->atasan_id)
@@ -577,7 +579,7 @@ class PenugasanUserController extends Controller
                         $getUserAtasan  = $atasan;
                     }
                 } else {
-                    $atasan = User::where('jabatan_id', $atasan2->id)
+                    $atasan = Karyawan::where('jabatan_id', $atasan2->id)
                         ->orWhere('jabatan1_id', $atasan2->id)
                         ->orWhere('jabatan2_id', $atasan2->id)
                         ->orWhere('jabatan3_id', $atasan2->id)
@@ -592,17 +594,18 @@ class PenugasanUserController extends Controller
             }
         }
         $departemen = Departemen::groupBy('nama_departemen')->get();
-        $record_data        = Penugasan::join('users', 'users.id', 'penugasans.id_user')->where('id_user', Auth::user()->id)
-            ->select('penugasans.*', 'users.fullname')->orderBy('tanggal_pengajuan', 'DESC')->get();
+        $record_data        = Penugasan::join('karyawans', 'karyawans.id', 'penugasans.id_user')->where('id_user', $user_karyawan->id)
+            ->select('penugasans.*', 'karyawans.fullname')->orderBy('tanggal_pengajuan', 'DESC')->get();
         // dd($record_data);
         $lokasi_kantor = Lokasi::whereNotIn('kategori_kantor', ['all', 'all sp', 'all sps', 'all sip'])->where('lokasi_kantor', '!=', $user->penempatan_kerja)->get();
         $get_kategori_cuti  = KategoriCuti::where('status', 1)->get();
-        $get_user_backup    = User::where('dept_id', Auth::user()->dept_id)->where('divisi_id', Auth::user()->divisi_id)->where('id', '!=', Auth::user()->id)->get();
+        $get_user_backup    = Karyawan::where('dept_id', $user_karyawan->dept_id)->where('divisi_id', $user_karyawan->divisi_id)->where('id', '!=', $user_karyawan->id)->get();
         return view(
             'users.penugasan.index',
             [
                 'title'                 => 'Tambah Permintaan Cuti Karyawan',
                 'data_user'             => $user,
+                'user_karyawan'         => $user_karyawan,
                 'data_cuti_user'        => Penugasan::where('id_user', $user_id)->orderBy('id', 'desc')->get(),
                 'getUserAtasan'         => $getUserAtasan,
                 'get_user_backup'       => $get_user_backup,
@@ -622,19 +625,19 @@ class PenugasanUserController extends Controller
         // dd($request->all());
         if ($request->level > 2) {
 
-            $diminta = User::leftJoin('jabatans', 'jabatans.id', 'users.jabatan_id')
+            $diminta = Karyawan::leftJoin('jabatans', 'jabatans.id', 'karyawans.jabatan_id')
                 ->leftJoin('level_jabatans', 'level_jabatans.id', 'jabatans.level_id')
                 ->where('level_jabatans.level_jabatan', '<', $request->level)
-                ->where('users.dept_id', $request->dept)
-                ->select('users.id', 'users.name')
-                ->orderBy('users.name')
+                ->where('karyawans.dept_id', $request->dept)
+                ->select('karyawans.id', 'karyawans.name')
+                ->orderBy('karyawans.name')
                 ->get();
         } else {
-            $diminta = User::leftJoin('jabatans', 'jabatans.id', 'users.jabatan_id')
+            $diminta = Karyawan::leftJoin('jabatans', 'jabatans.id', 'karyawans.jabatan_id')
                 ->leftJoin('level_jabatans', 'level_jabatans.id', 'jabatans.level_id')
                 ->where('level_jabatans.level_jabatan', '<', $request->level)
-                ->select('users.id', 'users.name')
-                ->orderBy('users.name')
+                ->select('karyawans.id', 'karyawans.name')
+                ->orderBy('karyawans.name')
                 ->get();
         }
         echo "<option value=''>Pilih Diminta...</option>";
@@ -645,13 +648,13 @@ class PenugasanUserController extends Controller
     public function get_diminta_departemen(Request $request)
     {
         // dd($request->all());
-        $diminta = User::leftJoin('jabatans', 'jabatans.id', 'users.jabatan_id')
-            ->leftJoin('departemens', 'departemens.id', 'users.dept_id')
+        $diminta = Karyawan::leftJoin('jabatans', 'jabatans.id', 'karyawans.jabatan_id')
+            ->leftJoin('departemens', 'departemens.id', 'karyawans.dept_id')
             ->leftJoin('level_jabatans', 'level_jabatans.id', 'jabatans.level_id')
             ->where('level_jabatans.level_jabatan', '<', $request->level)
             ->where('departemens.nama_departemen', $request->value)
-            ->select('users.id', 'users.name')
-            ->orderBy('users.name')
+            ->select('karyawans.id', 'karyawans.name')
+            ->orderBy('karyawans.name')
             ->get();
         echo "<option value=''>Pilih Diminta...</option>";
         foreach ($diminta as $diminta) {
@@ -680,16 +683,16 @@ class PenugasanUserController extends Controller
         } else if ($request->value == 'CV. SURYA INTI PANGAN - MAKASAR') {
             $lokasi = ['CV. SURYA INTI PANGAN - MAKASAR', 'ALL SITES (SIP)', 'ALL SITES (SP, SPS, SIP)'];
         }
-        $finance = User::join('jabatans', 'jabatans.id', '=', 'users.jabatan_id')
+        $finance = Karyawan::join('jabatans', 'jabatans.id', '=', 'karyawans.jabatan_id')
             ->join('bagians', 'bagians.id', '=', 'jabatans.bagian_id')
-            ->join('divisis', 'divisis.id', '=', 'users.divisi_id')
-            ->join('departemens', 'departemens.id', '=', 'users.dept_id')
-            ->whereIn('users.penempatan_kerja', $lokasi)
+            ->join('divisis', 'divisis.id', '=', 'karyawans.divisi_id')
+            ->join('departemens', 'departemens.id', '=', 'karyawans.dept_id')
+            ->whereIn('karyawans.penempatan_kerja', $lokasi)
             ->where('bagians.nama_bagian', 'CASH AND BANK (CASHIER)')
             ->where('divisis.nama_divisi', 'FINANCE')
             ->where('departemens.nama_departemen', 'FINANCE AND ACCOUNTING')
-            ->select('users.*', 'bagians.nama_bagian')
-            ->orderBy('users.name')
+            ->select('karyawans.*', 'bagians.nama_bagian')
+            ->orderBy('karyawans.name')
             ->get();
         echo "<option value=''>Pilih Finance...</option>";
         foreach ($finance as $finance) {
@@ -700,6 +703,7 @@ class PenugasanUserController extends Controller
     public function tambahPenugasan(Request $request)
     {
         // dd($request->all());
+        $user_karyawan = Karyawan::where('id', Auth::user()->karyawan_id)->first();
         $date_now = Carbon::now();
         // dd('oke');
         if ($request->alamat_dikunjungi == NULL) {
@@ -723,32 +727,32 @@ class PenugasanUserController extends Controller
         }
 
         Penugasan::create([
-            'id_user'                       => User::where('id', Auth::user()->id)->value('id'),
-            'nama_user'                     => User::where('id', Auth::user()->id)->value('name'),
-            'id_user_atasan'                => User::where('id', $request->id_user_atasan)->value('id'),
+            'id_user'                       => Karyawan::where('id', $user_karyawan->id)->value('id'),
+            'nama_user'                     => Karyawan::where('id', $user_karyawan->id)->value('name'),
+            'id_user_atasan'                => Karyawan::where('id', $request->id_user_atasan)->value('id'),
             'id_jabatan'                    => Jabatan::where('id', $request->id_jabatan)->value('id'),
             'id_departemen'                 => Departemen::where('id', $request->id_departemen)->value('id'),
             'id_divisi'                     => Divisi::where('id', $request->id_divisi)->value('id'),
             'asal_kerja'                    => $request->asal_kerja,
-            'id_diajukan_oleh'              => User::where('id', $request->id_diajukan_oleh)->value('id'),
-            'nama_diajukan'                 => User::where('id', $request->id_diajukan_oleh)->value('name'),
+            'id_diajukan_oleh'              => Karyawan::where('id', $request->id_diajukan_oleh)->value('id'),
+            'nama_diajukan'                 => Karyawan::where('id', $request->id_diajukan_oleh)->value('name'),
             'ttd_id_diajukan_oleh'          => $request->ttd_id_diajukan_oleh,
             'waktu_ttd_id_diajukan_oleh'    => $request->waktu_ttd_id_diajukan_oleh,
-            'id_diminta_oleh'               => User::where('id', $diminta_oleh)->value('id'),
-            'nama_diminta'                  => User::where('id', $diminta_oleh)->value('name'),
+            'id_diminta_oleh'               => Karyawan::where('id', $diminta_oleh)->value('id'),
+            'nama_diminta'                  => Karyawan::where('id', $diminta_oleh)->value('name'),
             'ttd_id_diminta_oleh'           => $request->ttd_id_diminta_oleh,
             'waktu_ttd_id_diminta_oleh'     => $request->waktu_ttd_id_diminta_oleh,
-            'id_disahkan_oleh'              => User::where('id', $request->id_disahkan_oleh)->value('id'),
-            'nama_disahkan'                 => User::where('id', $request->id_disahkan_oleh)->value('name'),
+            'id_disahkan_oleh'              => Karyawan::where('id', $request->id_disahkan_oleh)->value('id'),
+            'nama_disahkan'                 => Karyawan::where('id', $request->id_disahkan_oleh)->value('name'),
             'ttd_id_disahkan_oleh'          => $request->ttd_id_disahkan_oleh,
             'waktu_ttd_id_disahkan_oleh'    => $request->waktu_ttd_id_disahkan_oleh,
-            'id_user_hrd'                   => User::where('id', $request->proses_hrd)->value('id'),
-            'nama_hrd'                      => User::where('id', $request->proses_hrd)->value('name'),
+            'id_user_hrd'                   => Karyawan::where('id', $request->proses_hrd)->value('id'),
+            'nama_hrd'                      => Karyawan::where('id', $request->proses_hrd)->value('name'),
             'ttd_proses_hrd'                => $request->ttd_proses_hrd,
             'waktu_ttd_proses_hrd'          => $request->waktu_ttd_proses_hrd,
             'biaya_ditanggung'              => $request->biaya_ditanggung_oleh,
-            'id_user_finance'               => User::where('id', $request->proses_finance)->value('id'),
-            'nama_finance'                  => User::where('id', $request->proses_finance)->value('name'),
+            'id_user_finance'               => Karyawan::where('id', $request->proses_finance)->value('id'),
+            'nama_finance'                  => Karyawan::where('id', $request->proses_finance)->value('name'),
             'ttd_proses_finance'            => $request->ttd_proses_finance,
             'waktu_ttd_proses_finance'      => $request->waktu_ttd_proses_finance,
             'penugasan'                     => $request->penugasan,
@@ -776,88 +780,90 @@ class PenugasanUserController extends Controller
 
     public function penugasanEdit($id)
     {
-        $user           = User::join('jabatans', 'jabatans.id', '=', 'users.jabatan_id')
-            ->join('departemens', 'departemens.id', '=', 'users.dept_id')
-            ->join('divisis', 'divisis.id', '=', 'users.divisi_id')
-            ->where('users.id', Auth()->user()->id)->first();
+        $user_karyawan = Karyawan::where('id', Auth::user()->karyawan_id)->first();
+        $user           = Karyawan::join('jabatans', 'jabatans.id', '=', 'karyawans.jabatan_id')
+            ->join('departemens', 'departemens.id', '=', 'karyawans.dept_id')
+            ->join('divisis', 'divisis.id', '=', 'karyawans.divisi_id')
+            ->where('karyawans.id', $user_karyawan->id)->first();
         $penugasan      = Penugasan::join('jabatans', 'jabatans.id', 'penugasans.id_jabatan')
             ->join('departemens', 'departemens.id', 'penugasans.id_departemen')
             ->join('divisis', 'divisis.id', 'penugasans.id_divisi')
-            ->join('users', 'users.id', 'penugasans.id_diminta_oleh')
+            ->join('karyawans', 'karyawans.id', 'penugasans.id_diminta_oleh')
             ->where('penugasans.id', $id)->first();
         // $id_penugasan   = $id;
         $master_lokasi = Lokasi::whereNotIn('kategori_kantor', ['all sps', 'all sp', 'all sip', 'all'])->get();
-        $diminta = User::where(['id' => $penugasan->id_diminta_oleh])->first();
-        $disahkan = User::where(['id' => $penugasan->id_disahkan_oleh])->first();
+        $diminta = Karyawan::where(['id' => $penugasan->id_diminta_oleh])->first();
+        $disahkan = Karyawan::where(['id' => $penugasan->id_disahkan_oleh])->first();
         if ($user->kontrak_kerja == 'SP') {
             // Bu fitri
-            $hrd = User::join('jabatans', 'jabatans.id', '=', 'users.jabatan_id')
+            $hrd = Karyawan::join('jabatans', 'jabatans.id', '=', 'karyawans.jabatan_id')
                 ->join('bagians', 'bagians.id', '=', 'jabatans.bagian_id')
-                ->join('departemens', 'departemens.id', '=', 'users.dept_id')
-                ->join('divisis', 'divisis.id', '=', 'users.divisi_id')
+                ->join('departemens', 'departemens.id', '=', 'karyawans.dept_id')
+                ->join('divisis', 'divisis.id', '=', 'karyawans.divisi_id')
                 // ->where('jabatans.holding', 'sp')
                 ->where('jabatans.nama_jabatan', 'MANAGER')
                 ->where('bagians.nama_bagian', 'HRD & GA')
                 ->where('divisis.nama_divisi', 'HRD & GA')
                 ->where('departemens.nama_departemen', 'HRD & GA')
-                ->select('users.*')
+                ->select('karyawans.*')
                 ->get();
-            $finance = User::join('jabatans', 'jabatans.id', '=', 'users.jabatan_id')
+            $finance = Karyawan::join('jabatans', 'jabatans.id', '=', 'karyawans.jabatan_id')
                 ->join('bagians', 'bagians.id', '=', 'jabatans.bagian_id')
-                ->join('divisis', 'divisis.id', '=', 'users.divisi_id')
-                ->join('departemens', 'departemens.id', '=', 'users.dept_id')
+                ->join('divisis', 'divisis.id', '=', 'karyawans.divisi_id')
+                ->join('departemens', 'departemens.id', '=', 'karyawans.dept_id')
                 ->where('jabatans.holding', 'sp')
                 ->where('bagians.nama_bagian', 'CASH AND BANK (CASHIER)')
                 ->where('divisis.nama_divisi', 'FINANCE')
                 ->where('departemens.nama_departemen', 'FINANCE AND ACCOUNTING')
-                ->select('users.*')
+                ->select('karyawans.*')
                 ->get();
         } else if ($user->kontrak_kerja == 'SPS') {
-            $hrd = User::join('jabatans', 'jabatans.id', '=', 'users.jabatan_id')
+            // dd('ok');
+            $hrd = Karyawan::join('jabatans', 'jabatans.id', '=', 'karyawans.jabatan_id')
                 ->join('bagians', 'bagians.id', '=', 'jabatans.bagian_id')
-                ->join('departemens', 'departemens.id', '=', 'users.dept_id')
-                ->join('divisis', 'divisis.id', '=', 'users.divisi_id')
+                ->join('departemens', 'departemens.id', '=', 'karyawans.dept_id')
+                ->join('divisis', 'divisis.id', '=', 'karyawans.divisi_id')
                 // ->where('jabatans.holding', 'sp')
-                ->where('jabatans.nama_jabatan', 'MANAGER')
-                ->where('bagians.nama_bagian', 'HRD & GA')
-                ->where('divisis.nama_divisi', 'HRD & GA')
                 ->where('departemens.nama_departemen', 'HRD & GA')
-                ->select('users.*')
+                ->where('divisis.nama_divisi', 'HRD & GA')
+                ->where('bagians.nama_bagian', 'HRD & GA')
+                ->where('jabatans.nama_jabatan', 'MANAGER')
+                ->select('karyawans.*')
                 ->get();
             // diana sps
-            $finance = User::join('jabatans', 'jabatans.id', '=', 'users.jabatan_id')
+            $finance = Karyawan::join('jabatans', 'jabatans.id', '=', 'karyawans.jabatan_id')
                 ->join('bagians', 'bagians.id', '=', 'jabatans.bagian_id')
-                ->join('divisis', 'divisis.id', '=', 'users.divisi_id')
-                ->join('departemens', 'departemens.id', '=', 'users.dept_id')
+                ->join('divisis', 'divisis.id', '=', 'karyawans.divisi_id')
+                ->join('departemens', 'departemens.id', '=', 'karyawans.dept_id')
                 ->where('jabatans.holding', 'sps')
                 ->where('bagians.nama_bagian', 'CASH AND BANK (CASHIER)')
                 ->where('divisis.nama_divisi', 'FINANCE')
                 ->where('departemens.nama_departemen', 'FINANCE AND ACCOUNTING')
-                ->select('users.*')
+                ->select('karyawans.*')
                 ->get();
             // dd($finance);
         } else {
-            $hrd = User::join('jabatans', 'jabatans.id', '=', 'users.jabatan_id')
+            $hrd = Karyawan::join('jabatans', 'jabatans.id', '=', 'karyawans.jabatan_id')
                 ->join('bagians', 'bagians.id', '=', 'jabatans.bagian_id')
-                ->join('departemens', 'departemens.id', '=', 'users.dept_id')
-                ->join('divisis', 'divisis.id', '=', 'users.divisi_id')
+                ->join('departemens', 'departemens.id', '=', 'karyawans.dept_id')
+                ->join('divisis', 'divisis.id', '=', 'karyawans.divisi_id')
                 // ->where('jabatans.holding', 'sp')
                 ->where('jabatans.nama_jabatan', 'MANAGER')
                 ->where('bagians.nama_bagian', 'HRD & GA')
                 ->where('divisis.nama_divisi', 'HRD & GA')
                 ->where('departemens.nama_departemen', 'HRD & GA')
-                ->select('users.*')
+                ->select('karyawans.*')
                 ->get();
             // diana sps
-            $finance = User::join('jabatans', 'jabatans.id', '=', 'users.jabatan_id')
+            $finance = Karyawan::join('jabatans', 'jabatans.id', '=', 'karyawans.jabatan_id')
                 ->join('bagians', 'bagians.id', '=', 'jabatans.bagian_id')
-                ->join('divisis', 'divisis.id', '=', 'users.divisi_id')
-                ->join('departemens', 'departemens.id', '=', 'users.dept_id')
+                ->join('divisis', 'divisis.id', '=', 'karyawans.divisi_id')
+                ->join('departemens', 'departemens.id', '=', 'karyawans.dept_id')
                 ->where('jabatans.holding', 'sip')
                 ->where('bagians.nama_bagian', 'CASH AND BANK (CASHIER)')
                 ->where('divisis.nama_divisi', 'FINANCE')
                 ->where('departemens.nama_departemen', 'FINANCE AND ACCOUNTING')
-                ->select('users.*')
+                ->select('karyawans.*')
                 ->get();
         }
 
@@ -903,10 +909,10 @@ class PenugasanUserController extends Controller
         $data->kelas                        = $request->kelas;
         $data->budget_hotel                 = $request->budget_hotel;
         $data->makan                        = $request->makan;
-        $data->id_user_hrd                  = User::where('id', $request->proses_hrd)->value('id');
-        $data->nama_hrd                     = User::where('id', $request->proses_hrd)->value('name');
-        $data->id_user_finance              = User::where('id', $request->proses_finance)->value('id');
-        $data->nama_finance                 = User::where('id', $request->proses_finance)->value('name');
+        $data->id_user_hrd                  = Karyawan::where('id', $request->proses_hrd)->value('id');
+        $data->nama_hrd                     = Karyawan::where('id', $request->proses_hrd)->value('name');
+        $data->id_user_finance              = Karyawan::where('id', $request->proses_finance)->value('id');
+        $data->nama_finance                 = Karyawan::where('id', $request->proses_finance)->value('name');
         $data->ttd_id_diajukan_oleh         = $uniqid;
         $data->waktu_ttd_id_diajukan_oleh   = date('Y-m-d H:i:s');
         $data->status_penugasan             = 1;
@@ -918,26 +924,26 @@ class PenugasanUserController extends Controller
 
     public function approveShow($id)
     {
-        $user       = User::join('jabatans', 'jabatans.id', '=', 'users.jabatan_id')
-            ->join('departemens', 'departemens.id', '=', 'users.dept_id')
-            ->join('divisis', 'divisis.id', '=', 'users.divisi_id')
-            ->where('users.id', Auth()->user()->id)->first();
+        $user       = Karyawan::join('jabatans', 'jabatans.id', '=', 'karyawans.jabatan_id')
+            ->join('departemens', 'departemens.id', '=', 'karyawans.dept_id')
+            ->join('divisis', 'divisis.id', '=', 'karyawans.divisi_id')
+            ->where('karyawans.id', $user_karyawan->id)->first();
         $penugasan  = Penugasan::join('jabatans', 'jabatans.id', 'penugasans.id_jabatan')
             ->join('departemens', 'departemens.id', 'penugasans.id_departemen')
-            ->join('users', 'users.id', 'penugasans.id_user')
+            ->join('karyawans', 'karyawans.id', 'penugasans.id_user')
             ->join('divisis', 'divisis.id', 'penugasans.id_divisi')
             ->where('penugasans.id', $id)->first();
         // dd($penugasan);
         // $id_penugasan   = $id;
-        $diminta = User::where(['id' => $penugasan->id_diminta_oleh])->first();
-        $disahkan = User::where(['id' => $penugasan->id_disahkan_oleh])->first();
-        $hrd = User::where('id', 'e30d4a42-5562-415c-b1b6-f6b9ccc379a1')->first();
+        $diminta = Karyawan::where(['id' => $penugasan->id_diminta_oleh])->first();
+        $disahkan = Karyawan::where(['id' => $penugasan->id_disahkan_oleh])->first();
+        $hrd = Karyawan::where('id', 'e30d4a42-5562-415c-b1b6-f6b9ccc379a1')->first();
         if ($user->kontrak_kerja == 'sp') {
             // kasir SP
-            $finance = User::where('id', '436da676-5782-4f4e-ad50-52b45060430c')->first();
+            $finance = Karyawan::where('id', '436da676-5782-4f4e-ad50-52b45060430c')->first();
         } else {
             // diana sps
-            $finance = User::where('id', 'b709b754-7b00-4118-ab3f-e9b2760b08cf')->first();
+            $finance = Karyawan::where('id', 'b709b754-7b00-4118-ab3f-e9b2760b08cf')->first();
         }
         $id_penugasan   = Penugasan::where('id', $id)->first();
         return view('users.penugasan.approve', [
@@ -990,9 +996,10 @@ class PenugasanUserController extends Controller
     }
     public function cetak_form_penugasan($id)
     {
-        $penugasan = Penugasan::join('users', 'users.id', 'penugasans.id_user')->where('penugasans.id', $id)->first();
-        $penugasan1 = Penugasan::join('users', 'users.id', 'penugasans.id_diminta_oleh')->where('penugasans.id', $id)->first();
-        $penugasan2 = Penugasan::join('users', 'users.id', 'penugasans.id_disahkan_oleh')->where('penugasans.id', $id)->first();
+        $user_karyawan = Karyawan::where('id', Auth::user()->karyawan_id)->first();
+        $penugasan = Penugasan::join('karyawans', 'karyawans.id', 'penugasans.id_user')->where('penugasans.id', $id)->first();
+        $penugasan1 = Penugasan::join('karyawans', 'karyawans.id', 'penugasans.id_diminta_oleh')->where('penugasans.id', $id)->first();
+        $penugasan2 = Penugasan::join('karyawans', 'karyawans.id', 'penugasans.id_disahkan_oleh')->where('penugasans.id', $id)->first();
         $departemen = Departemen::where('id', $penugasan->id_departemen)->first();
         $divisi = Divisi::where('id', $penugasan->id_divisi)->first();
         $jabatan = Jabatan::where('id', $penugasan->id_jabatan)->first();
@@ -1002,7 +1009,7 @@ class PenugasanUserController extends Controller
         $departemen2 = Departemen::where('id', $penugasan2->dept_id)->first();
         $divisi2 = Divisi::where('id', $penugasan2->divisi_id)->first();
         $jabatan2 = Jabatan::where('id', $penugasan2->jabatan_id)->first();
-        $pengganti = User::where('id', $penugasan->user_id_backup)->first();
+        $pengganti = Karyawan::where('id', $penugasan->user_id_backup)->first();
         // dd(Cuti::with('KategoriCuti')->with('User')->where('cutis.id', $id)->where('cutis.status_cuti', '3')->first());
         $data = [
             'title' => 'domPDF in Laravel 10',
@@ -1018,7 +1025,7 @@ class PenugasanUserController extends Controller
             'departemen2' => $departemen2,
             'pengganti' => $pengganti
         ];
-        $pdf = PDF::loadView('users/penugasan/form_penugasan', $data)->setPaper('F4', 'landscape');;
-        return $pdf->stream('FORM_PENGAJUAN_PENUGASAN_' . Auth::user()->name . '_' . date('Y-m-d H:i:s') . '.pdf');
+        $pdf = PDF::loadView('karyawans/penugasan/form_penugasan', $data)->setPaper('F4', 'landscape');;
+        return $pdf->stream('FORM_PENGAJUAN_PENUGASAN_' . $user_karyawan->name . '_' . date('Y-m-d H:i:s') . '.pdf');
     }
 }

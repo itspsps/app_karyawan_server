@@ -18,7 +18,7 @@
                 <h4 class="card-header"><a href="{{url('users/'.$holding)}}"><i class="mdi mdi-arrow-left-bold"></i></a>&nbsp;Profil Karyawan</h4>
                 <!-- Account -->
                 <div class="card-body">
-                    <form method="post" action="{{ url('/karyawan/edit-password-proses/'.$karyawan->id.'/'.$holding) }}">
+                    <form method="post" action="{{ url('/users/edit-password-proses/'.$karyawan->id.'/'.$holding) }}">
                         @csrf
                         <div class="d-flex align-items-start align-items-sm-center gap-4">
                             @if($karyawan->foto_karyawan == null)

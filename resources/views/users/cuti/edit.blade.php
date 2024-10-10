@@ -168,7 +168,7 @@
         @csrf
         <div class="input-group">
             <input type="hidden" name="id" value="{{$get_cuti->id}}">
-            <input type="hidden" name="id_user" value="{{Auth::user()->id }}">
+            <input type="hidden" name="id_user" value="{{$user_karyawan->id }}">
             <input type="hidden" name="telp" value="{{$get_cuti->telp}}">
             <input type="hidden" name="email" value="{{$get_cuti->email}}">
             <input type="hidden" name="departements" value="{{$get_cuti->departements_id}}">
@@ -180,7 +180,7 @@
         </div>
         <div class="input-group">
             <input type="text" class="form-control" value="Nama" readonly>
-            <input type="text" class="form-control" name="fullname" value="{{ Auth::user()->fullname }}" style="font-weight: bold" readonly required>
+            <input type="text" class="form-control" name="fullname" value="{{ $user_karyawan->fullname }}" style="font-weight: bold" readonly required>
         </div>
         <div class="text-center" style="margin-top: -4%;margin-bottom: 2%;">
             @if ($get_cuti->ttd_user != '')
@@ -218,7 +218,7 @@
                             @if($user->name=='')
                             <h6 class="text-center">kosong</h6>
                             @else
-                            <img src="{{ url('https://karyawan.sumberpangan.store/laravel/public/signature/'.$get_cuti->ttd_user.'.png') }}" style="width: 100%;" alt="">
+                            <img src="{{ url('http://127.0.0.1:8000/signature/cuti/'.$get_cuti->ttd_user.'.png') }}" style="width: 100%;" alt="">
                             @endif
                             <p style="text-align: center;font-weight: bold">{{ \Carbon\Carbon::parse($get_cuti->waktu_ttd_user)->isoFormat('D MMMM Y HH:m')}} WIB</p>
                         </div>
@@ -434,7 +434,7 @@
                 <div>
                     <div id="note" onmouseover="my_function();"></div>
                     <canvas id="the_canvas" width="auto" height="100px"></canvas>
-                    <p class="text-primary" style="text-align: center">Ttd : {{ Auth::user()->name }} {{ date('d-m-Y') }}</p>
+                    <p class="text-primary" style="text-align: center">Ttd : {{ $user_karyawan->name }} {{ date('d-m-Y') }}</p>
                     <hr>
                     <div class="text-center">
                         <input type="hidden" id="signature" name="signature">

@@ -13,7 +13,7 @@
         <div class="dz-info col-12">
             <span class="location d-block text-left">Form Izin&nbsp;
             </span>
-            @if(auth()->user()->kategori=='Karyawan Bulanan')
+            @if($user_karyawan->kategori=='Karyawan Bulanan')
             <h6 class="title">@if($user->kontrak_kerja == 'SP')
                 CV. SUMBER PANGAN
                 @elseif($user->kontrak_kerja == 'SPS')
@@ -24,8 +24,8 @@
             {{-- @foreach ($user  as $dep) --}}
             <h6 class="title">Department of "{{ $user->nama_departemen }}"</h6>
             {{-- @endforeach --}}
-            @elseif(auth()->user()->kategori=='Karyawan Harian')
-            <h6 class="title">{{auth()->user()->penempatan_kerja}}
+            @elseif($user_karyawan->kategori=='Karyawan Harian')
+            <h6 class="title">{{$user_karyawan->penempatan_kerja}}
             </h6>
             @endif
         </div>
@@ -205,12 +205,12 @@
                             </button>
                         </div>
                         <div class="input-group">
-                            <input type="hidden" name="id_user" value="{{ Auth::user()->id }}">
+                            <input type="hidden" name="id_user" value="{{ $user_karyawan->id }}">
                             <input type="hidden" name="telp" value="{{ $data_user->telepon }}">
                             <input type="hidden" name="email" value="{{ $data_user->email }}">
                             <input type="hidden" name="departements" value="{{ $user->dept_id }}">
                             <input type="hidden" name="jabatan" value="{{ $user->jabatan_id }}">
-                            <input type="hidden" name="level_jabatan" value="@if(Auth::user()->kategori=='Karyawan Harian')@else{{ $user->level_jabatan }}@endif">
+                            <input type="hidden" name="level_jabatan" value="@if($user_karyawan->kategori=='Karyawan Harian')@else{{ $user->level_jabatan }}@endif">
                             <input type="hidden" name="divisi" value="{{ $user->divisi_id }}" id="">
                             @if($getUserAtasan==NULL)
                             <input type="hidden" name="id_user_atasan" value="">
@@ -220,7 +220,7 @@
                         </div>
                         <div class="input-group">
                             <input type="text" class="form-control" value="Name" readonly>
-                            <input type="text" class="form-control" name="fullname" value="{{ Auth::user()->name }}" style="font-weight: bold" readonly required>
+                            <input type="text" class="form-control" name="fullname" value="{{ $user_karyawan->name }}" style="font-weight: bold" readonly required>
                         </div>
                         <div class="input-group">
                             <input type="text" class="form-control" value="Kategori Izin" readonly>
