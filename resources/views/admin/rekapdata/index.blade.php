@@ -217,8 +217,9 @@
                                         </tr>
                                         <tr>
                                             <th>Tepat&nbsp;Waktu</th>
-                                            <th>Telat&nbsp;Hadir(>&nbsp;15&nbsp;Menit)</th>
-                                            <th>Telat&nbsp;Hadir(<&nbsp;15&nbsp;Menit)</th>
+                                            <th>Telat&nbsp;Hadir&nbsp;<span>(>&nbsp;15&nbsp;Menit)</span></th>
+                                            <th>Telat&nbsp;Hadir&nbsp;<span>(<&nbsp;15&nbsp;Menit)</span>
+                                            </th>
                                             <th>Izin</th>
                                             <th>Cuti</th>
                                             <th>Dinas</th>
@@ -518,8 +519,8 @@
                             name: 'nomor_identitas_karyawan'
                         },
                         {
-                            data: 'fullname',
-                            name: 'fullname'
+                            data: 'name',
+                            name: 'name'
                         },
                         {
                             data: 'total_hadir_tepat_waktu',
@@ -581,8 +582,8 @@
                         name: 'nomor_identitas_karyawan'
                     },
                     {
-                        data: 'fullname',
-                        name: 'fullname'
+                        data: 'name',
+                        name: 'name'
                     },
                     {
                         data: 'total_hadir_tepat_waktu',
