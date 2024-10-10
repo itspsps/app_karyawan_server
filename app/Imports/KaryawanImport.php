@@ -20,7 +20,7 @@ use Maatwebsite\Excel\Concerns\ToModel;
 use Maatwebsite\Excel\Concerns\WithCalculatedFormulas;
 use Maatwebsite\Excel\Concerns\WithStartRow;
 
-class KaryawanImport implements ToModel, WithStartRow, WithCalculatedFormulas, SkipsOnError
+class KaryawanImport implements ToModel, WithStartRow, WithCalculatedFormulas
 {
 
     use Importable, SkipsFailures;
@@ -29,10 +29,7 @@ class KaryawanImport implements ToModel, WithStartRow, WithCalculatedFormulas, S
      *
      * @return \Illuminate\Database\Eloquent\Model|null
      */
-    public function onError(\Throwable $e)
-    {
-        // Handle the exception how you'd like.
-    }
+
     public function startRow(): int
     {
         return 3;
@@ -40,7 +37,7 @@ class KaryawanImport implements ToModel, WithStartRow, WithCalculatedFormulas, S
 
     public function model(array $row)
     {
-        //     dd($row);
+        // dd($row);
         // dd(Carbon::parse(\PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($row[12]))->format('Y-m-d'));
         $holding = request()->segment(count(request()->segments()));
 
@@ -48,60 +45,64 @@ class KaryawanImport implements ToModel, WithStartRow, WithCalculatedFormulas, S
         // if ($row[0] == null) {
         //     break;
         // }
-        if ($row[0] == 'NULL' || $row[0] == 0) {
+        if ($row[0] == NULL || $row[0] == 0) {
             $nomor_identitas_karyawan = NULL;
         } else {
             $nomor_identitas_karyawan = $row[0];
         }
-        if ($row[1] == 'NULL' || $row[1] == 0) {
+        if ($row[1] == NULL || $row[1] == 0) {
             $name = NULL;
         } else {
             $name = $row[1];
         }
-        if ($row[2] == 'NULL' || $row[2] == 0) {
+        if ($row[2] == NULL || $row[2] == 0) {
             $nik = NULL;
         } else {
             $nik = $row[2];
         }
-        if ($row[3] == 'NULL' || $row[3] == 0) {
-            $npwp = NULL;
+        if ($row[3] == NULL || $row[3] == 0) {
+            $agama = NULL;
         } else {
-            $npwp = $row[3];
+            $agama = $row[3];
         }
-        if ($row[4] == 'NULL' || $row[4] == 0) {
-            $fullname = NULL;
+        if ($row[4] == NULL || $row[4] == 0) {
+            $golongan_darah = NULL;
         } else {
-            $fullname = $row[4];
+            $golongan_darah = $row[4];
         }
-        if ($row[5] == 'NULL' || $row[5] == 0) {
-            $motto = NULL;
-        } else {
-            $motto = $row[5];
-        }
-        if ($row[6] == 'NULL' || $row[6] == 0) {
+        if ($row[5] == NULL || $row[5] == 0) {
             $email = NULL;
         } else {
-            $email = $row[6];
+            $email = $row[5];
         }
-        if ($row[7] == 'NULL' || $row[7] == 0) {
+        if ($row[6] == NULL || $row[6] == 0) {
             $telepon = NULL;
         } else {
-            $telepon = $row[7];
+            $telepon = $row[6];
+        }
+        if ($row[7] == NULL || $row[7] == 0) {
+            $status_nomor = 'tidak';
+            $nomor_wa = NULL;
+        } else {
+            $status_nomor = 'ya';
+            $nomor_wa = $row[7];
         }
 
-        if ($row[8] == 'NULL' || $row[8] == 0) {
+        if ($row[8] == NULL || $row[8] == 0) {
             $tempat_lahir = NULL;
         } else {
             $tempat_lahir = $row[8];
         }
-        if ($row[9] == 'NULL' || $row[9] == 0) {
+        // dd($row[9]);
+        if ($row[9] == NULL || $row[9] == 0) {
             $tgl_lahir = NULL;
         } else {
-            $tgl_lahir = is_numeric($row[9]) ? Carbon::parse(\PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($row[9]))->format('Y-m-d') : Carbon::createFromFormat('d/m/Y', $row[9])->format('Y-m-d');
+            $tgl_lahir = Carbon::parse($row[9])->format('Y-m-d');
+            // $tgl_lahir = is_numeric($row[9]) ? Carbon::parse(\PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($row[9]))->format('Y-m-d') : Carbon::createFromFormat('d/m/Y', $row[9])->format('Y-m-d');
         }
         // dd($tgl_lahir);
         // KELAMIN
-        if ($row[10] == 'NULL' || $row[10] == 0) {
+        if ($row[10] == NULL || $row[10] == 0) {
             // dd($row);
             $kelamin = NULL;
         } else if ($row[10] == 'Laki-Laki') {
@@ -120,309 +121,440 @@ class KaryawanImport implements ToModel, WithStartRow, WithCalculatedFormulas, S
             $kelamin = 'Perempuan';
         }
 
-        // TANGGAL JOIN
-        if ($row[11] == 'NULL' || $row[11] == 0) {
-            $tgl_join = NULL;
-        } else {
-            $tgl_join = is_numeric($row[11]) ? Carbon::parse(\PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($row[11]))->format('Y-m-d') : Carbon::createFromFormat('d/m/Y', $row[11])->format('Y-m-d');
-            // dd($tgl_mulai);
-        }
 
         // STATUS NIKAH
-        if ($row[12] == 'NULL' || $row[12] == 0) {
+        if ($row[11] == NULL || $row[11] == 0) {
             // dd($row);
             $status_nikah = NULL;
-        } else if ($row[12] == 'LAJANG') {
+        } else if ($row[11] == 'LAJANG') {
             $status_nikah = 'Lajang';
-        } else if ($row[12] == 'lajang') {
+        } else if ($row[11] == 'lajang') {
             $status_nikah = 'Lajang';
-        } else if ($row[12] == 'Lajang') {
+        } else if ($row[11] == 'Lajang') {
             $status_nikah = 'Lajang';
-        } else if ($row[12] == 'MENIKAH') {
+        } else if ($row[11] == 'MENIKAH') {
             $status_nikah = 'Menikah';
-        } else if ($row[12] == 'menikah') {
+        } else if ($row[11] == 'menikah') {
             $status_nikah = 'Menikah';
-        } else if ($row[12] == 'Menikah') {
+        } else if ($row[11] == 'Menikah') {
             $status_nikah = 'Menikah';
         }
 
-        if ($row[13] == 'NULL' || $row[13] == '0') {
+        if ($row[12] == NULL || $row[12] == '0') {
             $provinsi = NULL;
         } else {
-            $get_provinsi = Province::whereLike('name', $row[13])->value('code');
+            $get_provinsi = Province::where('name', $row[12])->value('code');
             if ($get_provinsi == NULL) {
-                $provinsi = Province::where('code', $row[13])->value('code');
+                $provinsi = NULL;
             } else {
-                $provinsi = $row[13];
+                $provinsi = $get_provinsi;
             }
         }
 
-        if ($row[14] == 'NULL' || $row[14] == '0') {
+        if ($row[13] == NULL || $row[13] == '0') {
             $kabupaten = NULL;
         } else {
-            if (strpos($row[14], 'KAB') !== false) {
-                $get_kabupaten = str_replace(array('KAB'), 'KABUPATEN', $row[14]);
-                $kabupaten = Cities::where('province_code', $provinsi)->whereLike('name', $get_kabupaten)->value('code');
-            } else if (strpos($row[14], 'KOTA') !== false) {
+            if (strpos($row[13], 'KAB. ') !== false) {
+                $get_kabupaten = str_replace(array('KAB. '), 'KABUPATEN ', $row[13]);
+                $kabupaten = Cities::where('province_code', $provinsi)->where('name', $get_kabupaten)->value('code');
                 // dd('ok');
-                $get_kabupaten = str_replace(array('KOTA'), '', $row[14]);
-                $kabupaten = Cities::where('province_code', $provinsi)->whereLike('name', $get_kabupaten)->value('code');
-            } else {
+            } else if (strpos($row[13], 'KOTA') !== false) {
                 // dd('ok1');
-                $get_kabupaten = Cities::where('province_code', $provinsi)->whereLike('name', $row[14])->value('code');
+                // dd('ok');
+                $get_kabupaten = str_replace(array('KOTA'), '', $row[13]);
+                $kabupaten = Cities::where('province_code', $provinsi)->where('name', $get_kabupaten)->value('code');
+            } else {
+                // dd('ok2');
+                // dd('ok1');
+                $get_kabupaten = Cities::where('province_code', $provinsi)->where('name', $row[13])->value('code');
+                // dd($get_kabupaten);
                 if ($get_kabupaten == NULL) {
-                    $kabupaten = Cities::where('province_code', $provinsi)->where('code', $row[14])->value('code');
+                    $kabupaten = NULL;
                 } else {
-                    $kabupaten = $row[14];
+                    $kabupaten = $get_kabupaten;
                 }
             }
         }
-        if ($row[15] == 'NULL' || $row[15] == '0') {
+        // dd($kabupaten);
+        if ($row[14] == NULL || $row[14] == '0') {
             $kecamatan = NULL;
         } else {
-            if (strpos($row[15], 'KEC') !== false || strpos($row[15], 'KECAMATAN') !== false) {
+            if (strpos($row[14], 'KEC. ') !== false || strpos($row[14], 'KECAMATAN ') !== false) {
                 // dd('ok');
-                $get_kecamatan = str_replace(array('KEC ', 'KECAMATAN '), '', $row[15]);
-                $kecamatan = District::where('city_code', $kabupaten)->whereLike('name', $get_kecamatan)->value('code');
+                $get_kecamatan = str_replace(array('KEC. ', 'KECAMATAN '), '', $row[14]);
+                $kecamatan = District::where('city_code', $kabupaten)->where('name', $get_kecamatan)->value('code');
                 // dd($get_kecamatan);
             } else {
                 // dd('ok1');
-                $get_kecamatan = District::where('city_code', $kabupaten)->whereLike('name', $row[15])->value('code');
+                $get_kecamatan = District::where('city_code', $kabupaten)->where('name', $row[14])->value('code');
                 if ($get_kecamatan == NULL) {
-                    $kecamatan = District::where('city_code', $kabupaten)->where('code', $row[15])->value('code');
+                    $kecamatan = NULL;
                 } else {
-                    $kecamatan = $row[15];
+                    $kecamatan = $get_kecamatan;
                 }
             }
         }
         // dd($kecamatan);
-        if ($row[16] == 'NULL' || $row[16] == '0') {
+        if ($row[15] == NULL || $row[15] == '0') {
             $desa = NULL;
         } else {
-            if (strpos($row[16], 'KEL ') !== false || strpos($row[16], 'DS ') !== false) {
-                $get_desa = str_replace(array('KEL ', 'DS '), '', $row[16]);
+            if (strpos($row[15], 'KEL. ') !== false || strpos($row[15], 'DS. ') !== false) {
+                $get_desa = str_replace(array('KEL. ', 'DS. '), '', $row[15]);
                 // dd($get_desa);
-                $desa = Village::where('district_code', $kecamatan)->whereLike('name', $get_desa)->value('code');
+                $desa = Village::where('district_code', $kecamatan)->where('name', $get_desa)->value('code');
             } else {
                 // dd('ok1');
-                $get_desa = Village::where('district_code', $kecamatan)->whereLike('name', $row[16])->value('code');
+                $get_desa = Village::where('district_code', $kecamatan)->where('name', $row[15])->value('code');
                 if ($get_desa == NULL) {
 
-                    $desa = Village::where('district_code', $kecamatan)->where('code', $row[16])->value('code');
+                    $desa = NULL;
                 } else {
-                    $desa = $row[16];
+                    $desa = $get_desa;
                 }
             }
         }
         // dd($desa);
-        if ($row[17] == 'NULL') {
+        if ($row[16] == NULL) {
             $rt = NULL;
         } else {
-            $rt = $row[17];
+            $rt = $row[16];
         }
-        if ($row[18] == 'NULL') {
+        if ($row[17] == NULL) {
             $rw = NULL;
         } else {
-            $rw = $row[18];
+            $rw = $row[17];
         }
         $detail_alamat = Province::where('code', $provinsi)->value('name') . ', ' . Cities::where('code', $kabupaten)->value('name') . ', ' . District::where('code', $kecamatan)->value('name') . ', ' . Village::where('code', $desa)->value('name') . ', RT: ' . $rt . ', RW: ' . $rw;
-        if ($row[19] == 'NULL' || $row[19] == '0') {
+        if ($row[18] == NULL || $row[18] == '0') {
             $alamat = NULL;
         } else {
-            $alamat = $row[19];
+            $alamat = $row[18];
         }
-        $kuota_cuti_tahunan =  $row[20];
-        // dd($kuota_cuti_tahunan);
-        if ($row[21] == 'NULL' || $row[21] == '0') {
-            $kategori = NULL;
+        // alamat Domisili
+        if ($row[19] == NULL || $row[19] == '0') {
+            $status_alamat = 'ya';
+            $provinsi_domisili = NULL;
         } else {
-            $kategori = $row[21];
-        }
-        if ($row[22] == 'NULL' || $row[22] == '0') {
-            $lama_kontrak_kerja = NULL;
-        } else {
-            $lama_kontrak_kerja = $row[22];
+            $get_provinsi_domisili = Province::where('name', $row[19])->value('code');
+            if ($get_provinsi_domisili == NULL) {
+                $status_alamat = 'ya';
+                $provinsi_domisili = NULL;
+            } else {
+                $status_alamat = 'tidak';
+                $provinsi_domisili = $get_provinsi_domisili;
+            }
         }
 
-        if ($row[23] == 'NULL' || $row[23] == '0') {
-            $tgl_mulai = NULL;
+        if ($row[20] == NULL || $row[20] == '0') {
+            $kabupaten_domisili = NULL;
         } else {
-            $tgl_mulai = is_numeric($row[23]) ? Carbon::parse(\PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($row[23]))->format('Y-m-d') : Carbon::createFromFormat('d/m/Y', $row[23])->format('Y-m-d');
+            if (strpos($row[20], 'KAB. ') !== false) {
+                $get_kabupaten_domisili = str_replace(array('KAB. '), 'KABUPATEN ', $row[20]);
+                $kabupaten_domisili = Cities::where('province_code', $provinsi_domisili)->where('name', $get_kabupaten_domisili)->value('code');
+                // dd('ok');
+            } else if (strpos($row[20], 'KOTA') !== false) {
+                // dd('ok1');
+                // dd('ok');
+                $get_kabupaten_domisili = str_replace(array('KOTA'), '', $row[20]);
+                $kabupaten_domisili = Cities::where('province_code', $provinsi_domisili)->where('name', $get_kabupaten_domisili)->value('code');
+            } else {
+                // dd('ok2');
+                // dd('ok1');
+                $get_kabupaten_domisili = Cities::where('province_code', $provinsi_domisili)->where('name', $row[13])->value('code');
+                // dd($get_kabupaten_domisili);
+                if ($get_kabupaten_domisili == NULL) {
+                    $kabupaten_domisili = NULL;
+                } else {
+                    $kabupaten_domisili = $get_kabupaten_domisili;
+                }
+            }
+        }
+        // dd($kabupaten);
+        if ($row[21] == NULL || $row[21] == '0') {
+            $kecamatan_domisili = NULL;
+        } else {
+            if (strpos($row[21], 'KEC. ') !== false || strpos($row[21], 'KECAMATAN ') !== false) {
+                // dd('ok');
+                $get_kecamatan_domisili = str_replace(array('KEC. ', 'KECAMATAN '), '', $row[21]);
+                $kecamatan_domisili = District::where('city_code', $kabupaten_domisili)->where('name', $get_kecamatan_domisili)->value('code');
+                // dd($get_kecamatan_domisili);
+            } else {
+                // dd('ok1');
+                $get_kecamatan_domisili = District::where('city_code', $kabupaten_domisili)->where('name', $row[21])->value('code');
+                if ($get_kecamatan_domisili == NULL) {
+                    $kecamatan_domisili = NULL;
+                } else {
+                    $kecamatan_domisili = $get_kecamatan_domisili;
+                }
+            }
+        }
+        // dd($kecamatan);
+        if ($row[22] == NULL || $row[22] == '0') {
+            $desa_domisili = NULL;
+        } else {
+            if (strpos($row[22], 'KEL. ') !== false || strpos($row[22], 'DS. ') !== false) {
+                $get_desa_domisili = str_replace(array('KEL. ', 'DS. '), '', $row[22]);
+                // dd($get_desa_domisili);
+                $desa_domisili = Village::where('district_code', $kecamatan_domisili)->where('name', $get_desa_domisili)->value('code');
+            } else {
+                // dd('ok1');
+                $get_desa_domisili = Village::where('district_code', $kecamatan_domisili)->where('name', $row[22])->value('code');
+                if ($get_desa_domisili == NULL) {
+
+                    $desa_domisili = NULL;
+                } else {
+                    $desa_domisili = $get_desa_domisili;
+                }
+            }
+        }
+        // dd($desa);
+        if ($row[23] == NULL) {
+            $rt_domisili = NULL;
+        } else {
+            $rt_domisili = $row[23];
+        }
+        if ($row[24] == NULL) {
+            $rw_domisili = NULL;
+        } else {
+            $rw_domisili = $row[24];
+        }
+        $detail_alamat_domisili = Province::where('code', $provinsi_domisili)->value('name') . ', ' . Cities::where('code', $kabupaten_domisili)->value('name') . ', ' . District::where('code', $kecamatan_domisili)->value('name') . ', ' . Village::where('code', $desa_domisili)->value('name') . ', RT: ' . $rt_domisili . ', RW: ' . $rw_domisili;
+        if ($row[25] == NULL || $row[25] == '0') {
+            $alamat_domisili = NULL;
+        } else {
+            $alamat_domisili = $row[25];
+        }
+        $kuota_cuti_tahunan =  $row[26];
+        // dd($kuota_cuti_tahunan);
+        if ($row[27] == NULL || $row[27] == '0') {
+            $kategori = NULL;
+        } else {
+            $kategori = $row[27];
+        }
+        // TANGGAL JOIN
+        if ($row[28] == NULL || $row[28] == 0) {
+            $tgl_join = NULL;
+        } else {
+            $tgl_join = Carbon::parse($row[28])->format('Y-m-d'); // $tgl_join = is_numeric($row[28]) ? Carbon::parse(\PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($row[28]))->format('Y-m-d') : Carbon::createFromFormat('d/m/Y', $row[28])->format('Y-m-d');
             // dd($tgl_mulai);
         }
-        if ($row[24] == 'NULL' || $row[24] == '0') {
+        if ($row[29] == NULL || $row[29] == '0') {
+            $lama_kontrak_kerja = NULL;
+        } else {
+            $lama_kontrak_kerja = $row[29];
+        }
+
+        if ($row[30] == NULL || $row[30] == '0') {
+            $tgl_mulai = NULL;
+        } else {
+            $tgl_mulai = Carbon::parse($row[30])->format('Y-m-d'); // $tgl_mulai = is_numeric($row[30]) ? Carbon::parse(\PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($row[30]))->format('Y-m-d') : Carbon::createFromFormat('d/m/Y', $row[30])->format('Y-m-d');
+            // dd($tgl_mulai);
+        }
+        if ($row[31] == NULL || $row[31] == '0') {
             // dd($row);
             $tgl_selesai = NULL;
         } else {
-            $tgl_selesai = is_numeric($row[24]) ? Carbon::parse(\PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($row[24]))->format('Y-m-d') : Carbon::createFromFormat('d/m/Y', $row[24])->format('Y-m-d');
+            $tgl_selesai = Carbon::parse($row[31])->format('Y-m-d');
+            // $tgl_selesai = is_numeric($row[31]) ? Carbon::parse(\PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($row[31]))->format('Y-m-d') : Carbon::createFromFormat('d/m/Y', $row[31])->format('Y-m-d');
         }
-        if ($row[25] == 'NULL' || $row[25] == '0') {
+        if ($row[32] == NULL || $row[32] == '0') {
             $kontrak_kerja = NULL;
         } else {
-            $kontrak_kerja = $row[25];
+            $kontrak_kerja = $row[32];
         }
-        if ($row[26] == 'NULL' || $row[26] == '0') {
+        if ($row[33] == NULL || $row[33] == '0') {
             $penempatan_kerja = NULL;
         } else {
-            $penempatan_kerja = $row[26];
+            $penempatan_kerja = $row[33];
         }
-        if ($row[27] == 'NULL' || $row[27] == '0') {
+        if ($row[34] == NULL || $row[34] == '0') {
             $site_job = NULL;
         } else {
-            $site_job = $row[27];
+            $site_job = $row[34];
         }
 
-        if ($row[28] == 'NULL' || $row[28] == '0') {
+        if ($row[35] == NULL || $row[35] == '0') {
             $nama_bank = NULL;
-        } else if ($row[28] == 'OCBC') {
+        } else if ($row[35] == 'OCBC') {
             $nama_bank = 'BOCBC';
-        } else if ($row[28] == 'BRI') {
+        } else if ($row[35] == 'BRI') {
             $nama_bank = 'BBRI';
-        } else if ($row[28] == 'BCA') {
+        } else if ($row[35] == 'BCA') {
             $nama_bank = 'BBCA';
-        } else if ($row[28] == 'MANDIRI') {
+        } else if ($row[35] == 'MANDIRI') {
             $nama_bank = 'BMANDIRI';
         } else {
-            $nama_bank = $row[28];
+            $nama_bank = $row[35];
         }
 
-        if ($row[29] == 'NULL' || $row[29] == '0') {
+        if ($row[36] == NULL || $row[36] == '0') {
+            $nama_pemilik_rekening = NULL;
+        } else {
+            $nama_pemilik_rekening = $row[36];
+        }
+        if ($row[37] == NULL || $row[37] == '0') {
             $nomor_rekening = NULL;
         } else {
-            $nomor_rekening = $row[29];
+            $nomor_rekening = $row[37];
         }
-        if ($row[30] == 'NULL' || $row[30] == '0') {
+        if ($row[38] == NULL || $row[38] == '0') {
             $kategori_jabatan = NULL;
-        } else if ($row[30] == 'SP') {
+        } else if ($row[38] == 'SP') {
             $kategori_jabatan = 'sp';
-        } else if ($row[30] == 'SPS') {
+        } else if ($row[38] == 'SPS') {
             $kategori_jabatan = 'sps';
-        } else if ($row[30] == 'SIP') {
+        } else if ($row[38] == 'SIP') {
             $kategori_jabatan = 'sip';
         } else {
-            $kategori_jabatan = $row[30];
+            $kategori_jabatan = $row[38];
         }
-        if ($kategori_jabatan == 'NULL') {
-            $departemen = NULL;
-            $divisi = NULL;
-            $bagian = NULL;
-            $jabatan = NULL;
-            $departemen1 = NULL;
-            $divisi1 = NULL;
-            $bagian1 = NULL;
-            $jabatan1 = NULL;
-            $departemen2 = NULL;
-            $divisi2 = NULL;
-            $bagian2 = NULL;
-            $jabatan2 = NULL;
-            $departemen3 = NULL;
-            $divisi3 = NULL;
-            $bagian3 = NULL;
-            $jabatan3 = NULL;
-            $departemen4 = NULL;
-            $divisi4 = NULL;
-            $bagian4 = NULL;
-            $jabatan4 = NULL;
+        if ($kategori_jabatan == null) {
+            $get_jabatan = $kontrak_kerja;
         } else {
-            $departemen = Departemen::where('nama_departemen', $row[31])->where('holding', $kategori_jabatan)->value('id');
-            $divisi = Divisi::where('nama_divisi', $row[32])->where('dept_id', $departemen)->where('holding', $kategori_jabatan)->value('id');
-            $bagian = Bagian::where('nama_bagian', $row[33])->where('divisi_id', $divisi)->where('holding', $kategori_jabatan)->value('id');
-            $jabatan = Jabatan::where('nama_jabatan', $row[34])->where('divisi_id', $divisi)->where('bagian_id', $bagian)->where('holding', $kategori_jabatan)->value('id');
+            $get_jabatan = $kategori_jabatan;
+        }
 
-            $departemen1 = Departemen::where('nama_departemen', $row[35])->where('holding', $kategori_jabatan)->value('id');
-            $divisi1 = Divisi::where('nama_divisi', $row[36])->where('dept_id', $departemen1)->where('holding', $kategori_jabatan)->value('id');
-            $bagian1 = Bagian::where('nama_bagian', $row[37])->where('divisi_id', $divisi1)->where('holding', $kategori_jabatan)->value('id');
-            $jabatan1 = Jabatan::where('nama_jabatan', $row[38])->where('divisi_id', $divisi1)->where('bagian_id', $bagian1)->where('holding', $kategori_jabatan)->value('id');
+        $departemen = Departemen::where('nama_departemen', $row[39])->where('holding', $get_jabatan)->value('id');
+        $divisi = Divisi::where('nama_divisi', $row[40])->where('dept_id', $departemen)->value('id');
+        $bagian = Bagian::where('nama_bagian', $row[41])->where('divisi_id', $divisi)->value('id');
+        $jabatan = Jabatan::where('nama_jabatan', $row[42])->where('divisi_id', $divisi)->where('bagian_id', $bagian)->value('id');
+        // dd($get_jabatan);
 
-            $departemen2 = Departemen::where('nama_departemen', $row[39])->where('holding', $kategori_jabatan)->value('id');
-            $divisi2 = Divisi::where('nama_divisi', $row[40])->where('dept_id', $departemen2)->where('holding', $kategori_jabatan)->value('id');
-            $bagian2 = Bagian::where('nama_bagian', $row[41])->where('divisi_id', $divisi2)->where('holding', $kategori_jabatan)->value('id');
-            $jabatan2 = Jabatan::where('nama_jabatan', $row[42])->where('divisi_id', $divisi2)->where('bagian_id', $bagian2)->where('holding', $kategori_jabatan)->value('id');
+        $departemen1 = Departemen::where('nama_departemen', $row[43])->value('id');
+        $divisi1 = Divisi::where('nama_divisi', $row[44])->where('dept_id', $departemen1)->value('id');
+        $bagian1 = Bagian::where('nama_bagian', $row[45])->where('divisi_id', $divisi1)->value('id');
+        $jabatan1 = Jabatan::where('nama_jabatan', $row[46])->where('divisi_id', $divisi1)->where('bagian_id', $bagian1)->value('id');
 
-            $departemen3 = Departemen::where('nama_departemen', $row[43])->where('holding', $kategori_jabatan)->value('id');
-            $divisi3 = Divisi::where('nama_divisi', $row[44])->where('dept_id', $departemen3)->where('holding', $kategori_jabatan)->value('id');
-            $bagian3 = Bagian::where('nama_bagian', $row[45])->where('divisi_id', $divisi3)->where('holding', $kategori_jabatan)->value('id');
-            $jabatan3 = Jabatan::where('nama_jabatan', $row[46])->where('divisi_id', $divisi3)->where('bagian_id', $bagian3)->where('holding', $kategori_jabatan)->value('id');
+        $departemen2 = Departemen::where('nama_departemen', $row[47])->value('id');
+        $divisi2 = Divisi::where('nama_divisi', $row[48])->where('dept_id', $departemen2)->value('id');
+        $bagian2 = Bagian::where('nama_bagian', $row[49])->where('divisi_id', $divisi2)->value('id');
+        $jabatan2 = Jabatan::where('nama_jabatan', $row[50])->where('divisi_id', $divisi2)->where('bagian_id', $bagian2)->value('id');
 
-            $departemen4 = Departemen::where('nama_departemen', $row[47])->where('holding', $kategori_jabatan)->value('id');
-            $divisi4 = Divisi::where('nama_divisi', $row[48])->where('dept_id', $departemen4)->where('holding', $kategori_jabatan)->value('id');
-            $bagian4 = Bagian::where('nama_bagian', $row[49])->where('divisi_id', $divisi4)->where('holding', $kategori_jabatan)->value('id');
-            $jabatan4 = Jabatan::where('nama_jabatan', $row[50])->where('divisi_id', $divisi4)->where('bagian_id', $bagian4)->where('holding', $kategori_jabatan)->value('id');
-        }
-        if ($row[51] == 'NULL' || $row[51] == '0') {
-            $bpjs_ketenagakerjaan = 'off';
-        } else if ($row[51] == 'FALSE') {
-            $bpjs_ketenagakerjaan = 'off';
-        } else if ($row[51] == 'TRUE') {
-            $bpjs_ketenagakerjaan = 'on';
-        } else {
-            $bpjs_ketenagakerjaan = $row[51];
-        }
-        if ($row[52] == 'NULL' || $row[52] == '0') {
-            $no_bpjs_ketenagakerjaan = NULL;
-        } else {
-            $no_bpjs_ketenagakerjaan = $row[52];
-        }
-        if ($row[53] == 'NULL' || $row[53] == '0') {
-            $bpjs_pensiun = 'off';
-        } else if ($row[53] == 'FALSE') {
-            $bpjs_pensiun = 'off';
-        } else if ($row[53] == 'TRUE') {
-            $bpjs_pensiun = 'on';
-        } else {
-            $bpjs_pensiun = $row[53];
-        }
-        if ($row[54] == 'NULL' || $row[54] == '0') {
-            $bpjs_kesehatan = 'off';
-        } else if ($row[54] == 'FALSE') {
-            $bpjs_kesehatan = 'off';
-        } else if ($row[54] == 'TRUE') {
-            $bpjs_kesehatan = 'on';
-        } else {
-            $bpjs_kesehatan = $row[54];
-        }
-        if ($row[55] == 'NULL' || $row[55] == '0') {
-            $no_bpjs_kesehatan = NULL;
-        } else {
-            $no_bpjs_kesehatan = $row[55];
-        }
-        if ($row[56] == 'NULL' || $row[56] == '0') {
-            $kelas_bpjs = NULL;
-        } else {
-            $kelas_bpjs = $row[56];
-        }
-        if ($row[58] == 'NULL' || $row[58] == '0') {
+        $departemen3 = Departemen::where('nama_departemen', $row[51])->value('id');
+        $divisi3 = Divisi::where('nama_divisi', $row[52])->where('dept_id', $departemen3)->value('id');
+        $bagian3 = Bagian::where('nama_bagian', $row[53])->where('divisi_id', $divisi3)->value('id');
+        $jabatan3 = Jabatan::where('nama_jabatan', $row[54])->where('divisi_id', $divisi3)->where('bagian_id', $bagian3)->value('id');
+
+        $departemen4 = Departemen::where('nama_departemen', $row[55])->value('id');
+        $divisi4 = Divisi::where('nama_divisi', $row[56])->where('dept_id', $departemen4)->value('id');
+        $bagian4 = Bagian::where('nama_bagian', $row[57])->where('divisi_id', $divisi4)->value('id');
+        $jabatan4 = Jabatan::where('nama_jabatan', $row[58])->where('divisi_id', $divisi4)->where('bagian_id', $bagian4)->value('id');
+
+        if ($row[59] == NULL || $row[59] == '0') {
             $ptkp = NULL;
         } else {
-            $ptkp = $row[58];
+            $ptkp = $row[59];
+        }
+        if ($row[60] == NULL || $row[60] == 0) {
+            $status_npwp = 'off';
+            $npwp = NULL;
+        } else {
+            $status_npwp = 'on';
+            $npwp = $row[60];
+        }
+        if ($row[61] == NULL || $row[61] == 0) {
+            $nama_pemilik_npwp = NULL;
+        } else {
+            $nama_pemilik_npwp = $row[61];
+        }
+        if ($row[62] == NULL || $row[62] == '0') {
+            // dd('ok1')/;
+            $bpjs_ketenagakerjaan = 'off';
+        } else if ($row[62] == 'FALSE') {
+            // dd('ok2');
+            $bpjs_ketenagakerjaan = 'off';
+        } else if ($row[62] == 'TRUE') {
+            // dd('ok3');
+            $bpjs_ketenagakerjaan = 'on';
+        } else {
+            // dd('ok4');
+            $bpjs_ketenagakerjaan = $row[62];
+        }
+        if ($row[63] == NULL || $row[63] == '0') {
+            $nama_pemilik_bpjs_ketenagakerjaan = NULL;
+        } else {
+            $nama_pemilik_bpjs_ketenagakerjaan = $row[63];
+        }
+        if ($row[64] == NULL || $row[64] == '0') {
+            $no_bpjs_ketenagakerjaan = NULL;
+        } else {
+            $no_bpjs_ketenagakerjaan = $row[64];
+        }
+        if ($row[65] == NULL || $row[65] == '0') {
+            $bpjs_pensiun = 'off';
+        } else if ($row[65] == 'FALSE') {
+            $bpjs_pensiun = 'off';
+        } else if ($row[65] == 'TRUE') {
+            $bpjs_pensiun = 'on';
+        } else {
+            $bpjs_pensiun = $row[65];
+        }
+        if ($row[66] == NULL || $row[66] == '0') {
+            $bpjs_kesehatan = 'off';
+        } else if ($row[66] == 'FALSE') {
+            $bpjs_kesehatan = 'off';
+        } else if ($row[66] == 'TRUE') {
+            $bpjs_kesehatan = 'on';
+        } else {
+            $bpjs_kesehatan = $row[66];
+        }
+        if ($row[67] == NULL || $row[67] == '0') {
+            $nama_pemilik_bpjs_kesehatan = NULL;
+        } else {
+            $nama_pemilik_bpjs_kesehatan = $row[67];
+        }
+        if ($row[68] == NULL || $row[68] == '0') {
+            $no_bpjs_kesehatan = NULL;
+        } else {
+            $no_bpjs_kesehatan = $row[68];
+        }
+        if ($row[69] == NULL || $row[69] == '0') {
+            $kelas_bpjs = NULL;
+        } else {
+            $kelas_bpjs = $row[69];
         }
 
         try {
+            // dd($row[65]);
             return new Karyawan([
+                "id"                                            => $row[72],
+                "face_id"                                       => $row[70],
+                "status_aktif"                                  => $row[71],
                 "nomor_identitas_karyawan"                      => $nomor_identitas_karyawan,
                 "name"                                          => $name,
                 "nik"                                           => $nik,
-                "npwp"                                          => $npwp,
-                "fullname"                                      => $fullname,
-                "motto"                                         => $motto,
+                "agama"                                         => $agama,
+                "golongan_darah"                                => $golongan_darah,
                 "email"                                         => $email,
                 "telepon"                                       => $telepon,
+                "status_nomor"                                  => $status_nomor,
+                "nomor_wa"                                      => $nomor_wa,
                 "tempat_lahir"                                  => $tempat_lahir,
                 "tgl_lahir"                                     => $tgl_lahir,
                 // 10
                 "gender"                                        => $kelamin,
-                "tgl_join"                                      => $tgl_join,
                 "status_nikah"                                  => $status_nikah,
+                "status_alamat"                                 => $status_alamat,
+                "provinsi_domisili"                             => $provinsi_domisili,
+                "kabupaten_domisili"                            => $kabupaten_domisili,
+                "kecamatan_domisili"                            => $kecamatan_domisili,
+                "desa_domisili"                                 => $desa_domisili,
+                "rt_domisili"                                   => $rt_domisili,
+                "rw_domisili"                                   => $rw_domisili,
+                "detail_alamat_domisili"                        => $detail_alamat_domisili,
+                "alamat_domisili"                               => $alamat_domisili,
                 "provinsi"                                      => $provinsi,
                 "kabupaten"                                     => $kabupaten,
                 "kecamatan"                                     => $kecamatan,
                 "desa"                                          => $desa,
                 "rt"                                            => $rt,
                 "rw"                                            => $rw,
+                "detail_alamat"                                 => $detail_alamat,
                 "alamat"                                        => $alamat,
                 // 20
                 "kuota_cuti_tahunan"                            => $kuota_cuti_tahunan,
                 "kategori"                                      => $kategori,
+                "tgl_join"                                      => $tgl_join,
                 "lama_kontrak_kerja"                            => $lama_kontrak_kerja,
                 "tgl_mulai_kontrak"                             => $tgl_mulai,
                 "tgl_selesai_kontrak"                           => $tgl_selesai,
@@ -430,17 +562,10 @@ class KaryawanImport implements ToModel, WithStartRow, WithCalculatedFormulas, S
                 "penempatan_kerja"                              => $penempatan_kerja,
                 "site_job"                                      => $site_job,
                 "nama_bank"                                     => $nama_bank,
+                "nama_pemilik_rekening"                         => $nama_pemilik_rekening,
                 "nomor_rekening"                                => $nomor_rekening,
                 // 30
                 "kategori_jabatan"                              => $kategori_jabatan,
-                "bpjs_ketenagakerjaan"                          => $bpjs_ketenagakerjaan,
-                "no_bpjs_ketenagakerjaan"                       => $no_bpjs_ketenagakerjaan,
-                "bpjs_pensiun"                                  => $bpjs_pensiun,
-                "bpjs_kesehatan"                                => $bpjs_kesehatan,
-                "no_bpjs_kesehatan"                             => $no_bpjs_kesehatan,
-                "kelas_bpjs"                                    => $kelas_bpjs,
-                "ptkp"                                          => $ptkp,
-                "status_aktif"                                  => 'AKTIF',
                 "dept_id"                                       => $departemen,
                 // 40
                 "divisi_id"                                     => $divisi,
@@ -462,6 +587,18 @@ class KaryawanImport implements ToModel, WithStartRow, WithCalculatedFormulas, S
                 "divisi4_id"                                    => $divisi4,
                 "bagian4_id"                                    => $bagian4,
                 "jabatan4_id"                                   => $jabatan4,
+                "ptkp"                                          => $ptkp,
+                "status_npwp"                                   => $status_npwp,
+                "npwp"                                          => $npwp,
+                "nama_pemilik_npwp"                             => $nama_pemilik_npwp,
+                "bpjs_ketenagakerjaan"                          => $bpjs_ketenagakerjaan,
+                "nama_pemilik_bpjs_ketenagakerjaan"             => $nama_pemilik_bpjs_ketenagakerjaan,
+                "no_bpjs_ketenagakerjaan"                       => $no_bpjs_ketenagakerjaan,
+                "bpjs_pensiun"                                  => $bpjs_pensiun,
+                "bpjs_kesehatan"                                => $bpjs_kesehatan,
+                "nama_pemilik_bpjs_kesehatan"                   => $nama_pemilik_bpjs_kesehatan,
+                "no_bpjs_kesehatan"                             => $no_bpjs_kesehatan,
+                "kelas_bpjs"                                    => $kelas_bpjs
             ]);
         } catch (\Throwable $e) {
 

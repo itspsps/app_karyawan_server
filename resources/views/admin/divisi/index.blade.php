@@ -168,7 +168,7 @@
                                 </div>
                                 <div class="modal-body">
                                     <div class="col-lg-12">
-                                        <table class="table" id="table_lihat_karyawan" style="width: 100%;">
+                                        <table class="table" id="table_lihat_karyawan" style="width: 100%; font-size: smaller;">
                                             <thead class="table-primary">
                                                 <tr>
                                                     <th>No.</th>
@@ -201,7 +201,7 @@
                                 </div>
                                 <div class="modal-body">
                                     <div class="col-lg-12">
-                                        <table class="table" id="table_lihat_bagian" style="width: 100%;">
+                                        <table class="table" id="table_lihat_bagian" style="width: 100%; font-size: smaller;">
                                             <thead class="table-primary">
                                                 <tr>
                                                     <th>No.</th>
@@ -222,7 +222,7 @@
                             </div>
                         </div>
                     </div>
-                    <table class="table" id="table_divisi" style="width: 100%;">
+                    <table class="table" id="table_divisi" style="width: 100%; font-size: smaller;">
                         <thead class="table-primary">
                             <tr>
                                 <th>No.</th>

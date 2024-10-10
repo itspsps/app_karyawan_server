@@ -305,6 +305,11 @@
     }
 </script>
 <script>
+    // console.log('ok');
+    setTimeout(function() {
+        // console.log('ok1');
+        $("#alert_karyawan_tidaksesuai").remove();
+    }, 4000); // 7 secs
     $(document).on('click', '#btn_klik', function(e) {
         Swal.fire({
             allowOutsideClick: false,

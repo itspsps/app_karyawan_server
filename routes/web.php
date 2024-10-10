@@ -41,6 +41,7 @@ use App\Http\Controllers\PenugasanController;
 use App\Http\Controllers\PenugasanUserController;
 use App\Http\Controllers\StrukturOrganisasiController;
 use App\Http\Controllers\RecruitmentController;
+use App\Http\Controllers\UserKaryawanController;
 use App\Models\Jabatan;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Artisan;
@@ -216,12 +217,6 @@ Route::post('/karyawan/proses-edit/{id}/sip', [karyawanController::class, 'editK
 Route::get('/karyawan/delete/{id}/sp', [karyawanController::class, 'deleteKaryawan'])->middleware('admin');
 Route::get('/karyawan/delete/{id}/sps', [karyawanController::class, 'deleteKaryawan'])->middleware('admin');
 Route::get('/karyawan/delete/{id}/sip', [karyawanController::class, 'deleteKaryawan'])->middleware('admin');
-Route::get('/karyawan/edit-password/{id}/sp', [karyawanController::class, 'editPassword'])->middleware('admin');
-Route::get('/karyawan/edit-password/{id}/sps', [karyawanController::class, 'editPassword'])->middleware('admin');
-Route::get('/karyawan/edit-password/{id}/sip', [karyawanController::class, 'editPassword'])->middleware('admin');
-Route::post('/karyawan/edit-password-proses/{id}/sp', [karyawanController::class, 'editPasswordProses'])->middleware('admin');
-Route::post('/karyawan/edit-password-proses/{id}/sps', [karyawanController::class, 'editPasswordProses'])->middleware('admin');
-Route::post('/karyawan/edit-password-proses/{id}/sip', [karyawanController::class, 'editPasswordProses'])->middleware('admin');
 Route::post('/karyawan/ImportKaryawan/sp', [karyawanController::class, 'ImportKaryawan'])->middleware('admin');
 Route::post('/karyawan/ImportKaryawan/sps', [karyawanController::class, 'ImportKaryawan'])->middleware('admin');
 Route::post('/karyawan/ImportKaryawan/sip', [karyawanController::class, 'ImportKaryawan'])->middleware('admin');
@@ -253,17 +248,25 @@ Route::get('/karyawan/karyawan_masa_tenggang_kontrak/sip', [karyawanController::
 Route::get('/karyawan/database_karyawan_masa_tenggang_kontrak/sp', [karyawanController::class, 'database_karyawan_masa_tenggang_kontrak'])->middleware('admin');
 Route::get('/karyawan/database_karyawan_masa_tenggang_kontrak/sps', [karyawanController::class, 'database_karyawan_masa_tenggang_kontrak'])->middleware('admin');
 Route::get('/karyawan/database_karyawan_masa_tenggang_kontrak/sip', [karyawanController::class, 'database_karyawan_masa_tenggang_kontrak'])->middleware('admin');
-Route::post('/karyawan/upddate_kontrak_proses', [karyawanController::class, 'upddate_kontrak_proses'])->middleware('admin');
+Route::post('/karyawan/update_kontrak_proses', [karyawanController::class, 'update_kontrak_proses'])->middleware('admin');
 
-Route::get('/users/sp', [karyawanController::class, 'index_users'])->middleware('admin');
-Route::get('/users/sps', [karyawanController::class, 'index_users'])->middleware('admin');
-Route::get('/users/sip', [karyawanController::class, 'index_users'])->middleware('admin');
-Route::get('/users_bulanan-datatable/sp', [karyawanController::class, 'datatable_users_bulanan'])->middleware('admin');
-Route::get('/users_harian-datatable/sp', [karyawanController::class, 'datatable_users_harian'])->middleware('admin');
-Route::get('/users_bulanan-datatable/sps', [karyawanController::class, 'datatable_users_bulanan'])->middleware('admin');
-Route::get('/users_harian-datatable/sps', [karyawanController::class, 'datatable_users_harian'])->middleware('admin');
-Route::get('/users_bulanan-datatable/sip', [karyawanController::class, 'datatable_users_bulanan'])->middleware('admin');
-Route::get('/users_harian-datatable/sip', [karyawanController::class, 'datatable_users_harian'])->middleware('admin');
+Route::get('/users/sp', [UserKaryawanController::class, 'index_users'])->middleware('admin');
+Route::get('/users/sps', [UserKaryawanController::class, 'index_users'])->middleware('admin');
+Route::get('/users/sip', [UserKaryawanController::class, 'index_users'])->middleware('admin');
+Route::get('/users_bulanan-datatable/sp', [UserKaryawanController::class, 'datatable_users_bulanan'])->middleware('admin');
+Route::get('/users_harian-datatable/sp', [UserKaryawanController::class, 'datatable_users_harian'])->middleware('admin');
+Route::get('/users_bulanan-datatable/sps', [UserKaryawanController::class, 'datatable_users_bulanan'])->middleware('admin');
+Route::get('/users_harian-datatable/sps', [UserKaryawanController::class, 'datatable_users_harian'])->middleware('admin');
+Route::get('/users_bulanan-datatable/sip', [UserKaryawanController::class, 'datatable_users_bulanan'])->middleware('admin');
+Route::get('/users_harian-datatable/sip', [UserKaryawanController::class, 'datatable_users_harian'])->middleware('admin');
+Route::get('/users/edit-password/{id}/sp', [UserKaryawanController::class, 'editPassword'])->middleware('admin');
+Route::get('/users/edit-password/{id}/sps', [UserKaryawanController::class, 'editPassword'])->middleware('admin');
+Route::get('/users/edit-password/{id}/sip', [UserKaryawanController::class, 'editPassword'])->middleware('admin');
+Route::post('/users/edit-password-proses/{id}/sp', [UserKaryawanController::class, 'editPasswordProses'])->middleware('admin');
+Route::post('/users/edit-password-proses/{id}/sps', [UserKaryawanController::class, 'editPasswordProses'])->middleware('admin');
+Route::post('/users/edit-password-proses/{id}/sip', [UserKaryawanController::class, 'editPasswordProses'])->middleware('admin');
+Route::post('/users/non_aktif_proses', [UserKaryawanController::class, 'non_aktif_proses'])->middleware('admin');
+Route::post('/users/aktif_proses', [UserKaryawanController::class, 'aktif_proses'])->middleware('admin');
 
 
 // STRUKTUR ORGANISASI

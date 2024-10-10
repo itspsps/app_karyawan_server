@@ -143,18 +143,18 @@
                         @method('put')
                         @csrf
                         <div class="input-group">
-                            <input type="hidden" name="id_user" value="{{ Auth::user()->id }}">
+                            <input type="hidden" name="id_user" value="{{ $user_karyawan->id }}">
                             {{-- <input type="hidden" name="telp" value="{{ $data_user->telepon }}"> --}}
                             {{-- <input type="hidden" name="email" value="{{ $data_user->email }}"> --}}
                             {{-- <input type="hidden" name="departements" value="{{ $user->dept_id }}"> --}}
                             {{-- <input type="hidden" name="jabatan" value="{{ $user->jabatan_id }}"> --}}
                             {{-- <input type="hidden" name="divisi" value="{{ $user->divisi_id }}" id=""> --}}
                             <input type="hidden" name="id_user_atasan" value="{{ $getUserAtasan->id }}">
-                            <input type="hidden" name="nik" value="{{ Auth::user()->id }}">
+                            <input type="hidden" name="nik" value="{{ $user_karyawan->nik }}">
                             <input type="hidden" name="id_jabatan" value="{{ $user->jabatan_id }}">
                             <input type="hidden" name="id_departemen" value="{{ $user->dept_id }}">
                             <input type="hidden" name="id_divisi" value="{{ $user->divisi_id }}">
-                            <input type="hidden" name="id_diajukan_oleh" value="{{ Auth::user()->id }}">
+                            <input type="hidden" name="id_diajukan_oleh" value="{{ $user_karyawan->id }}">
                             <input type="hidden" name="id_disahkan_oleh" value="{{ $getUserAtasan->id }}">
                             <input type="hidden" name="proses_hrd" value="proses hrd">
                             <input type="hidden" name="proses_finance" value="proses finance">
@@ -162,11 +162,11 @@
                         </div>
                         <div class="input-group">
                             <input type="text" class="form-control" value="NIK" readonly>
-                            <input type="text" class="form-control" name="" value="{{ Auth::user()->nik }}" style="font-weight: bold" readonly required>
+                            <input type="text" class="form-control" name="" value="{{ $user_karyawan->nik }}" style="font-weight: bold" readonly required>
                         </div>
                         <div class="input-group">
                             <input type="text" class="form-control" value="Nama" readonly>
-                            <input type="text" class="form-control" name="" value="{{ Auth::user()->fullname }}" style="font-weight: bold" readonly required>
+                            <input type="text" class="form-control" name="" value="{{ $user_karyawan->fullname }}" style="font-weight: bold" readonly required>
                         </div>
                         <div class="input-group">
                             <input type="text" class="form-control" value="Jabatan" readonly>
@@ -283,7 +283,7 @@
                         <hr>
                         <div class="input-group">
                             <input type="text" class="form-control" value="Diajukan oleh" readonly>
-                            <input type="text" class="form-control" name="diajukan_oleh" value="{{ Auth::user()->name }}" readonly>
+                            <input type="text" class="form-control" name="diajukan_oleh" value="{{ $user_karyawan->name }}" readonly>
                         </div>
                         <div class="input-group">
                             <input type="text" class="form-control" value="Diminta oleh" readonly>
@@ -522,7 +522,7 @@
                 $('#diminta_oleh').hide();
                 $('#diminta_oleh_departemen').hide();
                 $('#diminta_oleh_saya').show();
-                $('#diminta_oleh_saya').val('{{Auth::user()->name}}');
+                $('#diminta_oleh_saya').val('{{$user_karyawan->name}}');
 
             }
         });

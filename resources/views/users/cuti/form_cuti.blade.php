@@ -113,7 +113,7 @@
             <tr>
                 <th></th>
                 <th style="background-color:#F2F3F4 ;">Nama Pengganti<i>(Jika Ada)</i></th>
-                <td style="background-color:#F2F3F4 ;">:&nbsp;{{$pengganti->name}}</td>
+                <td style="background-color:#F2F3F4 ;">:&nbsp;@if($pengganti==null) @else {{$pengganti->name}} @endif</td>
             </tr>
         </tfoot>
     </table>
@@ -136,7 +136,7 @@
             <tr style="font-weight: bold;">
                 <td style="text-align: center;">
                     <img src="{{ url('https://karyawan.sumberpangan.store/laravel/public/signature/'.$data_cuti->ttd_user.'.png') }}" width="100%" alt="">
-                    <p>{{Auth::user()->name}}</p>
+                    <p>{{$user_karyawan->name}}</p>
                 </td>
                 <td style="text-align: center;">
                     <img src="{{ url('https://karyawan.sumberpangan.store/laravel/public/signature/'.$data_cuti->ttd_atasan.'.png') }}" width="100%" alt="">

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Departemen;
 use App\Models\Divisi;
 use App\Models\Jabatan;
+use App\Models\Karyawan;
 use App\Models\Lokasi;
 use App\Models\Provincies;
 use App\Models\User;
@@ -31,19 +32,19 @@ class AccessController extends Controller
             'title' => 'Karyawan',
             "data_departemen" => Departemen::all(),
             'holding' => $holding,
-            'data_user' => User::where('kontrak_kerja', $kontrak_kerja)->where('is_admin', 'user')->get(),
+            'data_user' => Karyawan::where('kontrak_kerja', $kontrak_kerja)->get(),
             "data_departemen" => Departemen::all(),
             "data_jabatan" => Jabatan::all(),
-            "karyawan_laki" => User::where('gender', 'Laki-Laki')->where('kontrak_kerja', $holding)->count(),
-            "karyawan_perempuan" => User::where('gender', 'Perempuan')->where('kontrak_kerja', $holding)->count(),
-            "karyawan_office" => User::where('gender', 'Laki-Laki')->where('kontrak_kerja', $holding)->count(),
-            "karyawan_shift" => User::where('gender', 'Perempuan')->where('kontrak_kerja', $holding)->count(),
+            "karyawan_laki" => Karyawan::where('gender', 'Laki-Laki')->where('kontrak_kerja', $holding)->count(),
+            "karyawan_perempuan" => Karyawan::where('gender', 'Perempuan')->where('kontrak_kerja', $holding)->count(),
+            "karyawan_office" => Karyawan::where('gender', 'Laki-Laki')->where('kontrak_kerja', $holding)->count(),
+            "karyawan_shift" => Karyawan::where('gender', 'Perempuan')->where('kontrak_kerja', $holding)->count(),
         ]);
     }
     public function datatable(Request $request)
     {
         $holding = request()->segment(count(request()->segments()));
-        $table = User::where('kontrak_kerja', $holding)->get();
+        $table = Karyawan::where('kontrak_kerja', $holding)->get();
         if (request()->ajax()) {
             return DataTables::of($table)
                 ->addColumn('departemen', function ($row) use ($holding) {
@@ -78,7 +79,7 @@ class AccessController extends Controller
     public function add_access(Request $request, $id)
     {
         $holding = request()->segment(count(request()->segments()));
-        $user = User::with('Jabatan')
+        $user = Karyawan::with('Jabatan')
             ->with('Divisi')
             ->with('Divisi1')
             ->with('Divisi2')
@@ -98,7 +99,7 @@ class AccessController extends Controller
     {
         // dd($request->all());
         $holding = request()->segment(count(request()->segments()));
-        $access = User::where('id', $request->id_karyawan)->update([
+        $access = Karyawan::where('id', $request->id_karyawan)->update([
             'access_1' => $request->access_1,
         ]);
         Alert::success('Berhasil', 'Anda Berhasil Menyimpan Data');

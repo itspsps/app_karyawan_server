@@ -6,6 +6,7 @@ use App\Models\ActivityLog;
 use App\Models\Inventaris;
 use App\Models\Departemen;
 use App\Models\Jabatan;
+use App\Models\Karyawan;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -24,12 +25,12 @@ class InventarisController extends Controller
             "data_departemen" => Departemen::all(),
             "data_inventaris" => Inventaris::all(),
             'holding' => $holding,
-            'data_user' => User::where('kontrak_kerja', $holding)->where('status_aktif', 'AKTIF')->get(),
+            'data_user' => Karyawan::where('kontrak_kerja', $holding)->where('status_aktif', 'AKTIF')->get(),
             "data_jabatan" => Jabatan::all(),
-            "karyawan_laki" => User::where('gender', 'Laki-Laki')->where('kontrak_kerja', $holding)->where('status_aktif', 'AKTIF')->count(),
-            "karyawan_perempuan" => User::where('gender', 'Perempuan')->where('kontrak_kerja', $holding)->where('status_aktif', 'AKTIF')->count(),
-            "karyawan_office" => User::where('gender', 'Laki-Laki')->where('kontrak_kerja', $holding)->where('status_aktif', 'AKTIF')->count(),
-            "karyawan_shift" => User::where('gender', 'Perempuan')->where('kontrak_kerja', $holding)->where('status_aktif', 'AKTIF')->count(),
+            "karyawan_laki" => Karyawan::where('gender', 'Laki-Laki')->where('kontrak_kerja', $holding)->where('status_aktif', 'AKTIF')->count(),
+            "karyawan_perempuan" => Karyawan::where('gender', 'Perempuan')->where('kontrak_kerja', $holding)->where('status_aktif', 'AKTIF')->count(),
+            "karyawan_office" => Karyawan::where('gender', 'Laki-Laki')->where('kontrak_kerja', $holding)->where('status_aktif', 'AKTIF')->count(),
+            "karyawan_shift" => Karyawan::where('gender', 'Perempuan')->where('kontrak_kerja', $holding)->where('status_aktif', 'AKTIF')->count(),
         ]);
     }
     public function datatable(Request $request)
@@ -40,9 +41,9 @@ class InventarisController extends Controller
             return DataTables::of($table)
                 ->addColumn('foto_inventaris', function ($row) use ($holding) {
                     if ($row->foto_inventaris == '') {
-                        $img = '<img src="https://karyawan.sumberpangan.store/public/admin/assets/img/avatars/1.png" alt="user-avatar" class="d-block w-px-120 h-px-120 rounded" id="template_foto_inventaris" />';
+                        $img = '<img src="http://127.0.0.1:8000/admin/assets/img/avatars/1.png" alt="user-avatar" class="d-block w-px-120 h-px-120 rounded" id="template_foto_inventaris" />';
                     } else {
-                        $img = '<img src="https://karyawan.sumberpangan.store/laravel/storage/app/public/foto_inventaris/' . $row->foto_inventaris . '" alt="user-avatar" class="d-block w-px-120 h-px-120 rounded" id="template_foto_inventaris" />';
+                        $img = '<img src="http://127.0.0.1:8000/storage/app/public/foto_inventaris/' . $row->foto_inventaris . '" alt="user-avatar" class="d-block w-px-120 h-px-120 rounded" id="template_foto_inventaris" />';
                     }
                     return $img;
                 })

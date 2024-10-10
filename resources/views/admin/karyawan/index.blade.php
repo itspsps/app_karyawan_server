@@ -357,18 +357,17 @@
                                 </table>
                             </div>
                             <div class="tab-pane fade" id="navs-pills-justified-profile" role="tabpanel">
-                                <table class="table" id="table_karyawan_harian" style="width: 100%;">
+                                <table class="table" id="table_karyawan_harian" style="width: 100%; font-size: smaller;">
                                     <thead class="table-primary">
                                         <tr>
                                             <th>No.</th>
                                             <th>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Nomor&nbsp;ID&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
                                             <th>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Nama&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
-                                            <th>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Username&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
                                             <th>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Telepon&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
                                             <th>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Alamat&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
-                                            <th>Tanggal&nbsp;Masuk</th>
-                                            <th>Penempatan&nbsp;Kerja</th>
-                                            <th>Opsi</th>
+                                            <th>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Tanggal&nbsp;Masuk&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
+                                            <th>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Penempatan&nbsp;Kerja&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
+                                            <th>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Opsi&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
                                         </tr>
                                     </thead>
                                     <tbody class="table-border-bottom-0">
@@ -471,10 +470,6 @@
             {
                 data: 'name',
                 name: 'name'
-            },
-            {
-                data: 'username',
-                name: 'username'
             },
             {
                 data: 'telepon',
@@ -949,24 +944,43 @@
         let holding = $(this).data("holding");
         console.log(holding);
         let url = "{{ url('/karyawan/detail/')}}" + '/' + id + '/' + holding;
-        $.ajax({
-            url: url,
-            method: 'GET',
-            contentType: false,
-            cache: false,
-            processData: false,
-            // data: {
-            //     id_kecamatan: id_kecamatan
-            // },
-            success: function(response) {
-                // console.log(response);
-                window.location.assign(url);
-            },
-            error: function(data) {
-                console.log('error:', data)
-            },
+        Swal.fire({
+            allowOutsideClick: false,
+            background: 'transparent',
+            html: ' <div class="spinner-grow text-primary spinner-grow-sm me-2" role="status"></div><div class="spinner-grow text-primary spinner-grow-sm me-2" role="status"></div><div class="spinner-grow text-primary spinner-grow-sm me-2" role="status"></div>',
+            showCancelButton: false,
+            showConfirmButton: false,
+            onBeforeOpen: () => {
+                // Swal.showLoading()
+                $.ajax({
+                    url: url,
+                    method: 'GET',
+                    contentType: false,
+                    cache: false,
+                    processData: false,
+                    // data: {
+                    //     id_kecamatan: id_kecamatan
+                    // },
+                    success: function(response) {
+                        // console.log(response);
+                        window.location.assign(url);
+                    },
+                    error: function(data) {
+                        Swal.fire({
+                            icon: 'warning',
+                            title: 'Error',
+                            text: 'Error : ' + data.responseJSON.message,
+                            showConfirmButton: true,
+                        });
+                        // console.log('error:', data)
+                    },
 
-        })
+                })
+            },
+            onAfterClose() {
+                Swal.close()
+            }
+        });
     });
     $(document).on('click', '#btn_non_aktif_karyawan', function() {
         var id = $(this).data('id');

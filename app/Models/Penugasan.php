@@ -60,6 +60,6 @@ class Penugasan extends Model
 
     public function User()
     {
-        return $this->belongsTo(User::class, 'id_user', 'id');
+        return $this->belongsTo(Karyawan::class, 'id_user', 'id');
     }
 }

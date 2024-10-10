@@ -86,7 +86,7 @@
                             @if($data->ttd_user=='')
                             <h6 class="text-center">kosong</h6>
                             @else
-                            <img src="{{ url('https://karyawan.sumberpangan.store/laravel/public/signature/'.$data->ttd_user.'.png') }}" style="width: 100%;" alt="">
+                            <img src="{{ url('http://127.0.0.1:8000/signature/cuti/'.$data->ttd_user.'.png') }}" style="width: 100%;" alt="">
                             @endif
                             <p style="text-align: center;font-weight: bold">{{ \Carbon\Carbon::parse($data->waktu_ttd_user)->isoFormat('D MMMM Y HH:m')}} WIB</p>
                         </div>
@@ -165,7 +165,7 @@
                     <div>
                         <div id="note" onmouseover="my_function();"></div>
                         <canvas id="the_canvas" width="auto" height="100px"></canvas>
-                        <p class="text-primary" style="text-align: center">Ttd : {{ Auth::user()->name }} {{ date('d-m-Y') }}</p>
+                        <p class="text-primary" style="text-align: center">Ttd : {{ $user_karyawan->name }} {{ date('d-m-Y') }}</p>
                         <hr>
                         <div class="text-center">
                             <input type="hidden" id="signature" name="signature">
