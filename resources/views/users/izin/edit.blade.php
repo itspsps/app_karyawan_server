@@ -152,7 +152,7 @@
         </div>
         <div class="input-group">
             <input type="text" class="form-control" value="Name" readonly>
-            <input type="text" class="form-control" name="fullname" value="{{ $get_izin->fullname }}" style="font-weight: bold" readonly required>
+            <input type="text" class="form-control" name="fullname" value="{{ $get_izin->name }}" style="font-weight: bold" readonly required>
         </div>
         <div class="input-group">
             <input type="text" class="form-control" value="Kategori Izin" readonly>
@@ -274,7 +274,7 @@
                 <div>
                     <div id="note" onmouseover="my_function();"></div>
                     <canvas id="the_canvas" width="auto" height="100px"></canvas>
-                    <p class="text-primary" style="text-align: center">Ttd : {{ $user_karyawan->fullname }} {{ date('Y-m-d') }}</p>
+                    <p class="text-primary" style="text-align: center">Ttd : {{ $user_karyawan->name }} {{ date('Y-m-d') }}</p>
                     <hr>
                     <div class="text-center">
                         <input type="hidden" id="signature" name="signature">

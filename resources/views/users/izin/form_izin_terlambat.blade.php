@@ -120,7 +120,7 @@
             </tr>
             <tr>
                 <td>Nama Karyawan</td>
-                <td>:&nbsp;{{$data_izin->User->fullname}}</td>
+                <td>:&nbsp;{{$data_izin->User->name}}</td>
             </tr>
             <tr>
                 <td>Jabatan</td>
@@ -156,7 +156,7 @@
             <tr style="font-weight: bold;">
                 <td style="text-align: center;">
                     <img src="http:127.0.0.1:8000/signature/izin/'.$data_izin->ttd_pengajuan.'.png" width="100%" alt="">
-                    <p>({{$data_izin->fullname}})</p>
+                    <p>({{$data_izin->name}})</p>
                 </td>
                 <td style="text-align: center;">
                     <img src="http:127.0.0.1:8000/signature/izin/'.$data_izin->ttd_atasan.'.png" width="100%" alt="">

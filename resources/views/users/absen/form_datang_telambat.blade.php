@@ -127,7 +127,7 @@
                         </div>
                         <div class="input-group">
                             <input type="text" class="form-control" value="Name" readonly>
-                            <input type="text" class="form-control" name="fullname" value="{{ Auth::user()->name }}" style="font-weight: bold" readonly required>
+                            <input type="text" class="form-control" name="fullname" value="{{ $user->name }}" style="font-weight: bold" readonly required>
                         </div>
                         <div class="input-group">
                             <input type="text" class="form-control" value="Kategori Izin" readonly>

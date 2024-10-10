@@ -55,7 +55,7 @@
                                             @endif
                                         </div>
                                         <div class="card-info">
-                                            <h6 class="title">{{ $dataizin->fullname }}</h6>
+                                            <h6 class="title">{{ $dataizin->name }}</h6>
                                             <span class="">{{ $dataizin->izin }}</span>
                                             <div class="d-flex align-items-center">
                                                 @if ($dataizin->status_izin == 1)
@@ -160,7 +160,7 @@
                                             <img src="{{ asset('assets/assets_users/images/users/user_icon.jpg') }}" alt="/">
                                         </div>
                                         <div class="card-info">
-                                            <h6 class="title">{{ $datapenugasan->fullname }}</h6>
+                                            <h6 class="title">{{ $datapenugasan->name }}</h6>
                                             <span class="" style="font-size: 12px">Penugasan {{ $datapenugasan->penugasan }}</span>
                                             <div class="d-flex align-items-center">
                                                 {{-- @if ($datapenugasan->status_penugasan = 1) --}}
@@ -185,7 +185,7 @@
                                             <img src="{{ asset('assets/assets_users/images/users/user_icon.jpg') }}" alt="/">
                                         </div>
                                         <div class="card-info">
-                                            <h6 class="title">{{ $datapenugasan->fullname }}</h6>
+                                            <h6 class="title">{{ $datapenugasan->name }}</h6>
                                             <span class="" style="font-size: 12px">Penugasan {{ $datapenugasan->penugasan }}</span>
                                             <div class="d-flex align-items-center">
                                                 {{-- @if ($datapenugasan->status_penugasan = 1) --}}
@@ -210,7 +210,7 @@
                                             <img src="{{ asset('assets/assets_users/images/users/user_icon.jpg') }}" alt="/">
                                         </div>
                                         <div class="card-info">
-                                            <h6 class="title">{{ $datapenugasan->fullname }}</h6>
+                                            <h6 class="title">{{ $datapenugasan->name }}</h6>
                                             <span class="" style="font-size: 12px">Penugasan {{ $datapenugasan->penugasan }}</span>
                                             <div class="d-flex align-items-center">
                                                 {{-- @if ($datapenugasan->status_penugasan = 1) --}}
@@ -235,7 +235,7 @@
                                             <img src="{{ asset('assets/assets_users/images/users/user_icon.jpg') }}" alt="/">
                                         </div>
                                         <div class="card-info">
-                                            <h6 class="title">{{ $datapenugasan->fullname }}</h6>
+                                            <h6 class="title">{{ $datapenugasan->name }}</h6>
                                             <span class="" style="font-size: 12px">Penugasan {{ $datapenugasan->penugasan }}</span>
                                             <div class="d-flex align-items-center">
                                                 {{-- @if ($datapenugasan->status_penugasan = 1) --}}
