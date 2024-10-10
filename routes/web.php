@@ -267,7 +267,9 @@ Route::post('/users/edit-password-proses/{id}/sps', [UserKaryawanController::cla
 Route::post('/users/edit-password-proses/{id}/sip', [UserKaryawanController::class, 'editPasswordProses'])->middleware('admin');
 Route::post('/users/non_aktif_proses', [UserKaryawanController::class, 'non_aktif_proses'])->middleware('admin');
 Route::post('/users/aktif_proses', [UserKaryawanController::class, 'aktif_proses'])->middleware('admin');
-
+Route::post('/users/ImportUser/sp', [UserKaryawanController::class, 'ImportUser'])->middleware('admin');
+Route::post('/users/ImportUser/sps', [UserKaryawanController::class, 'ImportUser'])->middleware('admin');
+Route::post('/users/ImportUser/sip', [UserKaryawanController::class, 'ImportUser'])->middleware('admin');
 
 // STRUKTUR ORGANISASI
 Route::get('/struktur_organisasi/sp', [StrukturOrganisasiController::class, 'index'])->middleware('admin');

@@ -287,8 +287,8 @@
             $('#form_jam_pulang_cepat').show();
             $('#form_jam_kembali').show();
             $('#form_tgl_selesai').show();
+
         }
-    }
     });
 </script>
 <script type="text/javascript">

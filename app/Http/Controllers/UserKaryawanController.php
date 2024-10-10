@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Imports\KaryawanImport;
+use App\Imports\UsersImport;
 use App\Models\ActivityLog;
 use App\Models\Departemen;
 use App\Models\Divisi;
@@ -13,6 +15,7 @@ use App\Models\UserNonActive;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use Maatwebsite\Excel\Facades\Excel;
 use RealRashid\SweetAlert\Facades\Alert;
 use Yajra\DataTables\Facades\DataTables;
 
@@ -458,5 +461,15 @@ class UserKaryawanController extends Controller
         $update_user->update();
 
         return redirect()->back()->with('success', 'Data Berhasil di Simpan');
+    }
+
+    public function ImportUser(Request $request)
+    {
+        // dd('ok');
+        $holding = request()->segment(count(request()->segments()));
+        $query = Excel::import(new UsersImport, $request->file_excel);
+        if ($query) {
+            return redirect('/users/' . $holding)->with('success', 'Import User Sukses');
+        }
     }
 }

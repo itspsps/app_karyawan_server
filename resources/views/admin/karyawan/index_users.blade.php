@@ -100,10 +100,10 @@
                             </div>
                         </div>
                         <div class="modal-footer">
-                            <button type="submit" class="btn btn-sm btn-success">
+                            <button type="submit" class="btn btn-xs btn-success">
                                 Save
                             </button>
-                            <button type="button" class="btn btn-sm btn-outline-secondary" data-bs-dismiss="modal">
+                            <button type="button" class="btn btn-xs btn-outline-secondary" data-bs-dismiss="modal">
                                 Close
                             </button>
                         </div>
@@ -185,10 +185,10 @@
                             </div>
                         </div>
                         <div class="modal-footer">
-                            <button type="submit" class="btn btn-sm btn-success">
+                            <button type="submit" class="btn btn-xs btn-success">
                                 Save
                             </button>
-                            <button type="button" class="btn btn-sm btn-outline-secondary" data-bs-dismiss="modal">
+                            <button type="button" class="btn btn-xs btn-outline-secondary" data-bs-dismiss="modal">
                                 Close
                             </button>
                         </div>
@@ -260,6 +260,77 @@
                     </div>
                 </div>
                 <div class="card-body">
+                    <a type="button" href="{{url('users/tambah-users/'.$holding)}}" class="btn btn-xs btn-primary waves-effect waves-light"><i class="menu-icon tf-icons mdi mdi-plus"></i>Tambah</a>
+
+                    <button class="btn btn-xs btn-success waves-effect waves-light dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="menu-icon tf-icons mdi mdi-file-excel"></i> Excel
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#modal_import_user_karyawan" href="">Import Add Excel</a></li>
+                        <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#modal_import_update_user_karyawan" href="">Import Update Excel</a></li>
+                        <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#modal_export_karyawan" href="#">Export Excel</a></li>
+                    </ul>
+                    <a type="button" href="{{url('users/pdfKaryawan/'.$holding)}}" class="btn btn-xs btn-danger waves-effect waves-light"><i class="menu-icon tf-icons mdi mdi-file-pdf-box"></i>PDF</a>
+                    <div class="modal fade" id="modal_import_user_karyawan" data-bs-backdrop="static" tabindex="-1">
+                        <div class="modal-dialog modal-dialog-scrollable modal-lg">
+                            <form method="post" action="{{ url('/users/ImportUser/'.$holding) }}" class="modal-content" enctype="multipart/form-data">
+                                @csrf
+                                <div class="modal-header">
+                                    <h4 class="modal-title" id="backDropModalTitle">Import Add User</h4>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="row g-2 mt-2">
+                                        <div class="col mb-2">
+                                            <div class="form-floating form-floating-outline">
+                                                <input type="file" id="file_excel" name="file_excel" accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel" class="form-control" placeholder="Masukkan File" />
+                                                <label for="file_excel">File Excel</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row g-2 mt-2">
+                                        <a href="{{asset('admin/template_import/TEMPLATE IMPORT TAMBAH KARYAWAN BULANAN SP_SPS.xlsx')}}" type="button" download="" class="btn btn-xs btn-primary"> Download Format Excel</a>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+                                        Close
+                                    </button>
+                                    <button type="submit" class="btn btn-primary">Save</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="modal fade" id="modal_import_update_user_karyawan" data-bs-backdrop="static" tabindex="-1">
+                        <div class="modal-dialog modal-dialog-scrollable modal-lg">
+                            <form method="post" action="{{ url('/users/ImportUpdateUser/'.$holding) }}" class="modal-content" enctype="multipart/form-data">
+                                @csrf
+                                <div class="modal-header">
+                                    <h4 class="modal-title" id="backDropModalTitle">Import Update Karyawan</h4>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="row g-2 mt-2">
+                                        <div class="col mb-2">
+                                            <div class="form-floating form-floating-outline">
+                                                <input type="file" id="file_excel" name="file_excel" accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel" class="form-control" placeholder="Masukkan File" />
+                                                <label for="file_excel">File Excel</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row g-2 mt-2">
+                                        <a href="{{asset('admin/template_import/TEMPLATE IMPORT UPDATE KARYAWAN BULANAN SP_SPS.xlsx')}}" type="button" download="" class="btn btn-xs btn-primary"> Download Format Excel</a>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+                                        Close
+                                    </button>
+                                    <button type="submit" class="btn btn-primary">Save</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
                     <hr class="my-5">
                     <div class="nav-align-top">
                         <div class="row">

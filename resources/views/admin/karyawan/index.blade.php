@@ -20,9 +20,9 @@
                     </div>
                 </div>
                 <div class="card-body">
-                    <a type="button" href="{{url('karyawan/tambah-karyawan/'.$holding)}}" class="btn btn-sm btn-primary waves-effect waves-light"><i class="menu-icon tf-icons mdi mdi-plus"></i>Tambah</a>
+                    <a type="button" href="{{url('karyawan/tambah-karyawan/'.$holding)}}" class="btn btn-xs btn-primary waves-effect waves-light"><i class="menu-icon tf-icons mdi mdi-plus"></i>Tambah</a>
 
-                    <button class="btn btn-sm btn-success waves-effect waves-light dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <button class="btn btn-xs btn-success waves-effect waves-light dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                         <i class="menu-icon tf-icons mdi mdi-file-excel"></i> Excel
                     </button>
                     <ul class="dropdown-menu">
@@ -30,7 +30,8 @@
                         <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#modal_import_update_karyawan" href="">Import Update Excel</a></li>
                         <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#modal_export_karyawan" href="#">Export Excel</a></li>
                     </ul>
-                    <a type="button" href="{{url('karyawan/pdfKaryawan/'.$holding)}}" class="btn btn-sm btn-danger waves-effect waves-light"><i class="menu-icon tf-icons mdi mdi-file-pdf-box"></i>PDF</a>
+                    <a type="button" href="{{url('karyawan/pdfKaryawan/'.$holding)}}" class="btn btn-xs btn-danger waves-effect waves-light"><i class="menu-icon tf-icons mdi mdi-file-pdf-box"></i>PDF</a>
+
                     <hr class="my-5">
                     <div class="row g-3">
                         <div class="col-md-3 col-6">
@@ -105,7 +106,7 @@
                                         </div>
                                     </div>
                                     <div class="row g-2 mt-2">
-                                        <a href="{{asset('admin/template_import/TEMPLATE IMPORT TAMBAH KARYAWAN BULANAN SP_SPS.xlsx')}}" type="button" download="" class="btn btn-sm btn-primary"> Download Format Excel</a>
+                                        <a href="{{asset('admin/template_import/TEMPLATE IMPORT TAMBAH KARYAWAN BULANAN SP_SPS.xlsx')}}" type="button" download="" class="btn btn-xs btn-primary"> Download Format Excel</a>
                                     </div>
                                 </div>
                                 <div class="modal-footer">
@@ -135,7 +136,7 @@
                                         </div>
                                     </div>
                                     <div class="row g-2 mt-2">
-                                        <a href="{{asset('admin/template_import/TEMPLATE IMPORT UPDATE KARYAWAN BULANAN SP_SPS.xlsx')}}" type="button" download="" class="btn btn-sm btn-primary"> Download Format Excel</a>
+                                        <a href="{{asset('admin/template_import/TEMPLATE IMPORT UPDATE KARYAWAN BULANAN SP_SPS.xlsx')}}" type="button" download="" class="btn btn-xs btn-primary"> Download Format Excel</a>
                                     </div>
                                 </div>
                                 <div class="modal-footer">
@@ -160,7 +161,7 @@
                                         <div class="col mb-2">
                                             <div class="form-floating form-floating-outline">
                                                 <h6>Download File Excel Data Karyawan</h6>
-                                                <a href="{{url('karyawan/ExportKaryawan/'.$holding)}}" type="button" class="btn btn-sm btn-success"> Download Excel</a>
+                                                <a href="{{url('karyawan/ExportKaryawan/'.$holding)}}" type="button" class="btn btn-xs btn-success"> Download Excel</a>
                                             </div>
                                         </div>
                                     </div>
@@ -252,10 +253,10 @@
                                     </div>
                                 </div>
                                 <div class="modal-footer">
-                                    <button type="submit" class="btn btn-sm btn-success">
+                                    <button type="submit" class="btn btn-xs btn-success">
                                         Save
                                     </button>
-                                    <button type="button" class="btn btn-sm btn-outline-secondary" data-bs-dismiss="modal">
+                                    <button type="button" class="btn btn-xs btn-outline-secondary" data-bs-dismiss="modal">
                                         Close
                                     </button>
                                 </div>
