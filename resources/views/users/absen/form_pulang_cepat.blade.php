@@ -205,7 +205,7 @@
                             <div>
                                 <div id="note" onmouseover="my_function();"></div>
                                 <canvas id="the_canvas" width="auto" height="100px"></canvas>
-                                <p class="text-primary" style="text-align: center">Ttd : {{ Auth::user()->fullname }} {{ date('Y-m-d') }}</p>
+                                <p class="text-primary" style="text-align: center">Ttd : {{ $user->name }} {{ date('Y-m-d') }}</p>
                                 <hr>
                                 <div class="text-center">
                                     <input type="hidden" id="signature" name="signature">

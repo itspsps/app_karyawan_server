@@ -73,13 +73,13 @@
         </div>
         <div class="input-group">
             <input type="text" class="form-control" value="Nama Pemohon" readonly>
-            <input type="text" class="form-control" name="fullname" value="{{ $data->fullname }}" style="font-weight: bold" readonly required>
+            <input type="text" class="form-control" name="fullname" value="{{ $data->name }}" style="font-weight: bold" readonly required>
         </div>
         <div class="modal fade" id="modal_ttd">
             <div class="modal-dialog modal-dialog-centered" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title">TTD : {{ $data->fullname }}</h5>
+                        <h5 class="modal-title">TTD : {{ $data->name }}</h5>
                     </div>
                     <div class="modal-body">
                         @if($data->ttd_pengajuan=='')
@@ -192,7 +192,7 @@
                 <div>
                     <div id="note" onmouseover="my_function();"></div>
                     <canvas id="the_canvas" width="auto" height="100px"></canvas>
-                    <p class="text-primary" style="text-align: center">Ttd : {{ $user_karyawan->fullname }} {{ date('Y-m-d') }}</p>
+                    <p class="text-primary" style="text-align: center">Ttd : {{ $user_karyawan->name }} {{ date('Y-m-d') }}</p>
                     <hr>
                     <div class="text-center">
                         <input type="hidden" id="signature" name="signature">

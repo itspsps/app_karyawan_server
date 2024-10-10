@@ -90,7 +90,7 @@ class HomeUserController extends Controller
                 ->orWhere('id_disahkan_oleh', $user)
                 ->orWhere('id_user_hrd', $user)
                 ->orWhere('id_user_finance', $user)
-                ->select('penugasans.*', 'karyawans.fullname')
+                ->select('penugasans.*', 'karyawans.name')
                 ->get();
             // dd($datapenugasan);
             $data_user_penugasaan  = DB::table('penugasans')->join('karyawans', 'karyawans.id', 'penugasans.id_user')
