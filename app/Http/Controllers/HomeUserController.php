@@ -36,11 +36,12 @@ class HomeUserController extends Controller
         if (auth()->user()->is_admin == 'admin') {
             return redirect('/dashboard/holding');
         } else {
-            date_default_timezone_set('Asia/Jakarta');
-            $user_login = auth()->user()->karyawan_id;
-            // dd($user_login);
-            $lokasi_kantor = Auth::user()->penempatan_kerja;
             $user_karyawan = Karyawan::where('id', Auth::user()->karyawan_id)->first();
+        
+            date_default_timezone_set('Asia/Jakarta');
+            $user_login = $user_karyawan->id;
+            // dd($user_login);
+            $lokasi_kantor = $user_karyawan->penempatan_kerja;
             // dd($user_karyawan);
             $tanggal = "";
             // $dateweek = \Carbon\Carbon::today();
@@ -62,7 +63,7 @@ class HomeUserController extends Controller
             $count_absen_telat  = MappingShift::where('user_id', $user_login)->where('status_absen', 'HADIR KERJA')->where('keterangan_absensi', 'TELAT HADIR')->where('tanggal_masuk', '<=', $tglskrg)
                 ->whereMonth('tanggal_masuk', $blnskrg)
                 ->count();
-            $user           = Auth::user()->karyawan_id;
+            $user           = $user_karyawan->id;
             $dataizin       = Izin::with('User')->where('id_approve_atasan', $user)
                 ->whereNotNull('ttd_pengajuan')
                 ->where('status_izin', 1)
@@ -211,6 +212,7 @@ class HomeUserController extends Controller
 
                 ]);
             }
+        
         }
     }
     public function create_face_id()
