@@ -41,6 +41,7 @@ use Barryvdh\DomPDF\PDF as DomPDFPDF;
 use Carbon\Carbon;
 use DateTime;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 use PDF;
@@ -460,13 +461,14 @@ class karyawanController extends Controller
     {
         // ini_set('max_execution_time', 300);
         $holding = request()->segment(count(request()->segments()));
-        $query = Excel::import(new KaryawanImportUpdate, $request->file_excel);
         // dd($query());
+        $import = new KaryawanImportUpdate;
         try {
+            Excel::import($import, $request->file_excel);
             return redirect('/karyawan/' . $holding)->with('success', 'Import Karyawan Update Sukses');
-        } catch (\Throwable $th) {
-
-            return redirect()->back()->withErrors($th);
+        } catch (\InvalidArgumentException $th) {
+            // dd($th);
+            return redirect()->back()->with('error', 'Import Error' . $th->getMessage());
         }
     }
     public function ExportKaryawan(Request $request)

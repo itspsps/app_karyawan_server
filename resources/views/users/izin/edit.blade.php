@@ -152,7 +152,7 @@
         </div>
         <div class="input-group">
             <input type="text" class="form-control" value="Name" readonly>
-            <input type="text" class="form-control" name="fullname" value="{{ $get_izin->name }}" style="font-weight: bold" readonly required>
+            <input type="text" class="form-control" name="fullname" value="{{ $get_izin->fullname }}" style="font-weight: bold" readonly required>
         </div>
         <div class="input-group">
             <input type="text" class="form-control" value="Kategori Izin" readonly>

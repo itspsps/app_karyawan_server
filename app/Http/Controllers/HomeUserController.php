@@ -37,7 +37,7 @@ class HomeUserController extends Controller
             return redirect('/dashboard/holding');
         } else {
             $user_karyawan = Karyawan::where('id', Auth::user()->karyawan_id)->first();
-        
+
             date_default_timezone_set('Asia/Jakarta');
             $user_login = $user_karyawan->id;
             // dd($user_login);
@@ -212,7 +212,6 @@ class HomeUserController extends Controller
 
                 ]);
             }
-        
         }
     }
     public function create_face_id()
@@ -2027,13 +2026,14 @@ class HomeUserController extends Controller
                             }
                         }
                     }
+                    if ($request["jarak_pulang"] == NULL) {
+                        $request->session()->flash('absenpulangoutradius', 'Gagal Absen Pulang');
+                        return redirect('/home');
+                    }
                 }
                 // dd($rumus);
                 // dd($lokasi_absen);
-                if ($request["jarak_pulang"] == NULL) {
-                    $request->session()->flash('absenpulangoutradius', 'Gagal Absen Pulang');
-                    return redirect('/home');
-                }
+
                 $tglskrg = date('Y-m-d');
                 $foto_jam_pulang = $request["foto_jam_pulang"];
 
