@@ -253,6 +253,9 @@ Route::post('/karyawan/update_kontrak_proses', [karyawanController::class, 'upda
 Route::get('/users/sp', [UserKaryawanController::class, 'index_users'])->middleware('admin');
 Route::get('/users/sps', [UserKaryawanController::class, 'index_users'])->middleware('admin');
 Route::get('/users/sip', [UserKaryawanController::class, 'index_users'])->middleware('admin');
+Route::post('/users/prosesTambahUser/sp', [UserKaryawanController::class, 'prosesTambahUser'])->middleware('admin');
+Route::post('/users/prosesTambahUser/sps', [UserKaryawanController::class, 'prosesTambahUser'])->middleware('admin');
+Route::post('/users/prosesTambahUser/sip', [UserKaryawanController::class, 'prosesTambahUser'])->middleware('admin');
 Route::get('/users_bulanan-datatable/sp', [UserKaryawanController::class, 'datatable_users_bulanan'])->middleware('admin');
 Route::get('/users_harian-datatable/sp', [UserKaryawanController::class, 'datatable_users_harian'])->middleware('admin');
 Route::get('/users_bulanan-datatable/sps', [UserKaryawanController::class, 'datatable_users_bulanan'])->middleware('admin');
@@ -270,6 +273,9 @@ Route::post('/users/aktif_proses', [UserKaryawanController::class, 'aktif_proses
 Route::post('/users/ImportUser/sp', [UserKaryawanController::class, 'ImportUser'])->middleware('admin');
 Route::post('/users/ImportUser/sps', [UserKaryawanController::class, 'ImportUser'])->middleware('admin');
 Route::post('/users/ImportUser/sip', [UserKaryawanController::class, 'ImportUser'])->middleware('admin');
+Route::get('/users/ExportUser/sp', [UserKaryawanController::class, 'ExportUser'])->middleware('admin');
+Route::get('/users/ExportUser/sps', [UserKaryawanController::class, 'ExportUser'])->middleware('admin');
+Route::get('/users/ExportUser/sip', [UserKaryawanController::class, 'ExportUser'])->middleware('admin');
 
 // STRUKTUR ORGANISASI
 Route::get('/struktur_organisasi/sp', [StrukturOrganisasiController::class, 'index'])->middleware('admin');

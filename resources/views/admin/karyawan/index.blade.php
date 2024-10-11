@@ -150,8 +150,7 @@
                     </div>
                     <div class="modal fade" id="modal_export_karyawan" data-bs-backdrop="static" tabindex="-1">
                         <div class="modal-dialog modal-dialog-scrollable modal-lg">
-                            <form method="post" action="{{ url('/karyawan/ImportKaryawan/'.$holding) }}" class="modal-content" enctype="multipart/form-data">
-                                @csrf
+                            <div class="modal-content">
                                 <div class="modal-header">
                                     <h4 class="modal-title" id="backDropModalTitle">Export Excel Karyawan</h4>
                                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -171,7 +170,7 @@
                                         Close
                                     </button>
                                 </div>
-                            </form>
+                            </div>
                         </div>
                     </div>
                     <div class="modal fade" id="modal_non_aktif_karyawan" data-bs-backdrop="static" tabindex="-1">

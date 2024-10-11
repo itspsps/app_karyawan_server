@@ -18,11 +18,11 @@
     <table border="0" style="margin-top: 3px;" class="kop" width="100%">
         <tr>
             @if($data_izin->User->kontrak_kerja=='SP')
-            <td style="width:20%;"> <img src="{{ url('public/holding/assets/img/logosp.png') }}" width="80px" class="images"> </td>
+            <td style="width:20%;"> <img src="{{ url('holding/assets/img/logosp.png') }}" width="80px" class="images"> </td>
             @elseif($data_izin->User->kontrak_kerja=='SPS')
-            <td style="width:20%;"> <img src="{{ url('public/holding/assets/img/logosps.png') }}" width="80px" class="images"> </td>
+            <td style="width:20%;"> <img src="{{ url('holding/assets/img/logosps.png') }}" width="80px" class="images"> </td>
             @elseif($data_izin->User->kontrak_kerja=='SIP')
-            <td style="width:20%;"> <img src="{{ url('public/holding/assets/img/logosip.png') }}" width="80px" class="images"> </td>
+            <td style="width:20%;"> <img src="{{ url('holding/assets/img/logosip.png') }}" width="80px" class="images"> </td>
             @endif
             <td style="width:50%; font-size: 12pt;">
                 @if($data_izin->User->kontrak_kerja=='SP')
@@ -104,7 +104,7 @@
             </tr>
             <tr style="width: 50%;">
                 <th>Nama</th>
-                <td>:&nbsp;{{$data_izin->User->fullname}}</td>
+                <td>:&nbsp;{{$data_izin->User->name}}</td>
                 <th>Divisi</th>
                 <td>:&nbsp;@foreach($divisi as $divisi){{$divisi->nama_divisi}} @endforeach</td>
             </tr>
@@ -197,20 +197,20 @@
         <tbody>
             <tr style="font-weight: bold;">
                 <td>
-                    <img style="text-align: center;" src="{{ url('https://karyawan.sumberpangan.store/laravel/public/signature/'.$data_izin->ttd_pengajuan.'.png') }}" width="100%" alt="">
+                    <img style="text-align: center;" src="{{ url('https://hrd.sumberpangan.store:4430/signature/'.$data_izin->ttd_pengajuan.'.png') }}" width="100%" alt="">
                 </td>
                 <td>
-                    <img style="text-align: center;" src="{{ url('https://karyawan.sumberpangan.store/laravel/public/signature/'.$data_izin->ttd_atasan.'.png') }}" width="100%" alt="">
+                    <img style="text-align: center;" src="{{ url('https://hrd.sumberpangan.store:4430/signature/'.$data_izin->ttd_atasan.'.png') }}" width="100%" alt="">
                 </td>
                 <td>
-                    <img style="text-align: center;" src="{{ url('https://karyawan.sumberpangan.store/laravel/public/signature/'.$data_izin->ttd_atasan.'.png') }}" width="100%" alt="">
+                    <img style="text-align: center;" src="{{ url('https://hrd.sumberpangan.store:4430/signature/'.$data_izin->ttd_atasan.'.png') }}" width="100%" alt="">
                 </td>
             </tr>
         </tbody>
         <tfoot>
             <tr>
                 <th>
-                    <p style="text-align: left; font-size: 12px; margin-bottom: -2%;">Nama&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp;{{$data_izin->fullname}}</p>
+                    <p style="text-align: left; font-size: 12px; margin-bottom: -2%;">Nama&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp;{{$data_izin->name}}</p>
                     <p style="text-align: left; font-size: 12px;">Tanggal &nbsp;:&nbsp;{{ \Carbon\Carbon::parse($data_izin->waktu_ttd_pengajuan)->isoFormat('D MMMM YYYY')}}</p>
                 </th>
                 <th>

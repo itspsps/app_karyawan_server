@@ -13,11 +13,11 @@
     <table border="0" style="margin-top: -45px;" class="kop" width="100%">
         <tr>
             @if($data_izin->User->kontrak_kerja=='SP')
-            <td style="width:10%;"> <img src="{{ url('public/holding/assets/img/logosp.png') }}" width="80px" class="images"> </td>
+            <td style="width:10%;"> <img src="{{ url('holding/assets/img/logosp.png') }}" width="80px" class="images"> </td>
             @elseif($data_izin->User->kontrak_kerja=='SPS')
-            <td style="width:10%;"> <img src="{{ url('public/holding/assets/img/logosps.png') }}" width="80px" class="images"> </td>
+            <td style="width:10%;"> <img src="{{ url('holding/assets/img/logosps.png') }}" width="80px" class="images"> </td>
             @elseif($data_izin->User->kontrak_kerja=='SIP')
-            <td style="width:10%;"> <img src="{{ url('public/holding/assets/img/logosip.png') }}" width="80px" class="images"> </td>
+            <td style="width:10%;"> <img src="{{ url('holding/assets/img/logosip.png') }}" width="80px" class="images"> </td>
             @endif
             <td style="width:60%;">
                 @if($data_izin->User->kontrak_kerja=='SP')
@@ -112,7 +112,7 @@
             </tr>
             <tr>
                 <td>Nama Karyawan</td>
-                <td>:&nbsp;{{$data_izin->User->fullname}}</td>
+                <td>:&nbsp;{{$data_izin->User->name}}</td>
             </tr>
             <tr>
                 <td>Departemen</td>
@@ -153,15 +153,15 @@
         <tbody>
             <tr style="font-weight: bold;">
                 <td style="text-align: center;">
-                    <img src="{{ url('https://karyawan.sumberpangan.store/laravel/public/signature/'.$data_izin->ttd_pengajuan.'.png') }}" width="100%" alt="">
-                    <p>({{$data_izin->fullname}})</p>
+                    <img src="{{ url('https://hrd.sumberpangan.store:4430/signature/'.$data_izin->ttd_pengajuan.'.png') }}" width="100%" alt="">
+                    <p>({{$data_izin->name}})</p>
                 </td>
                 <td style="text-align: center;">
-                    <img src="{{ url('https://karyawan.sumberpangan.store/laravel/public/signature/'.$data_izin->ttd_atasan.'.png') }}" width="100%" alt="">
+                    <img src="{{ url('https://hrd.sumberpangan.store:4430/signature/'.$data_izin->ttd_atasan.'.png') }}" width="100%" alt="">
                     <p>({{$data_izin->approve_atasan}})</p>
                 </td>
                 <td style="text-align: center;">
-                    <img src="{{ url('https://karyawan.sumberpangan.store/laravel/public/signature/'.$data_izin->ttd_atasan.'.png') }}" width="100%" alt="">
+                    <img src="{{ url('https://hrd.sumberpangan.store:4430/signature/'.$data_izin->ttd_atasan.'.png') }}" width="100%" alt="">
                     <p>({{$data_izin->approve_atasan}})</p>
                 </td>
             </tr>

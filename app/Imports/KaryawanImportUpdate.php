@@ -373,13 +373,21 @@ class KaryawanImportUpdate implements ToCollection, WithStartRow, SkipsOnFailure
 
             if ($row[35] == NULL || $row[35] == '0') {
                 $nama_bank = NULL;
+            } else if ($row[35] == 'BANK OCBC') {
+                $nama_bank = 'BOCBC';
             } else if ($row[35] == 'OCBC') {
                 $nama_bank = 'BOCBC';
+            } else if ($row[35] == 'BANK BRI') {
+                $nama_bank = 'BBRI';
             } else if ($row[35] == 'BRI') {
                 $nama_bank = 'BBRI';
+            } else if ($row[35] == 'BANK BCA') {
+                $nama_bank = 'BBCA';
             } else if ($row[35] == 'BCA') {
                 $nama_bank = 'BBCA';
             } else if ($row[35] == 'MANDIRI') {
+                $nama_bank = 'BMANDIRI';
+            } else if ($row[35] == 'BANK MANDIRI') {
                 $nama_bank = 'BMANDIRI';
             } else {
                 $nama_bank = $row[35];

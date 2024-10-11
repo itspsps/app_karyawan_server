@@ -12,8 +12,9 @@
     }
 
     .myFont {
-        font-size: small;
+        font-size: 4pt !important;
     }
+
 
     .img_resign {
         position: absolute;
@@ -274,7 +275,7 @@
                     <ul class="dropdown-menu">
                         <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#modal_import_user_karyawan" href="">Import Add Excel</a></li>
                         <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#modal_import_update_user_karyawan" href="">Import Update Excel</a></li>
-                        <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#modal_export_karyawan" href="#">Export Excel</a></li>
+                        <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#modal_export_user_karyawan" href="#">Export Excel</a></li>
                     </ul>
                     <a type="button" href="{{url('users/pdfKaryawan/'.$holding)}}" class="btn btn-xs btn-danger waves-effect waves-light"><i class="menu-icon tf-icons mdi mdi-file-pdf-box"></i>PDF</a>
                     <div class="modal fade" id="modal_tambah_users" role="dialog" data-bs-backdrop="static" aria-hidden="true">
@@ -289,26 +290,37 @@
                                     <div class="row g-2 mt-2">
                                         <div class="col-md-12 mb-2">
                                             <div class="form-floating form-floating-outline">
-                                                <select id="karyawan_id" name="karyawan_id" class="form-control" data-placeholder="Pilih Karyawan" style="font-size: small;">
+                                                <select id="nama_karyawan" name="nama_karyawan" class="form-control" data-placeholder="Pilih Karyawan" style="font-size: small;">
 
                                                     <option value="">Pilih Karyawan</option>
+
                                                     @foreach($karyawan as $karyawanid)
+                                                    @if(old('nama_karyawan') == $karyawanid->id)
+                                                    <option selected style="font-size: small;" value="{{$karyawanid->id}}">{{$karyawanid->name}}</option>
+                                                    @else
                                                     <option style="font-size: small;" value="{{$karyawanid->id}}">{{$karyawanid->name}}</option>
+                                                    @endif
                                                     @endforeach
                                                 </select>
-                                                <label for="karyawan_id">Username</label>
+                                                <label for="nama_karyawan">Username</label>
                                             </div>
                                         </div>
                                         <div class="col-md-12 mb-2">
                                             <div class="form-floating form-floating-outline">
-                                                <input type="text" id="username" name="username" class="form-control" placeholder="Username" />
+                                                <input type="text" id="username" name="username" class="form-control" placeholder="Username" value="{{old('username')}}" />
                                                 <label for="username">Username</label>
                                             </div>
                                         </div>
                                         <div class="col-md-12 mb-2">
-                                            <div class="form-floating form-floating-outline">
+                                            <div class="form-password-toggle">
+                                                <label class="form-label" for="password">Password</label>
                                                 <div class="input-group input-group-merge">
-                                                    <input type="password" class="form-control" id="basic-default-password32" placeholder="············" aria-describedby="basic-default-password32">
+                                                    <input
+                                                        type="password" value="{{old('password')}}"
+                                                        class="form-control"
+                                                        id="password" name="password"
+                                                        placeholder="&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;"
+                                                        aria-describedby="password" />
                                                     <span class="input-group-text cursor-pointer"><i class="mdi mdi-eye-off-outline"></i></span>
                                                 </div>
                                             </div>
@@ -316,8 +328,9 @@
                                         <div class="col-md-12 mb-2">
                                             <div class="form-floating form-floating-outline">
                                                 <select id="level" name="level" class="form-control" placeholder="Level Access">
-                                                    <option value="user">Karyawan</option>
-                                                    <option value="admin">HRD</option>
+                                                    <option @if(old('level')=='' ) selected else @endif disabled value=""> ~Pilih Access~ </option>
+                                                    <option @if(old('level')=='user' )selected else @endif value="user">Karyawan</option>
+                                                    <option @if(old('level')=='admin' )selected else @endif value="admin">HRD</option>
                                                 </select>
                                                 <label for="level">Level Access</label>
                                             </div>
@@ -365,8 +378,7 @@
                     </div>
                     <div class="modal fade" id="modal_import_update_user_karyawan" data-bs-backdrop="static" tabindex="-1">
                         <div class="modal-dialog modal-dialog-scrollable modal-lg">
-                            <form method="post" action="{{ url('/users/ImportUpdateUser/'.$holding) }}" class="modal-content" enctype="multipart/form-data">
-                                @csrf
+                            <div class="modal-content">
                                 <div class="modal-header">
                                     <h4 class="modal-title" id="backDropModalTitle">Import Update Karyawan</h4>
                                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -390,7 +402,32 @@
                                     </button>
                                     <button type="submit" class="btn btn-primary">Save</button>
                                 </div>
-                            </form>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal fade" id="modal_export_user_karyawan" data-bs-backdrop="static" tabindex="-1">
+                        <div class="modal-dialog modal-dialog-scrollable modal-lg">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h4 class="modal-title" id="backDropModalTitle">Export Excel User Karyawan</h4>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="row g-2 mt-2">
+                                        <div class="col mb-2">
+                                            <div class="form-floating form-floating-outline">
+                                                <h6>Download File Excel Data User Karyawan</h6>
+                                                <a href="{{url('users/ExportUser/'.$holding)}}" type="button" class="btn btn-xs btn-success"> Download Excel</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+                                        Close
+                                    </button>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <hr class="my-5">
@@ -421,7 +458,7 @@
                                             <th>Nama&nbsp;Karyawan</th>
                                             <th>Divisi</th>
                                             <th>Jabatan</th>
-                                            <th>username</th>
+                                            <th>Username</th>
                                             <th>Akses</th>
                                             <th>Status</th>
                                             <th>Opsi</th>

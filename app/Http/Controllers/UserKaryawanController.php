@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\UserExport;
 use App\Imports\KaryawanImport;
 use App\Imports\UsersImport;
 use App\Models\ActivityLog;
@@ -25,17 +26,16 @@ class UserKaryawanController extends Controller
     {
 
         $holding = request()->segment(count(request()->segments()));
-        $karyawan = Karyawan::Join('users','users.karyawan_id','karyawans.id')
-        ->where('karyawans.status_aktif','AKTIF')
-        ->where('karyawans.kontrak_kerja',$holding)
-        ->orderBy('karyawans.name','ASC')
-        ->get();
+        $karyawan = Karyawan::where('karyawans.status_aktif', 'AKTIF')
+            ->where('karyawans.kontrak_kerja', $holding)
+            ->orderBy('karyawans.name', 'ASC')
+            ->get();
         return view('admin.karyawan.index_users', [
             // return view('karyawan.index', [
             'title' => 'Karyawan',
             "data_departemen" => Departemen::orderBy('nama_departemen', 'ASC')->where('holding', $holding)->get(),
             'holding' => $holding,
-            'karyawan' =>$karyawan,
+            'karyawan' => $karyawan,
             'data_user' => User::Join('karyawans', 'users.karyawan_id', 'karyawans.id')->where('kontrak_kerja', $holding)->where('user_aktif', 'AKTIF')->get(),
             "data_jabatan" => Jabatan::orderBy('nama_jabatan', 'ASC')->where('holding', $holding)->get(),
             "data_lokasi" => Lokasi::orderBy('lokasi_kantor', 'ASC')->get(),
@@ -47,6 +47,43 @@ class UserKaryawanController extends Controller
     }
 
 
+    public function prosesTambahUser(Request $request)
+    {
+        $rules = [
+            'nama_karyawan'         => 'required',
+            'username'              => 'required|min:4|unique:users,username|alpha_dash',
+            'password'              => 'required|min:6',
+            'level'                 => 'required',
+        ];
+
+
+        $customMessages = [
+            'required' => ':attribute tidak boleh kosong.',
+            'unique' => ':attribute tidak boleh sama',
+            'email' => ':attribute format salah',
+            'min' => ':attribute Kurang',
+            'max' => ':attribute Melampaui Batas Maksimal'
+        ];
+        $validasi = Validator::make($request->all(), $rules, $customMessages);
+        if ($validasi->fails()) {
+            $errors = $validasi->errors()->first();
+            // dd($errors);
+            Alert::error('Gagal', $errors);
+            return back()->withInput();
+        }
+        // dd($request->nama_karyawan);
+        $user                = new User();
+        $user->karyawan_id   = Karyawan::where('id', $request->nama_karyawan)->value('id');
+        $user->username      = $request->username;
+        $user->password      = Hash::make($request->password);
+        $user->password_show = $request->password;
+        $user->is_admin      = $request->level;
+        $user->user_aktif    = 'AKTIF';
+        $user->save();
+
+
+        return redirect()->back()->with('success', 'Data Berhasil di Simpan');
+    }
     public function datatable_users_bulanan(Request $request)
     {
         $holding = request()->segment(count(request()->segments()));
@@ -477,5 +514,11 @@ class UserKaryawanController extends Controller
         if ($query) {
             return redirect('/users/' . $holding)->with('success', 'Import User Sukses');
         }
+    }
+    public function ExportUser(Request $request)
+    {
+        $date = date('YmdHis');
+        $holding = request()->segment(count(request()->segments()));
+        return Excel::download(new UserExport($holding), 'Data User Karyawan_' . $holding . '_' . $date . '.xlsx');
     }
 }
