@@ -9,7 +9,7 @@
 @endsection
 @section('isi')
 @include('sweetalert::alert')
-<div class="container-xxl flex-grow-1 container-p-y">
+<div class="container-xxl flex-grow-1 container-p-y" style="font-size: small;">
     <div class="row gy-4">
         <!-- Transactions -->
         <div class="modal fade" id="modal_perbarui_kontrak" data-bs-backdrop="static" tabindex="-1">

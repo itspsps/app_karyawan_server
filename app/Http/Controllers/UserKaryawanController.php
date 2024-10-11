@@ -25,11 +25,17 @@ class UserKaryawanController extends Controller
     {
 
         $holding = request()->segment(count(request()->segments()));
+        $karyawan = Karyawan::Join('users','users.karyawan_id','karyawans.id')
+        ->where('karyawans.status_aktif','AKTIF')
+        ->where('karyawans.kontrak_kerja',$holding)
+        ->orderBy('karyawans.name','ASC')
+        ->get();
         return view('admin.karyawan.index_users', [
             // return view('karyawan.index', [
             'title' => 'Karyawan',
             "data_departemen" => Departemen::orderBy('nama_departemen', 'ASC')->where('holding', $holding)->get(),
             'holding' => $holding,
+            'karyawan' =>$karyawan,
             'data_user' => User::Join('karyawans', 'users.karyawan_id', 'karyawans.id')->where('kontrak_kerja', $holding)->where('user_aktif', 'AKTIF')->get(),
             "data_jabatan" => Jabatan::orderBy('nama_jabatan', 'ASC')->where('holding', $holding)->get(),
             "data_lokasi" => Lokasi::orderBy('lokasi_kantor', 'ASC')->get(),

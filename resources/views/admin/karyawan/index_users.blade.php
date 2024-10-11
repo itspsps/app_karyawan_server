@@ -11,6 +11,10 @@
 
     }
 
+    .myFont {
+        font-size: small;
+    }
+
     .img_resign {
         position: absolute;
         top: 50%;
@@ -18,10 +22,12 @@
         transform: translate(-50%, -50%);
     }
 </style>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css" />
 @endsection
 @section('isi')
 @include('sweetalert::alert')
-<div class="container-xxl flex-grow-1 container-p-y">
+<div class="container-xxl flex-grow-1 container-p-y" style="font-size: small;">
     <div class="row gy-4">
         <!-- Transactions -->
         <div class="col-lg-12">
@@ -260,7 +266,7 @@
                     </div>
                 </div>
                 <div class="card-body">
-                    <a type="button" href="{{url('users/tambah-users/'.$holding)}}" class="btn btn-xs btn-primary waves-effect waves-light"><i class="menu-icon tf-icons mdi mdi-plus"></i>Tambah</a>
+                    <a type="button" href="javascript:void(0)" id="btn_tambah_users" class="btn btn-xs btn-primary waves-effect waves-light"><i class="menu-icon tf-icons mdi mdi-plus"></i>Tambah</a>
 
                     <button class="btn btn-xs btn-success waves-effect waves-light dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                         <i class="menu-icon tf-icons mdi mdi-file-excel"></i> Excel
@@ -271,6 +277,62 @@
                         <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#modal_export_karyawan" href="#">Export Excel</a></li>
                     </ul>
                     <a type="button" href="{{url('users/pdfKaryawan/'.$holding)}}" class="btn btn-xs btn-danger waves-effect waves-light"><i class="menu-icon tf-icons mdi mdi-file-pdf-box"></i>PDF</a>
+                    <div class="modal fade" id="modal_tambah_users" role="dialog" data-bs-backdrop="static" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-scrollable modal-lg">
+                            <form method="post" action="{{ url('/users/prosesTambahUser/'.$holding) }}" class="modal-content" enctype="multipart/form-data">
+                                @csrf
+                                <div class="modal-header">
+                                    <h4 class="modal-title" id="backDropModalTitle">Tambah User</h4>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body" style="height:400px">
+                                    <div class="row g-2 mt-2">
+                                        <div class="col-md-12 mb-2">
+                                            <div class="form-floating form-floating-outline">
+                                                <select id="karyawan_id" name="karyawan_id" class="form-control" data-placeholder="Pilih Karyawan" style="font-size: small;">
+
+                                                    <option value="">Pilih Karyawan</option>
+                                                    @foreach($karyawan as $karyawanid)
+                                                    <option style="font-size: small;" value="{{$karyawanid->id}}">{{$karyawanid->name}}</option>
+                                                    @endforeach
+                                                </select>
+                                                <label for="karyawan_id">Username</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12 mb-2">
+                                            <div class="form-floating form-floating-outline">
+                                                <input type="text" id="username" name="username" class="form-control" placeholder="Username" />
+                                                <label for="username">Username</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12 mb-2">
+                                            <div class="form-floating form-floating-outline">
+                                                <div class="input-group input-group-merge">
+                                                    <input type="password" class="form-control" id="basic-default-password32" placeholder="············" aria-describedby="basic-default-password32">
+                                                    <span class="input-group-text cursor-pointer"><i class="mdi mdi-eye-off-outline"></i></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12 mb-2">
+                                            <div class="form-floating form-floating-outline">
+                                                <select id="level" name="level" class="form-control" placeholder="Level Access">
+                                                    <option value="user">Karyawan</option>
+                                                    <option value="admin">HRD</option>
+                                                </select>
+                                                <label for="level">Level Access</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+                                        Close
+                                    </button>
+                                    <button type="submit" class="btn btn-primary">Save</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
                     <div class="modal fade" id="modal_import_user_karyawan" data-bs-backdrop="static" tabindex="-1">
                         <div class="modal-dialog modal-dialog-scrollable modal-lg">
                             <form method="post" action="{{ url('/users/ImportUser/'.$holding) }}" class="modal-content" enctype="multipart/form-data">
@@ -337,7 +399,7 @@
                             <div class="col-6">
                                 <ul class="nav nav-pills nav-fill" role="tablist">
                                     <li class="nav-item">
-                                        <a type=" button" style="width: auto;" class="nav-link active" role="tab" data-bs-toggle="tab" href="#navs-pills-justified-home">
+                                        <a type="button" style="width: auto;" class="nav-link active" role="tab" data-bs-toggle="tab" href="#navs-pills-justified-home">
                                             <i class="tf-icons mdi mdi-account-tie me-1"></i><span class="d-none d-sm-block">Karyawan Bulanan</span>
                                         </a>
                                     </li>
@@ -400,6 +462,8 @@
 <script src="https://cdn.datatables.net/2.0.5/js/dataTables.js"></script>
 <script src="https://cdn.datatables.net/2.0.5/js/dataTables.bootstrap5.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 <script>
     let holding = window.location.pathname.split("/").pop();
     var table = $('#table_karyawan_bulanan').DataTable({
@@ -510,6 +574,13 @@
     })
 </script>
 <script>
+    $('#karyawan_id').select2({
+        theme: "bootstrap-5",
+        dropdownParent: $('#modal_tambah_users .modal-content'),
+        width: $(this).data('width') ? $(this).data('width') : $(this).hasClass('w-100') ? '100%' : 'style',
+        placeholder: $(this).data('placeholder'),
+        dropdownCssClass: "myFont"
+    });
     $(document).on("click", "#btn_edit_password", function() {
         let id = $(this).data('id');
         let holding = $(this).data("holding");
@@ -587,6 +658,9 @@
         $('#td_penempatan_kerja').html(penempatan_kerja);
         $('#id_nonactive').val(id);
         $('#modal_non_aktif_user').modal('show');
+    });
+    $(document).on('click', '#btn_tambah_users', function() {
+        $('#modal_tambah_users').modal('show');
     });
     $(document).on('click', '#btn_aktif_karyawan', function() {
 
