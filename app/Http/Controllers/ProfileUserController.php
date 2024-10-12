@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use RealRashid\SweetAlert\Facades\Alert;
 use App\Models\ActivityLog;
+use App\Models\Karyawan;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 
@@ -16,9 +17,10 @@ class ProfileUserController extends Controller
 {
     public function index()
     {
+        $user_karyawan = Karyawan::where('id', Auth::user()->karyawan_id)->first();
         return view('users.profile.index', [
             'title' => 'Profile',
-            'data' => DB::table('users')->where('id', Auth::user()->id)->first()
+            'user_karyawan' => $user_karyawan
         ]);
     }
 }

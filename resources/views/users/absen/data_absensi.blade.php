@@ -80,7 +80,6 @@
                     <table id="table_absensi" class="table table-striped table-hover" style="width: 100%">
                         <thead>
                             <tr>
-                                <th scope="col">#</th>
                                 <th scope="col">Tanggal&nbsp;Masuk</th>
                                 <th scope="col">Jam&nbsp;Masuk</th>
                                 <th scope="col">Tanggal&nbsp;Pulang</th>
@@ -120,12 +119,6 @@
                     }
                 },
                 columns: [{
-                        data: 'id',
-                        render: function(data, type, row, meta) {
-                            return meta.row + meta.settings._iDisplayStart + 1;
-                        }
-                    },
-                    {
                         data: 'tanggal_masuk',
                         name: 'tanggal_masuk'
                     },
@@ -142,8 +135,8 @@
                         name: 'jam_pulang'
                     },
                     {
-                        data: 'status_absen',
-                        name: 'status_absen'
+                        data: 'keterangan',
+                        name: 'keterangan'
                     },
                 ],
                 order: [

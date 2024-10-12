@@ -10,17 +10,17 @@
     <div class="container profile-area">
         <div class="profile">
             <div class="media media-100">
-                @if(Auth::user()->foto_karyawan == '' || Auth::user()->foto_karyawan == NULL)
+                @if($user_karyawan->foto_karyawan == '' || $user_karyawan->foto_karyawan == NULL)
                 <img width="40px" src="{{asset('admin/assets/img/avatars/1.png')}}" alt="/">
                 @else
-                <img width="40px" src="{{ url('https://karyawan.sumberpangan.store/laravel/storage/app/public/foto_karyawan/'.Auth::user()->foto_karyawan) }}" alt="author-image">
+                <img width="40px" src="{{ url('https://karyawan.sumberpangan.store/laravel/storage/app/public/foto_karyawan/'.$user_karyawan->foto_karyawan) }}" alt="author-image">
                 @endif
             </div>
             <div class="mb-2">
-                <h4 class="mb-0">{{ $data->name}}</h4>
-                <span class="detail">{{ $data->fullname }}</span>
+                <h4 class="mb-0">{{ $user_karyawan->name}}</h4>
+                <span class="detail">{{ $user_karyawan->name }}</span>
             </div>
-            <p>{{ $data->motto }}</p>
+            <p>{{ $user_karyawan->penempatan_kerja }}</p>
         </div>
         <ul class="contact-profile">
             <li class="d-flex align-items-center">

@@ -1319,12 +1319,13 @@ class HomeUserController extends Controller
     {
         date_default_timezone_set('Asia/Jakarta');
         // dd($request->all());
+        $user_karyawan = Karyawan::where('id', Auth::user()->karyawan_id)->first();
         return view('users.absen.locationmaps', [
             'title' => 'Maps',
             'lat' => $request->lat_location,
             'long' => $request->long_location,
             'lokasi_kantor' => Lokasi::first(),
-            'user' => Auth::user()->name
+            'user_karyawan' => $user_karyawan
         ]);
     }
 
@@ -3086,14 +3087,14 @@ class HomeUserController extends Controller
 
     public function myAbsen(Request $request)
     {
-        $user_login = auth()->user()->id;
+        $user_karyawan = Karyawan::where('id', Auth::user()->karyawan_id)->first();
         $date_now = date('Y');
         $month_now = date('m');
         $month_yesterday = \Carbon\Carbon::now()->subMonthsNoOverflow()->isoFormat('MM');
         $month_yesterday1 = \Carbon\Carbon::now()->subMonthsNoOverflow()->isoFormat('MMMM');
         $month_now1 = \Carbon\Carbon::now()->isoFormat('MMMM');
         date_default_timezone_set('Asia/Jakarta');
-        $user_login = auth()->user()->id;
+        $user_login = $user_karyawan->id;
         $tanggal = "";
         $tglskrg = date('Y-m-d');
         $tglkmrn = date('Y-m-d', strtotime('-1 days'));
@@ -3187,7 +3188,8 @@ class HomeUserController extends Controller
             'lembur_now' => array_map('intval', json_decode($lembur_now)),
             'data_telat_now' => $data_telat_now,
             'data_telat_yesterday' => $data_telat_yesterday,
-            'lembur_yesterday' => array_map('intval', json_decode($lembur_yesterday))
+            'lembur_yesterday' => array_map('intval', json_decode($lembur_yesterday)),
+            'user_karyawan' => $user_karyawan
         ]);
     }
 }

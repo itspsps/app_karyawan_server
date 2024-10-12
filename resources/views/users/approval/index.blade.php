@@ -121,7 +121,7 @@
                                             @endif
                                         </div>
                                         <div class="card-info">
-                                            <h6 class="title">{{ $datacuti->name }}</h6>
+                                            <h6 class="title">{{ $datacuti->fullname }}</h6>
                                             @if($datacuti->nama_cuti=='Diluar Cuti Tahunan')
                                             <span class="">{{ $datacuti->KategoriCuti->nama_cuti }}</span>
                                             @else

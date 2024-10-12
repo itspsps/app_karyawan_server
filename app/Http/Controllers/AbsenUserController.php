@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use RealRashid\SweetAlert\Facades\Alert;
 use App\Models\ActivityLog;
+use App\Models\Karyawan;
 use Carbon\Carbon;
 use DateTime;
 use Illuminate\Support\Facades\DB;
@@ -180,74 +181,103 @@ class AbsenUserController extends Controller
 
     public function recordabsen(Request $request)
     {
+        $user_karyawan = Karyawan::where('id', Auth::user()->karyawan_id)->first();
         $thnskrg = date('Y');
         return view('users.absen.data_absensi', [
-            'thnskrg' => $thnskrg
+            'thnskrg' => $thnskrg,
+            'user_karyawan' => $user_karyawan
         ]);
     }
     public function get_table_absensi(Request $request)
     {
 
         // dd($request->all());
-        $user_login = auth()->user()->id;
-        $dateweek = \Carbon\Carbon::today()->subDays(7);
-        $datenow = \Carbon\Carbon::today();
+        $user_login = Karyawan::where('id', Auth::user()->karyawan_id)->value('id');
         $blnskrg = date('m');
         // dd($firstDayofPreviousMonth);
         if ($request->ajax()) {
             if (!empty($request->filter_month)) {
                 if ($request->filter_month == $blnskrg) {
-                    $data = MappingShift::where('user_id', $user_login)->whereMonth('tanggal_masuk', $blnskrg)->whereBetween('tanggal_masuk', array($dateweek, $datenow))->get();
+                    $data = MappingShift::where('user_id', $user_login)->whereMonth('tanggal_masuk', $blnskrg)->get();
                 } else {
                     $data = MappingShift::where('user_id', $user_login)->whereMonth('tanggal_masuk', $request->filter_month)->orderBy('tanggal_masuk', 'DESC')->get();
                 }
                 return DataTables::of($data)->addIndexColumn()
                     ->addColumn('tanggal_masuk', function ($row) {
-                        $result = Carbon::parse($row->tanggal)->isoFormat('D-MM-Y');
+                        $result = Carbon::parse($row->tanggal_masuk)->isoFormat('D-MM-Y');;
                         return $result;
                     })
                     ->addColumn('jam_absen', function ($row) {
                         if ($row->jam_absen == NULL) {
-                            return $row->jam_absen;
+                            return '-';
                         } else {
-                            $result = Carbon::parse($row->jam_absen)->format('H:m');
+                            $result = Carbon::parse($row->jam_absen)->isoFormat('HH:mm');;
                             return $result;
                         }
                     })
                     ->addColumn('jam_pulang', function ($row) {
                         if ($row->jam_pulang == NULL) {
-                            return $row->jam_pulang;
+                            return '-';
                         } else {
-                            $result = Carbon::parse($row->jam_pulang)->format('H:m');
+                            $result = Carbon::parse($row->jam_pulang)->isoFormat('HH:mm');;
                             return $result;
                         }
                     })
-                    ->rawColumns(['tanggal_masuk', 'jam_absen', 'jam_pulang'])
+                    ->addColumn('keterangan', function ($row) {
+                        if ($row->status_absen == NULL) {
+                            return '-';
+                        } else if ($row->status_absen == 'CUTI') {
+                            return '<span class="badge w-100 light badge-warning">CUTI</span>';
+                        } else if ($row->status_absen == 'LIBUR') {
+                            return '<span class="badge w-100 light badge-warning">LIBUR</span>';
+                        } else if ($row->status_absen == 'TIDAK HADIR KERJA') {
+                            return '<span class="badge w-100 light badge-warning">TIDAK HADIR KERJA</span>';
+                        } else if ($row->status_absen == 'HADIR KERJA') {
+                            return '<span class="badge w-100 light badge-success">HADIR KERJA</span>';
+                        } else {
+                            return $row->status_absen;
+                        }
+                    })
+                    ->rawColumns(['tanggal_masuk', 'jam_absen', 'jam_pulang', 'keterangan'])
                     ->make(true);
             } else {
-                $data = MappingShift::where('user_id', $user_login)->whereMonth('tanggal_masuk', $blnskrg)->whereBetween('tanggal_masuk', array($dateweek, $datenow))->orderBy('tanggal_masuk', 'DESC')->get();
-                return DataTables::of($data)->addIndexColumn()
+                $data = MappingShift::where('user_id', $user_login)->whereMonth('tanggal_masuk', $blnskrg)->orderBy('tanggal_masuk', 'DESC')->get();
+                // dd($data);
+                return DataTables::of($data)
                     ->addColumn('tanggal_masuk', function ($row) {
-                        $result = Carbon::parse($row->tanggal)->isoFormat('D-MM-Y');
+                        $result = Carbon::parse($row->tanggal_masuk)->isoFormat('D-MM-Y');;
                         return $result;
                     })
                     ->addColumn('jam_absen', function ($row) {
                         if ($row->jam_absen == NULL) {
-                            return $row->jam_absen;
+                            return '-';
                         } else {
-                            $result = Carbon::parse($row->jam_absen)->format('H:m');
+                            $result = Carbon::parse($row->jam_absen)->isoFormat('HH:mm');;
                             return $result;
                         }
                     })
                     ->addColumn('jam_pulang', function ($row) {
                         if ($row->jam_pulang == NULL) {
-                            return $row->jam_pulang;
+                            return '-';
                         } else {
-                            $result = Carbon::parse($row->jam_pulang)->format('H:m');
+                            $result = Carbon::parse($row->jam_pulang)->isoFormat('HH:mm');;
                             return $result;
                         }
                     })
-                    ->rawColumns(['tanggal_masuk', 'jam_absen', 'jam_pulang'])
+                    ->addColumn('keterangan', function ($row) {
+                        if ($row->status_absen == NULL) {
+                            return '-';
+                        } else if ($row->status_absen == 'CUTI') {
+                            return '<span class="badge w-100 light badge-warning">CUTI</span>';
+                        } else if ($row->status_absen == 'LIBUR') {
+                            return '<span class="badge w-100 light badge-warning">LIBUR</span>';
+                        } else if ($row->status_absen == 'TIDAK HADIR KERJA') {
+                            return '<span class="badge w-100 light badge-warning">TIDAK HADIR KERJA</span>';
+                        } else {
+                            return $row->status_absen;
+                        }
+                    })
+                    ->rawColumns(['tanggal_masuk', 'jam_absen', 'jam_pulang', 'keterangan'])
                     ->make(true);
             }
         }
