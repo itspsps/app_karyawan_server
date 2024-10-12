@@ -760,7 +760,7 @@ class HomeUserController extends Controller
     {
 
         // dd($request->all());
-        $user_login = auth()->user()->id;
+        $user_login = Karyawan::where('id', Auth::user()->karyawan_id)->value('id');
         $dateweek = \Carbon\Carbon::today()->subDays(7);
         $datenow = \Carbon\Carbon::today();
         $blnskrg = date('m');
