@@ -202,63 +202,6 @@
                     </form>
                 </div>
             </div>
-            <div class="modal fade" id="modal_non_aktif_user1" data-bs-backdrop="static" tabindex="-1">
-                <div class="modal-dialog modal-dialog-scrollable modal-lg">
-                    <form method="post" action="{{ url('/karyawan/non_aktif_proses/'.$holding) }}" class="modal-content" enctype="multipart/form-data">
-                        @csrf
-                        <div class="modal-header">
-                            <h4 class="modal-title" id="backDropModalTitle">Form Non Aktif Karyawan</h4>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <div class="modal-body">
-                            <div class="row g-2 mt-2">
-                                <div class="col-md-12">
-                                    <div class="card mb-4">
-                                        <h4 class="card-header"><a href="{{url('karyawan/'.$holding)}}"><i class="mdi mdi-arrow-left-bold"></i></a>&nbsp;Profil</h4>
-                                        <!-- Account -->
-                                        <div class="card-body">
-                                            <div class="d-flex align-items-start align-items-sm-center gap-4">
-                                                <img src="{{asset('admin/assets/img/avatars/1.png')}}" alt="user-avatar" class="d-block w-px-120 h-px-120 rounded" id="template_foto_karyawan" />
-
-                                                <table>
-                                                    <tr>
-                                                        <th>Nama</th>
-                                                        <td>&nbsp;</td>
-                                                        <td>:</td>
-                                                        <td id="td_nama"></td>
-                                                    </tr>
-                                                    <tr>
-                                                        <th>Jabatan</th>
-                                                        <td>&nbsp;</td>
-                                                        <td>:</td>
-                                                        <td>Karyawan Harian</td>
-                                                    <tr>
-                                                        <th>Penempatan Kerja</th>
-                                                        <td>&nbsp;</td>
-                                                        <td>:</td>
-                                                        <td id="td_penempatan_kerja"></td>
-                                                    </tr>
-                                                </table>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="form-floating form-floating-outline">
-                                        <input type="text" id="alasan_non_aktif" name="alasan_non_aktif" class="form-control @error('alasan_non_aktif') is-invalid @enderror" placeholder="Alasan" />
-                                        <label for="alasan_non_aktif">Alasan</label>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
-                                Close
-                            </button>
-                        </div>
-                    </form>
-                </div>
-            </div>
 
             <div class="card">
                 <div class="card-header">

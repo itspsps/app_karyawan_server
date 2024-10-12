@@ -273,6 +273,8 @@ class AbsenUserController extends Controller
                             return '<span class="badge w-100 light badge-warning">LIBUR</span>';
                         } else if ($row->status_absen == 'TIDAK HADIR KERJA') {
                             return '<span class="badge w-100 light badge-warning">TIDAK HADIR KERJA</span>';
+                        } else if ($row->status_absen == 'HADIR KERJA') {
+                            return '<span class="badge w-100 light badge-success">HADIR KERJA</span>';
                         } else {
                             return $row->status_absen;
                         }

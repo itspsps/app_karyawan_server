@@ -293,14 +293,16 @@ class karyawanController extends Controller
     }
     public function non_aktif_proses(Request $request)
     {
-        $data                       = new KaryawanNonActive();
-        $data->karyawan_id              = $request->id_nonactive;
-        $data->tanggal_nonactive     = $request->date_now;
-        $data->alasan               = $request->alasan_non_aktif;
-        $data->save();
+        // $data                       = new KaryawanNonActive();
+        // $data->karyawan_id              = $request->id_nonactive;
+        // $data->tanggal_nonactive     = $request->date_now;
+        // $data->alasan               = $request->alasan_non_aktif;
+        // $data->save();
 
         $update_user                = Karyawan::where('id', $request->id_nonactive)->first();
         $update_user->status_aktif  = 'NON AKTIF';
+        $update_user->tanggal_nonactive  = $request->date_now;
+        $update_user->alasan_nonactive  = $request->alasan_non_aktif;
         $update_user->update();
 
         return redirect()->back()->with('success', 'Data Berhasil di Simpan');
