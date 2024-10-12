@@ -1865,7 +1865,6 @@ class karyawanController extends Controller
                 'tempat_lahir'                          => $validatedData['tempat_lahir'],
                 'tgl_lahir'                             => $validatedData['tgl_lahir'],
                 'gender'                                => $validatedData['gender'],
-                'tgl_join'                              => $validatedData['tgl_join'],
                 'status_nikah'                          => $validatedData['status_nikah'],
                 'nama_bank'                             => $validatedData['nama_bank'],
                 'nomor_rekening'                        => $validatedData['nomor_rekening'],

@@ -302,7 +302,7 @@
                                                     @endif
                                                     @endforeach
                                                 </select>
-                                                <label for="nama_karyawan">Username</label>
+                                                <label for="nama_karyawan">Karyawan</label>
                                             </div>
                                         </div>
                                         <div class="col-md-12 mb-2">
@@ -611,7 +611,7 @@
     })
 </script>
 <script>
-    $('#karyawan_id').select2({
+    $('#nama_karyawan').select2({
         theme: "bootstrap-5",
         dropdownParent: $('#modal_tambah_users .modal-content'),
         width: $(this).data('width') ? $(this).data('width') : $(this).hasClass('w-100') ? '100%' : 'style',
