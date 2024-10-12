@@ -11,7 +11,7 @@
         <div class="col-md-12">
             <ul class="nav nav-pills flex-column flex-md-row mb-4 gap-2 gap-lg-0">
                 <li class="nav-item">
-                    <a class="nav-link active" href="javascript:void(0);"><i class="mdi mdi-account-outline mdi-20px me-1"></i>{{$karyawan->fullname}}&nbsp;<b>[{{$karyawan->nomor_identitas_karyawan}}]</b></a>
+                    <a class="nav-link active" href="javascript:void(0);"><i class="mdi mdi-account-outline mdi-20px me-1"></i>{{$karyawan->name}}&nbsp;<b>[{{$karyawan->nomor_identitas_karyawan}}]</b></a>
                 </li>
                 <li class="nav-item">
                     <a class="btn btn-info" href="{{url('/karyawan/shift/'.$karyawan->id.'/'.$holding)}}"><i class="mdi mdi-clock-outline mdi-20px me-1"></i>Mapping Jadwal&nbsp;</a>

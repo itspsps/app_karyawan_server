@@ -216,10 +216,12 @@ class HomeUserController extends Controller
     }
     public function create_face_id()
     {
-        $user = Auth::user();
+        $user_karyawan = Karyawan::where('id', Auth::user()->karyawan_id)->first();
+        $karyawan = Karyawan::where('id', Auth::user()->karyawan_id)->get();
         // dd($user);
         return view('users.createfaceid.index', [
-            'karyawan' => $user,
+            'user_karyawan' => $user_karyawan,
+            'karyawan' => $karyawan,
         ]);
     }
     public function get_notif()

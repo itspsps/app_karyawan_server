@@ -30,7 +30,7 @@
                                 <th>Nama</th>
                                 <td>&nbsp;</td>
                                 <td>:</td>
-                                <td>{{$karyawan->fullname}}</td>
+                                <td>{{$karyawan->name}}</td>
                             </tr>
                             <tr>
                                 <th>Divisi</th>
