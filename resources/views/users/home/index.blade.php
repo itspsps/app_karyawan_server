@@ -1493,7 +1493,7 @@
     <div class="row">
         <div class="col-6">
             <div class="card" style="box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.2), 0 3px 10px 0 rgba(0, 0, 0, 0.1);">
-                <div class="card-body">
+                <div class="card-body" style="padding: 5%; margin: 2%;">
                     <div class="row">
                         <div class="col">
                             <svg xmlns="http://www.w3.org/2000/svg" class="icon_kategori" viewBox="0 0 64 64" data-name="Layer 1" id="Layer_1">
@@ -1554,11 +1554,13 @@
                             </svg>
                         </div>
                         <div class="col">
-                            <h6 class="icon_text title"><a href="javascript:void(0);">Hadir</a></h6>
+                            <h6 class="icon_text title"><a href="javascript:void(0);">HADIR</a></h6>
                             <span class="">
-                                <h5 id="count_absen_hadir">
-                                    {{$count_absen_hadir}}
-                                </h5>
+                                <h3 id="count_absen_hadir">
+                                    <div class="spinner-border spinner-border-sm mb-2 text-primary" role="status">
+                                        <span class="sr-only">Loading...</span>
+                                    </div>
+                                </h3>
                             </span>
                         </div>
                     </div>
@@ -1567,7 +1569,7 @@
         </div>
         <div class="col-6">
             <div class="card" style="box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.2), 0 3px 10px 0 rgba(0, 0, 0, 0.1);">
-                <div class="card-body">
+                <div class="card-body" style="padding: 5%; margin: 2%;">
                     <div class="row">
                         <div class="col">
                             <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" class="icon_kategori" version="1.1" id="Capa_1" viewBox="0 0 512 512" xml:space="preserve">
@@ -1589,21 +1591,24 @@
                                 </g>
                             </svg>
                         </div>
-                        <div class="col">
-                            <h6 class="icon_text title"><a href="javascript:void(0);">Izin</a></h6>
+                        <div class="col" style="position: relative;">
+                            <h6 class="icon_text title">IZIN</h6>
                             <span class="">
-                                <h5>
-                                    {{$count_absen_izin}}
-                                </h5>
+                                <h3 id="count_izin">
+                                    <div class="spinner-border spinner-border-sm mb-2 text-primary" role="status">
+                                        <span class="sr-only">Loading...</span>
+                                    </div>
+                                </h3>
                             </span>
                         </div>
                     </div>
+                    <p style="font-size: 5pt; text-align: center; position: absolute; font-weight: bold;">(Terlambat, Pulang&nbsp;Cepat, Keluar&nbsp;Kantor)</p>
                 </div>
             </div>
         </div>
         <div class="col-6">
             <div class="card" style="box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.2), 0 3px 10px 0 rgba(0, 0, 0, 0.1);">
-                <div class="card-body">
+                <div class="card-body" style="padding: 5%; margin: 2%;">
                     <div class="row">
                         <div class="col">
                             <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="Layer_1" viewBox="0 0 496 496" xml:space="preserve" class="icon_kategori">
@@ -1625,11 +1630,13 @@
                             </svg>
                         </div>
                         <div class="col">
-                            <h6 class="icon_text title"><a href="javascript:void(0);">Sakit</a></h6>
+                            <h6 class="icon_text title"><a href="javascript:void(0);">SAKIT</a></h6>
                             <span class="">
-                                <h5>
-                                    {{$count_absen_sakit}}
-                                </h5>
+                                <h3 id="count_sakit">
+                                    <div class="spinner-border spinner-border-sm mb-2 text-primary" role="status">
+                                        <span class="sr-only">Loading...</span>
+                                    </div>
+                                </h3>
                             </span>
                         </div>
                     </div>
@@ -1638,7 +1645,7 @@
         </div>
         <div class="col-6">
             <div class="card" style="box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.2), 0 3px 10px 0 rgba(0, 0, 0, 0.1);">
-                <div class="card-body">
+                <div class="card-body" style="padding: 5%; margin: 2%;">
                     <div class="row">
                         <div class="col">
                             <svg xmlns="http://www.w3.org/2000/svg" class="icon_kategori" viewBox="-10.98 0 84.878 84.878">
@@ -1655,11 +1662,13 @@
                             </svg>
                         </div>
                         <div class="col">
-                            <h6 class="icon_text title"><a href="javascript:void(0);">Telat</a></h6>
+                            <h6 class="icon_text title"><a href="javascript:void(0);">TELAT</a></h6>
                             <span class="">
-                                <h5>
-                                    {{$count_absen_telat}}
-                                </h5>
+                                <h3 id="count_telat">
+                                    <div class="spinner-border spinner-border-sm mb-2 text-primary" role="status">
+                                        <span class="sr-only">Loading...</span>
+                                    </div>
+                                </h3>
                             </span>
                         </div>
                     </div>
@@ -1700,6 +1709,7 @@
 <script type="text/javascript">
     $(document).ready(function() {
         load_data();
+        load_absensi();
 
         function load_data(filter_month = '') {
             // console.log(filter_month);
@@ -1729,8 +1739,8 @@
                         name: 'jam_pulang'
                     },
                     {
-                        data: 'status_absen',
-                        name: 'status_absen'
+                        data: 'keterangan',
+                        name: 'keterangan'
                     },
                 ],
                 order: [
@@ -1750,8 +1760,11 @@
                     alert('Something is wrong');
                 },
                 success: function(data) {
-                    $('#count_absen_hadir').html(data);
-                    // console.log(data)
+                    console.log(data.count_absen_hadir)
+                    $('#count_absen_hadir').html(data.count_absen_hadir);
+                    $('#count_telat').html(data.count_telat);
+                    $('#count_izin').html(data.count_izin);
+                    $('#count_sakit').html(data.count_sakit);
                 }
             });
         }

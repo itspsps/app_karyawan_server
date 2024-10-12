@@ -746,15 +746,29 @@ class HomeUserController extends Controller
     public function get_count_absensi_home(Request $request)
     {
         $blnskrg = date('m');
-        $user_login = auth()->user()->id;
+        $user_login =  Karyawan::where('karyawans.id', Auth::user()->karyawan_id)->value('id');
+        // dd($request->all());
         if ($request->ajax()) {
             if (!empty($request->filter_month)) {
-                $count_absen_hadir = MappingShift::where('user_id', $user_login)->whereMonth('tanggal_masuk', $request->filter_month)->where('status_absen', 'Masuk')->count();
+                $count_absen_hadir = MappingShift::where('user_id', $user_login)->whereMonth('tanggal_masuk', $request->filter_month)->where('status_absen', 'HADIR KERJA')->count();
+                $count_telat = MappingShift::where('user_id', $user_login)->whereMonth('tanggal_masuk', $request->filter_month)->where('keterangan_absensi', 'TELAT HADIR')->where('status_absen', 'HADIR KERJA')->count();
+                $count_izin = Izin::where('user_id', $user_login)->whereMonth('tanggal', $request->filter_month)->where('izin', '!=', 'Sakit')->where('status_izin', '2')->count();
+                $count_sakit = Izin::where('user_id', $user_login)->whereMonth('tanggal', $request->filter_month)->where('izin', 'Sakit')->where('status_izin', '2')->count();
+                // dd($count_absen_hadir);
             } else {
-                $count_absen_hadir = MappingShift::where('user_id', $user_login)->whereMonth('tanggal_masuk', $blnskrg)->where('status_absen', 'Masuk')->count();
+                $count_absen_hadir = MappingShift::where('user_id', $user_login)->whereMonth('tanggal_masuk', $blnskrg)->where('status_absen', 'HADIR KERJA')->count();
+                $count_telat = MappingShift::where('user_id', $user_login)->whereMonth('tanggal_masuk', $blnskrg)->where('keterangan_absensi', 'TELAT HADIR')->where('status_absen', 'HADIR KERJA')->count();
+                $count_izin = Izin::where('user_id', $user_login)->whereMonth('tanggal', $blnskrg)->where('izin', '!=', 'Sakit')->where('status_izin', '2')->count();
+                $count_sakit = Izin::where('user_id', $user_login)->whereMonth('tanggal', $blnskrg)->where('izin', 'Sakit')->where('status_izin', '2')->count();
             }
         }
-        return $count_absen_hadir;
+        $result = [
+            'count_absen_hadir' => $count_absen_hadir,
+            'count_telat' => $count_telat,
+            'count_izin' => $count_izin,
+            'count_sakit' => $count_sakit
+        ];
+        return $result;
     }
     public function datatableHome(Request $request)
     {
@@ -793,24 +807,27 @@ class HomeUserController extends Controller
                             return $result;
                         }
                     })
-                    ->addColumn('status_absen', function ($row) {
+                    ->addColumn('keterangan', function ($row) {
                         if ($row->status_absen == NULL) {
                             return '-';
                         } else if ($row->status_absen == 'CUTI') {
-                            return '<span class="badge bg-labels-primary">CUTI</span>';
+                            return '<span class="badge w-100 light badge-warning">CUTI</span>';
                         } else if ($row->status_absen == 'LIBUR') {
-                            return '<span class="badge bg-labels-danger">LIBUR</span>';
+                            return '<span class="badge w-100 light badge-warning">LIBUR</span>';
                         } else if ($row->status_absen == 'TIDAK HADIR KERJA') {
-                            return '<span class="badge bg-labels-warning">TIDAK HADIR KERJA</span>';
-                        } else {;
-                            return '<span class="badge bg-labels-success">' . $row->status_absen . '</span>';
+                            return '<span class="badge w-100 light badge-warning">TIDAK HADIR KERJA</span>';
+                        } else if ($row->status_absen == 'HADIR KERJA') {
+                            return '<span class="badge w-100 light badge-success">HADIR KERJA</span>';
+                        } else {
+                            return $row->status_absen;
                         }
                     })
-                    ->rawColumns(['tanggal_masuk', 'jam_absen', 'jam_pulang', 'status_absen'])
+                    ->rawColumns(['tanggal_masuk', 'jam_absen', 'jam_pulang', 'keterangan'])
                     ->make(true);
             } else {
                 $data = MappingShift::where('user_id', $user_login)->whereMonth('tanggal_masuk', $blnskrg)->whereBetween('tanggal_masuk', array($dateweek, $datenow))->orderBy('tanggal_masuk', 'DESC')->get();
-                return DataTables::of($data)->addIndexColumn()
+                // dd($data);
+                return DataTables::of($data)
                     ->addColumn('tanggal_masuk', function ($row) {
                         $result = Carbon::parse($row->tanggal_masuk)->isoFormat('D-MM-Y');;
                         return $result;
@@ -831,20 +848,20 @@ class HomeUserController extends Controller
                             return $result;
                         }
                     })
-                    ->addColumn('status_absen', function ($row) {
+                    ->addColumn('keterangan', function ($row) {
                         if ($row->status_absen == NULL) {
                             return '-';
                         } else if ($row->status_absen == 'CUTI') {
-                            return '<span class="badge bg-labels-primary">CUTI</span>';
+                            return '<span class="badge w-100 light badge-warning">CUTI</span>';
                         } else if ($row->status_absen == 'LIBUR') {
-                            return '<span class="badge bg-labels-danger">LIBUR</span>';
+                            return '<span class="badge w-100 light badge-warning">LIBUR</span>';
                         } else if ($row->status_absen == 'TIDAK HADIR KERJA') {
-                            return '<span class="badge bg-labels-warning">TIDAK HADIR KERJA</span>';
-                        } else {;
-                            return '<span class="badge bg-labels-success">' . $row->status_absen . '</span>';
+                            return '<span class="badge w-100 light badge-warning">TIDAK HADIR KERJA</span>';
+                        } else {
+                            return $row->status_absen;
                         }
                     })
-                    ->rawColumns(['tanggal_masuk', 'jam_absen', 'jam_pulang', 'status_absen'])
+                    ->rawColumns(['tanggal_masuk', 'jam_absen', 'jam_pulang', 'keterangan'])
                     ->make(true);
             }
         }

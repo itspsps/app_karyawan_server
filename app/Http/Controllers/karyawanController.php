@@ -120,7 +120,7 @@ class karyawanController extends Controller
         $table = Karyawan::with('Departemen')
             ->with('Divisi')
             ->with('Jabatan')
-            // ->where('kontrak_kerja', $holding)
+            ->where('kontrak_kerja', $holding)
             ->where('status_aktif', 'NON AKTIF')
             ->where('kategori', 'Karyawan Bulanan')
             ->orderBy('id', 'DESC')
