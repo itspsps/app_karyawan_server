@@ -779,7 +779,7 @@ class HomeUserController extends Controller
                     })
                     ->addColumn('jam_absen', function ($row) {
                         if ($row->jam_absen == NULL) {
-                            return $row->jam_absen;
+                            return '-';
                         } else {
                             $result = Carbon::parse($row->jam_absen)->isoFormat('HH:mm');;
                             return $result;
@@ -787,13 +787,26 @@ class HomeUserController extends Controller
                     })
                     ->addColumn('jam_pulang', function ($row) {
                         if ($row->jam_pulang == NULL) {
-                            return $row->jam_pulang;
+                            return '-';
                         } else {
                             $result = Carbon::parse($row->jam_pulang)->isoFormat('HH:mm');;
                             return $result;
                         }
                     })
-                    ->rawColumns(['tanggal_masuk', 'jam_absen', 'jam_pulang'])
+                    ->addColumn('status_absen', function ($row) {
+                        if ($row->status_absen == NULL) {
+                            return '-';
+                        } else if ($row->status_absen == 'CUTI') {
+                            return '<span class="badge bg-labels-primary">CUTI</span>';
+                        } else if ($row->status_absen == 'LIBUR') {
+                            return '<span class="badge bg-labels-danger">LIBUR</span>';
+                        } else if ($row->status_absen == 'TIDAK HADIR KERJA') {
+                            return '<span class="badge bg-labels-warning">TIDAK HADIR KERJA</span>';
+                        } else {;
+                            return '<span class="badge bg-labels-success">' . $row->status_absen . '</span>';
+                        }
+                    })
+                    ->rawColumns(['tanggal_masuk', 'jam_absen', 'jam_pulang', 'status_absen'])
                     ->make(true);
             } else {
                 $data = MappingShift::where('user_id', $user_login)->whereMonth('tanggal_masuk', $blnskrg)->whereBetween('tanggal_masuk', array($dateweek, $datenow))->orderBy('tanggal_masuk', 'DESC')->get();
@@ -804,7 +817,7 @@ class HomeUserController extends Controller
                     })
                     ->addColumn('jam_absen', function ($row) {
                         if ($row->jam_absen == NULL) {
-                            return $row->jam_absen;
+                            return '-';
                         } else {
                             $result = Carbon::parse($row->jam_absen)->isoFormat('HH:mm');;
                             return $result;
@@ -812,13 +825,26 @@ class HomeUserController extends Controller
                     })
                     ->addColumn('jam_pulang', function ($row) {
                         if ($row->jam_pulang == NULL) {
-                            return $row->jam_pulang;
+                            return '-';
                         } else {
                             $result = Carbon::parse($row->jam_pulang)->isoFormat('HH:mm');;
                             return $result;
                         }
                     })
-                    ->rawColumns(['tanggal_masuk', 'jam_absen', 'jam_pulang'])
+                    ->addColumn('status_absen', function ($row) {
+                        if ($row->status_absen == NULL) {
+                            return '-';
+                        } else if ($row->status_absen == 'CUTI') {
+                            return '<span class="badge bg-labels-primary">CUTI</span>';
+                        } else if ($row->status_absen == 'LIBUR') {
+                            return '<span class="badge bg-labels-danger">LIBUR</span>';
+                        } else if ($row->status_absen == 'TIDAK HADIR KERJA') {
+                            return '<span class="badge bg-labels-warning">TIDAK HADIR KERJA</span>';
+                        } else {;
+                            return '<span class="badge bg-labels-success">' . $row->status_absen . '</span>';
+                        }
+                    })
+                    ->rawColumns(['tanggal_masuk', 'jam_absen', 'jam_pulang', 'status_absen'])
                     ->make(true);
             }
         }
