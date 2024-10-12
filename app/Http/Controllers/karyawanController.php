@@ -1469,6 +1469,8 @@ class karyawanController extends Controller
             $status_nomor = 'required';
         } else if ($request->status_nomor == "ya") {
             $status_nomor = 'nullable';
+        } else {
+            $status_nomor = 'required';
         }
         if ($request['kategori'] == 'Karyawan Harian') {
             $rules = [
@@ -1500,6 +1502,12 @@ class karyawanController extends Controller
                 'rw' => 'required|max:255',
             ];
         } else if ($request['kategori'] == 'Karyawan Bulanan') {
+            $lokasi_kerja = Lokasi::where('lokasi_kantor', $request->penempatan_kerja)->value('kategori_kantor');
+            if ($lokasi_kerja == 'all') {
+                $kategori_jabatan = 'required';
+            } else {
+                $kategori_jabatan = 'nullable';
+            }
             if ($request->status_npwp == 'on') {
                 $nama_pemilik_npwp = 'required';
                 $npwp = 'required';
@@ -1584,8 +1592,6 @@ class karyawanController extends Controller
                 'gender' => 'required',
                 'status_nikah' => 'required',
                 'kategori' => 'required',
-                'tgl_join' => 'required',
-                'max:255',
                 'kontrak_kerja' => 'required',
                 'max:255',
                 'kuota_cuti' => 'required',
@@ -1612,6 +1618,7 @@ class karyawanController extends Controller
                 'site_job' => 'required',
                 'penempatan_kerja' => 'required',
                 'max:255',
+                'kategori_jabatan' => $kategori_jabatan . '|max:255',
                 'departemen_id' => 'required',
                 'max:255',
                 'divisi_id' => 'required',
@@ -1671,7 +1678,6 @@ class karyawanController extends Controller
                 'kelas_bpjs' => $kelas_bpjs,
                 'ptkp' => 'required',
                 'file_cv' => 'max:255',
-                'kategori_jabatan' => 'max:255'
             ];
         } else {
             $rules = [
@@ -1702,8 +1708,6 @@ class karyawanController extends Controller
                 'gender' => 'required',
                 'status_nikah' => 'required',
                 'kategori' => 'required',
-                'tgl_join' => 'required',
-                'max:255',
                 'kontrak_kerja' => 'required',
                 'max:255',
                 // 'lama_kontrak_kerja' => 'max:255',
@@ -1712,7 +1716,6 @@ class karyawanController extends Controller
                 // 'tgl_selesai_kontrak' => 'max:25',
                 'kuota_cuti' => 'required',
                 'max:11',
-                'is_admin' => 'required',
                 'provinsi' => 'required',
                 'kabupaten' => 'required',
                 'kecamatan' => 'required',
@@ -2021,12 +2024,15 @@ class karyawanController extends Controller
     }
     public function get_departemen(Request $request)
     {
+        // dd($request->holding);
         if ($request->holding == 'sp') {
             $holding_1 = 'CV. SUMBER PANGAN';
         } else if ($request->holding == 'sps') {
             $holding_1 = 'PT. SURYA PANGAN SEMESTA';
-        } else {
+        } else if ($request->holding == 'sip') {
             $holding_1 = 'CV. SURYA INTI PANGAN';
+        } else {
+            $holding_1 = NULL;
         }
         $holding = $holding_1;
         $departemen      = Departemen::where('holding', $request->holding)->orderBy('nama_departemen', 'ASC')->get();

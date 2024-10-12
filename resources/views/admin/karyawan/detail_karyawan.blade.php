@@ -197,13 +197,13 @@
                                         <div class="col-md-6">
                                             <div class="form-floating form-floating-outline">
                                                 <select style="font-size: small;" class="form-control" id="agama" name="agama">
-                                                    <option @if($karyawan->agama=='') selected @else @endif disabled value=""> ~Pilih Agama~ </option>
-                                                    <option @if($karyawan->agama=='ISLAM') selected @else @endif value="ISLAM">ISLAM</option>
-                                                    <option @if($karyawan->agama=='KRISTEN PROTESTAN') selected @else @endif value="KRISTEN PROTESTAN">KRISTEN PROTESTAN</option>
-                                                    <option @if($karyawan->agama=='KRISTEN KATOLIK') selected @else @endif value="KRISTEN KATOLIK">KRISTEN KATOLIK</option>
-                                                    <option @if($karyawan->agama=='HINDU') selected @else @endif value="HINDU">HINDU</option>
-                                                    <option @if($karyawan->agama=='BUDDHA') selected @else @endif value="BUDDHA">BUDDHA</option>
-                                                    <option @if($karyawan->agama=='KHONGHUCU') selected @else @endif value="KHONGHUCU">KHONGHUCU</option>
+                                                    <option @if(old('agama',$karyawan->agama)=='') selected @else @endif disabled value=""> ~Pilih Agama~ </option>
+                                                    <option @if(old('agama',$karyawan->agama)=='ISLAM') selected @else @endif value="ISLAM">ISLAM</option>
+                                                    <option @if(old('agama',$karyawan->agama)=='KRISTEN PROTESTAN') selected @else @endif value="KRISTEN PROTESTAN">KRISTEN PROTESTAN</option>
+                                                    <option @if(old('agama',$karyawan->agama)=='KRISTEN KATOLIK') selected @else @endif value="KRISTEN KATOLIK">KRISTEN KATOLIK</option>
+                                                    <option @if(old('agama',$karyawan->agama)=='HINDU') selected @else @endif value="HINDU">HINDU</option>
+                                                    <option @if(old('agama',$karyawan->agama)=='BUDDHA') selected @else @endif value="BUDDHA">BUDDHA</option>
+                                                    <option @if(old('agama',$karyawan->agama)=='KHONGHUCU') selected @else @endif value="KHONGHUCU">KHONGHUCU</option>
                                                 </select>
                                                 <label for="agama">Agama</label>
                                             </div>
@@ -331,15 +331,6 @@
                                             <p class="alert alert-danger">{{$message}}</p>
                                             @enderror
                                         </div>
-                                        <div class="col-md-6">
-                                            <div class="form-floating form-floating-outline">
-                                                <input style="font-size: small;" type="date" class="form-control @error('tgl_join') is-invalid @enderror" id="tgl_join" name="tgl_join" value="{{ old('tgl_join', $karyawan->tgl_join) }}">
-                                                <label for="tgl_join">Tanggal Join Perusahaan</label>
-                                            </div>
-                                            @error('tgl_join')
-                                            <p class="alert alert-danger">{{$message}}</p>
-                                            @enderror
-                                        </div>
                                         <div id="form_kontrak" class="col-md-6">
                                             <div class="form-floating form-floating-outline">
                                                 <input style="font-size: small;" type="text" class="form-control" readonly value="@if($karyawan->kontrak_kerja =='SP')CV. SUMBER PANGAN @elseif($karyawan->kontrak_kerja =='SPS') PT. SURYA PANGAN SEMESTA @elseif($karyawan->kontrak_kerja =='SIP') CV. SURYA INTI PANGAN  @endif">
@@ -348,7 +339,17 @@
                                             </div>
 
                                         </div>
-                                        <div id="form_lama_kontrak" class="col-md-6">
+                                        <div class="col-md-3">
+                                            <div class="form-floating form-floating-outline">
+                                                <input style="font-size: small;" disabled type="date" class="form-control @error('tgl_join') is-invalid @enderror" id="tgl_join" name="tgl_join" value="{{ old('tgl_join', $karyawan->tgl_join) }}">
+                                                <label for="tgl_join">Tanggal Join Perusahaan</label>
+                                                <span class="badge bg-label-danger">Tidak Dapat Di Ubah</span>
+                                            </div>
+                                            @error('tgl_join')
+                                            <p class="alert alert-danger">{{$message}}</p>
+                                            @enderror
+                                        </div>
+                                        <div id="form_lama_kontrak" class="col-md-3">
                                             <?php $lama_kontrak_kerja = array(
                                                 [
                                                     "lama_kontrak_kerja" => "3 bulan"
@@ -387,7 +388,7 @@
                                         </div>
                                         <div id="form_tgl_mulai_kontrak" class="col-md-3">
                                             <div class="form-floating form-floating-outline">
-                                                <input style="font-size: small;" type="date" readonly class="form-control @error('tgl_mulai_kontrak') is-invalid @enderror" id="tgl_mulai_kontrak" name="tgl_mulai_kontrak" value="{{old('tgl_mulai_kontrak', $karyawan->tgl_mulai_kontrak) }}" />
+                                                <input style="font-size: small;" disabled type="date" readonly class="form-control @error('tgl_mulai_kontrak') is-invalid @enderror" id="tgl_mulai_kontrak" name="tgl_mulai_kontrak" value="{{old('tgl_mulai_kontrak', $karyawan->tgl_mulai_kontrak) }}" />
                                                 <label for="tgl_mulai_kontrak">Tanggal Mulai Kontrak</label>
                                                 <span class="badge bg-label-danger">Tidak Dapat Di Ubah</span>
                                             </div>
@@ -397,7 +398,7 @@
                                         </div>
                                         <div id="form_tgl_selesai_kontrak" class="col-md-3">
                                             <div class="form-floating form-floating-outline">
-                                                <input style="font-size: small;" type="date" readonly class="form-control @error('tgl_selesai_kontrak') is-invalid @enderror" id="tgl_selesai_kontrak" name="tgl_selesai_kontrak" value="{{old('tgl_selesai_kontrak', $karyawan->tgl_selesai_kontrak) }}" />
+                                                <input style="font-size: small;" disabled type="date" readonly class="form-control @error('tgl_selesai_kontrak') is-invalid @enderror" id="tgl_selesai_kontrak" name="tgl_selesai_kontrak" value="{{old('tgl_selesai_kontrak', $karyawan->tgl_selesai_kontrak) }}" />
                                                 <label for=" tgl_selesai_kontrak">Tanggal Selesai Kontrak</label>
                                                 <span class="badge bg-label-danger">Tidak Dapat Di Ubah</span>
                                             </div>
@@ -438,9 +439,9 @@
                                         </div>
                                         <div class="col-md-3">
                                             <?php
-                                            $kab = App\Models\Cities::Where('province_code', $karyawan->provinsi)->orderBy('name', 'ASC')->get();
-                                            $kec = App\Models\District::Where('city_code', $karyawan->kabupaten)->orderBy('name', 'ASC')->get();
-                                            $desa = App\Models\Village::Where('district_code', $karyawan->kecamatan)->orderBy('name', 'ASC')->get();
+                                            $kab = App\Models\Cities::where('province_code', old('provinsi', $karyawan->provinsi))->orderBy('name', 'ASC')->get();
+                                            $kec = App\Models\District::where('city_code', old('kabupaten', $karyawan->kabupaten))->orderBy('name', 'ASC')->get();
+                                            $desa = App\Models\Village::where('district_code', old('kecamatan', $karyawan->kecamatan))->orderBy('name', 'ASC')->get();
                                             // echo $kab;
                                             ?>
                                             <div class="form-floating form-floating-outline">
@@ -669,13 +670,17 @@
                                             <label class="form-check-label" for="kategori_jabatan">Pilih Kategori</label>
                                             <div class="form-floating form-floating-outline">
                                                 <div class="row gy-4">
-                                                    <div class="col-lg-3 form-check">
+                                                    <div class="col-lg-4 form-check">
                                                         <input style="font-size: small;" type="radio" id="kategori_jabatan_sp" name="kategori_jabatan" class="form-check-input" value="sp" @if(old('kategori_jabatan', $karyawan->kategori_jabatan)=='sp') checked @else @endif>
                                                         <label class="form-check-label" for="kategori_jabatan_sp">CV. SUMBER PANGAN</label>
                                                     </div>
-                                                    <div class="col-lg-6 form-check">
+                                                    <div class="col-lg-4 form-check">
                                                         <input style="font-size: small;" type="radio" id="kategori_jabatan_sps" name="kategori_jabatan" class="form-check-input" value="sps" @if(old('kategori_jabatan', $karyawan->kategori_jabatan)=='sps') checked @else @endif>
                                                         <label class="form-check-label" for="kategori_jabatan_sps">PT. SURYA PANGAN SEMESTA</label>
+                                                    </div>
+                                                    <div class="col-lg-4 form-check">
+                                                        <input style="font-size: small;" type="radio" id="kategori_jabatan_sip" name="kategori_jabatan" class="form-check-input" value="sip" @if(old('kategori_jabatan', $karyawan->kategori_jabatan)=='sip') checked @else @endif>
+                                                        <label class="form-check-label" for="kategori_jabatan_sip">CV. SURYA INTI PANGAN</label>
                                                     </div>
                                                 </div>
                                             </div>
@@ -692,8 +697,10 @@
                                                     $holding_jabatan = 'CV. SUMBER PANGAN';
                                                 } else if (old('kategori_jabatan', $kategori_jabatan) == 'sps') {
                                                     $holding_jabatan = 'PT. SURYA PANGAN SEMESTA';
-                                                } else {
+                                                } else if (old('kategori_jabatan', $kategori_jabatan) == 'sip') {
                                                     $holding_jabatan = 'CV. SURYA INTI PANGAN';
+                                                } else {
+                                                    $holding_jabatan = NULL;
                                                 }
                                                 // echo 'ok';
                                             } else {
@@ -703,8 +710,10 @@
                                                     $holding_jabatan = 'CV. SUMBER PANGAN';
                                                 } else if (old('kategori_jabatan', $karyawan->kategori_jabatan) == 'sps') {
                                                     $holding_jabatan = 'PT. SURYA PANGAN SEMESTA';
-                                                } else {
+                                                } else if (old('kategori_jabatan', $kategori_jabatan) == 'sip') {
                                                     $holding_jabatan = 'CV. SURYA INTI PANGAN';
+                                                } else {
+                                                    $holding_jabatan = NULL;
                                                 }
                                                 // print_r($kategori_jabatan);
                                             }
@@ -1854,10 +1863,26 @@
     $('#row_bpjs_ketenagakerjaan').hide();
     $('#row_bpjs_kesehatan').hide();
     $('#row_kelas_bpjs').show();
+    var status_nomor = "{{old('status_nomor',$karyawan->status_nomor)}}";
     var status_bpjs_ketenagakerjaan = "{{old('bpjs_ketenagakerjaan',$karyawan->bpjs_ketenagakerjaan)}}";
     var status_bpjs_kesehatan = "{{old('bpjs_kesehatan',$karyawan->bpjs_kesehatan)}}";
+    var pilih_domisili_alamat = "{{old('pilihan_alamat_domisili',$karyawan->status_alamat)}}";
     var status_npwp = "{{old('status_npwp',$karyawan->status_npwp)}}";
-    console.log(status_bpjs_ketenagakerjaan);
+    // console.log(status_bpjs_ketenagakerjaan);
+    if (status_nomor == 'ya') {
+        $('#content_nomor_wa').hide();
+    } else if (status_nomor == 'tidak') {
+        $('#content_nomor_wa').show();
+    } else {
+        $('#content_nomor_wa').hide();
+    }
+    if (pilih_domisili_alamat == 'ya') {
+        $('#content_alamat_domisili').hide();
+    } else if (pilih_domisili_alamat == 'tidak') {
+        $('#content_alamat_domisili').show();
+    } else {
+        $('#content_alamat_domisili').hide();
+    }
     if (status_bpjs_ketenagakerjaan == 'on') {
         $('#row_bpjs_ketenagakerjaan').show();
     } else if (status_bpjs_ketenagakerjaan == 'off') {
@@ -1877,6 +1902,7 @@
         $('#row_bpjs_kesehatan').hide();
 
     }
+
     if (status_npwp == 'on') {
         $('#row_npwp').show();
     } else if (status_npwp == 'off') {
@@ -1884,6 +1910,19 @@
     } else {
         $('#row_npwp').hide();
     }
+    $(document).on("click", "#btn_status_no_ya", function() {
+        var isChecked = $(this).is(':checked')
+        if (isChecked) {
+            $('#content_nomor_wa').hide();
+
+        }
+    });
+    $(document).on("click", "#btn_status_no_tidak", function() {
+        var isChecked = $(this).is(':checked')
+        if (isChecked) {
+            $('#content_nomor_wa').show();
+        }
+    });
     $(document).on("click", "#status_npwp_ya", function() {
         var id = $(this).val();
         if (id == 'on') {
@@ -1891,6 +1930,19 @@
         } else {
             $('#row_npwp').hide();
 
+        }
+    });
+    $(document).on("click", "#btnradio_ya", function() {
+        var isChecked = $(this).is(':checked')
+        if (isChecked) {
+            $('#content_alamat_domisili').hide();
+
+        }
+    });
+    $(document).on("click", "#btnradio_tidak", function() {
+        var isChecked = $(this).is(':checked')
+        if (isChecked) {
+            $('#content_alamat_domisili').show();
         }
     });
     $(document).on("click", "#status_npwp_tidak", function() {
@@ -2076,6 +2128,35 @@
 
                 success: function(msg) {
                     // console.log(msg);
+                    // $('#id_divisi').html(msg);
+                    $('#id_departemen').html(msg);
+                    $('#id_departemen1').html(msg);
+                    $('#id_departemen2').html(msg);
+                    $('#id_departemen3').html(msg);
+                    $('#id_departemen4').html(msg);
+                },
+                error: function(data) {
+                    console.log('error:', data)
+                },
+
+            })
+        }
+    });
+    $(document).on("click", "#kategori_jabatan_sip", function() {
+        var holding = $(this).val();
+        console.log(holding);
+        if (holding == 'sip') {
+            $('#kategori_jabatan').val(holding);
+            $.ajax({
+                type: 'GET',
+                url: "{{url('karyawan/get_departemen')}}",
+                data: {
+                    holding: holding,
+                },
+                cache: false,
+
+                success: function(msg) {
+                    console.log(msg);
                     // $('#id_divisi').html(msg);
                     $('#id_departemen').html(msg);
                     $('#id_departemen1').html(msg);
