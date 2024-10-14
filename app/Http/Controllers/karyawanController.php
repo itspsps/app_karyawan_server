@@ -2048,22 +2048,21 @@ class karyawanController extends Controller
     public function get_divisi(Request $request)
     {
         // dd($request->all());
-        $id_departemen    = $request->id_departemen;
-        if ($request->holding == 'sp') {
+        $departemen    = Departemen::where('id', $request->id_departemen)->first();
+        if ($departemen->holding == 'sp') {
             $holding_1 = 'CV. SUMBER PANGAN';
             // dd('ok2');
-        } else if ($request->holding == 'sps') {
+        } else if ($departemen->holding == 'sps') {
             $holding_1 = 'PT. SURYA PANGAN SEMESTA';
             // dd('ok1');
-        } else if ($request->holding == 'sip') {
+        } else if ($departemen->holding == 'sip') {
             // dd('ok');
             $holding_1 = 'CV. SURYA INTI PANGAN';
         }
-        $holding = $holding_1;
         // dd($holding);
-        $divisi      = Divisi::where('dept_id', $id_departemen)->where('holding', $request->holding)->orderBy('nama_divisi', 'ASC')->get();
+        $divisi      = Divisi::where('dept_id', $departemen->id)->orderBy('nama_divisi', 'ASC')->get();
         echo "<option value=''>Pilih Divisi...</option>";
-        echo "<optgroup label='Daftar Divisi $holding'>";
+        echo "<optgroup label='Daftar Divisi $holding_1'>";
         foreach ($divisi as $divisi) {
             echo "<option value='$divisi->id'>$divisi->nama_divisi</option>";
         }
@@ -2071,16 +2070,16 @@ class karyawanController extends Controller
     }
     public function get_bagian(Request $request)
     {
-        $id_divisi    = $request->id_divisi;
-        if ($request->holding == 'sp') {
+        $divisi    = Divisi::where('id', $request->id_divisi)->first();
+        if ($divisi->holding == 'sp') {
             $holding_1 = 'CV. SUMBER PANGAN';
-        } else if ($request->holding == 'sps') {
+        } else if ($divisi->holding == 'sps') {
             $holding_1 = 'PT. SURYA PANGAN SEMESTA';
-        } else if ($request->holding == 'sip') {
+        } else if ($divisi->holding == 'sip') {
             $holding_1 = 'CV. SURYA INTI PANGAN';
         }
         $holding = $holding_1;
-        $bagian      = Bagian::where('divisi_id', $id_divisi)->where('holding', $request->holding)->orderBy('nama_bagian', 'ASC')->get();
+        $bagian      = Bagian::where('divisi_id', $divisi->id)->orderBy('nama_bagian', 'ASC')->get();
         echo "<option value=''>Pilih Bagian...</option>";
         echo "<optgroup label='Daftar Bagian $holding'>";
         foreach ($bagian as $bagian) {
@@ -2090,16 +2089,16 @@ class karyawanController extends Controller
     }
     public function get_jabatan(Request $request)
     {
-        if ($request->holding == 'sp') {
+        $bagian    = Bagian::where('id', $request->id_bagian)->first();
+        if ($bagian->holding == 'sp') {
             $holding_1 = 'CV. SUMBER PANGAN';
-        } else if ($request->holding == 'sps') {
+        } else if ($bagian->holding == 'sps') {
             $holding_1 = 'PT. SURYA PANGAN SEMESTA';
-        } else if ($request->holding == 'sip') {
+        } else if ($bagian->holding == 'sip') {
             $holding_1 = 'CV. SURYA INTI PANGAN';
         }
         $holding = $holding_1;
-        $id_bagian    = $request->id_bagian;
-        $jabatan      = Jabatan::where('bagian_id', $id_bagian)->where('holding', $request->holding)->orderBy('nama_jabatan', 'ASC')->get();
+        $jabatan      = Jabatan::where('bagian_id', $bagian->id)->orderBy('nama_jabatan', 'ASC')->get();
         echo "<option value=''>Pilih Jabatan...</option>";
         echo "<optgroup label='Daftar Jabatan $holding'>";
         foreach ($jabatan as $jabatan) {

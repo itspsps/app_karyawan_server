@@ -137,7 +137,7 @@
                                         <div class="col-md-12">
                                             <h6>Apakah Nomor Telepon Terhubung WhatsApps ?</h6>
                                             <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
-                                                <input type="radio" class="btn-check @error('status_nomor') is-invalid @enderror" name="status_nomor" value="" checked>
+                                                <input type="radio" class="btn-check @error('status_nomor') is-invalid @enderror" name="status_nomor" value="" @if(old('status_nomor',$karyawan->status_nomor)=="") checked @else @endif>
                                                 <input type="radio" class="btn-check @error('status_nomor') is-invalid @enderror" name="status_nomor" id="btn_status_no_ya" value="ya" @if(old('status_nomor',$karyawan->status_nomor)=="ya" ) checked @else @endif>
                                                 <label class="btn btn-sm btn-outline-success waves-effect" for="btn_status_no_ya">Ya</label>
                                                 <input type="radio" class="btn-check @error('status_nomor') is-invalid @enderror" name="status_nomor" id="btn_status_no_tidak" value="tidak" @if(old('status_nomor',$karyawan->status_nomor)=="tidak" ) checked @else @endif>
@@ -692,13 +692,15 @@
                                             <?php
                                             if (old('kategori_jabatan', $karyawan->kategori_jabatan) == '') {
                                                 // echo 'ok';
-                                                $kategori_jabatan = $holding;
-                                                if (old('kategori_jabatan', $kategori_jabatan) == 'sp') {
+                                                $kategori_jabatan = App\Models\Lokasi::where('lokasi_kantor', old('site_job', $karyawan->site_job))->value('kategori_kantor');
+                                                if (old('kategori_jabatan', $kategori_jabatan) == 'sp' || old('kategori_jabatan', $kategori_jabatan) == 'all sp') {
                                                     $holding_jabatan = 'CV. SUMBER PANGAN';
-                                                } else if (old('kategori_jabatan', $kategori_jabatan) == 'sps') {
+                                                } else if (old('kategori_jabatan', $kategori_jabatan) == 'sps' || old('kategori_jabatan', $kategori_jabatan) == 'all sps') {
                                                     $holding_jabatan = 'PT. SURYA PANGAN SEMESTA';
-                                                } else if (old('kategori_jabatan', $kategori_jabatan) == 'sip') {
+                                                } else if (old('kategori_jabatan', $kategori_jabatan) == 'sip' || old('kategori_jabatan', $kategori_jabatan) == 'all sip') {
                                                     $holding_jabatan = 'CV. SURYA INTI PANGAN';
+                                                } else if (old('kategori_jabatan', $kategori_jabatan) == 'all') {
+                                                    $holding_jabatan = $holding;
                                                 } else {
                                                     $holding_jabatan = NULL;
                                                 }
@@ -746,7 +748,7 @@
                                             } else {
                                                 $kategori_jabatan = $karyawan->kategori_jabatan;
                                             }
-                                            $data_divisi = App\Models\Divisi::Where('dept_id', old('departemen_id', $karyawan->dept_id))->where('holding', $kategori_jabatan)->orderBy('nama_divisi', 'ASC')->get();
+                                            $data_divisi = App\Models\Divisi::Where('dept_id', old('departemen_id', $karyawan->dept_id))->orderBy('nama_divisi', 'ASC')->get();
                                             // echo $kec;
                                             ?>
                                             <div class="form-floating form-floating-outline">
@@ -775,7 +777,7 @@
                                             } else {
                                                 $kategori_jabatan = $karyawan->kategori_jabatan;
                                             }
-                                            $data_bagian = App\Models\Bagian::Where('divisi_id', old('divisi_id', $karyawan->divisi_id))->where('holding', $kategori_jabatan)->orderBy('nama_bagian', 'ASC')->get();
+                                            $data_bagian = App\Models\Bagian::Where('divisi_id', old('divisi_id', $karyawan->divisi_id))->orderBy('nama_bagian', 'ASC')->get();
                                             // echo $kec;
                                             ?>
                                             <div class="form-floating form-floating-outline">
@@ -805,17 +807,17 @@
                                             } else {
                                                 $kategori_jabatan = $karyawan->kategori_jabatan;
                                             }
-                                            $data_bagian = App\Models\Bagian::Where('divisi_id', old('bagian_id', $karyawan->divisi_id))->where('holding', $kategori_jabatan)->orderBy('nama_bagian', 'ASC')->get();
-                                            $data_bagian1 = App\Models\Bagian::Where('divisi_id', old('bagian_id', $karyawan->divisi1_id))->where('holding', $kategori_jabatan)->orderBy('nama_bagian', 'ASC')->get();
-                                            $data_bagian2 = App\Models\Bagian::Where('divisi_id', old('bagian_id', $karyawan->divisi2_id))->where('holding', $kategori_jabatan)->orderBy('nama_bagian', 'ASC')->get();
-                                            $data_bagian3 = App\Models\Bagian::Where('divisi_id', old('bagian_id', $karyawan->divisi3_id))->where('holding', $kategori_jabatan)->orderBy('nama_bagian', 'ASC')->get();
-                                            $data_bagian4 = App\Models\Bagian::Where('divisi_id', old('bagian_id', $karyawan->divisi4_id))->where('holding', $kategori_jabatan)->orderBy('nama_bagian', 'ASC')->get();
+                                            $data_bagian = App\Models\Bagian::Where('divisi_id', old('bagian_id', $karyawan->divisi_id))->orderBy('nama_bagian', 'ASC')->get();
+                                            $data_bagian1 = App\Models\Bagian::Where('divisi_id', old('bagian_id', $karyawan->divisi1_id))->orderBy('nama_bagian', 'ASC')->get();
+                                            $data_bagian2 = App\Models\Bagian::Where('divisi_id', old('bagian_id', $karyawan->divisi2_id))->orderBy('nama_bagian', 'ASC')->get();
+                                            $data_bagian3 = App\Models\Bagian::Where('divisi_id', old('bagian_id', $karyawan->divisi3_id))->orderBy('nama_bagian', 'ASC')->get();
+                                            $data_bagian4 = App\Models\Bagian::Where('divisi_id', old('bagian_id', $karyawan->divisi4_id))->orderBy('nama_bagian', 'ASC')->get();
                                             // Jabatan
-                                            $data_jabatan = App\Models\Jabatan::Where('bagian_id', old('bagian_id', $karyawan->bagian_id))->where(old('disivi_id', $karyawan->disivi_id))->where('holding', $kategori_jabatan)->orderBy('nama_jabatan', 'ASC')->get();
-                                            $data_jabatan1 = App\Models\Jabatan::Where('bagian_id', old('bagian1_id', $karyawan->bagian1_id))->where(old('disivi1_id', $karyawan->disivi1_id))->where('holding', $kategori_jabatan)->orderBy('nama_jabatan', 'ASC')->get();
-                                            $data_jabatan2 = App\Models\Jabatan::Where('bagian_id', old('bagian2_id', $karyawan->bagian2_id))->where(old('disivi2_id', $karyawan->disivi2_id))->where('holding', $kategori_jabatan)->orderBy('nama_jabatan', 'ASC')->get();
-                                            $data_jabatan3 = App\Models\Jabatan::Where('bagian_id', old('bagian3_id', $karyawan->bagian3_id))->where(old('disivi3_id', $karyawan->disivi3_id))->where('holding', $kategori_jabatan)->orderBy('nama_jabatan', 'ASC')->get();
-                                            $data_jabatan4 = App\Models\Jabatan::Where('bagian_id', old('bagian4_id', $karyawan->bagian4_id))->where(old('disivi4_id', $karyawan->disivi4_id))->where('holding', $kategori_jabatan)->orderBy('nama_jabatan', 'ASC')->get();
+                                            $data_jabatan = App\Models\Jabatan::Where('bagian_id', old('bagian_id', $karyawan->bagian_id))->where(old('disivi_id', $karyawan->disivi_id))->orderBy('nama_jabatan', 'ASC')->get();
+                                            $data_jabatan1 = App\Models\Jabatan::Where('bagian_id', old('bagian1_id', $karyawan->bagian1_id))->where(old('disivi1_id', $karyawan->disivi1_id))->orderBy('nama_jabatan', 'ASC')->get();
+                                            $data_jabatan2 = App\Models\Jabatan::Where('bagian_id', old('bagian2_id', $karyawan->bagian2_id))->where(old('disivi2_id', $karyawan->disivi2_id))->orderBy('nama_jabatan', 'ASC')->get();
+                                            $data_jabatan3 = App\Models\Jabatan::Where('bagian_id', old('bagian3_id', $karyawan->bagian3_id))->where(old('disivi3_id', $karyawan->disivi3_id))->orderBy('nama_jabatan', 'ASC')->get();
+                                            $data_jabatan4 = App\Models\Jabatan::Where('bagian_id', old('bagian4_id', $karyawan->bagian4_id))->where(old('disivi4_id', $karyawan->disivi4_id))->orderBy('nama_jabatan', 'ASC')->get();
                                             // echo $kec;
                                             ?>
                                             <div class="form-floating form-floating-outline">
@@ -883,7 +885,7 @@
                                                                                     } else {
                                                                                         $kategori_jabatan = $karyawan->kategori_jabatan;
                                                                                     }
-                                                                                    $divisi = App\Models\Divisi::where('dept_id', old('departemen1_id', $karyawan->dept1_id))->where('holding', $kategori_jabatan)->orderBy('nama_divisi', 'ASC')->get();
+                                                                                    $divisi = App\Models\Divisi::where('dept_id', old('departemen1_id', $karyawan->dept1_id))->orderBy('nama_divisi', 'ASC')->get();
                                                                                     ?>
                                                                                     @foreach($divisi as $divisi)
                                                                                     @if(old('divisi1_id',$karyawan->divisi1_id) == $divisi->id)
@@ -909,7 +911,7 @@
                                                                                     } else {
                                                                                         $kategori_jabatan = $karyawan->kategori_jabatan;
                                                                                     }
-                                                                                    $bagian = App\Models\Bagian::where('divisi_id', old('divisi1_id', $karyawan->divisi1_id))->where('holding', $kategori_jabatan)->orderBy('nama_bagian', 'ASC')->get();
+                                                                                    $bagian = App\Models\Bagian::where('divisi_id', old('divisi1_id', $karyawan->divisi1_id))->orderBy('nama_bagian', 'ASC')->get();
                                                                                     ?>
                                                                                     @foreach($bagian as $bagian)
                                                                                     @if(old('bagian1_id',$karyawan->bagian1_id) == $bagian->id)
@@ -935,7 +937,7 @@
                                                                                     } else {
                                                                                         $kategori_jabatan = $karyawan->kategori_jabatan;
                                                                                     }
-                                                                                    $jabatan = App\Models\Jabatan::where('bagian_id', old('bagian1_id', $karyawan->bagian1_id))->where('holding', $kategori_jabatan)->orderBy('nama_jabatan', 'ASC')->get();
+                                                                                    $jabatan = App\Models\Jabatan::where('bagian_id', old('bagian1_id', $karyawan->bagian1_id))->orderBy('nama_jabatan', 'ASC')->get();
                                                                                     ?>
                                                                                     @foreach($jabatan as $jabatan)
                                                                                     @if(old('jabatan1_id',$karyawan->jabatan1_id) == $jabatan->id)
@@ -989,7 +991,7 @@
                                                                                     } else {
                                                                                         $kategori_jabatan = $karyawan->kategori_jabatan;
                                                                                     }
-                                                                                    $divisi = App\Models\Divisi::where('dept_id', old('departemen2_id', $karyawan->dept_id))->where('holding', $kategori_jabatan)->orderBy('nama_divisi', 'ASC')->get();
+                                                                                    $divisi = App\Models\Divisi::where('dept_id', old('departemen2_id', $karyawan->dept_id))->orderBy('nama_divisi', 'ASC')->get();
                                                                                     ?>
                                                                                     @foreach($divisi as $divisi)
                                                                                     @if(old('divisi2_id',$karyawan->divisi2_id) == $divisi->id)
@@ -1015,7 +1017,7 @@
                                                                                     } else {
                                                                                         $kategori_jabatan = $karyawan->kategori_jabatan;
                                                                                     }
-                                                                                    $bagian = App\Models\Bagian::where('divisi_id', old('divisi2_id', $karyawan->divisi2_id))->where('holding', $kategori_jabatan)->orderBy('nama_bagian', 'ASC')->get();
+                                                                                    $bagian = App\Models\Bagian::where('divisi_id', old('divisi2_id', $karyawan->divisi2_id))->orderBy('nama_bagian', 'ASC')->get();
                                                                                     ?>
                                                                                     @foreach($bagian as $bagian)
                                                                                     @if(old('bagian2_id',$karyawan->bagian2_id) == $bagian->id)
@@ -1041,7 +1043,7 @@
                                                                                     } else {
                                                                                         $kategori_jabatan = $karyawan->kategori_jabatan;
                                                                                     }
-                                                                                    $jabatan = App\Models\Jabatan::where('bagian_id', old('bagian2_id', $karyawan->bagian2_id))->where('holding', $kategori_jabatan)->orderBy('nama_jabatan', 'ASC')->get();
+                                                                                    $jabatan = App\Models\Jabatan::where('bagian_id', old('bagian2_id', $karyawan->bagian2_id))->orderBy('nama_jabatan', 'ASC')->get();
                                                                                     ?>
                                                                                     @foreach($jabatan as $jabatan)
                                                                                     @if(old('jabatan2_id',$karyawan->jabatan2_id) == $jabatan->id)
@@ -1095,7 +1097,7 @@
                                                                                     } else {
                                                                                         $kategori_jabatan = $karyawan->kategori_jabatan;
                                                                                     }
-                                                                                    $divisi = App\Models\Divisi::where('dept_id', old('departemen3_id', $karyawan->dept_id))->where('holding', $kategori_jabatan)->orderBy('nama_divisi', 'ASC')->get();
+                                                                                    $divisi = App\Models\Divisi::where('dept_id', old('departemen3_id', $karyawan->dept_id))->orderBy('nama_divisi', 'ASC')->get();
                                                                                     ?>
                                                                                     @foreach($divisi as $divisi)
                                                                                     @if(old('divisi3_id',$karyawan->divisi3_id) == $divisi->id)
@@ -1121,7 +1123,7 @@
                                                                                     } else {
                                                                                         $kategori_jabatan = $karyawan->kategori_jabatan;
                                                                                     }
-                                                                                    $bagian = App\Models\Bagian::where('divisi_id', old('divisi3_id', $karyawan->divisi3_id))->where('holding', $kategori_jabatan)->orderBy('nama_bagian', 'ASC')->get();
+                                                                                    $bagian = App\Models\Bagian::where('divisi_id', old('divisi3_id', $karyawan->divisi3_id))->orderBy('nama_bagian', 'ASC')->get();
                                                                                     ?>
                                                                                     @foreach($bagian as $bagian)
                                                                                     @if(old('bagian3_id',$karyawan->bagian3_id) == $bagian->id)
@@ -1147,7 +1149,7 @@
                                                                                     } else {
                                                                                         $kategori_jabatan = $karyawan->kategori_jabatan;
                                                                                     }
-                                                                                    $jabatan = App\Models\Jabatan::where('bagian_id', old('bagian3_id', $karyawan->bagian3_id))->where('holding', $kategori_jabatan)->orderBy('nama_jabatan', 'ASC')->get();
+                                                                                    $jabatan = App\Models\Jabatan::where('bagian_id', old('bagian3_id', $karyawan->bagian3_id))->orderBy('nama_jabatan', 'ASC')->get();
                                                                                     ?>
                                                                                     @foreach($jabatan as $jabatan)
                                                                                     @if(old('jabatan3_id',$karyawan->jabatan3_id) == $jabatan->id)
@@ -1201,7 +1203,7 @@
                                                                                     } else {
                                                                                         $kategori_jabatan = $karyawan->kategori_jabatan;
                                                                                     }
-                                                                                    $divisi = App\Models\Divisi::where('dept_id', old('departemen4_id', $karyawan->dept_id))->where('holding', $kategori_jabatan)->orderBy('nama_divisi', 'ASC')->get();
+                                                                                    $divisi = App\Models\Divisi::where('dept_id', old('departemen4_id', $karyawan->dept_id))->orderBy('nama_divisi', 'ASC')->get();
                                                                                     ?>
                                                                                     @foreach($divisi as $divisi)
                                                                                     @if(old('divisi4_id',$karyawan->divisi4_id) == $divisi->id)
@@ -1227,7 +1229,7 @@
                                                                                     } else {
                                                                                         $kategori_jabatan = $karyawan->kategori_jabatan;
                                                                                     }
-                                                                                    $bagian = App\Models\Bagian::where('divisi_id', old('divisi4_id', $karyawan->divisi4_id))->where('holding', $kategori_jabatan)->orderBy('nama_bagian', 'ASC')->get();
+                                                                                    $bagian = App\Models\Bagian::where('divisi_id', old('divisi4_id', $karyawan->divisi4_id))->orderBy('nama_bagian', 'ASC')->get();
                                                                                     ?>
                                                                                     @foreach($bagian as $bagian)
                                                                                     @if(old('bagian4_id') == $bagian->id)
@@ -1253,7 +1255,7 @@
                                                                                     } else {
                                                                                         $kategori_jabatan = $karyawan->kategori_jabatan;
                                                                                     }
-                                                                                    $jabatan = App\Models\Jabatan::where('bagian_id', old('bagian4_id', $karyawan->bagian4_id))->where('holding', $kategori_jabatan)->orderBy('nama_jabatan', 'ASC')->get();
+                                                                                    $jabatan = App\Models\Jabatan::where('bagian_id', old('bagian4_id', $karyawan->bagian4_id))->orderBy('nama_jabatan', 'ASC')->get();
                                                                                     ?>
                                                                                     @foreach($jabatan as $jabatan)
                                                                                     @if(old('jabatan4_id',$karyawan->jabatan4_id) == $jabatan->id)
@@ -2018,7 +2020,7 @@
     if ($('#penempatan_kerja').val() == 'ALL SITES (SP, SPS, SIP)') {
         $('#row_kategori_jabatan').show();
     }
-    $(document).on("change", "#penempatan_kerja", function() {
+    $(document).on("change", "#site_job", function() {
         var id = $(this).val();
         if (id == 'ALL SITES (SP, SPS, SIP)') {
             $('#row_kategori_jabatan').show();
@@ -2074,6 +2076,21 @@
                 $('#id_departemen2').html(msg);
                 $('#id_departemen3').html(msg);
                 $('#id_departemen4').html(msg);
+                $('#id_divisi').html('<option value=""></option>');
+                $('#id_bagian').html('<option value=""></option>');
+                $('#id_jabatan').html('<option value=""></option>');
+                $('#id_divisi1').html('<option value=""></option>');
+                $('#id_bagian1').html('<option value=""></option>');
+                $('#id_jabatan1').html('<option value=""></option>');
+                $('#id_divisi2').html('<option value=""></option>');
+                $('#id_bagian2').html('<option value=""></option>');
+                $('#id_jabatan2').html('<option value=""></option>');
+                $('#id_divisi3').html('<option value=""></option>');
+                $('#id_bagian3').html('<option value=""></option>');
+                $('#id_jabatan3').html('<option value=""></option>');
+                $('#id_divisi4').html('<option value=""></option>');
+                $('#id_bagian4').html('<option value=""></option>');
+                $('#id_jabatan4').html('<option value=""></option>');
             },
             error: function(data) {
                 console.log('error:', data)
@@ -2173,13 +2190,12 @@
     });
     $('#id_departemen').on('change', function() {
         let id_departemen = $('#id_departemen').val();
-        let holding = $('#kategori_jabatan').val();
         // console.log(holding);
         $.ajax({
             type: 'GET',
             url: "{{url('karyawan/get_divisi')}}",
             data: {
-                holding: holding,
+                // holding: holding,
                 id_departemen: id_departemen
             },
             cache: false,
@@ -2199,13 +2215,11 @@
     })
     $('#id_departemen1').on('change', function() {
         let id_departemen = $('#id_departemen1').val();
-        let holding = $('#kategori_jabatan').val();
         // console.log(holding);
         $.ajax({
             type: 'GET',
             url: "{{url('karyawan/get_divisi')}}",
             data: {
-                holding: holding,
                 id_departemen: id_departemen
             },
             cache: false,
@@ -2224,13 +2238,11 @@
     })
     $('#id_departemen2').on('change', function() {
         let id_departemen = $('#id_departemen2').val();
-        let holding = $('#kategori_jabatan').val();
         // console.log(holding);
         $.ajax({
             type: 'GET',
             url: "{{url('karyawan/get_divisi')}}",
             data: {
-                holding: holding,
                 id_departemen: id_departemen
             },
             cache: false,
@@ -2250,13 +2262,11 @@
     })
     $('#id_departemen3').on('change', function() {
         let id_departemen = $('#id_departemen3').val();
-        let holding = $('#kategori_jabatan').val();
         // console.log(holding);
         $.ajax({
             type: 'GET',
             url: "{{url('karyawan/get_divisi')}}",
             data: {
-                holding: holding,
                 id_departemen: id_departemen
             },
             cache: false,
@@ -2275,13 +2285,11 @@
     })
     $('#id_departemen4').on('change', function() {
         let id_departemen = $('#id_departemen4').val();
-        let holding = $('#kategori_jabatan').val();
         // console.log(holding);
         $.ajax({
             type: 'GET',
             url: "{{url('karyawan/get_divisi')}}",
             data: {
-                holding: holding,
                 id_departemen: id_departemen
             },
             cache: false,
@@ -2299,12 +2307,10 @@
     })
     $('#id_divisi').on('change', function() {
         let id_divisi = $('#id_divisi').val();
-        let holding = $('#kategori_jabatan').val();
         $.ajax({
             type: 'GET',
             url: "{{url('karyawan/get_bagian')}}",
             data: {
-                holding: holding,
                 id_divisi: id_divisi
             },
             cache: false,
@@ -2320,12 +2326,10 @@
     })
     $('#id_divisi1').on('change', function() {
         let id_divisi = $('#id_divisi1').val();
-        let holding = $('#kategori_jabatan').val();
         $.ajax({
             type: 'GET',
             url: "{{url('karyawan/get_bagian')}}",
             data: {
-                holding: holding,
                 id_divisi: id_divisi
             },
             cache: false,
@@ -2341,12 +2345,10 @@
     })
     $('#id_divisi2').on('change', function() {
         let id_divisi = $('#id_divisi2').val();
-        let holding = $('#kategori_jabatan').val();
         $.ajax({
             type: 'GET',
             url: "{{url('karyawan/get_bagian')}}",
             data: {
-                holding: holding,
                 id_divisi: id_divisi
             },
             cache: false,
@@ -2362,12 +2364,10 @@
     })
     $('#id_divisi3').on('change', function() {
         let id_divisi = $('#id_divisi3').val();
-        let holding = $('#kategori_jabatan').val();
         $.ajax({
             type: 'GET',
             url: "{{url('karyawan/get_bagian')}}",
             data: {
-                holding: holding,
                 id_divisi: id_divisi
             },
             cache: false,
@@ -2383,12 +2383,10 @@
     })
     $('#id_divisi4').on('change', function() {
         let id_divisi = $('#id_divisi4').val();
-        let holding = $('#kategori_jabatan').val();
         $.ajax({
             type: 'GET',
             url: "{{url('karyawan/get_bagian')}}",
             data: {
-                holding: holding,
                 id_divisi: id_divisi
             },
             cache: false,
@@ -2404,12 +2402,10 @@
     })
     $('#id_bagian').on('change', function() {
         let id_bagian = $('#id_bagian').val();
-        let holding = $('#kategori_jabatan').val();
         $.ajax({
             type: 'GET',
             url: "{{url('karyawan/get_jabatan')}}",
             data: {
-                holding: holding,
                 id_bagian: id_bagian
             },
             cache: false,
@@ -2425,12 +2421,10 @@
     })
     $('#id_bagian1').on('change', function() {
         let id_bagian = $('#id_bagian1').val();
-        let holding = $('#kategori_jabatan').val();
         $.ajax({
             type: 'GET',
             url: "{{url('karyawan/get_jabatan')}}",
             data: {
-                holding: holding,
                 id_bagian: id_bagian
             },
             cache: false,
@@ -2446,12 +2440,10 @@
     })
     $('#id_bagian2').on('change', function() {
         let id_bagian = $('#id_bagian2').val();
-        let holding = $('#kategori_jabatan').val();
         $.ajax({
             type: 'GET',
             url: "{{url('karyawan/get_jabatan')}}",
             data: {
-                holding: holding,
                 id_bagian: id_bagian
             },
             cache: false,
@@ -2467,12 +2459,10 @@
     })
     $('#id_bagian3').on('change', function() {
         let id_bagian = $('#id_bagian3').val();
-        let holding = $('#kategori_jabatan').val();
         $.ajax({
             type: 'GET',
             url: "{{url('karyawan/get_jabatan')}}",
             data: {
-                holding: holding,
                 id_bagian: id_bagian
             },
             cache: false,
@@ -2488,12 +2478,10 @@
     })
     $('#id_bagian4').on('change', function() {
         let id_bagian = $('#id_bagian4').val();
-        let holding = $('#kategori_jabatan').val();
         $.ajax({
             type: 'GET',
             url: "{{url('karyawan/get_jabatan')}}",
             data: {
-                holding: holding,
                 id_bagian: id_bagian
             },
             cache: false,

@@ -667,13 +667,17 @@
                                             <label class="form-check-label" for="kategori_jabatan">Pilih Kategori Jabatan</label>
                                             <div class="form-floating form-floating-outline">
                                                 <div class="row gy-4">
-                                                    <div class="col-lg-3 form-check">
+                                                    <div class="col-lg-4 form-check">
                                                         <input style="font-size: small;" type="radio" id="kategori_jabatan_sp" name="kategori_jabatan" class="form-check-input" value="sp" @if(old('kategori_jabatan')=='sp' ) checked @else @endif>
                                                         <label class="form-check-label" for="kategori_jabatan_sp">CV. SUMBER PANGAN</label>
                                                     </div>
-                                                    <div class="col-lg-6 form-check">
+                                                    <div class="col-lg-4 form-check">
                                                         <input style="font-size: small;" type="radio" id="kategori_jabatan_sps" name="kategori_jabatan" class="form-check-input" value="sps" @if(old('kategori_jabatan')=='sps' ) checked @else @endif>
                                                         <label class="form-check-label" for="kategori_jabatan_sps">PT. SURYA PANGAN SEMESTA</label>
+                                                    </div>
+                                                    <div class="col-lg-4 form-check">
+                                                        <input style="font-size: small;" type="radio" id="kategori_jabatan_sip" name="kategori_jabatan" class="form-check-input" value="sip" @if(old('kategori_jabatan')=='sip' ) checked @else @endif>
+                                                        <label class="form-check-label" for="kategori_jabatan_sip">CV. SURYA INTI PANGAN</label>
                                                     </div>
                                                 </div>
                                             </div>
@@ -720,7 +724,7 @@
                                             }
                                             // print_r($kategori_jabatan);
                                             // exit;
-                                            $data_divisi = App\Models\Divisi::Where('dept_id', old('departemen_id'))->where('holding', $kategori_jabatan)->orderBy('nama_divisi', 'ASC')->get();
+                                            $data_divisi = App\Models\Divisi::Where('dept_id', old('departemen_id'))->orderBy('nama_divisi', 'ASC')->get();
                                             // echo $kec;
                                             ?>
                                             <div class="form-floating form-floating-outline">
@@ -745,7 +749,7 @@
                                             }
                                             // print_r($kategori_jabatan);
                                             // exit;
-                                            $data_bagian = App\Models\Bagian::Where('divisi_id', old('divisi_id'))->where('holding', $kategori_jabatan)->orderBy('nama_bagian', 'ASC')->get();
+                                            $data_bagian = App\Models\Bagian::Where('divisi_id', old('divisi_id'))->orderBy('nama_bagian', 'ASC')->get();
                                             // echo $kec;
                                             ?>
                                             <div class="form-floating form-floating-outline">
@@ -769,7 +773,7 @@
                                                 $kategori_jabatan = old('kategori_jabatan');
                                             }
                                             // exit;
-                                            $data_jabatan = App\Models\Jabatan::where('bagian_id', old('bagian_id'))->where('divisi_id', old('divisi_id'))->where('holding', $kategori_jabatan)->orderBy('nama_jabatan', 'ASC')->get();
+                                            $data_jabatan = App\Models\Jabatan::where('bagian_id', old('bagian_id'))->where('divisi_id', old('divisi_id'))->orderBy('nama_jabatan', 'ASC')->get();
                                             // print_r(old('bagian_id'));
                                             // print_r(old('divisi_id'));
                                             // print_r(old('jabatan_id'));
@@ -1892,7 +1896,7 @@
     if ($('#penempatan_kerja').val() == 'ALL SITES (SP, SPS, SIP)') {
         $('#row_kategori_jabatan').show();
     }
-    $(document).on("change", "#penempatan_kerja", function() {
+    $(document).on("change", "#site_job", function() {
         var id = $(this).val();
         if (id == 'ALL SITES (SP, SPS, SIP)') {
             $('#row_kategori_jabatan').show();
@@ -1948,6 +1952,21 @@
                 $('#id_departemen2').html(msg);
                 $('#id_departemen3').html(msg);
                 $('#id_departemen4').html(msg);
+                $('#id_divisi').html('<option value=""></option>');
+                $('#id_bagian').html('<option value=""></option>');
+                $('#id_jabatan').html('<option value=""></option>');
+                $('#id_divisi1').html('<option value=""></option>');
+                $('#id_bagian1').html('<option value=""></option>');
+                $('#id_jabatan1').html('<option value=""></option>');
+                $('#id_divisi2').html('<option value=""></option>');
+                $('#id_bagian2').html('<option value=""></option>');
+                $('#id_jabatan2').html('<option value=""></option>');
+                $('#id_divisi3').html('<option value=""></option>');
+                $('#id_bagian3').html('<option value=""></option>');
+                $('#id_jabatan3').html('<option value=""></option>');
+                $('#id_divisi4').html('<option value=""></option>');
+                $('#id_bagian4').html('<option value=""></option>');
+                $('#id_jabatan4').html('<option value=""></option>');
             },
             error: function(data) {
                 console.log('error:', data)
@@ -2005,6 +2024,50 @@
         var holding = $(this).val();
         // console.log(holding);
         if (holding == 'sps') {
+            $('#kategori_jabatan').val(holding);
+            $.ajax({
+                type: 'GET',
+                url: "{{url('karyawan/get_departemen')}}",
+                data: {
+                    holding: holding,
+                },
+                cache: false,
+
+                success: function(msg) {
+                    // console.log(msg);
+                    // $('#id_divisi').html(msg);
+                    $('#id_departemen').html(msg);
+                    $('#id_departemen1').html(msg);
+                    $('#id_departemen2').html(msg);
+                    $('#id_departemen3').html(msg);
+                    $('#id_departemen4').html(msg);
+                    $('#id_divisi').html('<option value="">Pilih Divisi</option>');
+                    $('#id_divisi1').html('<option value="">Pilih Divisi</option>');
+                    $('#id_divisi2').html('<option value="">Pilih Divisi</option>');
+                    $('#id_divisi3').html('<option value="">Pilih Divisi</option>');
+                    $('#id_divisi4').html('<option value="">Pilih Divisi</option>');
+                    $('#id_bagian').html('<option value="">Pilih Bagian</option>');
+                    $('#id_bagian1').html('<option value="">Pilih Bagian</option>');
+                    $('#id_bagian2').html('<option value="">Pilih Bagian</option>');
+                    $('#id_bagian3').html('<option value="">Pilih Bagian</option>');
+                    $('#id_bagian4').html('<option value="">Pilih Bagian</option>');
+                    $('#id_jabatan').html('<option value="">Pilih Jabatan</option>');
+                    $('#id_jabatan1').html('<option value="">Pilih Jabatan</option>');
+                    $('#id_jabatan2').html('<option value="">Pilih Jabatan</option>');
+                    $('#id_jabatan3').html('<option value="">Pilih Jabatan</option>');
+                    $('#id_jabatan4').html('<option value="">Pilih Jabatan</option>');
+                },
+                error: function(data) {
+                    console.log('error:', data)
+                },
+
+            })
+        }
+    });
+    $(document).on("click", "#kategori_jabatan_sip", function() {
+        var holding = $(this).val();
+        // console.log(holding);
+        if (holding == 'sip') {
             $('#kategori_jabatan').val(holding);
             $.ajax({
                 type: 'GET',
