@@ -156,15 +156,7 @@ class KaryawanImportUpdate implements ToCollection, WithStartRow
                 if (strpos($row[13], 'KAB. ') !== false) {
                     $get_kabupaten = str_replace(array('KAB. '), 'KABUPATEN ', $row[13]);
                     $kabupaten = Cities::where('province_code', $provinsi)->where('name', $get_kabupaten)->value('code');
-                    // dd('ok');
-                } else if (strpos($row[13], 'KOTA') !== false) {
-                    // dd('ok1');
-                    // dd('ok');
-                    $get_kabupaten = str_replace(array('KOTA'), '', $row[13]);
-                    $kabupaten = Cities::where('province_code', $provinsi)->where('name', $get_kabupaten)->value('code');
                 } else {
-                    // dd('ok2');
-                    // dd('ok1');
                     $get_kabupaten = Cities::where('province_code', $provinsi)->where('name', $row[13])->value('code');
                     // dd($get_kabupaten);
                     if ($get_kabupaten == NULL) {
@@ -231,15 +223,12 @@ class KaryawanImportUpdate implements ToCollection, WithStartRow
             }
             // alamat Domisili
             if ($row[19] == NULL || $row[19] == '0') {
-                $status_alamat = 'ya';
                 $provinsi_domisili = NULL;
             } else {
                 $get_provinsi_domisili = Provincies::where('name', $row[19])->value('code');
                 if ($get_provinsi_domisili == NULL) {
-                    $status_alamat = 'ya';
                     $provinsi_domisili = NULL;
                 } else {
-                    $status_alamat = 'tidak';
                     $provinsi_domisili = $get_provinsi_domisili;
                 }
             }
@@ -251,11 +240,6 @@ class KaryawanImportUpdate implements ToCollection, WithStartRow
                     $get_kabupaten_domisili = str_replace(array('KAB. '), 'KABUPATEN ', $row[20]);
                     $kabupaten_domisili = Cities::where('province_code', $provinsi_domisili)->where('name', $get_kabupaten_domisili)->value('code');
                     // dd('ok');
-                } else if (strpos($row[20], 'KOTA') !== false) {
-                    // dd('ok1');
-                    // dd('ok');
-                    $get_kabupaten_domisili = str_replace(array('KOTA'), '', $row[20]);
-                    $kabupaten_domisili = Cities::where('province_code', $provinsi_domisili)->where('name', $get_kabupaten_domisili)->value('code');
                 } else {
                     // dd('ok2');
                     // dd('ok1');
@@ -372,7 +356,7 @@ class KaryawanImportUpdate implements ToCollection, WithStartRow
                 $get_lokasi = NULL;
                 $site_job = NULL;
             } else {
-                $get_lokasi = Lokasi::where('lokasi_kantor', $row[34])->where()->value('kategori_kantor');
+                $get_lokasi = Lokasi::where('lokasi_kantor', $row[34])->value('kategori_kantor');
                 $site_job = $row[34];
             }
 
@@ -422,6 +406,12 @@ class KaryawanImportUpdate implements ToCollection, WithStartRow
             if ($kategori_jabatan == null) {
                 if ($get_lokasi == 'all') {
                     $get_jabatan = $kontrak_kerja;
+                } else  if ($get_lokasi == 'all sp') {
+                    $get_jabatan = 'sp';
+                } else  if ($get_lokasi == 'all sps') {
+                    $get_jabatan = 'sps';
+                } else  if ($get_lokasi == 'all sip') {
+                    $get_jabatan = 'sip';
                 } else {
                     $get_jabatan = $get_lokasi;
                 }
@@ -520,83 +510,12 @@ class KaryawanImportUpdate implements ToCollection, WithStartRow
             } else {
                 $kelas_bpjs = $row[67];
             }
-            $value = [
-                $name,
-                $nik,
-                $agama,
-                $golongan_darah,
-                $email,
-                $telepon,
-                $status_nomor,
-                $nomor_wa,
-                $tempat_lahir,
-                $tgl_lahir,
-                $kelamin,
-                $status_nikah,
-                $status_alamat,
-                $provinsi_domisili,
-                $kabupaten_domisili,
-                $kecamatan_domisili,
-                $desa_domisili,
-                $rt_domisili,
-                $rw_domisili,
-                $detail_alamat_domisili,
-                $alamat_domisili,
-                $provinsi,
-                $kabupaten,
-                $kecamatan,
-                $desa,
-                $rt,
-                $rw,
-                $detail_alamat,
-                $alamat,
-                $kuota_cuti_tahunan,
-                $kategori,
-                $tgl_join,
-                $lama_kontrak_kerja,
-                $tgl_mulai,
-                $tgl_selesai,
-                $kontrak_kerja,
-                $penempatan_kerja,
-                $site_job,
-                $nama_bank,
-                $nama_pemilik_rekening,
-                $nomor_rekening,
-                $kategori_jabatan,
-                $departemen,
-                $divisi,
-                $bagian,
-                $jabatan,
-                $departemen1,
-                $divisi1,
-                $bagian1,
-                $jabatan1,
-                $departemen2,
-                $divisi2,
-                $bagian2,
-                $jabatan2,
-                $departemen3,
-                $divisi3,
-                $bagian3,
-                $jabatan3,
-                $departemen4,
-                $divisi4,
-                $bagian4,
-                $jabatan4,
-                $ptkp,
-                $status_npwp,
-                $npwp,
-                $nama_pemilik_npwp,
-                $nama_pemilik_bpjs_ketenagakerjaan,
-                $bpjs_ketenagakerjaan,
-                $no_bpjs_ketenagakerjaan,
-                $bpjs_pensiun,
-                $bpjs_kesehatan,
-                $nama_pemilik_bpjs_kesehatan,
-                $no_bpjs_kesehatan,
-                $kelas_bpjs
-            ];
-            Karyawan::where('nomor_identitas_karyawan', $nomor_identitas_karyawan)->update([
+            if ($provinsi == $provinsi_domisili && $kabupaten == $kabupaten_domisili && $kecamatan == $kecamatan_domisili && $desa == $desa_domisili) {
+                $status_alamat = 'ya';
+            } else {
+                $status_alamat = 'tidak';
+            }
+            $karyawan = Karyawan::where('nomor_identitas_karyawan', $nomor_identitas_karyawan)->update([
                 "name"                                          => $name,
                 "nik"                                           => $nik,
                 "agama"                                         => $agama,
@@ -680,6 +599,6 @@ class KaryawanImportUpdate implements ToCollection, WithStartRow
             // return response()->json('sukses');
 
         }
-        return $value;
+        return $karyawan;
     }
 }

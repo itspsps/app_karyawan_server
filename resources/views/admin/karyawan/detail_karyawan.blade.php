@@ -692,19 +692,23 @@
                                             <?php
                                             if (old('kategori_jabatan', $karyawan->kategori_jabatan) == '') {
                                                 // echo 'ok';
-                                                $kategori_jabatan = App\Models\Lokasi::where('lokasi_kantor', old('site_job', $karyawan->site_job))->value('kategori_kantor');
-                                                if (old('kategori_jabatan', $kategori_jabatan) == 'sp' || old('kategori_jabatan', $kategori_jabatan) == 'all sp') {
+                                                $get_kategori_jabatan = App\Models\Lokasi::where('lokasi_kantor', old('site_job', $karyawan->site_job))->value('kategori_kantor');
+                                                if (old('kategori_jabatan', $get_kategori_jabatan) == 'sp' || old('kategori_jabatan', $get_kategori_jabatan) == 'all sp') {
+                                                    $kategori_jabatan = 'sp';
                                                     $holding_jabatan = 'CV. SUMBER PANGAN';
-                                                } else if (old('kategori_jabatan', $kategori_jabatan) == 'sps' || old('kategori_jabatan', $kategori_jabatan) == 'all sps') {
+                                                } else if (old('kategori_jabatan', $get_kategori_jabatan) == 'sps' || old('kategori_jabatan', $get_kategori_jabatan) == 'all sps') {
+                                                    $kategori_jabatan = 'sps';
                                                     $holding_jabatan = 'PT. SURYA PANGAN SEMESTA';
-                                                } else if (old('kategori_jabatan', $kategori_jabatan) == 'sip' || old('kategori_jabatan', $kategori_jabatan) == 'all sip') {
+                                                } else if (old('kategori_jabatan', $get_kategori_jabatan) == 'sip' || old('kategori_jabatan', $get_kategori_jabatan) == 'all sip') {
+                                                    $kategori_jabatan = 'sip';
                                                     $holding_jabatan = 'CV. SURYA INTI PANGAN';
-                                                } else if (old('kategori_jabatan', $kategori_jabatan) == 'all') {
+                                                } else if (old('kategori_jabatan', $get_kategori_jabatan) == 'all') {
+                                                    $kategori_jabatan = $holding;
                                                     $holding_jabatan = $holding;
                                                 } else {
                                                     $holding_jabatan = NULL;
                                                 }
-                                                // echo 'ok';
+                                                // echo $kategori_jabatan;
                                             } else {
                                                 // echo 'ok2';
                                                 $kategori_jabatan = old('kategori_jabatan', $karyawan->kategori_jabatan);
@@ -788,7 +792,7 @@
                                                         @if(old('bagian_id', $karyawan->bagian_id) == $bagian['id'])
                                                         <option value="{{$bagian->id}}" selected>{{$bagian->nama_bagian}}</option>
                                                         @else
-                                                        <option value="{{$bagian->id}}">{{$divisi->nama_bagian}}</option>
+                                                        <option value="{{$bagian->id}}">{{$bagian->nama_bagian}}</option>
                                                         @endif
                                                         @endforeach
                                                     </optgroup>
