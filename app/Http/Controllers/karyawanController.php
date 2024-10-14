@@ -2236,6 +2236,7 @@ class karyawanController extends Controller
         MappingShift::where('id', $request["id_shift"])->update([
             'user_id' => $request['user_id'],
             'shift_id' => Shift::where('id', $validatedData['shift_id_update'])->value('id'),
+            'nama_shift' => Shift::where('id', $validatedData['shift_id_update'])->value('nama_shift'),
             'tanggal_masuk' => $validatedData['tanggal_masuk'],
             'tanggal_pulang' => $validatedData['tanggal_pulang'],
         ]);
