@@ -68,6 +68,7 @@ class HomeUserController extends Controller
                 ->whereNotNull('ttd_pengajuan')
                 ->where('status_izin', 1)
                 ->get();
+            // dd($dataizin);
             // get atasan tingkat 
             $datacuti_tingkat1       = Cuti::with('KategoriCuti')
                 ->where('status_cuti', 1)
@@ -1937,6 +1938,7 @@ class HomeUserController extends Controller
                             'getUserAtasan' => $getUserAtasan,
                             'jam_kerja' => $jam_kerja,
                             'user' => $user,
+                            'user_karyawan' => $user_karyawan,
                             'telat' => $telat,
                             'foto_jam_absen' => $request["foto_jam_absen"],
                             'jarak_masuk' => $request["jarak_masuk"],

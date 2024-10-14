@@ -9,6 +9,7 @@ use App\Models\District;
 use App\Models\Divisi;
 use App\Models\Jabatan;
 use App\Models\Karyawan;
+use App\Models\Lokasi;
 use App\Models\Village;
 use Carbon\Carbon;
 use Illuminate\Support\Collection;
@@ -368,8 +369,10 @@ class KaryawanImportUpdate implements ToCollection, WithStartRow
                 $penempatan_kerja = $row[33];
             }
             if ($row[34] == NULL || $row[34] == '0') {
+                $get_lokasi = NULL;
                 $site_job = NULL;
             } else {
+                $get_lokasi = Lokasi::where('lokasi_kantor', $row[34])->where()->value('kategori_kantor');
                 $site_job = $row[34];
             }
 
@@ -417,7 +420,11 @@ class KaryawanImportUpdate implements ToCollection, WithStartRow
                 $kategori_jabatan = $row[38];
             }
             if ($kategori_jabatan == null) {
-                $get_jabatan = $kontrak_kerja;
+                if ($get_lokasi == 'all') {
+                    $get_jabatan = $kontrak_kerja;
+                } else {
+                    $get_jabatan = $get_lokasi;
+                }
             } else {
                 $get_jabatan = $kategori_jabatan;
             }

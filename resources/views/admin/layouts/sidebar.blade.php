@@ -61,7 +61,7 @@
                         <li class="menu-item {{ Request::is('users*') ? 'active' : '' }} {{ Request::is('karyawan/edit-password/*') ? 'active' : '' }}">
                             <a href="{{ url('/users/'.$holding) }}" class="menu-link">
                                 <i class="menu-icon tf-icons mdi mdi-account-key"></i>
-                                <div style="font-size: 10pt;" data-i18n="Karyawan Non Aktif">&nbsp;Users&nbsp;</div>
+                                <div style="font-size: 10pt;" data-i18n="Users">&nbsp;User Karyawan&nbsp;</div>
                             </a>
                         </li>
                         <li class="menu-item {{ Request::is('karyawan_ingin_bergabung*') ? 'active' : '' }}">
@@ -173,7 +173,7 @@
         <li class="menu-item {{ Request::is('access*') ? 'active' : '' }}">
             <a href="{{ url('/access/'.$holding) }}" class="menu-link">
                 <i class="menu-icon tf-icons mdi mdi-account-key"></i>
-                <div style="font-size: 10pt;" data-i18n="Blank">User Access</div>
+                <div style="font-size: 10pt;" data-i18n="Blank">User Level Access</div>
             </a>
         </li>
 

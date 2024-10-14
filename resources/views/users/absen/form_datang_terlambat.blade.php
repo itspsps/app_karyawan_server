@@ -145,12 +145,12 @@
                     @method('post')
                     @csrf
                     <div class="input-group">
-                        <input type="hidden" name="id_user" value="{{ Auth::user()->id }}">
+                        <input type="hidden" name="id_user" value="{{ $user_karyawan->id }}">
                         <input type="hidden" name="telp" value="{{ $user->telepon }}">
                         <input type="hidden" name="email" value="{{ $user->email }}">
                         <input type="hidden" name="departements" value="{{ $user->dept_id }}">
                         <input type="hidden" name="jabatan" value="{{ $user->jabatan_id }}">
-                        <input type="hidden" name="level_jabatan" value="@if(Auth::user()->kategori=='Karyawan Harian')@else{{ $user->level_jabatan }}@endif">
+                        <input type="hidden" name="level_jabatan" value="@if($user_karyawan->kategori=='Karyawan Harian')@else{{ $user->level_jabatan }}@endif">
                         <input type="hidden" name="divisi" value="{{ $user->divisi_id }}">
                         <input type="hidden" name="id_mapping" value="{{ $jam_kerja->id}}">
                         <input type="hidden" name="menit_telat" value="{{ $telat}}">
