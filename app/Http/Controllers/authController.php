@@ -85,7 +85,7 @@ class authController extends Controller
         if (Auth::guard('web')->attempt(array($fieldType => $credentials['username'], 'password' => $credentials['password'], 'is_admin' => 'admin'), $remember)) {
             // dd('admin');
             // dd(Auth::guard('web'));
-            if (Auth::guard('web')->user()->status_aktif == 'NON AKTIF') {
+            if (Auth::guard('web')->user()->user_aktif == 'NON AKTIF') {
                 Auth::logout();
                 $request->session()->flash('user_nonaktif');
                 return redirect('/');
@@ -105,7 +105,7 @@ class authController extends Controller
                 // dd('ok');
                 // dd(Auth::user());
                 Alert::success('Berhasil', 'Selamat Datang');
-                return redirect('/dashboard/holding')->with('Berhasil', 'Selamat Datang');
+                return redirect('hrd/dashboard/holding')->with('Berhasil', 'Selamat Datang');
             }
         } else if (Auth::guard('web')->attempt(array($fieldType => $credentials['username'], 'password' => $credentials['password'], 'is_admin' => 'user'), $remember)) {
             // dd('user');

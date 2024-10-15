@@ -15,7 +15,7 @@
     <div class="row">
         <div class="col-md-12">
             <div class="card mb-4">
-                <h4 class="card-header"><a href="{{url('karyawan/'.$holding)}}"><i class="mdi mdi-arrow-left-bold"></i></a>&nbsp;Profil</h4>
+                <h4 class="card-header"><a href="@if(Auth::user()->is_admin=='hrd'){{url('hrd/karyawan/'.$holding)}}@else{{url('karyawan/'.$holding)}}@endif"><i class="mdi mdi-arrow-left-bold"></i></a>&nbsp;Profil</h4>
                 <!-- Account -->
                 <div class="card-body">
                     <div class="d-flex align-items-start align-items-sm-center gap-4">
@@ -114,7 +114,7 @@
                     <button type="button" class="btn btn-sm btn-primary waves-effect waves-light mb-3" data-bs-toggle="modal" data-bs-target="#modal_tambah_shift"><i class="menu-icon tf-icons mdi mdi-plus"></i>Tambah&nbsp;Shift</button>
                     <div class="modal fade" id="modal_tambah_shift" data-bs-backdrop="static" tabindex="-1">
                         <div class="modal-dialog modal-dialog-scrollable ">
-                            <form method="post" action="{{ url('/karyawan/shift/proses-tambah-shift/'.$holding) }}" class=" modal-content" enctype="multipart/form-data">
+                            <form method="post" action="@if(Auth::user()->is_admin=='hrd'){{ url('/hrd/karyawan/shift/proses-tambah-shift/'.$holding) }}@else{{ url('/karyawan/shift/proses-tambah-shift/'.$holding) }}@endif" class=" modal-content" enctype="multipart/form-data">
                                 @csrf
                                 <div class="modal-header">
                                     <h4 class="modal-title" id="backDropModalTitle">Tambah Shift</h4>
@@ -177,7 +177,7 @@
                     <!-- modal edit -->
                     <div class="modal fade" id="modal_edit_shift" data-bs-backdrop="static" tabindex="-1">
                         <div class="modal-dialog modal-dialog-scrollable ">
-                            <form method="post" action="{{ url('/karyawan/proses-edit-shift/'.$holding) }}" class=" modal-content" enctype="multipart/form-data">
+                            <form method="post" action="@if(Auth::user()->is_admin=='hrd'){{ url('hrd/karyawan/proses-edit-shift/'.$holding) }}@else{{ url('karyawan/proses-edit-shift/'.$holding) }}@endif" class=" modal-content" enctype="multipart/form-data">
                                 @method('put')
                                 @csrf
                                 <div class="modal-header">
@@ -250,8 +250,14 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
 <script>
     let holding = window.location.pathname.split("/");
-    console.log(holding[3]);
-    console.log(holding[4]);
+    let auth = '{{ Auth::user()->is_admin }}';
+    if (auth == 'hrd') {
+        var holding1 = holding[4];
+        var holding2 = holding[5];
+    } else {
+        var holding1 = holding[3];
+        var holding2 = holding[4];
+    }
     var table = $('#table_mapping_shift').DataTable({
         pageLength: 50,
         "scrollY": true,
@@ -259,7 +265,7 @@
         processing: true,
         serverSide: true,
         ajax: {
-            url: "{{ url('karyawan/mapping_shift_datatable') }}" + '/' + holding[3] + '/' + holding[4],
+            url: "@if(Auth::user()->is_admin=='hrd'){{ url('hrd/karyawan/mapping_shift_datatable') }}@else{{ url('karyawan/mapping_shift_datatable') }}@endif" + '/' + holding1 + '/' + holding2,
         },
         columns: [{
                 data: "id",
@@ -335,7 +341,7 @@
         }).then((result) => {
             if (result.value) {
                 $.ajax({
-                    url: "{{ url('/karyawan/delete-shift') }}" + '/' + id + '/' + holding,
+                    url: "@if(Auth::user()->is_admin=='hrd'){{ url('/hrd/karyawan/delete-shift') }}@else{{ url('karyawan/mapping_shift_datatable') }}@endif" + '/' + id + '/' + holding,
                     type: "GET",
                     error: function() {
                         alert('Something is wrong');

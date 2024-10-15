@@ -13,7 +13,7 @@
             <div class="card mb-4">
                 <h4 class="card-header">Tambah Karyawan</h4>
                 <!-- Account -->
-                <form method="post" action="{{ url('/karyawan/tambah-karyawan-proses/'.$holding) }}" enctype="multipart/form-data">
+                <form method="post" action="@if(Auth::user()->is_admin=='hrd'){{ url('/hrd/karyawan/tambah-karyawan-proses/'.$holding) }}@else{{ url('/karyawan/tambah-karyawan-proses/'.$holding) }}@endif" enctype="multipart/form-data">
                     @csrf
                     <div class="card-body">
                         <div class="nav-align-top mb-4">
@@ -1283,7 +1283,7 @@
                                 </div>
                                 <div class="mt-4">
                                     <button type="submit" class="btn btn-primary me-2">Simpan</button>
-                                    <a href="{{url('/karyawan/'.$holding)}}" type="button" class="btn btn-outline-secondary">Kembali</a>
+                                    <a href="@if(Auth::user()->is_admin=='hrd'){{url('/hrd/karyawan/'.$holding)}}@else{{url('/karyawan/'.$holding)}}@endif" type="button" class="btn btn-outline-secondary">Kembali</a>
                                 </div>
                             </div>
                         </div>
@@ -1491,7 +1491,7 @@
             let divisi = $('#id_divisi').val();
             let id_karyawan = $('#id_karyawan').val();
             let holding = '{{$holding}}';
-            let url = "{{url('karyawan/atasan2/get_jabatan')}}" + "/" + holding;
+            let url = "@if(Auth::user()->is_admin=='hrd'){{url('hrd/karyawan/atasan2/get_jabatan')}}@else{{url('karyawan/atasan2/get_jabatan')}}@endif" + "/" + holding;
             console.log(divisi);
             // console.log(url);
             $.ajax({
@@ -1597,7 +1597,7 @@
         });
         $('#id_provinsi').on('change', function() {
             let id_provinsi = $(this).val();
-            let url = "{{url('/karyawan/get_kabupaten')}}" + "/" + id_provinsi;
+            let url = "@if(Auth::user()->is_admin=='hrd'){{url('/hrd/karyawan/get_kabupaten')}}@else{{url('/karyawan/get_kabupaten')}}@endif" + "/" + id_provinsi;
             console.log(id_provinsi);
             console.log(url);
             $.ajax({
@@ -1621,7 +1621,7 @@
         })
         $('#id_kabupaten').on('change', function() {
             let id_kabupaten = $(this).val();
-            let url = "{{url('/karyawan/get_kecamatan')}}" + "/" + id_kabupaten;
+            let url = "@if(Auth::user()->is_admin=='hrd'){{url('/hrd/karyawan/get_kecamatan')}}@else{{url('/karyawan/get_kecamatan')}}@endif" + "/" + id_kabupaten;
             console.log(id_kabupaten);
             console.log(url);
             $.ajax({
@@ -1645,7 +1645,7 @@
         })
         $('#id_kecamatan').on('change', function() {
             let id_kecamatan = $(this).val();
-            let url = "{{url('/karyawan/get_desa')}}" + "/" + id_kecamatan;
+            let url = "@if(Auth::user()->is_admin=='hrd'){{url('/hrd/karyawan/get_desa')}}@else{{url('/karyawan/get_desa')}}@endif" + "/" + id_kecamatan;
             console.log(id_kecamatan);
             console.log(url);
             $.ajax({
@@ -1669,7 +1669,7 @@
         })
         $('#id_provinsi_domisili').on('change', function() {
             let id_provinsi_domisili = $(this).val();
-            let url = "{{url('/karyawan/get_kabupaten')}}" + "/" + id_provinsi_domisili;
+            let url = "@if(Auth::user()->is_admin=='hrd'){{url('/hrd/karyawan/get_kabupaten')}}@else{{url('/karyawan/get_kabupaten')}}@endif" + "/" + id_provinsi_domisili;
             console.log(id_provinsi_domisili);
             console.log(url);
             $.ajax({
@@ -1693,7 +1693,7 @@
         })
         $('#id_kabupaten_domisili').on('change', function() {
             let id_kabupaten_domisili = $(this).val();
-            let url = "{{url('/karyawan/get_kecamatan')}}" + "/" + id_kabupaten_domisili;
+            let url = "@if(Auth::user()->is_admin=='hrd'){{url('/hrd/karyawan/get_kecamatan')}}@else{{url('/karyawan/get_kecamatan')}}@endif" + "/" + id_kabupaten_domisili;
             console.log(id_kabupaten_domisili);
             console.log(url);
             $.ajax({
@@ -1717,7 +1717,7 @@
         })
         $('#id_kecamatan_domisili').on('change', function() {
             let id_kecamatan_domisili = $(this).val();
-            let url = "{{url('/karyawan/get_desa')}}" + "/" + id_kecamatan_domisili;
+            let url = "@if(Auth::user()->is_admin=='hrd'){{url('/hrd/karyawan/get_desa')}}@else{{url('/karyawan/get_desa')}}@endif" + "/" + id_kecamatan_domisili;
             console.log(id_kecamatan_domisili);
             console.log(url);
             $.ajax({
@@ -1938,7 +1938,7 @@
         }
         $.ajax({
             type: 'GET',
-            url: "{{url('karyawan/get_departemen')}}",
+            url: "@if(Auth::user()->is_admin=='hrd'){{url('hrd/karyawan/get_departemen')}}@else{{url('karyawan/get_departemen')}}@endif",
             data: {
                 holding: holding,
             },
@@ -1983,7 +1983,7 @@
             // console.log(id_departemen);
             $.ajax({
                 type: 'GET',
-                url: "{{url('karyawan/get_departemen')}}",
+                url: "@if(Auth::user()->is_admin=='hrd'){{url('hrd/karyawan/get_departemen')}}@else{{url('karyawan/get_departemen')}}@endif",
                 data: {
                     holding: holding,
                 },
@@ -2027,7 +2027,7 @@
             $('#kategori_jabatan').val(holding);
             $.ajax({
                 type: 'GET',
-                url: "{{url('karyawan/get_departemen')}}",
+                url: "@if(Auth::user()->is_admin=='hrd'){{url('hrd/karyawan/get_departemen')}}@else{{url('karyawan/get_departemen')}}@endif",
                 data: {
                     holding: holding,
                 },
@@ -2071,7 +2071,7 @@
             $('#kategori_jabatan').val(holding);
             $.ajax({
                 type: 'GET',
-                url: "{{url('karyawan/get_departemen')}}",
+                url: "@if(Auth::user()->is_admin=='hrd'){{url('hrd/karyawan/get_departemen')}}@else{{url('karyawan/get_departemen')}}@endif",
                 data: {
                     holding: holding,
                 },
@@ -2114,7 +2114,7 @@
         // console.log(holding);
         $.ajax({
             type: 'GET',
-            url: "{{url('karyawan/get_divisi')}}",
+            url: "@if(Auth::user()->is_admin=='hrd'){{url('hrd/karyawan/get_divisi')}}@else{{url('karyawan/get_divisi')}}@endif",
             data: {
                 holding: holding,
                 id_departemen: id_departemen
@@ -2140,7 +2140,7 @@
         // console.log(holding);
         $.ajax({
             type: 'GET',
-            url: "{{url('karyawan/get_divisi')}}",
+            url: "@if(Auth::user()->is_admin=='hrd'){{url('hrd/karyawan/get_divisi')}}@else{{url('karyawan/get_divisi')}}@endif",
             data: {
                 holding: holding,
                 id_departemen: id_departemen
@@ -2165,7 +2165,7 @@
         // console.log(holding);
         $.ajax({
             type: 'GET',
-            url: "{{url('karyawan/get_divisi')}}",
+            url: "@if(Auth::user()->is_admin=='hrd'){{url('hrd/karyawan/get_divisi')}}@else{{url('karyawan/get_divisi')}}@endif",
             data: {
                 holding: holding,
                 id_departemen: id_departemen
@@ -2191,7 +2191,7 @@
         // console.log(holding);
         $.ajax({
             type: 'GET',
-            url: "{{url('karyawan/get_divisi')}}",
+            url: "@if(Auth::user()->is_admin=='hrd'){{url('hrd/karyawan/get_divisi')}}@else{{url('karyawan/get_divisi')}}@endif",
             data: {
                 holding: holding,
                 id_departemen: id_departemen
@@ -2216,7 +2216,7 @@
         // console.log(holding);
         $.ajax({
             type: 'GET',
-            url: "{{url('karyawan/get_divisi')}}",
+            url: "@if(Auth::user()->is_admin=='hrd'){{url('hrd/karyawan/get_divisi')}}@else{{url('karyawan/get_divisi')}}@endif",
             data: {
                 holding: holding,
                 id_departemen: id_departemen
@@ -2239,7 +2239,7 @@
         let holding = $('#kategori_jabatan').val();
         $.ajax({
             type: 'GET',
-            url: "{{url('karyawan/get_bagian')}}",
+            url: "@if(Auth::user()->is_admin=='hrd'){{url('hrd/karyawan/get_bagian')}}@else{{url('karyawan/get_bagian')}}@endif",
             data: {
                 holding: holding,
                 id_divisi: id_divisi
@@ -2260,7 +2260,7 @@
         let holding = $('#kategori_jabatan').val();
         $.ajax({
             type: 'GET',
-            url: "{{url('karyawan/get_bagian')}}",
+            url: "@if(Auth::user()->is_admin=='hrd'){{url('hrd/karyawan/get_bagian')}}@else{{url('karyawan/get_bagian')}}@endif",
             data: {
                 holding: holding,
                 id_divisi: id_divisi
@@ -2281,7 +2281,7 @@
         let holding = $('#kategori_jabatan').val();
         $.ajax({
             type: 'GET',
-            url: "{{url('karyawan/get_bagian')}}",
+            url: "@if(Auth::user()->is_admin=='hrd'){{url('hrd/karyawan/get_bagian')}}@else{{url('karyawan/get_bagian')}}@endif",
             data: {
                 holding: holding,
                 id_divisi: id_divisi
@@ -2302,7 +2302,7 @@
         let holding = $('#kategori_jabatan').val();
         $.ajax({
             type: 'GET',
-            url: "{{url('karyawan/get_bagian')}}",
+            url: "@if(Auth::user()->is_admin=='hrd'){{url('hrd/karyawan/get_bagian')}}@else{{url('karyawan/get_bagian')}}@endif",
             data: {
                 holding: holding,
                 id_divisi: id_divisi
@@ -2323,7 +2323,7 @@
         let holding = $('#kategori_jabatan').val();
         $.ajax({
             type: 'GET',
-            url: "{{url('karyawan/get_bagian')}}",
+            url: "@if(Auth::user()->is_admin=='hrd'){{url('hrd/karyawan/get_bagian')}}@else{{url('karyawan/get_bagian')}}@endif",
             data: {
                 holding: holding,
                 id_divisi: id_divisi
@@ -2344,7 +2344,7 @@
         let holding = $('#kategori_jabatan').val();
         $.ajax({
             type: 'GET',
-            url: "{{url('karyawan/get_jabatan')}}",
+            url: "@if(Auth::user()->is_admin=='hrd'){{url('hrd/karyawan/get_jabatan')}}@else{{url('karyawan/get_jabatan')}}@endif",
             data: {
                 holding: holding,
                 id_bagian: id_bagian
@@ -2365,7 +2365,7 @@
         let holding = $('#kategori_jabatan').val();
         $.ajax({
             type: 'GET',
-            url: "{{url('karyawan/get_jabatan')}}",
+            url: "@if(Auth::user()->is_admin=='hrd'){{url('hrd/karyawan/get_jabatan')}}@else{{url('karyawan/get_jabatan')}}@endif",
             data: {
                 holding: holding,
                 id_bagian: id_bagian
@@ -2386,7 +2386,7 @@
         let holding = $('#kategori_jabatan').val();
         $.ajax({
             type: 'GET',
-            url: "{{url('karyawan/get_jabatan')}}",
+            url: "@if(Auth::user()->is_admin=='hrd'){{url('hrd/karyawan/get_jabatan')}}@else{{url('karyawan/get_jabatan')}}@endif",
             data: {
                 holding: holding,
                 id_bagian: id_bagian
@@ -2407,7 +2407,7 @@
         let holding = $('#kategori_jabatan').val();
         $.ajax({
             type: 'GET',
-            url: "{{url('karyawan/get_jabatan')}}",
+            url: "@if(Auth::user()->is_admin=='hrd'){{url('hrd/karyawan/get_jabatan')}}@else{{url('karyawan/get_jabatan')}}@endif",
             data: {
                 holding: holding,
                 id_bagian: id_bagian
@@ -2428,7 +2428,7 @@
         let holding = $('#kategori_jabatan').val();
         $.ajax({
             type: 'GET',
-            url: "{{url('karyawan/get_jabatan')}}",
+            url: "@if(Auth::user()->is_admin=='hrd'){{url('hrd/karyawan/get_jabatan')}}@else{{url('karyawan/get_jabatan')}}@endif",
             data: {
                 holding: holding,
                 id_bagian: id_bagian

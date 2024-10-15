@@ -1963,7 +1963,7 @@ class karyawanController extends Controller
         $user_check = Karyawan::where('id', $id)->first();
         if ($user_check->kategori == 'Karyawan Bulanan') {
             if ($user_check->dept_id == NULL || $user_check->divisi_id == NULL || $user_check->jabatan_id == NULL) {
-                return redirect('/karyawan/' . $holding)->with('error', 'Jabatan Karyawan Kosong');
+                return redirect()->back()->with('error', 'Jabatan Karyawan Kosong');
             }
         }
         $oke = MappingShift::with('Shift')->where('user_id', $id)->orderBy('id', 'desc')->limit(100)->get();
@@ -2005,7 +2005,7 @@ class karyawanController extends Controller
     public function mapping_shift_datatable(Request $request, $id)
     {
         $holding = request()->segment(count(request()->segments()));
-
+        // dd('ok');
         $table = MappingShift::join('shifts', 'mapping_shifts.shift_id', 'shifts.id')
             ->where('mapping_shifts.user_id', $id)
             ->select('mapping_shifts.*', 'shifts.nama_shift', 'shifts.jam_masuk', 'shifts.jam_keluar')
@@ -2181,7 +2181,7 @@ class karyawanController extends Controller
             'activity' => 'create',
             'description' => 'Menambahkan shift karyawan ' . Auth::user()->name,
         ]);
-        return redirect('/karyawan/shift/' . $request["user_id"] . '/' . $holding)->with('success', 'Data Berhasil di Tambahkan');
+        return redirect()->back()->with('success', 'Data Berhasil di Tambahkan');
     }
 
     public function deleteShift(Request $request, $id)
@@ -2210,6 +2210,7 @@ class karyawanController extends Controller
 
     public function prosesEditShift(Request $request)
     {
+        // dd('ok');
         date_default_timezone_set('Asia/Jakarta');
 
         $nama_shift = Shift::where('id', $request['shift_id_update'])->value('nama_shift');
@@ -2246,7 +2247,7 @@ class karyawanController extends Controller
             'description' => 'Mengubah shift karyawan ' . Auth::guard('web')->user()->name,
         ]);
         $holding = request()->segment(count(request()->segments()));
-        return redirect('/karyawan/shift/' . $request["user_id"] . '/' . $holding)->with('success', 'Data Berhasil di Update');
+        return redirect()->back()->with('success', 'Data Berhasil di Update');
     }
 
     public function myProfile()
