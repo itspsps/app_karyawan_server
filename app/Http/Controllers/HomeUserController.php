@@ -35,6 +35,8 @@ class HomeUserController extends Controller
     {
         if (auth()->user()->is_admin == 'admin') {
             return redirect('/dashboard/holding');
+        } else if (auth()->user()->is_admin == 'hrd') {
+            return redirect('/dashboard/holding');
         } else {
             $user_karyawan = Karyawan::where('id', Auth::user()->karyawan_id)->first();
 

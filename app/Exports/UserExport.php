@@ -25,6 +25,7 @@ class UserExport implements FromCollection, WithEvents, WithHeadings, WithTitle,
     public function headings(): array
     {
         return [
+            'ID KARYAWAN',
             'NAMA KARYAWAN',
             'USERNAME',
             'PASSWORD',
@@ -48,6 +49,7 @@ class UserExport implements FromCollection, WithEvents, WithHeadings, WithTitle,
             ->where('users.is_admin', 'user')
             // ->where('karyawans.status_aktif', 'AKTIF')
             ->select(
+                'a.nomor_identitas_karyawan', //2
                 'a.name', //2
                 'username',
                 'password_show', //11
@@ -73,7 +75,7 @@ class UserExport implements FromCollection, WithEvents, WithHeadings, WithTitle,
             AfterSheet::class    => function (AfterSheet $event) use ($holding) {
                 $event->sheet
                     ->getDelegate()
-                    ->getStyle('A2:F2')
+                    ->getStyle('A2:G2')
                     ->getAlignment()
                     ->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
                 $event->sheet
@@ -81,7 +83,7 @@ class UserExport implements FromCollection, WithEvents, WithHeadings, WithTitle,
                 $event->sheet
                     ->getDelegate()->getStyle('I1')->getFont()->setBold(true);
                 $event->sheet
-                    ->getDelegate()->getStyle('A2:F2')->getFont()->setBold(true);
+                    ->getDelegate()->getStyle('A2:G2')->getFont()->setBold(true);
                 $event->sheet
                     ->setCellValue('I1', 'DATA MASTER USER KARYAWAN ' . $holding);
             },

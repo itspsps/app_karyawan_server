@@ -220,7 +220,7 @@
                         <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#modal_import_update_user_karyawan" href="">Import Update Excel</a></li>
                         <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#modal_export_user_karyawan" href="#">Export Excel</a></li>
                     </ul>
-                    <a type="button" href="{{url('users/pdfKaryawan/'.$holding)}}" class="btn btn-xs btn-danger waves-effect waves-light"><i class="menu-icon tf-icons mdi mdi-file-pdf-box"></i>PDF</a>
+                    <a type="button" href="{{url('users/pdfUserKaryawan/'.$holding)}}" class="btn btn-xs btn-danger waves-effect waves-light"><i class="menu-icon tf-icons mdi mdi-file-pdf-box"></i>PDF</a>
                     <div class="modal fade" id="modal_tambah_users" role="dialog" data-bs-backdrop="static" aria-hidden="true">
                         <div class="modal-dialog modal-dialog-scrollable modal-lg">
                             <form method="post" action="{{ url('/users/prosesTambahUser/'.$holding) }}" class="modal-content" enctype="multipart/form-data">
@@ -321,17 +321,18 @@
                     </div>
                     <div class="modal fade" id="modal_import_update_user_karyawan" data-bs-backdrop="static" tabindex="-1">
                         <div class="modal-dialog modal-dialog-scrollable modal-lg">
-                            <div class="modal-content">
+                            <form method="post" action="{{ url('/users/ImportUpdateUser/'.$holding) }}" enctype="multipart/form-data" class="modal-content">
+                                @csrf
                                 <div class="modal-header">
-                                    <h4 class="modal-title" id="backDropModalTitle">Import Update Karyawan</h4>
+                                    <h4 class="modal-title" id="backDropModalTitle">Import Update User Karyawan</h4>
                                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                 </div>
                                 <div class="modal-body">
                                     <div class="row g-2 mt-2">
                                         <div class="col mb-2">
                                             <div class="form-floating form-floating-outline">
-                                                <input type="file" id="file_excel" name="file_excel" accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel" class="form-control" placeholder="Masukkan File" />
-                                                <label for="file_excel">File Excel</label>
+                                                <input type="file" id="file_excel_update" name="file_excel_update" accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel" class="form-control" placeholder="Masukkan File" />
+                                                <label for="file_excel_update">File Excel</label>
                                             </div>
                                         </div>
                                     </div>
@@ -345,97 +346,98 @@
                                     </button>
                                     <button type="submit" class="btn btn-primary">Save</button>
                                 </div>
-                            </div>
+                                <form>
                         </div>
                     </div>
-                    <div class="modal fade" id="modal_export_user_karyawan" data-bs-backdrop="static" tabindex="-1">
-                        <div class="modal-dialog modal-dialog-scrollable modal-lg">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h4 class="modal-title" id="backDropModalTitle">Export Excel User Karyawan</h4>
-                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                </div>
-                                <div class="modal-body">
-                                    <div class="row g-2 mt-2">
-                                        <div class="col mb-2">
-                                            <div class="form-floating form-floating-outline">
-                                                <h6>Download File Excel Data User Karyawan</h6>
-                                                <a href="{{url('users/ExportUser/'.$holding)}}" type="button" class="btn btn-xs btn-success"> Download Excel</a>
-                                            </div>
+                </div>
+                <div class="modal fade" id="modal_export_user_karyawan" data-bs-backdrop="static" tabindex="-1">
+                    <div class="modal-dialog modal-dialog-scrollable modal-lg">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h4 class="modal-title" id="backDropModalTitle">Export Excel User Karyawan</h4>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="row g-2 mt-2">
+                                    <div class="col mb-2">
+                                        <div class="form-floating form-floating-outline">
+                                            <h6>Download File Excel Data User Karyawan</h6>
+                                            <a href="{{url('users/ExportUser/'.$holding)}}" type="button" class="btn btn-xs btn-success"> Download Excel</a>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
-                                        Close
-                                    </button>
-                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+                                    Close
+                                </button>
                             </div>
                         </div>
                     </div>
-                    <hr class="my-5">
-                    <div class="nav-align-top">
-                        <div class="row">
-                            <div class="col-6">
-                                <ul class="nav nav-pills nav-fill" role="tablist">
-                                    <li class="nav-item">
-                                        <a type="button" style="width: auto;" class="nav-link active" role="tab" data-bs-toggle="tab" href="#navs-pills-justified-home">
-                                            <i class="tf-icons mdi mdi-account-tie me-1"></i><span class="d-none d-sm-block">Karyawan Bulanan</span>
-                                        </a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a type="button" style="width: auto;" class="nav-link" role="tab" data-bs-toggle="tab" href="#navs-pills-justified-profile">
-                                            <i class="tf-icons mdi mdi-account me-1"></i><span class="d-none d-sm-block">Karyawan Harian</span>
-                                        </a>
-                                    </li>
-                                </ul>
-                            </div>
+                </div>
+                <hr class="my-5">
+                <div class="nav-align-top">
+                    <div class="row">
+                        <div class="col-6">
+                            <ul class="nav nav-pills nav-fill" role="tablist">
+                                <li class="nav-item">
+                                    <a type="button" style="width: auto;" class="nav-link active" role="tab" data-bs-toggle="tab" href="#navs-pills-justified-home">
+                                        <i class="tf-icons mdi mdi-account-tie me-1"></i><span class="d-none d-sm-block">Karyawan Bulanan</span>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a type="button" style="width: auto;" class="nav-link" role="tab" data-bs-toggle="tab" href="#navs-pills-justified-profile">
+                                        <i class="tf-icons mdi mdi-account me-1"></i><span class="d-none d-sm-block">Karyawan Harian</span>
+                                    </a>
+                                </li>
+                            </ul>
                         </div>
-                        <div class="tab-content">
-                            <div class="tab-pane fade show active" id="navs-pills-justified-home" role="tabpanel">
-                                <table class="table" id="table_karyawan_bulanan" style="width: 100%; font-size: smaller;">
-                                    <thead class="table-primary">
-                                        <tr>
-                                            <th>No.</th>
-                                            <th>Nomor&nbsp;ID</th>
-                                            <th>Nama&nbsp;Karyawan</th>
-                                            <th>Divisi</th>
-                                            <th>Jabatan</th>
-                                            <th>Username</th>
-                                            <th>Akses</th>
-                                            <th>Status</th>
-                                            <th>Opsi</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody class="table-border-bottom-0">
-                                    </tbody>
-                                </table>
-                            </div>
-                            <div class="tab-pane fade" id="navs-pills-justified-profile" role="tabpanel">
-                                <table class="table" id="table_karyawan_harian" style="width: 100%; font-size: smaller;">
-                                    <thead class="table-primary">
-                                        <tr>
-                                            <th>No.</th>
-                                            <th>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Nomor&nbsp;ID&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
-                                            <th>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Nama&nbsp;Karyawan&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
-                                            <th>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Username&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
-                                            <th>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Akses&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
-                                            <th>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Status&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
-                                            <th>Opsi</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody class="table-border-bottom-0">
-                                    </tbody>
-                                </table>
-                            </div>
+                    </div>
+                    <div class="tab-content">
+                        <div class="tab-pane fade show active" id="navs-pills-justified-home" role="tabpanel">
+                            <table class="table" id="table_karyawan_bulanan" style="width: 100%; font-size: smaller;">
+                                <thead class="table-primary">
+                                    <tr>
+                                        <th>No.</th>
+                                        <th>Nomor&nbsp;ID</th>
+                                        <th>Nama&nbsp;Karyawan</th>
+                                        <th>Divisi</th>
+                                        <th>Jabatan</th>
+                                        <th>Username</th>
+                                        <th>Akses</th>
+                                        <th>Status</th>
+                                        <th>Opsi</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="table-border-bottom-0">
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="tab-pane fade" id="navs-pills-justified-profile" role="tabpanel">
+                            <table class="table" id="table_karyawan_harian" style="width: 100%; font-size: smaller;">
+                                <thead class="table-primary">
+                                    <tr>
+                                        <th>No.</th>
+                                        <th>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Nomor&nbsp;ID&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
+                                        <th>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Nama&nbsp;Karyawan&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
+                                        <th>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Username&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
+                                        <th>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Akses&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
+                                        <th>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Status&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
+                                        <th>Opsi</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="table-border-bottom-0">
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        <!--/ Transactions -->
-        <!--/ Data Tables -->
     </div>
+    <!--/ Transactions -->
+    <!--/ Data Tables -->
+</div>
 </div>
 @endsection
 @section('js')

@@ -12,6 +12,7 @@ use App\Models\ActivityLog;
 use App\Models\Jabatan;
 use App\Models\Karyawan;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Ramsey\Uuid\Uuid;
 
@@ -19,6 +20,8 @@ class dashboardController extends Controller
 {
     public function index()
     {
+        // dd('ok');
+        // dd(Auth::user());
         $holding = request()->segment(count(request()->segments()));
         date_default_timezone_set('Asia/Jakarta');
         $tgl_skrg = date("Y-m-d");
@@ -186,7 +189,7 @@ class dashboardController extends Controller
 
     public function holding()
     {
-        // dd($sp);
+        // dd(Auth::user());
         $holding = request()->segment(count(request()->segments()));
         return view('admin.dashboard.holding', ['holding' => $holding]);
     }

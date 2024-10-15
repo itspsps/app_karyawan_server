@@ -453,6 +453,16 @@ class IzinUserController extends Controller
                                         ->where('jabatans.holding', 'sp')
                                         ->select('jabatans.id', 'jabatans.atasan_id', 'divisis.nama_divisi', 'jabatans.nama_jabatan', 'bagians.nama_bagian', 'jabatans.holding')
                                         ->first();
+                                } else if ($get_atasan_site->holding == 'sip') {
+                                    // dd('ok');
+                                    $get_atasan_more = Jabatan::Join('divisis', 'divisis.id', 'jabatans.divisi_id')
+                                        ->Join('bagians', 'bagians.id', 'jabatans.bagian_id')
+                                        ->where('jabatans.nama_jabatan', $get_atasan_site->nama_jabatan)
+                                        ->where('divisis.nama_divisi', $get_atasan_site->nama_divisi)
+                                        ->where('bagians.nama_bagian', $get_atasan_site->nama_bagian)
+                                        ->where('jabatans.holding', 'sp')
+                                        ->select('jabatans.id', 'jabatans.atasan_id', 'divisis.nama_divisi', 'jabatans.nama_jabatan', 'bagians.nama_bagian', 'jabatans.holding')
+                                        ->first();
                                     // dd($get_atasan_more);
                                 } else {
                                     $get_atasan_more = Jabatan::Join('divisis', 'divisis.id', 'jabatans.divisi_id')

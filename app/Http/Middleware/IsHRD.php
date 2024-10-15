@@ -5,9 +5,8 @@ namespace App\Http\Middleware;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use RealRashid\SweetAlert\Facades\Alert;
 
-class IsAdmin
+class IsHRD
 {
     /**
      * Handle an incoming request.
@@ -22,12 +21,11 @@ class IsAdmin
             // dd('ok');
             return redirect('/');
         }
-        if (Auth::user()->is_admin != 'admin') {
-            // dd(Auth::user());
-            Alert::warning('warning', 'Auth Access User Anda Diabatasi');
-            return redirect()->back()->with('warning', 'Auth Access User Anda Diabatasi');
+        // dd(Auth::user());
+        if (Auth::user()->is_admin != "hrd") {
+            dd('ok');
+            return redirect()->back();
         }
-
         return $next($request);
     }
 }

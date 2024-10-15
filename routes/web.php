@@ -192,7 +192,7 @@ Route::get('/activity-logs/sip', [ActivityLogController::class, 'index'])->middl
 Route::get('/activity-datatable/sp', [ActivityLogController::class, 'datatable'])->middleware('admin');
 Route::get('/activity-datatable/sps', [ActivityLogController::class, 'datatable'])->middleware('admin');
 Route::get('/activity-datatable/sip', [ActivityLogController::class, 'datatable'])->middleware('admin');
-// Route::post('/logout', [authController::class, 'logout'])->middleware('auth');
+
 Route::get('/karyawan/sp', [karyawanController::class, 'index'])->middleware('admin');
 Route::get('/karyawan_bulanan-datatable/sp', [karyawanController::class, 'datatable_bulanan'])->middleware('admin');
 Route::get('/karyawan_harian-datatable/sp', [karyawanController::class, 'datatable_harian'])->middleware('admin');
@@ -273,9 +273,59 @@ Route::post('/users/aktif_proses', [UserKaryawanController::class, 'aktif_proses
 Route::post('/users/ImportUser/sp', [UserKaryawanController::class, 'ImportUser'])->middleware('admin');
 Route::post('/users/ImportUser/sps', [UserKaryawanController::class, 'ImportUser'])->middleware('admin');
 Route::post('/users/ImportUser/sip', [UserKaryawanController::class, 'ImportUser'])->middleware('admin');
+Route::post('/users/ImportUpdateUser/sp', [UserKaryawanController::class, 'ImportUpdateUser'])->middleware('admin');
+Route::post('/users/ImportUpdateUser/sps', [UserKaryawanController::class, 'ImportUpdateUser'])->middleware('admin');
+Route::post('/users/ImportUpdateUser/sip', [UserKaryawanController::class, 'ImportUpdateUser'])->middleware('admin');
 Route::get('/users/ExportUser/sp', [UserKaryawanController::class, 'ExportUser'])->middleware('admin');
 Route::get('/users/ExportUser/sps', [UserKaryawanController::class, 'ExportUser'])->middleware('admin');
 Route::get('/users/ExportUser/sip', [UserKaryawanController::class, 'ExportUser'])->middleware('admin');
+Route::get('/users/pdfUserKaryawan/sps', [UserKaryawanController::class, 'download_pdf_user_karyawan'])->middleware('admin');
+Route::get('/users/pdfUserKaryawan/sp', [UserKaryawanController::class, 'download_pdf_user_karyawan'])->middleware('admin');
+Route::get('/users/pdfUserKaryawan/sip', [UserKaryawanController::class, 'download_pdf_user_karyawan'])->middleware('admin');
+
+// mapping shift
+Route::get('/karyawan/shift/{id}/sp', [karyawanController::class, 'shift'])->middleware('admin');
+Route::get('/karyawan/shift/{id}/sps', [karyawanController::class, 'shift'])->middleware('admin');
+Route::get('/karyawan/shift/{id}/sip', [karyawanController::class, 'shift'])->middleware('admin');
+Route::get('/karyawan/mapping_shift_datatable/{id}/sp', [karyawanController::class, 'mapping_shift_datatable'])->middleware('admin');
+Route::get('/karyawan/mapping_shift_datatable/{id}/sps', [karyawanController::class, 'mapping_shift_datatable'])->middleware('admin');
+Route::get('/karyawan/mapping_shift_datatable/{id}/sip', [karyawanController::class, 'mapping_shift_datatable'])->middleware('admin');
+Route::post('/karyawan/shift/proses-tambah-shift/sp', [karyawanController::class, 'prosesTambahShift'])->middleware('admin');
+Route::post('/karyawan/shift/proses-tambah-shift/sps', [karyawanController::class, 'prosesTambahShift'])->middleware('admin');
+Route::post('/karyawan/shift/proses-tambah-shift/sip', [karyawanController::class, 'prosesTambahShift'])->middleware('admin');
+Route::get('/karyawan/delete-shift/{id}/sp', [karyawanController::class, 'deleteShift'])->middleware('admin');
+Route::get('/karyawan/delete-shift/{id}/sps', [karyawanController::class, 'deleteShift'])->middleware('admin');
+Route::get('/karyawan/delete-shift/{id}/sip', [karyawanController::class, 'deleteShift'])->middleware('admin');
+Route::get('/karyawan/edit-shift/{id}/sp', [karyawanController::class, 'editShift'])->middleware('admin');
+Route::get('/karyawan/edit-shift/{id}/sps', [karyawanController::class, 'editShift'])->middleware('admin');
+Route::get('/karyawan/edit-shift/{id}/sip', [karyawanController::class, 'editShift'])->middleware('admin');
+
+// mapping shift NEW
+Route::get('/karyawan/mapping_shift/sp', [MappingShiftController::class, 'mapping_shift_index'])->middleware('admin');
+Route::get('/karyawan/mapping_shift/sps', [MappingShiftController::class, 'mapping_shift_index'])->middleware('admin');
+Route::get('/karyawan/mapping_shift/sip', [MappingShiftController::class, 'mapping_shift_index'])->middleware('admin');
+Route::get('/mapping_shift_datatable/sp', [MappingShiftController::class, 'mapping_shift_datatable'])->middleware('admin');
+Route::get('/mapping_shift_datatable/sps', [MappingShiftController::class, 'mapping_shift_datatable'])->middleware('admin');
+Route::get('/mapping_shift_datatable/sip', [MappingShiftController::class, 'mapping_shift_datatable'])->middleware('admin');
+Route::post('/shift/proses-tambah-shift/sp', [MappingShiftController::class, 'prosesTambahShift'])->middleware('admin');
+Route::post('/shift/proses-tambah-shift/sps', [MappingShiftController::class, 'prosesTambahShift'])->middleware('admin');
+Route::post('/shift/proses-tambah-shift/sip', [MappingShiftController::class, 'prosesTambahShift'])->middleware('admin');
+Route::get('/karyawan/delete-shift/sp', [MappingShiftController::class, 'deleteShift'])->middleware('admin');
+Route::get('/karyawan/delete-shift/sps', [MappingShiftController::class, 'deleteShift'])->middleware('admin');
+Route::get('/karyawan/delete-shift/sip', [MappingShiftController::class, 'deleteShift'])->middleware('admin');
+Route::get('/karyawan/edit-shift/sp', [MappingShiftController::class, 'editShift'])->middleware('admin');
+Route::get('/karyawan/edit-shift/sps', [MappingShiftController::class, 'editShift'])->middleware('admin');
+Route::get('/karyawan/edit-shift/sip', [MappingShiftController::class, 'editShift'])->middleware('admin');
+
+Route::get('/mapping_shift/get_divisi', [MappingShiftController::class, 'get_divisi'])->middleware('admin');
+Route::get('/mapping_shift/get_bagian', [MappingShiftController::class, 'get_bagian'])->middleware('admin');
+Route::get('/mapping_shift/get_jabatan', [MappingShiftController::class, 'get_jabatan'])->middleware('admin');
+
+//
+Route::get('/karyawan/get_departemen', [karyawanController::class, 'get_departemen'])->middleware('admin');
+Route::get('/karyawan/get_divisi', [karyawanController::class, 'get_divisi'])->middleware('admin');
+Route::get('/karyawan/get_bagian', [karyawanController::class, 'get_bagian'])->middleware('admin');
+Route::get('/karyawan/get_jabatan', [karyawanController::class, 'get_jabatan'])->middleware('admin');
 
 // STRUKTUR ORGANISASI
 Route::get('/struktur_organisasi/sp', [StrukturOrganisasiController::class, 'index'])->middleware('admin');
@@ -334,72 +384,175 @@ Route::get('/penugasan/datatable-penugasan/sip', [PenugasanController::class, 'd
 Route::get('/penugasan/cetak_admin_form_penugasan/{id}', [PenugasanController::class, 'cetak_admin_form_penugasan'])->middleware('admin');
 Route::get('/penugasan/ExportPenugasan/{kategori}/{holding}', [PenugasanController::class, 'ExportPenugasan']);
 
+// MIDLEWARE HRD
+Route::get('/dashboard/holding/sp', [dashboardController::class, 'index'])->middleware('hrd');
+Route::get('/dashboard/holding/sps', [dashboardController::class, 'index'])->middleware('hrd');
+Route::get('/dashboard/holding/sip', [dashboardController::class, 'index'])->middleware('hrd');
+Route::get('/dashboard/holding', [dashboardController::class, 'holding'])->middleware('hrd');
+
+Route::get('/karyawan/sp', [karyawanController::class, 'index'])->middleware('hrd');
+Route::get('/karyawan_bulanan-datatable/sp', [karyawanController::class, 'datatable_bulanan'])->middleware('hrd');
+Route::get('/karyawan_harian-datatable/sp', [karyawanController::class, 'datatable_harian'])->middleware('hrd');
+Route::get('/karyawan/sps', [karyawanController::class, 'index'])->middleware('hrd');
+Route::get('/karyawan_bulanan-datatable/sps', [karyawanController::class, 'datatable_bulanan'])->middleware('hrd');
+Route::get('/karyawan_harian-datatable/sps', [karyawanController::class, 'datatable_harian'])->middleware('hrd');
+Route::get('/karyawan/sip', [karyawanController::class, 'index'])->middleware('hrd');
+Route::get('/karyawan_bulanan-datatable/sip', [karyawanController::class, 'datatable_bulanan'])->middleware('hrd');
+Route::get('/karyawan_harian-datatable/sip', [karyawanController::class, 'datatable_harian'])->middleware('hrd');
+Route::get('/karyawan/tambah-karyawan/sp', [karyawanController::class, 'tambahKaryawan'])->middleware('hrd');
+Route::get('/karyawan/tambah-karyawan/sps', [karyawanController::class, 'tambahKaryawan'])->middleware('hrd');
+Route::get('/karyawan/tambah-karyawan/sip', [karyawanController::class, 'tambahKaryawan'])->middleware('hrd');
+Route::post('/karyawan/tambah-karyawan-proses/sp', [karyawanController::class, 'tambahKaryawanProses'])->middleware('hrd');
+Route::post('/karyawan/tambah-karyawan-proses/sps', [karyawanController::class, 'tambahKaryawanProses'])->middleware('hrd');
+Route::post('/karyawan/tambah-karyawan-proses/sip', [karyawanController::class, 'tambahKaryawanProses'])->middleware('hrd');
+Route::get('/karyawan/detail/{id}/sp', [karyawanController::class, 'detail'])->middleware('hrd');
+Route::get('/karyawan/detail/{id}/sps', [karyawanController::class, 'detail'])->middleware('hrd');
+Route::get('/karyawan/detail/{id}/sip', [karyawanController::class, 'detail'])->middleware('hrd');
+Route::post('/karyawan/proses-edit/{id}/sp', [karyawanController::class, 'editKaryawanProses'])->middleware('hrd');
+Route::post('/karyawan/proses-edit/{id}/sps', [karyawanController::class, 'editKaryawanProses'])->middleware('hrd');
+Route::post('/karyawan/proses-edit/{id}/sip', [karyawanController::class, 'editKaryawanProses'])->middleware('hrd');
+Route::get('/karyawan/delete/{id}/sp', [karyawanController::class, 'deleteKaryawan'])->middleware('hrd');
+Route::get('/karyawan/delete/{id}/sps', [karyawanController::class, 'deleteKaryawan'])->middleware('hrd');
+Route::get('/karyawan/delete/{id}/sip', [karyawanController::class, 'deleteKaryawan'])->middleware('hrd');
+Route::post('/karyawan/ImportKaryawan/sp', [karyawanController::class, 'ImportKaryawan'])->middleware('hrd');
+Route::post('/karyawan/ImportKaryawan/sps', [karyawanController::class, 'ImportKaryawan'])->middleware('hrd');
+Route::post('/karyawan/ImportKaryawan/sip', [karyawanController::class, 'ImportKaryawan'])->middleware('hrd');
+Route::post('/karyawan/ImportUpdateKaryawan/sp', [karyawanController::class, 'ImportUpdateKaryawan'])->middleware('hrd');
+Route::post('/karyawan/ImportUpdateKaryawan/sps', [karyawanController::class, 'ImportUpdateKaryawan'])->middleware('hrd');
+Route::post('/karyawan/ImportUpdateKaryawan/sip', [karyawanController::class, 'ImportUpdateKaryawan'])->middleware('hrd');
+Route::get('/karyawan/ExportKaryawan/sp', [karyawanController::class, 'ExportKaryawan'])->middleware('hrd');
+Route::get('/karyawan/ExportKaryawan/sps', [karyawanController::class, 'ExportKaryawan'])->middleware('hrd');
+Route::get('/karyawan/ExportKaryawan/sip', [karyawanController::class, 'ExportKaryawan'])->middleware('hrd');
+Route::get('/karyawan/pdfKaryawan/sps', [karyawanController::class, 'download_pdf_karyawan'])->middleware('hrd');
+Route::get('/karyawan/pdfKaryawan/sp', [karyawanController::class, 'download_pdf_karyawan'])->middleware('hrd');
+Route::get('/karyawan/pdfKaryawan/sip', [karyawanController::class, 'download_pdf_karyawan'])->middleware('hrd');
+// Route::post('/logout', [authController::class, 'logout'])->middleware('auth');
+
+Route::get('/karyawan_non_aktif/sp', [karyawanController::class, 'karyawan_non_aktif'])->middleware('hrd');
+Route::get('/karyawan_non_aktif/sps', [karyawanController::class, 'karyawan_non_aktif'])->middleware('hrd');
+Route::get('/karyawan_non_aktif/sip', [karyawanController::class, 'karyawan_non_aktif'])->middleware('hrd');
+Route::get('/database_karyawan_non_aktif/sp', [karyawanController::class, 'database_karyawan_non_aktif'])->middleware('hrd');
+Route::get('/database_karyawan_non_aktif/sps', [karyawanController::class, 'database_karyawan_non_aktif'])->middleware('hrd');
+Route::get('/database_karyawan_non_aktif/sip', [karyawanController::class, 'database_karyawan_non_aktif'])->middleware('hrd');
+Route::post('/karyawan/non_aktif_proses', [karyawanController::class, 'non_aktif_proses'])->middleware('hrd');
+
+Route::get('/karyawan_ingin_bergabung/sp', [karyawanController::class, 'karyawan_ingin_bergabung'])->middleware('hrd');
+Route::get('/karyawan_ingin_bergabung/sps', [karyawanController::class, 'karyawan_ingin_bergabung'])->middleware('hrd');
+Route::get('/karyawan_ingin_bergabung/sip', [karyawanController::class, 'karyawan_ingin_bergabung'])->middleware('hrd');
+
+Route::get('/karyawan/karyawan_masa_tenggang_kontrak/sp', [karyawanController::class, 'karyawan_masa_tenggang_kontrak'])->middleware('hrd');
+Route::get('/karyawan/karyawan_masa_tenggang_kontrak/sps', [karyawanController::class, 'karyawan_masa_tenggang_kontrak'])->middleware('hrd');
+Route::get('/karyawan/karyawan_masa_tenggang_kontrak/sip', [karyawanController::class, 'karyawan_masa_tenggang_kontrak'])->middleware('hrd');
+Route::get('/karyawan/database_karyawan_masa_tenggang_kontrak/sp', [karyawanController::class, 'database_karyawan_masa_tenggang_kontrak'])->middleware('hrd');
+Route::get('/karyawan/database_karyawan_masa_tenggang_kontrak/sps', [karyawanController::class, 'database_karyawan_masa_tenggang_kontrak'])->middleware('hrd');
+Route::get('/karyawan/database_karyawan_masa_tenggang_kontrak/sip', [karyawanController::class, 'database_karyawan_masa_tenggang_kontrak'])->middleware('hrd');
+Route::post('/karyawan/update_kontrak_proses', [karyawanController::class, 'update_kontrak_proses'])->middleware('hrd');
+
+Route::get('/users/sp', [UserKaryawanController::class, 'index_users'])->middleware('hrd');
+Route::get('/users/sps', [UserKaryawanController::class, 'index_users'])->middleware('hrd');
+Route::get('/users/sip', [UserKaryawanController::class, 'index_users'])->middleware('hrd');
+Route::post('/users/prosesTambahUser/sp', [UserKaryawanController::class, 'prosesTambahUser'])->middleware('hrd');
+Route::post('/users/prosesTambahUser/sps', [UserKaryawanController::class, 'prosesTambahUser'])->middleware('hrd');
+Route::post('/users/prosesTambahUser/sip', [UserKaryawanController::class, 'prosesTambahUser'])->middleware('hrd');
+Route::get('/users_bulanan-datatable/sp', [UserKaryawanController::class, 'datatable_users_bulanan'])->middleware('hrd');
+Route::get('/users_harian-datatable/sp', [UserKaryawanController::class, 'datatable_users_harian'])->middleware('hrd');
+Route::get('/users_bulanan-datatable/sps', [UserKaryawanController::class, 'datatable_users_bulanan'])->middleware('hrd');
+Route::get('/users_harian-datatable/sps', [UserKaryawanController::class, 'datatable_users_harian'])->middleware('hrd');
+Route::get('/users_bulanan-datatable/sip', [UserKaryawanController::class, 'datatable_users_bulanan'])->middleware('hrd');
+Route::get('/users_harian-datatable/sip', [UserKaryawanController::class, 'datatable_users_harian'])->middleware('hrd');
+Route::get('/users/edit-password/{id}/sp', [UserKaryawanController::class, 'editPassword'])->middleware('hrd');
+Route::get('/users/edit-password/{id}/sps', [UserKaryawanController::class, 'editPassword'])->middleware('hrd');
+Route::get('/users/edit-password/{id}/sip', [UserKaryawanController::class, 'editPassword'])->middleware('hrd');
+Route::post('/users/edit-password-proses/{id}/sp', [UserKaryawanController::class, 'editPasswordProses'])->middleware('hrd');
+Route::post('/users/edit-password-proses/{id}/sps', [UserKaryawanController::class, 'editPasswordProses'])->middleware('hrd');
+Route::post('/users/edit-password-proses/{id}/sip', [UserKaryawanController::class, 'editPasswordProses'])->middleware('hrd');
+Route::post('/users/non_aktif_proses', [UserKaryawanController::class, 'non_aktif_proses'])->middleware('hrd');
+Route::post('/users/aktif_proses', [UserKaryawanController::class, 'aktif_proses'])->middleware('hrd');
+Route::post('/users/ImportUser/sp', [UserKaryawanController::class, 'ImportUser'])->middleware('hrd');
+Route::post('/users/ImportUser/sps', [UserKaryawanController::class, 'ImportUser'])->middleware('hrd');
+Route::post('/users/ImportUser/sip', [UserKaryawanController::class, 'ImportUser'])->middleware('hrd');
+Route::post('/users/ImportUpdateUser/sp', [UserKaryawanController::class, 'ImportUpdateUser'])->middleware('hrd');
+Route::post('/users/ImportUpdateUser/sps', [UserKaryawanController::class, 'ImportUpdateUser'])->middleware('hrd');
+Route::post('/users/ImportUpdateUser/sip', [UserKaryawanController::class, 'ImportUpdateUser'])->middleware('hrd');
+Route::get('/users/ExportUser/sp', [UserKaryawanController::class, 'ExportUser'])->middleware('hrd');
+Route::get('/users/ExportUser/sps', [UserKaryawanController::class, 'ExportUser'])->middleware('hrd');
+Route::get('/users/ExportUser/sip', [UserKaryawanController::class, 'ExportUser'])->middleware('hrd');
+Route::get('/users/pdfUserKaryawan/sps', [UserKaryawanController::class, 'download_pdf_user_karyawan'])->middleware('hrd');
+Route::get('/users/pdfUserKaryawan/sp', [UserKaryawanController::class, 'download_pdf_user_karyawan'])->middleware('hrd');
+Route::get('/users/pdfUserKaryawan/sip', [UserKaryawanController::class, 'download_pdf_user_karyawan'])->middleware('hrd');
+
+// STRUKTUR ORGANISASI
+Route::get('/struktur_organisasi/sp', [StrukturOrganisasiController::class, 'index'])->middleware('hrd');
+Route::get('/struktur_organisasi/sps', [StrukturOrganisasiController::class, 'index'])->middleware('hrd');
+Route::get('/struktur_organisasi/sip', [StrukturOrganisasiController::class, 'index'])->middleware('hrd');
+
+
 // SHIFT
-Route::get('/shift/sp', [ShiftController::class, 'index'])->middleware('admin');
-Route::get('/shift/sps', [ShiftController::class, 'index'])->middleware('admin');
-Route::get('/shift/sip', [ShiftController::class, 'index'])->middleware('admin');
-Route::get('/shift-datatable/sp', [ShiftController::class, 'datatable'])->middleware('admin');
-Route::get('/shift-datatable/sps', [ShiftController::class, 'datatable'])->middleware('admin');
-Route::get('/shift-datatable/sip', [ShiftController::class, 'datatable'])->middleware('admin');
-Route::get('/shift/edit/sp', [ShiftController::class, 'edit'])->middleware('admin');
-Route::get('/shift/edit/sps', [ShiftController::class, 'edit'])->middleware('admin');
-Route::get('/shift/edit/sip', [ShiftController::class, 'edit'])->middleware('admin');
-Route::get('/shift/create/sp', [ShiftController::class, 'create'])->middleware('admin');
-Route::get('/shift/create/sps', [ShiftController::class, 'create'])->middleware('admin');
-Route::get('/shift/create/sip', [ShiftController::class, 'create'])->middleware('admin');
-Route::post('/shift/store/sp', [ShiftController::class, 'store'])->middleware('admin');
-Route::post('/shift/store/sps', [ShiftController::class, 'store'])->middleware('admin');
-Route::post('/shift/store/sip', [ShiftController::class, 'store'])->middleware('admin');
-Route::post('/shift/update/sp', [ShiftController::class, 'update'])->middleware('admin');
-Route::post('/shift/update/sps', [ShiftController::class, 'update'])->middleware('admin');
-Route::post('/shift/update/sip', [ShiftController::class, 'update'])->middleware('admin');
-Route::get('/shift/delete/{id}/sp', [ShiftController::class, 'destroy'])->middleware('admin');
-Route::get('/shift/delete/{id}/sps', [ShiftController::class, 'destroy'])->middleware('admin');
-Route::get('/shift/delete/{id}/sip', [ShiftController::class, 'destroy'])->middleware('admin');
+Route::get('/shift/sp', [ShiftController::class, 'index'])->middleware('hrd');
+Route::get('/shift/sps', [ShiftController::class, 'index'])->middleware('hrd');
+Route::get('/shift/sip', [ShiftController::class, 'index'])->middleware('hrd');
+Route::get('/shift-datatable/sp', [ShiftController::class, 'datatable'])->middleware('hrd');
+Route::get('/shift-datatable/sps', [ShiftController::class, 'datatable'])->middleware('hrd');
+Route::get('/shift-datatable/sip', [ShiftController::class, 'datatable'])->middleware('hrd');
+Route::get('/shift/edit/sp', [ShiftController::class, 'edit'])->middleware('hrd');
+Route::get('/shift/edit/sps', [ShiftController::class, 'edit'])->middleware('hrd');
+Route::get('/shift/edit/sip', [ShiftController::class, 'edit'])->middleware('hrd');
+Route::get('/shift/create/sp', [ShiftController::class, 'create'])->middleware('hrd');
+Route::get('/shift/create/sps', [ShiftController::class, 'create'])->middleware('hrd');
+Route::get('/shift/create/sip', [ShiftController::class, 'create'])->middleware('hrd');
+Route::post('/shift/store/sp', [ShiftController::class, 'store'])->middleware('hrd');
+Route::post('/shift/store/sps', [ShiftController::class, 'store'])->middleware('hrd');
+Route::post('/shift/store/sip', [ShiftController::class, 'store'])->middleware('hrd');
+Route::post('/shift/update/sp', [ShiftController::class, 'update'])->middleware('hrd');
+Route::post('/shift/update/sps', [ShiftController::class, 'update'])->middleware('hrd');
+Route::post('/shift/update/sip', [ShiftController::class, 'update'])->middleware('hrd');
+Route::get('/shift/delete/{id}/sp', [ShiftController::class, 'destroy'])->middleware('hrd');
+Route::get('/shift/delete/{id}/sps', [ShiftController::class, 'destroy'])->middleware('hrd');
+Route::get('/shift/delete/{id}/sip', [ShiftController::class, 'destroy'])->middleware('hrd');
 
 // mapping shift
-Route::get('/karyawan/shift/{id}/sp', [karyawanController::class, 'shift'])->middleware('admin');
-Route::get('/karyawan/shift/{id}/sps', [karyawanController::class, 'shift'])->middleware('admin');
-Route::get('/karyawan/shift/{id}/sip', [karyawanController::class, 'shift'])->middleware('admin');
-Route::get('/karyawan/mapping_shift_datatable/{id}/sp', [karyawanController::class, 'mapping_shift_datatable'])->middleware('admin');
-Route::get('/karyawan/mapping_shift_datatable/{id}/sps', [karyawanController::class, 'mapping_shift_datatable'])->middleware('admin');
-Route::get('/karyawan/mapping_shift_datatable/{id}/sip', [karyawanController::class, 'mapping_shift_datatable'])->middleware('admin');
-Route::post('/karyawan/shift/proses-tambah-shift/sp', [karyawanController::class, 'prosesTambahShift'])->middleware('admin');
-Route::post('/karyawan/shift/proses-tambah-shift/sps', [karyawanController::class, 'prosesTambahShift'])->middleware('admin');
-Route::post('/karyawan/shift/proses-tambah-shift/sip', [karyawanController::class, 'prosesTambahShift'])->middleware('admin');
-Route::get('/karyawan/delete-shift/{id}/sp', [karyawanController::class, 'deleteShift'])->middleware('admin');
-Route::get('/karyawan/delete-shift/{id}/sps', [karyawanController::class, 'deleteShift'])->middleware('admin');
-Route::get('/karyawan/delete-shift/{id}/sip', [karyawanController::class, 'deleteShift'])->middleware('admin');
-Route::get('/karyawan/edit-shift/{id}/sp', [karyawanController::class, 'editShift'])->middleware('admin');
-Route::get('/karyawan/edit-shift/{id}/sps', [karyawanController::class, 'editShift'])->middleware('admin');
-Route::get('/karyawan/edit-shift/{id}/sip', [karyawanController::class, 'editShift'])->middleware('admin');
+Route::get('/karyawan/shift/{id}/sp', [karyawanController::class, 'shift'])->middleware('hrd');
+Route::get('/karyawan/shift/{id}/sps', [karyawanController::class, 'shift'])->middleware('hrd');
+Route::get('/karyawan/shift/{id}/sip', [karyawanController::class, 'shift'])->middleware('hrd');
+Route::get('/karyawan/mapping_shift_datatable/{id}/sp', [karyawanController::class, 'mapping_shift_datatable'])->middleware('hrd');
+Route::get('/karyawan/mapping_shift_datatable/{id}/sps', [karyawanController::class, 'mapping_shift_datatable'])->middleware('hrd');
+Route::get('/karyawan/mapping_shift_datatable/{id}/sip', [karyawanController::class, 'mapping_shift_datatable'])->middleware('hrd');
+Route::post('/karyawan/shift/proses-tambah-shift/sp', [karyawanController::class, 'prosesTambahShift'])->middleware('hrd');
+Route::post('/karyawan/shift/proses-tambah-shift/sps', [karyawanController::class, 'prosesTambahShift'])->middleware('hrd');
+Route::post('/karyawan/shift/proses-tambah-shift/sip', [karyawanController::class, 'prosesTambahShift'])->middleware('hrd');
+Route::get('/karyawan/delete-shift/{id}/sp', [karyawanController::class, 'deleteShift'])->middleware('hrd');
+Route::get('/karyawan/delete-shift/{id}/sps', [karyawanController::class, 'deleteShift'])->middleware('hrd');
+Route::get('/karyawan/delete-shift/{id}/sip', [karyawanController::class, 'deleteShift'])->middleware('hrd');
+Route::get('/karyawan/edit-shift/{id}/sp', [karyawanController::class, 'editShift'])->middleware('hrd');
+Route::get('/karyawan/edit-shift/{id}/sps', [karyawanController::class, 'editShift'])->middleware('hrd');
+Route::get('/karyawan/edit-shift/{id}/sip', [karyawanController::class, 'editShift'])->middleware('hrd');
 
 // mapping shift NEW
-Route::get('/karyawan/mapping_shift/sp', [MappingShiftController::class, 'mapping_shift_index'])->middleware('admin');
-Route::get('/karyawan/mapping_shift/sps', [MappingShiftController::class, 'mapping_shift_index'])->middleware('admin');
-Route::get('/karyawan/mapping_shift/sip', [MappingShiftController::class, 'mapping_shift_index'])->middleware('admin');
-Route::get('/mapping_shift_datatable/sp', [MappingShiftController::class, 'mapping_shift_datatable'])->middleware('admin');
-Route::get('/mapping_shift_datatable/sps', [MappingShiftController::class, 'mapping_shift_datatable'])->middleware('admin');
-Route::get('/mapping_shift_datatable/sip', [MappingShiftController::class, 'mapping_shift_datatable'])->middleware('admin');
-Route::post('/shift/proses-tambah-shift/sp', [MappingShiftController::class, 'prosesTambahShift'])->middleware('admin');
-Route::post('/shift/proses-tambah-shift/sps', [MappingShiftController::class, 'prosesTambahShift'])->middleware('admin');
-Route::post('/shift/proses-tambah-shift/sip', [MappingShiftController::class, 'prosesTambahShift'])->middleware('admin');
-Route::get('/karyawan/delete-shift/sp', [MappingShiftController::class, 'deleteShift'])->middleware('admin');
-Route::get('/karyawan/delete-shift/sps', [MappingShiftController::class, 'deleteShift'])->middleware('admin');
-Route::get('/karyawan/delete-shift/sip', [MappingShiftController::class, 'deleteShift'])->middleware('admin');
-Route::get('/karyawan/edit-shift/sp', [MappingShiftController::class, 'editShift'])->middleware('admin');
-Route::get('/karyawan/edit-shift/sps', [MappingShiftController::class, 'editShift'])->middleware('admin');
-Route::get('/karyawan/edit-shift/sip', [MappingShiftController::class, 'editShift'])->middleware('admin');
+Route::get('/karyawan/mapping_shift/sp', [MappingShiftController::class, 'mapping_shift_index'])->middleware('hrd');
+Route::get('/karyawan/mapping_shift/sps', [MappingShiftController::class, 'mapping_shift_index'])->middleware('hrd');
+Route::get('/karyawan/mapping_shift/sip', [MappingShiftController::class, 'mapping_shift_index'])->middleware('hrd');
+Route::get('/mapping_shift_datatable/sp', [MappingShiftController::class, 'mapping_shift_datatable'])->middleware('hrd');
+Route::get('/mapping_shift_datatable/sps', [MappingShiftController::class, 'mapping_shift_datatable'])->middleware('hrd');
+Route::get('/mapping_shift_datatable/sip', [MappingShiftController::class, 'mapping_shift_datatable'])->middleware('hrd');
+Route::post('/shift/proses-tambah-shift/sp', [MappingShiftController::class, 'prosesTambahShift'])->middleware('hrd');
+Route::post('/shift/proses-tambah-shift/sps', [MappingShiftController::class, 'prosesTambahShift'])->middleware('hrd');
+Route::post('/shift/proses-tambah-shift/sip', [MappingShiftController::class, 'prosesTambahShift'])->middleware('hrd');
+Route::get('/karyawan/delete-shift/sp', [MappingShiftController::class, 'deleteShift'])->middleware('hrd');
+Route::get('/karyawan/delete-shift/sps', [MappingShiftController::class, 'deleteShift'])->middleware('hrd');
+Route::get('/karyawan/delete-shift/sip', [MappingShiftController::class, 'deleteShift'])->middleware('hrd');
+Route::get('/karyawan/edit-shift/sp', [MappingShiftController::class, 'editShift'])->middleware('hrd');
+Route::get('/karyawan/edit-shift/sps', [MappingShiftController::class, 'editShift'])->middleware('hrd');
+Route::get('/karyawan/edit-shift/sip', [MappingShiftController::class, 'editShift'])->middleware('hrd');
 
-Route::get('/mapping_shift/get_divisi', [MappingShiftController::class, 'get_divisi'])->middleware('admin');
-Route::get('/mapping_shift/get_bagian', [MappingShiftController::class, 'get_bagian'])->middleware('admin');
-Route::get('/mapping_shift/get_jabatan', [MappingShiftController::class, 'get_jabatan'])->middleware('admin');
+Route::get('/mapping_shift/get_divisi', [MappingShiftController::class, 'get_divisi'])->middleware('hrd');
+Route::get('/mapping_shift/get_bagian', [MappingShiftController::class, 'get_bagian'])->middleware('hrd');
+Route::get('/mapping_shift/get_jabatan', [MappingShiftController::class, 'get_jabatan'])->middleware('hrd');
 
 //
-Route::get('/karyawan/get_departemen', [karyawanController::class, 'get_departemen'])->middleware('admin');
-Route::get('/karyawan/get_divisi', [karyawanController::class, 'get_divisi'])->middleware('admin');
-Route::get('/karyawan/get_bagian', [karyawanController::class, 'get_bagian'])->middleware('admin');
-Route::get('/karyawan/get_jabatan', [karyawanController::class, 'get_jabatan'])->middleware('admin');
+Route::get('/karyawan/get_departemen', [karyawanController::class, 'get_departemen'])->middleware('hrd');
+Route::get('/karyawan/get_divisi', [karyawanController::class, 'get_divisi'])->middleware('hrd');
+Route::get('/karyawan/get_bagian', [karyawanController::class, 'get_bagian'])->middleware('hrd');
+Route::get('/karyawan/get_jabatan', [karyawanController::class, 'get_jabatan'])->middleware('hrd');
 
 // INVENTARIS
 Route::get('/inventaris/sp', [InventarisController::class, 'index'])->middleware('admin');

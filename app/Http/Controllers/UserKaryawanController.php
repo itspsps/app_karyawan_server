@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Exports\UserExport;
 use App\Imports\KaryawanImport;
 use App\Imports\UsersImport;
+use App\Imports\UserUpdateImport;
 use App\Models\ActivityLog;
 use App\Models\Departemen;
 use App\Models\Divisi;
@@ -13,6 +14,7 @@ use App\Models\Karyawan;
 use App\Models\Lokasi;
 use App\Models\User;
 use App\Models\UserNonActive;
+use PDF;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
@@ -511,15 +513,57 @@ class UserKaryawanController extends Controller
     {
         // dd('ok');
         $holding = request()->segment(count(request()->segments()));
-        $query = Excel::import(new UsersImport, $request->file_excel);
-        if ($query) {
+        try {
+            Excel::import(new UsersImport, $request->file_excel);
             return redirect('/users/' . $holding)->with('success', 'Import User Sukses');
+        } catch (\InvalidArgumentException $th) {
+            // dd($th);
+            return redirect()->back()->with('error', 'Import Error' . $th->getMessage());
+        }
+    }
+    public function ImportUpdateUser(Request $request)
+    {
+        // dd('ok');
+        $holding = request()->segment(count(request()->segments()));
+        try {
+            Excel::import(new UserUpdateImport, $request->file_excel_update);
+            return redirect('/users/' . $holding)->with('success', 'Import User Sukses');
+        } catch (\InvalidArgumentException $th) {
+            // dd($th);
+            return redirect('/users/' . $holding)->with('error', 'Import Error' . $th->getMessage());
         }
     }
     public function ExportUser(Request $request)
     {
         $date = date('YmdHis');
         $holding = request()->segment(count(request()->segments()));
-        return Excel::download(new UserExport($holding), 'Data User Karyawan_' . $holding . '_' . $date . '.xlsx');
+        try {
+            $query = Excel::download(new UserExport($holding), 'Data User Karyawan_' . $holding . '_' . $date . '.xlsx');
+            return $query;
+        } catch (\InvalidArgumentException $th) {
+            // dd($th);
+            return redirect()->back()->with('error', 'Import Error' . $th->getMessage());
+        }
+    }
+    public function download_pdf_user_karyawan(Request $request)
+    {
+        set_time_limit(6000);
+        $cek_holding = request()->segment(count(request()->segments()));
+        if ($cek_holding == 'sp') {
+            $holding = 'CV. SUMBER PANGAN';
+        } else if ($cek_holding == 'sps') {
+            $holding = 'PT. SURYA PANGAN SEMESTA';
+        } else {
+            $holding = 'CV. SURYA INTI PANGAN';
+        }
+        $date = date('YmdHis');
+        $data = [
+            'user' => User::Join('karyawans', 'karyawans.id', 'users.karyawan_id')->where('karyawans.kontrak_kerja', $cek_holding)->orderBy('karyawans.name', 'ASC')->get(),
+            'holding' => $holding,
+            'cek_holding' => $cek_holding,
+        ];
+        // dd($data);
+        $pdf = PDF::loadView('admin/karyawan/cetak_pdf_user_karyawan', $data)->setPaper('F4', 'potrait');
+        return $pdf->stream('DATA USER KARYAWAN' . $holding . '_' . $date . 'pdf');
     }
 }

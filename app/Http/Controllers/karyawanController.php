@@ -470,7 +470,7 @@ class karyawanController extends Controller
             return redirect('/karyawan/' . $holding)->with('success', 'Import Karyawan Update Sukses');
         } catch (\InvalidArgumentException $th) {
             // dd($th);
-            return redirect()->back()->with('error', 'Import Error' . $th->getMessage());
+            return redirect()->back()->with('error', 'Import Error ' . $th->getMessage() . ' ' . $th->getLine() . ' ' . $th->getFile());
         }
     }
     public function ExportKaryawan(Request $request)

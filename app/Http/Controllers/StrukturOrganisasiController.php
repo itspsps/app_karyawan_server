@@ -340,12 +340,7 @@ class StrukturOrganisasiController extends Controller
             }
         }
         // dd($jabatan_struktur);
-        $jabatan2 = Jabatan::with(['User' => function ($query) {
-            $query->where('penempatan_kerja', 'CV. SURYA INTI PANGAN - MAKASAR');
-            $query->orWhere('penempatan_kerja', 'ALL SITES (SP, SPS, SIP)');
-            $query->orWhere('penempatan_kerja', 'ALL SITES (SIP)');
-            $query->select('jabatan_id', 'karyawans.name');
-        }])->join('divisis', 'divisis.id', '=', 'jabatans.divisi_id')
+        $jabatan2 = Jabatan::join('divisis', 'divisis.id', '=', 'jabatans.divisi_id')
             ->join('level_jabatans', 'level_jabatans.id', '=', 'jabatans.level_id')
             ->join('departemens', 'departemens.id', '=', 'divisis.dept_id')
             ->join('bagians', 'bagians.id', '=', 'jabatans.bagian_id')
@@ -353,12 +348,12 @@ class StrukturOrganisasiController extends Controller
             ->orderBy('departemens.nama_departemen', 'ASC')
             ->orderBy('jabatans.nama_jabatan', 'ASC')
             ->orderBy('bagians.nama_bagian', 'ASC')
-            ->select('bagians.nama_bagian', 'jabatans.id', 'jabatans.atasan_id', 'jabatans.nama_jabatan', 'divisis.nama_divisi', 'level_jabatans.level_jabatan')
+            ->select('bagians.nama_bagian as nama_bagian', 'divisis.nama_divisi as nama_divisi', 'jabatans.divisi_id', 'jabatans.bagian_id', 'jabatans.id as id', 'jabatans.atasan_id', 'jabatans.nama_jabatan as nama_jabatan')
             // ->take('10')
             ->get();
-        // dd($jabatan2);
         // dd($jabatan);
-        if (count($jabatan2) == 0) {
+        // dd($jabatan);
+        if (count($jabatan1) == 0) {
             $jabatan_struktur2 = NULL;
         } else {
             foreach ($jabatan2 as $jabatan) {
@@ -366,74 +361,62 @@ class StrukturOrganisasiController extends Controller
                     ->join('divisis', 'divisis.id', '=', 'karyawans.divisi_id')
                     ->join('departemens', 'departemens.id', '=', 'karyawans.dept_id')
                     ->join('bagians', 'bagians.id', '=', 'karyawans.bagian_id')
+                    ->whereIn('karyawans.penempatan_kerja', ['ALL SITES (SP, SPS, SIP)', 'CV. SURYA INTI PANGAN - MAKASAR', 'ALL SITES (SIP)'])
                     ->where('divisis.nama_divisi', $jabatan["nama_divisi"])
                     ->where('bagians.nama_bagian', $jabatan["nama_bagian"])
                     ->where('jabatans.nama_jabatan', $jabatan["nama_jabatan"])
                     ->where('karyawans.status_aktif', 'AKTIF')
-                    // ->where('karyawans.penempatan_kerja', 'ALL SITES (SP, SPS, SIP)')
                     // ->orWhere('karyawans.penempatan_kerja', 'CV. SUMBER PANGAN - KEDIRI')
-                    // ->orWhere('penempatan_kerja', 'ALL SITES (SP)')
                     // ->take('5')
                     ->select('karyawans.name')
                     ->get()
                     ->toArray();
+                // dd($ok);
                 $ok1 = Karyawan::Join('jabatans', 'jabatans.id', 'karyawans.jabatan1_id')
                     ->join('divisis', 'divisis.id', '=', 'karyawans.divisi1_id')
-                    ->join('departemens', 'departemens.id', '=', 'karyawans.dept_id')
+                    ->join('departemens', 'departemens.id', '=', 'karyawans.dept1_id')
                     ->join('bagians', 'bagians.id', '=', 'karyawans.bagian1_id')
+                    ->whereIn('karyawans.penempatan_kerja', ['ALL SITES (SP, SPS, SIP)', 'CV. SURYA INTI PANGAN - MAKASAR', 'ALL SITES (SIP)'])
                     ->where('divisis.nama_divisi', $jabatan["nama_divisi"])
                     ->where('bagians.nama_bagian', $jabatan["nama_bagian"])
                     ->where('jabatans.nama_jabatan', $jabatan["nama_jabatan"])
                     ->where('karyawans.status_aktif', 'AKTIF')
-                    // ->where('karyawans.penempatan_kerja', 'ALL SITES (SP, SPS, SIP)')
-                    // ->orWhere('karyawans.penempatan_kerja', 'CV. SUMBER PANGAN - KEDIRI')
-                    // ->orWhere('penempatan_kerja', 'ALL SITES (SP)')
-                    // ->take('5')
                     ->select('karyawans.name')
                     ->get()
                     ->toArray();
                 $ok2 = Karyawan::Join('jabatans', 'jabatans.id', 'karyawans.jabatan2_id')
                     ->join('divisis', 'divisis.id', '=', 'karyawans.divisi2_id')
-                    ->join('departemens', 'departemens.id', '=', 'karyawans.dept_id')
+                    ->join('departemens', 'departemens.id', '=', 'karyawans.dept2_id')
                     ->join('bagians', 'bagians.id', '=', 'karyawans.bagian2_id')
+                    ->whereIn('karyawans.penempatan_kerja', ['ALL SITES (SP, SPS, SIP)', 'CV. SURYA INTI PANGAN - MAKASAR', 'ALL SITES (SIP)'])
                     ->where('divisis.nama_divisi', $jabatan["nama_divisi"])
                     ->where('bagians.nama_bagian', $jabatan["nama_bagian"])
                     ->where('jabatans.nama_jabatan', $jabatan["nama_jabatan"])
                     ->where('karyawans.status_aktif', 'AKTIF')
-                    // ->where('karyawans.penempatan_kerja', 'ALL SITES (SP, SPS, SIP)')
-                    // ->orWhere('karyawans.penempatan_kerja', 'CV. SUMBER PANGAN - KEDIRI')
-                    // ->orWhere('penempatan_kerja', 'ALL SITES (SP)')
-                    // ->take('5')
                     ->select('karyawans.name')
                     ->get()
                     ->toArray();
                 $ok3 = Karyawan::Join('jabatans', 'jabatans.id', 'karyawans.jabatan3_id')
                     ->join('divisis', 'divisis.id', '=', 'karyawans.divisi3_id')
-                    ->join('departemens', 'departemens.id', '=', 'karyawans.dept_id')
+                    ->join('departemens', 'departemens.id', '=', 'karyawans.dept3_id')
                     ->join('bagians', 'bagians.id', '=', 'karyawans.bagian3_id')
+                    ->whereIn('karyawans.penempatan_kerja', ['ALL SITES (SP, SPS, SIP)', 'CV. SURYA INTI PANGAN - MAKASAR', 'ALL SITES (SIP)'])
                     ->where('divisis.nama_divisi', $jabatan["nama_divisi"])
                     ->where('bagians.nama_bagian', $jabatan["nama_bagian"])
                     ->where('jabatans.nama_jabatan', $jabatan["nama_jabatan"])
                     ->where('karyawans.status_aktif', 'AKTIF')
-                    // ->where('karyawans.penempatan_kerja', 'ALL SITES (SP, SPS, SIP)')
-                    // ->orWhere('karyawans.penempatan_kerja', 'CV. SUMBER PANGAN - KEDIRI')
-                    // ->orWhere('penempatan_kerja', 'ALL SITES (SP)')
-                    // ->take('5')
                     ->select('karyawans.name')
                     ->get()
                     ->toArray();
                 $ok4 = Karyawan::Join('jabatans', 'jabatans.id', 'karyawans.jabatan4_id')
                     ->join('divisis', 'divisis.id', '=', 'karyawans.divisi4_id')
-                    ->join('departemens', 'departemens.id', '=', 'karyawans.dept_id')
+                    ->join('departemens', 'departemens.id', '=', 'karyawans.dept4_id')
                     ->join('bagians', 'bagians.id', '=', 'karyawans.bagian4_id')
+                    ->whereIn('karyawans.penempatan_kerja', ['ALL SITES (SP, SPS, SIP)', 'CV. SURYA INTI PANGAN - MAKASAR', 'ALL SITES (SIP)'])
                     ->where('divisis.nama_divisi', $jabatan["nama_divisi"])
                     ->where('bagians.nama_bagian', $jabatan["nama_bagian"])
                     ->where('jabatans.nama_jabatan', $jabatan["nama_jabatan"])
                     ->where('karyawans.status_aktif', 'AKTIF')
-                    // ->where('karyawans.penempatan_kerja', 'ALL SITES (SP, SPS, SIP)')
-                    // ->orWhere('karyawans.penempatan_kerja', 'CV. SUMBER PANGAN - KEDIRI')
-                    // ->orWhere('penempatan_kerja', 'ALL SITES (SP)')
-                    // ->take('5')
                     ->select('karyawans.name')
                     ->get()
                     ->toArray();
@@ -502,9 +485,9 @@ class StrukturOrganisasiController extends Controller
                 }
                 $count_username = (count($ok) + count($ok1) + count($ok2) + count($ok3) + count($ok4)) . '&nbsp;Karyawan';
 
-                // $foto = '<img width=30 height=30 style="border-radius: 50%;" align=center margin_bottom=4 margin_top=4 src=https://karyawan.sumberpangan.store/public/admin/assets/img/avatars/1.png><br>';
                 $foto = '<img width=30 height=30 style="border-radius: 50%;" align=center margin_bottom=4 margin_top=4 src=https://hrd.sumberpangan.store:4430/public/admin/assets/img/avatars/1.png><br>';
-                $jabatan_struktur2[] = array('x' => $jabatan['nama_jabatan'] . ' (' . $jabatan['nama_bagian'] . ')', 'id' => str_replace("-", "", $jabatan['id']), 'parent' => str_replace("-", "", $jabatan['atasan_id']), 'user' => $user_name  . $user_name1 . $user_name2 . $user_name3 . $user_name4, 'attributes' => array('role' => $count_username, 'photo' => $foto));
+                // $foto = '<img width=30 height=30 style="border-radius: 50%;" align=center margin_bottom=4 margin_top=4 src=https://karyawan.sumberpangan.store/public/admin/assets/img/avatars/1.png><br>';
+                $jabatan_struktur2[] = array('x' => $jabatan['nama_jabatan'] . ' <br>(' . $jabatan['nama_bagian'] . ')', 'id' => str_replace("-", "", $jabatan['id']), 'parent' => str_replace("-", "", $jabatan['atasan_id']), 'user' => $user_name  . $user_name1 . $user_name2 . $user_name3 . $user_name4, 'attributes' => array('role' => $count_username, 'photo' => $foto));
             }
         }
         return view('admin.struktur_organisasi.index', [

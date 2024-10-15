@@ -15,8 +15,9 @@ use Carbon\Carbon;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Hash;
 use Maatwebsite\Excel\Concerns\ToCollection;
+use Maatwebsite\Excel\Concerns\WithStartRow;
 
-class UserUpdateImport implements ToCollection
+class UserUpdateImport implements ToCollection, WithStartRow
 {
     /**
      * @param array $row
@@ -37,12 +38,12 @@ class UserUpdateImport implements ToCollection
             if ($row[0] == NULL || $row[0] == 0) {
                 $id = NULL;
             } else {
-                $id = $row[0];
+                $id = Karyawan::where('nomor_identitas_karyawan', $row[0])->value('nomor_identitas_karyawan');
             }
             if ($row[1] == NULL || $row[1] == 0) {
                 $karyawan_id = NULL;
             } else {
-                $karyawan_id = Karyawan::where('name', $row[1])->value('id');
+                $karyawan_id = Karyawan::where('nomor_identitas_karyawan', $id)->value('id');
             }
             // dd($karyawan_id);
             if ($row[2] == NULL || $row[2] == 0) {
@@ -52,26 +53,28 @@ class UserUpdateImport implements ToCollection
             }
             if ($row[3] == NULL || $row[3] == 0) {
                 $password = NULL;
+                $password_show = $password;
             } else {
                 $password = Hash::make($row[3]);
+                $password_show = $row[3];
             }
             if ($row[4] == NULL || $row[4] == 0) {
                 $level = NULL;
+            } else if ($row[4] == 'Karyawan' || $row[4] == 'karyawan') {
+                $level = 'user';
             } else {
                 $level = $row[4];
             }
-            try {
-                User::where('id', $id)->update([
+            // dd($row[0], $id);
+            User::Join('karyawans', 'karyawans.id', 'users.karyawan_id')
+                ->where('karyawans.nomor_identitas_karyawan', $id)->update([
                     "karyawan_id"                                   => $karyawan_id,
                     "username"                                      => $username,
                     "password"                                      => $password,
+                    "password_show"                                 => $password_show,
                     "is_admin"                                      => $level,
                     "updated_at"                                    => now(),
                 ]);
-            } catch (\Throwable $e) {
-
-                return redirect()->back()->with('error', $e->getMessage(), 1500);
-            }
         }
     }
 }

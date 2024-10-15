@@ -35,7 +35,7 @@ class DepartemenController extends Controller
     public function datatable(Request $request)
     {
         $holding = request()->segment(count(request()->segments()));
-        $table = Departemen::orderBy('nama_departemen', 'ASC')->where('holding', $holding)->orderBy('nama_departemen', 'ASC')->get();
+        $table = Departemen::where('holding', $holding)->orderBy('nama_departemen', 'ASC')->get();
         if (request()->ajax()) {
             return DataTables::of($table)
                 ->addColumn('jumlah_divisi', function ($row) use ($holding) {

@@ -21,6 +21,10 @@ return [
         'driver' => 'eloquent',
         'model' => App\Models\Admin::class,
     ],
+    'hrd' => [
+        'driver' => 'eloquent',
+        'model' => App\Models\Admin::class,
+    ],
     /*
     |--------------------------------------------------------------------------
     | Authentication Guards
@@ -46,6 +50,10 @@ return [
         'admin' => [
             'driver' => 'session',
             'provider' => 'admins',
+        ],
+        'hrd' => [
+            'driver' => 'session',
+            'provider' => 'hrd',
         ],
     ],
 
@@ -76,10 +84,10 @@ return [
             'model' => App\Models\Admin::class,
         ],
 
-        // 'users' => [
-        //     'driver' => 'database',
-        //     'table' => 'users',
-        // ],
+        'hrd' => [
+            'driver' => 'database',
+            'table' => 'users',
+        ],
     ],
 
     /*

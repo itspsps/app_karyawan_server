@@ -50,44 +50,56 @@ class UsersImport implements ToModel, WithStartRow, WithCalculatedFormulas, Skip
         // if ($row[0] == null) {
         //     break;
         // }
-        if ($row[0] == NULL || $row[0] == 0 || $row[0] == 'NULL') {
+        if ($row[0] == NULL || $row[0] == 0) {
+            $id = NULL;
+        } else {
+            $id = Karyawan::where('nomor_identitas_karyawan', $row[0])->value('nomor_identitas_karyawan');
+        }
+        if ($row[1] == NULL || $row[1] == 0) {
             $karyawan_id = NULL;
         } else {
-            $karyawan_id = Karyawan::where('id', $row[0])->value('id');
+            $karyawan_id = Karyawan::where('nomor_identitas_karyawan', $id)->value('id');
         }
-        if ($row[1] == NULL || $row[1] == 0 || $row[1] == 'NULL') {
+        // dd($karyawan_id);
+        if ($row[2] == NULL || $row[2] == 0) {
             $username = NULL;
         } else {
-            $username = $row[1];
+            $username = $row[2];
         }
-        if ($row[2] == NULL || $row[2] == 0 || $row[2] == 'NULL') {
+        if ($row[3] == NULL || $row[3] == 0) {
             $password = NULL;
-            $password_show = NULL;
+            $password_show = $password;
         } else {
-            $password = Hash::make($row[2]);
-            $password_show = $row[2];
+            $password = Hash::make($row[3]);
+            $password_show = $row[3];
         }
-        if ($row[3] == NULL || $row[3] == 0 || $row[3] == 'NULL') {
+        if ($row[4] == NULL || $row[4] == 0) {
             $level = NULL;
+        } else if ($row[4] == 'Karyawan' || $row[4] == 'karyawan') {
+            $level = 'user';
         } else {
-            $level = $row[3];
+            $level = $row[4];
         }
-        if ($row[4] == NULL || $row[4] == 0 || $row[4] == 'NULL') {
-            $access = NULL;
-        } else {
-            $access = $row[4];
-        }
-        if ($row[5] == NULL || $row[5] == 0 || $row[5] == 'NULL') {
+        if ($row[5] == NULL || $row[5] == 0) {
             $status_aktif = NULL;
+        } else if ($row[5] == 'Aktif' || $row[5] == 'aktif') {
+            $status_aktif = 'AKTIF';
+        } else if ($row[5] == 'Non Aktif' || $row[5] == 'non aktif') {
+            $status_aktif = 'NON AKTIF';
         } else {
             $status_aktif = $row[5];
         }
-        if ($row[6] == NULL || $row[6] == 0 || $row[6] == 'NULL') {
+        if ($row[6] == NULL || $row[6] == 0) {
             $alasan = NULL;
         } else {
-            $alasan = $row[6];
+            if ($status_aktif == 'AKTIF') {
+                $alasan = NULL;
+            } else if ($status_aktif == 'NON AKTIF') {
+                $alasan = $row[6];
+            } else {
+                $alasan = $row[6];
+            }
         }
-
         try {
             return new User([
                 "karyawan_id"                                   => $karyawan_id,
@@ -95,7 +107,6 @@ class UsersImport implements ToModel, WithStartRow, WithCalculatedFormulas, Skip
                 "password"                                      => $password,
                 "password_show"                                 => $password_show,
                 "is_admin"                                      => $level,
-                "access_1"                                      => $access,
                 "status_aktif"                                  => $status_aktif,
                 "alasan"                                        => $alasan,
 
