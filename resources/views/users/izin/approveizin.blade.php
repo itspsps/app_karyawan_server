@@ -255,6 +255,7 @@
                 $('#jam_masuk_kerja').hide();
                 $('#jam_datang').hide();
                 $('#form_terlambat').hide();
+                $('#form_jam_kembali').hide();
                 $('#form_jam_pulang_cepat').hide();
                 $('#form_user_backup').hide();
                 $('#form_tgl_selesai').show();
@@ -262,11 +263,13 @@
                 $('#jam_masuk_kerja').hide();
                 $('#jam_datang').hide();
                 $('#form_terlambat').hide();
+                $('#form_jam_kembali').hide();
                 $('#form_jam_pulang_cepat').hide();
                 $('#form_user_backup').hide();
                 $('#form_tgl_selesai').hide();
             }
         } else if (izin == 'Pulang Cepat') {
+            $('#form_jam_kembali').hide();
             $('#form_jam_pulang_cepat').show();
             $('#jam_masuk_kerja').hide();
             $('#form_terlambat').hide();
@@ -275,6 +278,7 @@
             $('#form_tgl_selesai').hide();
         } else if (izin == 'Tidak Masuk (Mendadak)') {
             $('#form_user_backup').show();
+            $('#form_jam_kembali').hide();
             $('#form_tgl_selesai').show();
             $('#jam_masuk_kerja').hide();
             $('#jam_datang').hide();
