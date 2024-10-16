@@ -60,7 +60,7 @@
                     <div class="dz-info">
                         <span class="location d-block text-left">Form Izin&nbsp;Datang Terlambat
                         </span>
-                        @if(auth()->user()->kategori=='Karyawan Bulanan')
+                        @if($user_karyawan->kategori=='Karyawan Bulanan')
                         <h5 class="title">@if($user->kontrak_kerja == 'SP')
                             CV. SUMBER PANGAN
                             @elseif($user->kontrak_kerja == 'SPS')
@@ -68,8 +68,8 @@
                             @elseif($user->kontrak_kerja == 'SIP')
                             CV. SURYA INTI PANGAN
                             @endif</h5>
-                        @elseif(auth()->user()->kategori=='Karyawan Harian')
-                        <h5 class="title">{{auth()->user()->penempatan_kerja}}
+                        @elseif($user_karyawan->kategori=='Karyawan Harian')
+                        <h5 class="title">{{$user_karyawan->penempatan_kerja}}
                         </h5>
                         @endif
                     </div>
@@ -258,62 +258,7 @@
             document.getElementById("note").innerHTML = "";
         }
     </script>
-    <script type="text/javascript">
-        $(document).ready(function() {
-            var awal = $('#jam_masuk').val().split(":"),
-                akhir = $('#jam').val().split(":");
-            var hours1 = parseInt(awal[0], 10),
-                hours2 = parseInt(akhir[0], 10),
-                mins1 = parseInt(awal[1], 10),
-                mins2 = parseInt(akhir[1], 10);
-            var hours = hours2 - hours1,
-                mins = 0;
-            // get hours
-            if (hours < 0) hours = 24 + hours;
 
-            // get minutes
-            if (mins2 >= mins1) {
-                mins = mins2 - mins1;
-            } else {
-                mins = (mins2 + 60) - mins1;
-                hours--;
-            }
-
-            // convert to fraction of 60
-            mins = (mins - 5); // -5 toleransi telat 5 menit
-            console.log(mins);
-
-            // hours += mins;
-            // hours = hours.toFixed(2);
-            $("#terlambat").val(hours + ' Jam, ' + mins + ' Menit');
-
-            // var time1 = awal.split(":");
-            // var time2 = akhir.split(":");
-            // var ok1 = time1[0] + time1[1];
-            // var ok2 = time2[0] + time2[1];
-            // console.log(ok1, ok2);
-            // if (ok1 < ok2) {
-            //     var ya = ok2 - ok1;
-            //     var hasil = ya / 60;
-            //     console.log(hasil);
-            //     var jam = (time2[0] - time1[0]);
-            //     var menit = (time2[1] - time1[1]);
-            //     // hours = Math.floor((diff / 60));
-            //     // minutes = (diff % 60);
-            //     console.log('jam = ' + jam);
-            //     console.log('menit = ' + menit);
-            //     // console.log('MENIT = ' + minutes);
-            //     $('#terlambat').val(Math.abs(jam) + ' Jam, ' + Math.abs(menit) + ' Menit')
-            // } else {
-            //     var diff1 = getTimeDiff('24:00', '{time1}', 'm');
-            //     var diff2 = getTimeDiff('{time2}', '00:00', 'm');
-            //     var totalDiff = diff1 + diff2;
-            //     hours = Math.floor((totalDiff / 60));
-            //     minutes = (totalDiff % 60);
-            // };
-            // var hasil = ((akhir - awal)) / 1000;
-        });
-    </script>
 </body>
 
 </html>

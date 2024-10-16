@@ -456,7 +456,7 @@ class karyawanController extends Controller
         $holding = request()->segment(count(request()->segments()));
         $query = Excel::import(new KaryawanImport, $request->file_excel);
         if ($query) {
-            return redirect('/karyawan/' . $holding)->with('success', 'Import Karyawan Sukses');
+            return redirect()->back()->with('success', 'Import Karyawan Sukses');
         }
     }
     public function ImportUpdateKaryawan(Request $request)
@@ -467,7 +467,7 @@ class karyawanController extends Controller
         $import = new KaryawanImportUpdate;
         try {
             Excel::import($import, $request->file_excel);
-            return redirect('/karyawan/' . $holding)->with('success', 'Import Karyawan Update Sukses');
+            return redirect()->back()->with('success', 'Import Karyawan Update Sukses');
         } catch (\InvalidArgumentException $th) {
             // dd($th);
             return redirect()->back()->with('error', 'Import Error ' . $th->getMessage() . ' ' . $th->getLine() . ' ' . $th->getFile());
@@ -1439,7 +1439,7 @@ class karyawanController extends Controller
             'activity' => 'create',
             'description' => 'Menambahkan data karyawan baru ' . $request->name,
         ]);
-        return redirect('/karyawan/' . $holding)->with('success', 'Data Berhasil di Tambahkan');
+        return redirect()->back()->with('success', 'Data Berhasil di Tambahkan');
     }
 
     public function detail($id)
@@ -1931,7 +1931,7 @@ class karyawanController extends Controller
         ]);
 
         $request->session()->flash('success', 'Data Berhasil di Update');
-        return redirect('/karyawan/' . $holding);
+        return redirect()->back();
     }
 
     public function deleteKaryawan($id)
@@ -1953,7 +1953,7 @@ class karyawanController extends Controller
             'activity' => 'delete',
             'description' => 'Menghapus data karyawan ' . $delete->name,
         ]);
-        return redirect('/karyawan/' . $holding)->with('success', 'Data Berhasil di Delete');
+        return redirect()->back()->with('success', 'Data Berhasil di Delete');
     }
 
 
@@ -2357,6 +2357,6 @@ class karyawanController extends Controller
             'activity' => 'update',
             'description' => 'Mengubah master data reset cuti',
         ]);
-        return redirect('/reset-cuti/' . $holding)->with('success', 'Master Cuti Berhasil Diupdate');
+        return redirect()->back()->with('success', 'Master Cuti Berhasil Diupdate');
     }
 }

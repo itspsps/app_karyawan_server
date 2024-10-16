@@ -210,7 +210,7 @@
         <tfoot>
             <tr>
                 <th>
-                    <p style="text-align: left; font-size: 12px; margin-bottom: -2%;">Nama&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp;{{$data_izin->name}}</p>
+                    <p style="text-align: left; font-size: 12px; margin-bottom: -2%;">Nama&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp;{{$data_izin->fullname}}</p>
                     <p style="text-align: left; font-size: 12px;">Tanggal &nbsp;:&nbsp;{{ \Carbon\Carbon::parse($data_izin->waktu_ttd_pengajuan)->isoFormat('D MMMM YYYY')}}</p>
                 </th>
                 <th>

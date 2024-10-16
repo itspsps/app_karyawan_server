@@ -243,6 +243,7 @@
         var izin = '{{$data->izin}}';
         var foto_izin = '{{$data->foto_izin}}';
         if (izin == 'Datang Terlambat') {
+            $('#form_jam_kembali').hide();
             $('#jam_masuk_kerja').show();
             $('#jam_datang').show();
             $('#form_terlambat').show();

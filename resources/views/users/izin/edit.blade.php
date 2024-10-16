@@ -512,8 +512,8 @@
                     var menit = (time2[1] - time1[1]);
                     // hours = Math.floor((diff / 60));
                     // minutes = (diff % 60);
-                    console.log('jam = ' + jam);
-                    console.log('menit = ' + menit);
+                    // console.log('jam = ' + jam);
+                    // console.log('menit = ' + menit);
                     // console.log('MENIT = ' + minutes);
                     $('#terlambat').val(Math.abs(jam) + ' Jam, ' + Math.abs(menit) + ' Menit')
                 } else {

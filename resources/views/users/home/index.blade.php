@@ -1177,10 +1177,14 @@
                         <div class="card job-post" style="box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.2), 0 3px 10px 0 rgba(0, 0, 0, 0.1);">
                             <div class="card-body">
                                 <div class="media media-80">
+                                    @if($a->User != '')
                                     @if($a->User->foto_karyawan != '')
-                                    <img src="https://karyawan.sumberpangan.store/laravel/storage/app/public/foto_karyawan/{{$dataizin->User->foto_karyawan}}" alt="/">
+                                    <img src="https://hrd.sumberpangan.store/storage/app/public/foto_karyawan/{{$dataizin->User->foto_karyawan}}" alt="/">
                                     @else
                                     <img src="{{ asset('admin/assets/img/avatars/1.png') }}" alt="/">
+                                    @else
+                                    <img src="{{ asset('admin/assets/img/avatars/1.png') }}" alt="/">
+                                    @endif
                                     @endif
                                 </div>
                                 <div class="card-info">
@@ -1234,7 +1238,7 @@
                             <div class="card-body">
                                 <div class="media media-80">
                                     @if($a->User->foto_karyawan != '')
-                                    <img src="https://karyawan.sumberpangan.store/laravel/storage/app/public/foto_karyawan/{{$dataizin->User->foto_karyawan}}" alt="/">
+                                    <img src="https://hrd.sumberpangan.store/storage/app/public/foto_karyawan/{{$dataizin->User->foto_karyawan}}" alt="/">
                                     @else
                                     <img src="{{ asset('admin/assets/img/avatars/1.png') }}" alt="/">
                                     @endif
@@ -1294,7 +1298,7 @@
                             <div class="card-body">
                                 <div class="media media-80">
                                     @if($a->User->foto_karyawan != '')
-                                    <img src="https://karyawan.sumberpangan.store/laravel/storage/app/public/foto_karyawan/{{$dataizin->User->foto_karyawan}}" alt="/">
+                                    <img src="https://hrd.sumberpangan.store/storage/app/public/foto_karyawan/{{$dataizin->User->foto_karyawan}}" alt="/">
                                     @else
                                     <img src="{{ asset('admin/assets/img/avatars/1.png') }}" alt="/">
                                     @endif
@@ -1349,7 +1353,7 @@
                 @endforeach
                 @foreach ($datapenugasan as $datapenugasan)
                 @if($datapenugasan->status_penugasan == 1)
-                @if($datapenugasan->id_user_atasan == auth::user()->id)
+                @if($datapenugasan->id_user_atasan == $user_karyawan->id)
                 @if($datapenugasan->ttd_id_diminta_oleh == NULL)
                 <div class="swiper-slide swiper-slide-prev" role="group" aria-label="1 / 4" style="margin-right: 10px;">
                     <a id="btn_klik" href="{{ url('/penugasan/approve/diminta/show/'.$datapenugasan->id) }}">
@@ -1374,7 +1378,7 @@
                 @endif
                 @endif
                 @elseif($datapenugasan->status_penugasan == 2)
-                @if($datapenugasan->id_user_atasan2 == auth::user()->id)
+                @if($datapenugasan->id_user_atasan2 == $user_karyawan->id)
                 @if($datapenugasan->ttd_id_disahkan_oleh == NULL)
                 <div class="swiper-slide swiper-slide-prev" role="group" aria-label="1 / 4" style="margin-right: 10px;">
                     <a id="btn_klik" href="{{ url('/penugasan/approve/diminta/show/'.$datapenugasan->id) }}">

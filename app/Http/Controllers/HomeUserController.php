@@ -21,6 +21,7 @@ use App\Models\Penugasan;
 use App\Models\Titik;
 use App\Notifications\TestPusherNotification;
 use Carbon\Carbon;
+use Carbon\CarbonInterval;
 use DateTime;
 use Facade\FlareClient\Time\Time;
 use Illuminate\Support\Facades\DB;
@@ -1114,7 +1115,7 @@ class HomeUserController extends Controller
                             return redirect('/izin/dashboard');
                         } else {
                             // No form
-                            $count_tbl_izin = Izin::where('izin', $request->izin)->count();
+                            $count_tbl_izin = Izin::where('izin', $request->izin)->where('tanggal', date('Y-m-d'))->count();
                             // dd($count_tbl_izin);
                             $countstr = strlen($count_tbl_izin + 1);
                             if ($countstr == '1') {
@@ -1126,6 +1127,8 @@ class HomeUserController extends Controller
                             } else {
                                 $no = $count_tbl_izin + 1;
                             }
+                            $no_form = $user_karyawan->kontrak_kerja . '/SK/FKDT/' . date('Y/m/d') . '/' . $no;
+                            // dd($no_form);
                             $jam_terlambat = $request->terlambat;
                             $jam_masuk_kerja = $request->jam_masuk;
                             $jam_pulang_cepat = NULL;
@@ -1137,7 +1140,6 @@ class HomeUserController extends Controller
                             $catatan_backup = NULL;
                             $tanggal = $request->tanggal;
                             $tanggal_selesai = NULL;
-                            $no_form = Auth::user()->kontrak_kerja . '/SK/FKDT/' . date('Y/m/d') . '/' . $no;
                             $folderPath     = public_path('signature/izin/');
                             $image_parts    = explode(";base64,", $request->signature);
                             $image_type_aux = explode("image/", $image_parts[0]);
@@ -1214,7 +1216,7 @@ class HomeUserController extends Controller
                         }
                     } else {
                         // No form
-                        $count_tbl_izin = Izin::where('izin', $request->izin)->count();
+                        $count_tbl_izin = Izin::where('izin', $request->izin)->where('tanggal', date('Y-m-d'))->count();
                         // dd($count_tbl_izin);
                         $countstr = strlen($count_tbl_izin + 1);
                         if ($countstr == '1') {
@@ -1226,6 +1228,7 @@ class HomeUserController extends Controller
                         } else {
                             $no = $count_tbl_izin + 1;
                         }
+                        $no_form = $user_karyawan->kontrak_kerja . '/SK/FKDT/' . date('Y/m/d') . '/' . $no;
                         $jam_terlambat = $request->terlambat;
                         $jam_masuk_kerja = $request->jam_masuk;
                         $jam_pulang_cepat = NULL;
@@ -1237,7 +1240,6 @@ class HomeUserController extends Controller
                         $catatan_backup = NULL;
                         $tanggal = $request->tanggal;
                         $tanggal_selesai = NULL;
-                        $no_form = Auth::user()->kontrak_kerja . '/SK/FKDT/' . date('Y/m/d') . '/' . $no;
                         $folderPath     = public_path('signature/izin/');
                         $image_parts    = explode(";base64,", $request->signature);
                         $image_type_aux = explode("image/", $image_parts[0]);
@@ -1933,10 +1935,12 @@ class HomeUserController extends Controller
                             $get_user_backup = NULL;
                             $getUserAtasan = $atasan;
                         }
-                        // dd('ok');
+
+                        $get_count_terlambat = CarbonInterval::minute($jml_all)->cascade();
+                        // dd($jml_all, $get_count_terlambat->h);
                         return view('users.absen.form_datang_terlambat', [
                             'jam_datang' => date('H:i:s'),
-                            'jumlah_terlambat' => $jml_all,
+                            'jumlah_terlambat' => $get_count_terlambat,
                             'getUserAtasan' => $getUserAtasan,
                             'jam_kerja' => $jam_kerja,
                             'user' => $user,
@@ -2737,7 +2741,7 @@ class HomeUserController extends Controller
                     } else {
                         $no = $count_tbl_izin + 1;
                     }
-                    $no_form = Auth::user()->kontrak_kerja . '/IP/' . date('Y/m/d') . '/' . $no;
+                    $no_form = $user_karyawan->kontrak_kerja . '/IP/' . date('Y/m/d') . '/' . $no;
                     $tgl_skrg = date('Y-m-d');
                     $akhir = new DateTime($tgl_skrg . $request["jam_pulang"]);
                     $awal  = new DateTime($tgl_skrg . $request["jam_pulang_cepat"]);
@@ -2829,7 +2833,7 @@ class HomeUserController extends Controller
                     $catatan_backup = NULL;
                     $tanggal = date('Y-m-d');
                     $tanggal_selesai = NULL;
-                    $no_form = Auth::user()->kontrak_kerja . '/IP/' . date('Y/m/d') . '/' . $no;
+                    $no_form = $user_karyawan->kontrak_kerja . '/IP/' . date('Y/m/d') . '/' . $no;
                 }
                 $tgl_skrg = date('Y-m-d');
                 $akhir = new DateTime($tgl_skrg . $request["jam_pulang"]);

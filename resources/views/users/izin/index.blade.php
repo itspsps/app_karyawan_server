@@ -471,29 +471,8 @@
         setTimeout(function() {
             // console.log('ok1');
             $("#alert_hapus_izin_sukses").remove();
-        }, 7000); // 7 secs
-
-    });
-    $("document").ready(function() {
-        // console.log('ok');
-        setTimeout(function() {
-            // console.log('ok1');
             $("#alert_izineditsuccess").remove();
-        }, 7000); // 7 secs
-
-    });
-    $("document").ready(function() {
-        // console.log('ok');
-        setTimeout(function() {
-            // console.log('ok1');
             $("#alert_addizin_success").remove();
-        }, 7000); // 7 secs
-
-    });
-    $("document").ready(function() {
-        // console.log('ok');
-        setTimeout(function() {
-            // console.log('ok1');
             $("#alert_atasankosong").remove();
         }, 7000); // 7 secs
 
@@ -503,7 +482,7 @@
     $(document).ready(function() {
         var jm_plg_cpt = '{{$jam_min_plg_cpt}}';
         var jm_kerja = '{{$jam_kerja}}';
-        console.log(jm_kerja);
+        // console.log(jm_kerja);
         $('#modal_surat').hide();
         $('#jam_masuk_kerja').hide();
         $('#jam_datang').hide();
@@ -711,7 +690,7 @@
         $('body').on("change", "#file_sakit", function() {
 
             let reader = new FileReader();
-            console.log(reader);
+            // console.log(reader);
             reader.onload = (e) => {
 
                 $('#template_foto_izin').attr('src', e.target.result);
