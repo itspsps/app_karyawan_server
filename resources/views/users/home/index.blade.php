@@ -1182,9 +1182,9 @@
                                     <img src="https://hrd.sumberpangan.store/storage/app/public/foto_karyawan/{{$dataizin->User->foto_karyawan}}" alt="/">
                                     @else
                                     <img src="{{ asset('admin/assets/img/avatars/1.png') }}" alt="/">
+                                    @endif
                                     @else
                                     <img src="{{ asset('admin/assets/img/avatars/1.png') }}" alt="/">
-                                    @endif
                                     @endif
                                 </div>
                                 <div class="card-info">
