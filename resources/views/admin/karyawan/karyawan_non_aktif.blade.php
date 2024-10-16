@@ -117,7 +117,7 @@
         processing: true,
         serverSide: true,
         ajax: {
-            url: "{{ url('database_karyawan_non_aktif') }}" + '/' + holding,
+            url: "@if(Auth::user()->is_admin=='hrd'){{ url('hrd/database_karyawan_non_aktif') }}@else{{ url('database_karyawan_non_aktif') }}@endif" + '/' + holding,
         },
         columns: [{
                 data: "id",

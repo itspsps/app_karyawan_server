@@ -15,10 +15,10 @@
     <div class="row">
         <div class="col-md-12">
             <div class="card mb-4">
-                <h4 class="card-header"><a href="{{url('users/'.$holding)}}"><i class="mdi mdi-arrow-left-bold"></i></a>&nbsp;Profil Karyawan</h4>
+                <h4 class="card-header"><a href="@if(Auth::user()->is_admin=='hrd'){{url('hrd/users/'.$holding)}}@else{{url('users/'.$holding)}}@endif"><i class="mdi mdi-arrow-left-bold"></i></a>&nbsp;Profil Karyawan</h4>
                 <!-- Account -->
                 <div class="card-body">
-                    <form method="post" action="{{ url('/users/edit-password-proses/'.$karyawan->id.'/'.$holding) }}">
+                    <form method="post" action="@if(Auth::user()->is_admin=='hrd'){{ url('/hrd/users/edit-password-proses/'.$karyawan->id.'/'.$holding) }}@else{{ url('/users/edit-password-proses/'.$karyawan->id.'/'.$holding) }}@endif">
                         @csrf
                         <div class="d-flex align-items-start align-items-sm-center gap-4">
                             @if($karyawan->foto_karyawan == null)
@@ -125,13 +125,21 @@
 <script>
     let holding = window.location.pathname.split("/");
     // console.log(holding[4]);
+    let auth = '{{ Auth::user()->is_admin }}';
+    if (auth == 'hrd') {
+        var holding1 = holding[4];
+        var holding2 = holding[5];
+    } else {
+        var holding1 = holding[3];
+        var holding2 = holding[4];
+    }
     var table = $('#table_mapping_shift').DataTable({
         "scrollY": true,
         "scrollX": true,
         processing: true,
         serverSide: true,
         ajax: {
-            url: "{{ url('karyawan/mapping_shift_datatable') }}" + '/' + holding[3] + '/' + holding[4],
+            url: "@if(Auth::user()->is_admin=='hrd'){{ url('hrd/karyawan/mapping_shift_datatable') }}@else{{ url('karyawan/mapping_shift_datatable') }}@endif" + '/' + holding1 + '/' + holding2,
         },
         columns: [{
                 data: "id",
@@ -209,7 +217,7 @@
         }).then((result) => {
             if (result.value) {
                 $.ajax({
-                    url: "{{ url('/karyawan/delete-shift') }}" + '/' + id + '/' + holding,
+                    url: "@if(Auth::user()->is_admin=='hrd'){{ url('/hrd/karyawan/delete-shift') }}@else{{ url('/karyawan/delete-shift') }}@endif" + '/' + id + '/' + holding,
                     type: "GET",
                     error: function() {
                         alert('Something is wrong');

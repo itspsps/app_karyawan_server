@@ -34,7 +34,7 @@
         <div class="col-lg-12">
             <div class="modal fade" id="modal_non_aktif_user" data-bs-backdrop="static" tabindex="-1">
                 <div class="modal-dialog modal-dialog-scrollable modal-lg">
-                    <form method="post" action="{{ url('users/non_aktif_proses') }}" class="modal-content" enctype="multipart/form-data">
+                    <form method="post" action="@if(Auth::user()->is_admin=='hrd'){{ url('hrd/users/non_aktif_proses') }}@else{{ url('users/non_aktif_proses') }}@endif" class="modal-content" enctype="multipart/form-data">
                         @csrf
                         <div class="modal-header">
                             <h4 class="modal-title" id="backDropModalTitle">Form Non Aktif User</h4>
@@ -119,7 +119,7 @@
             </div>
             <div class="modal fade" id="modal_aktif_user" data-bs-backdrop="static" tabindex="-1">
                 <div class="modal-dialog modal-dialog-scrollable modal-lg">
-                    <form method="post" action="{{ url('users/aktif_proses') }}" class="modal-content" enctype="multipart/form-data">
+                    <form method="post" action="@if(Auth::user()->is_admin=='hrd'){{ url('hrd/users/aktif_proses') }}@else{{ url('users/aktif_proses') }}@endif" class="modal-content" enctype="multipart/form-data">
                         @csrf
                         <div class="modal-header">
                             <h4 class="modal-title" id="backDropModalTitle">Form Aktif User</h4>
@@ -220,10 +220,10 @@
                         <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#modal_import_update_user_karyawan" href="">Import Update Excel</a></li>
                         <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#modal_export_user_karyawan" href="#">Export Excel</a></li>
                     </ul>
-                    <a type="button" href="{{url('users/pdfUserKaryawan/'.$holding)}}" class="btn btn-xs btn-danger waves-effect waves-light"><i class="menu-icon tf-icons mdi mdi-file-pdf-box"></i>PDF</a>
+                    <a type="button" href="@if(Auth::user()->is_admin=='hrd'){{url('hrd/users/pdfUserKaryawan/'.$holding)}}@else{{url('users/pdfUserKaryawan/'.$holding)}}@endif" class="btn btn-xs btn-danger waves-effect waves-light"><i class="menu-icon tf-icons mdi mdi-file-pdf-box"></i>PDF</a>
                     <div class="modal fade" id="modal_tambah_users" role="dialog" data-bs-backdrop="static" aria-hidden="true">
                         <div class="modal-dialog modal-dialog-scrollable modal-lg">
-                            <form method="post" action="{{ url('/users/prosesTambahUser/'.$holding) }}" class="modal-content" enctype="multipart/form-data">
+                            <form method="post" action="@if(Auth::user()->is_admin=='hrd'){{ url('/hrd/users/prosesTambahUser/'.$holding) }}@else{{ url('/users/prosesTambahUser/'.$holding) }}@endif" class="modal-content" enctype="multipart/form-data">
                                 @csrf
                                 <div class="modal-header">
                                     <h4 class="modal-title" id="backDropModalTitle">Tambah User</h4>
@@ -291,7 +291,7 @@
                     </div>
                     <div class="modal fade" id="modal_import_user_karyawan" data-bs-backdrop="static" tabindex="-1">
                         <div class="modal-dialog modal-dialog-scrollable modal-lg">
-                            <form method="post" action="{{ url('/users/ImportUser/'.$holding) }}" class="modal-content" enctype="multipart/form-data">
+                            <form method="post" action="@if(Auth::user()->is_admin=='hrd'){{ url('/hrd/users/ImportUser/'.$holding) }}@else{{ url('/users/ImportUser/'.$holding) }}@endif" class="modal-content" enctype="multipart/form-data">
                                 @csrf
                                 <div class="modal-header">
                                     <h4 class="modal-title" id="backDropModalTitle">Import Add User</h4>
@@ -321,7 +321,7 @@
                     </div>
                     <div class="modal fade" id="modal_import_update_user_karyawan" data-bs-backdrop="static" tabindex="-1">
                         <div class="modal-dialog modal-dialog-scrollable modal-lg">
-                            <form method="post" action="{{ url('/users/ImportUpdateUser/'.$holding) }}" enctype="multipart/form-data" class="modal-content">
+                            <form method="post" action="@if(Auth::user()->is_admin=='hrd'){{ url('/hrd/users/ImportUpdateUser/'.$holding) }}@else{{ url('/users/ImportUpdateUser/'.$holding) }}@endif" enctype="multipart/form-data" class="modal-content">
                                 @csrf
                                 <div class="modal-header">
                                     <h4 class="modal-title" id="backDropModalTitle">Import Update User Karyawan</h4>
@@ -362,7 +362,7 @@
                                     <div class="col mb-2">
                                         <div class="form-floating form-floating-outline">
                                             <h6>Download File Excel Data User Karyawan</h6>
-                                            <a href="{{url('users/ExportUser/'.$holding)}}" type="button" class="btn btn-xs btn-success"> Download Excel</a>
+                                            <a href="@if(Auth::user()->is_admin=='hrd'){{url('hrd/users/ExportUser/'.$holding)}}@else{{url('users/ExportUser/'.$holding)}}@endif" type="button" class="btn btn-xs btn-success"> Download Excel</a>
                                         </div>
                                     </div>
                                 </div>
@@ -448,6 +448,7 @@
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 <script>
     let holding = window.location.pathname.split("/").pop();
+    console.log(holding);
     var table = $('#table_karyawan_bulanan').DataTable({
         pageLength: 50,
         "scrollY": true,
@@ -455,7 +456,7 @@
         processing: true,
         serverSide: true,
         ajax: {
-            url: "{{ url('users_bulanan-datatable') }}" + '/' + holding,
+            url: "@if(Auth::user()->is_admin=='hrd'){{ url('hrd/users_bulanan-datatable') }}@else{{ url('users_bulanan-datatable') }}@endif" + '/' + holding,
         },
         columns: [{
                 data: "id",
@@ -512,7 +513,7 @@
         processing: true,
         serverSide: true,
         ajax: {
-            url: "{{ url('users_harian-datatable') }}" + '/' + holding,
+            url: "@if(Auth::user()->is_admin=='hrd'){{ url('hrd/users_harian-datatable') }}@else{{ url('users_harian-datatable') }}@endif" + '/' + holding,
         },
         columns: [{
                 data: "id",
@@ -567,7 +568,7 @@
         let id = $(this).data('id');
         let holding = $(this).data("holding");
         // console.log(holding);
-        let url = "{{ url('/users/edit-password/')}}" + '/' + id + '/' + holding;
+        let url = "@if(Auth::user()->is_admin=='hrd'){{ url('/hrd/users/edit-password/')}}@else{{ url('/users/edit-password/')}}@endif" + '/' + id + '/' + holding;
         Swal.fire({
             allowOutsideClick: false,
             background: 'transparent',

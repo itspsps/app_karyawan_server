@@ -16,7 +16,7 @@
             <div class="card">
                 <div class="card-header">
                     <div class="d-flex align-items-center justify-content-between">
-                        <h5 class="card-title m-0 me-2"><a href="{{url('jabatan/'.$holding)}}"><i class="mdi mdi-arrow-left-bold"></i></a>&nbsp;DAFTAR JABATAN</h5>
+                        <h5 class="card-title m-0 me-2"><a href="@if(Auth::user()->is_admin =='hrd'){{url('hrd/jabatan/'.$holding)}}@else{{url('jabatan/'.$holding)}}@endif"><i class="mdi mdi-arrow-left-bold"></i></a>&nbsp;DAFTAR JABATAN</h5>
                     </div>
                 </div>
                 <div class="card-body">
@@ -113,7 +113,7 @@
                     </div>
                     <div class="modal fade" id="modal_tambah_jabatan" data-bs-backdrop="static" tabindex="-1">
                         <div class="modal-dialog modal-dialog-scrollable">
-                            <form method="post" action="{{ url('/jabatan/insert/'.$holding) }}" class=" modal-content" enctype="multipart/form-data">
+                            <form method="post" action="@if(Auth::user()->is_admin =='hrd'){{ url('/hrd/jabatan/insert/'.$holding) }}@else{{ url('/jabatan/insert/'.$holding) }}@endif" class=" modal-content" enctype="multipart/form-data">
                                 @csrf
                                 <div class="modal-header">
                                     <h4 class="modal-title" id="backDropModalTitle">Tambah Jabatan</h4>
@@ -260,7 +260,7 @@
                     <!-- modal edit -->
                     <div class="modal fade" id="modal_edit_jabatan" data-bs-backdrop="static" tabindex="-1">
                         <div class="modal-dialog modal-dialog-scrollable">
-                            <form method="post" action="{{ url('/jabatan/update/'.$holding) }}" class="modal-content" enctype="multipart/form-data">
+                            <form method="post" action="@if(Auth::user()->is_admin =='hrd'){{ url('/hrd/jabatan/update/'.$holding) }}@else{{ url('/jabatan/update/'.$holding) }}@endif" class="modal-content" enctype="multipart/form-data">
                                 @csrf
                                 <div class="modal-header">
                                     <h4 class="modal-title" id="backDropModalTitle">Edit Jabatan</h4>
@@ -437,7 +437,12 @@
 <script>
     let holding = window.location.pathname.split("/").pop();
     let oke = window.location.pathname.split("/");
-    let id = oke[2];
+    let auth = '{{ Auth::user()->is_admin }}';
+    if (auth == 'hrd') {
+        var id = oke[3];
+    } else {
+        var id = oke[2];
+    }
     var table = $('#table_jabatan').DataTable({
         pageLength: 50,
         "scrollY": true,
@@ -445,7 +450,7 @@
         processing: true,
         serverSide: true,
         ajax: {
-            url: "{{ url('jabatan-datatable') }}" + '/' + id + '/' + holding,
+            url: "@if(Auth::user()->is_admin =='hrd'){{ url('hrd/jabatan-datatable') }}@else{{ url('jabatan-datatable') }}@endif" + '/' + id + '/' + holding,
         },
         columns: [{
                 data: "id",
@@ -537,7 +542,7 @@
         let divisi = $('#nama_divisi').val();
         let level = $('#level_jabatan').val();
         let holding = '{{$holding}}';
-        let url = "{{url('atasan/get_jabatan')}}" + "/" + holding;
+        let url = "@if(Auth::user()->is_admin =='hrd'){{url('hrd/atasan/get_jabatan')}}@else{{url('atasan/get_jabatan')}}@endif" + "/" + holding;
         console.log(divisi);
         // console.log(url);
         $.ajax({
@@ -609,7 +614,7 @@
         let divisi = $('#nama_divisi_update').val();
         let level = $('#level_jabatan_update').val();
         let holding = '{{$holding}}';
-        let url = "{{url('atasan/edit/get_jabatan')}}" + "/" + holding;
+        let url = "@if(Auth::user()->is_admin =='hrd'){{url('hrd/atasan/edit/get_jabatan')}}@else{{url('atasan/edit/get_jabatan')}}@endif" + "/" + holding;
         console.log(divisi);
         // console.log(url);
         $.ajax({
@@ -658,7 +663,7 @@
         } else {
             $('#lintas_departemen_update').prop('checked', false)
         }
-        let url = "{{url('atasan/edit/get_jabatan')}}" + "/" + holding;
+        let url = "@if(Auth::user()->is_admin =='hrd'){{url('hrd/atasan/edit/get_jabatan')}}@else{{url('atasan/edit/get_jabatan')}}@endif" + "/" + holding;
         console.log(divisi);
         // console.log(url);
         $.ajax({
@@ -694,7 +699,7 @@
 
         let id = $(this).data('id');
         let holding = $(this).data("holding");
-        let url = "{{ url('bawahanjabatan-datatable') }}" + '/' + id + '/' + holding;
+        let url = "@if(Auth::user()->is_admin =='hrd'){{ url('hrd/bawahanjabatan-datatable') }}@else{{ url('bawahanjabatan-datatable') }}@endif" + '/' + id + '/' + holding;
         // console.log(url);
         var table1 = $('#table_bawahan_jabatan').DataTable({
             "scrollY": true,
@@ -745,7 +750,7 @@
 
         let id = $(this).data('id');
         let holding = $(this).data("holding");
-        let url = "{{ url('karyawanjabatan-datatable') }}" + '/' + id + '/' + holding;
+        let url = "@if(Auth::user()->is_admin =='hrd'){{ url('hrd/karyawanjabatan-datatable') }}@else{{ url('karyawanjabatan-datatable') }}@endif" + '/' + id + '/' + holding;
         console.log(id);
         var table1 = $('#table_karyawan_jabatan').DataTable({
             "scrollY": true,
@@ -803,7 +808,7 @@
         }).then((result) => {
             if (result.value) {
                 $.ajax({
-                    url: "{{ url('/jabatan/delete/') }}" + '/' + id + '/' + holding,
+                    url: "@if(Auth::user()->is_admin =='hrd'){{ url('/hrd/jabatan/delete/') }}@else{{ url('/jabatan/delete/') }}@endif" + '/' + id + '/' + holding,
                     type: "GET",
                     data: {
                         holding: holding,

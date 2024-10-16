@@ -275,7 +275,7 @@
                  @endif
                  ">
                     <a href="@if(Auth::user()->is_admin=='hrd')
-                    {{ url('/hrd/departemen/'.$holding) }}
+                    {{ url('hrd/departemen/'.$holding) }}
                     @else
                     {{ url('/departemen/'.$holding) }}
                             @endif" class="menu-link">

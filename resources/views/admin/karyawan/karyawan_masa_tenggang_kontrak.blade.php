@@ -14,7 +14,7 @@
         <!-- Transactions -->
         <div class="modal fade" id="modal_perbarui_kontrak" data-bs-backdrop="static" tabindex="-1">
             <div class="modal-dialog modal-dialog-scrollable modal-lg">
-                <form id="form_update_kontrak" method="post" action="{{ url('karyawan/update_kontrak_proses') }}" class="modal-content" enctype="multipart/form-data">
+                <form id="form_update_kontrak" method="post" action="@if(Auth::user()->is_admin=='hrd'){{ url('hrd/karyawan/update_kontrak_proses') }}@else{{ url('karyawan/update_kontrak_proses') }}@endif" class="modal-content" enctype="multipart/form-data">
                     @csrf
                     <div class="modal-header">
                         <h4 class="modal-title" id="backDropModalTitle">Form Pembaruan Kontrak Karyawan</h4>
@@ -195,7 +195,7 @@
                     <hr class="my-5">
                     <div class="modal fade" id="modal_export_karyawan" data-bs-backdrop="static" tabindex="-1">
                         <div class="modal-dialog modal-dialog-scrollable modal-lg">
-                            <form method="post" action="{{ url('/karyawan/ImportKaryawan/'.$holding) }}" class="modal-content" enctype="multipart/form-data">
+                            <form method="post" action="@if(Auth::user()->is_admin=='hrd'){{ url('/hrd/karyawan/ImportKaryawan/'.$holding) }}@else{{ url('/karyawan/ImportKaryawan/'.$holding) }}@endif" class="modal-content" enctype="multipart/form-data">
                                 @csrf
                                 <div class="modal-header">
                                     <h4 class="modal-title" id="backDropModalTitle">Export Excel Karyawan</h4>
@@ -206,7 +206,7 @@
                                         <div class="col mb-2">
                                             <div class="form-floating form-floating-outline">
                                                 <h6>Download File Excel Data Karyawan</h6>
-                                                <a href="{{url('karyawan/ExportKaryawan/'.$holding)}}" type="button" class="btn btn-sm btn-success"> Download Excel</a>
+                                                <a href="@if(Auth::user()->is_admin=='hrd'){{url('hrd/karyawan/ExportKaryawan/'.$holding)}}@else{{url('karyawan/ExportKaryawan/'.$holding)}}@endif" type="button" class="btn btn-sm btn-success"> Download Excel</a>
                                             </div>
                                         </div>
                                     </div>
@@ -257,7 +257,7 @@
         processing: true,
         serverSide: true,
         ajax: {
-            url: "{{ url('karyawan/database_karyawan_masa_tenggang_kontrak') }}" + '/' + holding,
+            url: "@if(Auth::user()->is_admin=='hrd'){{ url('hrd/karyawan/database_karyawan_masa_tenggang_kontrak') }}@else{{ url('karyawan/database_karyawan_masa_tenggang_kontrak') }}@endif" + '/' + holding,
         },
         columns: [{
                 data: "id",

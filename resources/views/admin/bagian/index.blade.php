@@ -25,7 +25,7 @@
                     <button type="button" class="btn btn-sm btn-success waves-effect waves-light" data-bs-toggle="modal" data-bs-target="#modal_import_bagian"><i class="menu-icon tf-icons mdi mdi-file-excel"></i>Import</button>
                     <div class="modal fade" id="modal_tambah_bagian" data-bs-backdrop="static" tabindex="-1">
                         <div class="modal-dialog modal-dialog-scrollable">
-                            <form method="post" action="{{ url('/bagian/insert/'.$holding) }}" class="modal-content" enctype="multipart/form-data">
+                            <form method="post" action="@if(Auth::user()->is_admin =='hrd'){{ url('/hrd/bagian/insert/'.$holding) }}@else{{ url('/bagian/insert/'.$holding) }}@endif" class="modal-content" enctype="multipart/form-data">
                                 @csrf
                                 <div class="modal-header">
                                     <h4 class="modal-title" id="backDropModalTitle">Tambah Bagian</h4>
@@ -92,7 +92,7 @@
                     </div>
                     <div class="modal fade" id="modal_import_bagian" data-bs-backdrop="static" tabindex="-1">
                         <div class="modal-dialog modal-dialog-scrollable modal-lg">
-                            <form method="post" action="{{ url('/bagian/ImportBagian/'.$holding) }}" class="modal-content" enctype="multipart/form-data">
+                            <form method="post" action="@if(Auth::user()->is_admin =='hrd'){{ url('/hrd/bagian/ImportBagian/'.$holding) }}@else{{ url('/bagian/ImportBagian/'.$holding) }}@endif" class="modal-content" enctype="multipart/form-data">
                                 @csrf
                                 <div class="modal-header">
                                     <h4 class="modal-title" id="backDropModalTitle">Import Bagian</h4>
@@ -123,7 +123,7 @@
                     <!-- modal edit -->
                     <div class="modal fade" id="modal_edit_bagian" data-bs-backdrop="static" tabindex="-1">
                         <div class="modal-dialog modal-dialog-scrollable">
-                            <form method="post" action="{{ url('/bagian/update/'.$holding) }}" class="modal-content" enctype="multipart/form-data">
+                            <form method="post" action="@if(Auth::user()->is_admin =='hrd'){{ url('/hrd/bagian/update/'.$holding) }}@else{{ url('/bagian/update/'.$holding) }}@endif" class="modal-content" enctype="multipart/form-data">
                                 @csrf
                                 <div class="modal-header">
                                     <h4 class="modal-title" id="backDropModalTitle">Edit Bagian</h4>
@@ -292,7 +292,7 @@
         processing: true,
         serverSide: true,
         ajax: {
-            url: "{{ url('bagian-datatable') }}" + '/' + holding,
+            url: "@if(Auth::user()->is_admin =='hrd'){{ url('hrd/bagian-datatable') }}@else{{ url('bagian-datatable') }}@endif" + '/' + holding,
         },
         columns: [{
                 data: "id",
@@ -416,7 +416,7 @@
         }).then((result) => {
             if (result.value) {
                 $.ajax({
-                    url: "{{ url('/bagian/delete/') }}" + '/' + id + '/' + holding,
+                    url: "@if(Auth::user()->is_admin =='hrd'){{ url('/hrd/bagian/delete/') }}@else{{ url('/bagian/delete/') }}@endif" + '/' + id + '/' + holding,
                     type: "GET",
                     data: {
                         id: id,
@@ -470,7 +470,7 @@
 
         let id = $(this).data('id');
         let holding = $(this).data("holding");
-        let url = "{{ url('jabatan/jabatan-datatable') }}" + '/' + id + '/' + holding;
+        let url = "@if(Auth::user()->is_admin =='hrd'){{ url('hrd/jabatan/jabatan-datatable') }}@else{{ url('jabatan/jabatan-datatable') }}@endif" + '/' + id + '/' + holding;
         // console.log(url);
         var table1 = $('#table_lihat_jabatan').DataTable({
             "scrollY": true,
@@ -512,7 +512,7 @@
 
         let id = $(this).data('id');
         let holding = $(this).data("holding");
-        let url = "{{ url('jabatan/karyawanjabatan-datatable') }}" + '/' + id + '/' + holding;
+        let url = "@if(Auth::user()->is_admin =='hrd'){{ url('hrd/jabatan/karyawanjabatan-datatable') }}@else{{ url('jabatan/karyawanjabatan-datatable') }}@endif" + '/' + id + '/' + holding;
         console.log(id);
         var table1 = $('#table_lihat_karyawan').DataTable({
             "scrollY": true,

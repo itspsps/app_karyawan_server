@@ -2066,7 +2066,7 @@
         }
         $.ajax({
             type: 'GET',
-            url: "{{url('karyawan/get_departemen')}}",
+            url: "@if(Auth::user()->is_admin=='hrd'){{url('hrd/karyawan/get_departemen')}}@else{{url('karyawan/get_departemen')}}@endif",
             data: {
                 holding: holding,
             },
