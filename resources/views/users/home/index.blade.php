@@ -1179,7 +1179,7 @@
                                 <div class="media media-80">
                                     @if($a->User != '')
                                     @if($a->User->foto_karyawan != '')
-                                    <img src="https://hrd.sumberpangan.store/storage/app/public/foto_karyawan/{{$dataizin->User->foto_karyawan}}" alt="/">
+                                    <img src="https://hrd.sumberpangan.store:4430/storage/app/public/foto_karyawan/{{$dataizin->User->foto_karyawan}}" alt="/">
                                     @else
                                     <img src="{{ asset('admin/assets/img/avatars/1.png') }}" alt="/">
                                     @endif
@@ -1188,7 +1188,7 @@
                                     @endif
                                 </div>
                                 <div class="card-info">
-                                    <h6 class="title" style="font-size: 9pt;">{{ $a->name }}</h6>
+                                    <h6 class="title" style="font-size: 9pt;">{{ $a->fullname }}</h6>
                                     <span class="location">{{ $a->izin }}</span>
                                     <div class="d-flex align-items-center">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="Layer_1" viewBox="0 0 460 460" xml:space="preserve">
