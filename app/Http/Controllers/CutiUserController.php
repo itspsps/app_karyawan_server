@@ -1043,7 +1043,7 @@ class CutiUserController extends Controller
             ->where('karyawans.id', $user_karyawan->id)->first();
         $data   = Cuti::with('KategoriCuti')->where('cutis.id', $id)
             ->join('karyawans', 'karyawans.id', '=', 'cutis.user_id')
-            ->select('cutis.*', 'karyawans.name', 'karyawans.fullname', 'karyawans.kuota_cuti_tahunan')
+            ->select('cutis.*', 'karyawans.name', 'karyawans.kontrak_kerja', 'karyawans.kuota_cuti_tahunan')
             ->first();
         // dd($data);
         $get_id_backup = Karyawan::where('id', $data->user_id_backup)->first();

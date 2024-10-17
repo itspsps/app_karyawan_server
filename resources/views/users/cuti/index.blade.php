@@ -257,7 +257,7 @@
                         </div>
                         <div class="input-group">
                             <input type="text" class="form-control" value="Nama" readonly>
-                            <input type="text" class="form-control" name="fullname" value="{{ $user_karyawan->fullname }}" style="font-weight: bold" readonly required>
+                            <input type="text" class="form-control" name="fullname" value="{{ $user_karyawan->name }}" style="font-weight: bold" readonly required>
                         </div>
                         <div class="input-group">
                             <input type="text" class="form-control" value="Kuota Cuti Tahunan" readonly>
@@ -296,7 +296,7 @@
                             <select class="form-control" name="user_backup">
                                 <option value="">Pilih Pengganti...</option>
                                 @foreach($get_user_backup as $data)
-                                <option value="{{$data->id}}">{{$data->fullname}}
+                                <option value="{{$data->id}}">{{$data->name}}
                                 </option>
                                 @endforeach
                             </select>

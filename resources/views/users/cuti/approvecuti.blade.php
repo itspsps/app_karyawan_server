@@ -28,11 +28,11 @@
     <div class=" container">
         <div class="dz-info">
             <span class="location d-block">Form Cuti
-                @if($user->kontrak_kerja == 'sp')
+                @if($data->kontrak_kerja == 'SP')
                 CV. SUMBER PANGAN
-                @elseif($user->kontrak_kerja == 'sps')
+                @elseif($data->kontrak_kerja == 'SPS')
                 PT. SURYA PANGAN SEMESTA
-                @elseif($user->kontrak_kerja == 'sip')
+                @elseif($data->kontrak_kerja == 'SIP')
                 CV. SURYA INTI PANGAN
                 @endif
             </span>
@@ -86,7 +86,7 @@
                             @if($data->ttd_user=='')
                             <h6 class="text-center">kosong</h6>
                             @else
-                            <img src="{{ url('http://127.0.0.1:8000/signature/cuti/'.$data->ttd_user.'.png') }}" style="width: 100%;" alt="">
+                            <img src="{{ url('https://hrd.sumberpangan.store/signature/cuti/'.$data->ttd_user.'.png') }}" style="width: 100%;" alt="">
                             @endif
                             <p style="text-align: center;font-weight: bold">{{ \Carbon\Carbon::parse($data->waktu_ttd_user)->isoFormat('D MMMM Y HH:m')}} WIB</p>
                         </div>

@@ -180,7 +180,7 @@
         </div>
         <div class="input-group">
             <input type="text" class="form-control" value="Nama" readonly>
-            <input type="text" class="form-control" name="fullname" value="{{ $user_karyawan->fullname }}" style="font-weight: bold" readonly required>
+            <input type="text" class="form-control" name="fullname" value="{{ $user_karyawan->name }}" style="font-weight: bold" readonly required>
         </div>
         <div class="text-center" style="margin-top: -4%;margin-bottom: 2%;">
             @if ($get_cuti->ttd_user != '')
@@ -279,7 +279,7 @@
             @else
             <select class="form-control" name="user_backup" disabled>
                 @foreach($get_user_backup as $data)
-                <option value="{{$data->id}}" {{($data->id == $get_cuti->user_id_backup) ? 'selected' : ''}}>{{$data->fullname}}
+                <option value="{{$data->id}}" {{($data->id == $get_cuti->user_id_backup) ? 'selected' : ''}}>{{$data->name}}
                     @endforeach
             </select>
             @endif
@@ -289,7 +289,7 @@
             <select class="form-control" name="user_backup" required>
                 <option value="">Pilih Pengganti...</option>
                 @foreach($get_user_backup as $data)
-                <option value="{{$data->id}}" {{($data->id == $get_cuti->user_id_backup) ? 'selected' : ''}}>{{$data->fullname}}
+                <option value="{{$data->id}}" {{($data->id == $get_cuti->user_id_backup) ? 'selected' : ''}}>{{$data->name}}
                 </option>
                 @endforeach
             </select>
@@ -297,7 +297,7 @@
             <select class="form-control" name="user_backup" disabled>
                 <option value="">Pilih Pengganti...</option>
                 @foreach($get_user_backup as $data)
-                <option value="{{$data->id}}" {{($data->id == $get_cuti->user_id_backup) ? 'selected' : ''}}>{{$data->fullname}}
+                <option value="{{$data->id}}" {{($data->id == $get_cuti->user_id_backup) ? 'selected' : ''}}>{{$data->name}}
                 </option>
                 @endforeach
             </select> @endif
@@ -366,7 +366,7 @@
                             @if($get_cuti->ttd_atasan=='')
                             <h6 class="text-center">kosong</h6>
                             @else
-                            <img src="{{ url('https://karyawan.sumberpangan.store/laravel/public/signature/'.$get_cuti->ttd_atasan.'.png') }}" style="width: 100%;" alt="">
+                            <img src="{{ url('https://hrd.sumberpangan.store/signature/'.$get_cuti->ttd_atasan.'.png') }}" style="width: 100%;" alt="">
                             @endif
                             <p style="text-align: center;font-weight: bold">{{ $get_cuti->waktu_approve }}</p>
                         </div>
@@ -417,7 +417,7 @@
                             @if($get_cuti->ttd_atasan2=='')
                             <h6 class="text-center">kosong</h6>
                             @else
-                            <img src="{{ url('https://karyawan.sumberpangan.store/laravel/public/signature/'.$get_cuti->ttd_atasan2.'.png') }}" style="width: 100%;" alt="">
+                            <img src="{{ url('https://hrd.sumberpangan.store/signature/'.$get_cuti->ttd_atasan2.'.png') }}" style="width: 100%;" alt="">
                             @endif
                             <p style="text-align: center;font-weight: bold">{{ \Carbon\Carbon::parse($get_cuti->waktu_approve2)->format('d/m/Y H:i')}}</p>
                         </div>

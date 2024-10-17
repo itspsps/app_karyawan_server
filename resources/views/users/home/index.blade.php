@@ -1188,7 +1188,7 @@
                                     @endif
                                 </div>
                                 <div class="card-info">
-                                    <h6 class="title" style="font-size: 9pt;">{{ $a->fullname }}</h6>
+                                    <h6 class="title" style="font-size: 9pt;">{{ $a->name }}</h6>
                                     <span class="location">{{ $a->izin }}</span>
                                     <div class="d-flex align-items-center">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="Layer_1" viewBox="0 0 460 460" xml:space="preserve">
@@ -1244,7 +1244,7 @@
                                     @endif
                                 </div>
                                 <div class="card-info">
-                                    <h6 class="title" style="font-size: 9pt;"><a href="javascript:void(0);">{{$a->fullname}}</a></h6>
+                                    <h6 class="title" style="font-size: 9pt;"><a href="javascript:void(0);">{{$a->name}}</a></h6>
                                     @if($a->nama_cuti=='Diluar Cuti Tahunan')
                                     <span class="location">{{ $a->KategoriCuti->nama_cuti }}</span>
                                     @else
@@ -1304,7 +1304,7 @@
                                     @endif
                                 </div>
                                 <div class="card-info">
-                                    <h6 class="title" style="font-size: 9pt;"><a href="javascript:void(0);">{{$a->fullname}}</a></h6>
+                                    <h6 class="title" style="font-size: 9pt;"><a href="javascript:void(0);">{{$a->name}}</a></h6>
                                     @if($a->nama_cuti=='Diluar Cuti Tahunan')
                                     <span class="location">{{ $a->KategoriCuti->nama_cuti }}</span>
                                     @else
@@ -1363,7 +1363,7 @@
                                     <img src="{{ asset('assets/assets_users/images/users/user_icon.jpg') }}" alt="/">
                                 </div>
                                 <div class="card-info">
-                                    <h6 class="title">{{ $datapenugasan->fullname }}</h6>
+                                    <h6 class="title">{{ $datapenugasan->name }}</h6>
                                     <span class="location" style="font-size: 12px">Penugasan {{ $datapenugasan->penugasan }}</span>
                                     <div class="d-flex align-items-center">
                                         {{-- @if ($datapenugasan->status_penugasan = 1) --}}
@@ -1388,7 +1388,7 @@
                                     <img src="{{ asset('assets/assets_users/images/users/user_icon.jpg') }}" alt="/">
                                 </div>
                                 <div class="card-info">
-                                    <h6 class="title">{{ $datapenugasan->fullname }}</h6>
+                                    <h6 class="title">{{ $datapenugasan->name }}</h6>
                                     <span class="location" style="font-size: 12px">Penugasan {{ $datapenugasan->penugasan }}</span>
                                     <div class="d-flex align-items-center">
                                         {{-- @if ($datapenugasan->status_penugasan = 1) --}}
@@ -1413,7 +1413,7 @@
                                     <img src="{{ asset('assets/assets_users/images/users/user_icon.jpg') }}" alt="/">
                                 </div>
                                 <div class="card-info">
-                                    <h6 class="title">{{ $datapenugasan->fullname }}</h6>
+                                    <h6 class="title">{{ $datapenugasan->name }}</h6>
                                     <span class="location" style="font-size: 12px">Penugasan {{ $datapenugasan->penugasan }}</span>
                                     <div class="d-flex align-items-center">
                                         {{-- @if ($datapenugasan->status_penugasan = 1) --}}
@@ -1438,7 +1438,7 @@
                                     <img src="{{ asset('assets/assets_users/images/users/user_icon.jpg') }}" alt="/">
                                 </div>
                                 <div class="card-info">
-                                    <h6 class="title">{{ $datapenugasan->fullname }}</h6>
+                                    <h6 class="title">{{ $datapenugasan->name }}</h6>
                                     <span class="location" style="font-size: 12px">Penugasan {{ $datapenugasan->penugasan }}</span>
                                     <div class="d-flex align-items-center">
                                         {{-- @if ($datapenugasan->status_penugasan = 1) --}}
@@ -1815,7 +1815,7 @@
         var lat_saya = position.coords.latitude;
         var long_saya = position.coords.longitude;
         var lokasi_kantor = '{{$user_karyawan->penempatan_kerja}}';
-        var nama_saya = '{{$user_karyawan->fullname}}';
+        var nama_saya = '{{$user_karyawan->name}}';
         // console.log(lat_saya, long_saya);
         // console.log(lokasi_kantor);
 
@@ -2236,7 +2236,7 @@
         var lat_saya1 = position.coords.latitude;
         var long_saya1 = position.coords.longitude;
         var lokasi_kantor1 = '{{$user_karyawan->penempatan_kerja}}';
-        var nama_saya1 = '{{$user_karyawan->fullname}}';
+        var nama_saya1 = '{{$user_karyawan->name}}';
         // console.log(lat_saya1, long_saya1);
         // console.log(lokasi_kantor1);
 
