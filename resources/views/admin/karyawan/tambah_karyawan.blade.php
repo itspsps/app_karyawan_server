@@ -60,21 +60,21 @@
                                         BPJS
                                     </button>
                                 </li>
+                                <li class="nav-item">
+                                    <button type="button" class="nav-link" role="tab" data-bs-toggle="tab" data-bs-target="#nav_dokumen" aria-controls="nav_dokumen" aria-selected="false">
+                                        <i class="tf-icons mdi mdi-file-document-multiple-outline me-1"></i>
+                                        DOKUMEN
+                                    </button>
+                                </li>
                             </ul>
                             <div class="tab-content">
                                 <div class="tab-pane fade show active" id="nav_profile" role="tabpanel">
-                                    <div class="d-flex align-items-start align-items-sm-center gap-4">
-                                        <img src="{{asset('admin/assets/img/avatars/1.png')}}" alt="user-avatar" class="d-block w-px-120 h-px-120 rounded" id="template_foto_karyawan" />
-                                        <div class="button-wrapper">
-                                            <label for="foto_karyawan" class="btn btn-primary me-2 mb-3" tabindex="0">
-                                                <span class="d-none d-sm-block">Upload Foto</span>
-                                                <i class="mdi mdi-tray-arrow-up d-block d-sm-none"></i>
-                                                <input style="font-size: small;" type="file" name="foto_karyawan" id="foto_karyawan" class="account-file-input" hidden accept="image/png, image/jpeg" />
-                                            </label>
 
-                                            <div class="text-muted small">Allowed JPG, GIF or PNG. Max size of 800K</div>
-                                        </div>
+                                    <input style="font-size: small;" type="file" name="foto_karyawan" id="foto_karyawan" class="account-file-input" hidden accept="image/png, image/jpeg" />
+                                    <div class="col-md-3">
+                                        <span class="mdi mdi-account-tie badge bg-label-info">&nbsp;Biodata Diri</span>
                                     </div>
+                                    <hr class="m-0">
                                     <div class="row mt-2 gy-4">
                                         <div class="col-md-6">
                                             <div class="form-floating form-floating-outline">
@@ -241,40 +241,45 @@
                                             @enderror
                                         </div>
                                     </div>
+                                    <div class="col-md-3 mt-3">
+                                        <span class="mdi mdi-account-school-outline badge bg-label-info">&nbsp;Pendidikan</span>
+                                    </div>
+                                    <hr class="m-0 mb-3">
                                     <div class="row mt-2 gy-4">
-
-                                        <div class="col-md-12">
-                                            <div class="d-flex align-items-start align-items-sm-center gap-4">
-                                                <img src="{{asset('admin/assets/img/avatars/cv.png')}}" alt="user-avatar" class="d-block w-px-120 h-px-120 rounded" id="template_foto_karyawan" />
-
-                                                <div class="button-wrapper">
-                                                    <label for="file_cv" class="btn btn-danger me-2 mb-3" tabindex="0">
-                                                        <span class="d-none d-sm-block">Upload File CV</span>
-                                                        <i class="mdi mdi-tray-arrow-up d-block d-sm-none"></i>
-                                                        <input style="font-size: small;" type="file" name="file_cv" id="file_cv" class="account-file-input @error('file_cv') is-invalid @enderror" hidden accept=".doc, .docx,.pdf" />
-                                                    </label>
-                                                    <button type="button" id="btn_modal_lihat" data-bs-toggle="modal" data-bs-target="#modal_cv" class="btn_modal_lihat btn btn-info me-2 mb-3">Lihat</button>
-
-                                                    <div class="text-muted small">Allowed PDF, DOC or DOCX. Max size of 5 MB</div>
-                                                </div>
-
+                                        <div class="col-md-6">
+                                            <div class="form-floating form-floating-outline">
+                                                <select style="font-size: small;" class="form-control" id="strata_pendidikan" name="strata_pendidikan" value="{{old('strata_pendidikan') }}">
+                                                    <option @if(old('strata_pendidikan')=='' ) selected @else @endif disabled value=""> ~Pilih Tingkatan Pendidikan~ </option>
+                                                    <option @if(old('strata_pendidikan')=='SEKOLAH DASAR (SD)' ) selected @else @endif value="SEKOLAH DASAR (SD)">SEKOLAH DASAR (SD)</option>
+                                                    <option @if(old('strata_pendidikan')=='SEKOLAH MENENGAH PERTAMA (SMP)' ) selected @else @endif value="SEKOLAH MENENGAH PERTAMA (SMP)">SEKOLAH MENENGAH PERTAMA (SMP)</option>
+                                                    <option @if(old('strata_pendidikan')=='SEKOLAH MENENGAH AKHIR (SMA)' ) selected @else @endif value="SEKOLAH MENENGAH AKHIR (SMA)">SEKOLAH MENENGAH AKHIR (SMA)</option>
+                                                    <option @if(old('strata_pendidikan')=='SEKOLAH MENENGAH KEJURUAN (SMK)' ) selected @else @endif value="SEKOLAH MENENGAH KEJURUAN (SMK)">SEKOLAH MENENGAH KEJURUAN (SMK)</option>
+                                                    <option @if(old('strata_pendidikan')=='DIPLOMA III (D3)' ) selected @else @endif value="DIPLOMA III (D3)">DIPLOMA III (D3)</option>
+                                                    <option @if(old('strata_pendidikan')=='DIPLOMA IV (D4)' ) selected @else @endif value="DIPLOMA IV (D4)">DIPLOMA IV (D4)</option>
+                                                    <option @if(old('strata_pendidikan')=='SARJANA (S1)' ) selected @else @endif value="SARJANA (S1)">SARJANA (S1)</option>
+                                                    <option @if(old('strata_pendidikan')=='MAGISTER (S2)' ) selected @else @endif value="MAGISTER (S2)">MAGISTER (S2)</option>
+                                                    <option @if(old('strata_pendidikan')=='DOKTOR (S3)' ) selected @else @endif value="DOKTOR (S3)">DOKTOR (S3)</option>
+                                                </select>
+                                                <label for="strata_pendidikan">Tingkat Pendidikan</label>
                                             </div>
                                         </div>
-                                    </div>
-                                </div>
-                                <div class="modal fade" id="modal_cv" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                    <div class="modal-dialog modal-lg">
-                                        <div class="modal-content">
-                                            <div class="modal-header">
-                                                <h5 class="modal-title" id="exampleModalLabel">Lihat Lampiran</h5>
-                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        <div class="col-md-6">
+                                            <div class="form-floating form-floating-outline">
+                                                <input style="font-size: small;" class="form-control" type="text" id="instansi_pendidikan" value="{{old('instansi_pendidikan')}}" name="instansi_pendidikan" placeholder="Instansi Pendidikan" />
+                                                <label for="instansi_pendidikan">Instansi Pendidikan</label>
                                             </div>
-                                            <div class="modal-body">
-                                                <iframe id="lihat_file_cv" src="" style=" height: 500px; width: 100%;"></iframe>
+                                            @error('instansi_pendidikan')
+                                            <p class="alert alert-danger">{{$message}}</p>
+                                            @enderror
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-floating form-floating-outline">
+                                                <input style="font-size: small;" class="form-control" type="text" id="jurusan_akademik" value="{{old('jurusan_akademik')}}" name="jurusan_akademik" placeholder="Jurusan Akademik" />
+                                                <label for="jurusan_akademik">Jurusan Akademik</label>
                                             </div>
-                                            <div class="modal-footer">
-                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                            </div>
+                                            @error('jurusan_akademik')
+                                            <p class="alert alert-danger">{{$message}}</p>
+                                            @enderror
                                         </div>
                                     </div>
                                 </div>
@@ -664,7 +669,7 @@
                                         </div> -->
 
                                         <div id="row_kategori_jabatan" style="margin-top: -1%; margin-left: 2%;" class="col mb-6">
-                                            <label class="form-check-label" for="kategori_jabatan">Pilih Kategori Jabatan</label>
+                                            <label class="form-check-label" for="kategori_jabatan">Pilih Kategori Jabatan (Untuk All Site)</label>
                                             <div class="form-floating form-floating-outline">
                                                 <div class="row gy-4">
                                                     <div class="col-lg-4 form-check">
@@ -1278,6 +1283,43 @@
                                             @error('kelas_bpjs')
                                             <p class="alert alert-danger">{{$message}}</p>
                                             @enderror
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="tab-pane fade" id="nav_dokumen" role="tabpanel">
+                                    <div class="row mt-2 gy-4">
+                                        <div class="col-md-12">
+                                            <div class="d-flex align-items-start align-items-sm-center gap-4">
+                                                <img src="{{asset('admin/assets/img/avatars/cv.png')}}" alt="user-avatar" class="d-block w-px-120 h-px-120 rounded" id="template_foto_karyawan" />
+
+                                                <div class="button-wrapper">
+                                                    <label for="file_cv" class="btn btn-danger me-2 mb-3" tabindex="0">
+                                                        <span class="d-none d-sm-block">Upload File CV</span>
+                                                        <i class="mdi mdi-tray-arrow-up d-block d-sm-none"></i>
+                                                        <input style="font-size: small;" type="file" name="file_cv" id="file_cv" class="account-file-input @error('file_cv') is-invalid @enderror" hidden accept=".doc, .docx,.pdf" />
+                                                    </label>
+                                                    <button type="button" id="btn_modal_lihat" data-bs-toggle="modal" data-bs-target="#modal_cv" class="btn_modal_lihat btn btn-info me-2 mb-3">Lihat</button>
+
+                                                    <div class="text-muted small">Allowed PDF, DOC or DOCX. Max size of 5 MB</div>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="modal fade" id="modal_cv" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog modal-lg">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="exampleModalLabel">Lihat Lampiran</h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <iframe id="lihat_file_cv" src="" style=" height: 500px; width: 100%;"></iframe>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>

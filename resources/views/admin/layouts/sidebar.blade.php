@@ -37,7 +37,9 @@
         <!-- Dashboards -->
         <li class="menu-item 
         @if(Auth::user()->is_admin =='hrd')
-        {{ Request::is('hrd/dashboard*') ? 'active' : '' }} @else {{ Request::is('hrd/dashboard*') ? 'active' : '' }} @endif">
+        {{ Request::is('hrd/dashboard*') ? 'active' : '' }}
+        @else {{ Request::is('dashboard*') ? 'active' : '' }}
+         @endif">
             <a href="@if(Auth::user()->is_admin=='hrd')
             {{ url('/hrd/dashboard/holding/'.$holding) }}
             @else
@@ -84,9 +86,10 @@
         @else 
         {{ Request::is('detail_jabatan*') ? 'active open' : '' }}
         @endif
-        @if(Auth::user()->is_admin =='hrd'){{ Request::is('hrd/struktur_organisasi*') ? 'active open' : '' }} 
+        @if(Auth::user()->is_admin =='hrd')
+        {{ Request::is('hrd/struktur_organisasi*') ? 'active open' : '' }} 
         @else 
-        {{ Request::is('detail_jabatan*') ? 'active open' : '' }}
+        {{ Request::is('struktur_organisasi*') ? 'active open' : '' }} 
         @endif
         @if(Auth::user()->is_admin =='hrd'){{ Request::is('hrd/reset-cuti*') ? 'active open' : '' }} 
         @else 
@@ -166,7 +169,7 @@
                         {{ Request::is('hrd/karyawan/tambah-karyawan/'.$holding) ? 'active' : '' }} 
                         {{ Request::is('hrd/karyawan/detail*') ? 'active' : '' }} 
                         {{ Request::is('hrd/karyawan/shift*') ? 'active' : '' }}
-                        @lse 
+                        @else 
                         {{ Request::is('karyawan/'.$holding) ? 'active' : '' }} 
                         {{ Request::is('karyawan/tambah-karyawan/'.$holding) ? 'active' : '' }} 
                         {{ Request::is('karyawan/detail*') ? 'active' : '' }} 
@@ -184,9 +187,11 @@
                             </a>
                         </li>
                         <li class="menu-item 
-                        @if(Auth::user()->is_admin =='hrd'){{ Request::is('hrd/users*') ? 'active' : '' }} 
-                       {{ Request::is('hrd/karyawan/edit-password/*') ? 'active' : '' }}
-                       @else
+                        @if(Auth::user()->is_admin =='hrd')
+                        {{ Request::is('hrd/users*') ? 'active' : '' }} 
+                        {{ Request::is('hrd/karyawan/edit-password/*') ? 'active' : '' }}
+                        @else
+                        {{ Request::is('users*') ? 'active' : '' }} 
                        {{ Request::is('karyawan/edit-password/*') ? 'active' : '' }}
                        @endif 
                        ">
@@ -362,7 +367,7 @@
                 </li>
                 <li class="menu-item {{ Request::is('karyawan/mapping_shift*') ? 'active' : '' }}">
                     <a href="{{ url('/karyawan/mapping_shift/'.$holding) }}" class=" menu-link">
-                        <div style="font-size: 10pt;" data-i18n="Without navbar"><i class="mdi mdi-account-clock-outline"></i>&nbsp;Master Shift</div>
+                        <div style="font-size: 10pt;" data-i18n="Without navbar"><i class="mdi mdi-account-clock-outline"></i>&nbsp;Mapping&nbsp;Absensi&nbsp;Karyawan</div>
                     </a>
                 </li>
                 <li class="menu-item  {{ Request::is('rekap-data*') ? 'active' : '' }}">

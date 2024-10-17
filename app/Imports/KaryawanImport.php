@@ -141,9 +141,24 @@ class KaryawanImport implements ToModel, WithStartRow, WithCalculatedFormulas
         }
 
         if ($row[12] == NULL || $row[12] == '0') {
+            $strata_pendidikan = NULL;
+        } else {
+            $strata_pendidikan = $row[12];
+        }
+        if ($row[13] == NULL || $row[13] == '0') {
+            $instansi_pendidikan = NULL;
+        } else {
+            $instansi_pendidikan = $row[13];
+        }
+        if ($row[14] == NULL || $row[14] == '0') {
+            $jurusan_akademik = NULL;
+        } else {
+            $jurusan_akademik = $row[14];
+        }
+        if ($row[15] == NULL || $row[15] == '0') {
             $provinsi = NULL;
         } else {
-            $get_provinsi = Province::where('name', $row[12])->value('code');
+            $get_provinsi = Province::where('name', $row[15])->value('code');
             if ($get_provinsi == NULL) {
                 $provinsi = NULL;
             } else {
@@ -151,22 +166,22 @@ class KaryawanImport implements ToModel, WithStartRow, WithCalculatedFormulas
             }
         }
 
-        if ($row[13] == NULL || $row[13] == '0') {
+        if ($row[16] == NULL || $row[16] == '0') {
             $kabupaten = NULL;
         } else {
-            if (strpos($row[13], 'KAB. ') !== false) {
-                $get_kabupaten = str_replace(array('KAB. '), 'KABUPATEN ', $row[13]);
+            if (strpos($row[16], 'KAB. ') !== false) {
+                $get_kabupaten = str_replace(array('KAB. '), 'KABUPATEN ', $row[16]);
                 $kabupaten = Cities::where('province_code', $provinsi)->where('name', $get_kabupaten)->value('code');
                 // dd('ok');
-            } else if (strpos($row[13], 'KOTA') !== false) {
+            } else if (strpos($row[16], 'KOTA') !== false) {
                 // dd('ok1');
                 // dd('ok');
-                $get_kabupaten = str_replace(array('KOTA'), '', $row[13]);
+                $get_kabupaten = str_replace(array('KOTA'), '', $row[16]);
                 $kabupaten = Cities::where('province_code', $provinsi)->where('name', $get_kabupaten)->value('code');
             } else {
                 // dd('ok2');
                 // dd('ok1');
-                $get_kabupaten = Cities::where('province_code', $provinsi)->where('name', $row[13])->value('code');
+                $get_kabupaten = Cities::where('province_code', $provinsi)->where('name', $row[16])->value('code');
                 // dd($get_kabupaten);
                 if ($get_kabupaten == NULL) {
                     $kabupaten = NULL;
@@ -176,17 +191,17 @@ class KaryawanImport implements ToModel, WithStartRow, WithCalculatedFormulas
             }
         }
         // dd($kabupaten);
-        if ($row[14] == NULL || $row[14] == '0') {
+        if ($row[17] == NULL || $row[17] == '0') {
             $kecamatan = NULL;
         } else {
-            if (strpos($row[14], 'KEC. ') !== false || strpos($row[14], 'KECAMATAN ') !== false) {
+            if (strpos($row[17], 'KEC. ') !== false || strpos($row[17], 'KECAMATAN ') !== false) {
                 // dd('ok');
-                $get_kecamatan = str_replace(array('KEC. ', 'KECAMATAN '), '', $row[14]);
+                $get_kecamatan = str_replace(array('KEC. ', 'KECAMATAN '), '', $row[17]);
                 $kecamatan = District::where('city_code', $kabupaten)->where('name', $get_kecamatan)->value('code');
                 // dd($get_kecamatan);
             } else {
                 // dd('ok1');
-                $get_kecamatan = District::where('city_code', $kabupaten)->where('name', $row[14])->value('code');
+                $get_kecamatan = District::where('city_code', $kabupaten)->where('name', $row[17])->value('code');
                 if ($get_kecamatan == NULL) {
                     $kecamatan = NULL;
                 } else {
@@ -195,16 +210,16 @@ class KaryawanImport implements ToModel, WithStartRow, WithCalculatedFormulas
             }
         }
         // dd($kecamatan);
-        if ($row[15] == NULL || $row[15] == '0') {
+        if ($row[18] == NULL || $row[18] == '0') {
             $desa = NULL;
         } else {
-            if (strpos($row[15], 'KEL. ') !== false || strpos($row[15], 'DS. ') !== false) {
-                $get_desa = str_replace(array('KEL. ', 'DS. '), '', $row[15]);
+            if (strpos($row[18], 'KEL. ') !== false || strpos($row[18], 'DS. ') !== false) {
+                $get_desa = str_replace(array('KEL. ', 'DS. '), '', $row[18]);
                 // dd($get_desa);
                 $desa = Village::where('district_code', $kecamatan)->where('name', $get_desa)->value('code');
             } else {
                 // dd('ok1');
-                $get_desa = Village::where('district_code', $kecamatan)->where('name', $row[15])->value('code');
+                $get_desa = Village::where('district_code', $kecamatan)->where('name', $row[18])->value('code');
                 if ($get_desa == NULL) {
 
                     $desa = NULL;
@@ -214,28 +229,28 @@ class KaryawanImport implements ToModel, WithStartRow, WithCalculatedFormulas
             }
         }
         // dd($desa);
-        if ($row[16] == NULL) {
+        if ($row[19] == NULL) {
             $rt = NULL;
         } else {
-            $rt = $row[16];
+            $rt = $row[19];
         }
-        if ($row[17] == NULL) {
+        if ($row[20] == NULL) {
             $rw = NULL;
         } else {
-            $rw = $row[17];
+            $rw = $row[20];
         }
         $detail_alamat = Province::where('code', $provinsi)->value('name') . ', ' . Cities::where('code', $kabupaten)->value('name') . ', ' . District::where('code', $kecamatan)->value('name') . ', ' . Village::where('code', $desa)->value('name') . ', RT: ' . $rt . ', RW: ' . $rw;
-        if ($row[18] == NULL || $row[18] == '0') {
+        if ($row[21] == NULL || $row[21] == '0') {
             $alamat = NULL;
         } else {
-            $alamat = $row[18];
+            $alamat = $row[21];
         }
         // alamat Domisili
-        if ($row[19] == NULL || $row[19] == '0') {
+        if ($row[22] == NULL || $row[22] == '0') {
             $status_alamat = 'ya';
             $provinsi_domisili = NULL;
         } else {
-            $get_provinsi_domisili = Province::where('name', $row[19])->value('code');
+            $get_provinsi_domisili = Province::where('name', $row[22])->value('code');
             if ($get_provinsi_domisili == NULL) {
                 $status_alamat = 'ya';
                 $provinsi_domisili = NULL;
@@ -245,22 +260,22 @@ class KaryawanImport implements ToModel, WithStartRow, WithCalculatedFormulas
             }
         }
 
-        if ($row[20] == NULL || $row[20] == '0') {
+        if ($row[23] == NULL || $row[23] == '0') {
             $kabupaten_domisili = NULL;
         } else {
-            if (strpos($row[20], 'KAB. ') !== false) {
-                $get_kabupaten_domisili = str_replace(array('KAB. '), 'KABUPATEN ', $row[20]);
+            if (strpos($row[23], 'KAB. ') !== false) {
+                $get_kabupaten_domisili = str_replace(array('KAB. '), 'KABUPATEN ', $row[23]);
                 $kabupaten_domisili = Cities::where('province_code', $provinsi_domisili)->where('name', $get_kabupaten_domisili)->value('code');
                 // dd('ok');
-            } else if (strpos($row[20], 'KOTA') !== false) {
+            } else if (strpos($row[23], 'KOTA') !== false) {
                 // dd('ok1');
                 // dd('ok');
-                $get_kabupaten_domisili = str_replace(array('KOTA'), '', $row[20]);
+                $get_kabupaten_domisili = str_replace(array('KOTA'), '', $row[23]);
                 $kabupaten_domisili = Cities::where('province_code', $provinsi_domisili)->where('name', $get_kabupaten_domisili)->value('code');
             } else {
                 // dd('ok2');
                 // dd('ok1');
-                $get_kabupaten_domisili = Cities::where('province_code', $provinsi_domisili)->where('name', $row[13])->value('code');
+                $get_kabupaten_domisili = Cities::where('province_code', $provinsi_domisili)->where('name', $row[23])->value('code');
                 // dd($get_kabupaten_domisili);
                 if ($get_kabupaten_domisili == NULL) {
                     $kabupaten_domisili = NULL;
@@ -270,17 +285,17 @@ class KaryawanImport implements ToModel, WithStartRow, WithCalculatedFormulas
             }
         }
         // dd($kabupaten);
-        if ($row[21] == NULL || $row[21] == '0') {
+        if ($row[24] == NULL || $row[24] == '0') {
             $kecamatan_domisili = NULL;
         } else {
-            if (strpos($row[21], 'KEC. ') !== false || strpos($row[21], 'KECAMATAN ') !== false) {
+            if (strpos($row[24], 'KEC. ') !== false || strpos($row[24], 'KECAMATAN ') !== false) {
                 // dd('ok');
-                $get_kecamatan_domisili = str_replace(array('KEC. ', 'KECAMATAN '), '', $row[21]);
+                $get_kecamatan_domisili = str_replace(array('KEC. ', 'KECAMATAN '), '', $row[24]);
                 $kecamatan_domisili = District::where('city_code', $kabupaten_domisili)->where('name', $get_kecamatan_domisili)->value('code');
                 // dd($get_kecamatan_domisili);
             } else {
                 // dd('ok1');
-                $get_kecamatan_domisili = District::where('city_code', $kabupaten_domisili)->where('name', $row[21])->value('code');
+                $get_kecamatan_domisili = District::where('city_code', $kabupaten_domisili)->where('name', $row[24])->value('code');
                 if ($get_kecamatan_domisili == NULL) {
                     $kecamatan_domisili = NULL;
                 } else {
@@ -289,16 +304,16 @@ class KaryawanImport implements ToModel, WithStartRow, WithCalculatedFormulas
             }
         }
         // dd($kecamatan);
-        if ($row[22] == NULL || $row[22] == '0') {
+        if ($row[25] == NULL || $row[25] == '0') {
             $desa_domisili = NULL;
         } else {
-            if (strpos($row[22], 'KEL. ') !== false || strpos($row[22], 'DS. ') !== false) {
-                $get_desa_domisili = str_replace(array('KEL. ', 'DS. '), '', $row[22]);
+            if (strpos($row[25], 'KEL. ') !== false || strpos($row[25], 'DS. ') !== false) {
+                $get_desa_domisili = str_replace(array('KEL. ', 'DS. '), '', $row[25]);
                 // dd($get_desa_domisili);
                 $desa_domisili = Village::where('district_code', $kecamatan_domisili)->where('name', $get_desa_domisili)->value('code');
             } else {
                 // dd('ok1');
-                $get_desa_domisili = Village::where('district_code', $kecamatan_domisili)->where('name', $row[22])->value('code');
+                $get_desa_domisili = Village::where('district_code', $kecamatan_domisili)->where('name', $row[25])->value('code');
                 if ($get_desa_domisili == NULL) {
 
                     $desa_domisili = NULL;
@@ -308,113 +323,115 @@ class KaryawanImport implements ToModel, WithStartRow, WithCalculatedFormulas
             }
         }
         // dd($desa);
-        if ($row[23] == NULL) {
+        if ($row[26] == NULL) {
             $rt_domisili = NULL;
         } else {
-            $rt_domisili = $row[23];
+            $rt_domisili = $row[26];
         }
-        if ($row[24] == NULL) {
+        if ($row[27] == NULL) {
             $rw_domisili = NULL;
         } else {
-            $rw_domisili = $row[24];
+            $rw_domisili = $row[27];
         }
         $detail_alamat_domisili = Province::where('code', $provinsi_domisili)->value('name') . ', ' . Cities::where('code', $kabupaten_domisili)->value('name') . ', ' . District::where('code', $kecamatan_domisili)->value('name') . ', ' . Village::where('code', $desa_domisili)->value('name') . ', RT: ' . $rt_domisili . ', RW: ' . $rw_domisili;
-        if ($row[25] == NULL || $row[25] == '0') {
+        if ($row[28] == NULL || $row[28] == '0') {
             $alamat_domisili = NULL;
         } else {
-            $alamat_domisili = $row[25];
+            $alamat_domisili = $row[28];
         }
-        $kuota_cuti_tahunan =  $row[26];
+        $kuota_cuti_tahunan =  $row[29];
         // dd($kuota_cuti_tahunan);
-        if ($row[27] == NULL || $row[27] == '0') {
+        if ($row[30] == NULL || $row[30] == '0') {
             $kategori = NULL;
         } else {
-            $kategori = $row[27];
+            $kategori = $row[30];
         }
         // TANGGAL JOIN
-        if ($row[28] == NULL || $row[28] == 0) {
+        if ($row[31] == NULL || $row[31] == 0) {
             $tgl_join = NULL;
         } else {
-            $tgl_join = Carbon::parse($row[28])->format('Y-m-d'); // $tgl_join = is_numeric($row[28]) ? Carbon::parse(\PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($row[28]))->format('Y-m-d') : Carbon::createFromFormat('d/m/Y', $row[28])->format('Y-m-d');
+            // $tgl_join = Carbon::parse($row[31])->format('Y-m-d'); 
+            $tgl_join = is_numeric($row[31]) ? Carbon::parse(\PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($row[31]))->format('Y-m-d') : Carbon::createFromFormat('Y-m-d', $row[31])->format('Y-m-d');
             // dd($tgl_mulai);
         }
-        if ($row[29] == NULL || $row[29] == '0') {
+        if ($row[32] == NULL || $row[32] == '0') {
             $lama_kontrak_kerja = NULL;
         } else {
-            $lama_kontrak_kerja = $row[29];
+            $lama_kontrak_kerja = $row[32];
         }
 
-        if ($row[30] == NULL || $row[30] == '0') {
+        if ($row[33] == NULL || $row[33] == '0') {
             $tgl_mulai = NULL;
         } else {
-            $tgl_mulai = Carbon::parse($row[30])->format('Y-m-d'); // $tgl_mulai = is_numeric($row[30]) ? Carbon::parse(\PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($row[30]))->format('Y-m-d') : Carbon::createFromFormat('d/m/Y', $row[30])->format('Y-m-d');
+            // $tgl_mulai = Carbon::parse($row[33])->format('Y-m-d'); 
+            $tgl_mulai = is_numeric($row[33]) ? Carbon::parse(\PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($row[33]))->format('Y-m-d') : Carbon::createFromFormat('Y-m-d', $row[33])->format('Y-m-d');
             // dd($tgl_mulai);
         }
-        if ($row[31] == NULL || $row[31] == '0') {
+        if ($row[34] == NULL || $row[34] == '0') {
             // dd($row);
             $tgl_selesai = NULL;
         } else {
-            $tgl_selesai = Carbon::parse($row[31])->format('Y-m-d');
-            // $tgl_selesai = is_numeric($row[31]) ? Carbon::parse(\PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($row[31]))->format('Y-m-d') : Carbon::createFromFormat('d/m/Y', $row[31])->format('Y-m-d');
+            // $tgl_selesai = Carbon::parse($row[34])->format('Y-m-d');
+            $tgl_selesai = is_numeric($row[34]) ? Carbon::parse(\PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($row[34]))->format('Y-m-d') : Carbon::createFromFormat('Y-m-d', $row[34])->format('Y-m-d');
         }
-        if ($row[32] == NULL || $row[32] == '0') {
+        if ($row[35] == NULL || $row[35] == '0') {
             $kontrak_kerja = NULL;
         } else {
-            $kontrak_kerja = $row[32];
+            $kontrak_kerja = $row[35];
         }
-        if ($row[33] == NULL || $row[33] == '0') {
+        if ($row[36] == NULL || $row[36] == '0') {
             $penempatan_kerja = NULL;
         } else {
-            $penempatan_kerja = $row[33];
-        }
-        if ($row[34] == NULL || $row[34] == '0') {
-            $site_job = NULL;
-        } else {
-            $site_job = $row[34];
-        }
-
-        if ($row[35] == NULL || $row[35] == '0') {
-            $nama_bank = NULL;
-        } else if ($row[35] == 'BANK OCBC') {
-            $nama_bank = 'BOCBC';
-        } else if ($row[35] == 'OCBC') {
-            $nama_bank = 'BOCBC';
-        } else if ($row[35] == 'BANK BRI') {
-            $nama_bank = 'BBRI';
-        } else if ($row[35] == 'BRI') {
-            $nama_bank = 'BBRI';
-        } else if ($row[35] == 'BANK BCA') {
-            $nama_bank = 'BBCA';
-        } else if ($row[35] == 'BCA') {
-            $nama_bank = 'BBCA';
-        } else if ($row[35] == 'MANDIRI') {
-            $nama_bank = 'BMANDIRI';
-        } else if ($row[35] == 'BANK MANDIRI') {
-            $nama_bank = 'BMANDIRI';
-        } else {
-            $nama_bank = $row[35];
-        }
-
-        if ($row[36] == NULL || $row[36] == '0') {
-            $nama_pemilik_rekening = NULL;
-        } else {
-            $nama_pemilik_rekening = $row[36];
+            $penempatan_kerja = $row[36];
         }
         if ($row[37] == NULL || $row[37] == '0') {
+            $site_job = NULL;
+        } else {
+            $site_job = $row[37];
+        }
+
+        if ($row[38] == NULL || $row[38] == '0') {
+            $nama_bank = NULL;
+        } else if ($row[38] == 'BANK OCBC') {
+            $nama_bank = 'BOCBC';
+        } else if ($row[38] == 'OCBC') {
+            $nama_bank = 'BOCBC';
+        } else if ($row[38] == 'BANK BRI') {
+            $nama_bank = 'BBRI';
+        } else if ($row[38] == 'BRI') {
+            $nama_bank = 'BBRI';
+        } else if ($row[38] == 'BANK BCA') {
+            $nama_bank = 'BBCA';
+        } else if ($row[38] == 'BCA') {
+            $nama_bank = 'BBCA';
+        } else if ($row[38] == 'MANDIRI') {
+            $nama_bank = 'BMANDIRI';
+        } else if ($row[38] == 'BANK MANDIRI') {
+            $nama_bank = 'BMANDIRI';
+        } else {
+            $nama_bank = $row[38];
+        }
+
+        if ($row[39] == NULL || $row[39] == '0') {
+            $nama_pemilik_rekening = NULL;
+        } else {
+            $nama_pemilik_rekening = $row[39];
+        }
+        if ($row[40] == NULL || $row[40] == '0') {
             $nomor_rekening = NULL;
         } else {
-            $nomor_rekening = $row[37];
+            $nomor_rekening = $row[40];
         }
-        if ($row[38] == NULL || $row[38] == '0') {
+        if ($row[41] == NULL || $row[41] == '0') {
             $kategori_jabatan = NULL;
-        } else if ($row[38] == 'SP') {
+        } else if ($row[41] == 'SP') {
             $kategori_jabatan = 'sp';
-        } else if ($row[38] == 'SPS') {
+        } else if ($row[41] == 'SPS') {
             $kategori_jabatan = 'sps';
-        } else if ($row[38] == 'SIP') {
+        } else if ($row[41] == 'SIP') {
             $kategori_jabatan = 'sip';
         } else {
-            $kategori_jabatan = $row[38];
+            $kategori_jabatan = $row[41];
         }
         if ($kategori_jabatan == null) {
             $get_jabatan = $kontrak_kerja;
@@ -422,104 +439,101 @@ class KaryawanImport implements ToModel, WithStartRow, WithCalculatedFormulas
             $get_jabatan = $kategori_jabatan;
         }
 
-        $departemen = Departemen::where('nama_departemen', $row[39])->where('holding', $get_jabatan)->value('id');
-        $divisi = Divisi::where('nama_divisi', $row[40])->where('dept_id', $departemen)->value('id');
-        $bagian = Bagian::where('nama_bagian', $row[41])->where('divisi_id', $divisi)->value('id');
-        $jabatan = Jabatan::where('nama_jabatan', $row[42])->where('divisi_id', $divisi)->where('bagian_id', $bagian)->value('id');
+        $departemen = Departemen::where('nama_departemen', $row[42])->where('holding', $get_jabatan)->value('id');
+        $divisi = Divisi::where('nama_divisi', $row[43])->where('dept_id', $departemen)->value('id');
+        $bagian = Bagian::where('nama_bagian', $row[44])->where('divisi_id', $divisi)->value('id');
+        $jabatan = Jabatan::where('nama_jabatan', $row[45])->where('divisi_id', $divisi)->where('bagian_id', $bagian)->value('id');
         // dd($get_jabatan);
 
-        $departemen1 = Departemen::where('nama_departemen', $row[43])->value('id');
-        $divisi1 = Divisi::where('nama_divisi', $row[44])->where('dept_id', $departemen1)->value('id');
-        $bagian1 = Bagian::where('nama_bagian', $row[45])->where('divisi_id', $divisi1)->value('id');
-        $jabatan1 = Jabatan::where('nama_jabatan', $row[46])->where('divisi_id', $divisi1)->where('bagian_id', $bagian1)->value('id');
+        $departemen1 = Departemen::where('nama_departemen', $row[46])->value('id');
+        $divisi1 = Divisi::where('nama_divisi', $row[47])->where('dept_id', $departemen1)->value('id');
+        $bagian1 = Bagian::where('nama_bagian', $row[48])->where('divisi_id', $divisi1)->value('id');
+        $jabatan1 = Jabatan::where('nama_jabatan', $row[49])->where('divisi_id', $divisi1)->where('bagian_id', $bagian1)->value('id');
 
-        $departemen2 = Departemen::where('nama_departemen', $row[47])->value('id');
-        $divisi2 = Divisi::where('nama_divisi', $row[48])->where('dept_id', $departemen2)->value('id');
-        $bagian2 = Bagian::where('nama_bagian', $row[49])->where('divisi_id', $divisi2)->value('id');
-        $jabatan2 = Jabatan::where('nama_jabatan', $row[50])->where('divisi_id', $divisi2)->where('bagian_id', $bagian2)->value('id');
+        $departemen2 = Departemen::where('nama_departemen', $row[50])->value('id');
+        $divisi2 = Divisi::where('nama_divisi', $row[51])->where('dept_id', $departemen2)->value('id');
+        $bagian2 = Bagian::where('nama_bagian', $row[52])->where('divisi_id', $divisi2)->value('id');
+        $jabatan2 = Jabatan::where('nama_jabatan', $row[53])->where('divisi_id', $divisi2)->where('bagian_id', $bagian2)->value('id');
 
-        $departemen3 = Departemen::where('nama_departemen', $row[51])->value('id');
-        $divisi3 = Divisi::where('nama_divisi', $row[52])->where('dept_id', $departemen3)->value('id');
-        $bagian3 = Bagian::where('nama_bagian', $row[53])->where('divisi_id', $divisi3)->value('id');
-        $jabatan3 = Jabatan::where('nama_jabatan', $row[54])->where('divisi_id', $divisi3)->where('bagian_id', $bagian3)->value('id');
+        $departemen3 = Departemen::where('nama_departemen', $row[54])->value('id');
+        $divisi3 = Divisi::where('nama_divisi', $row[55])->where('dept_id', $departemen3)->value('id');
+        $bagian3 = Bagian::where('nama_bagian', $row[56])->where('divisi_id', $divisi3)->value('id');
+        $jabatan3 = Jabatan::where('nama_jabatan', $row[57])->where('divisi_id', $divisi3)->where('bagian_id', $bagian3)->value('id');
 
-        $departemen4 = Departemen::where('nama_departemen', $row[55])->value('id');
-        $divisi4 = Divisi::where('nama_divisi', $row[56])->where('dept_id', $departemen4)->value('id');
-        $bagian4 = Bagian::where('nama_bagian', $row[57])->where('divisi_id', $divisi4)->value('id');
-        $jabatan4 = Jabatan::where('nama_jabatan', $row[58])->where('divisi_id', $divisi4)->where('bagian_id', $bagian4)->value('id');
+        $departemen4 = Departemen::where('nama_departemen', $row[58])->value('id');
+        $divisi4 = Divisi::where('nama_divisi', $row[59])->where('dept_id', $departemen4)->value('id');
+        $bagian4 = Bagian::where('nama_bagian', $row[60])->where('divisi_id', $divisi4)->value('id');
+        $jabatan4 = Jabatan::where('nama_jabatan', $row[61])->where('divisi_id', $divisi4)->where('bagian_id', $bagian4)->value('id');
 
-        if ($row[59] == NULL || $row[59] == '0') {
+        if ($row[62] == NULL || $row[62] == '0') {
             $ptkp = NULL;
         } else {
-            $ptkp = $row[59];
+            $ptkp = $row[62];
         }
-        if ($row[60] == NULL || $row[60] == 0) {
+        if ($row[63] == NULL || $row[63] == 0) {
+            $status_npwp = 'off';
+            $nama_pemilik_npwp = NULL;
+        } else {
+            $status_npwp = 'on';
+            $nama_pemilik_npwp = $row[63];
+        }
+        if ($row[64] == NULL || $row[64] == 0) {
             $status_npwp = 'off';
             $npwp = NULL;
         } else {
             $status_npwp = 'on';
-            $npwp = $row[60];
-        }
-        if ($row[61] == NULL || $row[61] == 0) {
-            $nama_pemilik_npwp = NULL;
-        } else {
-            $nama_pemilik_npwp = $row[61];
-        }
-        if ($row[62] == NULL || $row[62] == '0') {
-            // dd('ok1')/;
-            $bpjs_ketenagakerjaan = 'off';
-        } else if ($row[62] == 'FALSE') {
-            // dd('ok2');
-            $bpjs_ketenagakerjaan = 'off';
-        } else if ($row[62] == 'TRUE') {
-            // dd('ok3');
-            $bpjs_ketenagakerjaan = 'on';
-        } else {
-            // dd('ok4');
-            $bpjs_ketenagakerjaan = $row[62];
-        }
-        if ($row[63] == NULL || $row[63] == '0') {
-            $nama_pemilik_bpjs_ketenagakerjaan = NULL;
-        } else {
-            $nama_pemilik_bpjs_ketenagakerjaan = $row[63];
-        }
-        if ($row[64] == NULL || $row[64] == '0') {
-            $no_bpjs_ketenagakerjaan = NULL;
-        } else {
-            $no_bpjs_ketenagakerjaan = $row[64];
+            $npwp = $row[64];
         }
         if ($row[65] == NULL || $row[65] == '0') {
-            $bpjs_pensiun = 'off';
-        } else if ($row[65] == 'FALSE') {
-            $bpjs_pensiun = 'off';
-        } else if ($row[65] == 'TRUE') {
-            $bpjs_pensiun = 'on';
+            $bpjs_ketenagakerjaan = 'off';
+            $nama_pemilik_bpjs_ketenagakerjaan = NULL;
         } else {
-            $bpjs_pensiun = $row[65];
+            $bpjs_ketenagakerjaan = 'on';
+            $nama_pemilik_bpjs_ketenagakerjaan = $row[65];
         }
         if ($row[66] == NULL || $row[66] == '0') {
-            $bpjs_kesehatan = 'off';
-        } else if ($row[66] == 'FALSE') {
-            $bpjs_kesehatan = 'off';
-        } else if ($row[66] == 'TRUE') {
-            $bpjs_kesehatan = 'on';
+            $bpjs_ketenagakerjaan = 'off';
+            $no_bpjs_ketenagakerjaan = NULL;
         } else {
-            $bpjs_kesehatan = $row[66];
+            $bpjs_ketenagakerjaan = 'on';
+            $no_bpjs_ketenagakerjaan = $row[66];
         }
         if ($row[67] == NULL || $row[67] == '0') {
-            $nama_pemilik_bpjs_kesehatan = NULL;
+            $bpjs_pensiun = 'off';
+        } else if ($row[67] == 'FALSE') {
+            $bpjs_pensiun = 'off';
+        } else if ($row[67] == 'TRUE') {
+            $bpjs_pensiun = 'on';
+        } else if ($row[67] == 'ya') {
+            $bpjs_pensiun = 'on';
+        } else if ($row[67] == 'tidak') {
+            $bpjs_pensiun = 'off';
         } else {
-            $nama_pemilik_bpjs_kesehatan = $row[67];
+            $bpjs_pensiun = $row[67];
         }
         if ($row[68] == NULL || $row[68] == '0') {
-            $no_bpjs_kesehatan = NULL;
+            $bpjs_kesehatan = 'off';
+            $nama_pemilik_bpjs_kesehatan = NULL;
         } else {
-            $no_bpjs_kesehatan = $row[68];
+            $bpjs_kesehatan = 'on';
+            $nama_pemilik_bpjs_kesehatan = $row[68];
         }
         if ($row[69] == NULL || $row[69] == '0') {
+            $bpjs_kesehatan = 'off';
+            $no_bpjs_kesehatan = NULL;
+        } else {
+            $bpjs_kesehatan = 'on';
+            $no_bpjs_kesehatan = $row[69];
+        }
+        if ($row[70] == NULL || $row[70] == '0') {
             $kelas_bpjs = NULL;
         } else {
-            $kelas_bpjs = $row[69];
+            $kelas_bpjs = $row[70];
+        }
+        if ($provinsi == $provinsi_domisili && $kabupaten == $kabupaten_domisili && $kecamatan == $kecamatan_domisili && $desa == $desa_domisili) {
+            $status_alamat = 'ya';
+        } else {
+            $status_alamat = 'tidak';
         }
 
         try {

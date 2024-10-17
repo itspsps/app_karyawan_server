@@ -6,6 +6,7 @@ use App\Models\Bagian;
 use App\Models\Departemen;
 use App\Models\Divisi;
 use App\Models\Jabatan;
+use App\Models\Karyawan;
 use App\Models\MappingShift;
 use App\Models\Shift;
 use App\Models\User;
@@ -30,7 +31,7 @@ class MappingShiftController extends Controller
 
         $title = "Rekap Data Absensi Tanggal " . date('Y-m-01') . " s/d " . date('Y-m-d');
 
-        $user = User::with('Cuti')->with('Izin')->where('status_aktif', 'AKTIF')->get();
+        $user = Karyawan::with('Cuti')->with('Izin')->where('status_aktif', 'AKTIF')->get();
         // dd($user->Cuti->nama_cuti);
 
         if ($request["mulai"] && $request["akhir"]) {

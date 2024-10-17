@@ -481,6 +481,28 @@ Route::middleware('admin')->group(function () {
     Route::put('/lokasi-kantor/radius/{id}/sip', [LokasiController::class, 'updateRadiusLokasi']);
     Route::get('/lokasi_kantor/get_lokasi', [LokasiController::class, 'get_lokasi']);
 
+    Route::get('/shift/sp', [ShiftController::class, 'index']);
+    Route::get('/shift/sps', [ShiftController::class, 'index']);
+    Route::get('/shift/sip', [ShiftController::class, 'index']);
+    Route::get('/shift-datatable/sp', [ShiftController::class, 'datatable']);
+    Route::get('/shift-datatable/sps', [ShiftController::class, 'datatable']);
+    Route::get('/shift-datatable/sip', [ShiftController::class, 'datatable']);
+    Route::get('/shift/edit/sp', [ShiftController::class, 'edit']);
+    Route::get('/shift/edit/sps', [ShiftController::class, 'edit']);
+    Route::get('/shift/edit/sip', [ShiftController::class, 'edit']);
+    Route::get('/shift/create/sp', [ShiftController::class, 'create']);
+    Route::get('/shift/create/sps', [ShiftController::class, 'create']);
+    Route::get('/shift/create/sip', [ShiftController::class, 'create']);
+    Route::post('/shift/store/sp', [ShiftController::class, 'store']);
+    Route::post('/shift/store/sps', [ShiftController::class, 'store']);
+    Route::post('/shift/store/sip', [ShiftController::class, 'store']);
+    Route::post('/shift/update/sp', [ShiftController::class, 'update']);
+    Route::post('/shift/update/sps', [ShiftController::class, 'update']);
+    Route::post('/shift/update/sip', [ShiftController::class, 'update']);
+    Route::get('/shift/delete/{id}/sp', [ShiftController::class, 'destroy']);
+    Route::get('/shift/delete/{id}/sps', [ShiftController::class, 'destroy']);
+    Route::get('/shift/delete/{id}/sip', [ShiftController::class, 'destroy']);
+
     // reset Cuti
     Route::get('/reset-cuti/sp', [KaryawanController::class, 'resetCuti']);
     Route::get('/reset-cuti/sps', [KaryawanController::class, 'resetCuti']);

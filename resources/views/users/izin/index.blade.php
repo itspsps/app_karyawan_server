@@ -100,6 +100,18 @@
             <i class="fa-solid fa-xmark"></i>
         </button>
     </div>
+    @elseif(Session::has('dataizin_duplicate'))
+    <div id="alert_izinduplicate" class="alert alert-danger light alert-lg alert-dismissible fade show">
+        <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" class="me-2">
+            <polygon points="7.86 2 16.14 2 22 7.86 22 16.14 16.14 22 7.86 22 2 16.14 2 7.86 7.86 2"></polygon>
+            <line x1="15" y1="9" x2="9" y2="15"></line>
+            <line x1="9" y1="9" x2="15" y2="15"></line>
+        </svg>
+        <strong>error!</strong> &nbsp;Data Izin Duplicate.
+        <button class="btn-close" data-bs-dismiss="alert" aria-label="btn-close">
+            <i class="fa-solid fa-xmark"></i>
+        </button>
+    </div>
     @elseif(Session::has('izineditsuccess'))
     <div id="alert_izineditsuccess" class="alert alert-success light alert-dismissible fade show">
         <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" class="me-2">
@@ -474,6 +486,7 @@
             $("#alert_izineditsuccess").remove();
             $("#alert_addizin_success").remove();
             $("#alert_atasankosong").remove();
+            $("#alert_izinduplicate").remove();
         }, 7000); // 7 secs
 
     });

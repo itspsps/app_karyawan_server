@@ -1091,6 +1091,10 @@ class HomeUserController extends Controller
     public function proses_izin_datang_terlambat(Request $request)
     {
         // dd($request->all());
+        $cek_duplicate = Izin::whereDate('tanggal', $request->tanggal)->where('user_id', $request->id_user)->where('izin', $request->izin)->count();
+        if ($cek_duplicate > 0) {
+            return redirect('/home');
+        }
         $user_karyawan = Karyawan::where('id', Auth::user()->karyawan_id)->first();
         $lokasi_kerja = $user_karyawan->penempatan_kerja;
         if ($lokasi_kerja == '' || $lokasi_kerja == NULL) {
@@ -1146,7 +1150,7 @@ class HomeUserController extends Controller
                             $image_type     = $image_type_aux[1];
                             $image_base64   = base64_decode($image_parts[1]);
                             $uniqid         = date('y-m-d') . '-' . uniqid();
-                            $file           = $folderPath . $uniqid . '.' . $image_type;
+                            $file           = $uniqid . '.' . $image_type;
                             file_put_contents($file, $image_base64);
                             $data                   = new Izin();
                             $data->user_id          = $request->id_user;
@@ -1246,7 +1250,7 @@ class HomeUserController extends Controller
                         $image_type     = $image_type_aux[1];
                         $image_base64   = base64_decode($image_parts[1]);
                         $uniqid         = date('y-m-d') . '-' . uniqid();
-                        $file           = $folderPath . $uniqid . '.' . $image_type;
+                        $file           = $uniqid . '.' . $image_type;
                         file_put_contents($file, $image_base64);
                         $data                   = new Izin();
                         $data->user_id          = $request->id_user;
@@ -2717,6 +2721,10 @@ class HomeUserController extends Controller
     public function proses_izin_pulang_cepats(Request $request)
     {
         // dd($request->all());
+        $cek_duplicate = Izin::whereDate('tanggal', $request->tanggal)->where('user_id', $request->id_user)->where('izin', $request->izin)->count();
+        if ($cek_duplicate > 0) {
+            return redirect('/home');
+        }
         $user_karyawan = Karyawan::where('id', Auth::user()->karyawan_id)->first();
         $jam_kerja = MappingShift::with('Shift')->where('user_id', $user_karyawan->id)->where('tanggal_masuk', date('Y-m-d'))->first();
         if ($jam_kerja == '' || $jam_kerja == NULL) {
@@ -2751,13 +2759,13 @@ class HomeUserController extends Controller
                     $second = $diff->format('%S');
                     $hitung_pulang_cepat = ($hours . ':' . $minutes . ':' . $second);
                     // dd($hitung_pulang_cepat);
-                    $folderPath     = public_path('signature/izin');
+                    $folderPath     = public_path('signature/izin/');
                     $image_parts    = explode(";base64,", $request->signature);
                     $image_type_aux = explode("image/", $image_parts[0]);
                     $image_type     = $image_type_aux[1];
                     $image_base64   = base64_decode($image_parts[1]);
                     $uniqid         = date('y-m-d') . '-' . uniqid();
-                    $file           = $folderPath . $uniqid . '.' . $image_type;
+                    $file           = $uniqid . '.' . $image_type;
                     file_put_contents($file, $image_base64);
                     $data                   = new Izin();
                     $data->user_id          = $request->id_user;
@@ -2844,13 +2852,13 @@ class HomeUserController extends Controller
                 $second = $diff->format('%S');
                 $hitung_pulang_cepat = ($hours . ':' . $minutes . ':' . $second);
                 // dd($hitung_pulang_cepat);
-                $folderPath     = public_path('signature/izin');
+                $folderPath     = public_path('signature/izin/');
                 $image_parts    = explode(";base64,", $request->signature);
                 $image_type_aux = explode("image/", $image_parts[0]);
                 $image_type     = $image_type_aux[1];
                 $image_base64   = base64_decode($image_parts[1]);
                 $uniqid         = date('y-m-d') . '-' . uniqid();
-                $file           = $folderPath . $uniqid . '.' . $image_type;
+                $file           = $uniqid . '.' . $image_type;
                 file_put_contents($file, $image_base64);
                 // dd($request->all());
                 $data                   = new Izin();

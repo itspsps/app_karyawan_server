@@ -613,12 +613,7 @@ class IzinUserController extends Controller
         // dd($request->all());
         $user_karyawan = Karyawan::where('id', Auth::user()->karyawan_id)->first();
         if ($request->signature !== null) {
-            if ($request->izin_old == $request->izin) {
-                $count_izin = Izin::where('izin', $request->izin)->whereMonth('tanggal', date('m'))->count();
-                $count_tbl_izin = $count_izin - 1;
-            } else {
-                $count_tbl_izin = Izin::where('izin', $request->izin)->whereMonth('tanggal', date('m'))->count();
-            }
+            $count_tbl_izin = Izin::where('izin', $request->izin)->where('tanggal', $request->tanggal)->whereNotNull('no_form_izin')->count();
             // dd($count_tbl_izin);
             $get_izin = Izin::where('id', $request->id)->first();
             if ($request->izin == $get_izin->izin) {
@@ -626,15 +621,17 @@ class IzinUserController extends Controller
             } else {
                 $add = 1;
             }
+
+            // dd($count_tbl_izin);
             $countstr = strlen($count_tbl_izin + 1);
             if ($countstr == '1') {
-                $no = '000' . $count_tbl_izin + $add;
+                $no = '000' . $count_tbl_izin + 1;
             } else if ($countstr == '2') {
-                $no = '00' . $count_tbl_izin + $add;
+                $no = '00' . $count_tbl_izin + 1;
             } else if ($countstr == '3') {
-                $no = '0' . $count_tbl_izin + $add;
+                $no = '0' . $count_tbl_izin + 1;
             } else {
-                $no = $count_tbl_izin + $add;
+                $no = $count_tbl_izin + 1;
             }
             if ($request->izin == 'Pulang Cepat') {
                 $pulang_cepat = $request->jam_pulang_cepat;
@@ -648,11 +645,7 @@ class IzinUserController extends Controller
                 $jam_masuk = NULL;
                 $tanggal = $request->tanggal;
                 $tanggal_selesai = $request->tanggal;
-                if ($request->izin_old == $request->izin) {
-                    $no_form = $request->no_form_old;
-                } else {
-                    $no_form = $user_karyawan->kontrak_kerja . '/IP/' . date('Y/m/d') . '/' . $no;
-                }
+                $no_form = $user_karyawan->kontrak_kerja . '/IP/' . date('Y/m/d') . '/' . $no;
             } else if ($request->izin == 'Keluar Kantor') {
                 $jam_keluar = $request->jam_keluar;
                 $jam_kembali = $request->jam_kembali;
@@ -665,11 +658,7 @@ class IzinUserController extends Controller
                 $tanggal = $request->tanggal;
                 $tanggal_selesai = $request->tanggal;
                 $terlambat = NULL;
-                if ($request->izin_old == $request->izin) {
-                    $no_form = $request->no_form_old;
-                } else {
-                    $no_form = $user_karyawan->kontrak_kerja . '/MK/' . date('Y/m/d') . '/' . $no;
-                }
+                $no_form = $user_karyawan->kontrak_kerja . '/MK/' . date('Y/m/d') . '/' . $no;
             } else if ($request->izin == 'Tidak Masuk (Mendadak)') {
                 $jumlah_hari = explode(' ', $request->tanggal);
                 $startDate = trim($jumlah_hari[0]);
@@ -690,11 +679,7 @@ class IzinUserController extends Controller
                 $id_backup = $request->user_backup;
                 $name_backup = Karyawan::where('id', $request->user_backup)->value('name');
                 $catatan_backup = $request->catatan_backup;
-                if ($request->izin_old == $request->izin) {
-                    $no_form = $request->no_form_old;
-                } else {
-                    $no_form = $user_karyawan->kontrak_kerja . '/FPI/' . date('Y/m/d') . '/' . $no;
-                }
+                $no_form = $user_karyawan->kontrak_kerja . '/FPI/' . date('Y/m/d') . '/' . $no;
             } else if ($request->izin == 'Sakit') {
                 if ($request->foto_izin_lama == 'TIDAK ADA' || $request->foto_izin_lama == NULL) {
                     if ($request['file_sakit']) {
@@ -743,11 +728,7 @@ class IzinUserController extends Controller
                 $img_name = NULL;
                 $tanggal = $request->tanggal;
                 $tanggal_selesai = $request->tanggal;
-                if ($request->izin_old == $request->izin) {
-                    $no_form = $request->no_form_old;
-                } else {
-                    $no_form = $user_karyawan->kontrak_kerja . '/FKDT/' . date('Y/m/d') . '/' . $no;
-                }
+                $no_form = $user_karyawan->kontrak_kerja . '/FKDT/' . date('Y/m/d') . '/' . $no;
             } else {
                 $catatan_backup = NULL;
                 $id_backup = NULL;
@@ -882,7 +863,12 @@ class IzinUserController extends Controller
                         $catatan_backup = NULL;
                         $tanggal = date('Y-m-d');
                         $tanggal_selesai = date('Y-m-d');
-                        $no_form = $user_karyawan->kontrak_kerja . '/MK/' . date('Y/m/d') . '/' . $no;
+                    }
+                    $cek_duplicate = Izin::whereBetween('tanggal', [$tanggal, $tanggal_selesai])->where('user_id', $request->id_user)->where('izin', $request->izin)->count();
+                    // dd($cek_duplicate);
+                    if ($cek_duplicate > 0) {
+                        $request->session()->flash('dataizin_duplicate');
+                        return redirect('/izin/dashboard');
                     }
                 } else if ($request->izin == 'Tidak Masuk (Mendadak)') {
                     $jumlah_hari = explode(' ', $request->tanggal);
@@ -895,6 +881,12 @@ class IzinUserController extends Controller
                     $tanggal = date('Y-m-d', strtotime($startDate));
                     $tanggal_selesai = date('Y-m-d', strtotime($endDate));
                     // dd($data_interval);
+                    $cek_duplicate = Izin::whereBetween('tanggal', [$tanggal, $tanggal_selesai])->where('user_id', $request->id_user)->where('izin', $request->izin)->count();
+                    // dd($cek_duplicate);
+                    if ($cek_duplicate > 0) {
+                        $request->session()->flash('dataizin_duplicate');
+                        return redirect('/izin/dashboard');
+                    }
                     $jam_keluar = $request->jam_keluar;
                     $jam_kembali = $request->jam_kembali;
                     $jam_pulang_cepat = NULL;
@@ -906,7 +898,6 @@ class IzinUserController extends Controller
                     $catatan_backup = $request->catatan_backup;
                     $no_form = NULL;
                 } else if ($request->izin == 'Sakit') {
-
                     if ($request['file_sakit']) {
                         // dd($request->all());
                         // dd('ok');
@@ -928,6 +919,12 @@ class IzinUserController extends Controller
                     $tanggal = date('Y-m-d', strtotime($startDate));
                     $tanggal_selesai = date('Y-m-d', strtotime($endDate));
                     // $jam_pulang_cepat = $request->pulang_cepat;
+                    $cek_duplicate = Izin::whereBetween('tanggal', [$request->tanggal, $tanggal_selesai])->where('user_id', $request->id_user)->where('izin', $request->izin)->count();
+                    // dd($cek_duplicate);
+                    if ($cek_duplicate > 0) {
+                        $request->session()->flash('dataizin_duplicate');
+                        return redirect('/izin/dashboard');
+                    }
                     $jam_terlambat = NULL;
                     $jam_masuk_kerja = NULL;
                     $jam_pulang_cepat = NULL;
@@ -1005,18 +1002,7 @@ class IzinUserController extends Controller
     public function izinApproveProses(Request $request)
     {
         // dd($request->all());
-        $count_tbl_izin = Izin::where('izin', $request->izin)->where('tanggal', $request->tanggal)->whereNotNull('no_form_izin')->count();
-        // dd($count_tbl_izin);
-        $countstr = strlen($count_tbl_izin + 1);
-        if ($countstr == '1') {
-            $no = '000' . $count_tbl_izin + 1;
-        } else if ($countstr == '2') {
-            $no = '00' . $count_tbl_izin + 1;
-        } else if ($countstr == '3') {
-            $no = '0' . $count_tbl_izin + 1;
-        } else {
-            $no = $count_tbl_izin + 1;
-        }
+
         $user_karyawan = Karyawan::where('id', Auth::user()->karyawan_id)->first();
         if ($request->izin == 'Sakit') {
             if ($request->signature != null) {
@@ -1292,7 +1278,6 @@ class IzinUserController extends Controller
                 return redirect()->back()->with('info', 'Tanda Tangan Harus Terisi');
             }
         } else if ($request->izin == 'Tidak Masuk (Mendadak)') {
-            $no_form = $user_karyawan->kontrak_kerja . '/MK/' . date('Y/m/d') . '/' . $no;
             if ($request->signature != null) {
                 $folderPath     = public_path('signature/izin/');
                 $image_parts    = explode(";base64,", $request->signature);
@@ -1349,7 +1334,6 @@ class IzinUserController extends Controller
                         $data->status_izin  = $request->status_izin;
                         $data->ttd_atasan   = $uniqid;
                         $data->catatan      = $request->catatan;
-                        $data->no_form_izin      = $no_form;
                         $data->waktu_approve = date('Y-m-d H:i:s');
                         $data->update();
 
@@ -1503,7 +1487,6 @@ class IzinUserController extends Controller
                 return redirect()->back()->with('info', 'Tanda Tangan Harus Terisi');
             }
         } else if ($request->izin == 'Datang Terlambat') {
-            $no_form = $user_karyawan->kontrak_kerja . '/SK/FKDT/' . date('Y/m/d') . '/' . $no;
             if ($request->signature != null) {
                 $folderPath     = public_path('signature/izin/');
                 $image_parts    = explode(";base64,", $request->signature);
@@ -1532,7 +1515,6 @@ class IzinUserController extends Controller
                     $data = Izin::where('id', $request->id)->first();
                     $data->status_izin  = $request->status_izin;
                     $data->ttd_atasan      = $uniqid;
-                    $data->no_form_izin      = $no_form;
                     $data->catatan      = $request->catatan;
                     $data->waktu_approve = date('Y-m-d H:i:s');
                     $data->update();
@@ -1552,7 +1534,6 @@ class IzinUserController extends Controller
         } else if ($request->izin == 'Keluar Kantor') {
             // dd($request->signature);
             // dd('ok');
-            $no_form = $user_karyawan->kontrak_kerja . '/MK/' . date('Y/m/d') . '/' . $no;
             if ($request->signature != null) {
                 $folderPath     = public_path('signature/izin/');
                 $image_parts    = explode(";base64,", $request->signature);
@@ -1585,7 +1566,6 @@ class IzinUserController extends Controller
                     $data->ttd_atasan  = $uniqid;
                     $data->catatan      = $request->catatan;
                     $data->waktu_approve = date('Y-m-d H:i:s');
-                    $data->no_form_izin         = $no_form;
                     $data->update();
 
                     $mapping                       = MappingShift::where('tanggal_masuk', $request->tanggal)->where('user_id', $request->id_user)->first();

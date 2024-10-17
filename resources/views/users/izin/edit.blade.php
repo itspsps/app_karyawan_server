@@ -191,7 +191,7 @@
                         <h5 class="modal-title">SURAT KETERANGAN SAKIT </h5>
                     </div>
                     <div class="modal-body">
-                        <img src="https://karyawan.sumberpangan.store/laravel/storage/app/public/foto_izin/{{$get_izin->foto_izin}}" alt="" id="template_foto_izin">
+                        <img src="https://hrd.sumberpangan.store/storage/app/public/foto_izin/{{$get_izin->foto_izin}}" alt="" id="template_foto_izin">
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-sm btn-danger light" data-bs-dismiss="modal">Close</button>

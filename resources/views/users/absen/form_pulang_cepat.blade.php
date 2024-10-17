@@ -180,7 +180,7 @@
                     </div>
                     <div id="form_jam_pulang_cepat" class="input-group">
                         <input type="text" class="form-control" value="Jam Keluar" readonly>
-                        <input type="time" readonly name="jam_pulang_cepat" id="jam_pulang_cepat" value="{{date('H:i')}}" style="font-weight: bold" placeholder="Jam Pulang" class="form-control">
+                        <input type="time" readonly name="jam_pulang_cepat" id="jam_pulang_cepat" value="{{date('H:i:s')}}" style="font-weight: bold" placeholder="Jam Pulang" class="form-control">
                     </div>
                     <div class="input-group">
                         <textarea class="form-control" name="keterangan_izin" style="font-weight: bold" required placeholder="Keterangan"></textarea>

@@ -37,6 +37,9 @@ class KaryawanExport implements FromCollection, WithEvents, WithHeadings, WithTi
             'TANGGAL LAHIR',
             'KELAMIN',
             'STATUS PERNIKAHAAN',
+            'TINGKAT PENDIDIKAN',
+            'INSTANSI PENDIDIKAN',
+            'JURUSAN AKADEMIK',
             'PROVINSI',
             'KABUPATEN/KOTA',
             'KECAMATAN',
@@ -150,6 +153,10 @@ class KaryawanExport implements FromCollection, WithEvents, WithHeadings, WithTi
                 'tgl_lahir', //10
                 'gender', //11
                 'status_nikah', //12
+                'strata_pendidikan', //12
+                'instansi_pendidikan', //12
+                'jurusan_akademik', //12
+                'status_nikah', //12
                 'q.name as nama_provinsi', //13
                 'r.name as nama_kabupaten', //14
                 's.name as nama_kecamatan', //15
@@ -223,7 +230,7 @@ class KaryawanExport implements FromCollection, WithEvents, WithHeadings, WithTi
             AfterSheet::class    => function (AfterSheet $event) use ($holding) {
                 $event->sheet
                     ->getDelegate()
-                    ->getStyle('A2:BP2')
+                    ->getStyle('A2:BS2')
                     ->getAlignment()
                     ->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
                 $event->sheet
@@ -231,7 +238,7 @@ class KaryawanExport implements FromCollection, WithEvents, WithHeadings, WithTi
                 $event->sheet
                     ->getDelegate()->getStyle('I1')->getFont()->setBold(true);
                 $event->sheet
-                    ->getDelegate()->getStyle('A2:BP2')->getFont()->setBold(true);
+                    ->getDelegate()->getStyle('A2:BS2')->getFont()->setBold(true);
                 $event->sheet
                     ->setCellValue('I1', 'DATA MASTER KARYAWAN ' . $holding);
             },

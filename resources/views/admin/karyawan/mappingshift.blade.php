@@ -206,12 +206,21 @@
                                             <input type="date" class="form-control @error('tanggal_update') is-invalid @enderror" id="tanggal_update" name="tanggal_update" value="{{ old('tanggal_update') }}">
                                             <label for="tanggal_update">Tanggal</label>
                                         </div>
-                                        @error('tanggal')
+                                        @error('tanggal_update')
                                         <span class="invalid-feedback" role="alert">
                                             <strong>{{ $message }}</strong>
                                         </span>
                                         @enderror
                                         <br>
+                                        <div class="form-floating form-floating-outline">
+                                            <input type="text" class="form-control @error('keterangan_update') is-invalid @enderror" id="keterangan_update" name="keterangan_update" value="{{ old('keterangan_update') }}">
+                                            <label for="keterangan_update">Keterangan</label>
+                                        </div>
+                                        @error('keterangan_update')
+                                        <span class="invalid-feedback" role="alert">
+                                            <strong>{{ $message }}</strong>
+                                        </span>
+                                        @enderror
                                     </div>
                                 </div>
                                 <div class="modal-footer">
@@ -315,16 +324,29 @@
         let id = $(this).data('id');
         let user_id = $(this).data('userid');
         let tanggal = $(this).data("tanggal");
+        let date_now = new Date().toISOString().slice(0, 10);
         let shift = $(this).data("shift");
         let holding = $(this).data("holding");
-        console.log(tanggal);
+        let keterangan = $(this).data("keterangan");
+        console.log(date_now);
         $('#id_shift').val(id);
         $('#tanggal_update').val(tanggal);
+        $('#keterangan_update').val(keterangan);
         $('#user_id').val(user_id);
         $('#shift_id_update option').filter(function() {
             // console.log($(this).val().trim());
             return $(this).val().trim() == shift
         }).prop('selected', true)
+        if (tanggal >= date_now) {
+            Swal.fire({
+                title: 'Info!',
+                text: 'Tidak Bisa Di Ubah Ketika Melebihi Tanggal Sekarang',
+                icon: 'warning',
+                timer: 3000
+            })
+        } else {
+            $('#modal_edit_shift').modal('show');
+        }
     });
     $(document).on('click', '#btn_delete_mapping_shift', function() {
         var id = $(this).data('id');

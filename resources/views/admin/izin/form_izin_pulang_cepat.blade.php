@@ -30,7 +30,7 @@
             </td>
             <td style="width: 30%; vertical-align: bottom; font-size:6pt; text-align: right;">
                 @if($data_izin->User->kontrak_kerja=='SP')
-                @if($data_izin->User->kontrak_site=='KEDIRI')
+                @if($data_izin->User->penempatan_kerja=='CV. SUMBER PANGAN - KEDIRI')
                 <p>Jl. Raya Sambirobyong No.88 Kayen Kidul - KEDIRI <br>
                     Telp: 0354-548466, 0354-546859, Fax: 0354548465 <br>
                     Website:
@@ -38,8 +38,16 @@
                         www.beraskediri.com
                     </a>
                 </p>
-                @elseif($data_izin->User->kontrak_site=='TUBAN')
+                @elseif($data_izin->User->penempatan_kerja=='CV. SUMBER PANGAN - TUBAN')
                 <p>Jl. Raya Sambirobyong No.88 Kayen Kidul - TUBAN <br>
+                    Telp: 0354-548466, 0354-546859, Fax: 0354548465 <br>
+                    Website:
+                    <a href="www.beraskediri.com">
+                        www.beraskediri.com
+                    </a>
+                </p>
+                @else
+                <p>Jl. Raya Sambirobyong No.88 Kayen Kidul - KEDIRI <br>
                     Telp: 0354-548466, 0354-546859, Fax: 0354548465 <br>
                     Website:
                     <a href="www.beraskediri.com">
@@ -48,7 +56,7 @@
                 </p>
                 @endif
                 @elseif($data_izin->User->kontrak_kerja=='SPS')
-                @if($data_izin->User->kontrak_site=='KEDIRI')
+                @if($data_izin->User->penempatan_kerja=='PT. SURYA PANGAN SEMESTA - KEDIRI')
 
                 <p>Jl. Dusun Bringin No.300, Bringin, Wonosari - KEDIRI <br>
                     Telp: 0354-548466, 0354-546859, Fax: 0354548465 <br>
@@ -57,7 +65,7 @@
                         www.beraskediri.com
                     </a>
                 </p>
-                @elseif($data_izin->User->kontrak_site=='NGAWI')
+                @elseif($data_izin->User->penempatan_kerja=='PT. SURYA PANGAN SEMESTA - NGAWI')
                 <p>Jl. Raya Madiun-Ngawi KM No.13, Tambakromo - NGAWI <br>
                     Telp: 0354-548466, 0354-546859, Fax: 0354548465 <br>
                     Website:
@@ -65,7 +73,7 @@
                         www.beraskediri.com
                     </a>
                 </p>
-                @elseif($data_izin->User->kontrak_site=='SUBUANG')
+                @elseif($data_izin->User->penempatan_kerja=='PT. SURYA PANGAN SEMESTA - SUBANG')
                 <p>Jl. Pusaka Jaya Kebondanas - SUBANG <br>
                     Telp: 0354-548466, 0354-546859, Fax: 0354548465 <br>
                     Website:

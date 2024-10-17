@@ -46,6 +46,14 @@
                         www.beraskediri.com
                     </a>
                 </p>
+                @else
+                <p>Jl. Raya Sambirobyong No.88 Kayen Kidul - KEDIRI <br>
+                    Telp: 0354-548466, 0354-546859, Fax: 0354548465 <br>
+                    Website:
+                    <a href="www.beraskediri.com">
+                        www.beraskediri.com
+                    </a>
+                </p>
                 @endif
                 @elseif($data_izin->User->kontrak_kerja=='SPS')
                 @if($data_izin->User->penempatan_kerja=='PT.SURYA PANGAN SEMESTA - KEDIRI')
