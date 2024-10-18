@@ -66,7 +66,7 @@
                                 <td>&nbsp;</td>
                                 <td>:</td>
                                 <td>
-                                    @if($karyawan->kontrak_kerja=='SP') CV. SUMBER PANGAN @elseif($karyawan->kontrak_kerja=='SPS') PT. SURYA PANGAN SEMESTA @endif
+                                    @if($karyawan->kontrak_kerja=='SP') CV. SUMBER PANGAN @elseif($karyawan->kontrak_kerja=='SPS') PT. SURYA PANGAN SEMESTA @else CV. SUMBER INTI PANGAN @endif
                                 </td>
                             </tr>
                             <tr>
@@ -117,14 +117,15 @@
                             <button type="button" class="btn btn-sm btn-primary waves-effect waves-light mb-3" data-bs-toggle="modal" data-bs-target="#modal_tambah_shift"><i class="menu-icon tf-icons mdi mdi-plus"></i>Tambah&nbsp;Shift</button>
                         </div>
                         <div class="col-md-9">
-                            <form action="{{ url('/rekap-data/'.$holding) }}">
-                                <div id="reportrange" style="background: #fff; cursor: pointer; padding: 5px 10px; width: 100%">
+                            <div id="reportrange" style="background: #fff; cursor: pointer; padding: 5px 10px; width: 100%">
+                                <button class="btn btn-outline-secondary waves-effect">
+                                    FILTER DATE : &nbsp;
                                     <i class="mdi mdi-calendar-filter-outline"></i>&nbsp;
                                     <span></span> <i class="mdi mdi-menu-down"></i>
-                                    <input type="date" id="start_date" name="start_date" value="">
-                                    <input type="date" id="end_date" name="end_date" value="">
-                                </div>
-                            </form>
+                                    <input type="date" id="start_date" name="start_date" hidden value="">
+                                    <input type="date" id="end_date" name="end_date" hidden value="">
+                                </button>
+                            </div>
                         </div>
                     </div>
                     <div class="modal fade" id="modal_tambah_shift" data-bs-backdrop="static" tabindex="-1">
@@ -274,7 +275,43 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
 <script type="text/javascript" src="{{ asset('assets/assets_users/js/daterangepicker.js') }}"></script>
-<script>
+<script type="text/javascript">
+    $(function() {
+
+        var start = moment().subtract(29, 'days');
+        var end = moment();
+        var lstart, lend;
+        var start_date = document.getElementById("start_date");
+        var end_date = document.getElementById("end_date");
+
+        function cb(start, end) {
+            $('#reportrange span').html(start.format('D MMMM YYYY') + ' - ' + end.format('D MMMM YYYY'));
+            lstart = moment($('#reportrange').data('daterangepicker').startDate).format('YYYY-MM-DD');
+            lend = moment($('#reportrange').data('daterangepicker').endDate).format('YYYY-MM-DD');
+            start_date.value = lstart;
+            end_date.value = lend;
+            // console.log(lstart, lend)
+            load_data(lstart, lend);
+        }
+
+        $('#reportrange').daterangepicker({
+            startDate: start,
+            endDate: end,
+            ranges: {
+                'Today': [moment(), moment()],
+                'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+                'Last 7 Days': [moment().subtract(6, 'days'), moment()],
+                'Last 30 Days': [moment().subtract(29, 'days'), moment()],
+                'This Month': [moment().startOf('month'), moment().endOf('month')],
+                'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+            }
+        }, cb);
+
+        cb(start, end);
+
+    });
+</script>
+<script type="text/javascript">
     let holding = window.location.pathname.split("/");
     let auth = '{{ Auth::user()->is_admin }}';
     if (auth == 'hrd') {
@@ -284,16 +321,17 @@
         var holding1 = holding[3];
         var holding2 = holding[4];
     }
-    $('#start_date').change(function() {
-        start_date = $(this).val();
-        end_date = $('#end_date').val();
-        $('#table_mapping_shift').DataTable().destroy();
-        load_data(start_date, end_date);
-    })
-    load_data();
+    end_date = $('#end_date').val();
+    start_date = $('#start_date').val();
+    // $('#start_date').change(function() {
+    // })
+    // load_data(start_date, end_date);
+    // console.log(start_date, end_date);
+    // load_data();
 
     function load_data(start_date = '', end_date = '') {
-        console.log(start_date);
+        $('#table_mapping_shift').DataTable().destroy();
+        // console.log(start_date);
         var table = $('#table_mapping_shift').DataTable({
             pageLength: 50,
             "scrollY": true,
@@ -302,6 +340,10 @@
             serverSide: true,
             ajax: {
                 url: "@if(Auth::user()->is_admin=='hrd'){{ url('hrd/karyawan/mapping_shift_datatable') }}@else{{ url('karyawan/mapping_shift_datatable') }}@endif" + '/' + holding1 + '/' + holding2,
+                data: {
+                    start_date: start_date,
+                    end_date: end_date,
+                }
             },
             columns: [{
                     data: "id",
@@ -341,8 +383,8 @@
 
             ],
             order: [
-                [2, 'DESC'],
-                [0, 'DESC']
+                [2, 'ASC'],
+                [0, 'ASC']
             ]
         });
     }
@@ -352,11 +394,12 @@
         let id = $(this).data('id');
         let user_id = $(this).data('userid');
         let tanggal = $(this).data("tanggal");
-        let date_now = new Date().toISOString().slice(0, 10);
+        let tgl = new Date(tanggal);
+        let date_now = new Date();
         let shift = $(this).data("shift");
         let holding = $(this).data("holding");
         let keterangan = $(this).data("keterangan");
-        console.log(date_now);
+        console.log(tgl.getTime(), date_now.getTime());
         $('#id_shift').val(id);
         $('#tanggal_update').val(tanggal);
         $('#keterangan_update').val(keterangan);
@@ -365,7 +408,7 @@
             // console.log($(this).val().trim());
             return $(this).val().trim() == shift
         }).prop('selected', true)
-        if (tanggal >= date_now) {
+        if (tgl.getTime() <= date_now.getTime()) {
             Swal.fire({
                 title: 'Info!',
                 text: 'Tidak Bisa Di Ubah Ketika Melebihi Tanggal Sekarang',
@@ -379,7 +422,7 @@
     $(document).on('click', '#btn_delete_mapping_shift', function() {
         var id = $(this).data('id');
         let holding = $(this).data("holding");
-        console.log(id);
+        // console.log(id);
         Swal.fire({
             title: 'Apakah kamu yakin?',
             text: "Kamu tidak dapat mengembalikan data ini",
@@ -418,39 +461,5 @@
 
     });
 </script>
-<script type="text/javascript">
-    $(function() {
 
-        var start = moment().subtract(29, 'days');
-        var end = moment();
-        var lstart, lend;
-        var start_date = document.getElementById("start_date");
-        var end_date = document.getElementById("end_date");
-
-        function cb(start, end) {
-            $('#reportrange span').html(start.format('D MMMM YYYY') + ' - ' + end.format('D MMMM YYYY'));
-            lstart = moment($('#reportrange').data('daterangepicker').startDate).format('YYYY-MM-DD');
-            lend = moment($('#reportrange').data('daterangepicker').endDate).format('YYYY-MM-DD');
-            start_date.value = lstart;
-            end_date.value = lend;
-            console.log(lstart, lend)
-        }
-
-        $('#reportrange').daterangepicker({
-            startDate: start,
-            endDate: end,
-            ranges: {
-                'Today': [moment(), moment()],
-                'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
-                'Last 7 Days': [moment().subtract(6, 'days'), moment()],
-                'Last 30 Days': [moment().subtract(29, 'days'), moment()],
-                'This Month': [moment().startOf('month'), moment().endOf('month')],
-                'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
-            }
-        }, cb);
-
-        cb(start, end);
-
-    });
-</script>
 @endsection

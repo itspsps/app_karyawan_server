@@ -1942,25 +1942,27 @@ class karyawanController extends Controller
     }
     public function mapping_shift_datatable(Request $request, $id)
     {
-        dd($request->all());
+        // dd($request->start_date);
         $holding = request()->segment(count(request()->segments()));
         // dd('ok');
-        $table = MappingShift::join('shifts', 'mapping_shifts.shift_id', 'shifts.id')
-            ->where('mapping_shifts.user_id', $id)
-            ->select('mapping_shifts.*', 'shifts.nama_shift', 'shifts.jam_masuk', 'shifts.jam_keluar')
-            ->orderBy('created_at', 'DESC')
-            // ->limit(100)
-            ->get();
-        // dd($table);
         if (request()->ajax()) {
-            return DataTables::of($table)
-                ->addColumn('option', function ($row) use ($holding) {
-                    $btn = '<button id="btn_edit_mapping_shift" type="button" data-id="' . $row->id . '" data-shift="' . $row->shift_id . '"  data-userid="' . $row->user_id . '" data-keterangan="' . $row->status_absen . '" data-tanggal="' . $row->tanggal_masuk . '" data-holding="' . $holding . '" class="btn btn-icon btn-warning waves-effect waves-light"><span class="tf-icons mdi mdi-pencil-outline"></span></button>';
-                    $btn = $btn . '<button id="btn_delete_mapping_shift" data-id="' . $row->id . '" data-holding="' . $holding . '" type="button" class="btn btn-icon btn-danger waves-effect waves-light"><span class="tf-icons mdi mdi-delete-outline"></span></button>';
-                    return $btn;
-                })
-                ->rawColumns(['option'])
-                ->make(true);
+            if (!empty($request->start_date)) {
+                $table = MappingShift::join('shifts', 'mapping_shifts.shift_id', 'shifts.id')
+                    ->where('mapping_shifts.user_id', $id)
+                    ->whereBetween('tanggal_masuk', [$request->start_date, $request->end_date])
+                    ->select('mapping_shifts.*', 'shifts.nama_shift', 'shifts.jam_masuk', 'shifts.jam_keluar')
+                    ->orderBy('tanggal_masuk', 'ASC')
+                    // ->limit(100)
+                    ->get();
+                return DataTables::of($table)
+                    ->addColumn('option', function ($row) use ($holding) {
+                        $btn = '<button id="btn_edit_mapping_shift" type="button" data-id="' . $row->id . '" data-shift="' . $row->shift_id . '"  data-userid="' . $row->user_id . '" data-keterangan="' . $row->status_absen . '" data-tanggal="' . $row->tanggal_masuk . '" data-holding="' . $holding . '" class="btn btn-icon btn-warning waves-effect waves-light"><span class="tf-icons mdi mdi-pencil-outline"></span></button>';
+                        $btn = $btn . '<button id="btn_delete_mapping_shift" data-id="' . $row->id . '" data-holding="' . $holding . '" type="button" class="btn btn-icon btn-danger waves-effect waves-light"><span class="tf-icons mdi mdi-delete-outline"></span></button>';
+                        return $btn;
+                    })
+                    ->rawColumns(['option'])
+                    ->make(true);
+            }
         }
     }
     public function get_departemen(Request $request)
@@ -2227,10 +2229,11 @@ class karyawanController extends Controller
             'tanggal_masuk' => $validatedData['tanggal_masuk'],
             'tanggal_pulang' => $validatedData['tanggal_pulang'],
         ]);
+        $user_karyawan = Karyawan::where('id', Auth::user()->karyawan_id)->first();
         ActivityLog::create([
             'user_id' => $request->user()->id,
             'activity' => 'update',
-            'description' => 'Mengubah shift karyawan ' . Auth::guard('web')->user()->name,
+            'description' => 'Mengubah shift karyawan ' . $user_karyawan->name,
         ]);
         $holding = request()->segment(count(request()->segments()));
         return redirect()->back()->with('success', 'Data Berhasil di Update');
