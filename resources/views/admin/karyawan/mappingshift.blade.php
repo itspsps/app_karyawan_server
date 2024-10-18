@@ -1,6 +1,7 @@
 @extends('admin.layouts.dashboard')
 @section('css')
 <link rel="stylesheet" href="https://cdn.datatables.net/2.0.5/css/dataTables.bootstrap5.css">
+<link rel="stylesheet" type="text/css" href="{{ asset('assets/assets_users/css/daterangepicker.css') }}" />
 <style type="text/css">
     .my-swal {
         z-index: X;
@@ -22,7 +23,7 @@
                         @if($karyawan->foto_karyawan == null)
                         <img src="{{asset('admin/assets/img/avatars/1.png')}}" alt="user-avatar" class="d-block w-px-120 h-px-120 rounded" id="template_foto_karyawan" />
                         @else
-                        <img src="https://karyawan.sumberpangan.store/laravel/storage/app/public/foto_karyawan/{{$karyawan->foto_karyawan}}" alt="user-avatar" class="d-block w-px-120 h-px-120 rounded" id="template_foto_karyawan" />
+                        <img src="https://hrd.sumberpangan.store:4430/storage/app/public/foto_karyawan/{{$karyawan->foto_karyawan}}" alt="user-avatar" class="d-block w-px-120 h-px-120 rounded" id="template_foto_karyawan" />
                         @endif
                         @if($karyawan->kategori=='Karyawan Bulanan')
                         <table>
@@ -111,7 +112,21 @@
                 <h4 class="card-header">Mapping Shift</h4>
                 <!-- Account -->
                 <div class="card-body">
-                    <button type="button" class="btn btn-sm btn-primary waves-effect waves-light mb-3" data-bs-toggle="modal" data-bs-target="#modal_tambah_shift"><i class="menu-icon tf-icons mdi mdi-plus"></i>Tambah&nbsp;Shift</button>
+                    <div class="row">
+                        <div class="col-md-3">
+                            <button type="button" class="btn btn-sm btn-primary waves-effect waves-light mb-3" data-bs-toggle="modal" data-bs-target="#modal_tambah_shift"><i class="menu-icon tf-icons mdi mdi-plus"></i>Tambah&nbsp;Shift</button>
+                        </div>
+                        <div class="col-md-9">
+                            <form action="{{ url('/rekap-data/'.$holding) }}">
+                                <div id="reportrange" style="background: #fff; cursor: pointer; padding: 5px 10px; width: 100%">
+                                    <i class="mdi mdi-calendar-filter-outline"></i>&nbsp;
+                                    <span></span> <i class="mdi mdi-menu-down"></i>
+                                    <input type="date" id="start_date" name="start_date" value="">
+                                    <input type="date" id="end_date" name="end_date" value="">
+                                </div>
+                            </form>
+                        </div>
+                    </div>
                     <div class="modal fade" id="modal_tambah_shift" data-bs-backdrop="static" tabindex="-1">
                         <div class="modal-dialog modal-dialog-scrollable ">
                             <form method="post" action="@if(Auth::user()->is_admin=='hrd'){{ url('/hrd/karyawan/shift/proses-tambah-shift/'.$holding) }}@else{{ url('/karyawan/shift/proses-tambah-shift/'.$holding) }}@endif" class=" modal-content" enctype="multipart/form-data">
@@ -257,6 +272,8 @@
 <script src="https://cdn.datatables.net/2.0.5/js/dataTables.js"></script>
 <script src="https://cdn.datatables.net/2.0.5/js/dataTables.bootstrap5.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
+<script type="text/javascript" src="{{ asset('assets/assets_users/js/daterangepicker.js') }}"></script>
 <script>
     let holding = window.location.pathname.split("/");
     let auth = '{{ Auth::user()->is_admin }}';
@@ -267,57 +284,68 @@
         var holding1 = holding[3];
         var holding2 = holding[4];
     }
-    var table = $('#table_mapping_shift').DataTable({
-        pageLength: 50,
-        "scrollY": true,
-        "scrollX": true,
-        processing: true,
-        serverSide: true,
-        ajax: {
-            url: "@if(Auth::user()->is_admin=='hrd'){{ url('hrd/karyawan/mapping_shift_datatable') }}@else{{ url('karyawan/mapping_shift_datatable') }}@endif" + '/' + holding1 + '/' + holding2,
-        },
-        columns: [{
-                data: "id",
+    $('#start_date').change(function() {
+        start_date = $(this).val();
+        end_date = $('#end_date').val();
+        $('#table_mapping_shift').DataTable().destroy();
+        load_data(start_date, end_date);
+    })
+    load_data();
 
-                render: function(data, type, row, meta) {
-                    return meta.row + meta.settings._iDisplayStart + 1;
-                }
+    function load_data(start_date = '', end_date = '') {
+        console.log(start_date);
+        var table = $('#table_mapping_shift').DataTable({
+            pageLength: 50,
+            "scrollY": true,
+            "scrollX": true,
+            processing: true,
+            serverSide: true,
+            ajax: {
+                url: "@if(Auth::user()->is_admin=='hrd'){{ url('hrd/karyawan/mapping_shift_datatable') }}@else{{ url('karyawan/mapping_shift_datatable') }}@endif" + '/' + holding1 + '/' + holding2,
             },
-            {
-                data: 'nama_shift',
-                name: 'nama_shift'
-            },
-            {
-                data: 'tanggal_masuk',
-                name: 'tanggal_masuk'
-            },
-            {
-                data: 'jam_masuk',
-                name: 'jam_masuk'
-            },
-            {
-                data: 'tanggal_pulang',
-                name: 'tanggal_pulang'
-            },
-            {
-                data: 'jam_keluar',
-                name: 'jam_keluar'
-            },
-            {
-                data: 'status_absen',
-                name: 'status_absen'
-            },
-            {
-                data: 'option',
-                name: 'option'
-            },
+            columns: [{
+                    data: "id",
 
-        ],
-        order: [
-            [2, 'DESC'],
-            [0, 'DESC']
-        ]
-    });
+                    render: function(data, type, row, meta) {
+                        return meta.row + meta.settings._iDisplayStart + 1;
+                    }
+                },
+                {
+                    data: 'nama_shift',
+                    name: 'nama_shift'
+                },
+                {
+                    data: 'tanggal_masuk',
+                    name: 'tanggal_masuk'
+                },
+                {
+                    data: 'jam_masuk',
+                    name: 'jam_masuk'
+                },
+                {
+                    data: 'tanggal_pulang',
+                    name: 'tanggal_pulang'
+                },
+                {
+                    data: 'jam_keluar',
+                    name: 'jam_keluar'
+                },
+                {
+                    data: 'status_absen',
+                    name: 'status_absen'
+                },
+                {
+                    data: 'option',
+                    name: 'option'
+                },
+
+            ],
+            order: [
+                [2, 'DESC'],
+                [0, 'DESC']
+            ]
+        });
+    }
 </script>
 <script>
     $(document).on("click", "#btn_edit_mapping_shift", function() {
@@ -387,6 +415,41 @@
                 })
             }
         });
+
+    });
+</script>
+<script type="text/javascript">
+    $(function() {
+
+        var start = moment().subtract(29, 'days');
+        var end = moment();
+        var lstart, lend;
+        var start_date = document.getElementById("start_date");
+        var end_date = document.getElementById("end_date");
+
+        function cb(start, end) {
+            $('#reportrange span').html(start.format('D MMMM YYYY') + ' - ' + end.format('D MMMM YYYY'));
+            lstart = moment($('#reportrange').data('daterangepicker').startDate).format('YYYY-MM-DD');
+            lend = moment($('#reportrange').data('daterangepicker').endDate).format('YYYY-MM-DD');
+            start_date.value = lstart;
+            end_date.value = lend;
+            console.log(lstart, lend)
+        }
+
+        $('#reportrange').daterangepicker({
+            startDate: start,
+            endDate: end,
+            ranges: {
+                'Today': [moment(), moment()],
+                'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+                'Last 7 Days': [moment().subtract(6, 'days'), moment()],
+                'Last 30 Days': [moment().subtract(29, 'days'), moment()],
+                'This Month': [moment().startOf('month'), moment().endOf('month')],
+                'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+            }
+        }, cb);
+
+        cb(start, end);
 
     });
 </script>

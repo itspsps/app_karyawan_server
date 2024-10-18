@@ -1942,6 +1942,7 @@ class karyawanController extends Controller
     }
     public function mapping_shift_datatable(Request $request, $id)
     {
+        dd($request->all());
         $holding = request()->segment(count(request()->segments()));
         // dd('ok');
         $table = MappingShift::join('shifts', 'mapping_shifts.shift_id', 'shifts.id')

@@ -1676,7 +1676,7 @@
                 $('#form_kuota_cuti').hide();
             } else if (id == 'Karyawan Bulanan') {
                 let lama = $('#lama_kontrak_kerja').val();
-                console.log(lama);
+                // console.log(lama);
                 if (lama == 'tetap') {
                     $('#form_tgl_mulai_kontrak').show();
                     $('#form_kuota_cuti').show();
@@ -1821,7 +1821,7 @@
         $('#foto_karyawan').change(function() {
 
             let reader = new FileReader();
-            console.log(reader);
+            // console.log(reader);
             reader.onload = (e) => {
 
                 $('#template_foto_karyawan').attr('src', e.target.result);
@@ -2041,17 +2041,17 @@
     });
     var file_cv = '{{$karyawan->file_cv}}';
     if (file_cv == '') {
-        console.log('ok');
+        // console.log('ok');
         $('#btn_modal_lihat').hide();
     } else {
-        console.log('ok1');
+        // console.log('ok1');
         $('#btn_modal_lihat').show();
     }
     $('#file_cv').change(function() {
 
 
         let reader = new FileReader();
-        console.log(reader);
+        // console.log(reader);
         reader.onload = (e) => {
             $('#lihat_file_cv').attr('src', e.target.result);
         }
@@ -2060,13 +2060,15 @@
 
     });
     $('#row_kategori_jabatan').hide();
-    if ($('#penempatan_kerja').val() == 'ALL SITES (SP, SPS, SIP)') {
+    if ($('#site_job').val() == 'ALL SITES (SP, SPS, SIP)') {
         $('#row_kategori_jabatan').show();
     }
     $(document).on("change", "#site_job", function() {
         var id = $(this).val();
         if (id == 'ALL SITES (SP, SPS, SIP)') {
             $('#row_kategori_jabatan').show();
+            var holding = $('#kategori_jabatan').val();
+            // console.log(holding);
         } else if (id == 'ALL SITES (SP)') {
             $('#kategori_jabatan').val('sp');
             $('#row_kategori_jabatan').hide();
@@ -2140,7 +2142,7 @@
             },
 
         })
-        console.log($(this).val());
+        // console.log($(this).val());
     });
     $(document).on("click", "#kategori_jabatan_sp", function() {
         var holding = $(this).val();
@@ -2204,7 +2206,7 @@
     });
     $(document).on("click", "#kategori_jabatan_sip", function() {
         var holding = $(this).val();
-        console.log(holding);
+        // console.log(holding);
         if (holding == 'sip') {
             $('#kategori_jabatan').val(holding);
             $.ajax({
@@ -2216,7 +2218,7 @@
                 cache: false,
 
                 success: function(msg) {
-                    console.log(msg);
+                    // console.log(msg);
                     // $('#id_divisi').html(msg);
                     $('#id_departemen').html(msg);
                     $('#id_departemen1').html(msg);
@@ -2546,7 +2548,7 @@
         let holding = '{{$holding}}';
         let url = "@if(Auth::user()->is_admin=='hrd'){{url('hrd/karyawan/atasan/get_jabatan')}}@else{{url('karyawan/atasan/get_jabatan')}}@endif" + "/" + holding;
         // console.log(divisi);
-        console.log(holding);
+        // console.log(holding);
         $.ajax({
             url: url,
             method: 'GET',
