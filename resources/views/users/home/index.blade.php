@@ -876,12 +876,12 @@
     </div>
 </div>
 @elseif ($status_absen_skrg->jam_absen != null && $status_absen_skrg->jam_pulang==null)
-<div class="container" style="margin-top: -5%;">
+<div class="container" style="margin-top: -5%; padding-bottom: 0; margin-bottom: 0;">
     <div class="col-lg-12">
         <div class="row">
-            <div class="col-6" style="height: 80px;">
+            <div class="col-6">
                 <a id="btn_klik" href="{{ url('/home/absen') }}" style="pointer-events: none">
-                    <div class="card card-bx card-content bg-primary" style="height: 100%; width: 100%;">
+                    <div class="card card-bx card-content bg-primary">
                         <div class="card-body" style="padding: 4px;">
                             <svg xmlns="http://www.w3.org/2000/svg" style="position: absolute; right: 0; bottom: 0;  margin-left: auto;  margin-right: 0;" xmlns:xlink="http://www.w3.org/1999/xlink" width="50" height="50" viewBox="0 0 24 24" version="1.1" class="svg-main-icon">
                                 <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
@@ -890,15 +890,16 @@
                                 </g>
                             </svg>
                             <div class="info" style="color: white;">
-                                <p>Sudah Absen <br> <span class="absen_title title">{{ $status_absen_skrg->jam_absen }}</span></p>
+                                <!-- <p>Sudah Absen <br> <span class="absen_title title">{{ $status_absen_skrg->jam_absen }}</span></p> -->
+                                <p>Sudah Absen</p>
                             </div>
                         </div>
                     </div>
                 </a>
             </div>
-            <div class="col-6" style="height: 80px;">
+            <div class="col-6">
                 <a id="btn_klik" href="{{ url('/home/absen') }}">
-                    <div class="card card-bx card-content bg-secondary" style="height: 100%; width: 100%;">
+                    <div class="card card-bx card-content bg-secondary" style="width: 100%;">
                         <div class="card-body" style="padding: 4px;">
                             <svg xmlns="http://www.w3.org/2000/svg" style="position: absolute; right: 0; bottom: 0;  margin-left: auto;  margin-right: 0;" xmlns:xlink="http://www.w3.org/1999/xlink" width="50" height="50" viewBox="0 0 24 24" version="1.1" class="svg-main-icon">
                                 <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
@@ -908,7 +909,7 @@
                             </svg>
                             <div class="info" style="color: white;">
                                 <p>Absen Pulang <br> <span class="absen_title title" id="jam_pulang"></span></p>
-                                <script>
+                                <!-- <script>
                                     setInterval(customClock, 500);
 
                                     function customClock() {
@@ -918,7 +919,7 @@
                                         var sec = (time.getSeconds() < 10 ? '0' : '') + time.getSeconds();
                                         document.getElementById('jam_pulang').innerHTML = hrs + ":" + min + ":" + sec;
                                     }
-                                </script>
+                                </script> -->
                             </div>
                         </div>
                     </div>

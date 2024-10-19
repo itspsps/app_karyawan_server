@@ -254,6 +254,7 @@
                                                     <option @if(old('strata_pendidikan')=='SEKOLAH MENENGAH PERTAMA (SMP)' ) selected @else @endif value="SEKOLAH MENENGAH PERTAMA (SMP)">SEKOLAH MENENGAH PERTAMA (SMP)</option>
                                                     <option @if(old('strata_pendidikan')=='SEKOLAH MENENGAH AKHIR (SMA)' ) selected @else @endif value="SEKOLAH MENENGAH AKHIR (SMA)">SEKOLAH MENENGAH AKHIR (SMA)</option>
                                                     <option @if(old('strata_pendidikan')=='SEKOLAH MENENGAH KEJURUAN (SMK)' ) selected @else @endif value="SEKOLAH MENENGAH KEJURUAN (SMK)">SEKOLAH MENENGAH KEJURUAN (SMK)</option>
+                                                    <option @if(old('strata_pendidikan')=='DIPLOMA I (D1)' ) selected @else @endif value="DIPLOMA I (D1)">DIPLOMA I (D1)</option>
                                                     <option @if(old('strata_pendidikan')=='DIPLOMA III (D3)' ) selected @else @endif value="DIPLOMA III (D3)">DIPLOMA III (D3)</option>
                                                     <option @if(old('strata_pendidikan')=='DIPLOMA IV (D4)' ) selected @else @endif value="DIPLOMA IV (D4)">DIPLOMA IV (D4)</option>
                                                     <option @if(old('strata_pendidikan')=='SARJANA (S1)' ) selected @else @endif value="SARJANA (S1)">SARJANA (S1)</option>

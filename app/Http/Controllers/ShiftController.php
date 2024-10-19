@@ -32,7 +32,7 @@ class ShiftController extends Controller
         if (request()->ajax()) {
             return DataTables::of($table)
                 ->addColumn('option', function ($row) use ($holding) {
-                    $btn = '<button id="btn_edit_shift" data-id="' . $row->id . '" data-shift="' . $row->nama_shift . '" data-jammasuk="' . $row->jam_masuk . '" data-jamkeluar="' . $row->jam_keluar . '" data-holding="' . $holding . '" type="button" class="btn btn-icon btn-warning waves-effect waves-light"><span class="tf-icons mdi mdi-pencil-outline"></span></button>';
+                    $btn = '<button id="btn_edit_shift" data-id="' . $row->id . '" data-shift="' . $row->nama_shift . '" data-jamkerja="' . $row->nama_jam_kerja . '" data-jammasuk="' . $row->jam_masuk . '" data-jamkeluar="' . $row->jam_keluar . '" data-holding="' . $holding . '" type="button" class="btn btn-icon btn-warning waves-effect waves-light"><span class="tf-icons mdi mdi-pencil-outline"></span></button>';
                     $btn = $btn . '<button type="button" id="btn_delete_shift" data-id="' . $row->id . '" data-holding="' . $holding . '" class="btn btn-icon btn-danger waves-effect waves-light"><span class="tf-icons mdi mdi-delete-outline"></span></button>';
                     return $btn;
                 })
@@ -118,17 +118,21 @@ class ShiftController extends Controller
         $validatedData = $request->validate([
             'nama_shift_update' => 'required|max:255',
             'jam_masuk_update' => 'required',
+            'jam_kerja_update' => 'required',
             'jam_keluar_update' => 'required'
         ]);
 
         Shift::where('id', $request->id_shift)->update([
             'nama_shift' => $validatedData['nama_shift_update'],
             'jam_masuk' => $validatedData['jam_masuk_update'],
+            'jam_kerja' => $validatedData['jam_kerja_update'],
             'jam_keluar' => $validatedData['jam_keluar_update'],
         ]);
         ActivityLog::create([
-            'user_id' => Auth::user()->id,
-            'activity' => 'update',
+            'user_id' => Auth::user()->karyawan_id,
+            'object_id' => $request->id_shift,
+            'kategory_activity' => 'SHIFT',
+            'activity' => 'Update Master Shift',
             'description' => 'Mengubah data master shift dengan nama shift ' . $request->nama_shift
         ]);
         return redirect('/shift/' . $holding)->with('success', 'Data Berhasil di Update');

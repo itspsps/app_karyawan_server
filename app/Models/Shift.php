@@ -11,7 +11,7 @@ class Shift extends Model
     use HasFactory, UuidTrait;
     public $incrementing = false;
     protected $guarded = ['id'];
-    protected $fillable = ['nama_shift', 'jam_masuk', 'jam_keluar'];
+    protected $fillable = ['nama_shift', 'jam_kerja', 'jam_masuk', 'jam_keluar'];
 
     public function MappingShift()
     {
