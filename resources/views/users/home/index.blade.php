@@ -74,7 +74,8 @@
         }
 
         .absen_masuk_context {
-            font-size: 12pt;
+            font-size: 11pt;
+            margin: 0;
         }
 
         .absen_masuk_text {
@@ -87,7 +88,8 @@
         }
 
         .absen_pulang_context {
-            font-size: 12pt;
+            font-size: 11pt;
+            margin: 0;
         }
 
         .absen_pulang_text {
@@ -196,6 +198,7 @@
 
         .absen_masuk_context {
             font-size: 10pt;
+            margin: 0;
         }
 
         .absen_masuk_text {
@@ -209,6 +212,7 @@
 
         .absen_pulang_context {
             font-size: 10pt;
+            margin: 0;
         }
 
         .absen_pulang_text {
@@ -267,6 +271,7 @@
 
         .absen_masuk_context {
             font-size: 10pt;
+            margin: 0;
         }
 
         .absen_masuk_text {
@@ -280,6 +285,7 @@
 
         .absen_pulang_context {
             font-size: 10pt;
+            margin: 0;
         }
 
         .absen_pulang_text {
@@ -303,6 +309,7 @@
 
         .absen_masuk_context {
             font-size: 10pt;
+            margin: 0;
         }
 
         .absen_masuk_text {
@@ -316,6 +323,7 @@
 
         .absen_pulang_context {
             font-size: 10pt;
+            margin: 0;
         }
 
         .absen_pulang_text {
@@ -373,6 +381,7 @@
 
         .absen_masuk_context {
             font-size: 8pt;
+            margin: 0;
         }
 
         .absen_masuk_text {
@@ -386,6 +395,7 @@
 
         .absen_pulang_context {
             font-size: 8pt;
+            margin: 0;
         }
 
         .absen_pulang_text {
@@ -442,6 +452,7 @@
 
         .absen_masuk_context {
             font-size: 8pt;
+            margin: 0;
         }
 
         .absen_masuk_text {
@@ -455,6 +466,7 @@
 
         .absen_pulang_context {
             font-size: 8pt;
+            margin: 0;
         }
 
         .absen_pulang_text {
@@ -1001,7 +1013,7 @@
                             </div>
                             <div class="col-9">
                                 <div class="dz-inner">
-                                    <span class="dz-title absen_masuk_context">&nbsp;Absen&nbsp;Masuk</span>
+                                    <p class="dz-title absen_masuk_context">&nbsp;Absen&nbsp;Masuk</p>
                                 </div>
                                 @if ($status_absen_skrg->jam_absen == null && $status_absen_skrg->jam_absen=="")
                                 -
@@ -1035,7 +1047,7 @@
                             </div>
                             <div class="col-8">
                                 <div class="dz-inner">
-                                    <span class="dz-title absen_pulang_context">&nbsp;Absen&nbsp;Pulang</span>
+                                    <p class="dz-title absen_pulang_context">&nbsp;Absen&nbsp;Pulang</p>
                                 </div>
                                 @if ($status_absen_skrg->jam_pulang == null && $status_absen_skrg->jam_pulang=="")
                                 -
