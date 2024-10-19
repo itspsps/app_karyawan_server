@@ -74,7 +74,7 @@
         }
 
         .absen_masuk_context {
-            font-size: 11pt;
+            font-size: 12pt;
         }
 
         .absen_masuk_text {
@@ -87,7 +87,7 @@
         }
 
         .absen_pulang_context {
-            font-size: 11pt;
+            font-size: 12pt;
         }
 
         .absen_pulang_text {
@@ -97,27 +97,6 @@
         .absen_masuk_icon {
             width: 20px;
             height: 20px;
-        }
-
-        .absen_masuk_context {
-            font-size: 8pt;
-        }
-
-        .absen_masuk_text {
-            font-size: 8pt;
-        }
-
-        .absen_pulang_icon {
-            width: 20px;
-            height: 20px;
-        }
-
-        .absen_pulang_context {
-            font-size: 8pt;
-        }
-
-        .absen_pulang_text {
-            font-size: 8pt;
         }
 
         .absen_title {

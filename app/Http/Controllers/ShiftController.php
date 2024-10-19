@@ -128,8 +128,13 @@ class ShiftController extends Controller
             'jam_kerja' => $validatedData['jam_kerja_update'],
             'jam_keluar' => $validatedData['jam_keluar_update'],
         ]);
+        if (Auth::user()->is_admin == 'user') {
+            $user_activity = Auth::user()->karyawan_id;
+        } else {
+            $user_activity = Auth::user()->id;
+        }
         ActivityLog::create([
-            'user_id' => Auth::user()->karyawan_id,
+            'user_id' => $user_activity,
             'object_id' => $request->id_shift,
             'kategory_activity' => 'SHIFT',
             'activity' => 'Update Master Shift',
