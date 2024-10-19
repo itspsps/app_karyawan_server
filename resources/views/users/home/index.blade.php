@@ -96,11 +96,6 @@
             font-size: 8pt;
         }
 
-        .absen_masuk_icon {
-            width: 20px;
-            height: 20px;
-        }
-
         .absen_title {
             font-size: 23pt;
             text-align: center;
@@ -1016,7 +1011,7 @@
                                     <p class="dz-title absen_masuk_context">&nbsp;Absen&nbsp;Masuk</p>
                                 </div>
                                 @if ($status_absen_skrg->jam_absen == null && $status_absen_skrg->jam_absen=="")
-                                -
+                                &nbsp;-
                                 @else
                                 <span class="badge light badge-sm badge-success absen_masuk_text">
                                     &nbsp;{{$status_absen_skrg->jam_absen}}&nbsp;WIB
@@ -1045,12 +1040,12 @@
                                     </svg>
                                 </div>
                             </div>
-                            <div class="col-8">
+                            <div class="col-9">
                                 <div class="dz-inner">
                                     <p class="dz-title absen_pulang_context">&nbsp;Absen&nbsp;Pulang</p>
                                 </div>
                                 @if ($status_absen_skrg->jam_pulang == null && $status_absen_skrg->jam_pulang=="")
-                                -
+                                &nbsp;-
                                 @else
                                 <span class="badge w-80 light badge-success absen_pulang_text">
                                     &nbsp;{{$status_absen_skrg->jam_pulang}}&nbsp;WIB
