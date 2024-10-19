@@ -255,7 +255,7 @@ class HomeUserController extends Controller
     public function savefaceid(Request $request)
     {
         // dd($request->all());
-        $query = Karyawan::where('id', $request->id_user)->first();
+        $query = Karyawan::where('id', $request->karyawan_id)->first();
         $query->face_id = $request->faceid;
         $query->update();
         if ($query) {
@@ -1150,7 +1150,7 @@ class HomeUserController extends Controller
                             $image_type     = $image_type_aux[1];
                             $image_base64   = base64_decode($image_parts[1]);
                             $uniqid         = date('y-m-d') . '-' . uniqid();
-                            $file           = $uniqid . '.' . $image_type;
+                            $file           = $folderPath . $uniqid . '.' . $image_type;
                             file_put_contents($file, $image_base64);
                             $data                   = new Izin();
                             $data->user_id          = $request->id_user;
@@ -1210,10 +1210,12 @@ class HomeUserController extends Controller
                             $update->update();
 
                             ActivityLog::create([
-                                'user_id' => $user_karyawan->id,
-                                'activity' => 'tambah',
-                                'description' => 'Absen Masuk Pada Tanggal ' . $tanggal,
-                                'status_absen_skrg' => MappingShift::where('user_id', $user_karyawan->id)->where('tanggal_masuk', date('Y-m-d'))->get(),
+                                'user_id' => Auth::user()->karyawan_id,
+                                'object_id' => $update->id,
+                                'kategory_activity' => 'ABSENSI',
+                                'activity' => 'Absen Masuk',
+                                'description' => 'Absen Masuk Tanggal ' . $tanggal . ' Jam ' . $update->jam_absen . ' Keterangan ' . $update->keterangan_absensi,
+                                'read_status' => 0
                             ]);
                             $request->session()->flash('absenmasuksuccess');
                             return redirect('home');
@@ -1250,7 +1252,7 @@ class HomeUserController extends Controller
                         $image_type     = $image_type_aux[1];
                         $image_base64   = base64_decode($image_parts[1]);
                         $uniqid         = date('y-m-d') . '-' . uniqid();
-                        $file           = $uniqid . '.' . $image_type;
+                        $file           = $folderPath . $uniqid . '.' . $image_type;
                         file_put_contents($file, $image_base64);
                         $data                   = new Izin();
                         $data->user_id          = $request->id_user;
@@ -1313,10 +1315,12 @@ class HomeUserController extends Controller
                         $update->update();
 
                         ActivityLog::create([
-                            'user_id' => $user_karyawan->id,
-                            'activity' => 'tambah',
-                            'description' => 'Absen Masuk Pada Tanggal ' . $tanggal,
-                            'status_absen_skrg' => MappingShift::where('user_id', $user_karyawan->id)->where('tanggal_masuk', date('Y-m-d'))->get(),
+                            'user_id' => Auth::user()->karyawan_id,
+                            'object_id' => $update->id,
+                            'kategory_activity' => 'ABSENSI',
+                            'activity' => 'Absen Masuk',
+                            'description' => 'Absen Masuk Tanggal ' . $tanggal . ' Jam ' . $update->jam_absen . ' Keterangan ' . $update->keterangan_absensi,
+                            'read_status' => 0
                         ]);
 
                         $request->session()->flash('absenmasuksuccess');
@@ -1973,10 +1977,12 @@ class HomeUserController extends Controller
                         $update->update();
 
                         ActivityLog::create([
-                            'user_id' => $user_karyawan->id,
-                            'activity' => 'tambah',
-                            'description' => 'Absen Masuk Pada Tanggal ' . $tanggal,
-                            'status_absen_skrg' => MappingShift::where('user_id', Auth::user()->karyawan_id)->where('tanggal_masuk', $tglskrg)->get(),
+                            'user_id' => Auth::user()->karyawan_id,
+                            'object_id' => $update->id,
+                            'kategory_activity' => 'ABSENSI',
+                            'activity' => 'Absen Masuk',
+                            'description' => 'Absen Masuk Tanggal ' . $tanggal . ' Jam ' . $update->jam_absen . ' Keterangan ' . $update->keterangan_absensi,
+                            'read_status' => 0
                         ]);
                         $request->session()->flash('absen_tidak_masuk');
                         return redirect('/home');
@@ -1999,9 +2005,11 @@ class HomeUserController extends Controller
 
                     ActivityLog::create([
                         'user_id' => Auth::user()->karyawan_id,
-                        'activity' => 'tambah',
-                        'description' => 'Absen Masuk Pada Tanggal ' . $tanggal,
-                        'status_absen_skrg' => MappingShift::where('user_id', Auth::user()->karyawan_id)->where('tanggal_masuk', $tglskrg)->get(),
+                        'object_id' => $update->id,
+                        'kategory_activity' => 'ABSENSI',
+                        'activity' => 'Absen Masuk',
+                        'description' => 'Absen Masuk Tanggal ' . $tanggal . ' Jam ' . $update->jam_absen . ' Keterangan ' . $update->keterangan_absensi,
+                        'read_status' => 0
                     ]);
 
                     // dd($tglskrg);
@@ -2765,7 +2773,7 @@ class HomeUserController extends Controller
                     $image_type     = $image_type_aux[1];
                     $image_base64   = base64_decode($image_parts[1]);
                     $uniqid         = date('y-m-d') . '-' . uniqid();
-                    $file           = $uniqid . '.' . $image_type;
+                    $file           = $folderPath . $uniqid . '.' . $image_type;
                     file_put_contents($file, $image_base64);
                     $data                   = new Izin();
                     $data->user_id          = $request->id_user;
@@ -2858,7 +2866,7 @@ class HomeUserController extends Controller
                 $image_type     = $image_type_aux[1];
                 $image_base64   = base64_decode($image_parts[1]);
                 $uniqid         = date('y-m-d') . '-' . uniqid();
-                $file           = $uniqid . '.' . $image_type;
+                $file           = $folderPath . $uniqid . '.' . $image_type;
                 file_put_contents($file, $image_base64);
                 // dd($request->all());
                 $data                   = new Izin();

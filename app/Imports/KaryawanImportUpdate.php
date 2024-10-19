@@ -96,8 +96,8 @@ class KaryawanImportUpdate implements ToCollection, WithStartRow
             if ($row[9] == NULL || $row[9] == 0) {
                 $tgl_lahir = NULL;
             } else {
-                $tgl_lahir = Carbon::parse($row[9])->format('Y-m-d');
-                // $tgl_lahir = is_numeric($row[9]) ? Carbon::parse(\PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($row[9]))->format('Y-m-d') : Carbon::createFromFormat('d/m/Y', $row[9])->format('Y-m-d');
+                // $tgl_lahir = Carbon::parse($row[9])->format('Y-m-d');
+                $tgl_lahir = is_numeric($row[9]) ? Carbon::parse(\PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($row[9]))->format('Y-m-d') : Carbon::createFromFormat('d/m/Y', $row[9])->format('Y-m-d');
             }
             // dd($tgl_lahir);
             // KELAMIN
@@ -157,7 +157,7 @@ class KaryawanImportUpdate implements ToCollection, WithStartRow
             if ($row[15] == NULL || $row[15] == '0') {
                 $provinsi = NULL;
             } else {
-                $get_provinsi = Province::where('name', $row[15])->value('code');
+                $get_provinsi = Provincies::where('name', $row[15])->value('code');
                 if ($get_provinsi == NULL) {
                     $provinsi = NULL;
                 } else {
@@ -238,7 +238,7 @@ class KaryawanImportUpdate implements ToCollection, WithStartRow
             } else {
                 $rw = $row[20];
             }
-            $detail_alamat = Province::where('code', $provinsi)->value('name') . ', ' . Cities::where('code', $kabupaten)->value('name') . ', ' . District::where('code', $kecamatan)->value('name') . ', ' . Village::where('code', $desa)->value('name') . ', RT: ' . $rt . ', RW: ' . $rw;
+            $detail_alamat = Provincies::where('code', $provinsi)->value('name') . ', ' . Cities::where('code', $kabupaten)->value('name') . ', ' . District::where('code', $kecamatan)->value('name') . ', ' . Village::where('code', $desa)->value('name') . ', RT: ' . $rt . ', RW: ' . $rw;
             if ($row[21] == NULL || $row[21] == '0') {
                 $alamat = NULL;
             } else {
@@ -249,7 +249,7 @@ class KaryawanImportUpdate implements ToCollection, WithStartRow
                 $status_alamat = 'ya';
                 $provinsi_domisili = NULL;
             } else {
-                $get_provinsi_domisili = Province::where('name', $row[22])->value('code');
+                $get_provinsi_domisili = Provincies::where('name', $row[22])->value('code');
                 if ($get_provinsi_domisili == NULL) {
                     $status_alamat = 'ya';
                     $provinsi_domisili = NULL;
@@ -332,7 +332,7 @@ class KaryawanImportUpdate implements ToCollection, WithStartRow
             } else {
                 $rw_domisili = $row[27];
             }
-            $detail_alamat_domisili = Province::where('code', $provinsi_domisili)->value('name') . ', ' . Cities::where('code', $kabupaten_domisili)->value('name') . ', ' . District::where('code', $kecamatan_domisili)->value('name') . ', ' . Village::where('code', $desa_domisili)->value('name') . ', RT: ' . $rt_domisili . ', RW: ' . $rw_domisili;
+            $detail_alamat_domisili = Provincies::where('code', $provinsi_domisili)->value('name') . ', ' . Cities::where('code', $kabupaten_domisili)->value('name') . ', ' . District::where('code', $kecamatan_domisili)->value('name') . ', ' . Village::where('code', $desa_domisili)->value('name') . ', RT: ' . $rt_domisili . ', RW: ' . $rw_domisili;
             if ($row[28] == NULL || $row[28] == '0') {
                 $alamat_domisili = NULL;
             } else {
@@ -548,6 +548,9 @@ class KaryawanImportUpdate implements ToCollection, WithStartRow
                 // 10
                 "gender"                                        => $kelamin,
                 "status_nikah"                                  => $status_nikah,
+                "strata_pendidikan"                             => $strata_pendidikan,
+                "instansi_pendidikan"                           => $instansi_pendidikan,
+                "jurusan_akademik"                              => $jurusan_akademik,
                 "status_alamat"                                 => $status_alamat,
                 "provinsi_domisili"                             => $provinsi_domisili,
                 "kabupaten_domisili"                            => $kabupaten_domisili,

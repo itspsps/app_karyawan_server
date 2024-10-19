@@ -49,13 +49,13 @@
                                     <div class="card-body">
                                         <div class="media media-80">
                                             @if($dataizin->User->foto_karyawan != '')
-                                            <img src="https://karyawan.sumberpangan.store/laravel/storage/app/public/foto_karyawan/{{$dataizin->User->foto_karyawan}}" alt="/">
+                                            <img src="https://hrd.sumberpangan.store:4430/storage/app/public/foto_karyawan/{{$dataizin->User->foto_karyawan}}" alt="/">
                                             @else
                                             <img src="{{ asset('assets/assets_users/images/users/user_icon.jpg') }}" alt="/">
                                             @endif
                                         </div>
                                         <div class="card-info">
-                                            <h6 class="title">{{ $dataizin->name }}</h6>
+                                            <h6 class="title">{{ $dataizin->fullname }}</h6>
                                             <span class="">{{ $dataizin->izin }}</span>
                                             <div class="d-flex align-items-center">
                                                 @if ($dataizin->status_izin == 1)
@@ -83,7 +83,7 @@
                                     <div class="card-body">
                                         <div class="media media-80">
                                             @if($datacuti->foto_karyawan!='')
-                                            <img src="https://karyawan.sumberpangan.store/laravel/storage/app/public/foto_karyawan/{{$datacuti->foto_karyawan}}" alt="/">
+                                            <img src="https://hrd.sumberpangan.store:4430/storage/app/public/foto_karyawan/{{$datacuti->foto_karyawan}}" alt="/">
                                             @else
                                             <img src="{{ asset('assets/assets_users/images/users/user_icon.jpg') }}" alt="/">
                                             @endif
@@ -115,7 +115,7 @@
                                     <div class="card-body">
                                         <div class="media media-80">
                                             @if($datacuti->foto_karyawan!='')
-                                            <img src="https://karyawan.sumberpangan.store/laravel/storage/app/public/foto_karyawan/{{$datacuti->foto_karyawan}}" alt="/">
+                                            <img src="https://hrd.sumberpangan.store:4430/storage/app/public/foto_karyawan/{{$datacuti->foto_karyawan}}" alt="/">
                                             @else
                                             <img src="{{ asset('assets/assets_users/images/users/user_icon.jpg') }}" alt="/">
                                             @endif

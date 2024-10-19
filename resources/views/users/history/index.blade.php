@@ -1,5 +1,15 @@
 @extends('users.layouts.main')
 @section('title') APPS | KARYAWAN - SP @endsection
+
+@section('css')
+<style>
+    .nav-fill {
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        overflow-y: hidden;
+    }
+</style>
+@endsection
 @section('content')
 <div class="fixed-content p-0" style=" border-radius: 10px; margin-top: 0%;box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19); ">
     <div class=" container" style="margin-top: -5%;">
@@ -29,122 +39,103 @@
             </div>
         </div>
         <div class="col-lg-12">
-            <div class="notification-content" style="overflow: auto; height: 100%;">
-                <a href="profile.html">
-                    <div class="notification" style="box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.2), 0 3px 10px 0 rgba(0, 0, 0, 0.1);">
-                        <h6>Izin Cuti</h6>
-                        <p>Acara Keluarga</p>
-                        <div class="notification-footer">
-                            <span>
-                                <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M6 11C8.76142 11 11 8.76142 11 6C11 3.23858 8.76142 1 6 1C3.23858 1 1 3.23858 1 6C1 8.76142 3.23858 11 6 11Z" stroke="#787878" stroke-linecap="round" stroke-linejoin="round"></path>
-                                    <path d="M6 3V6L8 7" stroke="#787878" stroke-linecap="round" stroke-linejoin="round"></path>
-                                </svg>
-                                10h ago
-                            </span>
-                            <p class="mb-0">Mark as read</p>
+            <div class="card" style="margin-top: 0%;">
+                <nav>
+                    <div class="nav nav-pills nav-fill" id="nav-tab" role="tablist">
+                        <button class="nav-link active" id="nav-absen-tab" data-bs-toggle="tab" data-bs-target="#nav-absen" type="button" role="tab" aria-controls="nav-absen" aria-selected="true">Absensi</button>
+                        <button class="nav-link" id="nav-izin-tab" data-bs-toggle="tab" data-bs-target="#nav-izin" type="button" role="tab" aria-controls="nav-izin" aria-selected="true">Izin</button>
+                        <button class="nav-link" id="nav-cuti-tab" data-bs-toggle="tab" data-bs-target="#nav-cuti" type="button" role="tab" aria-controls="nav-cuti" aria-selected="false">Cuti</button>
+                        <button class="nav-link" id="nav-penugasan-tab" data-bs-toggle="tab" data-bs-target="#nav-penugasan" type="button" role="tab" aria-controls="nav-penugasan" aria-selected="false">Penugasan</button>
+                    </div>
+                </nav>
+                <div class="tab-content" id="nav-tabContent" style="margin-top: 2%;">
+                    <div class="tab-pane fade show active" id="nav-absen" role="tabpanel" aria-labelledby="nav-absen-tab">
+                        <div class="notification-content" style="overflow: auto; height: 100%;">
+                            @foreach($history_absensi as $history_absensi)
+                            <a href="profile.html">
+                                <div class="notification" style="box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.2), 0 3px 10px 0 rgba(0, 0, 0, 0.1);">
+                                    <h6>Izin Cuti</h6>
+                                    <p>Acara Keluarga</p>
+                                    <div class="notification-footer">
+                                        <span>
+                                            <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                <path d="M6 11C8.76142 11 11 8.76142 11 6C11 3.23858 8.76142 1 6 1C3.23858 1 1 3.23858 1 6C1 8.76142 3.23858 11 6 11Z" stroke="#787878" stroke-linecap="round" stroke-linejoin="round"></path>
+                                                <path d="M6 3V6L8 7" stroke="#787878" stroke-linecap="round" stroke-linejoin="round"></path>
+                                            </svg>
+                                            10h ago
+                                        </span>
+                                        <p class="mb-0">Mark as read</p>
+                                    </div>
+                                </div>
+                            </a>
+                            @endforeach
                         </div>
                     </div>
-                </a>
-                <a href="profile.html">
-                    <div class="notification" style="box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.2), 0 3px 10px 0 rgba(0, 0, 0, 0.1);">
-                        <h6>Izin Cuti</h6>
-                        <p>Acara Keluarga</p>
-                        <div class="notification-footer">
-                            <span>
-                                <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M6 11C8.76142 11 11 8.76142 11 6C11 3.23858 8.76142 1 6 1C3.23858 1 1 3.23858 1 6C1 8.76142 3.23858 11 6 11Z" stroke="#787878" stroke-linecap="round" stroke-linejoin="round"></path>
-                                    <path d="M6 3V6L8 7" stroke="#787878" stroke-linecap="round" stroke-linejoin="round"></path>
-                                </svg>
-                                10h ago
-                            </span>
-                            <p class="mb-0">Mark as read</p>
+                    <div class="tab-pane fade show" id="nav-izin" role="tabpanel" aria-labelledby="nav-izin-tab">
+                        <div class="notification-content" style="overflow: auto; height: 100%;">
+                            <a href="profile.html">
+                                <div class="notification" style="box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.2), 0 3px 10px 0 rgba(0, 0, 0, 0.1);">
+                                    <h6>Izin Cuti</h6>
+                                    <p>Acara Keluarga</p>
+                                    <div class="notification-footer">
+                                        <span>
+                                            <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                <path d="M6 11C8.76142 11 11 8.76142 11 6C11 3.23858 8.76142 1 6 1C3.23858 1 1 3.23858 1 6C1 8.76142 3.23858 11 6 11Z" stroke="#787878" stroke-linecap="round" stroke-linejoin="round"></path>
+                                                <path d="M6 3V6L8 7" stroke="#787878" stroke-linecap="round" stroke-linejoin="round"></path>
+                                            </svg>
+                                            10h ago
+                                        </span>
+                                        <p class="mb-0">Mark as read</p>
+                                    </div>
+                                </div>
+                            </a>
                         </div>
                     </div>
-                </a>
-                <a href="profile.html">
-                    <div class="notification" style="box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.2), 0 3px 10px 0 rgba(0, 0, 0, 0.1);">
-                        <h6>Izin Cuti</h6>
-                        <p>Acara Keluarga</p>
-                        <div class="notification-footer">
-                            <span>
-                                <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M6 11C8.76142 11 11 8.76142 11 6C11 3.23858 8.76142 1 6 1C3.23858 1 1 3.23858 1 6C1 8.76142 3.23858 11 6 11Z" stroke="#787878" stroke-linecap="round" stroke-linejoin="round"></path>
-                                    <path d="M6 3V6L8 7" stroke="#787878" stroke-linecap="round" stroke-linejoin="round"></path>
-                                </svg>
-                                10h ago
-                            </span>
-                            <p class="mb-0">Mark as read</p>
+                    <div class="tab-pane fade show" id="nav-cuti" role="tabpanel" aria-labelledby="nav-cuti-tab">
+                        <div class="notification-content" style="overflow: auto; height: 100%;">
+                            <a href="profile.html">
+                                <div class="notification" style="box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.2), 0 3px 10px 0 rgba(0, 0, 0, 0.1);">
+                                    <h6>Izin Cuti</h6>
+                                    <p>Acara Keluarga</p>
+                                    <div class="notification-footer">
+                                        <span>
+                                            <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                <path d="M6 11C8.76142 11 11 8.76142 11 6C11 3.23858 8.76142 1 6 1C3.23858 1 1 3.23858 1 6C1 8.76142 3.23858 11 6 11Z" stroke="#787878" stroke-linecap="round" stroke-linejoin="round"></path>
+                                                <path d="M6 3V6L8 7" stroke="#787878" stroke-linecap="round" stroke-linejoin="round"></path>
+                                            </svg>
+                                            10h ago
+                                        </span>
+                                        <p class="mb-0">Mark as read</p>
+                                    </div>
+                                </div>
+                            </a>
                         </div>
                     </div>
-                </a>
-                <a href="profile.html">
-                    <div class="notification">
-                        <h6>Izin Cuti</h6>
-                        <p>Acara Keluarga</p>
-                        <div class="notification-footer">
-                            <span>
-                                <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M6 11C8.76142 11 11 8.76142 11 6C11 3.23858 8.76142 1 6 1C3.23858 1 1 3.23858 1 6C1 8.76142 3.23858 11 6 11Z" stroke="#787878" stroke-linecap="round" stroke-linejoin="round"></path>
-                                    <path d="M6 3V6L8 7" stroke="#787878" stroke-linecap="round" stroke-linejoin="round"></path>
-                                </svg>
-                                10h ago
-                            </span>
-                            <p class="mb-0">Mark as read</p>
+                    <div class="tab-pane fade show" id="nav-penugasan" role="tabpanel" aria-labelledby="nav-cuti-tab">
+                        <div class="notification-content" style="overflow: auto; height: 100%;">
+                            <a href="profile.html">
+                                <div class="notification" style="box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.2), 0 3px 10px 0 rgba(0, 0, 0, 0.1);">
+                                    <h6>Izin Cuti</h6>
+                                    <p>Acara Keluarga</p>
+                                    <div class="notification-footer">
+                                        <span>
+                                            <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                <path d="M6 11C8.76142 11 11 8.76142 11 6C11 3.23858 8.76142 1 6 1C3.23858 1 1 3.23858 1 6C1 8.76142 3.23858 11 6 11Z" stroke="#787878" stroke-linecap="round" stroke-linejoin="round"></path>
+                                                <path d="M6 3V6L8 7" stroke="#787878" stroke-linecap="round" stroke-linejoin="round"></path>
+                                            </svg>
+                                            10h ago
+                                        </span>
+                                        <p class="mb-0">Mark as read</p>
+                                    </div>
+                                </div>
+                            </a>
                         </div>
                     </div>
-                </a>
-                <a href="profile.html">
-                    <div class="notification">
-                        <h6>Izin Cuti</h6>
-                        <p>Acara Keluarga</p>
-                        <div class="notification-footer">
-                            <span>
-                                <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M6 11C8.76142 11 11 8.76142 11 6C11 3.23858 8.76142 1 6 1C3.23858 1 1 3.23858 1 6C1 8.76142 3.23858 11 6 11Z" stroke="#787878" stroke-linecap="round" stroke-linejoin="round"></path>
-                                    <path d="M6 3V6L8 7" stroke="#787878" stroke-linecap="round" stroke-linejoin="round"></path>
-                                </svg>
-                                1-02-2024
-                            </span>
-                            <p class="mb-0">Mark as read</p>
-                        </div>
-                    </div>
-                </a>
-                <a href="profile.html">
-                    <div class="notification">
-                        <h6>Izin Cuti</h6>
-                        <p>Acara Keluarga</p>
-                        <div class="notification-footer">
-                            <span>
-                                <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M6 11C8.76142 11 11 8.76142 11 6C11 3.23858 8.76142 1 6 1C3.23858 1 1 3.23858 1 6C1 8.76142 3.23858 11 6 11Z" stroke="#787878" stroke-linecap="round" stroke-linejoin="round"></path>
-                                    <path d="M6 3V6L8 7" stroke="#787878" stroke-linecap="round" stroke-linejoin="round"></path>
-                                </svg>
-                                14-02-2024
-                            </span>
-                            <p class="mb-0">Mark as read</p>
-                        </div>
-                    </div>
-                </a>
-                <a href="profile.html">
-                    <div class="notification">
-                        <h6>Izin Cuti</h6>
-                        <p>Acara Keluarga</p>
-                        <div class="notification-footer">
-                            <span>
-                                <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M6 11C8.76142 11 11 8.76142 11 6C11 3.23858 8.76142 1 6 1C3.23858 1 1 3.23858 1 6C1 8.76142 3.23858 11 6 11Z" stroke="#787878" stroke-linecap="round" stroke-linejoin="round"></path>
-                                    <path d="M6 3V6L8 7" stroke="#787878" stroke-linecap="round" stroke-linejoin="round"></path>
-                                </svg>
-                                28-02-2024
-                            </span>
-                            <p class="mb-0">Mark as read</p>
-                        </div>
-                    </div>
-                </a>
+                </div>
             </div>
         </div>
     </div>
+</div>
 </div>
 @endsection
 @section('js')

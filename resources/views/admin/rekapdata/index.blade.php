@@ -86,7 +86,7 @@
                                         </div>
                                     </div>
                                     <div class="row g-2 mt-2">
-                                        <a href="{{asset('')}}" type="button" download="" class="btn btn-sm btn-primary"> Download Format Excel</a>
+                                        <a href="" type="button" download="" class="btn btn-sm btn-primary"> Download Format Excel</a>
                                     </div>
                                 </div>
                                 <div class="modal-footer">
@@ -218,7 +218,7 @@
                                         <tr>
                                             <th>Tepat&nbsp;Waktu</th>
                                             <th>Telat&nbsp;Hadir&nbsp;<span>(>&nbsp;15&nbsp;Menit)</span></th>
-                                            <th>Telat&nbsp;Hadir&nbsp;<span>(<&nbsp;15&nbsp;Menit)</span>
+                                            <th>Telat&nbsp;Hadir&nbsp;<span>(<&nbsp;15&nbsp;Menit)< /span>
                                             </th>
                                             <th>Izin</th>
                                             <th>Cuti</th>

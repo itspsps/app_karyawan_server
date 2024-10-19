@@ -156,7 +156,7 @@
             <tr style="font-weight: bold;">
                 <td style="text-align: center;">
                     <img src="{{url('https://hrd.sumberpangan.store:4430/public/signature/izin/'.$data_izin->ttd_pengajuan.'.png') }}" width="100%" alt="">
-                    <p>({{$data_izin->name}})</p>
+                    <p>({{$data_izin->fullname}})</p>
                 </td>
                 <td style="text-align: center;">
                     <img src="{{url('https://hrd.sumberpangan.store:4430/public/signature/izin/'.$data_izin->ttd_atasan.'.png') }}" width="100%" alt="">
