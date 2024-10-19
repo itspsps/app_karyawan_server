@@ -2635,6 +2635,7 @@ class HomeUserController extends Controller
                                 'title'             => 'Tambah Izin Karyawan',
                                 'data_user'         => $user,
                                 'getUserAtasan'     => $getUserAtasan,
+                                'user_karyawan'     => $user_karyawan,
                                 'user'              => $user,
                                 'jam_kerja'       => $jam_kerja,
                                 'jam_min_plg_cpt'       => $jam_min_plg_cpt,

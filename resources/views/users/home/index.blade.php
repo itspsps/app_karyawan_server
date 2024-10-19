@@ -68,6 +68,58 @@
             font-size: 12pt;
         }
 
+        .absen_masuk_icon {
+            width: 30px;
+            height: 30px;
+        }
+
+        .absen_masuk_context {
+            font-size: 11pt;
+        }
+
+        .absen_masuk_text {
+            font-size: 8pt;
+        }
+
+        .absen_pulang_icon {
+            width: 30px;
+            height: 30px;
+        }
+
+        .absen_pulang_context {
+            font-size: 11pt;
+        }
+
+        .absen_pulang_text {
+            font-size: 8pt;
+        }
+
+        .absen_masuk_icon {
+            width: 20px;
+            height: 20px;
+        }
+
+        .absen_masuk_context {
+            font-size: 8pt;
+        }
+
+        .absen_masuk_text {
+            font-size: 8pt;
+        }
+
+        .absen_pulang_icon {
+            width: 20px;
+            height: 20px;
+        }
+
+        .absen_pulang_context {
+            font-size: 8pt;
+        }
+
+        .absen_pulang_text {
+            font-size: 8pt;
+        }
+
         .absen_title {
             font-size: 23pt;
             text-align: center;
@@ -158,6 +210,32 @@
             margin-top: -5%;
         }
 
+        .absen_masuk_icon {
+            width: 27px;
+            height: 27px;
+        }
+
+        .absen_masuk_context {
+            font-size: 10pt;
+        }
+
+        .absen_masuk_text {
+            font-size: 8pt;
+        }
+
+        .absen_pulang_icon {
+            width: 27px;
+            height: 27px;
+        }
+
+        .absen_pulang_context {
+            font-size: 10pt;
+        }
+
+        .absen_pulang_text {
+            font-size: 8pt;
+        }
+
     }
 
     @media only screen and (max-width: 380px) {
@@ -203,14 +281,66 @@
             margin-top: -5%;
         }
 
+        .absen_masuk_icon {
+            width: 27px;
+            height: 27px;
+        }
+
+        .absen_masuk_context {
+            font-size: 10pt;
+        }
+
+        .absen_masuk_text {
+            font-size: 8pt;
+        }
+
+        .absen_pulang_icon {
+            width: 27px;
+            height: 27px;
+        }
+
+        .absen_pulang_context {
+            font-size: 10pt;
+        }
+
+        .absen_pulang_text {
+            font-size: 8pt;
+        }
+
     }
 
-    @media only screen and (max-width: 373px) {
+    @media only screen and (max-width: 375px) {
 
         /* styles for browsers larger than 960px; */
         .absen_title {
             font-size: 22pt;
             text-align: center;
+        }
+
+        .absen_masuk_icon {
+            width: 25px;
+            height: 25px;
+        }
+
+        .absen_masuk_context {
+            font-size: 10pt;
+        }
+
+        .absen_masuk_text {
+            font-size: 8pt;
+        }
+
+        .absen_pulang_icon {
+            width: 25px;
+            height: 25px;
+        }
+
+        .absen_pulang_context {
+            font-size: 10pt;
+        }
+
+        .absen_pulang_text {
+            font-size: 8pt;
         }
 
         .jamkerja_text {
@@ -257,6 +387,32 @@
             margin-right: 0;
         }
 
+        .absen_masuk_icon {
+            width: 20px;
+            height: 20px;
+        }
+
+        .absen_masuk_context {
+            font-size: 8pt;
+        }
+
+        .absen_masuk_text {
+            font-size: 8pt;
+        }
+
+        .absen_pulang_icon {
+            width: 20px;
+            height: 20px;
+        }
+
+        .absen_pulang_context {
+            font-size: 8pt;
+        }
+
+        .absen_pulang_text {
+            font-size: 8pt;
+        }
+
         .absen_title {
             font-size: 20pt;
             text-align: center;
@@ -288,15 +444,42 @@
         .garis_content {
             width: max-content;
         }
+
     }
 
-    @media only screen and (max-width: 330px) {
+    @media only screen and (max-width: 334px) {
 
         /* styles for browsers larger than 960px; */
         .jamkerja_content {
             width: max-content;
             margin-left: auto;
             margin-right: 0;
+        }
+
+        .absen_masuk_icon {
+            width: 20px;
+            height: 20px;
+        }
+
+        .absen_masuk_context {
+            font-size: 8pt;
+        }
+
+        .absen_masuk_text {
+            font-size: 8pt;
+        }
+
+        .absen_pulang_icon {
+            width: 20px;
+            height: 20px;
+        }
+
+        .absen_pulang_context {
+            font-size: 8pt;
+        }
+
+        .absen_pulang_text {
+            font-size: 8pt;
         }
 
         .absen_title {
@@ -806,7 +989,7 @@
         <div class="jamkerja_content col-5">
             <p class="jamkerja_text">Jam Kerja : </p>
             <div class="main-content" style="margin-top: -22%; float: right;">
-                <p class="jamkerja_text_main">@if($jam_kerja=='')__-__ @else {{$jam_kerja->shift->jam_masuk}}-{{$jam_kerja->shift->jam_keluar}}@endif&nbsp;</p>
+                <p class="jamkerja_text_main">@if($jam_kerja=='')__-__ @else {{$jam_kerja->shift->jam_kerja}}-{{$jam_kerja->shift->jam_keluar}}@endif&nbsp;</p>
                 <svg xmlns="http://www.w3.org/2000/svg" style="margin-top: -20%;" width="17" height="17" viewBox="-4.52 0 69.472 69.472">
                     <g id="Group_4" data-name="Group 4" transform="translate(-651.45 -155.8)">
                         <circle id="Ellipse_4" data-name="Ellipse 4" cx="28.716" cy="28.716" r="28.716" transform="translate(652.95 157.3)" fill="none" stroke="#000000" stroke-miterlimit="10" stroke-width="3" />
@@ -823,153 +1006,76 @@
 @section('absensi')
 @if($status_absen_skrg==NULL)
 @else
-@if ($status_absen_skrg->jam_absen == null && $status_absen_skrg->jam_pulang==null)
-<div class="absen_masuk_content container" style="margin-top: -5%;">
-    <div class="col-lg-12">
-        <div class="row">
-            <div class="col-6" style="height: 80px;">
-                <a id="btn_klik" href="{{ url('/home/absen') }}">
-                    <div class="card card-bx card-content bg-primary" style="height: 100%; width: 100%;">
-                        <div class="card-body" style="padding: 4px;">
-                            <svg xmlns="http://www.w3.org/2000/svg" style="position: absolute; right: 0; bottom: 0;  margin-left: auto;  margin-right: 0;" xmlns:xlink="http://www.w3.org/1999/xlink" width="50" height="50" viewBox="0 0 24 24" version="1.1" class="svg-main-icon">
-                                <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-                                    <rect x="0" y="0" width="24" height="24" />
-                                    <path d="M12 2c5.514 0 10 4.486 10 10s-4.486 10-10 10-10-4.486-10-10 4.486-10 10-10zm0-2c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm5.848 12.459c.202.038.202.333.001.372-1.907.361-6.045 1.111-6.547 1.111-.719 0-1.301-.582-1.301-1.301 0-.512.77-5.447 1.125-7.445.034-.192.312-.181.343.014l.985 6.238 5.394 1.011z" fill="#fff" fill-rule="nonzero" opacity="0.3" />
-                                </g>
-                            </svg>
-                            <div class="info" style="color: white;">
-                                <p>Absen Masuk <br> <span class="absen_title title" id="jam_masuk"></span></p>
-                                <script>
-                                    setInterval(customClock, 500);
-
-                                    function customClock() {
-                                        var time = new Date();
-                                        var hrs = (time.getHours() < 10 ? '0' : '') + time.getHours();
-                                        var min = (time.getMinutes() < 10 ? '0' : '') + time.getMinutes();
-                                        var sec = (time.getSeconds() < 10 ? '0' : '') + time.getSeconds();
-                                        document.getElementById('jam_masuk').innerHTML = hrs + ":" + min + ":" + sec;
-                                    }
-                                </script>
-                            </div>
-                        </div>
-                    </div>
-                </a>
-            </div>
-            <div class="col-6" style="height: 80px;">
-                <a id="btn_klik" href="{{ url('/home/absen') }}" style="pointer-events: none">
-                    <div class="card card-bx card-content bg-secondary" style="height: 100%; width: 100%;">
-                        <div class="card-body" style="padding: 4px;">
-                            <svg xmlns="http://www.w3.org/2000/svg" style="position: absolute; right: 0; bottom: 0;  margin-left: auto;  margin-right: 0;" xmlns:xlink="http://www.w3.org/1999/xlink" width="50" height="50" viewBox="0 0 24 24" version="1.1" class="svg-main-icon">
-                                <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-                                    <rect x="0" y="0" width="24" height="24" />
-                                    <path d="M13 12l-.688-4h-.609l-.703 4c-.596.347-1 .984-1 1.723 0 1.104.896 2 2 2s2-.896 2-2c0-.739-.404-1.376-1-1.723zm-1-8c-5.522 0-10 4.477-10 10s4.478 10 10 10 10-4.477 10-10-4.478-10-10-10zm0 18c-4.411 0-8-3.589-8-8s3.589-8 8-8 8 3.589 8 8-3.589 8-8 8zm-2-19.819v-2.181h4v2.181c-1.438-.243-2.592-.238-4 0zm9.179 2.226l1.407-1.407 1.414 1.414-1.321 1.321c-.462-.484-.964-.926-1.5-1.328zm-12.679 9.593c0 .276-.224.5-.5.5s-.5-.224-.5-.5.224-.5.5-.5.5.224.5.5zm12 0c0 .276-.224.5-.5.5s-.5-.224-.5-.5.224-.5.5-.5.5.224.5.5zm-6 6c0 .276-.224.5-.5.5s-.5-.224-.5-.5.224-.5.5-.5.5.224.5.5zm-4-2c0 .276-.224.5-.5.5s-.5-.224-.5-.5.224-.5.5-.5.5.224.5.5zm8 0c0 .276-.224.5-.5.5s-.5-.224-.5-.5.224-.5.5-.5.5.224.5.5zm-8-9c0 .276-.224.5-.5.5s-.5-.224-.5-.5.224-.5.5-.5.5.224.5.5zm8 0c0 .276-.224.5-.5.5s-.5-.224-.5-.5.224-.5.5-.5.5.224.5.5z" fill="#fff" fill-rule="nonzero" opacity="0.3" />
-                                </g>
-                            </svg>
-                            <div class="info" style="color: white;">
-                                <p>Absen Pulang <br> <span class="absen_title title">-</span></p>
-                            </div>
-                        </div>
-                    </div>
-                </a>
-            </div>
-        </div>
-    </div>
-</div>
-@elseif ($status_absen_skrg->jam_absen != null && $status_absen_skrg->jam_pulang==null)
 <div class="container" style="margin-top: -5%; padding-bottom: 0; margin-bottom: 0;">
     <div class="col-lg-12">
         <div class="row">
             <div class="col-6">
-                <a id="btn_klik" href="{{ url('/home/absen') }}" style="pointer-events: none">
-                    <div class="card card-bx card-content bg-primary">
-                        <div class="card-body" style="padding: 4px;">
-                            <svg xmlns="http://www.w3.org/2000/svg" style="position: absolute; right: 0; bottom: 0;  margin-left: auto;  margin-right: 0;" xmlns:xlink="http://www.w3.org/1999/xlink" width="50" height="50" viewBox="0 0 24 24" version="1.1" class="svg-main-icon">
-                                <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-                                    <rect x="0" y="0" width="24" height="24" />
-                                    <path d="M12 2c5.514 0 10 4.486 10 10s-4.486 10-10 10-10-4.486-10-10 4.486-10 10-10zm0-2c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm5.848 12.459c.202.038.202.333.001.372-1.907.361-6.045 1.111-6.547 1.111-.719 0-1.301-.582-1.301-1.301 0-.512.77-5.447 1.125-7.445.034-.192.312-.181.343.014l.985 6.238 5.394 1.011z" fill="#fff" fill-rule="nonzero" opacity="0.3" />
-                                </g>
-                            </svg>
-                            <div class="info" style="color: white;">
-                                <!-- <p>Sudah Absen <br> <span class="absen_title title">{{ $status_absen_skrg->jam_absen }}</span></p> -->
-                                <p>Sudah Absen</p>
+                <div class3="card card-bx card-content">
+                    <div class="card-body" style="padding: 2px; margin: 2px;">
+                        <div class="row">
+                            <div class="col-2">
+                                <div class="dz-icon bg-green light absen_masuk_icon" style="padding: 0px;">
+                                    <svg style="margin-top: 10%;" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path fill-rule="evenodd" clip-rule="evenodd" d="M11.8861 2H16.9254C19.445 2 21.5 4 21.5 6.44V17.56C21.5 20.01 19.445 22 16.9047 22H11.8758C9.35611 22 7.29083 20.01 7.29083 17.57V12.77H13.6932L12.041 14.37C11.7312 14.67 11.7312 15.16 12.041 15.46C12.1959 15.61 12.4024 15.68 12.6089 15.68C12.8051 15.68 13.0117 15.61 13.1666 15.46L16.1819 12.55C16.3368 12.41 16.4194 12.21 16.4194 12C16.4194 11.8 16.3368 11.6 16.1819 11.46L13.1666 8.55C12.8568 8.25 12.3508 8.25 12.041 8.55C11.7312 8.85 11.7312 9.34 12.041 9.64L13.6932 11.23H7.29083V6.45C7.29083 4 9.35611 2 11.8861 2ZM2.5 11.9999C2.5 11.5799 2.85523 11.2299 3.2815 11.2299H7.29052V12.7699H3.2815C2.85523 12.7699 2.5 12.4299 2.5 11.9999Z" fill="#130F26"></path>
+                                    </svg>
+                                </div>
+                            </div>
+                            <div class="col-9">
+                                <div class="dz-inner">
+                                    <span class="dz-title absen_masuk_context">&nbsp;Absen&nbsp;Masuk</span>
+                                </div>
+                                @if ($status_absen_skrg->jam_absen == null && $status_absen_skrg->jam_absen=="")
+                                -
+                                @else
+                                <span class="badge light badge-sm badge-success absen_masuk_text">
+                                    &nbsp;{{$status_absen_skrg->jam_absen}}&nbsp;WIB
+                                </span>
+                                <!-- <h6 class="card-title card-intro-title">
+                                </h6> -->
+                                @endif
                             </div>
                         </div>
                     </div>
-                </a>
+                </div>
             </div>
             <div class="col-6">
-                <a id="btn_klik" href="{{ url('/home/absen') }}">
-                    <div class="card card-bx card-content bg-secondary" style="width: 100%;">
-                        <div class="card-body" style="padding: 4px;">
-                            <svg xmlns="http://www.w3.org/2000/svg" style="position: absolute; right: 0; bottom: 0;  margin-left: auto;  margin-right: 0;" xmlns:xlink="http://www.w3.org/1999/xlink" width="50" height="50" viewBox="0 0 24 24" version="1.1" class="svg-main-icon">
-                                <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-                                    <rect x="0" y="0" width="24" height="24" />
-                                    <path d="M13 12l-.688-4h-.609l-.703 4c-.596.347-1 .984-1 1.723 0 1.104.896 2 2 2s2-.896 2-2c0-.739-.404-1.376-1-1.723zm-1-8c-5.522 0-10 4.477-10 10s4.478 10 10 10 10-4.477 10-10-4.478-10-10-10zm0 18c-4.411 0-8-3.589-8-8s3.589-8 8-8 8 3.589 8 8-3.589 8-8 8zm-2-19.819v-2.181h4v2.181c-1.438-.243-2.592-.238-4 0zm9.179 2.226l1.407-1.407 1.414 1.414-1.321 1.321c-.462-.484-.964-.926-1.5-1.328zm-12.679 9.593c0 .276-.224.5-.5.5s-.5-.224-.5-.5.224-.5.5-.5.5.224.5.5zm12 0c0 .276-.224.5-.5.5s-.5-.224-.5-.5.224-.5.5-.5.5.224.5.5zm-6 6c0 .276-.224.5-.5.5s-.5-.224-.5-.5.224-.5.5-.5.5.224.5.5zm-4-2c0 .276-.224.5-.5.5s-.5-.224-.5-.5.224-.5.5-.5.5.224.5.5zm8 0c0 .276-.224.5-.5.5s-.5-.224-.5-.5.224-.5.5-.5.5.224.5.5zm-8-9c0 .276-.224.5-.5.5s-.5-.224-.5-.5.224-.5.5-.5.5.224.5.5zm8 0c0 .276-.224.5-.5.5s-.5-.224-.5-.5.224-.5.5-.5.5.224.5.5z" fill="#fff" fill-rule="nonzero" opacity="0.3" />
-                                </g>
-                            </svg>
-                            <div class="info" style="color: white;">
-                                <p>Absen Pulang <br> <span class="absen_title title" id="jam_pulang"></span></p>
-                                <!-- <script>
-                                    setInterval(customClock, 500);
+                <div class3="card card-bx card-content">
+                    <div class="card-body" style="padding: 2px; margin: 2px;">
+                        <div class="row">
+                            <div class="col-2">
+                                <div class="dz-icon bg-red light absen_pulang_icon" style="padding: 0px;">
+                                    <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="6" height="6" style="margin-top: 10%;" viewBox="0 0 24 24" version="1.1" class="svg-main-icon">
+                                        <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                            <rect x="0" y="0" width="20" height="20" />
+                                            <path d="M14.0069431,7.00607258 C13.4546584,7.00607258 13.0069431,6.55855153 13.0069431,6.00650634 C13.0069431,5.45446114 13.4546584,5.00694009 14.0069431,5.00694009 L15.0069431,5.00694009 C17.2160821,5.00694009 19.0069431,6.7970243 19.0069431,9.00520507 L19.0069431,15.001735 C19.0069431,17.2099158 17.2160821,19 15.0069431,19 L3.00694311,19 C0.797804106,19 -0.993056895,17.2099158 -0.993056895,15.001735 L-0.993056895,8.99826498 C-0.993056895,6.7900842 0.797804106,5 3.00694311,5 L4.00694793,5 C4.55923268,5 5.00694793,5.44752105 5.00694793,5.99956624 C5.00694793,6.55161144 4.55923268,6.99913249 4.00694793,6.99913249 L3.00694311,6.99913249 C1.90237361,6.99913249 1.00694311,7.89417459 1.00694311,8.99826498 L1.00694311,15.001735 C1.00694311,16.1058254 1.90237361,17.0008675 3.00694311,17.0008675 L15.0069431,17.0008675 C16.1115126,17.0008675 17.0069431,16.1058254 17.0069431,15.001735 L17.0069431,9.00520507 C17.0069431,7.90111468 16.1115126,7.00607258 15.0069431,7.00607258 L14.0069431,7.00607258 Z" fill="#fff" fill-rule="nonzero" opacity="0.3" transform="translate(9.006943, 12.000000) scale(-1, 1) rotate(-90.000000) translate(-9.006943, -12.000000) " />
+                                            <rect fill="#ff4db8" opacity="0.3" transform="translate(14.000000, 12.000000) rotate(-270.000000) translate(-14.000000, -12.000000) " x="13" y="6" width="2" height="12" rx="1" />
+                                            <path d="M21.7928932,9.79289322 C22.1834175,9.40236893 22.8165825,9.40236893 23.2071068,9.79289322 C23.5976311,10.1834175 23.5976311,10.8165825 23.2071068,11.2071068 L20.2071068,14.2071068 C19.8165825,14.5976311 19.1834175,14.5976311 18.7928932,14.2071068 L15.7928932,11.2071068 C15.4023689,10.8165825 15.4023689,10.1834175 15.7928932,9.79289322 C16.1834175,9.40236893 16.8165825,9.40236893 17.2071068,9.79289322 L19.5,12.0857864 L21.7928932,9.79289322 Z" fill="#fff" fill-rule="nonzero" transform="translate(19.500000, 12.000000) rotate(-90.000000) translate(-19.500000, -12.000000) " />
+                                        </g>
+                                    </svg>
+                                </div>
+                            </div>
+                            <div class="col-8">
+                                <div class="dz-inner">
+                                    <span class="dz-title absen_pulang_context">&nbsp;Absen&nbsp;Pulang</span>
+                                </div>
+                                @if ($status_absen_skrg->jam_pulang == null && $status_absen_skrg->jam_pulang=="")
+                                -
+                                @else
+                                <span class="badge w-80 light badge-success absen_pulang_text">
+                                    &nbsp;{{$status_absen_skrg->jam_pulang}}&nbsp;WIB
 
-                                    function customClock() {
-                                        var time = new Date();
-                                        var hrs = (time.getHours() < 10 ? '0' : '') + time.getHours();
-                                        var min = (time.getMinutes() < 10 ? '0' : '') + time.getMinutes();
-                                        var sec = (time.getSeconds() < 10 ? '0' : '') + time.getSeconds();
-                                        document.getElementById('jam_pulang').innerHTML = hrs + ":" + min + ":" + sec;
-                                    }
-                                </script> -->
+                                </span>
+                                <!-- <h6 class="card-title card-intro-title">
+                                </h6> -->
+                                @endif
                             </div>
                         </div>
                     </div>
-                </a>
+                </div>
             </div>
         </div>
     </div>
 </div>
-@elseif ($status_absen_skrg->jam_absen != null && $status_absen_skrg->jam_pulang != null)
-<div class="container" style="margin-top: -5%;">
-    <div class="col-lg-12">
-        <div class="row">
-            <div class="col-6" style="height: 80px;">
-                <a id="btn_klik" href="{{ url('/home/absen') }}" style="pointer-events: none">
-                    <div class="card card-bx card-content bg-primary" style="height: 100%; width: 100%;">
-                        <div class="card-body" style="padding: 4px;">
-                            <svg xmlns="http://www.w3.org/2000/svg" style="position: absolute; right: 0; bottom: 0;  margin-left: auto;  margin-right: 0;" xmlns:xlink="http://www.w3.org/1999/xlink" width="50" height="50" viewBox="0 0 24 24" version="1.1" class="svg-main-icon">
-                                <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-                                    <rect x="0" y="0" width="24" height="24" />
-                                    <path d="M12 2c5.514 0 10 4.486 10 10s-4.486 10-10 10-10-4.486-10-10 4.486-10 10-10zm0-2c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm5.848 12.459c.202.038.202.333.001.372-1.907.361-6.045 1.111-6.547 1.111-.719 0-1.301-.582-1.301-1.301 0-.512.77-5.447 1.125-7.445.034-.192.312-.181.343.014l.985 6.238 5.394 1.011z" fill="#fff" fill-rule="nonzero" opacity="0.3" />
-                                </g>
-                            </svg>
-                            <div class="info" style="color: white;">
-                                <p>Sudah Absen <br> <span class="absen_title title">{{ $status_absen_skrg->jam_absen }}</span></p>
-                            </div>
-                        </div>
-                    </div>
-                </a>
-            </div>
-            <div class="col-6" style="height: 80px;">
-                <a id="btn_klik" href="{{ url('/home/absen') }}" style="pointer-events: none">
-                    <div class="card card-bx card-content bg-secondary" style="height: 100%; width: 100%;">
-                        <div class="card-body" style="padding: 4px;">
-                            <svg xmlns="http://www.w3.org/2000/svg" style="position: absolute; right: 0; bottom: 0;  margin-left: auto;  margin-right: 0;" xmlns:xlink="http://www.w3.org/1999/xlink" width="50" height="50" viewBox="0 0 24 24" version="1.1" class="svg-main-icon">
-                                <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-                                    <rect x="0" y="0" width="24" height="24" />
-                                    <path d="M13 12l-.688-4h-.609l-.703 4c-.596.347-1 .984-1 1.723 0 1.104.896 2 2 2s2-.896 2-2c0-.739-.404-1.376-1-1.723zm-1-8c-5.522 0-10 4.477-10 10s4.478 10 10 10 10-4.477 10-10-4.478-10-10-10zm0 18c-4.411 0-8-3.589-8-8s3.589-8 8-8 8 3.589 8 8-3.589 8-8 8zm-2-19.819v-2.181h4v2.181c-1.438-.243-2.592-.238-4 0zm9.179 2.226l1.407-1.407 1.414 1.414-1.321 1.321c-.462-.484-.964-.926-1.5-1.328zm-12.679 9.593c0 .276-.224.5-.5.5s-.5-.224-.5-.5.224-.5.5-.5.5.224.5.5zm12 0c0 .276-.224.5-.5.5s-.5-.224-.5-.5.224-.5.5-.5.5.224.5.5zm-6 6c0 .276-.224.5-.5.5s-.5-.224-.5-.5.224-.5.5-.5.5.224.5.5zm-4-2c0 .276-.224.5-.5.5s-.5-.224-.5-.5.224-.5.5-.5.5.224.5.5zm8 0c0 .276-.224.5-.5.5s-.5-.224-.5-.5.224-.5.5-.5.5.224.5.5zm-8-9c0 .276-.224.5-.5.5s-.5-.224-.5-.5.224-.5.5-.5.5.224.5.5zm8 0c0 .276-.224.5-.5.5s-.5-.224-.5-.5.224-.5.5-.5.5.224.5.5z" fill="#fff" fill-rule="nonzero" opacity="0.3" />
-                                </g>
-                            </svg>
-                            <div class="info" style="color: white;">
-                                <p>Sudah Absen <br> <span class="absen_title title">{{ $status_absen_skrg->jam_pulang }}</span></p>
-                            </div>
-                        </div>
-                    </div>
-                </a>
-            </div>
-        </div>
-    </div>
-</div>
-@endif
 @endif
 
 @endsection
