@@ -1440,6 +1440,7 @@ class karyawanController extends Controller
     public function editKaryawanProses(Request $request, $id)
     {
         // dd($id);
+        // dd($request->departemen1_id, $request->divisi1_id, $request->bagian1_id, $request->jabatan1_id);
         if ($request->status_nomor == "tidak") {
             $status_nomor = 'required';
         } else if ($request->status_nomor == "ya") {
