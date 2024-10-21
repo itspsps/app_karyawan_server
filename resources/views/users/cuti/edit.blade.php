@@ -177,6 +177,7 @@
             <input type="hidden" name="divisi" value="{{$get_cuti->divisi_id}}">
             <input type="hidden" name="id_user_atasan" value="{{$get_cuti->id_user_atasan}}">
             <input type="hidden" name="id_user_atasan2" value="{{$get_cuti->id_user_atasan2}}">
+            <input type="hidden" name="tanggal" value="{{$get_cuti->tanggal}}">
         </div>
         <div class="input-group">
             <input type="text" class="form-control" value="Nama" readonly>

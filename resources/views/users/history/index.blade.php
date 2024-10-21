@@ -62,7 +62,11 @@
                             <a href="">
                                 <div class="notification" style="box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.2), 0 3px 10px 0 rgba(0, 0, 0, 0.1);">
                                     <h6>{{$history_absensi->activity}}</h6>
-                                    <p>{{$history_absensi->description}}</p>
+                                    <p>{{ \Illuminate\Support\Str::limit(strip_tags($history_absensi->description), 70) }}
+                                        @if (strlen(strip_tags($history_absensi->description)) > 70)
+                                        Baca Selengkapnya..
+                                        @endif
+                                    </p>
                                     <div class="notification-footer">
                                         <span class="badge bg-labels-info">
                                             <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -89,19 +93,23 @@
                             </div>
                             @else
                             @foreach($history_izin as $history_izin)
-                            <a href="profile.html">
+                            <a href="">
                                 <div class="notification" style="box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.2), 0 3px 10px 0 rgba(0, 0, 0, 0.1);">
-                                    <h6>Izin Cuti</h6>
-                                    <p>Acara Keluarga</p>
+                                    <h6>{{$history_izin->activity}}</h6>
+                                    <p>{{ \Illuminate\Support\Str::limit(strip_tags($history_izin->description), 70) }}
+                                        @if (strlen(strip_tags($history_izin->description)) > 70)
+                                        Baca Selengkapnya..
+                                        @endif
+                                    </p>
                                     <div class="notification-footer">
-                                        <span>
+                                        <span class="badge bg-labels-info">
                                             <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                 <path d="M6 11C8.76142 11 11 8.76142 11 6C11 3.23858 8.76142 1 6 1C3.23858 1 1 3.23858 1 6C1 8.76142 3.23858 11 6 11Z" stroke="#787878" stroke-linecap="round" stroke-linejoin="round"></path>
                                                 <path d="M6 3V6L8 7" stroke="#787878" stroke-linecap="round" stroke-linejoin="round"></path>
                                             </svg>
-                                            10h ago
+                                            {{\Carbon\Carbon::parse($history_izin->created_at)->format('d-m-Y')}}
                                         </span>
-                                        <p class="mb-0">Mark as read</p>
+                                        <p class="mb-0">@if($history_izin->read_status=='0') @else Read @endif</p>
                                     </div>
                                 </div>
                             </a>
@@ -111,42 +119,70 @@
                     </div>
                     <div class="tab-pane fade show" id="nav-cuti" role="tabpanel" aria-labelledby="nav-cuti-tab">
                         <div class="notification-content" style="overflow: auto; height: 100%;">
-                            <a href="profile.html">
+                            @if($history_cuti->count() == 0)
+                            <div class="text-center">
+                                <span>
+                                    History Tidak Ada
+                                </span>
+                            </div>
+                            @else
+                            @foreach($history_cuti as $history_cuti)
+                            <a href="">
                                 <div class="notification" style="box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.2), 0 3px 10px 0 rgba(0, 0, 0, 0.1);">
-                                    <h6>Izin Cuti</h6>
-                                    <p>Acara Keluarga</p>
+                                    <h6>{{$history_cuti->activity}}</h6>
+                                    <p>{{ \Illuminate\Support\Str::limit(strip_tags($history_cuti->description), 70) }}
+                                        @if (strlen(strip_tags($history_cuti->description)) > 70)
+                                        Baca Selengkapnya..
+                                        @endif
+                                    </p>
                                     <div class="notification-footer">
-                                        <span>
+                                        <span class="badge bg-labels-info">
                                             <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                 <path d="M6 11C8.76142 11 11 8.76142 11 6C11 3.23858 8.76142 1 6 1C3.23858 1 1 3.23858 1 6C1 8.76142 3.23858 11 6 11Z" stroke="#787878" stroke-linecap="round" stroke-linejoin="round"></path>
                                                 <path d="M6 3V6L8 7" stroke="#787878" stroke-linecap="round" stroke-linejoin="round"></path>
                                             </svg>
-                                            10h ago
+                                            {{\Carbon\Carbon::parse($history_cuti->created_at)->format('d-m-Y')}}
                                         </span>
-                                        <p class="mb-0">Mark as read</p>
+                                        <p class="mb-0">@if($history_cuti->read_status=='0') @else Read @endif</p>
                                     </div>
                                 </div>
                             </a>
+                            @endforeach
+                            @endif
                         </div>
                     </div>
                     <div class="tab-pane fade show" id="nav-penugasan" role="tabpanel" aria-labelledby="nav-cuti-tab">
                         <div class="notification-content" style="overflow: auto; height: 100%;">
-                            <a href="profile.html">
+                            @if($history_penugasan->count() == 0)
+                            <div class="text-center">
+                                <span>
+                                    History Tidak Ada
+                                </span>
+                            </div>
+                            @else
+                            @foreach($history_penugasan as $history_penugasan)
+                            <a href="">
                                 <div class="notification" style="box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.2), 0 3px 10px 0 rgba(0, 0, 0, 0.1);">
-                                    <h6>Izin Cuti</h6>
-                                    <p>Acara Keluarga</p>
+                                    <h6>{{$history_penugasan->activity}}</h6>
+                                    <p>{{ \Illuminate\Support\Str::limit(strip_tags($history_penugasan->description), 70) }}
+                                        @if (strlen(strip_tags($history_penugasan->description)) > 70)
+                                        Baca Selengkapnya..
+                                        @endif
+                                    </p>
                                     <div class="notification-footer">
-                                        <span>
+                                        <span class="badge bg-labels-info">
                                             <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                 <path d="M6 11C8.76142 11 11 8.76142 11 6C11 3.23858 8.76142 1 6 1C3.23858 1 1 3.23858 1 6C1 8.76142 3.23858 11 6 11Z" stroke="#787878" stroke-linecap="round" stroke-linejoin="round"></path>
                                                 <path d="M6 3V6L8 7" stroke="#787878" stroke-linecap="round" stroke-linejoin="round"></path>
                                             </svg>
-                                            10h ago
+                                            {{\Carbon\Carbon::parse($history_penugasan->created_at)->format('d-m-Y')}}
                                         </span>
-                                        <p class="mb-0">Mark as read</p>
+                                        <p class="mb-0">@if($history_penugasan->read_status=='0') @else Read @endif</p>
                                     </div>
                                 </div>
                             </a>
+                            @endforeach
+                            @endif
                         </div>
                     </div>
                 </div>

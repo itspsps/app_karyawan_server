@@ -1064,7 +1064,21 @@ class CutiUserController extends Controller
     {
         // dd($request->all());
         $user_karyawan = Karyawan::where('id', Auth::user()->karyawan_id)->first();
-        $no_form = NULL;
+        $count_tbl_cuti = Cuti::whereDate('tanggal', $request->tanggal)->whereNotNull('no_form_cuti')->count();
+        // dd($count_tbl_cuti);
+        $countstr = strlen($count_tbl_cuti + 1);
+        if ($countstr == '1') {
+            $no = '0000' . $count_tbl_cuti + 1;
+        } else if ($countstr == '2') {
+            $no = '000' . $count_tbl_cuti + 1;
+        } else if ($countstr == '3') {
+            $no = '00' . $count_tbl_cuti + 1;
+        } else if ($countstr == '4') {
+            $no = '0' . $count_tbl_cuti + 1;
+        } else {
+            $no = $count_tbl_cuti + 1;
+        }
+        $no_form = $user_karyawan->kontrak_kerja . '/FCT/' . date('Y/m/d') . '/' . $no;
         if ($request->cuti == 'Diluar Cuti Tahunan') {
             $jumlah_hari = explode(' ', $request->jumlah_cuti);
             $jumlah_kuota = explode(' ', $request->kuota_cuti);
@@ -1123,7 +1137,15 @@ class CutiUserController extends Controller
             $data->catatan2                 = NULL;
             $data->no_form_cuti             = $no_form;
             $data->update();
+            ActivityLog::create([
+                'user_id' => Auth::user()->id,
+                'object_id' => $data->id,
+                'kategory_activity' => 'CUTI',
+                'activity' => $data->nama_cuti,
+                'description' => 'Pengajuan ' . $data->nama_cuti . ' No Form: ' . $data->no_form_cuti . ' Tanggal ' . $data->tanggal_mulai . ' - ' . $data->tanggal_selesai . ' Keterangan  ' . $data->keterangan_cuti,
+                'read_status' => 0
 
+            ]);
             $request->session()->flash('statuscutieditsuccess', 'Berhasil');
             return redirect('cuti/dashboard');
         } else {
@@ -1190,7 +1212,15 @@ class CutiUserController extends Controller
                 $data->catatan2                 = NULL;
                 $data->no_form_cuti             = $no_form;
                 $data->update();
+                ActivityLog::create([
+                    'user_id' => Auth::user()->id,
+                    'object_id' => $data->id,
+                    'kategory_activity' => 'CUTI',
+                    'activity' => $data->nama_cuti,
+                    'description' => 'Pengajuan ' . $data->nama_cuti . ' No Form: ' . $data->no_form_cuti . ' Tanggal ' . $data->tanggal_mulai . ' - ' . $data->tanggal_selesai . ' Keterangan  ' . $data->keterangan_cuti,
+                    'read_status' => 0
 
+                ]);
                 $request->session()->flash('statuscutieditsuccess', 'Berhasil');
                 return redirect('cuti/dashboard');
             } else {
@@ -1392,24 +1422,9 @@ class CutiUserController extends Controller
             }
             if ($request->status_cuti == '2') {
                 $data = Cuti::where('id', $request->id)->first();
-                $count_tbl_cuti = Cuti::whereDate('tanggal', $data->tanggal)->whereNotNull('no_form_cuti')->count();
-                // dd($count_tbl_cuti);
-                $countstr = strlen($count_tbl_cuti + 1);
-                if ($countstr == '1') {
-                    $no = '0000' . $count_tbl_cuti + 1;
-                } else if ($countstr == '2') {
-                    $no = '000' . $count_tbl_cuti + 1;
-                } else if ($countstr == '3') {
-                    $no = '00' . $count_tbl_cuti + 1;
-                } else if ($countstr == '4') {
-                    $no = '0' . $count_tbl_cuti + 1;
-                } else {
-                    $no = $count_tbl_cuti + 1;
-                }
-                $no_form = $user_karyawan->kontrak_kerja . '/FCT/' . date('Y/m/d') . '/' . $no;
+
                 $data->status_cuti  = 3;
                 $data->ttd_atasan2  = $uniqid;
-                $data->no_form_cuti  = $no_form;
                 $data->catatan2      = $request->catatan;
                 $data->waktu_approve2 = date('Y-m-d H:i:s');
                 $data->update();
@@ -1436,27 +1451,12 @@ class CutiUserController extends Controller
             } else if ($request->status_cuti == '1') {
                 $data = Cuti::where('id', $request->id)->first();
                 if ($user_karyawan->id == $data->id_user_atasan && $user_karyawan->id == $data->id_user_atasan2) {
-                    $count_tbl_cuti = Cuti::whereDate('tanggal', $data->tanggal)->whereNotNull('no_form_cuti')->count();
-                    // dd($count_tbl_cuti);
-                    $countstr = strlen($count_tbl_cuti + 1);
-                    if ($countstr == '1') {
-                        $no = '0000' . $count_tbl_cuti + 1;
-                    } else if ($countstr == '2') {
-                        $no = '000' . $count_tbl_cuti + 1;
-                    } else if ($countstr == '3') {
-                        $no = '00' . $count_tbl_cuti + 1;
-                    } else if ($countstr == '4') {
-                        $no = '0' . $count_tbl_cuti + 1;
-                    } else {
-                        $no = $count_tbl_cuti + 1;
-                    }
-                    $no_form = $user_karyawan->kontrak_kerja . '/FCT/' . date('Y/m/d') . '/' . $no;
+
                     $data->status_cuti  = 3;
                     $data->ttd_atasan  = $uniqid;
                     $data->ttd_atasan2  = $uniqid;
                     $data->catatan      = $request->catatan;
                     $data->catatan2      = $request->catatan;
-                    $data->no_form_cuti  = $no_form;
                     $data->waktu_approve = date('Y-m-d H:i:s');
                     $data->waktu_approve2 = date('Y-m-d H:i:s');
                     $data->update();

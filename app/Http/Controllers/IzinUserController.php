@@ -1054,13 +1054,8 @@ class IzinUserController extends Controller
         }
         $get_izin_id = Izin::where('id', $id)->first();
         $get_user_backup = Karyawan::where('dept_id', $user_karyawan->dept_id)
-            ->where('karyawans.id', '!=', $user_karyawan->id)
-            ->where('karyawans.site_job', $user_karyawan->site_job)
-            ->where('karyawans.divisi_id', $user_karyawan->divisi_id)
-            ->orWhere('karyawans.divisi1_id', $user_karyawan->divisi_id)
-            ->orWhere('karyawans.divisi2_id', $user_karyawan->divisi_id)
-            ->orWhere('karyawans.divisi3_id', $user_karyawan->divisi_id)
-            ->orWhere('karyawans.divisi4_id', $user_karyawan->divisi_id)
+            ->where('id', '!=', $user_karyawan->id)
+            ->where('dept_id', $user_karyawan->dept_id)
             ->get();
         $kategori_izin = KategoriIzin::orderBy('id', 'ASC')->get();
         $jam_kerja = MappingShift::with('Shift')->where('user_id', $user_karyawan->id)->where('tanggal_masuk', date('Y-m-d'))->first();
@@ -1260,6 +1255,16 @@ class IzinUserController extends Controller
                 $data->status_izin      = 1;
             }
             $data->update();
+
+            ActivityLog::create([
+                'user_id' => Auth::user()->id,
+                'object_id' => $data->id,
+                'kategory_activity' => 'IZIN',
+                'activity' => 'Izin ' . $data->izin,
+                'description' => 'Pengajuan Izin' . $data->izin . ' No Form: ' . $data->no_form_izin . ' Tanggal ' . $data->tanggal . ' - ' . $data->tanggal_selesai . ' Keterangan  ' . $data->keterangan_izin,
+                'read_status' => 0
+
+            ]);
             $request->session()->flash('izineditsuccess');
             return redirect('/izin/dashboard');
         } else {
@@ -1458,6 +1463,7 @@ class IzinUserController extends Controller
                 $data->ttd_atasan      = NULL;
                 $data->waktu_approve      = NULL;
                 $data->save();
+
                 $request->session()->flash('izinsuccess');
                 return redirect('/izin/dashboard');
             }

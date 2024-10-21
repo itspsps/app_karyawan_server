@@ -1408,7 +1408,7 @@ class karyawanController extends Controller
 
         // Merekam aktivitas pengguna
         ActivityLog::create([
-            'user_id' => $request->user()->id,
+            'user_id' => Auth::user()->id,
             'activity' => 'create',
             'description' => 'Menambahkan data karyawan baru ' . $request->name,
         ]);
@@ -1863,7 +1863,7 @@ class karyawanController extends Controller
             ]
         );
         ActivityLog::create([
-            'user_id' => $request->user()->id,
+            'user_id' => Auth::user()->id,
             'activity' => 'update',
             'description' => 'Mengubah data karyawan ' . $request->name,
         ]);
@@ -2128,24 +2128,27 @@ class karyawanController extends Controller
                 'tanggal_pulang' => 'required',
             ]);
 
-            MappingShift::insert([
-                'user_id' => Karyawan::where('id', $validatedData['user_id'])->value('id'),
-                'nik_karyawan' => Karyawan::where('id', $validatedData['user_id'])->value('nomor_identitas_karyawan'),
-                'nama_karyawan' => Karyawan::where('id', $validatedData['user_id'])->value('name'),
-                'shift_id' => Shift::where('id', $validatedData['shift_id'])->value('id'),
-                'nama_shift' => Shift::where('id', $validatedData['shift_id'])->value('nama_shift'),
-                'tanggal_masuk' => $validatedData['tanggal_masuk'],
-                'tanggal_pulang' => $validatedData['tanggal_pulang'],
-                'status_absen' => $request['status_absen'],
-            ]);
+            $insert = new MappingShift();
+            $insert->user_id = Karyawan::where('id', $validatedData['user_id'])->value('id');
+            $insert->nik_karyawan = Karyawan::where('id', $validatedData['user_id'])->value('nomor_identitas_karyawan');
+            $insert->nama_karyawan = Karyawan::where('id', $validatedData['user_id'])->value('name');
+            $insert->shift_id = Shift::where('id', $validatedData['shift_id'])->value('id');
+            $insert->nama_shift = Shift::where('id', $validatedData['shift_id'])->value('nama_shift');
+            $insert->tanggal_masuk = $validatedData['tanggal_masuk'];
+            $insert->tanggal_pulang = $validatedData['tanggal_pulang'];
+            $insert->status_absen = $request['status_absen'];
+            $insert->save();
         }
         // dd($week);
         // dd($week);
         $holding = request()->segment(count(request()->segments()));
         ActivityLog::create([
             'user_id' => Auth::user()->id,
-            'activity' => 'create',
-            'description' => 'Menambahkan shift karyawan ' . Auth::user()->name,
+            'object_id' => $insert->id,
+            'kategory_activity' => 'MAPPING SHIFT',
+            'activity' => 'TAMBAH MAPPING SHIFT ',
+            'description' => 'Menambahkan Jadwal shift karyawan ' . $insert->nama_karyawan . ' Shift ' . $insert->nama_shift,
+            'read_status' => 0
         ]);
         return redirect()->back()->with('success', 'Data Berhasil di Tambahkan');
     }
@@ -2153,12 +2156,15 @@ class karyawanController extends Controller
     public function deleteShift(Request $request, $id)
     {
         $holding = request()->segment(count(request()->segments()));
+        $delete_mapping = MappingShift::where('id', $id)->first();
         $delete = MappingShift::find($id);
         $delete->delete();
         ActivityLog::create([
-            'user_id' => $request->user()->id,
-            'activity' => 'delete',
-            'description' => 'Menghapus shift karyawan ' . $delete->user->name,
+            'user_id' => Auth::user()->id,
+            'kategory_activity' => 'MAPPING SHIFT',
+            'activity' => 'HAPUS MAPPING SHIFT ',
+            'description' => 'Menghapus Jadwal shift karyawan ' . $delete_mapping->nama_karyawan . ' Shift ' . $delete_mapping->nama_shift,
+            'read_status' => 0
         ]);
         return redirect()->back()->with('success', 'Data Berhasil di Delete');
     }
@@ -2231,7 +2237,7 @@ class karyawanController extends Controller
         ]);
         $user_karyawan = Karyawan::where('id', Auth::user()->karyawan_id)->first();
         ActivityLog::create([
-            'user_id' => $request->user()->id,
+            'user_id' => Auth::user()->id,
             'activity' => 'update',
             'description' => 'Mengubah shift karyawan ' . $user_karyawan->name,
         ]);
@@ -2283,7 +2289,7 @@ class karyawanController extends Controller
 
         Karyawan::where('id', $id)->update($validatedData);
         ActivityLog::create([
-            'user_id' => $request->user()->id,
+            'user_id' => Auth::user()->id,
             'activity' => 'update',
             'description' => 'Mengubah profile karyawan ' . $request->name,
         ]);
@@ -2308,7 +2314,7 @@ class karyawanController extends Controller
 
         Karyawan::where('id', $id)->update($validatedData);
         ActivityLog::create([
-            'user_id' => $request->user()->id,
+            'user_id' => Auth::user()->id,
             'activity' => 'update',
             'description' => 'Mengubah password karyawan ' . $request->name,
         ]);
@@ -2342,7 +2348,7 @@ class karyawanController extends Controller
 
         ResetCuti::where('id', $id)->update($validatedData);
         ActivityLog::create([
-            'user_id' => $request->user()->id,
+            'user_id' => Auth::user()->id,
             'activity' => 'update',
             'description' => 'Mengubah master data reset cuti',
         ]);

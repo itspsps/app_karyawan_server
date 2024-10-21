@@ -2684,10 +2684,12 @@ class HomeUserController extends Controller
                 $update->update();
 
                 ActivityLog::create([
-                    'user_id' => $user_karyawan->id,
-                    'activity' => 'tambah',
-                    'description' => 'Absen Pulang Pada Tanggal ' . $tanggal,
-                    'status_absen_skrg' => MappingShift::where('user_id', $user_login)->where('tanggal_masuk', $tglskrg)->get(),
+                    'user_id' => Auth::user()->id,
+                    'object_id' => $request->shift_karyawan,
+                    'kategory_activity' => 'ABSENSI',
+                    'activity' => 'Absen Pulang',
+                    'description' => 'Absen Pulang Tanggal ' . $update->tanggal_pulang . ' Jam ' . $update->jam_pulang . ' Keterangan  ' . $update->status_absen,
+                    'read_status' => 0
 
                 ]);
                 $request->session()->flash('absenpulangsuccess', 'Berhasil Absen Pulang');
@@ -2776,6 +2778,25 @@ class HomeUserController extends Controller
                     $update->keterangan_absensi_pulang = 'PULANG CEPAT';
                     $update->kelengkapan_absensi  = 'PRESENSI LENGKAP';
                     $update->update();
+
+                    ActivityLog::create([
+                        'user_id' => Auth::user()->id,
+                        'object_id' => $update->id,
+                        'kategory_activity' => 'ABSENSI',
+                        'activity' => 'Absen Pulang',
+                        'description' => 'Absen Pulang Tanggal ' . $update->tanggal_pulang . ' Jam ' . $update->jam_pulang . ' Keterangan  ' . $update->keterangan_absensi_pulang,
+                        'read_status' => 0
+
+                    ]);
+                    ActivityLog::create([
+                        'user_id' => Auth::user()->id,
+                        'object_id' => $data->id,
+                        'kategory_activity' => 'IZIN',
+                        'activity' => 'Izin Pulang Cepat',
+                        'description' => 'Pengajuan Izin Pulang Cepat Pulang Tanggal ' . $data->tanggal . ' Jam ' . $data->pulang_cepat . ' Keterangan  ' . $data->keterangan_izin,
+                        'read_status' => 0
+
+                    ]);
                     $request->session()->flash('absenpulangsuccess', 'Berhasil Absen Pulang');
                     return redirect('/home');
                 }
@@ -2875,6 +2896,24 @@ class HomeUserController extends Controller
                 $update->keterangan_absensi_pulang = 'PULANG CEPAT';
                 $update->kelengkapan_absensi  = 'PRESENSI LENGKAP';
                 $update->update();
+                ActivityLog::create([
+                    'user_id' => Auth::user()->id,
+                    'object_id' => $update->id,
+                    'kategory_activity' => 'ABSENSI',
+                    'activity' => 'Absen Pulang',
+                    'description' => 'Absen Pulang Tanggal ' . $update->tanggal_pulang . ' Jam ' . $update->jam_pulang . ' Keterangan  ' . $update->keterangan_absensi_pulang,
+                    'read_status' => 0
+
+                ]);
+                ActivityLog::create([
+                    'user_id' => Auth::user()->id,
+                    'object_id' => $data->id,
+                    'kategory_activity' => 'IZIN',
+                    'activity' => 'Izin Pulang Cepat',
+                    'description' => 'Pengajuan Izin Pulang Cepat Pulang Tanggal ' . $data->tanggal . ' Jam ' . $data->pulang_cepat . ' Keterangan  ' . $data->keterangan_izin,
+                    'read_status' => 0
+
+                ]);
                 $request->session()->flash('absenpulangsuccess', 'Berhasil Absen Pulang');
                 return redirect('/home');
             }
