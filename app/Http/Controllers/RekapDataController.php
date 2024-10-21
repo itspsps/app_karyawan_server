@@ -267,7 +267,7 @@ class RekapDataController extends Controller
                         if ($row->foto_jam_absen == '') {
                             $foto_absen_masuk = '';
                         } else {
-                            $foto_absen_masuk = '<a type="button" class="btn btn-sm btn-success" target="_blank" href="http://127.0.0.1:8000/storage/app/public/' . $row->foto_jam_absen . '">LIHAT</a>';
+                            $foto_absen_masuk = '<a type="button" class="btn btn-sm btn-success" target="_blank" href="https://hrd.sumberpangan.store:4430/storage/app/public/' . $row->foto_jam_absen . '">LIHAT</a>';
                         }
                         return $foto_absen_masuk;
                     })
@@ -275,7 +275,7 @@ class RekapDataController extends Controller
                         if ($row->foto_jam_pulang == '') {
                             $foto_absen_pulang = '';
                         } else {
-                            $foto_absen_pulang = '<a type="button" class="btn btn-sm btn-success" target="_blank" href="http://127.0.0.1:8000/storage/app/public/' . $row->foto_jam_pulang . '">LIHAT</a>';
+                            $foto_absen_pulang = '<a type="button" class="btn btn-sm btn-success" target="_blank" href="https://hrd.sumberpangan.store:4430/storage/app/public/' . $row->foto_jam_pulang . '">LIHAT</a>';
                         }
                         return $foto_absen_pulang;
                     })
@@ -407,7 +407,7 @@ class RekapDataController extends Controller
                         if ($row->foto_jam_absen == '') {
                             $foto_absen_masuk = '';
                         } else {
-                            $foto_absen_masuk = '<a type="button" class="btn btn-sm btn-success" target="_blank" href="http://127.0.0.1:8000/storage/app/public/' . $row->foto_jam_absen . '">LIHAT</a>';
+                            $foto_absen_masuk = '<a type="button" class="btn btn-sm btn-success" target="_blank" href="https://hrd.sumberpangan.store:4430/storage/app/public/' . $row->foto_jam_absen . '">LIHAT</a>';
                         }
                         return $foto_absen_masuk;
                     })
@@ -415,7 +415,7 @@ class RekapDataController extends Controller
                         if ($row->foto_jam_pulang == '') {
                             $foto_absen_pulang = '';
                         } else {
-                            $foto_absen_pulang = '<a type="button" class="btn btn-sm btn-success" target="_blank" href="http://127.0.0.1:8000/storage/app/public/' . $row->foto_jam_pulang . '">LIHAT</a>';
+                            $foto_absen_pulang = '<a type="button" class="btn btn-sm btn-success" target="_blank" href="https://hrd.sumberpangan.store:4430/storage/app/public/' . $row->foto_jam_pulang . '">LIHAT</a>';
                         }
                         return $foto_absen_pulang;
                     })
