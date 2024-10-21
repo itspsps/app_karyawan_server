@@ -18,7 +18,7 @@ class HistoryUserController extends Controller
     public function index()
     {
         $user_karyawan = Karyawan::where('id', Auth::user()->karyawan_id)->first();
-        $history_absensi = ActivityLog::where('kategory_activity', 'ABSENSI')->get();
+        $history_absensi = ActivityLog::where('kategory_activity', 'ABSENSI')->where('user_id', $user_karyawan->id)->get();
         $history_izin = ActivityLog::where('kategory_activity', 'IZIN')->get();
         $history_cuti = ActivityLog::where('kategory_activity', 'CUTI')->get();
         $history_penugasan = ActivityLog::where('kategory_activity', 'PENUGASAN')->get();

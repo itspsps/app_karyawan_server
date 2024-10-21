@@ -613,7 +613,7 @@
             <line x1="9" y1="9" x2="9.01" y2="9"></line>
             <line x1="15" y1="9" x2="15.01" y2="9"></line>
         </svg>
-        <strong>Success!</strong> Anda Berhasil Absen Masuk.
+        <strong>Success!</strong> &nbsp;Anda Berhasil Absen Masuk.
         <button class="btn-close" data-bs-dismiss="alert" aria-label="btn-close">
             <i class="fa-solid fa-xmark"></i>
         </button>
@@ -628,7 +628,7 @@
             <line x1="9" y1="9" x2="9.01" y2="9"></line>
             <line x1="15" y1="9" x2="15.01" y2="9"></line>
         </svg>
-        <strong>Success!</strong> Anda Berhasil Absen Pulang.
+        <strong>Success!</strong> &nbsp;Anda Berhasil Absen Pulang.
         <button class="btn-close" data-bs-dismiss="alert" aria-label="btn-close">
             <i class="fa-solid fa-xmark"></i>
         </button>
@@ -642,7 +642,7 @@
             <line x1="15" y1="9" x2="9" y2="15"></line>
             <line x1="9" y1="9" x2="15" y2="15"></line>
         </svg>
-        <strong>error!</strong> Anda Gagal Absen Pulang.
+        <strong>error!</strong> &nbsp;Anda Gagal Absen Pulang.
         <button class="btn-close" data-bs-dismiss="alert" aria-label="btn-close">
             <i class="fa-solid fa-xmark"></i>
         </button>
@@ -685,7 +685,7 @@
             <line x1="9" y1="9" x2="9.01" y2="9"></line>
             <line x1="15" y1="9" x2="15.01" y2="9"></line>
         </svg>
-        <strong>Success!</strong> Anda Berhasil Approve Penugasan.
+        <strong>Success!</strong> &nbsp;Anda Berhasil Approve Penugasan.
         <button class="btn-close" data-bs-dismiss="alert" aria-label="btn-close">
             <i class="fa-solid fa-xmark"></i>
         </button>
@@ -700,7 +700,7 @@
             <line x1="9" y1="9" x2="9.01" y2="9"></line>
             <line x1="15" y1="9" x2="15.01" y2="9"></line>
         </svg>
-        <strong>Success!</strong> Anda Berhasil Tolak Approve Cuti.
+        <strong>Success!</strong> &nbsp;Anda Berhasil Tolak Approve Cuti.
         <button class="btn-close" data-bs-dismiss="alert" aria-label="btn-close">
             <i class="fa-solid fa-xmark"></i>
         </button>
@@ -715,7 +715,7 @@
             <line x1="9" y1="9" x2="9.01" y2="9"></line>
             <line x1="15" y1="9" x2="15.01" y2="9"></line>
         </svg>
-        <strong>Success!</strong> Anda Berhasil Approve Cuti.
+        <strong>Success!</strong>&nbsp; Anda Berhasil Approve Cuti.
         <button class="btn-close" data-bs-dismiss="alert" aria-label="btn-close">
             <i class="fa-solid fa-xmark"></i>
         </button>
@@ -730,7 +730,7 @@
             <line x1="9" y1="9" x2="9.01" y2="9"></line>
             <line x1="15" y1="9" x2="15.01" y2="9"></line>
         </svg>
-        <strong>Success!</strong> Anda Berhasil Tolak Approve Izin.
+        <strong>Success!</strong> &nbsp;Anda Berhasil Tolak Approve Izin.
         <button class="btn-close" data-bs-dismiss="alert" aria-label="btn-close">
             <i class="fa-solid fa-xmark"></i>
         </button>
@@ -745,7 +745,7 @@
             <line x1="9" y1="9" x2="9.01" y2="9"></line>
             <line x1="15" y1="9" x2="15.01" y2="9"></line>
         </svg>
-        <strong>Success!</strong> Anda Berhasil Approve Izin.
+        <strong>Success!</strong> &nbsp;Anda Berhasil Approve Izin.
         <button class="btn-close" data-bs-dismiss="alert" aria-label="btn-close">
             <i class="fa-solid fa-xmark"></i>
         </button>
@@ -829,7 +829,7 @@
             <line x1="15" y1="9" x2="9" y2="15"></line>
             <line x1="9" y1="9" x2="15" y2="15"></line>
         </svg>
-        <strong>Gagal!</strong> Anda Berada Diluar Wilayah Radius Penugasan
+        <strong>Gagal!</strong> &nbsp;Anda Berada Diluar Wilayah Radius Penugasan
         <button class="btn-close" data-bs-dismiss="alert" aria-label="btn-close">
             <i class="fa-solid fa-xmark"></i>
         </button>
@@ -844,7 +844,7 @@
             <line x1="9" y1="9" x2="9.01" y2="9"></line>
             <line x1="15" y1="9" x2="15.01" y2="9"></line>
         </svg>
-        <strong>Success!</strong> Anda Berhasil Menyimpan Face
+        <strong>Success!</strong> &nbsp;Anda Berhasil Menyimpan Face
         <button class="btn-close" data-bs-dismiss="alert" aria-label="btn-close">
             <i class="fa-solid fa-xmark"></i>
         </button>
@@ -859,7 +859,22 @@
             <line x1="9" y1="9" x2="9.01" y2="9"></line>
             <line x1="15" y1="9" x2="15.01" y2="9"></line>
         </svg>
-        <strong>Success!</strong> Anda Gagal Menyimpan Face
+        <strong>Error!</strong> &nbsp;Anda Gagal Menyimpan Face
+        <button class="btn-close" data-bs-dismiss="alert" aria-label="btn-close">
+            <i class="fa-solid fa-xmark"></i>
+        </button>
+    </div>
+</div>
+@elseif(Session::has('jam_kerja_libur'))
+<div id="alert_jam_kerja_libur" class="container" style="margin-top:-5%">
+    <div class="alert alert-danger light alert-lg alert-dismissible fade show">
+        <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" class="me-2">
+            <circle cx="12" cy="12" r="10"></circle>
+            <path d="M8 14s1.5 2 4 2 4-2 4-2"></path>
+            <line x1="9" y1="9" x2="9.01" y2="9"></line>
+            <line x1="15" y1="9" x2="15.01" y2="9"></line>
+        </svg>
+        <strong>Error!</strong>&nbsp;Hari ini Anda Libur
         <button class="btn-close" data-bs-dismiss="alert" aria-label="btn-close">
             <i class="fa-solid fa-xmark"></i>
         </button>
@@ -974,6 +989,11 @@
         </div>
         <div class="jamkerja_content col-5">
             <p class="jamkerja_text">Jam Kerja : </p>
+            @if($jam_kerja->status_absen=='LIBUR')
+            <div class="main-content" style="margin-top: -30%; float: right;">
+                <p class="jamkerja_text_main">LIBUR&nbsp;</p>
+            </div>
+            @else
             <div class="main-content" style="margin-top: -22%; float: right;">
                 <p class="jamkerja_text_main">@if($jam_kerja=='')__-__ @else {{$jam_kerja->shift->jam_kerja}}-{{$jam_kerja->shift->jam_keluar}}@endif&nbsp;</p>
                 <svg xmlns="http://www.w3.org/2000/svg" style="margin-top: -20%;" width="17" height="17" viewBox="-4.52 0 69.472 69.472">
@@ -984,6 +1004,7 @@
                     </g>
                 </svg>
             </div>
+            @endif
         </div>
 
     </div>
@@ -2779,6 +2800,9 @@
             $("#alert_absen_masuk_error").remove();
             $("#alert_absenpulangoutradius").remove();
             $("#alert_absenmasukoutradius").remove();
+            $("#alert_jam_kerja_libur").remove();
+            $("#alert_simpanface_danger").remove();
+            $("#alert_simpanface_success").remove();
         }, 7000); // 7 secs
 
     });

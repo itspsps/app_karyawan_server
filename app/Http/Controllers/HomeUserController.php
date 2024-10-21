@@ -874,6 +874,7 @@ class HomeUserController extends Controller
     }
     public function HomeAbsen(Request $request)
     {
+        // dd('p');
         $user_login = Auth::user()->karyawan_id;
         $user_karyawan = Karyawan::where('id', Auth::user()->karyawan_id)->first();
         $date_now = date('Y');
@@ -905,30 +906,7 @@ class HomeUserController extends Controller
             ->groupBy(DB::raw("Month(tanggal_masuk)"))
             ->pluck('count');
         // dd();
-        $telat_now = MappingShift::whereMonth('tanggal_masuk', $month_now)
-            ->where('user_id', $user_login)
-            ->select(DB::raw("telat as count"))
-            ->pluck('count');
-        $telat_yesterday = MappingShift::whereMonth('tanggal_masuk', $month_yesterday)
-            ->where('user_id', $user_login)
-            ->select(DB::raw("telat as count"))
-            ->pluck('count');
-        $lembur_now = MappingShift::whereMonth('tanggal_masuk', $month_now)
-            ->where('user_id', $user_login)
-            ->select(DB::raw("lembur as count"))
-            ->pluck('count');
-        $lembur_yesterday = MappingShift::whereMonth('tanggal_masuk', $month_yesterday)
-            ->where('user_id', $user_login)
-            ->select(DB::raw("lembur as count"))
-            ->pluck('count');
-        $data_telat_now = MappingShift::whereMonth('tanggal_masuk', $month_yesterday)
-            ->where('user_id', $user_login)
-            ->select(DB::raw("tanggal_masuk as count"))
-            ->pluck('count');
-        $data_telat_yesterday = MappingShift::whereMonth('tanggal_masuk', $month_yesterday)
-            ->where('user_id', $user_login)
-            ->select(DB::raw("tanggal_masuk as count "))
-            ->pluck('count');
+
         $get_mapping = MappingShift::where('user_id', $user_login)->where('tanggal_masuk', $tglkmrn)->first();
         if ($get_mapping == '' || $get_mapping == NULL) {
             $tanggal = $tglskrg;
@@ -937,9 +915,10 @@ class HomeUserController extends Controller
             $tanggal = $tglkmrn;
             $mapping_shift = MappingShift::where('user_id', $user_login)->where('tanggal_masuk', $tanggal)->first();
         }
+
         date_default_timezone_set('Asia/Jakarta');
         $tglskrg = date('Y-m-d');
-        $data_absen = MappingShift::where('tanggal_masuk', $tglskrg)->where('user_id', auth()->user()->id);
+        $data_absen = MappingShift::where('tanggal_masuk', $tglskrg)->where('user_id', $user_karyawan->id);
 
         if ($request["mulai"] == null) {
             $request["mulai"] = $request["akhir"];
@@ -950,7 +929,7 @@ class HomeUserController extends Controller
         }
 
         if ($request["mulai"] && $request["akhir"]) {
-            $data_absen = MappingShift::where('user_id', auth()->user()->id)->whereBetween('tanggal_masuk', [$request["mulai"], $request["akhir"]]);
+            $data_absen = MappingShift::where('user_id', $user_karyawan->id)->whereBetween('tanggal_masuk', [$request["mulai"], $request["akhir"]]);
         }
         // dd($mapping_shift);
         if ($mapping_shift == NULL) {
@@ -976,6 +955,11 @@ class HomeUserController extends Controller
         } else {
             $status_absen_skrg = MappingShift::where('user_id', $user_login)->where('tanggal_masuk', $tglskrg)->orderBy('tanggal_masuk', 'DESC')->first();
             // dd($status_absen_skrg);
+        }
+        // dd($status_absen_skrg->status_absen);
+        if ($status_absen_skrg->status_absen == "LIBUR") {
+            $request->session()->flash('jam_kerja_libur');
+            return redirect('home');
         }
         $cek_jam_maks_kerja = MappingShift::With('Shift')->where('user_id', $user_login)->where('tanggal_masuk', $tglskrg)->first();
         $time_now = date('H:i:s');
@@ -1004,12 +988,6 @@ class HomeUserController extends Controller
                     'date_now' => $date_now,
                     'month_now1' => $month_now1,
                     'month_yesterday1' => $month_yesterday1,
-                    'telat_now' => array_map('intval', json_decode($telat_now)),
-                    'telat_yesterday' => array_map('intval', json_decode($telat_yesterday)),
-                    'lembur_now' => array_map('intval', json_decode($lembur_now)),
-                    'data_telat_now' => $data_telat_now,
-                    'data_telat_yesterday' => $data_telat_yesterday,
-                    'lembur_yesterday' => array_map('intval', json_decode($lembur_yesterday)),
                     'face' => Karyawan::where('id', $user_login)->whereNotNull('face_id')->select('id', 'name', 'face_id')->get(),
                     'karyawan' => Karyawan::where('id', $user_login)->whereNotNull('face_id')->select('id', 'name', 'face_id')->get(),
                     'angka' => 1,
@@ -1032,12 +1010,7 @@ class HomeUserController extends Controller
                         'date_now' => $date_now,
                         'month_now1' => $month_now1,
                         'month_yesterday1' => $month_yesterday1,
-                        'telat_now' => array_map('intval', json_decode($telat_now)),
-                        'telat_yesterday' => array_map('intval', json_decode($telat_yesterday)),
-                        'lembur_now' => array_map('intval', json_decode($lembur_now)),
-                        'data_telat_now' => $data_telat_now,
-                        'data_telat_yesterday' => $data_telat_yesterday,
-                        'lembur_yesterday' => array_map('intval', json_decode($lembur_yesterday)),
+
                         'face' => Karyawan::where('id', $user_login)->whereNotNull('face_id')->select('id', 'name', 'face_id')->get(),
                         'karyawan' => Karyawan::where('id', $user_login)->whereNotNull('face_id')->select('id', 'name', 'face_id')->get(),
                         'angka' => 1,
@@ -1072,12 +1045,7 @@ class HomeUserController extends Controller
                 'date_now' => $date_now,
                 'month_now1' => $month_now1,
                 'month_yesterday1' => $month_yesterday1,
-                'telat_now' => array_map('intval', json_decode($telat_now)),
-                'telat_yesterday' => array_map('intval', json_decode($telat_yesterday)),
-                'lembur_now' => array_map('intval', json_decode($lembur_now)),
-                'data_telat_now' => $data_telat_now,
-                'data_telat_yesterday' => $data_telat_yesterday,
-                'lembur_yesterday' => array_map('intval', json_decode($lembur_yesterday)),
+
                 'face' => Karyawan::where('id', $user_login)->whereNotNull('face_id')->select('id', 'name', 'face_id')->get(),
                 'karyawan' => Karyawan::where('id', $user_login)->whereNotNull('face_id')->select('id', 'name', 'face_id')->get(),
                 'angka' => 1,
