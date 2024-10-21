@@ -1068,7 +1068,7 @@
                                 @if ($status_absen_skrg->jam_pulang == null && $status_absen_skrg->jam_pulang=="")
                                 &nbsp;-
                                 @else
-                                <span class="badge w-80 light badge-success absen_pulang_text">
+                                <span class="badge w-80 light badge-danger absen_pulang_text">
                                     &nbsp;{{$status_absen_skrg->jam_pulang}}&nbsp;WIB
 
                                 </span>
