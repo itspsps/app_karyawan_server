@@ -66,7 +66,7 @@ class CutiUserController extends Controller
                 if ($get_nama_jabatan == NULL || $get_nama_jabatan == '') {
                     $get_atasan_site = Jabatan::Join('divisis', 'divisis.id', 'jabatans.divisi_id')
                         ->Join('bagians', 'bagians.id', 'jabatans.bagian_id')
-                        ->where('jabatans.id', $IdLevelAtasan->atasan_id)
+                        ->where('jabatans.id', $IdLevelAtasan->id)
                         ->select('jabatans.id', 'divisis.nama_divisi', 'jabatans.nama_jabatan', 'bagians.nama_bagian', 'jabatans.holding')
                         ->first();
                     if ($get_atasan_site->holding == 'sps') {
@@ -854,9 +854,10 @@ class CutiUserController extends Controller
                 if ($get_nama_jabatan == NULL || $get_nama_jabatan == '') {
                     $get_atasan_site = Jabatan::Join('divisis', 'divisis.id', 'jabatans.divisi_id')
                         ->Join('bagians', 'bagians.id', 'jabatans.bagian_id')
-                        ->where('jabatans.id', $IdLevelAtasan->atasan_id)
+                        ->where('jabatans.id', $IdLevelAtasan->id)
                         ->select('jabatans.id', 'divisis.nama_divisi', 'jabatans.nama_jabatan', 'bagians.nama_bagian', 'jabatans.holding')
                         ->first();
+                    // dd($get_atasan_site);
                     if ($get_atasan_site->holding == 'sps') {
                         $get_atasan_more = Jabatan::Join('divisis', 'divisis.id', 'jabatans.divisi_id')
                             ->Join('bagians', 'bagians.id', 'jabatans.bagian_id')
