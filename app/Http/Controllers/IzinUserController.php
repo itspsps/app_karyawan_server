@@ -229,6 +229,7 @@ class IzinUserController extends Controller
                                         ->where('bagians.nama_bagian', $get_atasan_site->nama_bagian)
                                         ->whereIn('jabatans.holding', ['sp', 'sip'])
                                         ->select('jabatans.id', 'jabatans.atasan_id', 'divisis.nama_divisi', 'jabatans.nama_jabatan', 'bagians.nama_bagian', 'jabatans.holding')
+                                        ->orderBy('jabatans.holding', 'DESC')
                                         ->first();
                                 } else if ($get_atasan_site->holding == 'sip') {
                                     $get_atasan_more = Jabatan::Join('divisis', 'divisis.id', 'jabatans.divisi_id')
@@ -247,6 +248,7 @@ class IzinUserController extends Controller
                                         ->where('bagians.nama_bagian', $get_atasan_site->nama_bagian)
                                         ->whereIn('jabatans.holding', ['sps', 'sip'])
                                         ->select('jabatans.id', 'jabatans.atasan_id', 'divisis.nama_divisi', 'jabatans.nama_jabatan', 'bagians.nama_bagian', 'jabatans.holding')
+                                        ->orderBy('jabatans.holding', 'DESC')
                                         ->first();
                                 }
                                 // dd($get_atasan_more);
@@ -371,6 +373,7 @@ class IzinUserController extends Controller
                                         ->where('bagians.nama_bagian', $get_atasan_site->nama_bagian)
                                         ->whereIn('jabatans.holding', ['sp', 'sip'])
                                         ->select('jabatans.id', 'jabatans.atasan_id', 'divisis.nama_divisi', 'jabatans.nama_jabatan', 'bagians.nama_bagian', 'jabatans.holding')
+                                        ->orderBy('jabatans.holding', 'DESC')
                                         ->first();
                                 } else if ($get_atasan_site->holding == 'sip') {
                                     $get_atasan_more = Jabatan::Join('divisis', 'divisis.id', 'jabatans.divisi_id')
@@ -390,6 +393,7 @@ class IzinUserController extends Controller
                                         ->where('jabatans.holding', 'sps')
                                         ->whereIn('jabatans.holding', ['sps', 'sip'])
                                         ->select('jabatans.id', 'jabatans.atasan_id', 'divisis.nama_divisi', 'jabatans.nama_jabatan', 'bagians.nama_bagian', 'jabatans.holding')
+                                        ->orderBy('jabatans.holding', 'DESC')
                                         ->first();
                                 }
                                 // dd($get_atasan_more);
@@ -515,6 +519,7 @@ class IzinUserController extends Controller
                                         ->where('bagians.nama_bagian', $get_atasan_site->nama_bagian)
                                         ->whereIn('jabatans.holding', ['sp', 'sip'])
                                         ->select('jabatans.id', 'jabatans.atasan_id', 'divisis.nama_divisi', 'jabatans.nama_jabatan', 'bagians.nama_bagian', 'jabatans.holding')
+                                        ->orderBy('jabatans.holding', 'DESC')
                                         ->first();
                                 } else if ($get_atasan_site->holding == 'sip') {
                                     $get_atasan_more = Jabatan::Join('divisis', 'divisis.id', 'jabatans.divisi_id')
@@ -533,6 +538,7 @@ class IzinUserController extends Controller
                                         ->where('bagians.nama_bagian', $get_atasan_site->nama_bagian)
                                         ->whereIn('jabatans.holding', ['sps', 'sip'])
                                         ->select('jabatans.id', 'jabatans.atasan_id', 'divisis.nama_divisi', 'jabatans.nama_jabatan', 'bagians.nama_bagian', 'jabatans.holding')
+                                        ->orderBy('jabatans.holding', 'DESC')
                                         ->first();
                                 }
                                 // dd($get_atasan_more);
