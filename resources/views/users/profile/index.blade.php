@@ -10,7 +10,22 @@
 @section('content')
 <div class="fixed-content p-0" style=" border-radius: 10px; margin-top: 0%;box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19); ">
     <div class=" container" style="margin-top: -5%;">
-
+        @if(Session::has('profile_update_success'))
+        <div id="alert_profile_update_success" class="container" style="margin-top:-5%">
+            <div class="alert alert-success light alert-lg alert-dismissible fade show">
+                <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" class="me-2">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <path d="M8 14s1.5 2 4 2 4-2 4-2"></path>
+                    <line x1="9" y1="9" x2="9.01" y2="9"></line>
+                    <line x1="15" y1="9" x2="15.01" y2="9"></line>
+                </svg>
+                <strong>Sukses!</strong> Anda Berhasil Update Foto Profile.
+                <button class="btn-close" data-bs-dismiss="alert" aria-label="btn-close">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+        </div>
+        @endif
         <div class="dz-banner-heading">
             <div class="overlay-black-light">
                 <img src="{{ asset('assets/assets_users/images/bg_profil.jpg') }}" class="bnr-img" alt="">

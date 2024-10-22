@@ -142,6 +142,7 @@ Route::middleware('auth:web', 'log.activity')->group(function () {
     // PROFILE USER
     Route::get('/profile', [ProfileUserController::class, 'index'])->name('profile');
     Route::get('/change_photoprofile_camera', [ProfileUserController::class, 'change_photoprofile_camera']);
+    Route::post('/save_capture_profile', [ProfileUserController::class, 'save_capture_profile']);
 
 
     Route::put('/absen/masuk/{id}', [AbsenController::class, 'absenMasuk']);
