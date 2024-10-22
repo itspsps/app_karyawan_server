@@ -989,6 +989,18 @@
         </div>
         <div class="jamkerja_content col-5">
             <p class="jamkerja_text">Jam Kerja : </p>
+            @if($jam_kerja==NULL || $jam_kerja=='')
+            <div class="main-content" style="margin-top: -22%; float: right;">
+                <p class="jamkerja_text_main">@if($jam_kerja=='')__-__ @else {{$jam_kerja->shift->jam_kerja}}-{{$jam_kerja->shift->jam_keluar}}@endif&nbsp;</p>
+                <svg xmlns="http://www.w3.org/2000/svg" style="margin-top: -20%;" width="17" height="17" viewBox="-4.52 0 69.472 69.472">
+                    <g id="Group_4" data-name="Group 4" transform="translate(-651.45 -155.8)">
+                        <circle id="Ellipse_4" data-name="Ellipse 4" cx="28.716" cy="28.716" r="28.716" transform="translate(652.95 157.3)" fill="none" stroke="#000000" stroke-miterlimit="10" stroke-width="3" />
+                        <path id="Path_11" data-name="Path 11" d="M697.51,186.016H681.667V163.846" fill="none" stroke="#814dff" stroke-miterlimit="10" stroke-width="3" />
+                        <circle id="Ellipse_5" data-name="Ellipse 5" cx="28.716" cy="28.716" r="28.716" transform="translate(652.95 166.34)" fill="none" stroke="#000000" stroke-linecap="round" stroke-miterlimit="10" stroke-width="3" opacity="0.15" />
+                    </g>
+                </svg>
+            </div>
+            @else
             @if($jam_kerja->status_absen=='LIBUR')
             <div class="main-content" style="margin-top: -30%; float: right;">
                 <p class="jamkerja_text_main">LIBUR&nbsp;</p>
@@ -1004,6 +1016,7 @@
                     </g>
                 </svg>
             </div>
+            @endif
             @endif
         </div>
 

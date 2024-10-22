@@ -46,11 +46,14 @@ class ProfileUserController extends Controller
         $file = $folderPath . $fileName;
         // dd($file);
         Storage::put($file, $image_base64);
-
-        $update_foto                = Karyawan::where('id', $user_karyawan->id)->first();
-        $update_foto->foto_karyawan = $fileName;
-        $update_foto->update();
-        $request->session()->flash('profile_update_success');
+        if ($img) {
+            $update_foto                = Karyawan::where('id', $user_karyawan->id)->first();
+            $update_foto->foto_karyawan = $fileName;
+            $update_foto->update();
+            $request->session()->flash('profile_update_success');
+        } else {
+            $request->session()->flash('profile_update_error');
+        }
         return redirect('profile');
     }
 }

@@ -25,6 +25,21 @@
                 </button>
             </div>
         </div>
+        @elseif(Session::has('profile_update_error'))
+        <div id="alert_profile_update_error" class="container" style="margin-top:-5%">
+            <div class="alert alert-danger light alert-lg alert-dismissible fade show">
+                <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" class="me-2">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <path d="M8 14s1.5 2 4 2 4-2 4-2"></path>
+                    <line x1="9" y1="9" x2="9.01" y2="9"></line>
+                    <line x1="15" y1="9" x2="15.01" y2="9"></line>
+                </svg>
+                <strong>Error!</strong> Anda Gagal Update Foto Profile.
+                <button class="btn-close" data-bs-dismiss="alert" aria-label="btn-close">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+        </div>
         @endif
         <div class="dz-banner-heading">
             <div class="overlay-black-light">
@@ -50,13 +65,13 @@
                 </div>
                 <div class="mb-2">
                     <h4 class="mb-0">{{ $user_karyawan->name}}</h4>
-                    <span class="detail">{{ $user_karyawan->name }}</span>
+                    <span class="detail">{{ Auth::user()->username }}</span>
                 </div>
                 <p>{{ $user_karyawan->penempatan_kerja }}</p>
             </div>
             <ul class="contact-profile">
                 <li class="d-flex align-items-center">
-                    <a href="messages.html" class="contact-icon">
+                    <a href="{{url('detail_profile)}}" class="contact-icon">
                         <svg class="text-primary" width="24" height="24" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path d="M26.2806 19.775C26.2089 19.7181 21 15.9635 19.5702 16.233C18.8877 16.3538 18.4975 16.8193 17.7144 17.7511C17.5884 17.9016 17.2856 18.2621 17.0503 18.5185C16.5553 18.3571 16.0726 18.1606 15.6056 17.9305C13.1955 16.7571 11.2481 14.8098 10.0747 12.3996C9.84451 11.9327 9.648 11.45 9.48675 10.955C9.744 10.7188 10.1045 10.416 10.2585 10.2865C11.186 9.50775 11.6524 9.1175 11.7731 8.43325C12.0208 7.01575 8.26875 1.771 8.22937 1.72375C8.05914 1.48056 7.83698 1.27825 7.57896 1.13147C7.32095 0.984676 7.03353 0.897075 6.7375 0.875C5.21675 0.875 0.875 6.50737 0.875 7.45587C0.875 7.511 0.954625 13.1145 7.8645 20.1434C14.8864 27.0454 20.489 27.125 20.5441 27.125C21.4935 27.125 27.125 22.7832 27.125 21.2625C27.1032 20.9675 27.0161 20.681 26.8701 20.4238C26.724 20.1666 26.5227 19.945 26.2806 19.775Z" fill="#40189D"></path>
                         </svg>
@@ -267,5 +282,16 @@
             },
         });
     };
+</script>
+<script>
+    $("document").ready(function() {
+        // console.log('ok');
+        setTimeout(function() {
+            // console.log('ok1');
+            $("#alert_profile_update_success").remove();
+            $("#alert_profile_update_error").remove();
+        }, 7000); // 7 secs
+
+    });
 </script>
 @endsection
