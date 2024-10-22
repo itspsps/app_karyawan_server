@@ -1,5 +1,15 @@
 @extends('users.profile.layouts.main')
 @section('title') APPS | KARYAWAN - SP @endsection
+@section('css')
+<style>
+    @media (max-width: 576px) {
+        #my_camera video {
+            max-width: 100%;
+            max-height: 80%;
+        }
+    }
+</style>
+@endsection
 @section('content')
 <div class="fixed-content p-0" style=" border-radius: 10px; margin-top: 0%;box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19); ">
     <div class=" container" style="margin-top: -5%;">
