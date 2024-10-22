@@ -23,4 +23,12 @@ class ProfileUserController extends Controller
             'user_karyawan' => $user_karyawan
         ]);
     }
+    public function change_photoprofile_camera()
+    {
+        $user_karyawan = Karyawan::where('id', Auth::user()->karyawan_id)->first();
+        return view('users.profile.change_photoprofile_camera', [
+            'title' => 'Profile',
+            'user_karyawan' => $user_karyawan
+        ]);
+    }
 }

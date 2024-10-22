@@ -139,7 +139,10 @@ Route::middleware('auth:web', 'log.activity')->group(function () {
     Route::get('/history', [HistoryUserController::class, 'index'])->name('history');
 
     // Route::get('/absen', [HomeUserController::class, 'HomeAbsen'])->name('absen');
+    // PROFILE USER
     Route::get('/profile', [ProfileUserController::class, 'index'])->name('profile');
+    Route::get('/change_photoprofile_camera', [ProfileUserController::class, 'change_photoprofile_camera']);
+
 
     Route::put('/absen/masuk/{id}', [AbsenController::class, 'absenMasuk']);
     Route::put('/absen/pulang/{id}', [AbsenController::class, 'absenPulang']);
