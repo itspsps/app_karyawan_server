@@ -136,7 +136,7 @@
                     @if($user_karyawan->foto_karyawan == '' || $user_karyawan->foto_karyawan == NULL)
                     <a href="{{route('profile')}}"><img src="{{asset('admin/assets/img/avatars/1.png')}}" class="rounded-circle" alt="author-image"></a>
                     @else
-                    <a href="{{route('profile')}}"><img src="{{ url('https://127.0.0.1:8000/storage/app/public/foto_karyawan/'.$user_karyawan->foto_karyawan) }}" class="rounded-circle" alt="author-image"></a>
+                    <a href="{{route('profile')}}"><img src="{{ url('https://hrd.sumberpangan.storage:4430/storage/app/public/foto_karyawan/'.$user_karyawan->foto_karyawan) }}" class="rounded-circle" alt="author-image"></a>
                     @endif
                 </div>
             </div>

@@ -37,7 +37,7 @@
                     @if($user_karyawan->foto_karyawan == '' || $user_karyawan->foto_karyawan == NULL)
                     <img width="60px" src="{{asset('admin/assets/img/avatars/1.png')}}" alt="/">
                     @else
-                    <img width="60px" src="{{ url('https://hrd.sumberpangan.store/storage/app/public/foto_karyawan/'.$user_karyawan->foto_karyawan) }}" alt="author-image">
+                    <img width="60px" src="{{ url('https://hrd.sumberpangan.store:4430/storage/app/public/foto_karyawan/'.$user_karyawan->foto_karyawan) }}" alt="author-image">
                     @endif
                 </div>
                 <div class="" style="margin-top: -8%; padding: 0;">
