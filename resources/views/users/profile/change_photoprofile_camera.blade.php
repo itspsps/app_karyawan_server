@@ -40,7 +40,7 @@
             @csrf
             <div class="col-md-6">
                 <div id="results"></div>
-                <input type="hidden" name="image" class="image-tag">
+                <input type="hidden" name="gallery_image" class="image-tag">
             </div>
             <br>
             <button type="submit" id="btn_klik" class="btn btn-sm btn-info light pwa-btn">
@@ -79,6 +79,7 @@
     function take_snapshot() {
         Webcam.snap(function(data_uri) {
             $(".image-tag").val(data_uri);
+            console.log(data_uri);
             document.getElementById('results').innerHTML = '<img src="' + data_uri + '"/>';
         });
     }

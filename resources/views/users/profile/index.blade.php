@@ -179,7 +179,7 @@
             </svg>
             &nbsp;Gallery
         </button>
-        <input type="file" hidden id="gallery_image" name="gallery_image" value="" accept="image/jpeg">
+        <input type="file" hidden id="gallery_image" value="" accept="image/jpeg">
         <a id="btn_klik" href="{{url('change_photoprofile_camera')}}" class="btn btn-sm light btn-primary ms-2">
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none">
                 <circle cx="12" cy="13" r="3" stroke="#1C274C" stroke-width="1.5" />
@@ -190,10 +190,56 @@
         </a>
     </div>
 </div>
+<div class="offcanvas offcanvas-bottom" tabindex="-1" id="offcanvas_konfirmasi_edit_profile" aria-labelledby="offcanvasBottomLabel">
+    <div class="offcanvas-body text-center small">
+        <h5 class="title">Konfirmasi</h5>
+        <p>Konfirmasi Pengambilan Foto</p>
+        <img src="" id="preview_gallery" alt="">
+        <form method="POST" action="{{ url('save_capture_profile') }}" enctype="multipart/form-data">
+            @csrf
+            <div class="col-md-6">
+                <div id="results"></div>
+                <input type="hidden" name="gallery_image" class="image-tag">
+            </div>
+            <br>
+            <button type="submit" id="btn_klik" class="btn btn-sm btn-info light pwa-btn">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none">
+                    <path d="M15 13H9" stroke="#1C274C" stroke-width="1.5" stroke-linecap="round" />
+                    <path d="M12 10L12 16" stroke="#1C274C" stroke-width="1.5" stroke-linecap="round" />
+                    <path d="M19 10H18" stroke="#1C274C" stroke-width="1.5" stroke-linecap="round" />
+                    <path d="M2 13.3636C2 10.2994 2 8.76721 2.74902 7.6666C3.07328 7.19014 3.48995 6.78104 3.97524 6.46268C4.69555 5.99013 5.59733 5.82123 6.978 5.76086C7.63685 5.76086 8.20412 5.27068 8.33333 4.63636C8.52715 3.68489 9.37805 3 10.3663 3H13.6337C14.6219 3 15.4728 3.68489 15.6667 4.63636C15.7959 5.27068 16.3631 5.76086 17.022 5.76086C18.4027 5.82123 19.3044 5.99013 20.0248 6.46268C20.51 6.78104 20.9267 7.19014 21.251 7.6666C22 8.76721 22 10.2994 22 13.3636C22 16.4279 22 17.9601 21.251 19.0607C20.9267 19.5371 20.51 19.9462 20.0248 20.2646C18.9038 21 17.3433 21 14.2222 21H9.77778C6.65675 21 5.09624 21 3.97524 20.2646C3.48995 19.9462 3.07328 19.5371 2.74902 19.0607C2.53746 18.7498 2.38566 18.4045 2.27673 18" stroke="#1C274C" stroke-width="1.5" stroke-linecap="round" />
+                </svg>
+                &nbsp;Simpan
+            </button>
+            <a href="javascript:void(0);" class="btn btn-sm light btn-primary ms-2" data-bs-dismiss="offcanvas" aria-label="Close">
+                &nbsp;Batal
+            </a>
+        </form>
+    </div>
+</div>
 @endsection
 @section('js')
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
 <script>
+    function readURL(input) {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+
+            reader.onload = function(e) {
+                $('#preview_gallery').attr('src', e.target.result);
+                $('.image-tag').val(e.target.result);
+            }
+
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+
+    $("#gallery_image").change(function() {
+        readURL(this);
+        var bsOffcanvas = new bootstrap.Offcanvas(document.getElementById('offcanvas_konfirmasi_edit_profile'))
+        bsOffcanvas.show()
+    });
+
     function thisFileUpload() {
         document.getElementById("gallery_image").click();
     };

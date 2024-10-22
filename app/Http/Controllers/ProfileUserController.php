@@ -36,7 +36,7 @@ class ProfileUserController extends Controller
     {
         // dd($request->all());
         $user_karyawan = Karyawan::where('id', Auth::user()->karyawan_id)->first();
-        $img = $request->image;
+        $img = $request->gallery_image;
         $folderPath = "foto_karyawan/";
         $image_parts = explode(";base64,", $img);
         $image_type_aux = explode("image/", $image_parts[0]);
