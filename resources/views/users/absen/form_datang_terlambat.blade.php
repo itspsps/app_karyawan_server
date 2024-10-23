@@ -230,6 +230,7 @@
     <script type="text/javascript" src="{{ asset('assets_ttd/assets/signature.js') }}"></script>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
     <script>
         var wrapper = document.getElementById("signature-pad");
         var clearButton = wrapper.querySelector("[data-action=clear]");
@@ -257,6 +258,35 @@
         function my_function() {
             document.getElementById("note").innerHTML = "";
         }
+    </script>
+    <script>
+        $(document).on('click', '#save_btn', function(e) {
+            Swal.fire({
+                allowOutsideClick: false,
+                background: 'transparent',
+                html: ' <div class="spinner-grow text-primary spinner-grow-sm me-2" role="status"></div><div class="spinner-grow text-primary spinner-grow-sm me-2" role="status"></div><div class="spinner-grow text-primary spinner-grow-sm me-2" role="status"></div>',
+                showCancelButton: false,
+                showConfirmButton: false,
+                onBeforeOpen: () => {
+                    // Swal.showLoading()
+                },
+            });
+        });
+        window.onbeforeunload = function() {
+            Swal.fire({
+                allowOutsideClick: false,
+                background: 'transparent',
+                html: ' <div class="spinner-grow text-primary spinner-grow-sm me-2" role="status"></div><div class="spinner-grow text-primary spinner-grow-sm me-2" role="status"></div><div class="spinner-grow text-primary spinner-grow-sm me-2" role="status"></div>',
+                showCancelButton: false,
+                showConfirmButton: false,
+                onBeforeOpen: () => {
+                    // Swal.showLoading()
+                },
+                onAfterClose() {
+                    Swal.close()
+                }
+            });
+        };
     </script>
 
 </body>

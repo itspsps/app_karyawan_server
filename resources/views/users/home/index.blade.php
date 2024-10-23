@@ -1321,7 +1321,7 @@
                                 <div class="media media-80">
                                     @if($a->User != '')
                                     @if($a->User->foto_karyawan != '')
-                                    <img src="https://hrd.sumberpangan.store:4430/storage/app/public/foto_karyawan/{{$a->User->foto_karyawan}}" alt="/">
+                                    <img src="{{asset('../storage/app/public/foto_karyawan/'.$a->User->foto_karyawan)}}" alt="/">
                                     @else
                                     <img src="{{ asset('admin/assets/img/avatars/1.png') }}" alt="/">
                                     @endif
@@ -1380,7 +1380,7 @@
                             <div class="card-body">
                                 <div class="media media-80">
                                     @if($a->User->foto_karyawan != '')
-                                    <img src="https://hrd.sumberpangan.store:4430/storage/app/public/foto_karyawan/{{$a->User->foto_karyawan}}" alt="/">
+                                    <img src="{{asset('../storage/app/public/foto_karyawan/'.$a->User->foto_karyawan)}}" alt="/">
                                     @else
                                     <img src="{{ asset('admin/assets/img/avatars/1.png') }}" alt="/">
                                     @endif
@@ -1440,7 +1440,7 @@
                             <div class="card-body">
                                 <div class="media media-80">
                                     @if($a->User->foto_karyawan != '')
-                                    <img src="https://hrd.sumberpangan.store:4430/storage/app/public/foto_karyawan/{{$a->User->foto_karyawan}}" alt="/">
+                                    <img src="{{asset('../storage/app/public/foto_karyawan/'.$a->User->foto_karyawan)}}" alt="/">
                                     @else
                                     <img src="{{ asset('admin/assets/img/avatars/1.png') }}" alt="/">
                                     @endif
