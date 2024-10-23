@@ -141,9 +141,16 @@ Route::middleware('auth:web', 'log.activity')->group(function () {
     // Route::get('/absen', [HomeUserController::class, 'HomeAbsen'])->name('absen');
     // PROFILE USER
     Route::get('/profile', [ProfileUserController::class, 'index'])->name('profile');
+
     Route::get('/detail_profile', [ProfileUserController::class, 'detail_profile']);
+    Route::post('/save_detail_profile', [ProfileUserController::class, 'save_detail_profile']);
+
     Route::get('/detail_alamat', [ProfileUserController::class, 'detail_alamat']);
+    Route::post('/save_detail_alamat', [ProfileUserController::class, 'save_detail_alamat']);
+
     Route::get('/detail_account', [ProfileUserController::class, 'detail_account']);
+    Route::post('/save_detail_account', [ProfileUserController::class, 'save_detail_account']);
+
     Route::get('/change_photoprofile_camera', [ProfileUserController::class, 'change_photoprofile_camera']);
     Route::post('/save_capture_profile', [ProfileUserController::class, 'save_capture_profile']);
 
