@@ -56,4 +56,7 @@ class ProfileUserController extends Controller
         }
         return redirect('profile');
     }
+    public function detail_profile(Request $request) {}
+    public function detail_alamat(Request $request) {}
+    public function detail_account(Request $request) {}
 }
