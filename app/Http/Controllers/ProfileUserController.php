@@ -18,6 +18,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Ramsey\Uuid\Uuid;
+use Intervention\Image\Laravel\Facades\Image;
 
 class ProfileUserController extends Controller
 {
@@ -41,16 +42,24 @@ class ProfileUserController extends Controller
     {
         // dd($request->all());
         $user_karyawan = Karyawan::where('id', Auth::user()->karyawan_id)->first();
-        $img = $request->gallery_image;
+        $img = $request->file('gallery_image');
         $folderPath = "foto_karyawan/";
-        $image_parts = explode(";base64,", $img);
-        $image_type_aux = explode("image/", $image_parts[0]);
-        $image_type = $image_type_aux[1];
-        $image_base64 = base64_decode($image_parts[1]);
-        $fileName =  date('y-m-d') . '-' . Uuid::uuid4() . '.' . $image_type;
+        // $image_parts = explode(";base64,", $img);
+        // $image_type_aux = explode("image/", $image_parts[0]);
+        // $image_type = $image_type_aux[1];
+        // $image_base64 = base64_decode($image_parts[1]);
+        $fileName =  date('y-m-d') . '-' . Uuid::uuid4() . '.jpeg';
         $file = $folderPath . $fileName;
-        // dd($file);
-        Storage::put($file, $image_base64);
+        $width = 500;
+        $height = null;
+        $img = Image::read($img->getRealPath());
+        // dd($img);
+        $img->resize(300, 300, function ($constraint) {
+            $constraint->aspectRatio();
+        });
+        $img->save(public_path('../storage/app/public/foto_karyawan/') . $fileName);
+        // Storage::disk('s3')->put("{$app}/{$directory}/{$fileName}", $img, 'public');
+        // Storage::put($file, $img, 'public');
         if ($img) {
             $update_foto                = Karyawan::where('id', $user_karyawan->id)->first();
             $update_foto->foto_karyawan = $fileName;

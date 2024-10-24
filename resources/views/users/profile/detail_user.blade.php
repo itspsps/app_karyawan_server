@@ -41,7 +41,7 @@
                                         <i class="fa fa-key"></i>
                                     </span>
                                     <input type="password" class="form-control @error('password') is-invalid @enderror" @if(Auth::user()->user_aktif=='NON AKTIF') disabled @else @endif id="password" name="password" placeholder="Password" value="{{old('password',Auth::user()->password_show)}}">
-                                    <span class="input-icon" style="float: right;" onclick="password_show_hide();">
+                                    <span class="input-icon" style="left: 90%;" onclick="password_show_hide();">
                                         <i class="fa fa-eye-slash d-none" id="hide_eye"></i>
                                         <i class="fa fa-eye" id="show_eye"></i>
                                     </span>
@@ -167,5 +167,22 @@
             $('#content_alamat_domisili').show();
         }
     });
+
+    function password_show_hide() {
+        var x = document.getElementById("password");
+        var show_eye = document.getElementById("show_eye");
+        var hide_eye = document.getElementById("hide_eye");
+        hide_eye.classList.remove("d-none");
+        if (x.type === "password") {
+            x.type = "text";
+            show_eye.style.display = "none";
+            hide_eye.style.display = "block";
+        } else {
+            x.type = "password";
+            show_eye.style.display = "block";
+            hide_eye.style.display = "none";
+
+        }
+    }
 </script>
 @endsection

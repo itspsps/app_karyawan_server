@@ -358,7 +358,6 @@
             </svg>
             &nbsp;Gallery
         </button>
-        <input type="file" hidden id="gallery_image" value="" accept="image/jpeg">
         <a id="btn_klik" href="{{url('change_photoprofile_camera')}}" class="btn btn-sm light btn-primary ms-2">
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none">
                 <circle cx="12" cy="13" r="3" stroke="#1C274C" stroke-width="1.5" />
@@ -378,7 +377,7 @@
             @csrf
             <div class="col-md-6">
                 <div id="results"></div>
-                <input type="hidden" name="gallery_image" class="image-tag">
+                <input type="file" hidden id="gallery_image" name="gallery_image" value="" accept="image/jpeg">
             </div>
             <br>
             <button type="submit" id="btn_klik" class="btn btn-sm btn-info light pwa-btn">
@@ -406,7 +405,6 @@
 
             reader.onload = function(e) {
                 $('#preview_gallery').attr('src', e.target.result);
-                $('.image-tag').val(e.target.result);
             }
 
             reader.readAsDataURL(input.files[0]);
@@ -414,6 +412,8 @@
     }
 
     $("#gallery_image").change(function() {
+        var result = $(this).val();
+        console.log(result);
         readURL(this);
         var bsOffcanvas = new bootstrap.Offcanvas(document.getElementById('offcanvas_konfirmasi_edit_profile'))
         bsOffcanvas.show()
