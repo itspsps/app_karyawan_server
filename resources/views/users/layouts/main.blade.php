@@ -98,9 +98,7 @@
         </div>
         <!-- Preloader end-->
 
-        <!-- Sidebar -->
-        @include('users.layouts.sidebar')
-        <!-- Sidebar End -->
+
 
         <!-- Banner -->
         <div class="banner-wrapper author-notification">
