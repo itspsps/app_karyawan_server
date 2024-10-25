@@ -16,7 +16,13 @@
     <div class="row">
         <div class="col-md-12">
             <div class="card mb-4">
-                <h4 class="card-header"><a href="@if(Auth::user()->is_admin=='hrd'){{url('hrd/karyawan/'.$holding)}}@else{{url('karyawan/'.$holding)}}@endif"><i class="mdi mdi-arrow-left-bold"></i></a>&nbsp;Profil</h4>
+                <div class="card-header">
+                    <a href="@if(Auth::user()->is_admin=='hrd'){{url('hrd/karyawan/detail/'.$karyawan->id.'/'.$holding)}}@else{{url('karyawan/detail/'.$karyawan->id.'/'.$holding)}}@endif" class="btn btn-sm btn-primary">
+                        <i class="mdi mdi-account-arrow-left"></i>
+                        &nbsp;Profil
+                    </a>
+                </div>
+                </ul>
                 <!-- Account -->
                 <div class="card-body">
                     <div class="d-flex align-items-start align-items-sm-center gap-4">

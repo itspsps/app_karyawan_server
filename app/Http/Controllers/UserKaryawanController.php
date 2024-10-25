@@ -114,7 +114,9 @@ class UserKaryawanController extends Controller
                             $name = '<span style="color:red; text-decoration: line-through;">' . $row->Karyawan->name . '</span>';
                             $name = $name . '<br><span class="badges bg-label-danger">NON AKTIF</span>';
                         } else {
-                            $name = '<span>' . $row->Karyawan->name . '</span>';
+                            $name = '<a href=../karyawan/shift/' . $row->Karyawan->id . '/' . $holding . '>
+                            <span class="badge bg-label-success">' . $row->Karyawan->name . '</span>
+                            </a>';
                         }
                     }
                     return $name;

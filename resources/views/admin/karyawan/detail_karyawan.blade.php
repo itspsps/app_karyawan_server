@@ -14,7 +14,7 @@
                     <a class="nav-link active" href="javascript:void(0);"><i class="mdi mdi-account-outline mdi-20px me-1"></i>{{$karyawan->name}}&nbsp;<b>[{{$karyawan->nomor_identitas_karyawan}}]</b></a>
                 </li>
                 <li class="nav-item">
-                    <a class="btn btn-info" href="@if(Auth::user()->is_admin=='hrd'){{url('/hrd/karyawan/shift/'.$karyawan->id.'/'.$holding)}}@else{{url('/karyawan/shift/'.$karyawan->id.'/'.$holding)}}@endif"><i class="mdi mdi-clock-outline mdi-20px me-1"></i>Mapping Jadwal&nbsp;</a>
+                    <a class="btn btn-sm btn-info" href="@if(Auth::user()->is_admin=='hrd'){{url('/hrd/karyawan/shift/'.$karyawan->id.'/'.$holding)}}@else{{url('/karyawan/shift/'.$karyawan->id.'/'.$holding)}}@endif"><i class="mdi mdi-clock-outline mdi-20px me-1"></i>Mapping Jadwal&nbsp;</a>
                 </li>
             </ul>
             <div class="card mb-4">

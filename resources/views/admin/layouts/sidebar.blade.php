@@ -110,7 +110,13 @@
         @if(Auth::user()->is_admin =='hrd'){{ Request::is('hrd/jabatan*') ? 'active open' : '' }} 
         @else 
         {{ Request::is('jabatan*') ? 'active open' : '' }}
-        @endif">
+        @endif
+          @if(Auth::user()->is_admin =='hrd')
+          {{ Request::is('hrd/karyawan/shift/*') ? 'active open' : '' }}
+          @else
+          {{ Request::is('karyawan/shift/*') ? 'active open' : '' }}
+          @endif
+         ">
             <a href="javascript:void(0);" class="menu-link menu-toggle">
                 <i class="menu-icon tf-icons mdi mdi-database-outline"></i>
                 <div style="font-size: 10pt;" data-i18n="Data Master">Data&nbsp;Master&nbsp;Karyawan</div>
@@ -155,9 +161,15 @@
                   @endif
                  @if(Auth::user()->is_admin =='hrd')
                  {{ Request::is('hrd/karyawan_non_aktif*') ? 'active open' : '' }}
-                  @else
+                 @else
                  {{ Request::is('karyawan_non_aktif*') ? 'active open' : '' }}
-                  @endif">
+                 @endif
+                 @if(Auth::user()->is_admin =='hrd')
+                 {{ Request::is('hrd/karyawan/shift/*') ? 'active open' : '' }}
+                 @else
+                 {{ Request::is('karyawan/shift/*') ? 'active open' : '' }}
+                 @endif
+                 ">
                     <a href="javascript:void(0);" class="menu-link menu-toggle">
                         <i class="menu-icon tf-icons mdi mdi-account-group-outline"></i>
                         <div style="font-size: 10pt;" data-i18n="Data Master">&nbsp;Karyawan</div>

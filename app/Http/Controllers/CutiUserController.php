@@ -102,19 +102,22 @@ class CutiUserController extends Controller
                             ->orderBy('jabatans.holding', 'DESC')
                             ->first();
                     }
-
-                    $atasan = Karyawan::join('jabatans', 'jabatans.id', '=', 'karyawans.jabatan_id')
-                        ->join('level_jabatans', 'jabatans.level_id', '=', 'level_jabatans.id')
-                        ->join('departemens', 'departemens.id', '=', 'karyawans.dept_id')
-                        ->join('divisis', 'divisis.id', '=', 'karyawans.divisi_id')
-                        ->where('karyawans.jabatan_id', $get_atasan_more->id)
-                        ->orWhere('karyawans.jabatan1_id', $get_atasan_more->id)
-                        ->orWhere('karyawans.jabatan2_id', $get_atasan_more->id)
-                        ->orWhere('karyawans.jabatan3_id', $get_atasan_more->id)
-                        ->orWhere('karyawans.jabatan4_id', $get_atasan_more->id)
-                        ->select('karyawans.*', 'jabatans.atasan_id', 'level_jabatans.level_jabatan')
-                        // ->orWhere('d.nama_jabatan', $get_name_jabatan->nama_jabatan)
-                        ->first();
+                    if ($get_atasan_more == NULL) {
+                        $atasan = NULL;
+                    } else {
+                        $atasan = Karyawan::join('jabatans', 'jabatans.id', '=', 'karyawans.jabatan_id')
+                            ->join('level_jabatans', 'jabatans.level_id', '=', 'level_jabatans.id')
+                            ->join('departemens', 'departemens.id', '=', 'karyawans.dept_id')
+                            ->join('divisis', 'divisis.id', '=', 'karyawans.divisi_id')
+                            ->where('karyawans.jabatan_id', $get_atasan_more->id)
+                            ->orWhere('karyawans.jabatan1_id', $get_atasan_more->id)
+                            ->orWhere('karyawans.jabatan2_id', $get_atasan_more->id)
+                            ->orWhere('karyawans.jabatan3_id', $get_atasan_more->id)
+                            ->orWhere('karyawans.jabatan4_id', $get_atasan_more->id)
+                            ->select('karyawans.*', 'jabatans.atasan_id', 'level_jabatans.level_jabatan')
+                            // ->orWhere('d.nama_jabatan', $get_name_jabatan->nama_jabatan)
+                            ->first();
+                    }
                     // dd($atasan);
                 } else {
 
@@ -187,15 +190,18 @@ class CutiUserController extends Controller
                                         ->orderBy('jabatans.holding', 'DESC')
                                         ->first();
                                 }
-
-                                $atasan1 = Karyawan::where('jabatan_id', $get_atasan_more1->id)
-                                    ->orWhere('jabatan1_id', $get_atasan_more1->id)
-                                    ->orWhere('jabatan2_id', $get_atasan_more1->id)
-                                    ->orWhere('jabatan3_id', $get_atasan_more1->id)
-                                    ->orWhere('jabatan4_id', $get_atasan_more1->id)
-                                    ->select('karyawans.*')
-                                    // ->orWhere('d.nama_jabatan', $get_name_jabatan->nama_jabatan)
-                                    ->first();
+                                if ($get_atasan_more1 == NULL) {
+                                    $atasan1 = NULL;
+                                } else {
+                                    $atasan1 = Karyawan::where('jabatan_id', $get_atasan_more1->id)
+                                        ->orWhere('jabatan1_id', $get_atasan_more1->id)
+                                        ->orWhere('jabatan2_id', $get_atasan_more1->id)
+                                        ->orWhere('jabatan3_id', $get_atasan_more1->id)
+                                        ->orWhere('jabatan4_id', $get_atasan_more1->id)
+                                        ->select('karyawans.*')
+                                        // ->orWhere('d.nama_jabatan', $get_name_jabatan->nama_jabatan)
+                                        ->first();
+                                }
                                 // dd($atasan);
                             } else {
 
@@ -271,19 +277,23 @@ class CutiUserController extends Controller
                             ->first();
                     }
                     // dd($get_atasan_more);
-                    $atasan = Karyawan::join('jabatans', 'jabatans.id', '=', 'karyawans.jabatan_id')
-                        ->join('level_jabatans', 'jabatans.level_id', '=', 'level_jabatans.id')
-                        ->join('departemens', 'departemens.id', '=', 'karyawans.dept_id')
-                        ->join('divisis', 'divisis.id', '=', 'karyawans.divisi_id')
-                        ->where('karyawans.jabatan_id', $IdLevelAtasan->id)
-                        ->orWhere('karyawans.jabatan1_id', $IdLevelAtasan->id)
-                        ->orWhere('karyawans.jabatan2_id', $IdLevelAtasan->id)
-                        ->orWhere('karyawans.jabatan3_id', $IdLevelAtasan->id)
-                        ->orWhere('karyawans.jabatan4_id', $IdLevelAtasan->id)
-                        ->whereIn('site_job', ['ALL SITES (SP)', 'ALL SITES (SP, SPS, SIP)', $site_job])
-                        // ->orWhere('d.nama_jabatan', $get_name_jabatan->nama_jabatan)
-                        ->select('karyawans.*', 'jabatans.atasan_id', 'level_jabatans.level_jabatan')
-                        ->first();
+                    if ($get_atasan_more == NULL) {
+                        $atasan = NULL;
+                    } else {
+                        $atasan = Karyawan::join('jabatans', 'jabatans.id', '=', 'karyawans.jabatan_id')
+                            ->join('level_jabatans', 'jabatans.level_id', '=', 'level_jabatans.id')
+                            ->join('departemens', 'departemens.id', '=', 'karyawans.dept_id')
+                            ->join('divisis', 'divisis.id', '=', 'karyawans.divisi_id')
+                            ->where('karyawans.jabatan_id', $IdLevelAtasan->id)
+                            ->orWhere('karyawans.jabatan1_id', $IdLevelAtasan->id)
+                            ->orWhere('karyawans.jabatan2_id', $IdLevelAtasan->id)
+                            ->orWhere('karyawans.jabatan3_id', $IdLevelAtasan->id)
+                            ->orWhere('karyawans.jabatan4_id', $IdLevelAtasan->id)
+                            ->whereIn('site_job', ['ALL SITES (SP)', 'ALL SITES (SP, SPS, SIP)', $site_job])
+                            // ->orWhere('d.nama_jabatan', $get_name_jabatan->nama_jabatan)
+                            ->select('karyawans.*', 'jabatans.atasan_id', 'level_jabatans.level_jabatan')
+                            ->first();
+                    }
                 } else {
                     $atasan = Karyawan::join('jabatans', 'jabatans.id', '=', 'karyawans.jabatan_id')
                         ->join('level_jabatans', 'jabatans.level_id', '=', 'level_jabatans.id')
@@ -355,15 +365,18 @@ class CutiUserController extends Controller
                                         ->orderBy('jabatans.holding', 'DESC')
                                         ->first();
                                 }
-
-                                $atasan1 = Karyawan::where('jabatan_id', $get_atasan_more1->id)
-                                    ->orWhere('jabatan1_id', $get_atasan_more1->id)
-                                    ->orWhere('jabatan2_id', $get_atasan_more1->id)
-                                    ->orWhere('jabatan3_id', $get_atasan_more1->id)
-                                    ->orWhere('jabatan4_id', $get_atasan_more1->id)
-                                    ->select('karyawans.*')
-                                    // ->orWhere('d.nama_jabatan', $get_name_jabatan->nama_jabatan)
-                                    ->first();
+                                if ($get_atasan_more1 == NULL) {
+                                    $atasan1 = NULL;
+                                } else {
+                                    $atasan1 = Karyawan::where('jabatan_id', $get_atasan_more1->id)
+                                        ->orWhere('jabatan1_id', $get_atasan_more1->id)
+                                        ->orWhere('jabatan2_id', $get_atasan_more1->id)
+                                        ->orWhere('jabatan3_id', $get_atasan_more1->id)
+                                        ->orWhere('jabatan4_id', $get_atasan_more1->id)
+                                        ->select('karyawans.*')
+                                        // ->orWhere('d.nama_jabatan', $get_name_jabatan->nama_jabatan)
+                                        ->first();
+                                }
                                 // dd($atasan);
                             } else {
 
@@ -439,20 +452,23 @@ class CutiUserController extends Controller
                             ->first();
                     }
                     // dd($get_atasan_more);
-
-                    $atasan = Karyawan::join('jabatans', 'jabatans.id', '=', 'karyawans.jabatan_id')
-                        ->join('level_jabatans', 'jabatans.level_id', '=', 'level_jabatans.id')
-                        ->join('departemens', 'departemens.id', '=', 'karyawans.dept_id')
-                        ->join('divisis', 'divisis.id', '=', 'karyawans.divisi_id')
-                        ->where('jabatan_id', $get_atasan_more->id)
-                        ->orWhere('jabatan1_id', $get_atasan_more->id)
-                        ->orWhere('jabatan2_id', $get_atasan_more->id)
-                        ->orWhere('jabatan3_id', $get_atasan_more->id)
-                        ->orWhere('jabatan4_id', $get_atasan_more->id)
-                        ->whereIn('site_job', ['ALL SITES (SP, SPS, SIP)', $site_job])
-                        // ->orWhere('d.nama_jabatan', $get_name_jabatan->nama_jabatan)
-                        ->select('karyawans.*', 'jabatans.atasan_id', 'level_jabatans.level_jabatan')
-                        ->first();
+                    if ($get_atasan_more == NULL) {
+                        $atasan = NULL;
+                    } else {
+                        $atasan = Karyawan::join('jabatans', 'jabatans.id', '=', 'karyawans.jabatan_id')
+                            ->join('level_jabatans', 'jabatans.level_id', '=', 'level_jabatans.id')
+                            ->join('departemens', 'departemens.id', '=', 'karyawans.dept_id')
+                            ->join('divisis', 'divisis.id', '=', 'karyawans.divisi_id')
+                            ->where('jabatan_id', $get_atasan_more->id)
+                            ->orWhere('jabatan1_id', $get_atasan_more->id)
+                            ->orWhere('jabatan2_id', $get_atasan_more->id)
+                            ->orWhere('jabatan3_id', $get_atasan_more->id)
+                            ->orWhere('jabatan4_id', $get_atasan_more->id)
+                            ->whereIn('site_job', ['ALL SITES (SP, SPS, SIP)', $site_job])
+                            // ->orWhere('d.nama_jabatan', $get_name_jabatan->nama_jabatan)
+                            ->select('karyawans.*', 'jabatans.atasan_id', 'level_jabatans.level_jabatan')
+                            ->first();
+                    }
                 } else {
 
                     $atasan = Karyawan::join('jabatans', 'jabatans.id', '=', 'karyawans.jabatan_id')
@@ -527,15 +543,18 @@ class CutiUserController extends Controller
                                         ->orderBy('jabatans.holding', 'DESC')
                                         ->first();
                                 }
-
-                                $atasan1 = Karyawan::where('jabatan_id', $get_atasan_more1->id)
-                                    ->orWhere('jabatan1_id', $get_atasan_more1->id)
-                                    ->orWhere('jabatan2_id', $get_atasan_more1->id)
-                                    ->orWhere('jabatan3_id', $get_atasan_more1->id)
-                                    ->orWhere('jabatan4_id', $get_atasan_more1->id)
-                                    ->select('karyawans.*')
-                                    // ->orWhere('d.nama_jabatan', $get_name_jabatan->nama_jabatan)
-                                    ->first();
+                                if ($get_atasan_more1 == NULL) {
+                                    $atasan1 = NULL;
+                                } else {
+                                    $atasan1 = Karyawan::where('jabatan_id', $get_atasan_more1->id)
+                                        ->orWhere('jabatan1_id', $get_atasan_more1->id)
+                                        ->orWhere('jabatan2_id', $get_atasan_more1->id)
+                                        ->orWhere('jabatan3_id', $get_atasan_more1->id)
+                                        ->orWhere('jabatan4_id', $get_atasan_more1->id)
+                                        ->select('karyawans.*')
+                                        // ->orWhere('d.nama_jabatan', $get_name_jabatan->nama_jabatan)
+                                        ->first();
+                                }
                                 // dd($atasan);
                             } else {
 
@@ -612,20 +631,23 @@ class CutiUserController extends Controller
                             ->first();
                     }
                     // dd($get_atasan_more);
-
-                    $atasan = Karyawan::join('jabatans', 'jabatans.id', '=', 'karyawans.jabatan_id')
-                        ->join('level_jabatans', 'jabatans.level_id', '=', 'level_jabatans.id')
-                        ->join('departemens', 'departemens.id', '=', 'karyawans.dept_id')
-                        ->join('divisis', 'divisis.id', '=', 'karyawans.divisi_id')
-                        ->where('jabatan_id', $get_atasan_more->id)
-                        ->orWhere('jabatan1_id', $get_atasan_more->id)
-                        ->orWhere('jabatan2_id', $get_atasan_more->id)
-                        ->orWhere('jabatan3_id', $get_atasan_more->id)
-                        ->orWhere('jabatan4_id', $get_atasan_more->id)
-                        ->whereNotIn('site_job', ['ALL SITES (SP)', 'CV. SUMBER PANGAN - KEDIRI', 'CV. SUMBER PANGAN - TUBAN'])
-                        // ->orWhere('d.nama_jabatan', $get_name_jabatan->nama_jabatan)
-                        ->select('karyawans.*', 'jabatans.atasan_id', 'level_jabatans.level_jabatan')
-                        ->first();
+                    if ($get_atasan_more == NULL) {
+                        $atasan = NULL;
+                    } else {
+                        $atasan = Karyawan::join('jabatans', 'jabatans.id', '=', 'karyawans.jabatan_id')
+                            ->join('level_jabatans', 'jabatans.level_id', '=', 'level_jabatans.id')
+                            ->join('departemens', 'departemens.id', '=', 'karyawans.dept_id')
+                            ->join('divisis', 'divisis.id', '=', 'karyawans.divisi_id')
+                            ->where('jabatan_id', $get_atasan_more->id)
+                            ->orWhere('jabatan1_id', $get_atasan_more->id)
+                            ->orWhere('jabatan2_id', $get_atasan_more->id)
+                            ->orWhere('jabatan3_id', $get_atasan_more->id)
+                            ->orWhere('jabatan4_id', $get_atasan_more->id)
+                            ->whereNotIn('site_job', ['ALL SITES (SP)', 'CV. SUMBER PANGAN - KEDIRI', 'CV. SUMBER PANGAN - TUBAN'])
+                            // ->orWhere('d.nama_jabatan', $get_name_jabatan->nama_jabatan)
+                            ->select('karyawans.*', 'jabatans.atasan_id', 'level_jabatans.level_jabatan')
+                            ->first();
+                    }
                 } else {
 
                     $atasan = Karyawan::join('jabatans', 'jabatans.id', '=', 'karyawans.jabatan_id')
@@ -697,15 +719,18 @@ class CutiUserController extends Controller
                                         ->orderBy('jabatans.holding', 'DESC')
                                         ->first();
                                 }
-
-                                $atasan1 = Karyawan::where('jabatan_id', $get_atasan_more1->id)
-                                    ->orWhere('jabatan1_id', $get_atasan_more1->id)
-                                    ->orWhere('jabatan2_id', $get_atasan_more1->id)
-                                    ->orWhere('jabatan3_id', $get_atasan_more1->id)
-                                    ->orWhere('jabatan4_id', $get_atasan_more1->id)
-                                    ->select('karyawans.*')
-                                    // ->orWhere('d.nama_jabatan', $get_name_jabatan->nama_jabatan)
-                                    ->first();
+                                if ($get_atasan_more1 == NULL) {
+                                    $atasan1 = NULL;
+                                } else {
+                                    $atasan1 = Karyawan::where('jabatan_id', $get_atasan_more1->id)
+                                        ->orWhere('jabatan1_id', $get_atasan_more1->id)
+                                        ->orWhere('jabatan2_id', $get_atasan_more1->id)
+                                        ->orWhere('jabatan3_id', $get_atasan_more1->id)
+                                        ->orWhere('jabatan4_id', $get_atasan_more1->id)
+                                        ->select('karyawans.*')
+                                        // ->orWhere('d.nama_jabatan', $get_name_jabatan->nama_jabatan)
+                                        ->first();
+                                }
                                 // dd($atasan);
                             } else {
 
@@ -784,20 +809,23 @@ class CutiUserController extends Controller
                             ->first();
                     }
                     // dd($get_atasan_more);
-
-                    $atasan = Karyawan::join('jabatans', 'jabatans.id', '=', 'karyawans.jabatan_id')
-                        ->join('level_jabatans', 'jabatans.level_id', '=', 'level_jabatans.id')
-                        ->join('departemens', 'departemens.id', '=', 'karyawans.dept_id')
-                        ->join('divisis', 'divisis.id', '=', 'karyawans.divisi_id')
-                        ->where('jabatan_id', $get_atasan_more->id)
-                        ->orWhere('jabatan1_id', $get_atasan_more->id)
-                        ->orWhere('jabatan2_id', $get_atasan_more->id)
-                        ->orWhere('jabatan3_id', $get_atasan_more->id)
-                        ->orWhere('jabatan4_id', $get_atasan_more->id)
-                        ->whereNotIn('site_job', ['ALL SITES (SPS)', 'ALL SITES (SIP)', 'CV. SURYA INTI PANGAN - MAKASAR', 'PT. SURYA PANGAN SEMESTA - KEDIRI', 'PT. SURYA PANGAN SEMESTA - NGAWI', 'PT. SURYA PANGAN SEMESTA - SUBANG'])
-                        // ->orWhere('d.nama_jabatan', $get_name_jabatan->nama_jabatan)
-                        ->select('karyawans.*', 'jabatans.atasan_id', 'level_jabatans.level_jabatan')
-                        ->first();
+                    if ($get_atasan_more == NULL) {
+                        $atasan = NULL;
+                    } else {
+                        $atasan = Karyawan::join('jabatans', 'jabatans.id', '=', 'karyawans.jabatan_id')
+                            ->join('level_jabatans', 'jabatans.level_id', '=', 'level_jabatans.id')
+                            ->join('departemens', 'departemens.id', '=', 'karyawans.dept_id')
+                            ->join('divisis', 'divisis.id', '=', 'karyawans.divisi_id')
+                            ->where('jabatan_id', $get_atasan_more->id)
+                            ->orWhere('jabatan1_id', $get_atasan_more->id)
+                            ->orWhere('jabatan2_id', $get_atasan_more->id)
+                            ->orWhere('jabatan3_id', $get_atasan_more->id)
+                            ->orWhere('jabatan4_id', $get_atasan_more->id)
+                            ->whereNotIn('site_job', ['ALL SITES (SPS)', 'ALL SITES (SIP)', 'CV. SURYA INTI PANGAN - MAKASAR', 'PT. SURYA PANGAN SEMESTA - KEDIRI', 'PT. SURYA PANGAN SEMESTA - NGAWI', 'PT. SURYA PANGAN SEMESTA - SUBANG'])
+                            // ->orWhere('d.nama_jabatan', $get_name_jabatan->nama_jabatan)
+                            ->select('karyawans.*', 'jabatans.atasan_id', 'level_jabatans.level_jabatan')
+                            ->first();
+                    }
                     // dd($atasan);
                 } else {
                     $atasan = Karyawan::join('jabatans', 'jabatans.id', '=', 'karyawans.jabatan_id')
@@ -871,15 +899,18 @@ class CutiUserController extends Controller
                                         ->orderBy('jabatans.holding', 'DESC')
                                         ->first();
                                 }
-
-                                $atasan1 = Karyawan::where('jabatan_id', $get_atasan_more1->id)
-                                    ->orWhere('jabatan1_id', $get_atasan_more1->id)
-                                    ->orWhere('jabatan2_id', $get_atasan_more1->id)
-                                    ->orWhere('jabatan3_id', $get_atasan_more1->id)
-                                    ->orWhere('jabatan4_id', $get_atasan_more1->id)
-                                    ->select('karyawans.*')
-                                    // ->orWhere('d.nama_jabatan', $get_name_jabatan->nama_jabatan)
-                                    ->first();
+                                if ($get_atasan_more1 == NULL) {
+                                    $atasan1 = NULL;
+                                } else {
+                                    $atasan1 = Karyawan::where('jabatan_id', $get_atasan_more1->id)
+                                        ->orWhere('jabatan1_id', $get_atasan_more1->id)
+                                        ->orWhere('jabatan2_id', $get_atasan_more1->id)
+                                        ->orWhere('jabatan3_id', $get_atasan_more1->id)
+                                        ->orWhere('jabatan4_id', $get_atasan_more1->id)
+                                        ->select('karyawans.*')
+                                        // ->orWhere('d.nama_jabatan', $get_name_jabatan->nama_jabatan)
+                                        ->first();
+                                }
                                 // dd($atasan);
                             } else {
 
@@ -957,20 +988,23 @@ class CutiUserController extends Controller
                             ->first();
                     }
                     // dd($get_atasan_more);
-
-                    $atasan = Karyawan::join('jabatans', 'jabatans.id', '=', 'karyawans.jabatan_id')
-                        ->join('level_jabatans', 'jabatans.level_id', '=', 'level_jabatans.id')
-                        ->join('departemens', 'departemens.id', '=', 'karyawans.dept_id')
-                        ->join('divisis', 'divisis.id', '=', 'karyawans.divisi_id')
-                        ->where('jabatan_id', $get_atasan_more->id)
-                        ->orWhere('jabatan1_id', $get_atasan_more->id)
-                        ->orWhere('jabatan2_id', $get_atasan_more->id)
-                        ->orWhere('jabatan3_id', $get_atasan_more->id)
-                        ->orWhere('jabatan4_id', $get_atasan_more->id)
-                        ->whereNotIn('site_job', ['ALL SITES (SPS)', 'ALL SITES (SP)', 'CV. SUMBER PANGAN - TUBAN', 'CV. SUMBER PANGAN - KEDIRI', 'PT. SURYA PANGAN SEMESTA - KEDIRI', 'PT. SURYA PANGAN SEMESTA - NGAWI', 'PT. SURYA PANGAN SEMESTA - SUBANG'])
-                        // ->orWhere('d.nama_jabatan', $get_name_jabatan->nama_jabatan)
-                        ->select('karyawans.*', 'jabatans.atasan_id', 'level_jabatans.level_jabatan')
-                        ->first();
+                    if ($get_atasan_more == NULL) {
+                        $atasan = NULL;
+                    } else {
+                        $atasan = Karyawan::join('jabatans', 'jabatans.id', '=', 'karyawans.jabatan_id')
+                            ->join('level_jabatans', 'jabatans.level_id', '=', 'level_jabatans.id')
+                            ->join('departemens', 'departemens.id', '=', 'karyawans.dept_id')
+                            ->join('divisis', 'divisis.id', '=', 'karyawans.divisi_id')
+                            ->where('jabatan_id', $get_atasan_more->id)
+                            ->orWhere('jabatan1_id', $get_atasan_more->id)
+                            ->orWhere('jabatan2_id', $get_atasan_more->id)
+                            ->orWhere('jabatan3_id', $get_atasan_more->id)
+                            ->orWhere('jabatan4_id', $get_atasan_more->id)
+                            ->whereNotIn('site_job', ['ALL SITES (SPS)', 'ALL SITES (SP)', 'CV. SUMBER PANGAN - TUBAN', 'CV. SUMBER PANGAN - KEDIRI', 'PT. SURYA PANGAN SEMESTA - KEDIRI', 'PT. SURYA PANGAN SEMESTA - NGAWI', 'PT. SURYA PANGAN SEMESTA - SUBANG'])
+                            // ->orWhere('d.nama_jabatan', $get_name_jabatan->nama_jabatan)
+                            ->select('karyawans.*', 'jabatans.atasan_id', 'level_jabatans.level_jabatan')
+                            ->first();
+                    }
                     // dd($atasan);
                 } else {
                     $atasan = Karyawan::join('jabatans', 'jabatans.id', '=', 'karyawans.jabatan_id')
@@ -1043,15 +1077,18 @@ class CutiUserController extends Controller
                                         ->orderBy('jabatans.holding', 'DESC')
                                         ->first();
                                 }
-
-                                $atasan1 = Karyawan::where('jabatan_id', $get_atasan_more1->id)
-                                    ->orWhere('jabatan1_id', $get_atasan_more1->id)
-                                    ->orWhere('jabatan2_id', $get_atasan_more1->id)
-                                    ->orWhere('jabatan3_id', $get_atasan_more1->id)
-                                    ->orWhere('jabatan4_id', $get_atasan_more1->id)
-                                    ->select('karyawans.*')
-                                    // ->orWhere('d.nama_jabatan', $get_name_jabatan->nama_jabatan)
-                                    ->first();
+                                if ($get_atasan_more1 == NULL) {
+                                    $atasan1 = NULL;
+                                } else {
+                                    $atasan1 = Karyawan::where('jabatan_id', $get_atasan_more1->id)
+                                        ->orWhere('jabatan1_id', $get_atasan_more1->id)
+                                        ->orWhere('jabatan2_id', $get_atasan_more1->id)
+                                        ->orWhere('jabatan3_id', $get_atasan_more1->id)
+                                        ->orWhere('jabatan4_id', $get_atasan_more1->id)
+                                        ->select('karyawans.*')
+                                        // ->orWhere('d.nama_jabatan', $get_name_jabatan->nama_jabatan)
+                                        ->first();
+                                }
                                 // dd($atasan);
                             } else {
 
@@ -1128,18 +1165,22 @@ class CutiUserController extends Controller
                             ->first();
                     }
                     // dd($get_atasan_more);
-                    $atasan = Karyawan::join('jabatans', 'jabatans.id', '=', 'karyawans.jabatan_id')
-                        ->join('level_jabatans', 'jabatans.level_id', '=', 'level_jabatans.id')
-                        ->join('departemens', 'departemens.id', '=', 'karyawans.dept_id')
-                        ->join('divisis', 'divisis.id', '=', 'karyawans.divisi_id')
-                        ->where('karyawans.jabatan_id', $get_atasan_more->id)
-                        ->orWhere('karyawans.jabatan1_id', $get_atasan_more->id)
-                        ->orWhere('karyawans.jabatan2_id', $get_atasan_more->id)
-                        ->orWhere('karyawans.jabatan3_id', $get_atasan_more->id)
-                        ->orWhere('karyawans.jabatan4_id', $get_atasan_more->id)
-                        ->select('karyawans.*', 'jabatans.atasan_id', 'level_jabatans.level_jabatan')
-                        // ->orWhere('d.nama_jabatan', $get_name_jabatan->nama_jabatan)
-                        ->first();
+                    if ($get_atasan_more == NULL) {
+                        $atasan = NULL;
+                    } else {
+                        $atasan = Karyawan::join('jabatans', 'jabatans.id', '=', 'karyawans.jabatan_id')
+                            ->join('level_jabatans', 'jabatans.level_id', '=', 'level_jabatans.id')
+                            ->join('departemens', 'departemens.id', '=', 'karyawans.dept_id')
+                            ->join('divisis', 'divisis.id', '=', 'karyawans.divisi_id')
+                            ->where('karyawans.jabatan_id', $get_atasan_more->id)
+                            ->orWhere('karyawans.jabatan1_id', $get_atasan_more->id)
+                            ->orWhere('karyawans.jabatan2_id', $get_atasan_more->id)
+                            ->orWhere('karyawans.jabatan3_id', $get_atasan_more->id)
+                            ->orWhere('karyawans.jabatan4_id', $get_atasan_more->id)
+                            ->select('karyawans.*', 'jabatans.atasan_id', 'level_jabatans.level_jabatan')
+                            // ->orWhere('d.nama_jabatan', $get_name_jabatan->nama_jabatan)
+                            ->first();
+                    }
                     // dd($atasan);
                 } else {
 
@@ -1217,15 +1258,18 @@ class CutiUserController extends Controller
                                         ->orderBy('jabatans.holding', 'DESC')
                                         ->first();
                                 }
-
-                                $atasan1 = Karyawan::where('jabatan_id', $get_atasan_more1->id)
-                                    ->orWhere('jabatan1_id', $get_atasan_more1->id)
-                                    ->orWhere('jabatan2_id', $get_atasan_more1->id)
-                                    ->orWhere('jabatan3_id', $get_atasan_more1->id)
-                                    ->orWhere('jabatan4_id', $get_atasan_more1->id)
-                                    ->select('karyawans.*')
-                                    // ->orWhere('d.nama_jabatan', $get_name_jabatan->nama_jabatan)
-                                    ->first();
+                                if ($get_atasan_more1 == NULL) {
+                                    $atasan1 = NULL;
+                                } else {
+                                    $atasan1 = Karyawan::where('jabatan_id', $get_atasan_more1->id)
+                                        ->orWhere('jabatan1_id', $get_atasan_more1->id)
+                                        ->orWhere('jabatan2_id', $get_atasan_more1->id)
+                                        ->orWhere('jabatan3_id', $get_atasan_more1->id)
+                                        ->orWhere('jabatan4_id', $get_atasan_more1->id)
+                                        ->select('karyawans.*')
+                                        // ->orWhere('d.nama_jabatan', $get_name_jabatan->nama_jabatan)
+                                        ->first();
+                                }
                                 // dd($atasan);
                             } else {
 
