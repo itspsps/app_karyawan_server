@@ -292,4 +292,20 @@ class ProfileUserController extends Controller
             'title' => 'Profile',
         ]);
     }
+    public function lihat_jabatan()
+    {
+        $user_karyawan = Karyawan::With('Departemen')->with('Divisi')->with('Bagian')->with('Jabatan')->where('id', Auth::user()->karyawan_id)->first();
+        return view('users.profile.lihat_jabatan', [
+            'title' => 'Profile',
+            'user_karyawan' => $user_karyawan
+        ]);
+    }
+    public function lihat_kontrak_kerja()
+    {
+        $user_karyawan = Karyawan::With('Departemen')->with('Divisi')->with('Bagian')->with('Jabatan')->where('id', Auth::user()->karyawan_id)->first();
+        return view('users.profile.lihat_jabatan', [
+            'title' => 'Profile',
+            'user_karyawan' => $user_karyawan
+        ]);
+    }
 }

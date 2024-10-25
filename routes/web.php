@@ -154,6 +154,12 @@ Route::middleware('auth:web', 'log.activity')->group(function () {
     Route::get('/change_photoprofile_camera', [ProfileUserController::class, 'change_photoprofile_camera']);
     Route::post('/save_capture_profile', [ProfileUserController::class, 'save_capture_profile']);
 
+    Route::get('/profile/lihat_jabatan', [ProfileUserController::class, 'lihat_jabatan']);
+    Route::get('/profile/lihat_kontrak_kerja', [ProfileUserController::class, 'lihat_kontrak_kerja']);
+    Route::get('/profile/lihat_dokumen', [ProfileUserController::class, 'lihat_dokumen']);
+    Route::get('/profile/lihat_struktur_organisasi', [ProfileUserController::class, 'lihat_struktur_organisasi']);
+    Route::get('/profile/lihat_rekan_kerja', [ProfileUserController::class, 'lihat_rekan_kerja']);
+
 
     Route::put('/absen/masuk/{id}', [AbsenController::class, 'absenMasuk']);
     Route::put('/absen/pulang/{id}', [AbsenController::class, 'absenPulang']);

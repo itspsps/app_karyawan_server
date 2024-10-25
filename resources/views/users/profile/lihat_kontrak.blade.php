@@ -20,50 +20,53 @@
             <div class="col-md-12 text-center" style="margin: 0; padding: 0;">
                 <div class="card">
                     <div class="card-header">
-                        <h5 class="title">Edit User</h5>
+                        <h5 class="title">Kontrak</h5>
                     </div>
                     <div class="card-body">
-                        <form method="POST" action="{{url('save_detail_account')}}">
-                            @csrf
-                            <div class="basic-form style-1">
-                                <input type="hidden" name="user_id" id="user_id" value="{{Auth::user()->id}}">
-                                <div class="mb-3 form-input">
-                                    <span class="input-icon">
-                                        <i class="fa fa-user"></i>
-                                    </span>
-                                    <input type="text" class="form-control @error('username') is-invalid @enderror" @if(Auth::user()->user_aktif=='NON AKTIF') disabled @else @endif id="username" name="username" placeholder="Username" value="{{old('username',Auth::user()->username)}}">
-                                </div>
-                                @error('username')
-                                <p class="alert alert-danger">{{$message}}</p>
-                                @enderror
-                                <div class="mb-3 form-input">
-                                    <span class="input-icon">
-                                        <i class="fa fa-key"></i>
-                                    </span>
-                                    <input type="password" class="form-control @error('password') is-invalid @enderror" @if(Auth::user()->user_aktif=='NON AKTIF') disabled @else @endif id="password" name="password" placeholder="Password" value="{{old('password',Auth::user()->password_show)}}">
-                                    <span class="input-icon" style="left: 90%;" onclick="password_show_hide();">
-                                        <i class="fa fa-eye-slash d-none" id="hide_eye"></i>
-                                        <i class="fa fa-eye" id="show_eye"></i>
-                                    </span>
-                                </div>
-                                @error('password')
-                                <p class="alert alert-danger">{{$message}}</p>
-                                @enderror
-                                <div class="mb-3 form-input">
-                                    <p style="text-align: left;">Status User :&nbsp;<span class="badge light @if(Auth::user()->user_aktif=='AKTIF')badge-success @else badge-danger @endif">{{Auth::user()->user_aktif}}</span></p>
-                                </div>
-                            </div>
-                            <div class="border-top">
-                                <div class="row">
-                                    <div class="col-6">
-                                        <button type="submit" @if(Auth::user()->user_aktif=='NON AKTIF') disabled @else @endif class="btn btn-primary mt-1 btn-sm btn-rounded btn-block">UPDATE</button>
-                                    </div>
-                                    <div class="col-6">
-                                        <a id="btn_klik" type="button" href="{{url('profile')}}" class="btn btn-light mt-1 btn-sm btn-rounded btn-block">KEMBALI</a>
+                        <div class="skill-section">
+                            <div class="row">
+                                <div class="col-12">
+                                    <div class="skill-bar">
+                                        <table style="text-align: left;">
+                                            <tr>
+                                                <th>Departemen</th>
+                                                <td>&nbsp;</td>
+                                                <td>:</td>
+                                                <th>&nbsp;{{$user_karyawan->Departemen->nama_departemen}}</th>
+                                            </tr>
+                                            <tr>
+                                                <th>Divisi</th>
+                                                <td>&nbsp;</td>
+                                                <td>:</td>
+                                                <th>&nbsp;{{$user_karyawan->Divisi->nama_divisi}}</th>
+                                            <tr>
+                                                <th>Bagian</th>
+                                                <td>&nbsp;</td>
+                                                <td>:</td>
+                                                <th>&nbsp;{{$user_karyawan->Bagian->nama_bagian}}</th>
+                                            </tr>
+                                            <tr>
+                                                <th>Jabatan</th>
+                                                <td>&nbsp;</td>
+                                                <td>:</td>
+                                                <th>&nbsp;{{$user_karyawan->Jabatan->nama_jabatan}}</th>
+                                            </tr>
+                                        </table>
                                     </div>
                                 </div>
                             </div>
-                        </form>
+                        </div>
+                        <div class="border-top">
+                            <div class="row">
+                                <div class="col-4">
+                                </div>
+                                <div class="col-4">
+                                    <a id="btn_klik" type="button" href="{{url('profile')}}" class="btn btn-light mt-1 btn-sm btn-rounded btn-block">KEMBALI</a>
+                                </div>
+                                <div class="col-4">
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

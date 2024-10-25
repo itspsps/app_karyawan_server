@@ -142,6 +142,20 @@
                     <div class="modal-body">
                         @method('put')
                         @csrf
+                        @if($getUserAtasan==NULL)
+                        <div class="alert alert-danger light alert-dismissible fade show">
+                            <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" class="me-2">
+                                <polygon points="7.86 2 16.14 2 22 7.86 22 16.14 16.14 22 7.86 22 2 16.14 2 7.86 7.86 2"></polygon>
+                                <line x1="15" y1="9" x2="9" y2="15"></line>
+                                <line x1="9" y1="9" x2="15" y2="15"></line>
+                            </svg>
+                            <strong>Info!</strong>&nbsp;Karyawan Atasan Kosong.
+                            <button class="btn-close" data-bs-dismiss="alert" aria-label="btn-close">
+                                <i class="fa-solid fa-xmark"></i>
+                            </button>
+                        </div>
+                        @else
+                        @endif
                         <div class="input-group">
                             <input type="hidden" name="id_user" value="{{ $user_karyawan->id }}">
                             {{-- <input type="hidden" name="telp" value="{{ $data_user->telepon }}"> --}}
@@ -149,13 +163,13 @@
                             {{-- <input type="hidden" name="departements" value="{{ $user->dept_id }}"> --}}
                             {{-- <input type="hidden" name="jabatan" value="{{ $user->jabatan_id }}"> --}}
                             {{-- <input type="hidden" name="divisi" value="{{ $user->divisi_id }}" id=""> --}}
-                            <input type="hidden" name="id_user_atasan" value="{{ $getUserAtasan->id }}">
+                            <input type="hidden" name="id_user_atasan" value="@if($getUserAtasan==NULL)@else{{ $getUserAtasan->id }}@endif">
                             <input type="hidden" name="nik" value="{{ $user_karyawan->nik }}">
                             <input type="hidden" name="id_jabatan" value="{{ $user->jabatan_id }}">
                             <input type="hidden" name="id_departemen" value="{{ $user->dept_id }}">
                             <input type="hidden" name="id_divisi" value="{{ $user->divisi_id }}">
                             <input type="hidden" name="id_diajukan_oleh" value="{{ $user_karyawan->id }}">
-                            <input type="hidden" name="id_disahkan_oleh" value="{{ $getUserAtasan->id }}">
+                            <input type="hidden" name="id_disahkan_oleh" value="@if($getUserAtasan==NULL)@else{{ $getUserAtasan->id }}@endif">
                             <input type="hidden" name="proses_hrd" value="proses hrd">
                             <input type="hidden" name="proses_finance" value="proses finance">
                             <input type="hidden" name="tanggal_pengajuan" value="{{ date('Y-m-d') }}">
@@ -166,7 +180,7 @@
                         </div>
                         <div class="input-group">
                             <input type="text" class="form-control" value="Nama" readonly>
-                            <input type="text" class="form-control" name="" value="{{ $user_karyawan->fullname }}" style="font-weight: bold" readonly required>
+                            <input type="text" class="form-control" name="" value="{{ $user_karyawan->name }}" style="font-weight: bold" readonly required>
                         </div>
                         <div class="input-group">
                             <input type="text" class="form-control" value="Jabatan" readonly>
@@ -307,7 +321,7 @@
                         </div>
                         <div class="input-group">
                             <input type="text" class="form-control" value="Disahkan oleh" readonly>
-                            <input type="text" class="form-control" name="disahkan_oleh" value="{{ $getUserAtasan->name }}" readonly>
+                            <input type="text" class="form-control" name="disahkan_oleh" value="@if($getUserAtasan==NULL)@else{{ $getUserAtasan->id }}@endif" readonly>
                         </div>
                         <div class="input-group">
                             <input type="text" class="form-control" value="Diproses HRD" readonly>
@@ -403,7 +417,7 @@
             @endif
             <a id="btn_klik" href="{{ url('penugasan/detail/edit/'.$record_data->id) }}">
                 <div class="notification">
-                    <h6>{{ $record_data->fullname }}</h6>
+                    <h6>{{ $record_data->name }}</h6>
                     <p>{{ $record_data->kegiatan_penugasan}}</p>
                     <div class="notification-footer">
                         <span>

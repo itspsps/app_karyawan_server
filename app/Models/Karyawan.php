@@ -173,6 +173,26 @@ class Karyawan extends Model
     {
         return $this->belongsTo(Divisi::class, 'divisi4_id', 'id');
     }
+    public function Bagian(): BelongsTo
+    {
+        return $this->belongsTo(Bagian::class, 'bagian_id', 'id');
+    }
+    public function Bagian1(): BelongsTo
+    {
+        return $this->belongsTo(Bagian::class, 'bagian1_id', 'id');
+    }
+    public function Bagian2(): BelongsTo
+    {
+        return $this->belongsTo(Bagian::class, 'bagian2_id', 'id');
+    }
+    public function Bagian3(): BelongsTo
+    {
+        return $this->belongsTo(Bagian::class, 'bagian3_id', 'id');
+    }
+    public function Bagian4(): BelongsTo
+    {
+        return $this->belongsTo(Bagian::class, 'bagian4_id', 'id');
+    }
     public function Jabatan(): BelongsTo
     {
         return $this->belongsTo(Jabatan::class, 'jabatan_id', 'id');

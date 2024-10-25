@@ -200,7 +200,8 @@ class RekapDataController extends Controller
                     ->where('kontrak_kerja', $holding)
                     ->where('kategori', 'Karyawan Bulanan')
                     ->where('status_aktif', 'AKTIF')
-                    // ->limit(210)
+                    ->select('karyawans.name', 'karyawans.nomor_identitas_karyawan')
+                    // ->limit(111)
                     ->get();
                 return DataTables::of($table)
                     ->addColumn('btn_detail', function ($row) use ($holding) {
