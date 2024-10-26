@@ -74,7 +74,7 @@ class RekapDataController extends Controller
 
         $title = "Rekap Data Absensi Tanggal " . date('Y-m-01') . " s/d " . date('Y-m-d');
 
-        $user = Karyawan::where('id', $id)->where('status_aktif', 'AKTIF')->first();
+        $user = Karyawan::where('nomor_identitas_karyawan', $id)->where('status_aktif', 'AKTIF')->first();
         // dd($user->Cuti->nama_cuti);
 
         if ($request["mulai"] && $request["akhir"]) {
@@ -200,12 +200,12 @@ class RekapDataController extends Controller
                     ->where('kontrak_kerja', $holding)
                     ->where('kategori', 'Karyawan Bulanan')
                     ->where('status_aktif', 'AKTIF')
-                    ->select('karyawans.id', 'karyawans.name', 'karyawans.nomor_identitas_karyawan')
+                    ->select('karyawans.name', 'karyawans.nomor_identitas_karyawan')
                     // ->limit(111)
                     ->get();
                 return DataTables::of($table)
                     ->addColumn('btn_detail', function ($row) use ($holding) {
-                        $btn_detail = '<a id="btn_detail" type="button" href="' . url('rekap-data/detail', ['id' => $row->id]) . '/' . $holding . '" class="btn btn-sm btn-info"><i class="menu-icon tf-icons mdi mdi-eye"></i> Detail</a>';
+                        $btn_detail = '<a id="btn_detail" type="button" href="' . url('rekap-data/detail', ['id' => $row->nomor_identitas_karyawan]) . '/' . $holding . '" class="btn btn-sm btn-info"><i class="menu-icon tf-icons mdi mdi-eye"></i> Detail</a>';
                         return $btn_detail;
                     })
                     ->addColumn('total_hadir_tepat_waktu', function ($row) use ($now, $now1) {
