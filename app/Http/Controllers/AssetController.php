@@ -39,7 +39,7 @@ class InventarisController extends Controller
         if (request()->ajax()) {
             return DataTables::of($table)
                 ->addColumn('foto_inventaris', function ($row) use ($holding) {
-                    $img = '<img src="https://karyawan.sumberpangan.store/laravel/storage/app/public/foto_inventaris/' . $row->foto_inventaris . '" alt="user-avatar" class="d-block w-px-120 h-px-120 rounded" id="template_foto_inventaris" />';
+                    $img = '<img src="https://hrd.sumberpangan.store:4430/storage/app/public/foto_inventaris/' . $row->foto_inventaris . '" alt="user-avatar" class="d-block w-px-120 h-px-120 rounded" id="template_foto_inventaris" />';
                     return $img;
                 })
                 ->addColumn('option', function ($row) use ($holding) {

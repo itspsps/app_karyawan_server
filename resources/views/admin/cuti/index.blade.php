@@ -537,7 +537,7 @@
             let tgl = $(this).data("tgl");
             let nama = $(this).data("nama");
             let ttd = $(this).data("ttd");
-            $('#ttd_pengajuan').attr('src', 'https://karyawan.sumberpangan.store/laravel/public/signature/' + ttd + '.png');
+            $('#ttd_pengajuan').attr('src', 'https://hrd.sumberpangan.store:4430/public/signature/cuti/' + ttd + '.png');
             $('#nama_pengajuan').html(nama);
             $('#tgl_pengajuan').html(tgl);
 
@@ -548,7 +548,7 @@
             let tgl = $(this).data("tgl");
             let nama = $(this).data("nama");
             let ttd = $(this).data("ttd");
-            $('#ttd_atasan').attr('src', 'https://karyawan.sumberpangan.store/laravel/public/signature/' + ttd + '.png');
+            $('#ttd_atasan').attr('src', 'https://hrd.sumberpangan.store:4430/public/signature/cuti/' + ttd + '.png');
             $('#nama_atasan').html(nama);
             $('#tgl_atasan').html(tgl);
 

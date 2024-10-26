@@ -25,7 +25,7 @@
                     <hr class="">
                     <form action="{{ url('/rekap-data/'.$holding) }}">
                         <div class="row g-3 text-center">
-                            <div class="col-2">
+                            <div class="col-3">
                                 <div class="form-floating form-floating-outline">
                                     <select type="text" class="form-control" name="departemen_filter" id="departemen_filter">
                                         <option selected disabled value="">--</option>
@@ -36,7 +36,7 @@
                                     <label for="departemen_filter">Departemen</label>
                                 </div>
                             </div>
-                            <div class="col-2">
+                            <div class="col-3">
                                 <div class="form-floating form-floating-outline">
                                     <select type="text" class="form-control" name="divisi_filter" placeholder="Date Filter" id="divisi_filter">
                                         <option selected disabled value="">--</option>
@@ -44,7 +44,7 @@
                                     <label for="divisi_filter">Divisi</label>
                                 </div>
                             </div>
-                            <div class="col-2">
+                            <div class="col-3">
                                 <div class="form-floating form-floating-outline">
                                     <select type="text" class="form-control" name="bagian_filter" placeholder="Date Filter" id="bagian_filter">
                                         <option selected disabled value="">--</option>
@@ -52,7 +52,7 @@
                                     <label for="bagian_filter">Bagian</label>
                                 </div>
                             </div>
-                            <div class="col-2">
+                            <div class="col-3">
                                 <div class="form-floating form-floating-outline">
                                     <select type="text" class="form-control" name="jabatan_filter" placeholder="Date Filter" id="jabatan_filter">
                                         <option selected disabled value="">--</option>
@@ -60,10 +60,17 @@
                                     <label for="jabatan_filter">Jabatan</label>
                                 </div>
                             </div>
-                            <div class="col-3">
-                                <div class="form-floating form-floating-outline">
-                                    <input type="month" class="form-control" name="date_filter" placeholder="Filter By Month:" id="date_filter" value="{{ date('Y-m') }}">
-                                    <label for="date_filter">Date Range Filter</label>
+                        </div>
+                        <div class="row mt-3 g-3">
+                            <div class="col-lg-6">
+                                <div id="reportrange" style="background: #fff; cursor: pointer; padding: 5px 10px; width: 100%">
+                                    <button class="btn btn-outline-secondary waves-effect">
+                                        FILTER DATE : &nbsp;
+                                        <i class="mdi mdi-calendar-filter-outline"></i>&nbsp;
+                                        <span></span> <i class="mdi mdi-menu-down"></i>
+                                        <input type="date" id="start_date" name="start_date" hidden value="">
+                                        <input type="date" id="end_date" name="end_date" hidden value="">
+                                    </button>
                                 </div>
                             </div>
                         </div>
@@ -276,6 +283,8 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
     <script src="https://cdn.datatables.net/buttons/3.1.2/js/buttons.html5.min.js"></script>
     <script src="https://cdn.datatables.net/buttons/3.1.2/js/buttons.print.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
+    <script type="text/javascript" src="{{ asset('assets/assets_users/js/daterangepicker.js') }}"></script>
     <script>
         let holding = window.location.pathname.split("/").pop();
         $(document).ready(function() {
@@ -690,6 +699,42 @@
                     })
                 }
             });
+
+        });
+    </script>
+    <script type="text/javascript">
+        $(function() {
+
+            var start = moment().subtract(29, 'days');
+            var end = moment();
+            var lstart, lend;
+            var start_date = document.getElementById("start_date");
+            var end_date = document.getElementById("end_date");
+
+            function cb(start, end) {
+                $('#reportrange span').html(start.format('D MMMM YYYY') + ' - ' + end.format('D MMMM YYYY'));
+                lstart = moment($('#reportrange').data('daterangepicker').startDate).format('YYYY-MM-DD');
+                lend = moment($('#reportrange').data('daterangepicker').endDate).format('YYYY-MM-DD');
+                start_date.value = lstart;
+                end_date.value = lend;
+                // console.log(lstart, lend)
+                load_data(lstart, lend);
+            }
+
+            $('#reportrange').daterangepicker({
+                startDate: start,
+                endDate: end,
+                ranges: {
+                    'Today': [moment(), moment()],
+                    'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+                    'Last 7 Days': [moment().subtract(6, 'days'), moment()],
+                    'Last 30 Days': [moment().subtract(29, 'days'), moment()],
+                    'This Month': [moment().startOf('month'), moment().endOf('month')],
+                    'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+                }
+            }, cb);
+
+            cb(start, end);
 
         });
     </script>

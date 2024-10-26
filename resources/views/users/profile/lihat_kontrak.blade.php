@@ -27,29 +27,35 @@
                             <div class="row">
                                 <div class="col-12">
                                     <div class="skill-bar">
-                                        <table style="text-align: left;">
+                                        <table style="text-align: left; font-size: small;">
                                             <tr>
-                                                <th>Departemen</th>
+                                                <td>Kontrak</td>
                                                 <td>&nbsp;</td>
                                                 <td>:</td>
-                                                <th>&nbsp;{{$user_karyawan->Departemen->nama_departemen}}</th>
+                                                <td>&nbsp;@if($user_karyawan->kontrak_kerja=='SP')CV.&nbsp;SUMBER&nbsp;PANGAN @elseif($user_karyawan->kontrak_kerja=='SPS')PT.&nbsp;SURYA&nbsp;PANGAN&nbsp;SEMESTA @elseif($user_karyawan->kontrak_kerja=='SIP') CV. SUMBER INTI PANGAN @endif</td>
                                             </tr>
                                             <tr>
-                                                <th>Divisi</th>
+                                                <td>Tanggal&nbsp;Join</td>
                                                 <td>&nbsp;</td>
                                                 <td>:</td>
-                                                <th>&nbsp;{{$user_karyawan->Divisi->nama_divisi}}</th>
+                                                <td>&nbsp;{{\Carbon\Carbon::parse($user_karyawan->tgl_join)->isoFormat('DD/MM/YYYY') }}</td>
                                             <tr>
-                                                <th>Bagian</th>
+                                                <td>Lama Kontrak</td>
                                                 <td>&nbsp;</td>
                                                 <td>:</td>
-                                                <th>&nbsp;{{$user_karyawan->Bagian->nama_bagian}}</th>
+                                                <td>&nbsp;{{$user_karyawan->lama_kontrak_kerja}}</td>
                                             </tr>
                                             <tr>
-                                                <th>Jabatan</th>
+                                                <td>Tanggal&nbsp;Kontrak</td>
                                                 <td>&nbsp;</td>
                                                 <td>:</td>
-                                                <th>&nbsp;{{$user_karyawan->Jabatan->nama_jabatan}}</th>
+                                                <td>&nbsp; {{\Carbon\Carbon::parse($user_karyawan->tgl_mulai_kontrak)->isoFormat('DD/MM/YYYY') }}&nbsp;-&nbsp;{{\Carbon\Carbon::parse($user_karyawan->tgl_selesai_kontrak)->isoFormat('DD/MM/YYYY') }}</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Kategori</td>
+                                                <td>&nbsp;</td>
+                                                <td>:</td>
+                                                <td>&nbsp; <span class="badge light badge-primary">{{$user_karyawan->kategori}}</span></td>
                                             </tr>
                                         </table>
                                     </div>

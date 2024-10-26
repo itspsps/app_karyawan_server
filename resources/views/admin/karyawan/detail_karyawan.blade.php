@@ -313,7 +313,7 @@
                                                 @if($karyawan->file_cv=='')
                                                 <iframe id="lihat_file_cv" src="" style=" height: 500px; width: 100%;"></iframe>
                                                 @else
-                                                <iframe id="lihat_file_cv" src="{{url('https://karyawan.sumberpangan.store/laravel/storage/app/public/file_cv/'.$karyawan->file_cv)}}" style=" height: 500px; width: 100%;"></iframe>
+                                                <iframe id="lihat_file_cv" src="{{url('https://hrd.sumberpangan.store:4430/storage/app/public/file_cv/'.$karyawan->file_cv)}}" style=" height: 500px; width: 100%;"></iframe>
                                                 @endif
                                             </div>
                                             <div class="modal-footer">

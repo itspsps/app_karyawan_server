@@ -40,9 +40,9 @@ class RecruitmentController extends Controller
             return DataTables::of($table)
                 ->addColumn('foto_inventaris', function ($row) use ($holding) {
                     if ($row->foto_inventaris == '') {
-                        $img = '<img src="https://karyawan.sumberpangan.store/public/admin/assets/img/avatars/1.png" alt="user-avatar" class="d-block w-px-120 h-px-120 rounded" id="template_foto_inventaris" />';
+                        $img = '<img src="https://hrd.sumberpangan.store:4430/public/admin/assets/img/avatars/1.png" alt="user-avatar" class="d-block w-px-120 h-px-120 rounded" id="template_foto_inventaris" />';
                     } else {
-                        $img = '<img src="https://karyawan.sumberpangan.store/laravel/storage/app/public/foto_inventaris/' . $row->foto_inventaris . '" alt="user-avatar" class="d-block w-px-120 h-px-120 rounded" id="template_foto_inventaris" />';
+                        $img = '<img src="https://hrd.sumberpangan.store:4430/storage/app/public/foto_inventaris/' . $row->foto_inventaris . '" alt="user-avatar" class="d-block w-px-120 h-px-120 rounded" id="template_foto_inventaris" />';
                     }
                     return $img;
                 })
@@ -147,6 +147,4 @@ class RecruitmentController extends Controller
         ]);
         return redirect('/inventaris/' . $holding)->with('success', 'Data Berhasil di Diupdate');
     }
-    
-    
 }

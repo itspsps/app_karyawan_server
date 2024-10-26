@@ -32,24 +32,24 @@
                                                 <th>Departemen</th>
                                                 <td>&nbsp;</td>
                                                 <td>:</td>
-                                                <th>&nbsp;if($user_karyawan->Departemen==''){{$user_karyawan->Departemen->nama_departemen}}</th>
+                                                <th>&nbsp;@if($user_karyawan->Departemen=='')-@else{{$user_karyawan->Departemen->nama_departemen}}@endif</th>
                                             </tr>
                                             <tr>
                                                 <th>Divisi</th>
                                                 <td>&nbsp;</td>
                                                 <td>:</td>
-                                                <th>&nbsp;if($user_karyawan->Divisi==''){{$user_karyawan->Divisi->nama_divisi}}</th>
+                                                <th>&nbsp;@if($user_karyawan->Divisi=='')-@else{{$user_karyawan->Divisi->nama_divisi}}@endif</th>
                                             <tr>
                                                 <th>Bagian</th>
                                                 <td>&nbsp;</td>
                                                 <td>:</td>
-                                                <th>&nbsp;if($user_karyawan->Bagian==''){{$user_karyawan->Bagian->nama_bagian}}</th>
+                                                <th>&nbsp;@if($user_karyawan->Bagian=='')-@else{{$user_karyawan->Bagian->nama_bagian}}@endif</th>
                                             </tr>
                                             <tr>
                                                 <th>Jabatan</th>
                                                 <td>&nbsp;</td>
                                                 <td>:</td>
-                                                <th>&nbsp;if($user_karyawan->Jabatan==''){{$user_karyawan->Jabatan->nama_jabatan}}</th>
+                                                <th>&nbsp;@if($user_karyawan->Jabatan=='')-@else{{$user_karyawan->Jabatan->nama_jabatan}}@endif</th>
                                             </tr>
                                         </table>
                                     </div>

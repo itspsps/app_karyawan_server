@@ -1743,7 +1743,6 @@ class karyawanController extends Controller
         }
         if ($request['file_cv']) {
             // dd('ok');
-            // $file_path = "https://karyawan.sumberpangan.store/laravel/storage/app/public/file_cv/CV-24-07-30-e8d6a3d4-72d2-4fde-9721-1ef71f893253.pdf";
             $file_path = 'https://hrd.sumberpangan.store:4430/storage/app/public/file_cv/' . $request->file_cv_lama;
             // dd($file_path);
             if (File::exists($file_path)) {

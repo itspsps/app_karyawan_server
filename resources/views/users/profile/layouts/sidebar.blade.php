@@ -5,7 +5,7 @@
 				@if(Auth::user()->foto_karyawan == '' || Auth::user()->foto_karyawan == NULL)
 				<img src="{{asset('admin/assets/img/avatars/1.png')}}" class="rounded-circle" alt="author-image">
 				@else
-				<img src="{{ url('https://karyawan.sumberpangan.store/laravel/storage/app/public/foto_karyawan/'.Auth::user()->foto_karyawan) }}" class="rounded-circle" alt="author-image">
+				<img src="{{ url('https://hrd.sumberpangan.store:4430/storage/app/public/foto_karyawan/'.Auth::user()->foto_karyawan) }}" class="rounded-circle" alt="author-image">
 				@endif
 			</div>
 			<div class="dz-info">

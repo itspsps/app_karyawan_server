@@ -310,15 +310,15 @@
         <tbody>
             <tr style="font-weight: bold;">
                 <td style="text-align: center;">
-                    <img src="{{ url('https://karyawan.sumberpangan.store/laravel/public/signature/'.$data_penugasan->ttd_user.'.png') }}" width="100%" alt="">
+                    <img src="{{ url('https://hrd.sumberpangan.store:4430/public/signature/penugasan/'.$data_penugasan->ttd_user.'.png') }}" width="100%" alt="">
                     <p>{{$data_penugasan->User->name}}<br>(Karyawan)</p>
                 </td>
                 <td style="text-align: center;">
-                    <img src="{{ url('https://karyawan.sumberpangan.store/laravel/public/signature/'.$data_penugasan->ttd_atasan.'.png') }}" width="100%" alt="">
+                    <img src="{{ url('https://hrd.sumberpangan.store:4430/public/signature/penugasan/'.$data_penugasan->ttd_atasan.'.png') }}" width="100%" alt="">
                     <p style="margin-bottom: -10px;">{{$data_penugasan->approve_atasan}}<br>(Atasan 1)</p>
                 </td>
                 <td style="text-align: center;">
-                    <img src="{{ url('https://karyawan.sumberpangan.store/laravel/public/signature/'.$data_penugasan->ttd_atasan2.'.png') }}" width="100%" alt="">
+                    <img src="{{ url('https://hrd.sumberpangan.store:4430/public/signature/penugasan/'.$data_penugasan->ttd_atasan2.'.png') }}" width="100%" alt="">
                     <p>{{$data_penugasan->approve_atasan2}}<br>(Atasan 2)</p>
                 </td>
             </tr>

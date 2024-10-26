@@ -71,7 +71,7 @@
                                     @if($user->foto_karyawan=='')
                                     <img src="{{ asset('assets/assets_users/images/users/user_icon.jpg') }}" alt="/">
                                     @else
-                                    <img src="https://karyawan.sumberpangan.store/laravel/storage/app/public/foto_karyawan/{{$user->foto_karyawan}}" alt="/">
+                                    <img src="https://hrd.sumberpangan.store:4430/storage/app/public/foto_karyawan/{{$user->foto_karyawan}}" alt="/">
                                     @endif
                                 </div>
                                 <div class="card-info">
