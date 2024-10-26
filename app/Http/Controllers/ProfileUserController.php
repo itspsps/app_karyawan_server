@@ -302,8 +302,16 @@ class ProfileUserController extends Controller
     }
     public function lihat_kontrak_kerja()
     {
-        $user_karyawan = Karyawan::With('Departemen')->with('Divisi')->with('Bagian')->with('Jabatan')->where('id', Auth::user()->karyawan_id)->first();
+        $user_karyawan = Karyawan::where('id', Auth::user()->karyawan_id)->first();
         return view('users.profile.lihat_kontrak', [
+            'title' => 'Profile',
+            'user_karyawan' => $user_karyawan
+        ]);
+    }
+    public function lihat_dokumen()
+    {
+        $user_karyawan = Karyawan::where('id', Auth::user()->karyawan_id)->first();
+        return view('users.profile.lihat_dokumen', [
             'title' => 'Profile',
             'user_karyawan' => $user_karyawan
         ]);
