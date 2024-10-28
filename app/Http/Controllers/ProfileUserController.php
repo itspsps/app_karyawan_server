@@ -9,8 +9,12 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use RealRashid\SweetAlert\Facades\Alert;
 use App\Models\ActivityLog;
+use App\Models\Bagian;
 use App\Models\Cities;
+use App\Models\Departemen;
 use App\Models\District;
+use App\Models\Divisi;
+use App\Models\Jabatan;
 use App\Models\Karyawan;
 use App\Models\Provincies;
 use App\Models\Village;
@@ -314,6 +318,280 @@ class ProfileUserController extends Controller
         return view('users.profile.lihat_dokumen', [
             'title' => 'Profile',
             'user_karyawan' => $user_karyawan
+        ]);
+    }
+    public function lihat_rekan_kerja()
+    {
+        $user_karyawan = Karyawan::where('id', Auth::user()->karyawan_id)->first();
+        $rekan_kerja = Karyawan::where('dept_id', $user_karyawan->dept_id)->get();
+        return view('users.profile.lihat_rekan_kerja', [
+            'title' => 'Profile',
+            'rekan_kerja' => $rekan_kerja,
+            'user_karyawan' => $user_karyawan
+        ]);
+    }
+    public function lihat_struktur_organisasi()
+    {
+
+        // syncfusion
+        $user_karyawan = Karyawan::where('id', Auth::user()->karyawan_id)->first();
+        $user_site_job = Lokasi::where('lokasi_kantor', $user_karyawan->site_job)->first();
+        if ($user_site_job->kategori_kantor == 'sp') {
+            $user_site_job_karyawan =  ['ALL SITES (SP, SPS, SIP)', 'CV. SUMBER PANGAN - KEDIRI', 'CV. SUMBER PANGAN - TUBAN', 'ALL SITES (SP)'];
+        } else if ($user_site_job->kategori_kantor == 'sps') {
+            $user_site_job_karyawan =  ['ALL SITES (SP, SPS, SIP)', 'PT. SURYA PANGAN SEMESTA - KEDIRI', 'PT. SURYA PANGAN SEMESTA - NGAWI', 'PT. SURYA PANGAN SEMESTA - SUBANG', 'ALL SITES (SP)'];
+        } else {
+            $user_site_job_karyawan = ['ALL SITES (SP, SPS, SIP)', 'CV. SUMBER PANGAN - KEDIRI', 'CV. SUMBER PANGAN - TUBAN', 'ALL SITES (SP)'];
+        }
+
+        $jabatan_karyawan = Jabatan::With('Bagian')->with(['Divisi' => function ($query) {
+            $query->With('Departemen');
+        }])->where('id', $user_karyawan->jabatan_id)->first();
+        if ($jabatan_karyawan == NULL) {
+            $jabatan = NULL;
+        } else {
+            $jabatan = $jabatan_karyawan->atasan_id;
+        }
+        $jabatan_karyawan_atasan1 = Jabatan::With('Bagian')->with(['Divisi' => function ($query) {
+            $query->With('Departemen');
+        }])->where('id', $jabatan)->first();
+        if ($jabatan_karyawan_atasan1 == NULL) {
+            $jabatan_atasan1 = NULL;
+        } else {
+            $jabatan_atasan1 = $jabatan_karyawan_atasan1->atasan_id;
+        }
+        $jabatan_karyawan_atasan2 = Jabatan::With('Bagian')->with(['Divisi' => function ($query) {
+            $query->With('Departemen');
+        }])->where('id', $jabatan_atasan1)->first();
+        if ($jabatan_karyawan_atasan2 == NULL) {
+            $jabatan_atasan2 = NULL;
+        } else {
+            $jabatan_atasan2 = $jabatan_karyawan_atasan2->atasan_id;
+        }
+        $jabatan_karyawan_atasan3 = Jabatan::With('Bagian')->with(['Divisi' => function ($query) {
+            $query->With('Departemen');
+        }])->where('id', $jabatan_atasan2)->first();
+        if ($jabatan_karyawan_atasan3 == NULL) {
+            $jabatan_atasan3 = NULL;
+        } else {
+            $jabatan_atasan3 = $jabatan_karyawan_atasan3->atasan_id;
+        }
+        // dd($jabatan_karyawan_atasan3);
+        $jabatan_karyawan_atasan4 = Jabatan::With('Bagian')->with(['Divisi' => function ($query) {
+            $query->With('Departemen');
+        }])->where('id', $jabatan_atasan3)->first();
+        if ($jabatan_karyawan_atasan4 == NULL) {
+            $jabatan_atasan4 = NULL;
+        } else {
+            $jabatan_atasan4 = $jabatan_karyawan_atasan4->atasan_id;
+        }
+        $jabatan_karyawan_atasan5 = Jabatan::With('Bagian')->with(['Divisi' => function ($query) {
+            $query->With('Departemen');
+        }])->where('id', $jabatan_atasan4)->first();
+        $jabatan = [$jabatan_karyawan, $jabatan_karyawan_atasan1, $jabatan_karyawan_atasan2, $jabatan_karyawan_atasan3, $jabatan_karyawan_atasan4, $jabatan_karyawan_atasan5];
+
+        // dd($jabatan);
+        if (count($jabatan) == 0) {
+            $jabatan_struktur = NULL;
+        } else {
+            foreach ($jabatan as $jabatan) {
+                if ($jabatan == NULL) {
+                    $jabatan_karyawan = NULL;
+                    $jabatan_karyawan_id = NULL;
+                    $jabatan_karyawan_atasan = NULL;
+                    break;
+                } else {
+                    $jabatan_karyawan = $jabatan['nama_jabatan'];
+                    $jabatan_karyawan_id = $jabatan['id'];
+                    $jabatan_karyawan_atasan = $jabatan['atasan_id'];
+                    if ($jabatan->Bagian == NULL) {
+                        $jabatan_bagian = NULL;
+                    } else {
+                        $jabatan_bagian = $jabatan->Bagian["nama_bagian"];
+                    }
+                    if ($jabatan->Divisi == NULL) {
+                        $jabatan_divisi = NULL;
+                    } else {
+                        $jabatan_divisi = $jabatan->Divisi["nama_divisi"];
+                        if ($jabatan->Divisi->Departemen == NULL) {
+                            $jabatan_departemen = NULL;
+                        } else {
+                            $jabatan_departemen = $jabatan->Divisi->Departemen["nama_departemen"];
+                        }
+                    }
+                    // continue;
+                }
+                // dd($jabatan_departemen);
+                // $ok = $jabatan->User->toArray();
+                $ok = Karyawan::Join('jabatans', 'jabatans.id', 'karyawans.jabatan_id')
+                    ->join('divisis', 'divisis.id', '=', 'karyawans.divisi_id')
+                    ->join('departemens', 'departemens.id', '=', 'karyawans.dept_id')
+                    ->join('bagians', 'bagians.id', '=', 'karyawans.bagian_id')
+                    // ->whereIn('karyawans.site_job', ['ALL SITES (SP, SPS, SIP)', 'CV. SUMBER PANGAN - KEDIRI', 'CV. SUMBER PANGAN - TUBAN', 'ALL SITES (SP)'])
+                    ->whereIn('karyawans.site_job', $user_site_job_karyawan)
+                    ->where('departemens.nama_departemen', $jabatan_departemen)
+                    ->where('divisis.nama_divisi', $jabatan_divisi)
+                    ->where('bagians.nama_bagian', $jabatan_bagian)
+                    ->where('jabatans.nama_jabatan', $jabatan_karyawan)
+                    ->where('karyawans.status_aktif', 'AKTIF')
+                    // ->orWhere('penempatan_kerja', 'ALL SITES (SP)')
+                    // ->orWhere('karyawans.site_job', 'CV. SUMBER PANGAN - KEDIRI')
+                    // ->take('5')
+                    ->select('karyawans.name')
+                    ->get()
+                    ->toArray();
+                $ok1 = Karyawan::Join('jabatans', 'jabatans.id', 'karyawans.jabatan1_id')
+                    ->join('divisis', 'divisis.id', '=', 'karyawans.divisi1_id')
+                    ->join('departemens', 'departemens.id', '=', 'karyawans.dept1_id')
+                    ->join('bagians', 'bagians.id', '=', 'karyawans.bagian1_id')
+                    // ->whereIn('karyawans.site_job', ['ALL SITES (SP, SPS, SIP)', 'CV. SUMBER PANGAN - KEDIRI', 'CV. SUMBER PANGAN - TUBAN', 'ALL SITES (SP)'])
+                    ->whereIn('karyawans.site_job', $user_site_job_karyawan)
+                    ->where('departemens.nama_departemen', $jabatan_departemen)
+                    ->where('divisis.nama_divisi', $jabatan_divisi)
+                    ->where('bagians.nama_bagian', $jabatan_bagian)
+                    ->where('jabatans.nama_jabatan', $jabatan_karyawan)
+                    ->where('karyawans.status_aktif', 'AKTIF')
+                    // ->orWhere('karyawans.site_job', 'CV. SUMBER PANGAN - KEDIRI')
+                    // ->orWhere('penempatan_kerja', 'ALL SITES (SP)')
+                    // ->take('5')
+                    ->select('karyawans.name')
+                    ->get()
+                    ->toArray();
+                $ok2 = Karyawan::Join('jabatans', 'jabatans.id', 'karyawans.jabatan2_id')
+                    ->join('divisis', 'divisis.id', '=', 'karyawans.divisi2_id')
+                    ->join('departemens', 'departemens.id', '=', 'karyawans.dept2_id')
+                    ->join('bagians', 'bagians.id', '=', 'karyawans.bagian2_id')
+                    // ->whereIn('karyawans.site_job', ['ALL SITES (SP, SPS, SIP)', 'CV. SUMBER PANGAN - KEDIRI', 'CV. SUMBER PANGAN - TUBAN', 'ALL SITES (SP)'])
+                    // ->where('divisis.nama_divisi', $jabatan["nama_divisi"])
+                    // ->where('bagians.nama_bagian', $jabatan["nama_bagian"])
+                    ->whereIn('karyawans.site_job', $user_site_job_karyawan)
+                    ->where('departemens.nama_departemen', $jabatan_departemen)
+                    ->where('divisis.nama_divisi', $jabatan_divisi)
+                    ->where('bagians.nama_bagian', $jabatan_bagian)
+                    ->where('jabatans.nama_jabatan', $jabatan_karyawan)
+                    ->where('karyawans.status_aktif', 'AKTIF')
+                    // ->where('karyawans.site_job', 'ALL SITES (SP, SPS, SIP)')
+                    // ->orWhere('karyawans.site_job', 'CV. SUMBER PANGAN - KEDIRI')
+                    // ->orWhere('penempatan_kerja', 'ALL SITES (SP)')
+                    // ->take('5')
+                    ->select('karyawans.name')
+                    ->get()
+                    ->toArray();
+                $ok3 = Karyawan::Join('jabatans', 'jabatans.id', 'karyawans.jabatan3_id')
+                    ->join('divisis', 'divisis.id', '=', 'karyawans.divisi3_id')
+                    ->join('departemens', 'departemens.id', '=', 'karyawans.dept3_id')
+                    ->join('bagians', 'bagians.id', '=', 'karyawans.bagian3_id')
+                    // ->whereIn('karyawans.site_job', ['ALL SITES (SP, SPS, SIP)', 'CV. SUMBER PANGAN - KEDIRI', 'CV. SUMBER PANGAN - TUBAN', 'ALL SITES (SP)'])
+                    // ->where('divisis.nama_divisi', $jabatan["nama_divisi"])
+                    // ->where('bagians.nama_bagian', $jabatan["nama_bagian"])
+                    ->whereIn('karyawans.site_job', $user_site_job_karyawan)
+                    ->where('departemens.nama_departemen', $jabatan_departemen)
+                    ->where('divisis.nama_divisi', $jabatan_divisi)
+                    ->where('bagians.nama_bagian', $jabatan_bagian)
+                    ->where('jabatans.nama_jabatan', $jabatan_karyawan)
+                    ->where('karyawans.status_aktif', 'AKTIF')
+                    // ->where('karyawans.site_job', 'ALL SITES (SP, SPS, SIP)')
+                    // ->orWhere('karyawans.site_job', 'CV. SUMBER PANGAN - KEDIRI')
+                    // ->orWhere('penempatan_kerja', 'ALL SITES (SP)')
+                    // ->take('5')
+                    ->select('karyawans.name')
+                    ->get()
+                    ->toArray();
+                $ok4 = Karyawan::Join('jabatans', 'jabatans.id', 'karyawans.jabatan4_id')
+                    ->join('divisis', 'divisis.id', '=', 'karyawans.divisi4_id')
+                    ->join('departemens', 'departemens.id', '=', 'karyawans.dept4_id')
+                    ->join('bagians', 'bagians.id', '=', 'karyawans.bagian4_id')
+                    // ->whereIn('karyawans.site_job', ['ALL SITES (SP, SPS, SIP)', 'CV. SUMBER PANGAN - KEDIRI', 'CV. SUMBER PANGAN - TUBAN', 'ALL SITES (SP)'])
+                    // ->where('divisis.nama_divisi', $jabatan["nama_divisi"])
+                    // ->where('bagians.nama_bagian', $jabatan["nama_bagian"])
+                    ->whereIn('karyawans.site_job', $user_site_job_karyawan)
+                    ->where('departemens.nama_departemen', $jabatan_departemen)
+                    ->where('divisis.nama_divisi', $jabatan_divisi)
+                    ->where('bagians.nama_bagian', $jabatan_bagian)
+                    ->where('jabatans.nama_jabatan', $jabatan_karyawan)
+                    ->where('karyawans.status_aktif', 'AKTIF')
+                    // ->where('karyawans.site_job', 'ALL SITES (SP, SPS, SIP)')
+                    // ->orWhere('karyawans.site_job', 'CV. SUMBER PANGAN - KEDIRI')
+                    // ->orWhere('penempatan_kerja', 'ALL SITES (SP)')
+                    // ->take('5')
+                    ->select('karyawans.name')
+                    ->get()
+                    ->toArray();
+                // dd($ok);
+                if ($ok == []) {
+                    $user_name = NULL;
+                } else {
+                    // dd(json_encode($ok));
+                    $user_name = str_replace('[{', '', json_encode($ok));
+                    $user_name = str_replace('{', '<li>', $user_name);
+                    $user_name = str_replace('"', '', $user_name);
+                    $user_name = str_replace('}', '', $user_name);
+                    $user_name = str_replace(']', '', $user_name);
+                    $user_name = str_replace('name:', ' ', $user_name);
+                    $user_name = str_replace(' ', '&nbsp;', $user_name);
+                    $user_name = str_replace(',', '</li>', $user_name);
+                }
+
+                if ($ok1 == []) {
+                    $user_name1 = NULL;
+                } else {
+                    $user_name1 = str_replace('[{', '', json_encode($ok1));
+                    $user_name1 = str_replace('{', '<li>', $user_name1);
+                    $user_name1 = str_replace('"', '', $user_name1);
+                    $user_name1 = str_replace('}', '', $user_name1);
+                    $user_name1 = str_replace(']', '', $user_name1);
+                    $user_name1 = str_replace('name:', ' ', $user_name1);
+                    $user_name1 = str_replace(' ', '&nbsp;', $user_name1);
+                    $user_name1 = str_replace(',', '</li>', $user_name1);
+                }
+                if ($ok2 == []) {
+                    $user_name2 = NULL;
+                } else {
+                    $user_name2 = str_replace('[{', '', json_encode($ok2));
+                    $user_name2 = str_replace('{', '<li>', $user_name2);
+                    $user_name2 = str_replace('"', '', $user_name2);
+                    $user_name2 = str_replace('}', '', $user_name2);
+                    $user_name2 = str_replace(']', '', $user_name2);
+                    $user_name2 = str_replace('name:', ' ', $user_name2);
+                    $user_name2 = str_replace(' ', '&nbsp;', $user_name2);
+                    $user_name2 = str_replace(',', '</li>', $user_name2);
+                }
+                if ($ok3 == []) {
+                    $user_name3 = NULL;
+                } else {
+                    $user_name3 = str_replace('[{', '', json_encode($ok3));
+                    $user_name3 = str_replace('{', '<li>', $user_name3);
+                    $user_name3 = str_replace('"', '', $user_name3);
+                    $user_name3 = str_replace('}', '', $user_name3);
+                    $user_name3 = str_replace(']', '', $user_name3);
+                    $user_name3 = str_replace('name:', ' ', $user_name3);
+                    $user_name3 = str_replace(' ', '&nbsp;', $user_name3);
+                    $user_name3 = str_replace(',', '</li>', $user_name3);
+                }
+                if ($ok4 == []) {
+                    $user_name4 = NULL;
+                } else {
+                    $user_name4 = str_replace('[{', '', json_encode($ok4));
+                    $user_name4 = str_replace('{', '<li>', $user_name4);
+                    $user_name4 = str_replace('"', '', $user_name4);
+                    $user_name4 = str_replace('}', '', $user_name4);
+                    $user_name4 = str_replace(']', '', $user_name4);
+                    $user_name4 = str_replace('name:', ' ', $user_name4);
+                    $user_name4 = str_replace(' ', '&nbsp;', $user_name4);
+                    $user_name4 = str_replace(',', '</li>', $user_name4);
+                }
+                // $role = '<a class="btn btn-sm btn-primary"> oke</a>';
+                $count_username = (count($ok) + count($ok1) + count($ok2) + count($ok3) + count($ok4)) . '&nbsp;Karyawan';
+
+                $foto = '<img width=30 height=30 style="border-radius: 50%;" align=center margin_bottom=4 margin_top=4 src=https://hrd.sumberpangan.store:4430/public/admin/assets/img/avatars/1.png><br>';
+                $jabatan_struktur[] = array('x' => $jabatan_karyawan . ' <br>(' . $jabatan_bagian . ')', 'id' => str_replace("-", "", $jabatan_karyawan_id), 'parent' => str_replace("-", "", $jabatan_karyawan_atasan), 'user' => $user_name  . $user_name1 . $user_name2 . $user_name3 . $user_name4, 'attributes' => array('role' => $count_username, 'photo' => $foto));
+                // $jabatan_struktur[] = array('x' => $jabatan['nama_jabatan'] . ' (' . $jabatan['nama_bagian'] . ')', 'id' => str_replace("-", "", $jabatan['id']), 'parent' => str_replace("-", "", $jabatan['atasan_id']), 'attributes' => array('role' => $user_name  . $user_name1 . $user_name2 . $user_name3 . $user_name4, 'photo' => $foto));
+            }
+            // dd($jabatan_struktur);
+        }
+        return view('users.profile.lihat_struktur_organisasi', [
+            'title' => 'Profile',
+            'user' => $jabatan_struktur,
         ]);
     }
 }
