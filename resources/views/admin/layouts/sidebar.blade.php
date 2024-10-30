@@ -355,6 +355,7 @@
         {{ Request::is('shift*') ? 'active open' : '' }}
         {{ Request::is('lokasi-kantor*') ? 'active open' : '' }}
         {{ Request::is('rekap-data*') ? 'active open' : '' }} 
+         {{ Request::is('report/*') ? 'active open' : '' }}
         {{ Request::is('karyawan/mapping_shift*') ? 'active open' : '' }}">
             <a href="javascript:void(0);" class="menu-link menu-toggle">
                 <i class="menu-icon tf-icons mdi mdi-table-account"></i>
@@ -382,10 +383,25 @@
                         <div style="font-size: 10pt;" data-i18n="Without navbar"><i class="mdi mdi-account-clock-outline"></i>&nbsp;Mapping&nbsp;Absensi&nbsp;Karyawan</div>
                     </a>
                 </li>
-                <li class="menu-item  {{ Request::is('rekap-data*') ? 'active' : '' }}">
-                    <a href="{{ url('/rekap-data/'.$holding) }}" class="menu-link">
-                        <div style="font-size: 10pt;" data-i18n="Container"><i class="mdi mdi-file-chart-check-outline"></i>&nbsp;Rekap Data Absensi</div>
+                <li class="menu-item 
+                    {{ Request::is('rekap-data*') ? 'active open' : '' }} 
+                    {{ Request::is('report/*') ? 'active open' : '' }}">
+                    <a href="javascript:void(0);" class="menu-link menu-toggle">
+                        <i class="menu-icon tf-icons mdi mdi-table-account"></i>
+                        <div style="font-size: 10pt;" data-i18n="Data Master">Report</div>
                     </a>
+                    <ul class="menu-sub">
+                        <li class="menu-item  {{ Request::is('rekap-data*') ? 'active' : '' }}">
+                            <a href="{{ url('/rekap-data/'.$holding) }}" class="menu-link">
+                                <div style="font-size: 10pt;" data-i18n="Container"><i class="mdi mdi-file-chart-check-outline"></i>&nbsp;Rekap Data Absensi</div>
+                            </a>
+                        </li>
+                        <li class="menu-item {{ Request::is('report*') ? 'active' : '' }}">
+                            <a href="{{ url('/report/'.$holding) }}" class=" menu-link">
+                                <div style="font-size: 10pt;" data-i18n="Without navbar"><i class="mdi mdi-account-clock-outline"></i>&nbsp;Report&nbsp;Absensi&nbsp;Karyawan</div>
+                            </a>
+                        </li>
+                    </ul>
                 </li>
             </ul>
         </li>

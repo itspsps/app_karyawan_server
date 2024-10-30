@@ -41,6 +41,7 @@ use App\Http\Controllers\PenugasanController;
 use App\Http\Controllers\PenugasanUserController;
 use App\Http\Controllers\StrukturOrganisasiController;
 use App\Http\Controllers\RecruitmentController;
+use App\Http\Controllers\ReportController;
 use App\Http\Controllers\UserKaryawanController;
 use App\Models\Jabatan;
 use Carbon\Carbon;
@@ -439,6 +440,7 @@ Route::middleware('admin')->group(function () {
     Route::put('/data-absen/{id}/proses-edit-pulang', [AbsenController::class, 'prosesEditPulang']);
     Route::delete('/data-absen/{id}/delete', [AbsenController::class, 'deleteAdmin']);
     Route::get('/data-lembur', [LemburController::class, 'dataLembur']);
+
     Route::get('/rekap-data/sp', [RekapDataController::class, 'index']);
     Route::get('/rekap-data/sps', [RekapDataController::class, 'index']);
     Route::get('/rekap-data/sip', [RekapDataController::class, 'index']);
@@ -471,6 +473,20 @@ Route::middleware('admin')->group(function () {
     Route::post('/rekapdata/ImportAbsensi/sp', [RekapDataController::class, 'ImportAbsensi']);
     Route::post('/rekapdata/ImportAbsensi/sps', [RekapDataController::class, 'ImportAbsensi']);
     Route::post('/rekapdata/ImportAbsensi/sip', [RekapDataController::class, 'ImportAbsensi']);
+
+
+    // REPORT ABSENSI
+    Route::get('/report/sp', [ReportController::class, 'index']);
+    Route::get('/report/sps', [ReportController::class, 'index']);
+    Route::get('/report/sip', [ReportController::class, 'index']);
+    Route::get('/report-datatable/sp', [ReportController::class, 'datatable']);
+    Route::get('/report-datatable/sps', [ReportController::class, 'datatable']);
+    Route::get('/report-datatable/sip', [ReportController::class, 'datatable']);
+    Route::get('/report/get_divisi', [ReportController::class, 'get_divisi']);
+    Route::get('/report/get_bagian', [ReportController::class, 'get_bagian']);
+    Route::get('/report/get_jabatan', [ReportController::class, 'get_jabatan']);
+    Route::get('/report/get_columns', [ReportController::class, 'get_columns']);
+
     Route::get('/data-cuti', [CutiController::class, 'dataCuti']);
     Route::get('/data-cuti/tambah', [CutiController::class, 'tambahAdmin']);
     Route::post('/data-cuti/getuserid', [CutiController::class, 'getUserId']);

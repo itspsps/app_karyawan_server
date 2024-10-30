@@ -20,7 +20,7 @@
             <div class="col-md-12 text-center" style="margin: 0; padding: 0;">
                 <div class="card">
                     <div class="card-header">
-                        <h5 class="title">Kontrak</h5>
+                        <h5 class="title">Struktur Organisasi</h5>
                     </div>
                     <div class="card-body">
                         <div class="skill-section">

@@ -51,7 +51,7 @@ class MappingShift extends Model
 
     public function User(): BelongsTo
     {
-        return $this->belongsTo(Karyawan::class, 'user_id', 'id');
+        return $this->belongsTo(Karyawan::class, 'id', 'user_id');
     }
     public function Koordinator()
     {

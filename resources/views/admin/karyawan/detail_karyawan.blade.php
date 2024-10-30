@@ -2116,7 +2116,7 @@
             cache: false,
 
             success: function(msg) {
-                // console.log(msg);
+                console.log(msg);
                 // $('#id_divisi').html(msg);
                 $('#id_departemen').html(msg);
                 $('#id_departemen1').html(msg);
