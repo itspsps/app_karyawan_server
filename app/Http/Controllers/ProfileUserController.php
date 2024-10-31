@@ -47,6 +47,7 @@ class ProfileUserController extends Controller
         // dd($request->all());
         $user_karyawan = Karyawan::where('id', Auth::user()->karyawan_id)->first();
         $img = $request->file('gallery_image');
+        // dd($img);
         $folderPath = "foto_karyawan/";
         // $image_parts = explode(";base64,", $img);
         // $image_type_aux = explode("image/", $image_parts[0]);
@@ -54,11 +55,11 @@ class ProfileUserController extends Controller
         // $image_base64 = base64_decode($image_parts[1]);
         $fileName =  date('y-m-d') . '-' . Uuid::uuid4() . '.jpeg';
         $file = $folderPath . $fileName;
-        $width = 500;
+        $width = 300;
         $height = null;
         $img = Image::read($img->getRealPath());
         // dd($img);
-        $img->resize(300, 300, function ($constraint) {
+        $img->resize($width, $height, function ($constraint) {
             $constraint->aspectRatio();
         });
         $img->save(public_path('../storage/app/public/foto_karyawan/') . $fileName);
