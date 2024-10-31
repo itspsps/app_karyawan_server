@@ -180,13 +180,13 @@
         <tbody>
             <tr style="font-weight: bold;">
                 <td>
-                    <img style="text-align: center;" src="{{ url('https://karyawan.sumberpangan.store/laravel/public/signature/'.$data_izin->ttd_pengajuan.'.png') }}" width="100%" alt="">
+                    <img style="text-align: center;" src="{{ url('https://hrd.sumberpangan.store:4430/public/signature/izin/'.$data_izin->ttd_pengajuan.'.png') }}" width="100%" alt="">
                 </td>
                 <td>
-                    <img style="text-align: center;" src="{{ url('https://karyawan.sumberpangan.store/laravel/public/signature/'.$data_izin->ttd_atasan.'.png') }}" width="100%" alt="">
+                    <img style="text-align: center;" src="{{ url('https://hrd.sumberpangan.store:4430/public/signature/izin/'.$data_izin->ttd_atasan.'.png') }}" width="100%" alt="">
                 </td>
                 <td>
-                    <img style="text-align: center;" src="{{ url('https://karyawan.sumberpangan.store/laravel/public/signature/'.$data_izin->ttd_atasan.'.png') }}" width="100%" alt="">
+                    <img style="text-align: center;" src="{{ url('https://hrd.sumberpangan.store:4430/public/signature/izin/'.$data_izin->ttd_atasan.'.png') }}" width="100%" alt="">
                 </td>
             </tr>
         </tbody>

@@ -47,7 +47,7 @@ class Izin extends Model
 
     public function User(): BelongsTo
     {
-        return $this->belongsTo(User::class, 'user_id', 'id');
+        return $this->belongsTo(Karyawan::class, 'user_id', 'id');
     }
     public function KategoriIzin(): BelongsTo
     {

@@ -2,6 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Bagian;
+use App\Models\Departemen;
+use App\Models\Divisi;
+use App\Models\Jabatan;
+use App\Models\Karyawan;
 use App\Models\MappingShift;
 use App\Models\Shift;
 use App\Models\User;
@@ -9,9 +14,42 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Yajra\DataTables\Facades\DataTables;
 
 class MappingShiftController extends Controller
 {
+    function mapping_shift_index(Request $request)
+    {
+        $holding = request()->segment(count(request()->segments()));
+        date_default_timezone_set('Asia/Jakarta');
+
+        // $bulan = date('m');
+        // $tahun = date('Y');
+        // $hari_per_bulan = cal_days_in_month(CAL_GREGORIAN,$bulan,$tahun);
+        $tanggal_mulai = date('Y-m-01');
+        $tanggal_akhir = date('Y-m-d');
+
+        $title = "Rekap Data Absensi Tanggal " . date('Y-m-01') . " s/d " . date('Y-m-d');
+
+        $user = Karyawan::with('Cuti')->with('Izin')->where('status_aktif', 'AKTIF')->get();
+        // dd($user->Cuti->nama_cuti);
+
+        if ($request["mulai"] && $request["akhir"]) {
+            $tanggal_mulai = $request["mulai"];
+            $tanggal_akhir = $request["akhir"];
+            $title = "Rekap Data Absensi Tanggal " . $tanggal_mulai . " s/d " . $tanggal_akhir;
+        }
+        $departemen = Departemen::where('holding', $holding)->get();
+        // dd($user);
+
+        return view('admin.karyawan.karyawan_mappingshift', [
+            'tanggal_mulai' => $tanggal_mulai,
+            'departemen' => $departemen,
+            'holding' => $holding,
+            'tanggal_akhir' => $tanggal_akhir,
+            'user' => $user
+        ]);
+    }
     function index()
     {
         $shift = Shift::whereNotIn('nama_shift', ['Office'])->get();
@@ -27,13 +65,43 @@ class MappingShiftController extends Controller
         }])->where('penempatan_kerja', Auth::user()->penempatan_kerja)
             ->where('kategori', 'Karyawan Harian')->get();
         // dd($koordinator);
-        dd($user_shift);
+        // dd($user_shift);
         // dd(Auth::user()->kontrak_kerja);
         return view('users.mapping_shift.index', [
             'user' => $user,
             'shift' => $shift,
             'user_shift' => $user_shift
         ]);
+    }
+    public function get_divisi(Request $request)
+    {
+        // dd($request->all());
+        $id_departemen    = $request->departemen_filter;
+
+        $divisi      = Divisi::where('dept_id', $id_departemen)->where('holding', $request->holding)->orderBy('nama_divisi', 'ASC')->get();
+        echo "<option value=''>Pilih Divisi...</option>";
+        foreach ($divisi as $divisi) {
+            echo "<option value='$divisi->id'>$divisi->nama_divisi</option>";
+        }
+    }
+    public function get_bagian(Request $request)
+    {
+        $id_divisi    = $request->divisi_filter;
+
+        $bagian      = Bagian::where('divisi_id', $id_divisi)->where('holding', $request->holding)->orderBy('nama_bagian', 'ASC')->get();
+        echo "<option value=''>Pilih Bagian...</option>";
+        foreach ($bagian as $bagian) {
+            echo "<option value='$bagian->id'>$bagian->nama_bagian</option>";
+        }
+    }
+    public function get_jabatan(Request $request)
+    {
+        $id_bagian    = $request->bagian_filter;
+        $jabatan      = Jabatan::where('bagian_id', $id_bagian)->where('holding', $request->holding)->orderBy('nama_jabatan', 'ASC')->get();
+        echo "<option value=''>Pilih Jabatan...</option>";
+        foreach ($jabatan as $jabatan) {
+            echo "<option value='$jabatan->id'>$jabatan->nama_jabatan</option>";
+        }
     }
     public function prosesAddMappingShift(Request $request)
     {
@@ -106,5 +174,102 @@ class MappingShiftController extends Controller
         ]);
         $request->session()->flash('mappingshiftupdatesuccess');
         return redirect('/mapping_shift/dashboard/');
+    }
+    public function mapping_shift_datatable(Request $request)
+    {
+        $holding = request()->segment(count(request()->segments()));
+        // dd($request->all());
+        // $now = Carbon::parse($request->filter_month)->startOfMonth();
+        // dd($now);
+        if (request()->ajax()) {
+            if (!empty($request->departemen_filter)) {
+                $date1 = Carbon::now()->startOfWeek();
+                $date2 = Carbon::now()->endOfWeek();
+                dd($date1->addDays(1), $date2);
+                if (!empty($request->divisi_filter)) {
+                    if (!empty($request->bagian_filter)) {
+                        if (!empty($request->jabatan_filter)) {
+                            $table = User::with('Mappingshift')
+                                ->where('dept_id', $request->departemen_filter)
+                                ->where('divisi_id', $request->divisi_filter)
+                                ->where('bagian_id', $request->bagian_filter)
+                                ->where('jabatan_id', $request->jabatan_filter)
+                                ->where('kontrak_kerja', $holding)
+                                ->where('kategori', 'Karyawan Bulanan')
+                                ->where('status_aktif', 'AKTIF')
+                                ->get();
+                        } else {
+                            $table = User::with('Mappingshift')
+                                ->where('dept_id', $request->departemen_filter)
+                                ->where('divisi_id', $request->divisi_filter)
+                                ->where('bagian_id', $request->bagian_filter)
+                                ->where('kontrak_kerja', $holding)
+                                ->where('kategori', 'Karyawan Bulanan')
+                                ->where('status_aktif', 'AKTIF')
+                                ->get();
+                        }
+                    } else {
+                        $table = User::with('Mappingshift')
+                            ->where('dept_id', $request->departemen_filter)
+                            ->where('divisi_id', $request->divisi_filter)
+                            ->where('kontrak_kerja', $holding)
+                            ->where('kategori', 'Karyawan Bulanan')
+                            ->where('status_aktif', 'AKTIF')
+                            ->get();
+                    }
+                } else {
+                    $table = User::with('Mappingshift')
+                        ->where('dept_id', $request->departemen_filter)
+                        ->where('kontrak_kerja', $holding)
+                        ->where('kategori', 'Karyawan Bulanan')
+                        ->where('status_aktif', 'AKTIF')
+                        ->get();
+                    // dd($table);
+                }
+                return DataTables::of($table)
+                    ->addColumn('jabatan', function ($row) {
+                        $jabatan = $row->Jabatan->nama_jabatan;
+                        return $jabatan;
+                    })
+                    ->addColumn('mapping_shift', function ($row) use ($date1, $date2) {
+                        $mapping_senin = 'Senin:&nbsp;' . $row->Mappingshift->where('tanggal_masuk', $date1)->first();
+                        $mapping_selasa = 'Senin:&nbsp;' . $row->Mappingshift->where('tanggal_masuk', $date1->addDays(1))->first();
+                        $mapping_rabu = 'Senin:&nbsp;' . $row->Mappingshift->where('tanggal_masuk', $date1->addDays(2))->first();
+                        $mapping_kamis = 'Senin:&nbsp;' . $row->Mappingshift->where('tanggal_masuk', $date1->addDays(3))->first();
+                        $mapping_jumat = 'Senin:&nbsp;' . $row->Mappingshift->where('tanggal_masuk', $date1->addDays(4))->first();
+                        $mapping_sabtu = 'Senin:&nbsp;' . $row->Mappingshift->where('tanggal_masuk', $date1->addDays(5))->first();
+                        $mapping_minggu = 'Senin:&nbsp;' . $row->Mappingshift->where('tanggal_masuk', $date1->addDays(6))->first();
+                        $mapping_shift = '<li>';
+                        $mapping_shift = $mapping_shift . '';
+                        $mapping_shift = '</li>';
+                        // return $data;
+                    })
+                    ->rawColumns(['jabatan', 'mapping_shift'])
+                    ->make(true);
+            } else {
+                $now = Carbon::parse($request->filter_month)->startOfMonth();
+                $now1 = Carbon::parse($request->filter_month)->endOfMonth();
+                // dd($now1);
+                // dd($tgl_mulai, $tgl_selesai);
+                $table = User::with('Mappingshift')
+                    ->with('Jabatan')
+                    ->where('kontrak_kerja', $holding)
+                    ->where('kategori', 'Karyawan Bulanan')
+                    ->where('status_aktif', 'AKTIF')
+                    // ->limit(210)
+                    ->get();
+                return DataTables::of($table)
+                    ->addColumn('jabatan', function ($row) {
+                        $jabatan = $row->Jabatan->nama_jabatan;
+                        return $jabatan;
+                    })
+                    ->addColumn('mapping_shift', function ($row) {
+                        $mapping_shift = $row->Mappingshift;
+                        return $mapping_shift;
+                    })
+                    ->rawColumns(['jabatan', 'mapping_shift'])
+                    ->make(true);
+            }
+        }
     }
 }

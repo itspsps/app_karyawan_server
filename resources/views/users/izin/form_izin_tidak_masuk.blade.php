@@ -103,7 +103,7 @@
             </tr>
             <tr style="width: 50%;">
                 <th>Nama</th>
-                <td>:&nbsp;{{$data_izin->User->fullname}}</td>
+                <td>:&nbsp;{{$data_izin->User->name}}</td>
                 <th>Jabatan</th>
                 <td>:&nbsp;@foreach($jabatan as $jabatan){{$jabatan->nama_jabatan}} @endforeach</td>
             </tr>
@@ -193,7 +193,7 @@
         <tfoot>
             <tr>
                 <th>
-                    <p style="text-align: left; font-size: 12px; margin-bottom: -2%;">Nama&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp;{{$data_izin->fullname}}</p>
+                    <p style="text-align: left; font-size: 12px; margin-bottom: -2%;">Nama&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp;{{$data_izin->name}}</p>
                     <p style="text-align: left; font-size: 12px;">Tanggal &nbsp;:&nbsp;{{ \Carbon\Carbon::parse($data_izin->waktu_ttd_pengajuan)->isoFormat('D MMMM YYYY')}}</p>
                 </th>
                 <th>

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Karyawan;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -84,35 +85,47 @@ class authController extends Controller
         if (Auth::guard('web')->attempt(array($fieldType => $credentials['username'], 'password' => $credentials['password'], 'is_admin' => 'admin'), $remember)) {
             // dd('admin');
             // dd(Auth::guard('web'));
-            if (Auth::guard('web')->user()->status_aktif == 'NON AKTIF') {
+            if (Auth::guard('web')->user()->user_aktif == 'NON AKTIF') {
                 Auth::logout();
                 $request->session()->flash('user_nonaktif');
                 return redirect('/');
             } else {
-                Alert::success('Berhasil', 'Selamat Datang ' . $data->name);
-                return redirect('/dashboard/holding')->with('Berhasil', 'Selamat Datang ' . $data->name);
+                // dd('ok');
+                Alert::success('Berhasil', 'Selamat Datang');
+                return redirect('/dashboard/holding')->with('Berhasil', 'Selamat Datang');
             }
-        } else if (Auth::guard('web')->attempt(array($fieldType => $credentials['username'], 'password' => $credentials['password'], 'is_admin' => 'superadmin'), $remember)) {
+        } else if (Auth::guard('web')->attempt(array($fieldType => $credentials['username'], 'password' => $credentials['password'], 'is_admin' => 'hrd'), $remember)) {
             // dd('superadmin');
             // dd(Auth::guard('web'));
-            if (Auth::guard('web')->user()->status_aktif == 'NON AKTIF') {
+            if (Auth::guard('web')->user()->user_aktif == 'NON AKTIF') {
                 Auth::logout();
                 $request->session()->flash('user_nonaktif');
                 return redirect('/');
             } else {
-                Alert::success('Berhasil', 'Selamat Datang ' . $data->name);
-                return redirect('/dashboard/holding')->with('Berhasil', 'Selamat Datang ' . $data->name);
+                // dd('ok');
+                // dd(Auth::user());
+                Alert::success('Berhasil', 'Selamat Datang');
+                return redirect('hrd/dashboard/holding')->with('Berhasil', 'Selamat Datang');
             }
         } else if (Auth::guard('web')->attempt(array($fieldType => $credentials['username'], 'password' => $credentials['password'], 'is_admin' => 'user'), $remember)) {
             // dd('user');
             // dd(Auth::guard('web')->user()->status_aktif);
-            if (Auth::guard('web')->user()->status_aktif == 'NON AKTIF') {
+            $user_karyawan = Karyawan::where('id', Auth::user()->karyawan_id)->first();
+            if (Auth::user()->status_aktif == 'NON AKTIF') {
                 Auth::logout();
                 $request->session()->flash('user_nonaktif');
                 return redirect('/');
+            } else if ($user_karyawan == NULL) {
+                Auth::logout();
+                $request->session()->flash('karyawan_null');
+                return redirect('/');
+            } else if ($user_karyawan->status_aktif == 'NON AKTIF') {
+                Auth::logout();
+                $request->session()->flash('karyawan_nonaktif');
+                return redirect('/');
             } else {
-                Alert::success('Berhasil', 'Selamat Datang ' . $data->name);
-                return redirect('/home')->with('Berhasil', 'Selamat Datang ' . $data->name);
+                Alert::success('Berhasil', 'Selamat Datang');
+                return redirect('/home')->with('Berhasil', 'Selamat Datang');
             }
         } else {
 

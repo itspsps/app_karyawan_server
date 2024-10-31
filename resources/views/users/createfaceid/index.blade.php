@@ -46,7 +46,7 @@
                         <video id="video" height="400" width="300" autoplay muted></video>
                     </div>
                     <input type="hidden" id="faceid" name="faceid" value="">
-                    <input type="hidden" id="id_user" name="id_user" value="">
+                    <input type="hidden" id="karyawan_id" name="karyawan_id" value="{{$user_karyawan->id}}">
                 </div>
                 <div class="text-center" style="margin: 0 auto;">
                     <button class="btn_simpan_face btn btn-sm btn-primary me-2 mb-3" id="btn_klik" type="submit" disabled>

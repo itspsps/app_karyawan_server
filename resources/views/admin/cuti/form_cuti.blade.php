@@ -5,7 +5,7 @@
     <title>FORM PERMINTAAN CUTI</title>
     <!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous"> -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-    <link rel="stylesheet" href="{{asset('public/kpi/bower_components/font-awesome/css/font-awesome.min.css')}}">
+    <!-- <link rel="stylesheet" href="{{asset('public/kpi/bower_components/font-awesome/css/font-awesome.min.css')}}"> -->
 </head>
 
 
@@ -27,11 +27,11 @@
                 @endif
             </td>
             <td>
-                @if($data_penugasan->User->kontrak_kerja=='SP')
+                @if($data_cuti->User->kontrak_kerja=='SP')
                 <h4 style="text-align: center; font-size: 16pt;">CV&nbsp;SUMBER&nbsp;PANGAN</h4>
-                @elseif($data_penugasan->User->kontrak_kerja=='SPS')
+                @elseif($data_cuti->User->kontrak_kerja=='SPS')
                 <h4 style="text-align: center; font-size: 16pt;">PT&nbsp;SURYA&nbsp;PANGAN&nbsp;SEMESTA</h4>
-                @elseif($data_penugasan->User->kontrak_kerja=='SIP')
+                @elseif($data_cuti->User->kontrak_kerja=='SIP')
                 <h4 style="text-align: center; font-size: 16pt;">CV&nbsp;SURYA&nbsp;INTI&nbsp;PANGAN</h4>
                 @endif
             </td>
@@ -197,15 +197,15 @@
         <tbody>
             <tr style="font-weight: bold;">
                 <td style="text-align: center;">
-                    <img src="{{ url('https://karyawan.sumberpangan.store/laravel/public/signature/'.$data_cuti->ttd_user.'.png') }}" width="100%" alt="">
+                    <img src="{{ url('http://127.0.0.1:8000/signature/'.$data_cuti->ttd_user.'.png') }}" width="100%" alt="">
                     <p>{{$data_cuti->User->name}}<br>(Karyawan)</p>
                 </td>
                 <td style="text-align: center;">
-                    <img src="{{ url('https://karyawan.sumberpangan.store/laravel/public/signature/'.$data_cuti->ttd_atasan.'.png') }}" width="100%" alt="">
+                    <img src="{{ url('http://127.0.0.1:8000/signature/'.$data_cuti->ttd_atasan.'.png') }}" width="100%" alt="">
                     <p style="margin-bottom: -10px;">{{$data_cuti->approve_atasan}}<br>(Atasan 1)</p>
                 </td>
                 <td style="text-align: center;">
-                    <img src="{{ url('https://karyawan.sumberpangan.store/laravel/public/signature/'.$data_cuti->ttd_atasan2.'.png') }}" width="100%" alt="">
+                    <img src="{{ url('http://127.0.0.1:8000/signature/'.$data_cuti->ttd_atasan2.'.png') }}" width="100%" alt="">
                     <p>{{$data_cuti->approve_atasan2}}<br>(Atasan 2)</p>
                 </td>
             </tr>

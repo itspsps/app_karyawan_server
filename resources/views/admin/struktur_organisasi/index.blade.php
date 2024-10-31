@@ -567,17 +567,18 @@
 </script>
 
 <script>
-    var selectedPoint;
-    var highlightColor = '#5C6BC0',
-        mutedHighlightColor = '#9FA8DA',
-        mutedFill = '#f3f4fa',
-        selectedFill = '#E8EAF6',
-        normalFill = 'white';
+    var selectedPoint2;
+    var highlightColor2 = '#5C6BC0',
+        mutedHighlightColor2 = '#9FA8DA',
+        mutedFill2 = '#f3f4fa',
+        selectedFill2 = '#E8EAF6',
+        normalFill2 = 'white',
+        highlightDirection2 = 'Down';
+    var points2 = <?php echo json_encode($user2) ?>;
 
-    var points = <?php echo json_encode($user2) ?>;
 
-    console.log(points);
-    var chart = JSC.chart('chartDiv3', {
+    console.log(points2);
+    var chart2 = JSC.chart('chartDiv3', {
         debug: true,
         type: 'organizational',
         defaultTooltip_enabled: true,
@@ -618,7 +619,7 @@
                 mute: {
                     opacity: 0.8,
                     outline: {
-                        color: mutedHighlightColor,
+                        color: mutedHighlightColor2,
                         opacity: 0.9,
                         width: 2
                     }
@@ -626,27 +627,27 @@
                 select: {
                     enabled: true,
                     outline: {
-                        color: highlightColor,
+                        color: highlightColor2,
                         width: 2
                     },
-                    color: selectedFill
+                    color: selectedFill2
                 },
                 hover: {
                     outline: {
-                        color: mutedHighlightColor,
+                        color: mutedHighlightColor2,
                         width: 2
                     },
-                    color: mutedFill
+                    color: mutedFill2
                 }
             },
             events: {
-                click: pointClick,
-                mouseOver: pointMouseOver,
-                mouseOut: pointMouseOut
+                click: pointClick2,
+                mouseOver: pointMouseOver2,
+                mouseOut: pointMouseOut2
             }
         },
         series: [{
-            points: points
+            points: points2
         }]
     });
 
@@ -654,56 +655,133 @@
      * Event Handlers 
      */
 
-    function pointClick() {
+    function pointClick2() {
         var point = this,
             chart = point.chart;
-        resetStyles(chart);
-        if (point.id === selectedPoint) {
-            selectedPoint = undefined;
+        // console.log(point.userOptions.attributes.role, chart);
+        resetStyles2(chart);
+        if (point.id === selectedPoint2) {
+            selectedPoint2 = undefined;
             return;
         }
-        selectedPoint = point.id;
-        styleSelectedPoint(chart);
-    }
-
-    function pointMouseOver() {
-        var point = this,
-            chart = point.chart;
-        chart.connectors([point.id, 'up'], {
-            color: mutedHighlightColor,
-            width: 2
-        });
+        switch (highlightDirection1) {
+            case 'Up':
+                highlightUp(point.id);
+                break;
+            case 'Down':
+                highlightDown2(point.id);
+                break;
+            case 'Both':
+                highlightUp2(point.id);
+                highlightDown2(point.id);
+        }
         chart
             .series()
             .points([point.id, 'up'])
             .options({
                 muted: true
             });
-    }
 
-    function pointMouseOut() {
-        var point = this,
-            chart = point.chart;
-        // Reset point and line styling. 
-        resetStyles(chart);
-        // Style clicked points 
-        styleSelectedPoint(chart);
-        return false;
-    }
+        function highlightUp2(id) {
+            chart.connectors([id, 'up'], {
 
-    /** 
-     * Styling helper functions 
-     */
-
-    function styleSelectedPoint(chart) {
-        if (selectedPoint) {
-            chart.connectors([selectedPoint, 'up'], {
-                color: highlightColor,
                 width: 2
             });
             chart
                 .series()
-                .points([selectedPoint, 'up'])
+                .points([id, 'up'])
+                .options({
+                    selected: true,
+                    muted: false
+                });
+        }
+
+        // Use the muted state to highlight points down the tree. 
+        function highlightDown2(id) {
+            chart.connectors([id, 'down'], {
+
+                width: 2
+            });
+            chart
+                .series()
+                .points([id, 'down'])
+                .options({
+                    selected: false,
+                    muted: true
+                });
+        }
+        updateInfo2(point);
+        selectedPoint2 = point.id;
+        styleSelectedPoint2(chart);
+    }
+
+    function reset(c) {
+        c.connectors();
+        c.series()
+            .points()
+            .options({
+                selected: false
+            });
+        var el2 = document.getElementById('keterangan_karyawan_sip');
+        el2.innerHTML = '';
+    }
+
+    function updateInfo2(point) {
+        var chart = point.chart,
+            pathSelection = [
+                point.id,
+                highlightDirection
+            ],
+            paths = chart.connectors(pathSelection, {});
+        var html =
+            ' Daftar Karyawan : <br/>';
+
+        var pathList =
+            '<li>' +
+            point.userOptions.user +
+            '</li>';
+        console.log(point.userOptions.user);
+        html += '<ul>' + pathList + '</ul>';
+
+        var el = document.getElementById('keterangan_karyawan_sip');
+        el.innerHTML = html;
+
+        function idToPointName2(id) {
+            var point = chart.series().points(id);
+            var user = chart.series().points(user);
+            console.log(point.x, point.id);
+            return point.x || point.name;
+        }
+    }
+
+    function pointMouseOver2() {
+        var point = this,
+            chart = point.chart;
+        chart.connectors([point.id, 'up'], {
+            color: mutedHighlightColor,
+            width: 2
+        });
+    }
+
+    function pointMouseOut2() {
+        var point = this,
+            chart = point.chart;
+        // Reset point and line styling. 
+        resetStyles2(chart);
+        // Style clicked points 
+        styleSelectedPoint2(chart);
+        return false;
+    }
+
+    function styleSelectedPoint2(chart) {
+        if (selectedPoint2) {
+            chart.connectors([selectedPoint2, 'up'], {
+                color: highlightColor2,
+                width: 2
+            });
+            chart
+                .series()
+                .points([selectedPoint2, 'up'])
                 .options({
                     selected: true,
                     muted: false
@@ -711,11 +789,7 @@
         }
     }
 
-    /** 
-     * Clears connectors and point states. 
-     * @param chart Chart object 
-     */
-    function resetStyles(chart) {
+    function resetStyles2(chart) {
         chart.connectors();
         chart
             .series()
@@ -726,9 +800,9 @@
             });
     }
 
-    function getImgText(name) {
+    function getImgText2(name) {
         return (
-            '<img width=50 height=50 align=center margin_bottom=4 margin_top=4 src=' +
+            '<img width=50 height=50 style="border-radius:50%;" align=center margin_bottom=4 margin_top=4 src=' +
             name +
             '><br>'
         );

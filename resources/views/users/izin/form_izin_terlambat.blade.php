@@ -5,7 +5,7 @@
     <title>FORM PERMINTAAN IZIN DATANG TERLAMBAT</title>
     <!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous"> -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-    <link rel="stylesheet" href="https://portal-sp.my.id/kpi/bower_components/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="{{asset('public/kpi/bower_components/font-awesome/css/font-awesome.min.css')}}">
 </head>
 
 
@@ -13,11 +13,11 @@
     <table border="0" style="margin-top: -45px;" class="kop" width="100%">
         <tr>
             @if($data_izin->User->kontrak_kerja=='SP')
-            <td style="width:10%;"> <img src="https://portal-sp.my.id/holding/assets/img/logosp.png" width="80px" class="images"> </td>
+            <td style="width:10%;"> <img src="{{ url('public/holding/assets/img/logosp.png') }}" width="80px" class="images"> </td>
             @elseif($data_izin->User->kontrak_kerja=='SPS')
-            <td style="width:10%;"> <img src="https://portal-sp.my.id/holding/assets/img/logosps.png" width="80px" class="images"> </td>
-            @elseif($data_izin->User->kontrak_kerja=='SIP')
-            <td style="width:10%;"> <img src="https://portal-sp.my.id/holding/assets/img/logosip.png" width="80px" class="images"> </td>
+            <td style="width:10%;"> <img src="{{ url('public/holding/assets/img/logosps.png') }}" width="80px" class="images"> </td>
+            @else
+            <td style="width:10%;"> <img src="{{ url('public/holding/assets/img/logosip.png') }}" width="80px" class="images"> </td>
             @endif
             <td style="width:60%;">
                 @if($data_izin->User->kontrak_kerja=='SP')
@@ -120,7 +120,7 @@
             </tr>
             <tr>
                 <td>Nama Karyawan</td>
-                <td>:&nbsp;{{$data_izin->User->fullname}}</td>
+                <td>:&nbsp;{{$data_izin->User->name}}</td>
             </tr>
             <tr>
                 <td>Jabatan</td>
@@ -155,15 +155,15 @@
         <tbody>
             <tr style="font-weight: bold;">
                 <td style="text-align: center;">
-                    <img src="https://portal-sp.my.id/signature/izin/'.$data_izin->ttd_pengajuan.'.png" width="100%" alt="">
+                    <img src="{{url('https://hrd.sumberpangan.store:4430/public/signature/izin/'.$data_izin->ttd_pengajuan.'.png') }}" width="100%" alt="">
                     <p>({{$data_izin->fullname}})</p>
                 </td>
                 <td style="text-align: center;">
-                    <img src="https://portal-sp.my.id/signature/izin/'.$data_izin->ttd_atasan.'.png" width="100%" alt="">
+                    <img src="{{url('https://hrd.sumberpangan.store:4430/public/signature/izin/'.$data_izin->ttd_atasan.'.png') }}" width="100%" alt="">
                     <p>({{$data_izin->approve_atasan}})</p>
                 </td>
                 <td style="text-align: center;">
-                    <img src="https://portal-sp.my.id/signature/izin/'.$data_izin->ttd_atasan.'.png" width="100%" alt="">
+                    <img src="{{url('https://hrd.sumberpangan.store:4430/public/signature/izin/'.$data_izin->ttd_atasan.'.png') }}" width="100%" alt="">
                     <p>({{$data_izin->approve_atasan}})</p>
                 </td>
             </tr>

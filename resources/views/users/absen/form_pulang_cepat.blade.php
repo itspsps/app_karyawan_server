@@ -60,7 +60,7 @@
                     <div class="dz-info">
                         <span class="location d-block text-left">Form Izin&nbsp;Pulang Cepat
                         </span>
-                        @if(auth()->user()->kategori=='Karyawan Bulanan')
+                        @if($user_karyawan->kategori=='Karyawan Bulanan')
                         <h6 class="title">@if($user->kontrak_kerja == 'SP')
                             CV. SUMBER PANGAN
                             @elseif($user->kontrak_kerja == 'SPS')
@@ -68,8 +68,8 @@
                             @elseif($user->kontrak_kerja == 'SIP')
                             CV. SURYA INTI PANGAN
                             @endif</h6>
-                        @elseif(auth()->user()->kategori=='Karyawan Harian')
-                        <h5 class="title">{{auth()->user()->penempatan_kerja}}
+                        @elseif($user_karyawan->kategori=='Karyawan Harian')
+                        <h5 class="title">{{$user_karyawan->penempatan_kerja}}
                         </h5>
                         @endif
                     </div>
@@ -145,12 +145,12 @@
                     @method('post')
                     @csrf
                     <div class="input-group">
-                        <input type="hidden" name="id_user" value="{{ Auth::user()->id }}">
+                        <input type="hidden" name="id_user" value="{{ $user_karyawan->id }}">
                         <input type="hidden" name="telp" value="{{ $user->telepon }}">
                         <input type="hidden" name="email" value="{{ $user->email }}">
                         <input type="hidden" name="departements" value="{{ $user->dept_id }}">
                         <input type="hidden" name="jabatan" value="{{ $user->jabatan_id }}">
-                        <input type="hidden" name="level_jabatan" value="@if(Auth::user()->kategori=='Karyawan Harian')@else{{ $user->level_jabatan }}@endif">
+                        <input type="hidden" name="level_jabatan" value="@if($user_karyawan->kategori=='Karyawan Harian')@else{{ $user->level_jabatan }}@endif">
                         <input type="hidden" name="divisi" value="{{ $user->divisi_id }}">
                         <input type="hidden" name="id_mapping" value="{{ $jam_kerja->id}}">
                         <input type="hidden" name="menit_telat" value="{{ $pulang_cepat}}">
@@ -180,7 +180,7 @@
                     </div>
                     <div id="form_jam_pulang_cepat" class="input-group">
                         <input type="text" class="form-control" value="Jam Keluar" readonly>
-                        <input type="time" readonly name="jam_pulang_cepat" id="jam_pulang_cepat" value="{{date('H:i')}}" style="font-weight: bold" placeholder="Jam Pulang" class="form-control">
+                        <input type="time" readonly name="jam_pulang_cepat" id="jam_pulang_cepat" value="{{date('H:i:s')}}" style="font-weight: bold" placeholder="Jam Pulang" class="form-control">
                     </div>
                     <div class="input-group">
                         <textarea class="form-control" name="keterangan_izin" style="font-weight: bold" required placeholder="Keterangan"></textarea>
@@ -205,7 +205,7 @@
                             <div>
                                 <div id="note" onmouseover="my_function();"></div>
                                 <canvas id="the_canvas" width="auto" height="100px"></canvas>
-                                <p class="text-primary" style="text-align: center">Ttd : {{ Auth::user()->fullname }} {{ date('Y-m-d') }}</p>
+                                <p class="text-primary" style="text-align: center">Ttd : {{ $user->name }} {{ date('Y-m-d') }}</p>
                                 <hr>
                                 <div class="text-center">
                                     <input type="hidden" id="signature" name="signature">
@@ -227,6 +227,7 @@
     <script type="text/javascript" src="{{ asset('assets_ttd/assets/signature.js') }}"></script>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
     <script>
         var wrapper = document.getElementById("signature-pad");
         var clearButton = wrapper.querySelector("[data-action=clear]");
@@ -310,6 +311,35 @@
             // };
             // var hasil = ((akhir - awal)) / 1000;
         });
+    </script>
+    <script>
+        $(document).on('click', '#save_btn', function(e) {
+            Swal.fire({
+                allowOutsideClick: false,
+                background: 'transparent',
+                html: ' <div class="spinner-grow text-primary spinner-grow-sm me-2" role="status"></div><div class="spinner-grow text-primary spinner-grow-sm me-2" role="status"></div><div class="spinner-grow text-primary spinner-grow-sm me-2" role="status"></div>',
+                showCancelButton: false,
+                showConfirmButton: false,
+                onBeforeOpen: () => {
+                    // Swal.showLoading()
+                },
+            });
+        });
+        window.onbeforeunload = function() {
+            Swal.fire({
+                allowOutsideClick: false,
+                background: 'transparent',
+                html: ' <div class="spinner-grow text-primary spinner-grow-sm me-2" role="status"></div><div class="spinner-grow text-primary spinner-grow-sm me-2" role="status"></div><div class="spinner-grow text-primary spinner-grow-sm me-2" role="status"></div>',
+                showCancelButton: false,
+                showConfirmButton: false,
+                onBeforeOpen: () => {
+                    // Swal.showLoading()
+                },
+                onAfterClose() {
+                    Swal.close()
+                }
+            });
+        };
     </script>
 </body>
 

@@ -450,7 +450,7 @@
             let tgl = $(this).data("tgl");
             let nama = $(this).data("nama");
             let ttd = $(this).data("ttd");
-            $('#ttd_pengajuan').attr('src', 'https://karyawan.sumberpangan.store/laravel/public/signature/' + ttd + '.png');
+            $('#ttd_pengajuan').attr('src', 'https://hrd.sumberpangan.store:4430/public/signature/penugasan/' + ttd + '.png');
             $('#nama_pengajuan').html(nama);
             $('#tgl_pengajuan').html(tgl);
 
@@ -461,7 +461,7 @@
             let tgl = $(this).data("tgl");
             let nama = $(this).data("nama");
             let ttd = $(this).data("ttd");
-            $('#ttd_diminta').attr('src', 'https://karyawan.sumberpangan.store/laravel/public/signature/' + ttd + '.png');
+            $('#ttd_diminta').attr('src', 'https://hrd.sumberpangan.store:4430/public/signature/penugasan/' + ttd + '.png');
             $('#nama_diminta').html(nama);
             $('#tgl_diminta').html(tgl);
 
@@ -472,7 +472,7 @@
             let tgl = $(this).data("tgl");
             let nama = $(this).data("nama");
             let ttd = $(this).data("ttd");
-            $('#ttd_disahkan').attr('src', 'https://karyawan.sumberpangan.store/laravel/public/signature/' + ttd + '.png');
+            $('#ttd_disahkan').attr('src', 'https://hrd.sumberpangan.store:4430/public/signature/penugasan/' + ttd + '.png');
             $('#nama_disahkan').html(nama);
             $('#tgl_disahkan').html(tgl);
 
@@ -483,7 +483,7 @@
             let tgl = $(this).data("tgl");
             let nama = $(this).data("nama");
             let ttd = $(this).data("ttd");
-            $('#ttd_hrd').attr('src', 'https://karyawan.sumberpangan.store/laravel/public/signature/' + ttd + '.png');
+            $('#ttd_hrd').attr('src', 'https://hrd.sumberpangan.store:4430/public/signature/penugasan/' + ttd + '.png');
             $('#nama_hrd').html(nama);
             $('#tgl_hrd').html(tgl);
 
@@ -494,7 +494,7 @@
             let tgl = $(this).data("tgl");
             let nama = $(this).data("nama");
             let ttd = $(this).data("ttd");
-            $('#ttd_finance').attr('src', 'https://karyawan.sumberpangan.store/laravel/public/signature/' + ttd + '.png');
+            $('#ttd_finance').attr('src', 'https://hrd.sumberpangan.store:4430/public/signature/penugasan/' + ttd + '.png');
             $('#nama_finance').html(nama);
             $('#tgl_finance').html(tgl);
 

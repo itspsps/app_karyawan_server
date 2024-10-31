@@ -52,7 +52,7 @@
             </tr>
             <tr>
                 <th>Nama Karyawan</th>
-                <td>:&nbsp;{{$data_cuti->User->fullname}}</td>
+                <td>:&nbsp;{{$data_cuti->User->name}}</td>
             </tr>
             <tr>
                 <th>Departemen</th>
@@ -113,7 +113,7 @@
             <tr>
                 <th></th>
                 <th style="background-color:#F2F3F4 ;">Nama Pengganti<i>(Jika Ada)</i></th>
-                <td style="background-color:#F2F3F4 ;">:&nbsp;{{$pengganti->name}}</td>
+                <td style="background-color:#F2F3F4 ;">:&nbsp;@if($pengganti==null) @else {{$pengganti->name}} @endif</td>
             </tr>
         </tfoot>
     </table>
@@ -135,15 +135,15 @@
         <tbody>
             <tr style="font-weight: bold;">
                 <td style="text-align: center;">
-                    <img src="{{ url('https://karyawan.sumberpangan.store/laravel/public/signature/'.$data_cuti->ttd_user.'.png') }}" width="100%" alt="">
-                    <p>{{Auth::user()->name}}</p>
+                    <img src="{{ url('https://hrd.sumberpangan.store:4430/public/signature/cuti/'.$data_cuti->ttd_user.'.png') }}" width="100%" alt="">
+                    <p>{{$user_karyawan->name}}</p>
                 </td>
                 <td style="text-align: center;">
-                    <img src="{{ url('https://karyawan.sumberpangan.store/laravel/public/signature/'.$data_cuti->ttd_atasan.'.png') }}" width="100%" alt="">
+                    <img src="{{ url('https://hrd.sumberpangan.store:4430/public/signature/cuti/'.$data_cuti->ttd_atasan.'.png') }}" width="100%" alt="">
                     <p style="margin-bottom: -10px;">{{$data_cuti->approve_atasan}}</p>
                 </td>
                 <td style="text-align: center;">
-                    <img src="{{ url('https://karyawan.sumberpangan.store/laravel/public/signature/'.$data_cuti->ttd_atasan2.'.png') }}" width="100%" alt="">
+                    <img src="{{ url('https://hrd.sumberpangan.store:4430/public/signature/cuti/'.$data_cuti->ttd_atasan2.'.png') }}" width="100%" alt="">
                     <p>{{$data_cuti->approve_atasan2}}</p>
                 </td>
             </tr>

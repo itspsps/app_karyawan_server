@@ -9,6 +9,7 @@ use App\Models\Departemen;
 use App\Models\Divisi;
 use App\Models\Izin;
 use App\Models\Jabatan;
+use App\Models\Karyawan;
 use App\Models\Lembur;
 use App\Models\User;
 use App\Models\MappingShift;
@@ -19,6 +20,7 @@ use DateTime;
 use PDF;
 use Facade\Ignition\Tabs\Tab;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use RealRashid\SweetAlert\Facades\Alert;
 use Maatwebsite\Excel\Facades\Excel;
 use Yajra\DataTables\Facades\DataTables;
@@ -38,15 +40,16 @@ class RekapDataController extends Controller
 
         $title = "Rekap Data Absensi Tanggal " . date('Y-m-01') . " s/d " . date('Y-m-d');
 
-        $user = User::with('Cuti')->with('Izin')->get();
+        $user = Karyawan::with('Cuti')->with('Izin')->where('status_aktif', 'AKTIF')->get();
         // dd($user->Cuti->nama_cuti);
+        // dd($user);
 
         if ($request["mulai"] && $request["akhir"]) {
             $tanggal_mulai = $request["mulai"];
             $tanggal_akhir = $request["akhir"];
             $title = "Rekap Data Absensi Tanggal " . $tanggal_mulai . " s/d " . $tanggal_akhir;
         }
-        $departemen = Departemen::where('holding', $holding)->get();
+        $departemen = Departemen::where('holding', $holding)->orderBy('nama_departemen', 'ASC')->get();
         // dd($departemen);
         // dd(Carbon::createFromFormat('H:i:s', '17:12:00'));
         return view('admin.rekapdata.index', [
@@ -71,7 +74,7 @@ class RekapDataController extends Controller
 
         $title = "Rekap Data Absensi Tanggal " . date('Y-m-01') . " s/d " . date('Y-m-d');
 
-        $user = User::where('id', $id)->first();
+        $user = Karyawan::where('nomor_identitas_karyawan', $id)->where('status_aktif', 'AKTIF')->first();
         // dd($user->Cuti->nama_cuti);
 
         if ($request["mulai"] && $request["akhir"]) {
@@ -93,7 +96,7 @@ class RekapDataController extends Controller
         $holding = request()->segment(count(request()->segments()));
         // dd($request->all());
         // $now = Carbon::parse($request->filter_month)->startOfMonth();
-        // dd($now);
+        // dd(request()->ajax());
         if (request()->ajax()) {
             if (!empty($request->departemen_filter)) {
                 $date1 = Carbon::parse($request->filter_month)->startOfMonth();
@@ -102,7 +105,7 @@ class RekapDataController extends Controller
                 if (!empty($request->divisi_filter)) {
                     if (!empty($request->bagian_filter)) {
                         if (!empty($request->jabatan_filter)) {
-                            $table = User::with('Cuti')
+                            $table = Karyawan::with('Cuti')
                                 ->with('Izin')
                                 ->with('Mappingshift')
                                 ->where('dept_id', $request->departemen_filter)
@@ -111,9 +114,10 @@ class RekapDataController extends Controller
                                 ->where('jabatan_id', $request->jabatan_filter)
                                 ->where('kontrak_kerja', $holding)
                                 ->where('kategori', 'Karyawan Bulanan')
+                                ->where('status_aktif', 'AKTIF')
                                 ->get();
                         } else {
-                            $table = User::with('Cuti')
+                            $table = Karyawan::with('Cuti')
                                 ->with('Izin')
                                 ->with('Mappingshift')
                                 ->where('dept_id', $request->departemen_filter)
@@ -121,25 +125,28 @@ class RekapDataController extends Controller
                                 ->where('bagian_id', $request->bagian_filter)
                                 ->where('kontrak_kerja', $holding)
                                 ->where('kategori', 'Karyawan Bulanan')
+                                ->where('status_aktif', 'AKTIF')
                                 ->get();
                         }
                     } else {
-                        $table = User::with('Cuti')
+                        $table = Karyawan::with('Cuti')
                             ->with('Izin')
                             ->with('Mappingshift')
                             ->where('dept_id', $request->departemen_filter)
                             ->where('divisi_id', $request->divisi_filter)
                             ->where('kontrak_kerja', $holding)
                             ->where('kategori', 'Karyawan Bulanan')
+                            ->where('status_aktif', 'AKTIF')
                             ->get();
                     }
                 } else {
-                    $table = User::with('Cuti')
+                    $table = Karyawan::with('Cuti')
                         ->with('Izin')
                         ->with('Mappingshift')
                         ->where('dept_id', $request->departemen_filter)
                         ->where('kontrak_kerja', $holding)
                         ->where('kategori', 'Karyawan Bulanan')
+                        ->where('status_aktif', 'AKTIF')
                         ->get();
                 }
                 return DataTables::of($table)
@@ -187,16 +194,18 @@ class RekapDataController extends Controller
             } else {
                 $now = Carbon::parse($request->filter_month)->startOfMonth();
                 $now1 = Carbon::parse($request->filter_month)->endOfMonth();
-                // dd($now1);
+                // dd('p');
                 // dd($tgl_mulai, $tgl_selesai);
-                $table = User::with('Mappingshift')
+                $table = Karyawan::with('MappingShift')
                     ->where('kontrak_kerja', $holding)
                     ->where('kategori', 'Karyawan Bulanan')
-                    // ->limit(210)
+                    ->where('status_aktif', 'AKTIF')
+                    ->select('karyawans.name', 'karyawans.nomor_identitas_karyawan')
+                    // ->limit(111)
                     ->get();
                 return DataTables::of($table)
                     ->addColumn('btn_detail', function ($row) use ($holding) {
-                        $btn_detail = '<a id="btn_detail" type="button" href="' . url('rekap-data/detail', ['id' => $row->id]) . '/' . $holding . '" class="btn btn-sm btn-info"><i class="menu-icon tf-icons mdi mdi-eye"></i> Detail</a>';
+                        $btn_detail = '<a id="btn_detail" type="button" href="' . url('rekap-data/detail', ['id' => $row->nomor_identitas_karyawan]) . '/' . $holding . '" class="btn btn-sm btn-info"><i class="menu-icon tf-icons mdi mdi-eye"></i> Detail</a>';
                         return $btn_detail;
                     })
                     ->addColumn('total_hadir_tepat_waktu', function ($row) use ($now, $now1) {
@@ -242,6 +251,7 @@ class RekapDataController extends Controller
     }
     public function detail_datatable($id, Request $request)
     {
+        // dd($id);
         $holding = request()->segment(count(request()->segments()));
 
         if (request()->ajax()) {
@@ -258,7 +268,7 @@ class RekapDataController extends Controller
                         if ($row->foto_jam_absen == '') {
                             $foto_absen_masuk = '';
                         } else {
-                            $foto_absen_masuk = '<a type="button" class="btn btn-sm btn-success" target="_blank" href="https://karyawan.sumberpangan.store/laravel/storage/app/public/' . $row->foto_jam_absen . '">LIHAT</a>';
+                            $foto_absen_masuk = '<a type="button" class="btn btn-sm btn-success" target="_blank" href="https://hrd.sumberpangan.store:4430/storage/app/public/' . $row->foto_jam_absen . '">LIHAT</a>';
                         }
                         return $foto_absen_masuk;
                     })
@@ -266,7 +276,7 @@ class RekapDataController extends Controller
                         if ($row->foto_jam_pulang == '') {
                             $foto_absen_pulang = '';
                         } else {
-                            $foto_absen_pulang = '<a type="button" class="btn btn-sm btn-success" target="_blank" href="https://karyawan.sumberpangan.store/laravel/storage/app/public/' . $row->foto_jam_pulang . '">LIHAT</a>';
+                            $foto_absen_pulang = '<a type="button" class="btn btn-sm btn-success" target="_blank" href="https://hrd.sumberpangan.store:4430/storage/app/public/' . $row->foto_jam_pulang . '">LIHAT</a>';
                         }
                         return $foto_absen_pulang;
                     })
@@ -398,7 +408,7 @@ class RekapDataController extends Controller
                         if ($row->foto_jam_absen == '') {
                             $foto_absen_masuk = '';
                         } else {
-                            $foto_absen_masuk = '<a type="button" class="btn btn-sm btn-success" target="_blank" href="https://karyawan.sumberpangan.store/laravel/storage/app/public/' . $row->foto_jam_absen . '">LIHAT</a>';
+                            $foto_absen_masuk = '<a type="button" class="btn btn-sm btn-success" target="_blank" href="https://hrd.sumberpangan.store:4430/storage/app/public/' . $row->foto_jam_absen . '">LIHAT</a>';
                         }
                         return $foto_absen_masuk;
                     })
@@ -406,7 +416,7 @@ class RekapDataController extends Controller
                         if ($row->foto_jam_pulang == '') {
                             $foto_absen_pulang = '';
                         } else {
-                            $foto_absen_pulang = '<a type="button" class="btn btn-sm btn-success" target="_blank" href="https://karyawan.sumberpangan.store/laravel/storage/app/public/' . $row->foto_jam_pulang . '">LIHAT</a>';
+                            $foto_absen_pulang = '<a type="button" class="btn btn-sm btn-success" target="_blank" href="https://hrd.sumberpangan.store:4430/storage/app/public/' . $row->foto_jam_pulang . '">LIHAT</a>';
                         }
                         return $foto_absen_pulang;
                     })
@@ -528,7 +538,8 @@ class RekapDataController extends Controller
     public function datatable_harian(Request $request)
     {
         $holding = request()->segment(count(request()->segments()));
-        $table = User::with('Cuti')->with('Izin')->with('Mappingshift')->where('users.kontrak_kerja', $holding)->where('kategori', 'Karyawan Harian')->get();
+        $table = Karyawan::with('Cuti')->with('Izin')->with('Mappingshift')->where('karyawans.kontrak_kerja', $holding)->where('kategori', 'Karyawan Harian')->where('status_aktif', 'AKTIF')->get();
+        // dd($table);
         if (request()->ajax()) {
             return DataTables::of($table)
                 ->addColumn('total_hadir_tepat_waktu', function ($row) {
@@ -625,19 +636,19 @@ class RekapDataController extends Controller
     {
         $mapping_shift = MappingShift::where('id', $id)->first();
         $jabatan = Jabatan::join('users', function ($join) {
-            $join->on('jabatans.id', '=', 'users.jabatan_id');
-            $join->orOn('jabatans.id', '=', 'users.jabatan1_id');
-            $join->orOn('jabatans.id', '=', 'users.jabatan2_id');
-            $join->orOn('jabatans.id', '=', 'users.jabatan3_id');
-            $join->orOn('jabatans.id', '=', 'users.jabatan4_id');
-        })->where('users.id', $mapping_shift->user_id)->get();
+            $join->on('jabatans.id', '=', 'karyawans.jabatan_id');
+            $join->orOn('jabatans.id', '=', 'karyawans.jabatan1_id');
+            $join->orOn('jabatans.id', '=', 'karyawans.jabatan2_id');
+            $join->orOn('jabatans.id', '=', 'karyawans.jabatan3_id');
+            $join->orOn('jabatans.id', '=', 'karyawans.jabatan4_id');
+        })->where('karyawans.id', $mapping_shift->user_id)->get();
         $divisi = Divisi::join('users', function ($join) {
-            $join->on('divisis.id', '=', 'users.divisi_id');
-            $join->orOn('divisis.id', '=', 'users.divisi1_id');
-            $join->orOn('divisis.id', '=', 'users.divisi2_id');
-            $join->orOn('divisis.id', '=', 'users.divisi3_id');
-            $join->orOn('divisis.id', '=', 'users.divisi4_id');
-        })->where('users.id', $mapping_shift->user_id)->get();
+            $join->on('divisis.id', '=', 'karyawans.divisi_id');
+            $join->orOn('divisis.id', '=', 'karyawans.divisi1_id');
+            $join->orOn('divisis.id', '=', 'karyawans.divisi2_id');
+            $join->orOn('divisis.id', '=', 'karyawans.divisi3_id');
+            $join->orOn('divisis.id', '=', 'karyawans.divisi4_id');
+        })->where('karyawans.id', $mapping_shift->user_id)->get();
         $izin = Izin::where('id', $mapping_shift->izin_id)->first();
         $date1          = new DateTime($izin->tanggal);
         $date2          = new DateTime($izin->tanggal_selesai);
@@ -645,7 +656,7 @@ class RekapDataController extends Controller
         $data_interval  = $interval->days;
         // dd($data_interval);
         $departemen = Departemen::where('id', $izin->departements_id)->first();
-        $user_backup = User::where('id', $izin->user_id_backup)->first();
+        $user_backup = Karyawan::where('id', $izin->user_id_backup)->first();
         // dd(Izin::with('User')->where('izins.id', $mapping_shift->izin_id)->where('izins.status_izin', '2')->first());
         $jam_kerja = MappingShift::with('Shift')->where('user_id', $izin->user_id)->where('tanggal_masuk', date('Y-m-d'))->first();
         $data = [
@@ -675,22 +686,22 @@ class RekapDataController extends Controller
     {
         $mapping_shift = MappingShift::where('id', $id)->first();
         $jabatan = Jabatan::join('users', function ($join) {
-            $join->on('jabatans.id', '=', 'users.jabatan_id');
-            $join->orOn('jabatans.id', '=', 'users.jabatan1_id');
-            $join->orOn('jabatans.id', '=', 'users.jabatan2_id');
-            $join->orOn('jabatans.id', '=', 'users.jabatan3_id');
-            $join->orOn('jabatans.id', '=', 'users.jabatan4_id');
-        })->where('users.id', $mapping_shift->user_id)->get();
+            $join->on('jabatans.id', '=', 'karyawans.jabatan_id');
+            $join->orOn('jabatans.id', '=', 'karyawans.jabatan1_id');
+            $join->orOn('jabatans.id', '=', 'karyawans.jabatan2_id');
+            $join->orOn('jabatans.id', '=', 'karyawans.jabatan3_id');
+            $join->orOn('jabatans.id', '=', 'karyawans.jabatan4_id');
+        })->where('karyawans.id', $mapping_shift->user_id)->get();
         $divisi = Divisi::join('users', function ($join) {
-            $join->on('divisis.id', '=', 'users.divisi_id');
-            $join->orOn('divisis.id', '=', 'users.divisi1_id');
-            $join->orOn('divisis.id', '=', 'users.divisi2_id');
-            $join->orOn('divisis.id', '=', 'users.divisi3_id');
-            $join->orOn('divisis.id', '=', 'users.divisi4_id');
-        })->where('users.id', $mapping_shift->user_id)->get();
-        $cuti = Cuti::Join('users', 'cutis.user_id', 'users.id')->where('cutis.id', $mapping_shift->cuti_id)->first();
+            $join->on('divisis.id', '=', 'karyawans.divisi_id');
+            $join->orOn('divisis.id', '=', 'karyawans.divisi1_id');
+            $join->orOn('divisis.id', '=', 'karyawans.divisi2_id');
+            $join->orOn('divisis.id', '=', 'karyawans.divisi3_id');
+            $join->orOn('divisis.id', '=', 'karyawans.divisi4_id');
+        })->where('karyawans.id', $mapping_shift->user_id)->get();
+        $cuti = Cuti::Join('users', 'cutis.user_id', 'karyawans.id')->where('cutis.id', $mapping_shift->cuti_id)->first();
         $departemen = Departemen::where('id', $cuti->dept_id)->first();
-        $pengganti = User::where('id', $cuti->user_id_backup)->first();
+        $pengganti = Karyawan::where('id', $cuti->user_id_backup)->first();
         // dd(Cuti::with('KategoriCuti')->with('User')->where('cutis.id', $id)->where('cutis.status_cuti', '3')->first());
         $data = [
             'title' => 'domPDF in Laravel 10',
@@ -706,22 +717,22 @@ class RekapDataController extends Controller
     public function cetak_form_penugasan($id)
     {
         $jabatan = Jabatan::join('users', function ($join) {
-            $join->on('jabatans.id', '=', 'users.jabatan_id');
-            $join->orOn('jabatans.id', '=', 'users.jabatan1_id');
-            $join->orOn('jabatans.id', '=', 'users.jabatan2_id');
-            $join->orOn('jabatans.id', '=', 'users.jabatan3_id');
-            $join->orOn('jabatans.id', '=', 'users.jabatan4_id');
-        })->where('users.id', Auth::user()->id)->get();
+            $join->on('jabatans.id', '=', 'karyawans.jabatan_id');
+            $join->orOn('jabatans.id', '=', 'karyawans.jabatan1_id');
+            $join->orOn('jabatans.id', '=', 'karyawans.jabatan2_id');
+            $join->orOn('jabatans.id', '=', 'karyawans.jabatan3_id');
+            $join->orOn('jabatans.id', '=', 'karyawans.jabatan4_id');
+        })->where('karyawans.id', Auth::user()->id)->get();
         $divisi = Divisi::join('users', function ($join) {
-            $join->on('divisis.id', '=', 'users.divisi_id');
-            $join->orOn('divisis.id', '=', 'users.divisi1_id');
-            $join->orOn('divisis.id', '=', 'users.divisi2_id');
-            $join->orOn('divisis.id', '=', 'users.divisi3_id');
-            $join->orOn('divisis.id', '=', 'users.divisi4_id');
-        })->where('users.id', Auth::user()->id)->get();
-        $cuti = Pen::where('id', $id)->first();
+            $join->on('divisis.id', '=', 'karyawans.divisi_id');
+            $join->orOn('divisis.id', '=', 'karyawans.divisi1_id');
+            $join->orOn('divisis.id', '=', 'karyawans.divisi2_id');
+            $join->orOn('divisis.id', '=', 'karyawans.divisi3_id');
+            $join->orOn('divisis.id', '=', 'karyawans.divisi4_id');
+        })->where('karyawans.id', Auth::user()->id)->get();
+        $cuti = Cuti::where('id', $id)->first();
         $departemen = Departemen::where('id', Auth::user()->dept_id)->first();
-        $pengganti = User::where('id', $cuti->user_id_backup)->first();
+        $pengganti = Karyawan::where('id', $cuti->user_id_backup)->first();
         // dd(Cuti::with('KategoriCuti')->with('User')->where('cutis.id', $id)->where('cutis.status_cuti', '3')->first());
         $data = [
             'title' => 'domPDF in Laravel 10',
@@ -747,14 +758,14 @@ class RekapDataController extends Controller
     {
         $date = date('YmdHis');
         $holding = request()->segment(count(request()->segments()));
-        $data =  Izin::leftJoin('users', 'users.id', 'izins.user_id')
+        $data =  Izin::leftJoin('users', 'karyawans.id', 'izins.user_id')
             ->leftJoin('departemens', 'departemens.id', 'izins.departements_id')
             ->leftJoin('divisis', 'divisis.id', 'izins.divisi_id')
             ->leftJoin('jabatans', 'jabatans.id', 'izins.jabatan_id')
             ->where('izins.izin', $kategori)
-            ->where('users.kontrak_kerja', $holding)
-            // ->select('izins.no_form_izin', 'users.name', 'departemens.nama_departemen', 'divisis.nama_divisi', 'jabatans.nama_jabatan', 'izins.tanggal', 'izins.jam_masuk_kerja', 'izins.jam', 'izins.terlambat', 'izins.keterangan_izin', 'izins.ttd_pengajuan', 'izins.approve_atasan', 'izins.waktu_approve', 'izins.catatan', 'izins.status_izin')
-            ->select('izins.*', 'users.name', 'departemens.nama_departemen', 'divisis.nama_divisi', 'jabatans.nama_jabatan')
+            ->where('karyawans.kontrak_kerja', $holding)
+            // ->select('izins.no_form_izin', 'karyawans.name', 'departemens.nama_departemen', 'divisis.nama_divisi', 'jabatans.nama_jabatan', 'izins.tanggal', 'izins.jam_masuk_kerja', 'izins.jam', 'izins.terlambat', 'izins.keterangan_izin', 'izins.ttd_pengajuan', 'izins.approve_atasan', 'izins.waktu_approve', 'izins.catatan', 'izins.status_izin')
+            ->select('izins.*', 'karyawans.name', 'departemens.nama_departemen', 'divisis.nama_divisi', 'jabatans.nama_jabatan')
             ->get();
         return Excel::download(new IzinExport($holding, $kategori, $data), 'Data Izin Karyawan_' . $kategori . '_' . $holding . '_' . $date . '.xlsx');
     }

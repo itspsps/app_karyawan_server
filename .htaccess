@@ -7,7 +7,7 @@
 
     # Handle Authorization Header
     RewriteCond %{HTTP:Authorization} .
-    RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
+ 
     
     RewriteCond %{SERVER_PORT} 443 .
     RewriteRule ^(.*)$ https://localhost/$1 [R,L]
@@ -24,5 +24,5 @@
     
 </IfModule>
 <IfModule mod_php5.c>
-php_value max_execution_time 300
+php_value max_execution_time 3600
 </IfModule>

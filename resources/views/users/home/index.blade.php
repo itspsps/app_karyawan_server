@@ -68,6 +68,34 @@
             font-size: 12pt;
         }
 
+        .absen_masuk_icon {
+            width: 30px;
+            height: 30px;
+        }
+
+        .absen_masuk_context {
+            font-size: 11pt;
+            margin: 0;
+        }
+
+        .absen_masuk_text {
+            font-size: 8pt;
+        }
+
+        .absen_pulang_icon {
+            width: 30px;
+            height: 30px;
+        }
+
+        .absen_pulang_context {
+            font-size: 11pt;
+            margin: 0;
+        }
+
+        .absen_pulang_text {
+            font-size: 8pt;
+        }
+
         .absen_title {
             font-size: 23pt;
             text-align: center;
@@ -158,6 +186,34 @@
             margin-top: -5%;
         }
 
+        .absen_masuk_icon {
+            width: 27px;
+            height: 27px;
+        }
+
+        .absen_masuk_context {
+            font-size: 10pt;
+            margin: 0;
+        }
+
+        .absen_masuk_text {
+            font-size: 8pt;
+        }
+
+        .absen_pulang_icon {
+            width: 27px;
+            height: 27px;
+        }
+
+        .absen_pulang_context {
+            font-size: 10pt;
+            margin: 0;
+        }
+
+        .absen_pulang_text {
+            font-size: 8pt;
+        }
+
     }
 
     @media only screen and (max-width: 380px) {
@@ -203,14 +259,70 @@
             margin-top: -5%;
         }
 
+        .absen_masuk_icon {
+            width: 27px;
+            height: 27px;
+        }
+
+        .absen_masuk_context {
+            font-size: 10pt;
+            margin: 0;
+        }
+
+        .absen_masuk_text {
+            font-size: 8pt;
+        }
+
+        .absen_pulang_icon {
+            width: 27px;
+            height: 27px;
+        }
+
+        .absen_pulang_context {
+            font-size: 10pt;
+            margin: 0;
+        }
+
+        .absen_pulang_text {
+            font-size: 8pt;
+        }
+
     }
 
-    @media only screen and (max-width: 373px) {
+    @media only screen and (max-width: 375px) {
 
         /* styles for browsers larger than 960px; */
         .absen_title {
             font-size: 22pt;
             text-align: center;
+        }
+
+        .absen_masuk_icon {
+            width: 25px;
+            height: 25px;
+        }
+
+        .absen_masuk_context {
+            font-size: 10pt;
+            margin: 0;
+        }
+
+        .absen_masuk_text {
+            font-size: 8pt;
+        }
+
+        .absen_pulang_icon {
+            width: 25px;
+            height: 25px;
+        }
+
+        .absen_pulang_context {
+            font-size: 10pt;
+            margin: 0;
+        }
+
+        .absen_pulang_text {
+            font-size: 8pt;
         }
 
         .jamkerja_text {
@@ -257,6 +369,34 @@
             margin-right: 0;
         }
 
+        .absen_masuk_icon {
+            width: 20px;
+            height: 20px;
+        }
+
+        .absen_masuk_context {
+            font-size: 8pt;
+            margin: 0;
+        }
+
+        .absen_masuk_text {
+            font-size: 8pt;
+        }
+
+        .absen_pulang_icon {
+            width: 20px;
+            height: 20px;
+        }
+
+        .absen_pulang_context {
+            font-size: 8pt;
+            margin: 0;
+        }
+
+        .absen_pulang_text {
+            font-size: 8pt;
+        }
+
         .absen_title {
             font-size: 20pt;
             text-align: center;
@@ -288,15 +428,44 @@
         .garis_content {
             width: max-content;
         }
+
     }
 
-    @media only screen and (max-width: 330px) {
+    @media only screen and (max-width: 334px) {
 
         /* styles for browsers larger than 960px; */
         .jamkerja_content {
             width: max-content;
             margin-left: auto;
             margin-right: 0;
+        }
+
+        .absen_masuk_icon {
+            width: 20px;
+            height: 20px;
+        }
+
+        .absen_masuk_context {
+            font-size: 8pt;
+            margin: 0;
+        }
+
+        .absen_masuk_text {
+            font-size: 8pt;
+        }
+
+        .absen_pulang_icon {
+            width: 20px;
+            height: 20px;
+        }
+
+        .absen_pulang_context {
+            font-size: 8pt;
+            margin: 0;
+        }
+
+        .absen_pulang_text {
+            font-size: 8pt;
         }
 
         .absen_title {
@@ -444,7 +613,7 @@
             <line x1="9" y1="9" x2="9.01" y2="9"></line>
             <line x1="15" y1="9" x2="15.01" y2="9"></line>
         </svg>
-        <strong>Success!</strong> Anda Berhasil Absen Masuk.
+        <strong>Success!</strong> &nbsp;Anda Berhasil Absen Masuk.
         <button class="btn-close" data-bs-dismiss="alert" aria-label="btn-close">
             <i class="fa-solid fa-xmark"></i>
         </button>
@@ -459,7 +628,7 @@
             <line x1="9" y1="9" x2="9.01" y2="9"></line>
             <line x1="15" y1="9" x2="15.01" y2="9"></line>
         </svg>
-        <strong>Success!</strong> Anda Berhasil Absen Pulang.
+        <strong>Success!</strong> &nbsp;Anda Berhasil Absen Pulang.
         <button class="btn-close" data-bs-dismiss="alert" aria-label="btn-close">
             <i class="fa-solid fa-xmark"></i>
         </button>
@@ -473,7 +642,7 @@
             <line x1="15" y1="9" x2="9" y2="15"></line>
             <line x1="9" y1="9" x2="15" y2="15"></line>
         </svg>
-        <strong>error!</strong> Anda Gagal Absen Pulang.
+        <strong>error!</strong> &nbsp;Anda Gagal Absen Pulang.
         <button class="btn-close" data-bs-dismiss="alert" aria-label="btn-close">
             <i class="fa-solid fa-xmark"></i>
         </button>
@@ -516,7 +685,7 @@
             <line x1="9" y1="9" x2="9.01" y2="9"></line>
             <line x1="15" y1="9" x2="15.01" y2="9"></line>
         </svg>
-        <strong>Success!</strong> Anda Berhasil Approve Penugasan.
+        <strong>Success!</strong> &nbsp;Anda Berhasil Approve Penugasan.
         <button class="btn-close" data-bs-dismiss="alert" aria-label="btn-close">
             <i class="fa-solid fa-xmark"></i>
         </button>
@@ -531,7 +700,7 @@
             <line x1="9" y1="9" x2="9.01" y2="9"></line>
             <line x1="15" y1="9" x2="15.01" y2="9"></line>
         </svg>
-        <strong>Success!</strong> Anda Berhasil Tolak Approve Cuti.
+        <strong>Success!</strong> &nbsp;Anda Berhasil Tolak Approve Cuti.
         <button class="btn-close" data-bs-dismiss="alert" aria-label="btn-close">
             <i class="fa-solid fa-xmark"></i>
         </button>
@@ -546,7 +715,7 @@
             <line x1="9" y1="9" x2="9.01" y2="9"></line>
             <line x1="15" y1="9" x2="15.01" y2="9"></line>
         </svg>
-        <strong>Success!</strong> Anda Berhasil Approve Cuti.
+        <strong>Success!</strong>&nbsp; Anda Berhasil Approve Cuti.
         <button class="btn-close" data-bs-dismiss="alert" aria-label="btn-close">
             <i class="fa-solid fa-xmark"></i>
         </button>
@@ -561,7 +730,7 @@
             <line x1="9" y1="9" x2="9.01" y2="9"></line>
             <line x1="15" y1="9" x2="15.01" y2="9"></line>
         </svg>
-        <strong>Success!</strong> Anda Berhasil Tolak Approve Izin.
+        <strong>Success!</strong> &nbsp;Anda Berhasil Tolak Approve Izin.
         <button class="btn-close" data-bs-dismiss="alert" aria-label="btn-close">
             <i class="fa-solid fa-xmark"></i>
         </button>
@@ -576,7 +745,35 @@
             <line x1="9" y1="9" x2="9.01" y2="9"></line>
             <line x1="15" y1="9" x2="15.01" y2="9"></line>
         </svg>
-        <strong>Success!</strong> Anda Berhasil Approve Izin.
+        <strong>Success!</strong> &nbsp;Anda Berhasil Approve Izin.
+        <button class="btn-close" data-bs-dismiss="alert" aria-label="btn-close">
+            <i class="fa-solid fa-xmark"></i>
+        </button>
+    </div>
+</div>
+@elseif(Session::has('kontrakkerjaNULL'))
+<div id="alert_kontrak_kerja_null" class="container" style="margin-top:-5%">
+    <div class="alert alert-danger light alert-lg alert-dismissible fade show">
+        <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" class="me-2">
+            <polygon points="7.86 2 16.14 2 22 7.86 22 16.14 16.14 22 7.86 22 2 16.14 2 7.86 7.86 2"></polygon>
+            <line x1="15" y1="9" x2="9" y2="15"></line>
+            <line x1="9" y1="9" x2="15" y2="15"></line>
+        </svg>
+        &nbsp; Kontrak Kerja Anda Kosong. Hubungi HRD
+        <button class="btn-close" data-bs-dismiss="alert" aria-label="btn-close">
+            <i class="fa-solid fa-xmark"></i>
+        </button>
+    </div>
+</div>
+@elseif(Session::has('karyawan_null'))
+<div id="alert_kontrak_kerja_null" class="container" style="margin-top:-5%">
+    <div class="alert alert-danger light alert-lg alert-dismissible fade show">
+        <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" class="me-2">
+            <polygon points="7.86 2 16.14 2 22 7.86 22 16.14 16.14 22 7.86 22 2 16.14 2 7.86 7.86 2"></polygon>
+            <line x1="15" y1="9" x2="9" y2="15"></line>
+            <line x1="9" y1="9" x2="15" y2="15"></line>
+        </svg>
+        &nbsp; Karyawan NULL. Hubungi HRD
         <button class="btn-close" data-bs-dismiss="alert" aria-label="btn-close">
             <i class="fa-solid fa-xmark"></i>
         </button>
@@ -632,7 +829,7 @@
             <line x1="15" y1="9" x2="9" y2="15"></line>
             <line x1="9" y1="9" x2="15" y2="15"></line>
         </svg>
-        <strong>Gagal!</strong> Anda Berada Diluar Wilayah Radius Penugasan
+        <strong>Gagal!</strong> &nbsp;Anda Berada Diluar Wilayah Radius Penugasan
         <button class="btn-close" data-bs-dismiss="alert" aria-label="btn-close">
             <i class="fa-solid fa-xmark"></i>
         </button>
@@ -647,7 +844,7 @@
             <line x1="9" y1="9" x2="9.01" y2="9"></line>
             <line x1="15" y1="9" x2="15.01" y2="9"></line>
         </svg>
-        <strong>Success!</strong> Anda Berhasil Menyimpan Face
+        <strong>Success!</strong> &nbsp;Anda Berhasil Menyimpan Face
         <button class="btn-close" data-bs-dismiss="alert" aria-label="btn-close">
             <i class="fa-solid fa-xmark"></i>
         </button>
@@ -662,7 +859,22 @@
             <line x1="9" y1="9" x2="9.01" y2="9"></line>
             <line x1="15" y1="9" x2="15.01" y2="9"></line>
         </svg>
-        <strong>Success!</strong> Anda Gagal Menyimpan Face
+        <strong>Error!</strong> &nbsp;Anda Gagal Menyimpan Face
+        <button class="btn-close" data-bs-dismiss="alert" aria-label="btn-close">
+            <i class="fa-solid fa-xmark"></i>
+        </button>
+    </div>
+</div>
+@elseif(Session::has('jam_kerja_libur'))
+<div id="alert_jam_kerja_libur" class="container" style="margin-top:-5%">
+    <div class="alert alert-danger light alert-lg alert-dismissible fade show">
+        <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" class="me-2">
+            <circle cx="12" cy="12" r="10"></circle>
+            <path d="M8 14s1.5 2 4 2 4-2 4-2"></path>
+            <line x1="9" y1="9" x2="9.01" y2="9"></line>
+            <line x1="15" y1="9" x2="15.01" y2="9"></line>
+        </svg>
+        <strong>Error!</strong>&nbsp;Hari ini Anda Libur
         <button class="btn-close" data-bs-dismiss="alert" aria-label="btn-close">
             <i class="fa-solid fa-xmark"></i>
         </button>
@@ -769,7 +981,7 @@
                     <path d="M516.7 348m-97.5 0a97.5 97.5 0 1 0 195 0 97.5 97.5 0 1 0-195 0Z" fill="#FFFFFF" />
                     <path d="M516.7 472.1c-68.4 0-124.1-55.7-124.1-124.1s55.7-124.1 124.1-124.1S640.8 279.5 640.8 348 585.1 472.1 516.7 472.1z m0-195.1c-39.1 0-70.9 31.8-70.9 70.9 0 39.1 31.8 70.9 70.9 70.9s70.9-31.8 70.9-70.9c0-39.1-31.8-70.9-70.9-70.9z" fill="#333333" />
                 </svg>
-                <p class="penempatan_text">{{Auth::user()->penempatan_kerja}}</p>
+                <p class="penempatan_text">{{ $user_karyawan->penempatan_kerja }}</p>
             </div>
         </div>
         <div class="garis_content col-1">
@@ -777,8 +989,9 @@
         </div>
         <div class="jamkerja_content col-5">
             <p class="jamkerja_text">Jam Kerja : </p>
+            @if($jam_kerja==NULL || $jam_kerja=='')
             <div class="main-content" style="margin-top: -22%; float: right;">
-                <p class="jamkerja_text_main">@if($jam_kerja=='')__-__ @else {{$jam_kerja->shift->jam_masuk}}-{{$jam_kerja->shift->jam_keluar}}@endif&nbsp;</p>
+                <p class="jamkerja_text_main">@if($jam_kerja=='')__-__ @else {{$jam_kerja->shift->jam_kerja}}-{{$jam_kerja->shift->jam_keluar}}@endif&nbsp;</p>
                 <svg xmlns="http://www.w3.org/2000/svg" style="margin-top: -20%;" width="17" height="17" viewBox="-4.52 0 69.472 69.472">
                     <g id="Group_4" data-name="Group 4" transform="translate(-651.45 -155.8)">
                         <circle id="Ellipse_4" data-name="Ellipse 4" cx="28.716" cy="28.716" r="28.716" transform="translate(652.95 157.3)" fill="none" stroke="#000000" stroke-miterlimit="10" stroke-width="3" />
@@ -787,6 +1000,24 @@
                     </g>
                 </svg>
             </div>
+            @else
+            @if($jam_kerja->status_absen=='LIBUR')
+            <div class="main-content" style="margin-top: -30%; float: right;">
+                <p class="jamkerja_text_main">LIBUR&nbsp;</p>
+            </div>
+            @else
+            <div class="main-content" style="margin-top: -22%; float: right;">
+                <p class="jamkerja_text_main">@if($jam_kerja=='')__-__ @else {{$jam_kerja->shift->jam_kerja}}-{{$jam_kerja->shift->jam_keluar}}@endif&nbsp;</p>
+                <svg xmlns="http://www.w3.org/2000/svg" style="margin-top: -20%;" width="17" height="17" viewBox="-4.52 0 69.472 69.472">
+                    <g id="Group_4" data-name="Group 4" transform="translate(-651.45 -155.8)">
+                        <circle id="Ellipse_4" data-name="Ellipse 4" cx="28.716" cy="28.716" r="28.716" transform="translate(652.95 157.3)" fill="none" stroke="#000000" stroke-miterlimit="10" stroke-width="3" />
+                        <path id="Path_11" data-name="Path 11" d="M697.51,186.016H681.667V163.846" fill="none" stroke="#814dff" stroke-miterlimit="10" stroke-width="3" />
+                        <circle id="Ellipse_5" data-name="Ellipse 5" cx="28.716" cy="28.716" r="28.716" transform="translate(652.95 166.34)" fill="none" stroke="#000000" stroke-linecap="round" stroke-miterlimit="10" stroke-width="3" opacity="0.15" />
+                    </g>
+                </svg>
+            </div>
+            @endif
+            @endif
         </div>
 
     </div>
@@ -795,152 +1026,76 @@
 @section('absensi')
 @if($status_absen_skrg==NULL)
 @else
-@if ($status_absen_skrg->jam_absen == null && $status_absen_skrg->jam_pulang==null)
-<div class="absen_masuk_content container" style="margin-top: -5%;">
+<div class="container" style="margin-top: -5%; padding-bottom: 0; margin-bottom: 0;">
     <div class="col-lg-12">
         <div class="row">
-            <div class="col-6" style="height: 80px;">
-                <a id="btn_klik" href="{{ url('/home/absen') }}">
-                    <div class="card card-bx card-content bg-primary" style="height: 100%; width: 100%;">
-                        <div class="card-body" style="padding: 4px;">
-                            <svg xmlns="http://www.w3.org/2000/svg" style="position: absolute; right: 0; bottom: 0;  margin-left: auto;  margin-right: 0;" xmlns:xlink="http://www.w3.org/1999/xlink" width="50" height="50" viewBox="0 0 24 24" version="1.1" class="svg-main-icon">
-                                <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-                                    <rect x="0" y="0" width="24" height="24" />
-                                    <path d="M12 2c5.514 0 10 4.486 10 10s-4.486 10-10 10-10-4.486-10-10 4.486-10 10-10zm0-2c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm5.848 12.459c.202.038.202.333.001.372-1.907.361-6.045 1.111-6.547 1.111-.719 0-1.301-.582-1.301-1.301 0-.512.77-5.447 1.125-7.445.034-.192.312-.181.343.014l.985 6.238 5.394 1.011z" fill="#fff" fill-rule="nonzero" opacity="0.3" />
-                                </g>
-                            </svg>
-                            <div class="info" style="color: white;">
-                                <p>Absen Masuk <br> <span class="absen_title title" id="jam_masuk"></span></p>
-                                <script>
-                                    setInterval(customClock, 500);
+            <div class="col-6">
+                <div class3="card card-bx card-content">
+                    <div class="card-body" style="padding: 2px; margin: 2px;">
+                        <div class="row">
+                            <div class="col-2">
+                                <div class="dz-icon bg-green light absen_masuk_icon" style="padding: 0px;">
+                                    <svg style="margin-top: 10%;" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path fill-rule="evenodd" clip-rule="evenodd" d="M11.8861 2H16.9254C19.445 2 21.5 4 21.5 6.44V17.56C21.5 20.01 19.445 22 16.9047 22H11.8758C9.35611 22 7.29083 20.01 7.29083 17.57V12.77H13.6932L12.041 14.37C11.7312 14.67 11.7312 15.16 12.041 15.46C12.1959 15.61 12.4024 15.68 12.6089 15.68C12.8051 15.68 13.0117 15.61 13.1666 15.46L16.1819 12.55C16.3368 12.41 16.4194 12.21 16.4194 12C16.4194 11.8 16.3368 11.6 16.1819 11.46L13.1666 8.55C12.8568 8.25 12.3508 8.25 12.041 8.55C11.7312 8.85 11.7312 9.34 12.041 9.64L13.6932 11.23H7.29083V6.45C7.29083 4 9.35611 2 11.8861 2ZM2.5 11.9999C2.5 11.5799 2.85523 11.2299 3.2815 11.2299H7.29052V12.7699H3.2815C2.85523 12.7699 2.5 12.4299 2.5 11.9999Z" fill="#130F26"></path>
+                                    </svg>
+                                </div>
+                            </div>
+                            <div class="col-9">
+                                <div class="dz-inner">
+                                    <p class="dz-title absen_masuk_context">&nbsp;Absen&nbsp;Masuk</p>
+                                </div>
+                                @if ($status_absen_skrg->jam_absen == null && $status_absen_skrg->jam_absen=="")
+                                &nbsp;-
+                                @else
+                                <span class="badge light badge-sm badge-success absen_masuk_text">
+                                    &nbsp;{{$status_absen_skrg->jam_absen}}&nbsp;WIB
+                                </span>
+                                <!-- <h6 class="card-title card-intro-title">
+                                </h6> -->
+                                @endif
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-6">
+                <div class3="card card-bx card-content">
+                    <div class="card-body" style="padding: 2px; margin: 2px;">
+                        <div class="row">
+                            <div class="col-2">
+                                <div class="dz-icon bg-red light absen_pulang_icon" style="padding: 0px;">
+                                    <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="6" height="6" style="margin-top: 10%;" viewBox="0 0 24 24" version="1.1" class="svg-main-icon">
+                                        <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                            <rect x="0" y="0" width="20" height="20" />
+                                            <path d="M14.0069431,7.00607258 C13.4546584,7.00607258 13.0069431,6.55855153 13.0069431,6.00650634 C13.0069431,5.45446114 13.4546584,5.00694009 14.0069431,5.00694009 L15.0069431,5.00694009 C17.2160821,5.00694009 19.0069431,6.7970243 19.0069431,9.00520507 L19.0069431,15.001735 C19.0069431,17.2099158 17.2160821,19 15.0069431,19 L3.00694311,19 C0.797804106,19 -0.993056895,17.2099158 -0.993056895,15.001735 L-0.993056895,8.99826498 C-0.993056895,6.7900842 0.797804106,5 3.00694311,5 L4.00694793,5 C4.55923268,5 5.00694793,5.44752105 5.00694793,5.99956624 C5.00694793,6.55161144 4.55923268,6.99913249 4.00694793,6.99913249 L3.00694311,6.99913249 C1.90237361,6.99913249 1.00694311,7.89417459 1.00694311,8.99826498 L1.00694311,15.001735 C1.00694311,16.1058254 1.90237361,17.0008675 3.00694311,17.0008675 L15.0069431,17.0008675 C16.1115126,17.0008675 17.0069431,16.1058254 17.0069431,15.001735 L17.0069431,9.00520507 C17.0069431,7.90111468 16.1115126,7.00607258 15.0069431,7.00607258 L14.0069431,7.00607258 Z" fill="#fff" fill-rule="nonzero" opacity="0.3" transform="translate(9.006943, 12.000000) scale(-1, 1) rotate(-90.000000) translate(-9.006943, -12.000000) " />
+                                            <rect fill="#ff4db8" opacity="0.3" transform="translate(14.000000, 12.000000) rotate(-270.000000) translate(-14.000000, -12.000000) " x="13" y="6" width="2" height="12" rx="1" />
+                                            <path d="M21.7928932,9.79289322 C22.1834175,9.40236893 22.8165825,9.40236893 23.2071068,9.79289322 C23.5976311,10.1834175 23.5976311,10.8165825 23.2071068,11.2071068 L20.2071068,14.2071068 C19.8165825,14.5976311 19.1834175,14.5976311 18.7928932,14.2071068 L15.7928932,11.2071068 C15.4023689,10.8165825 15.4023689,10.1834175 15.7928932,9.79289322 C16.1834175,9.40236893 16.8165825,9.40236893 17.2071068,9.79289322 L19.5,12.0857864 L21.7928932,9.79289322 Z" fill="#fff" fill-rule="nonzero" transform="translate(19.500000, 12.000000) rotate(-90.000000) translate(-19.500000, -12.000000) " />
+                                        </g>
+                                    </svg>
+                                </div>
+                            </div>
+                            <div class="col-9">
+                                <div class="dz-inner">
+                                    <p class="dz-title absen_pulang_context">&nbsp;Absen&nbsp;Pulang</p>
+                                </div>
+                                @if ($status_absen_skrg->jam_pulang == null && $status_absen_skrg->jam_pulang=="")
+                                &nbsp;-
+                                @else
+                                <span class="badge w-80 light badge-danger absen_pulang_text">
+                                    &nbsp;{{$status_absen_skrg->jam_pulang}}&nbsp;WIB
 
-                                    function customClock() {
-                                        var time = new Date();
-                                        var hrs = (time.getHours() < 10 ? '0' : '') + time.getHours();
-                                        var min = (time.getMinutes() < 10 ? '0' : '') + time.getMinutes();
-                                        var sec = (time.getSeconds() < 10 ? '0' : '') + time.getSeconds();
-                                        document.getElementById('jam_masuk').innerHTML = hrs + ":" + min + ":" + sec;
-                                    }
-                                </script>
+                                </span>
+                                <!-- <h6 class="card-title card-intro-title">
+                                </h6> -->
+                                @endif
                             </div>
                         </div>
                     </div>
-                </a>
-            </div>
-            <div class="col-6" style="height: 80px;">
-                <a id="btn_klik" href="{{ url('/home/absen') }}" style="pointer-events: none">
-                    <div class="card card-bx card-content bg-secondary" style="height: 100%; width: 100%;">
-                        <div class="card-body" style="padding: 4px;">
-                            <svg xmlns="http://www.w3.org/2000/svg" style="position: absolute; right: 0; bottom: 0;  margin-left: auto;  margin-right: 0;" xmlns:xlink="http://www.w3.org/1999/xlink" width="50" height="50" viewBox="0 0 24 24" version="1.1" class="svg-main-icon">
-                                <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-                                    <rect x="0" y="0" width="24" height="24" />
-                                    <path d="M13 12l-.688-4h-.609l-.703 4c-.596.347-1 .984-1 1.723 0 1.104.896 2 2 2s2-.896 2-2c0-.739-.404-1.376-1-1.723zm-1-8c-5.522 0-10 4.477-10 10s4.478 10 10 10 10-4.477 10-10-4.478-10-10-10zm0 18c-4.411 0-8-3.589-8-8s3.589-8 8-8 8 3.589 8 8-3.589 8-8 8zm-2-19.819v-2.181h4v2.181c-1.438-.243-2.592-.238-4 0zm9.179 2.226l1.407-1.407 1.414 1.414-1.321 1.321c-.462-.484-.964-.926-1.5-1.328zm-12.679 9.593c0 .276-.224.5-.5.5s-.5-.224-.5-.5.224-.5.5-.5.5.224.5.5zm12 0c0 .276-.224.5-.5.5s-.5-.224-.5-.5.224-.5.5-.5.5.224.5.5zm-6 6c0 .276-.224.5-.5.5s-.5-.224-.5-.5.224-.5.5-.5.5.224.5.5zm-4-2c0 .276-.224.5-.5.5s-.5-.224-.5-.5.224-.5.5-.5.5.224.5.5zm8 0c0 .276-.224.5-.5.5s-.5-.224-.5-.5.224-.5.5-.5.5.224.5.5zm-8-9c0 .276-.224.5-.5.5s-.5-.224-.5-.5.224-.5.5-.5.5.224.5.5zm8 0c0 .276-.224.5-.5.5s-.5-.224-.5-.5.224-.5.5-.5.5.224.5.5z" fill="#fff" fill-rule="nonzero" opacity="0.3" />
-                                </g>
-                            </svg>
-                            <div class="info" style="color: white;">
-                                <p>Absen Pulang <br> <span class="absen_title title">-</span></p>
-                            </div>
-                        </div>
-                    </div>
-                </a>
+                </div>
             </div>
         </div>
     </div>
 </div>
-@elseif ($status_absen_skrg->jam_absen != null && $status_absen_skrg->jam_pulang==null)
-<div class="container" style="margin-top: -5%;">
-    <div class="col-lg-12">
-        <div class="row">
-            <div class="col-6" style="height: 80px;">
-                <a id="btn_klik" href="{{ url('/home/absen') }}" style="pointer-events: none">
-                    <div class="card card-bx card-content bg-primary" style="height: 100%; width: 100%;">
-                        <div class="card-body" style="padding: 4px;">
-                            <svg xmlns="http://www.w3.org/2000/svg" style="position: absolute; right: 0; bottom: 0;  margin-left: auto;  margin-right: 0;" xmlns:xlink="http://www.w3.org/1999/xlink" width="50" height="50" viewBox="0 0 24 24" version="1.1" class="svg-main-icon">
-                                <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-                                    <rect x="0" y="0" width="24" height="24" />
-                                    <path d="M12 2c5.514 0 10 4.486 10 10s-4.486 10-10 10-10-4.486-10-10 4.486-10 10-10zm0-2c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm5.848 12.459c.202.038.202.333.001.372-1.907.361-6.045 1.111-6.547 1.111-.719 0-1.301-.582-1.301-1.301 0-.512.77-5.447 1.125-7.445.034-.192.312-.181.343.014l.985 6.238 5.394 1.011z" fill="#fff" fill-rule="nonzero" opacity="0.3" />
-                                </g>
-                            </svg>
-                            <div class="info" style="color: white;">
-                                <p>Sudah Absen <br> <span class="absen_title title">{{ $status_absen_skrg->jam_absen }}</span></p>
-                            </div>
-                        </div>
-                    </div>
-                </a>
-            </div>
-            <div class="col-6" style="height: 80px;">
-                <a id="btn_klik" href="{{ url('/home/absen') }}">
-                    <div class="card card-bx card-content bg-secondary" style="height: 100%; width: 100%;">
-                        <div class="card-body" style="padding: 4px;">
-                            <svg xmlns="http://www.w3.org/2000/svg" style="position: absolute; right: 0; bottom: 0;  margin-left: auto;  margin-right: 0;" xmlns:xlink="http://www.w3.org/1999/xlink" width="50" height="50" viewBox="0 0 24 24" version="1.1" class="svg-main-icon">
-                                <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-                                    <rect x="0" y="0" width="24" height="24" />
-                                    <path d="M13 12l-.688-4h-.609l-.703 4c-.596.347-1 .984-1 1.723 0 1.104.896 2 2 2s2-.896 2-2c0-.739-.404-1.376-1-1.723zm-1-8c-5.522 0-10 4.477-10 10s4.478 10 10 10 10-4.477 10-10-4.478-10-10-10zm0 18c-4.411 0-8-3.589-8-8s3.589-8 8-8 8 3.589 8 8-3.589 8-8 8zm-2-19.819v-2.181h4v2.181c-1.438-.243-2.592-.238-4 0zm9.179 2.226l1.407-1.407 1.414 1.414-1.321 1.321c-.462-.484-.964-.926-1.5-1.328zm-12.679 9.593c0 .276-.224.5-.5.5s-.5-.224-.5-.5.224-.5.5-.5.5.224.5.5zm12 0c0 .276-.224.5-.5.5s-.5-.224-.5-.5.224-.5.5-.5.5.224.5.5zm-6 6c0 .276-.224.5-.5.5s-.5-.224-.5-.5.224-.5.5-.5.5.224.5.5zm-4-2c0 .276-.224.5-.5.5s-.5-.224-.5-.5.224-.5.5-.5.5.224.5.5zm8 0c0 .276-.224.5-.5.5s-.5-.224-.5-.5.224-.5.5-.5.5.224.5.5zm-8-9c0 .276-.224.5-.5.5s-.5-.224-.5-.5.224-.5.5-.5.5.224.5.5zm8 0c0 .276-.224.5-.5.5s-.5-.224-.5-.5.224-.5.5-.5.5.224.5.5z" fill="#fff" fill-rule="nonzero" opacity="0.3" />
-                                </g>
-                            </svg>
-                            <div class="info" style="color: white;">
-                                <p>Absen Pulang <br> <span class="absen_title title" id="jam_pulang"></span></p>
-                                <script>
-                                    setInterval(customClock, 500);
-
-                                    function customClock() {
-                                        var time = new Date();
-                                        var hrs = (time.getHours() < 10 ? '0' : '') + time.getHours();
-                                        var min = (time.getMinutes() < 10 ? '0' : '') + time.getMinutes();
-                                        var sec = (time.getSeconds() < 10 ? '0' : '') + time.getSeconds();
-                                        document.getElementById('jam_pulang').innerHTML = hrs + ":" + min + ":" + sec;
-                                    }
-                                </script>
-                            </div>
-                        </div>
-                    </div>
-                </a>
-            </div>
-        </div>
-    </div>
-</div>
-@elseif ($status_absen_skrg->jam_absen != null && $status_absen_skrg->jam_pulang != null)
-<div class="container" style="margin-top: -5%;">
-    <div class="col-lg-12">
-        <div class="row">
-            <div class="col-6" style="height: 80px;">
-                <a id="btn_klik" href="{{ url('/home/absen') }}" style="pointer-events: none">
-                    <div class="card card-bx card-content bg-primary" style="height: 100%; width: 100%;">
-                        <div class="card-body" style="padding: 4px;">
-                            <svg xmlns="http://www.w3.org/2000/svg" style="position: absolute; right: 0; bottom: 0;  margin-left: auto;  margin-right: 0;" xmlns:xlink="http://www.w3.org/1999/xlink" width="50" height="50" viewBox="0 0 24 24" version="1.1" class="svg-main-icon">
-                                <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-                                    <rect x="0" y="0" width="24" height="24" />
-                                    <path d="M12 2c5.514 0 10 4.486 10 10s-4.486 10-10 10-10-4.486-10-10 4.486-10 10-10zm0-2c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm5.848 12.459c.202.038.202.333.001.372-1.907.361-6.045 1.111-6.547 1.111-.719 0-1.301-.582-1.301-1.301 0-.512.77-5.447 1.125-7.445.034-.192.312-.181.343.014l.985 6.238 5.394 1.011z" fill="#fff" fill-rule="nonzero" opacity="0.3" />
-                                </g>
-                            </svg>
-                            <div class="info" style="color: white;">
-                                <p>Sudah Absen <br> <span class="absen_title title">{{ $status_absen_skrg->jam_absen }}</span></p>
-                            </div>
-                        </div>
-                    </div>
-                </a>
-            </div>
-            <div class="col-6" style="height: 80px;">
-                <a id="btn_klik" href="{{ url('/home/absen') }}" style="pointer-events: none">
-                    <div class="card card-bx card-content bg-secondary" style="height: 100%; width: 100%;">
-                        <div class="card-body" style="padding: 4px;">
-                            <svg xmlns="http://www.w3.org/2000/svg" style="position: absolute; right: 0; bottom: 0;  margin-left: auto;  margin-right: 0;" xmlns:xlink="http://www.w3.org/1999/xlink" width="50" height="50" viewBox="0 0 24 24" version="1.1" class="svg-main-icon">
-                                <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-                                    <rect x="0" y="0" width="24" height="24" />
-                                    <path d="M13 12l-.688-4h-.609l-.703 4c-.596.347-1 .984-1 1.723 0 1.104.896 2 2 2s2-.896 2-2c0-.739-.404-1.376-1-1.723zm-1-8c-5.522 0-10 4.477-10 10s4.478 10 10 10 10-4.477 10-10-4.478-10-10-10zm0 18c-4.411 0-8-3.589-8-8s3.589-8 8-8 8 3.589 8 8-3.589 8-8 8zm-2-19.819v-2.181h4v2.181c-1.438-.243-2.592-.238-4 0zm9.179 2.226l1.407-1.407 1.414 1.414-1.321 1.321c-.462-.484-.964-.926-1.5-1.328zm-12.679 9.593c0 .276-.224.5-.5.5s-.5-.224-.5-.5.224-.5.5-.5.5.224.5.5zm12 0c0 .276-.224.5-.5.5s-.5-.224-.5-.5.224-.5.5-.5.5.224.5.5zm-6 6c0 .276-.224.5-.5.5s-.5-.224-.5-.5.224-.5.5-.5.5.224.5.5zm-4-2c0 .276-.224.5-.5.5s-.5-.224-.5-.5.224-.5.5-.5.5.224.5.5zm8 0c0 .276-.224.5-.5.5s-.5-.224-.5-.5.224-.5.5-.5.5.224.5.5zm-8-9c0 .276-.224.5-.5.5s-.5-.224-.5-.5.224-.5.5-.5.5.224.5.5zm8 0c0 .276-.224.5-.5.5s-.5-.224-.5-.5.224-.5.5-.5.5.224.5.5z" fill="#fff" fill-rule="nonzero" opacity="0.3" />
-                                </g>
-                            </svg>
-                            <div class="info" style="color: white;">
-                                <p>Sudah Absen <br> <span class="absen_title title">{{ $status_absen_skrg->jam_pulang }}</span></p>
-                            </div>
-                        </div>
-                    </div>
-                </a>
-            </div>
-        </div>
-    </div>
-</div>
-@endif
 @endif
 
 @endsection
@@ -982,7 +1137,7 @@
 @endif
 @if(Session::has('absenmasukoutradius'))
 <div id="canvas_absenmasukoutradius" class="offcanvas offcanvas-bottom pwa-offcanvas">
-    <input type="hidden" name="home_index" id="home_index" value="{{Session::has('homeindex')}}">
+    <input type="hidden" name="home_index" id="home_index" value="{{Session::has('absenmasukoutradius')}}">
     <div class="container">
         <div class="offcanvas-body small text-center">
             <img src="{{asset('assets/assets_users/images/location.gif')}}" width="70" height="70" alt="">
@@ -1025,6 +1180,21 @@
 </div>
 <div class="offcanvas-backdrop pwa-backdrop"></div>
 @endif
+<div class="offcanvas offcanvas-bottom" tabindex="-1" id="offcanvas_logout" aria-labelledby="offcanvasBottomLabel">
+    <div class="offcanvas-body text-center small">
+        <h5 class="title">KONFIRMASI LOGOUT APP</h5>
+        <p>Apakah Anda Ingin Keluar Dari Aplikasi Ini ?</p>
+        <a id="btn_klik" href="{{url('/logout')}}" class="btn btn-sm btn-danger light pwa-btn">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none">
+                <path d="M5.46967 12.5303C5.17678 12.2374 5.17678 11.7626 5.46967 11.4697L7.46967 9.46967C7.76257 9.17678 8.23744 9.17678 8.53033 9.46967C8.82323 9.76256 8.82323 10.2374 8.53033 10.5303L7.81066 11.25L15 11.25C15.4142 11.25 15.75 11.5858 15.75 12C15.75 12.4142 15.4142 12.75 15 12.75L7.81066 12.75L8.53033 13.4697C8.82323 13.7626 8.82323 14.2374 8.53033 14.5303C8.23744 14.8232 7.76257 14.8232 7.46967 14.5303L5.46967 12.5303Z" fill="#1C274C" />
+                <path fill-rule="evenodd" clip-rule="evenodd" d="M13.9453 1.25H15.0551C16.4227 1.24998 17.525 1.24996 18.392 1.36652C19.2921 1.48754 20.05 1.74643 20.6519 2.34835C21.2538 2.95027 21.5127 3.70814 21.6337 4.60825C21.7503 5.47522 21.7502 6.57754 21.7502 7.94513V16.0549C21.7502 17.4225 21.7503 18.5248 21.6337 19.3918C21.5127 20.2919 21.2538 21.0497 20.6519 21.6517C20.05 22.2536 19.2921 22.5125 18.392 22.6335C17.525 22.75 16.4227 22.75 15.0551 22.75H13.9453C12.5778 22.75 11.4754 22.75 10.6085 22.6335C9.70836 22.5125 8.95048 22.2536 8.34857 21.6517C7.94963 21.2527 7.70068 20.7844 7.54305 20.2498C6.59168 20.2486 5.79906 20.2381 5.15689 20.1518C4.39294 20.0491 3.7306 19.8268 3.20191 19.2981C2.67321 18.7694 2.45093 18.1071 2.34822 17.3431C2.24996 16.6123 2.24998 15.6865 2.25 14.5537V9.44631C2.24998 8.31349 2.24996 7.38774 2.34822 6.65689C2.45093 5.89294 2.67321 5.2306 3.20191 4.7019C3.7306 4.17321 4.39294 3.95093 5.15689 3.84822C5.79906 3.76188 6.59168 3.75142 7.54305 3.75017C7.70068 3.21562 7.94963 2.74729 8.34857 2.34835C8.95048 1.74643 9.70836 1.48754 10.6085 1.36652C11.4754 1.24996 12.5778 1.24998 13.9453 1.25ZM7.25197 17.0042C7.25555 17.6487 7.2662 18.2293 7.30285 18.7491C6.46836 18.7459 5.848 18.7312 5.35676 18.6652C4.75914 18.5848 4.46611 18.441 4.26257 18.2374C4.05903 18.0339 3.91519 17.7409 3.83484 17.1432C3.7516 16.5241 3.75 15.6997 3.75 14.5V9.5C3.75 8.30029 3.7516 7.47595 3.83484 6.85676C3.91519 6.25914 4.05903 5.9661 4.26257 5.76256C4.46611 5.55902 4.75914 5.41519 5.35676 5.33484C5.848 5.2688 6.46836 5.25415 7.30285 5.25091C7.2662 5.77073 7.25555 6.35129 7.25197 6.99583C7.24966 7.41003 7.58357 7.74768 7.99778 7.74999C8.41199 7.7523 8.74964 7.41838 8.75194 7.00418C8.75803 5.91068 8.78643 5.1356 8.89448 4.54735C8.9986 3.98054 9.16577 3.65246 9.40923 3.40901C9.68599 3.13225 10.0746 2.9518 10.8083 2.85315C11.5637 2.75159 12.5648 2.75 14.0002 2.75H15.0002C16.4356 2.75 17.4367 2.75159 18.1921 2.85315C18.9259 2.9518 19.3144 3.13225 19.5912 3.40901C19.868 3.68577 20.0484 4.07435 20.1471 4.80812C20.2486 5.56347 20.2502 6.56459 20.2502 8V16C20.2502 17.4354 20.2486 18.4365 20.1471 19.1919C20.0484 19.9257 19.868 20.3142 19.5912 20.591C19.3144 20.8678 18.9259 21.0482 18.1921 21.1469C17.4367 21.2484 16.4356 21.25 15.0002 21.25H14.0002C12.5648 21.25 11.5637 21.2484 10.8083 21.1469C10.0746 21.0482 9.68599 20.8678 9.40923 20.591C9.16577 20.3475 8.9986 20.0195 8.89448 19.4527C8.78643 18.8644 8.75803 18.0893 8.75194 16.9958C8.74964 16.5816 8.41199 16.2477 7.99778 16.25C7.58357 16.2523 7.24966 16.59 7.25197 17.0042Z" fill="#1C274C" />
+            </svg>
+            &nbsp;Logout
+        </a>
+        <a href="javascrpit:void(0);" class="btn btn-sm light btn-primary ms-2" data-bs-dismiss="offcanvas" aria-label="Close">Batal</a>
+    </div>
+</div>
+
 <!-- {{Auth::user()->id}} -->
 <!-- Features -->
 @include('sweetalert::alert')
@@ -1032,8 +1202,8 @@
 
 </div> -->
 <!-- Categorie -->
-<div class="categorie-section">
-    <div class="title-bar">
+<div class="categorie-section" style="margin-bottom: 5%; padding: 0%;">
+    <div class="title-bar" style="margin: 0;">
         <h6 class="dz-title">Layanan</h6>
     </div>
     <ul class="d-flex align-items-center">
@@ -1127,10 +1297,10 @@
     </ul>
 </div>
 <!-- Categorie End -->
-
+<hr style="margin: 0;">
 
 @if($data_count > 0)
-<div class="m-b10">
+<div class="mb10" style="margin-bottom: 5%; padding: 0%;">
     <div class="title-bar">
         <h5 class="dz-title">Approval</h5>
         <div class="swiper-defult-pagination pagination-dots style-1 p-0 swiper-pagination-clickable swiper-pagination-bullets">
@@ -1147,10 +1317,14 @@
                 <div class="swiper-slide swiper-slide-prev" role="group" aria-label="1 / 4" style="margin-right: 10px;">
                     <a id="btn_klik" href="{{ url('/izin/approve/'.$a->id) }}">
                         <div class="card job-post" style="box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.2), 0 3px 10px 0 rgba(0, 0, 0, 0.1);">
-                            <div class="card-body">
-                                <div class="media media-80">
+                            <div class="card-body" style="padding: 6x;">
+                                <div class="media media-70">
+                                    @if($a->User != '')
                                     @if($a->User->foto_karyawan != '')
-                                    <img src="https://karyawan.sumberpangan.store/laravel/storage/app/public/foto_karyawan/{{$dataizin->User->foto_karyawan}}" alt="/">
+                                    <img src="{{asset('../storage/app/public/foto_karyawan/'.$a->User->foto_karyawan)}}" alt="/">
+                                    @else
+                                    <img src="{{ asset('admin/assets/img/avatars/1.png') }}" alt="/">
+                                    @endif
                                     @else
                                     <img src="{{ asset('admin/assets/img/avatars/1.png') }}" alt="/">
                                     @endif
@@ -1203,10 +1377,10 @@
                 <div class="swiper-slide swiper-slide-prev" role="group" aria-label="1 / 4" style="margin-right: 10px;">
                     <a id="btn_klik" href="{{ url('/cuti/approve/'.$a->id) }}">
                         <div class="card job-post" style="box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.2), 0 3px 10px 0 rgba(0, 0, 0, 0.1);">
-                            <div class="card-body">
-                                <div class="media media-80">
+                            <div class="card-body" style="padding: 6x;">
+                                <div class="media media-70">
                                     @if($a->User->foto_karyawan != '')
-                                    <img src="https://karyawan.sumberpangan.store/laravel/storage/app/public/foto_karyawan/{{$dataizin->User->foto_karyawan}}" alt="/">
+                                    <img src="{{asset('../storage/app/public/foto_karyawan/'.$a->User->foto_karyawan)}}" alt="/">
                                     @else
                                     <img src="{{ asset('admin/assets/img/avatars/1.png') }}" alt="/">
                                     @endif
@@ -1263,10 +1437,10 @@
                 <div class="swiper-slide swiper-slide-prev" role="group" aria-label="1 / 4" style="margin-right: 10px;">
                     <a id="btn_klik" href="{{ url('/cuti/approve/'.$a->id) }}">
                         <div class="card job-post" style="box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.2), 0 3px 10px 0 rgba(0, 0, 0, 0.1);">
-                            <div class="card-body">
-                                <div class="media media-80">
+                            <div class="card-body" style="padding: 6x;">
+                                <div class="media media-70">
                                     @if($a->User->foto_karyawan != '')
-                                    <img src="https://karyawan.sumberpangan.store/laravel/storage/app/public/foto_karyawan/{{$dataizin->User->foto_karyawan}}" alt="/">
+                                    <img src="{{asset('../storage/app/public/foto_karyawan/'.$a->User->foto_karyawan)}}" alt="/">
                                     @else
                                     <img src="{{ asset('admin/assets/img/avatars/1.png') }}" alt="/">
                                     @endif
@@ -1321,17 +1495,17 @@
                 @endforeach
                 @foreach ($datapenugasan as $datapenugasan)
                 @if($datapenugasan->status_penugasan == 1)
-                @if($datapenugasan->id_user_atasan == auth::user()->id)
+                @if($datapenugasan->id_user_atasan == $user_karyawan->id)
                 @if($datapenugasan->ttd_id_diminta_oleh == NULL)
                 <div class="swiper-slide swiper-slide-prev" role="group" aria-label="1 / 4" style="margin-right: 10px;">
                     <a id="btn_klik" href="{{ url('/penugasan/approve/diminta/show/'.$datapenugasan->id) }}">
                         <div class="card job-post" style="box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.2), 0 3px 10px 0 rgba(0, 0, 0, 0.1);">
-                            <div class="card-body">
-                                <div class="media media-80">
+                            <div class="card-body" style="padding: 6x;">
+                                <div class="media media-70">
                                     <img src="{{ asset('assets/assets_users/images/users/user_icon.jpg') }}" alt="/">
                                 </div>
                                 <div class="card-info">
-                                    <h6 class="title">{{ $datapenugasan->fullname }}</h6>
+                                    <h6 class="title">{{ $datapenugasan->name }}</h6>
                                     <span class="location" style="font-size: 12px">Penugasan {{ $datapenugasan->penugasan }}</span>
                                     <div class="d-flex align-items-center">
                                         {{-- @if ($datapenugasan->status_penugasan = 1) --}}
@@ -1346,17 +1520,17 @@
                 @endif
                 @endif
                 @elseif($datapenugasan->status_penugasan == 2)
-                @if($datapenugasan->id_user_atasan2 == auth::user()->id)
+                @if($datapenugasan->id_user_atasan2 == $user_karyawan->id)
                 @if($datapenugasan->ttd_id_disahkan_oleh == NULL)
                 <div class="swiper-slide swiper-slide-prev" role="group" aria-label="1 / 4" style="margin-right: 10px;">
                     <a id="btn_klik" href="{{ url('/penugasan/approve/diminta/show/'.$datapenugasan->id) }}">
                         <div class="card job-post" style="box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.2), 0 3px 10px 0 rgba(0, 0, 0, 0.1);">
-                            <div class="card-body">
-                                <div class="media media-80">
+                            <div class="card-body" style="padding: 6x;">
+                                <div class="media media-70">
                                     <img src="{{ asset('assets/assets_users/images/users/user_icon.jpg') }}" alt="/">
                                 </div>
                                 <div class="card-info">
-                                    <h6 class="title">{{ $datapenugasan->fullname }}</h6>
+                                    <h6 class="title">{{ $datapenugasan->name }}</h6>
                                     <span class="location" style="font-size: 12px">Penugasan {{ $datapenugasan->penugasan }}</span>
                                     <div class="d-flex align-items-center">
                                         {{-- @if ($datapenugasan->status_penugasan = 1) --}}
@@ -1381,7 +1555,7 @@
                                     <img src="{{ asset('assets/assets_users/images/users/user_icon.jpg') }}" alt="/">
                                 </div>
                                 <div class="card-info">
-                                    <h6 class="title">{{ $datapenugasan->fullname }}</h6>
+                                    <h6 class="title">{{ $datapenugasan->name }}</h6>
                                     <span class="location" style="font-size: 12px">Penugasan {{ $datapenugasan->penugasan }}</span>
                                     <div class="d-flex align-items-center">
                                         {{-- @if ($datapenugasan->status_penugasan = 1) --}}
@@ -1406,7 +1580,7 @@
                                     <img src="{{ asset('assets/assets_users/images/users/user_icon.jpg') }}" alt="/">
                                 </div>
                                 <div class="card-info">
-                                    <h6 class="title">{{ $datapenugasan->fullname }}</h6>
+                                    <h6 class="title">{{ $datapenugasan->name }}</h6>
                                     <span class="location" style="font-size: 12px">Penugasan {{ $datapenugasan->penugasan }}</span>
                                     <div class="d-flex align-items-center">
                                         {{-- @if ($datapenugasan->status_penugasan = 1) --}}
@@ -1427,13 +1601,13 @@
         </div>
     </div>
 </div>
+<hr style="margin: 0;">
 @else
 @endif
 
-
 <!-- Features End -->
-<div class="categorie-section">
-    <div class="title-bar">
+<div class="categorie-section" style="margin: 0;">
+    <div class="title-bar" style="margin: 0;">
         <h6 class="title"> Absen&nbsp;Bulan&nbsp;
             <select class="month" style="width: max-content;border-radius: 0px; background-color:transparent; color: var(--primary); border: none;outline: none;" name="" id="month">
                 <option value="01">Januari</option>
@@ -1465,7 +1639,7 @@
     <div class="row">
         <div class="col-6">
             <div class="card" style="box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.2), 0 3px 10px 0 rgba(0, 0, 0, 0.1);">
-                <div class="card-body">
+                <div class="card-body" style="padding: 5%; margin: 2%;">
                     <div class="row">
                         <div class="col">
                             <svg xmlns="http://www.w3.org/2000/svg" class="icon_kategori" viewBox="0 0 64 64" data-name="Layer 1" id="Layer_1">
@@ -1526,11 +1700,13 @@
                             </svg>
                         </div>
                         <div class="col">
-                            <h6 class="icon_text title"><a href="javascript:void(0);">Hadir</a></h6>
+                            <h6 class="icon_text title"><a href="javascript:void(0);">HADIR</a></h6>
                             <span class="">
-                                <h5 id="count_absen_hadir">
-                                    {{$count_absen_hadir}}
-                                </h5>
+                                <h3 id="count_absen_hadir">
+                                    <div class="spinner-border spinner-border-sm mb-2 text-primary" role="status">
+                                        <span class="sr-only">Loading...</span>
+                                    </div>
+                                </h3>
                             </span>
                         </div>
                     </div>
@@ -1539,7 +1715,7 @@
         </div>
         <div class="col-6">
             <div class="card" style="box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.2), 0 3px 10px 0 rgba(0, 0, 0, 0.1);">
-                <div class="card-body">
+                <div class="card-body" style="padding: 5%; margin: 2%;">
                     <div class="row">
                         <div class="col">
                             <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" class="icon_kategori" version="1.1" id="Capa_1" viewBox="0 0 512 512" xml:space="preserve">
@@ -1561,21 +1737,24 @@
                                 </g>
                             </svg>
                         </div>
-                        <div class="col">
-                            <h6 class="icon_text title"><a href="javascript:void(0);">Izin</a></h6>
+                        <div class="col" style="position: relative;">
+                            <h6 class="icon_text title">IZIN</h6>
                             <span class="">
-                                <h5>
-                                    {{$count_absen_izin}}
-                                </h5>
+                                <h3 id="count_izin">
+                                    <div class="spinner-border spinner-border-sm mb-2 text-primary" role="status">
+                                        <span class="sr-only">Loading...</span>
+                                    </div>
+                                </h3>
                             </span>
                         </div>
                     </div>
+                    <p style="font-size: 5pt; text-align: center; position: absolute; font-weight: bold;">(Terlambat, Pulang&nbsp;Cepat, Keluar&nbsp;Kantor)</p>
                 </div>
             </div>
         </div>
         <div class="col-6">
             <div class="card" style="box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.2), 0 3px 10px 0 rgba(0, 0, 0, 0.1);">
-                <div class="card-body">
+                <div class="card-body" style="padding: 5%; margin: 2%;">
                     <div class="row">
                         <div class="col">
                             <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="Layer_1" viewBox="0 0 496 496" xml:space="preserve" class="icon_kategori">
@@ -1597,11 +1776,13 @@
                             </svg>
                         </div>
                         <div class="col">
-                            <h6 class="icon_text title"><a href="javascript:void(0);">Sakit</a></h6>
+                            <h6 class="icon_text title"><a href="javascript:void(0);">SAKIT</a></h6>
                             <span class="">
-                                <h5>
-                                    {{$count_absen_sakit}}
-                                </h5>
+                                <h3 id="count_sakit">
+                                    <div class="spinner-border spinner-border-sm mb-2 text-primary" role="status">
+                                        <span class="sr-only">Loading...</span>
+                                    </div>
+                                </h3>
                             </span>
                         </div>
                     </div>
@@ -1610,7 +1791,7 @@
         </div>
         <div class="col-6">
             <div class="card" style="box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.2), 0 3px 10px 0 rgba(0, 0, 0, 0.1);">
-                <div class="card-body">
+                <div class="card-body" style="padding: 5%; margin: 2%;">
                     <div class="row">
                         <div class="col">
                             <svg xmlns="http://www.w3.org/2000/svg" class="icon_kategori" viewBox="-10.98 0 84.878 84.878">
@@ -1627,11 +1808,13 @@
                             </svg>
                         </div>
                         <div class="col">
-                            <h6 class="icon_text title"><a href="javascript:void(0);">Telat</a></h6>
+                            <h6 class="icon_text title"><a href="javascript:void(0);">TELAT</a></h6>
                             <span class="">
-                                <h5>
-                                    {{$count_absen_telat}}
-                                </h5>
+                                <h3 id="count_telat">
+                                    <div class="spinner-border spinner-border-sm mb-2 text-primary" role="status">
+                                        <span class="sr-only">Loading...</span>
+                                    </div>
+                                </h3>
                             </span>
                         </div>
                     </div>
@@ -1640,6 +1823,8 @@
         </div>
     </div>
 </div>
+
+<hr style="margin: 0;">
 <!-- Categorie -->
 <div class="categorie-section">
     <div class="title-bar">
@@ -1668,12 +1853,14 @@
 @section('js')
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
 <script src="https://unpkg.com/leaflet@1.8.0/dist/leaflet.js" integrity="sha512-BB3hKbKWOc9Ez/TAwyWxNXeoV9c1v6FIeYiBieIWkpLjauysF18NzgR1MBNBXf8/KABdlkX68nAhlwcDFLGPCQ==" crossorigin=""></script>
+
 <script type="text/javascript">
     $(document).ready(function() {
         load_data();
+        load_absensi();
 
         function load_data(filter_month = '') {
-            console.log(filter_month);
+            // console.log(filter_month);
             var table1 = $('#datatableHome').DataTable({
                 processing: true,
                 serverSide: true,
@@ -1700,8 +1887,8 @@
                         name: 'jam_pulang'
                     },
                     {
-                        data: 'status_absen',
-                        name: 'status_absen'
+                        data: 'keterangan',
+                        name: 'keterangan'
                     },
                 ],
                 order: [
@@ -1721,14 +1908,17 @@
                     alert('Something is wrong');
                 },
                 success: function(data) {
-                    $('#count_absen_hadir').html(data);
-                    console.log(data)
+                    console.log(data.count_absen_hadir)
+                    $('#count_absen_hadir').html(data.count_absen_hadir);
+                    $('#count_telat').html(data.count_telat);
+                    $('#count_izin').html(data.count_izin);
+                    $('#count_sakit').html(data.count_sakit);
                 }
             });
         }
         $('#month').change(function() {
             filter_month = $(this).val();
-            console.log(filter_month);
+            // console.log(filter_month);
             $('#datatableHome').DataTable().destroy();
             load_data(filter_month);
             load_absensi(filter_month);
@@ -1746,7 +1936,7 @@
         // console.log($('#home_index').val());
         if ($('#home_index').val() == '1') {
             console.log('hidden')
-            window.scrollTo(0, 20);
+            window.scrollTo(0, 50);
         }
     }
     // offcanvasEl.show()
@@ -1768,8 +1958,8 @@
         //   "<br>Longitude: " + position.coords.longitude;
         var lat_saya = position.coords.latitude;
         var long_saya = position.coords.longitude;
-        var lokasi_kantor = '{{Auth()->user()->penempatan_kerja}}';
-        var nama_saya = '{{Auth()->user()->name}}';
+        var lokasi_kantor = '{{$user_karyawan->penempatan_kerja}}';
+        var nama_saya = '{{$user_karyawan->name}}';
         // console.log(lat_saya, long_saya);
         // console.log(lokasi_kantor);
 
@@ -1800,10 +1990,27 @@
             mymap.showLabel(label);
         } else if (lokasi_kantor == 'CV. SUMBER PANGAN - TUBAN') {
             var latlngs = [
-                [-6.991185, 112.120763],
-                [-6.989174, 112.121394],
-                [-6.989563, 112.122751],
-                [-6.991437, 112.122061]
+                [-6.991758822037412, 112.12048943252134],
+                [-6.992285922956118, 112.12087444394012],
+                [-6.991649636772762, 112.12126324857486],
+                [-6.9918209446766015, 112.12162739730593],
+                [-6.99158186659566, 112.12182464453525],
+                [-6.991630811724543, 112.12207689339583],
+                [-6.988976733872493, 112.12301030070874],
+                [-6.988841110863623, 112.1225521606721],
+                [-6.988496578083082, 112.12262012506571],
+                [-6.988366830934185, 112.12224502050286],
+                [-6.988087592439392, 112.12137545996293],
+                [-6.98793810105542, 112.1214266105829],
+                [-6.987859124455924, 112.12116801578183],
+                [-6.988502219235255, 112.1209008958774],
+                [-6.988694019261298, 112.12132146764182],
+                [-6.989663035162432, 112.12098199978163],
+                [-6.9897194468028525, 112.12109850952719],
+                [-6.990145354468302, 112.12087117343832],
+                [-6.989959196198711, 112.12060689523501],
+                [-6.990190483734605, 112.12045628507613],
+                [-6.990653058462982, 112.12096779127609]
             ];
             var polygon = L.polygon(latlngs, {
                 color: 'red'
@@ -2172,8 +2379,8 @@
 
         var lat_saya1 = position.coords.latitude;
         var long_saya1 = position.coords.longitude;
-        var lokasi_kantor1 = '{{Auth()->user()->penempatan_kerja}}';
-        var nama_saya1 = '{{Auth()->user()->name}}';
+        var lokasi_kantor1 = '{{$user_karyawan->penempatan_kerja}}';
+        var nama_saya1 = '{{$user_karyawan->name}}';
         // console.log(lat_saya1, long_saya1);
         // console.log(lokasi_kantor1);
 
@@ -2535,7 +2742,16 @@
             var polygon_pulang1 = L.polygon(latlngs_pulang1, {
                 color: 'red'
             }).addTo(map1);
-
+        } else if (lokasi_kantor == 'BULOG PARON - KEDIRI') {
+            var latlngs = [
+                [-7.813968757527632, 112.05662997145677],
+                [-7.81236784846995, 112.05722929959332],
+                [-7.813095022711804, 112.05940470904986],
+                [-7.815163768273714, 112.0587276399426]
+            ];
+            var polygon = L.polygon(latlngs, {
+                color: 'red'
+            }).addTo(map);
         }
         var location1 = <?php echo json_encode($location); ?>;
         // console.log(location);
@@ -2597,142 +2813,26 @@
         setTimeout(function() {
             // console.log('ok1');
             $("#alert_kontrak_kerja_null").remove();
-        }, 7000); // 7 secs
-
-    });
-    $("document").ready(function() {
-        // console.log('ok');
-        setTimeout(function() {
-            // console.log('ok1');
             $("#alert_jabatan_null").remove();
-        }, 7000); // 7 secs
-
-    });
-    $("document").ready(function() {
-        // console.log('ok');
-        setTimeout(function() {
-            // console.log('ok1');
             $("#alert_absen_tidak_masuk").remove();
-        }, 7000); // 7 secs
-
-    });
-    $("document").ready(function() {
-        // console.log('ok');
-        setTimeout(function() {
-            // console.log('ok1');
             $("#alert_absen_tidak_masuk1").remove();
-        }, 7000); // 7 secs
-
-    });
-    $("document").ready(function() {
-        // console.log('ok');
-        setTimeout(function() {
-            // console.log('ok1');
             $("#alert_absenpulangsuccess").remove();
-        }, 7000); // 7 secs
-
-    });
-    $("document").ready(function() {
-        // console.log('ok');
-        setTimeout(function() {
-            // console.log('ok1');
             $("#alert_approve_cuti_success").remove();
-        }, 7000); // 7 secs
-
-    });
-    $("document").ready(function() {
-        // console.log('ok');
-        setTimeout(function() {
-            // console.log('ok1');
             $("#alert_approve_cuti_not_approve").remove();
-        }, 7000); // 7 secs
-
-    });
-    $("document").ready(function() {
-        // console.log('ok');
-        setTimeout(function() {
-            // console.log('ok1');
             $("#alert_approve_izin_success").remove();
-        }, 7000); // 7 secs
-
-    });
-    $("document").ready(function() {
-        // console.log('ok');
-        setTimeout(function() {
-            // console.log('ok1');
             $("#alert_approve_izin_not_approve").remove();
-        }, 7000); // 7 secs
-
-    });
-    $("document").ready(function() {
-        // console.log('ok');
-        setTimeout(function() {
-            // console.log('ok1');
             $("#alert_login_success").remove();
-        }, 7000); // 7 secs
-
-    });
-    $("document").ready(function() {
-        // console.log('ok');
-        setTimeout(function() {
-            // console.log('ok1');
             $("#alert_approve_penugasan_sukses").remove();
-        }, 7000); // 7 secs
-
-    });
-    $("document").ready(function() {
-        // console.log('ok');
-        setTimeout(function() {
-            // console.log('ok1');
             $("#alert_lokasikerjanull").remove();
-        }, 7000); // 7 secs
-
-    });
-    $("document").ready(function() {
-        // console.log('ok');
-        setTimeout(function() {
-            // console.log('ok1');
             $("#alert_latlongnull").remove();
-        }, 7000); // 7 secs
-
-    });
-    $("document").ready(function() {
-        // console.log('ok');
-        setTimeout(function() {
-            // console.log('ok1');
             $("#alert_absenkeluarerror").remove();
-        }, 7000); // 7 secs
-
-    });
-    $("document").ready(function() {
-        // console.log('ok');
-        setTimeout(function() {
-            // console.log('ok1');
             $("#alert_absen_masuk_success").remove();
-        }, 7000); // 7 secs
-
-    });
-    $("document").ready(function() {
-        // console.log('ok');
-        setTimeout(function() {
-            // console.log('ok1');
             $("#alert_absen_masuk_error").remove();
-        }, 7000); // 7 secs
-
-    });
-    $("document").ready(function() {
-        // console.log('ok');
-        setTimeout(function() {
-            // console.log('ok1');
             $("#alert_absenpulangoutradius").remove();
-        }, 7000); // 7 secs
-
-    });
-    $("document").ready(function() {
-        // console.log('ok');
-        setTimeout(function() {
-            // console.log('ok1');
             $("#alert_absenmasukoutradius").remove();
+            $("#alert_jam_kerja_libur").remove();
+            $("#alert_simpanface_danger").remove();
+            $("#alert_simpanface_success").remove();
         }, 7000); // 7 secs
 
     });

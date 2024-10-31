@@ -2,6 +2,7 @@
 
 namespace App\Exports;
 
+use App\Models\Karyawan;
 use App\Models\User;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\WithCustomStartCell;
@@ -24,21 +25,21 @@ class KaryawanExport implements FromCollection, WithEvents, WithHeadings, WithTi
     public function headings(): array
     {
         return [
-            'ID',
             'ID KARYAWAN',
-            'NAMA',
-            'NIK',
-            'NPWP',
             'NAMA LENGKAP',
-            'MOTTO',
+            'NIK',
+            'AGAMA',
+            'GOLONGAN DARAH',
             'EMAIL',
             'TELEPON',
-            'USERNAME',
+            'NOMOR WA',
             'TEMPAT LAHIR',
             'TANGGAL LAHIR',
             'KELAMIN',
-            'TANGGAL BERGABUNG',
             'STATUS PERNIKAHAAN',
+            'TINGKAT PENDIDIKAN',
+            'INSTANSI PENDIDIKAN',
+            'JURUSAN AKADEMIK',
             'PROVINSI',
             'KABUPATEN/KOTA',
             'KECAMATAN',
@@ -46,8 +47,16 @@ class KaryawanExport implements FromCollection, WithEvents, WithHeadings, WithTi
             'RT',
             'RW',
             'KETERANGAN ALAMAT',
+            'PROVINSI DOMISILI',
+            'KABUPATEN/KOTA DOMISILI',
+            'KECAMATAN DOMISILI',
+            'DESA DOMISILI',
+            'RT DOMISILI',
+            'RW DOMISILI',
+            'KETERANGAN ALAMAT DOMISILI',
             'SALDO CUTI',
             'KATEGORI KARYAWAN',
+            'TANGGAL BERGABUNG',
             'LAMA KONTRAK',
             'TANGGAL MULAI KONTRAK',
             'TANGGAL SELESAI KONTRAK',
@@ -55,6 +64,7 @@ class KaryawanExport implements FromCollection, WithEvents, WithHeadings, WithTi
             'PENEMPATAN KERJA',
             'SITE JOB',
             'BANK',
+            'NAMA PEMILIK REKENING',
             'NOMOR REKENING',
             'KATEGORI JABATAN',
             'DEPARTEMEN',
@@ -77,13 +87,15 @@ class KaryawanExport implements FromCollection, WithEvents, WithHeadings, WithTi
             'DIVISI 5',
             'BAGIAN 5',
             'JABATAN 5',
-            'BPJS KETENAGAKERJAAN',
+            'PTKP',
+            'NAMA PEMILIK NPWP',
+            'NPWP',
+            'NAMA PEMILIK BPJS KETENAGAKERJAAN',
             'NO BPJS KETENAGAKERJAAN',
             'BPJS PENSIUN',
-            'BPJS KESEHATAN',
+            'NAMA PEMILIK BPJS KESEHATAN',
             'NO BPJS KESEHATAN',
-            'KELAS BPJS',
-            'PTKP'
+            'KELAS BPJS'
         ];
     }
     public function title(): string
@@ -92,97 +104,115 @@ class KaryawanExport implements FromCollection, WithEvents, WithHeadings, WithTi
     }
     public function startCell(): string
     {
-        return 'A4';
+        return 'A2';
     }
     public function collection()
     {
-        return User::leftJoin('departemens as a', 'a.id', 'users.dept_id')
-            ->leftJoin('divisis as b', 'b.id', 'users.divisi_id')
-            ->leftJoin('bagians as c', 'c.id', 'users.bagian_id')
-            ->leftJoin('jabatans as d', 'd.id', 'users.jabatan_id')
-            ->leftJoin('divisis as e', 'e.id', 'users.divisi1_id')
-            ->leftJoin('bagians as f', 'f.id', 'users.bagian1_id')
-            ->leftJoin('jabatans as g', 'g.id', 'users.jabatan1_id')
-            ->leftJoin('divisis as h', 'h.id', 'users.divisi2_id')
-            ->leftJoin('bagians as i', 'i.id', 'users.bagian2_id')
-            ->leftJoin('jabatans as j', 'j.id', 'users.jabatan2_id')
-            ->leftJoin('divisis as k', 'k.id', 'users.divisi3_id')
-            ->leftJoin('bagians as l', 'l.id', 'users.bagian3_id')
-            ->leftJoin('jabatans as m', 'm.id', 'users.jabatan3_id')
-            ->leftJoin('divisis as n', 'n.id', 'users.divisi4_id')
-            ->leftJoin('bagians as o', 'o.id', 'users.bagian4_id')
-            ->leftJoin('jabatans as p', 'p.id', 'users.jabatan4_id')
-            ->leftJoin('departemens as u', 'u.id', 'users.dept1_id')
-            ->leftJoin('departemens as v', 'v.id', 'users.dept2_id')
-            ->leftJoin('departemens as w', 'w.id', 'users.dept3_id')
-            ->leftJoin('departemens as x', 'x.id', 'users.dept4_id')
-            ->leftJoin('indonesia_provinces as q', 'q.code', 'users.provinsi')
-            ->leftJoin('indonesia_cities as r', 'r.code', 'users.kabupaten')
-            ->leftJoin('indonesia_districts as s', 's.code', 'users.kecamatan')
-            ->leftJoin('indonesia_villages as t', 't.code', 'users.desa')
-            ->where('users.kontrak_kerja', $this->holding)
-            ->where('users.is_admin', 'user')
+        return Karyawan::leftJoin('departemens as a', 'a.id', 'karyawans.dept_id')
+            ->leftJoin('divisis as b', 'b.id', 'karyawans.divisi_id')
+            ->leftJoin('bagians as c', 'c.id', 'karyawans.bagian_id')
+            ->leftJoin('jabatans as d', 'd.id', 'karyawans.jabatan_id')
+            ->leftJoin('divisis as e', 'e.id', 'karyawans.divisi1_id')
+            ->leftJoin('bagians as f', 'f.id', 'karyawans.bagian1_id')
+            ->leftJoin('jabatans as g', 'g.id', 'karyawans.jabatan1_id')
+            ->leftJoin('divisis as h', 'h.id', 'karyawans.divisi2_id')
+            ->leftJoin('bagians as i', 'i.id', 'karyawans.bagian2_id')
+            ->leftJoin('jabatans as j', 'j.id', 'karyawans.jabatan2_id')
+            ->leftJoin('divisis as k', 'k.id', 'karyawans.divisi3_id')
+            ->leftJoin('bagians as l', 'l.id', 'karyawans.bagian3_id')
+            ->leftJoin('jabatans as m', 'm.id', 'karyawans.jabatan3_id')
+            ->leftJoin('divisis as n', 'n.id', 'karyawans.divisi4_id')
+            ->leftJoin('bagians as o', 'o.id', 'karyawans.bagian4_id')
+            ->leftJoin('jabatans as p', 'p.id', 'karyawans.jabatan4_id')
+            ->leftJoin('departemens as u', 'u.id', 'karyawans.dept1_id')
+            ->leftJoin('departemens as v', 'v.id', 'karyawans.dept2_id')
+            ->leftJoin('departemens as w', 'w.id', 'karyawans.dept3_id')
+            ->leftJoin('departemens as x', 'x.id', 'karyawans.dept4_id')
+            ->leftJoin('indonesia_provinces as q', 'q.code', 'karyawans.provinsi')
+            ->leftJoin('indonesia_cities as r', 'r.code', 'karyawans.kabupaten')
+            ->leftJoin('indonesia_districts as s', 's.code', 'karyawans.kecamatan')
+            ->leftJoin('indonesia_villages as t', 't.code', 'karyawans.desa')
+            ->leftJoin('indonesia_provinces as aa', 'aa.code', 'karyawans.provinsi_domisili')
+            ->leftJoin('indonesia_cities as ab', 'ab.code', 'karyawans.kabupaten_domisili')
+            ->leftJoin('indonesia_districts as ac', 'ac.code', 'karyawans.kecamatan_domisili')
+            ->leftJoin('indonesia_villages as ad', 'ad.code', 'karyawans.desa_domisili')
+            ->leftJoin('users as y', 'y.karyawan_id', 'karyawans.id')
+            ->where('karyawans.kontrak_kerja', $this->holding)
+            ->where('y.is_admin', 'user')
+            // ->where('karyawans.status_aktif', 'AKTIF')
             ->select(
-                'users.id',
-                'users.nomor_identitas_karyawan',
-                'users.name',
-                'nik',
-                'npwp',
-                'fullname',
-                'motto',
-                'email',
-                'telepon',
-                'username',
-                'tempat_lahir',
-                'tgl_lahir',
-                'gender',
-                'tgl_join',
-                'status_nikah',
-                'q.name as nama_provinsi',
-                'r.name as nama_kabupaten',
-                's.name as nama_kecamatan',
-                't.name as nama_desa',
-                'rt',
-                'rw',
-                'alamat',
-                'kuota_cuti_tahunan',
-                'kategori',
-                'lama_kontrak_kerja',
-                'tgl_mulai_kontrak',
-                'tgl_selesai_kontrak',
-                'kontrak_kerja',
-                'penempatan_kerja',
-                'site_job',
-                'nama_bank',
-                'nomor_rekening',
-                'users.kategori_jabatan',
-                'a.nama_departemen',
-                'b.nama_divisi',
-                'c.nama_bagian',
-                'd.nama_jabatan',
-                'u.nama_departemen as nama_departemen1',
-                'e.nama_divisi as nama_divisi1',
-                'f.nama_bagian as nama_bagian1',
-                'g.nama_jabatan as nama_jabatan1',
-                'v.nama_departemen as nama_departemen2',
-                'h.nama_divisi as nama_divisi2',
-                'i.nama_bagian as nama_bagian2',
-                'j.nama_jabatan as nama_jabatan2',
-                'w.nama_departemen as nama_departemen3',
-                'k.nama_divisi as nama_divisi3',
-                'l.nama_bagian as nama_bagian3',
-                'm.nama_jabatan as nama_jabatan3',
-                'x.nama_departemen as nama_departemen4',
-                'n.nama_divisi as nama_divisi4',
-                'o.nama_bagian as nama_bagian4',
-                'p.nama_jabatan as nama_jabatan4',
-                'users.bpjs_ketenagakerjaan',
-                'users.no_bpjs_ketenagakerjaan',
-                'users.bpjs_pensiun',
-                'users.bpjs_kesehatan',
-                'users.no_bpjs_kesehatan',
-                'users.kelas_bpjs',
-                'users.ptkp'
+                'karyawans.nomor_identitas_karyawan', //1
+                'karyawans.name', //2
+                'nik', //3
+                'agama', //4
+                'golongan_darah', //5
+                'email', //6
+                'telepon', //7
+                'nomor_wa', //8
+                'tempat_lahir', //9
+                'tgl_lahir', //10
+                'gender', //11
+                'status_nikah', //12
+                'strata_pendidikan', //12
+                'instansi_pendidikan', //12
+                'jurusan_akademik', //12
+                'status_nikah', //12
+                'q.name as nama_provinsi', //13
+                'r.name as nama_kabupaten', //14
+                's.name as nama_kecamatan', //15
+                't.name as nama_desa', //16
+                'rt', //17
+                'rw', //18
+                'alamat', //19
+                'aa.name as nama_provinsi_domisili', //20
+                'ab.name as nama_kabupaten_domisili', //21
+                'ac.name as nama_kecamatan_domisili', //22
+                'ad.name as nama_desa_domisili', //23
+                'rt_domisili', //24
+                'rw_domisili', //25
+                'alamat_domisili', //26
+                'kuota_cuti_tahunan', //27
+                'kategori', //28
+                'tgl_join', //29
+                'lama_kontrak_kerja', //30
+                'tgl_mulai_kontrak', //31
+                'tgl_selesai_kontrak', //32
+                'kontrak_kerja', //33
+                'penempatan_kerja', //34
+                'site_job', //35
+                'nama_bank', //36
+                'nama_pemilik_rekening', //37
+                'nomor_rekening', //38
+                'karyawans.kategori_jabatan', //39
+                'a.nama_departemen', //40
+                'b.nama_divisi', //41
+                'c.nama_bagian', //42
+                'd.nama_jabatan', //43
+                'u.nama_departemen as nama_departemen1', //44
+                'e.nama_divisi as nama_divisi1', //45
+                'f.nama_bagian as nama_bagian1', //46
+                'g.nama_jabatan as nama_jabatan1', //47
+                'v.nama_departemen as nama_departemen2', //48
+                'h.nama_divisi as nama_divisi2', //49
+                'i.nama_bagian as nama_bagian2', //50
+                'j.nama_jabatan as nama_jabatan2', //51
+                'w.nama_departemen as nama_departemen3', //52
+                'k.nama_divisi as nama_divisi3', //53
+                'l.nama_bagian as nama_bagian3', //54
+                'm.nama_jabatan as nama_jabatan3', //55
+                'x.nama_departemen as nama_departemen4', //56
+                'n.nama_divisi as nama_divisi4', //57
+                'o.nama_bagian as nama_bagian4', //58
+                'p.nama_jabatan as nama_jabatan4', //59
+                'karyawans.ptkp', //60
+                'nama_pemilik_npwp', //61
+                'npwp', //62
+                'karyawans.nama_pemilik_bpjs_ketenagakerjaan', //63
+                'karyawans.no_bpjs_ketenagakerjaan', //64
+                'karyawans.bpjs_pensiun', //65
+                'karyawans.nama_pemilik_bpjs_kesehatan', //66
+                'karyawans.no_bpjs_kesehatan', //67
+                'karyawans.kelas_bpjs' //68
             )
             ->orderBy('name', 'ASC')
             ->get();
@@ -200,17 +230,17 @@ class KaryawanExport implements FromCollection, WithEvents, WithHeadings, WithTi
             AfterSheet::class    => function (AfterSheet $event) use ($holding) {
                 $event->sheet
                     ->getDelegate()
-                    ->getStyle('A4:BH4')
+                    ->getStyle('A2:BS2')
                     ->getAlignment()
                     ->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
                 $event->sheet
-                    ->getDelegate()->getStyle('I2')->getFont()->setSize(14);
+                    ->getDelegate()->getStyle('I1')->getFont()->setSize(14);
                 $event->sheet
-                    ->getDelegate()->getStyle('I2')->getFont()->setBold(true);
+                    ->getDelegate()->getStyle('I1')->getFont()->setBold(true);
                 $event->sheet
-                    ->getDelegate()->getStyle('A4:BH4')->getFont()->setBold(true);
+                    ->getDelegate()->getStyle('A2:BS2')->getFont()->setBold(true);
                 $event->sheet
-                    ->setCellValue('I2', 'DATA MASTER KARYAWAN ' . $holding);
+                    ->setCellValue('I1', 'DATA MASTER KARYAWAN ' . $holding);
             },
         ];
     }

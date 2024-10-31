@@ -123,7 +123,9 @@ return [
     'key' => env('APP_KEY'),
 
     'cipher' => 'AES-256-CBC',
-
+    'cache' => [
+        'default' => env('CACHE_DRIVER', 'memcached'),
+    ],
     /*
     |--------------------------------------------------------------------------
     | Autoloaded Service Providers
@@ -174,7 +176,7 @@ return [
          */
         App\Providers\AppServiceProvider::class,
         App\Providers\AuthServiceProvider::class,
-        // App\Providers\BroadcastServiceProvider::class,
+        App\Providers\BroadcastServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
         // Laravolt\Indonesia\ServiceProvider::class

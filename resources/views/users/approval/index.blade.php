@@ -49,7 +49,7 @@
                                     <div class="card-body">
                                         <div class="media media-80">
                                             @if($dataizin->User->foto_karyawan != '')
-                                            <img src="https://karyawan.sumberpangan.store/laravel/storage/app/public/foto_karyawan/{{$dataizin->User->foto_karyawan}}" alt="/">
+                                            <img src="https://hrd.sumberpangan.store:4430/storage/app/public/foto_karyawan/{{$dataizin->User->foto_karyawan}}" alt="/">
                                             @else
                                             <img src="{{ asset('assets/assets_users/images/users/user_icon.jpg') }}" alt="/">
                                             @endif
@@ -83,7 +83,7 @@
                                     <div class="card-body">
                                         <div class="media media-80">
                                             @if($datacuti->foto_karyawan!='')
-                                            <img src="https://karyawan.sumberpangan.store/laravel/storage/app/public/foto_karyawan/{{$datacuti->foto_karyawan}}" alt="/">
+                                            <img src="https://hrd.sumberpangan.store:4430/storage/app/public/foto_karyawan/{{$datacuti->foto_karyawan}}" alt="/">
                                             @else
                                             <img src="{{ asset('assets/assets_users/images/users/user_icon.jpg') }}" alt="/">
                                             @endif
@@ -115,13 +115,13 @@
                                     <div class="card-body">
                                         <div class="media media-80">
                                             @if($datacuti->foto_karyawan!='')
-                                            <img src="https://karyawan.sumberpangan.store/laravel/storage/app/public/foto_karyawan/{{$datacuti->foto_karyawan}}" alt="/">
+                                            <img src="https://hrd.sumberpangan.store:4430/storage/app/public/foto_karyawan/{{$datacuti->foto_karyawan}}" alt="/">
                                             @else
                                             <img src="{{ asset('assets/assets_users/images/users/user_icon.jpg') }}" alt="/">
                                             @endif
                                         </div>
                                         <div class="card-info">
-                                            <h6 class="title">{{ $datacuti->name }}</h6>
+                                            <h6 class="title">{{ $datacuti->fullname }}</h6>
                                             @if($datacuti->nama_cuti=='Diluar Cuti Tahunan')
                                             <span class="">{{ $datacuti->KategoriCuti->nama_cuti }}</span>
                                             @else
@@ -160,7 +160,7 @@
                                             <img src="{{ asset('assets/assets_users/images/users/user_icon.jpg') }}" alt="/">
                                         </div>
                                         <div class="card-info">
-                                            <h6 class="title">{{ $datapenugasan->fullname }}</h6>
+                                            <h6 class="title">{{ $datapenugasan->name }}</h6>
                                             <span class="" style="font-size: 12px">Penugasan {{ $datapenugasan->penugasan }}</span>
                                             <div class="d-flex align-items-center">
                                                 {{-- @if ($datapenugasan->status_penugasan = 1) --}}
@@ -185,7 +185,7 @@
                                             <img src="{{ asset('assets/assets_users/images/users/user_icon.jpg') }}" alt="/">
                                         </div>
                                         <div class="card-info">
-                                            <h6 class="title">{{ $datapenugasan->fullname }}</h6>
+                                            <h6 class="title">{{ $datapenugasan->name }}</h6>
                                             <span class="" style="font-size: 12px">Penugasan {{ $datapenugasan->penugasan }}</span>
                                             <div class="d-flex align-items-center">
                                                 {{-- @if ($datapenugasan->status_penugasan = 1) --}}
@@ -210,7 +210,7 @@
                                             <img src="{{ asset('assets/assets_users/images/users/user_icon.jpg') }}" alt="/">
                                         </div>
                                         <div class="card-info">
-                                            <h6 class="title">{{ $datapenugasan->fullname }}</h6>
+                                            <h6 class="title">{{ $datapenugasan->name }}</h6>
                                             <span class="" style="font-size: 12px">Penugasan {{ $datapenugasan->penugasan }}</span>
                                             <div class="d-flex align-items-center">
                                                 {{-- @if ($datapenugasan->status_penugasan = 1) --}}
@@ -235,7 +235,7 @@
                                             <img src="{{ asset('assets/assets_users/images/users/user_icon.jpg') }}" alt="/">
                                         </div>
                                         <div class="card-info">
-                                            <h6 class="title">{{ $datapenugasan->fullname }}</h6>
+                                            <h6 class="title">{{ $datapenugasan->name }}</h6>
                                             <span class="" style="font-size: 12px">Penugasan {{ $datapenugasan->penugasan }}</span>
                                             <div class="d-flex align-items-center">
                                                 {{-- @if ($datapenugasan->status_penugasan = 1) --}}

@@ -25,7 +25,7 @@
                     <button type="button" class="btn btn-sm btn-success waves-effect waves-light" data-bs-toggle="modal" data-bs-target="#modal_import_divisi"><i class="menu-icon tf-icons mdi mdi-file-excel"></i>Import</button>
                     <div class="modal fade" id="modal_tambah_divisi" data-bs-backdrop="static" tabindex="-1">
                         <div class="modal-dialog modal-dialog-scrollable">
-                            <form method="post" action="{{ url('/divisi/insert/'.$holding) }}" class="modal-content" enctype="multipart/form-data">
+                            <form method="post" action="@if(Auth::user()->is_admin=='hrd'){{ url('/hrd/divisi/insert/'.$holding) }}@else{{ url('/divisi/insert/'.$holding) }}@endif" class="modal-content" enctype="multipart/form-data">
                                 @csrf
                                 <div class="modal-header">
                                     <h4 class="modal-title" id="backDropModalTitle">Tambah Divisi</h4>
@@ -76,7 +76,7 @@
                     </div>
                     <div class="modal fade" id="modal_import_divisi" data-bs-backdrop="static" tabindex="-1">
                         <div class="modal-dialog modal-dialog-scrollable modal-lg">
-                            <form method="post" action="{{ url('/divisi/ImportDivisi/'.$holding) }}" class="modal-content" enctype="multipart/form-data">
+                            <form method="post" action="@if(Auth::user()->is_admin=='hrd'){{ url('/hrd/divisi/ImportDivisi/'.$holding) }}@else{{ url('/divisi/ImportDivisi/'.$holding) }}@endif" class="modal-content" enctype="multipart/form-data">
                                 @csrf
                                 <div class="modal-header">
                                     <h4 class="modal-title" id="backDropModalTitle">Import Divisi</h4>
@@ -107,7 +107,7 @@
                     <!-- modal edit -->
                     <div class="modal fade" id="modal_edit_divisi" data-bs-backdrop="static" tabindex="-1">
                         <div class="modal-dialog modal-dialog-scrollable">
-                            <form method="post" action="{{ url('/divisi/update/'.$holding) }}" class="modal-content" enctype="multipart/form-data">
+                            <form method="post" action="@if(Auth::user()->is_admin=='hrd'){{ url('/hrd/divisi/update/'.$holding) }}@else{{ url('/divisi/update/'.$holding) }}@endif" class="modal-content" enctype="multipart/form-data">
                                 @csrf
                                 <div class="modal-header">
                                     <h4 class="modal-title" id="backDropModalTitle">Edit Divisi</h4>
@@ -168,7 +168,7 @@
                                 </div>
                                 <div class="modal-body">
                                     <div class="col-lg-12">
-                                        <table class="table" id="table_lihat_karyawan" style="width: 100%;">
+                                        <table class="table" id="table_lihat_karyawan" style="width: 100%; font-size: smaller;">
                                             <thead class="table-primary">
                                                 <tr>
                                                     <th>No.</th>
@@ -201,7 +201,7 @@
                                 </div>
                                 <div class="modal-body">
                                     <div class="col-lg-12">
-                                        <table class="table" id="table_lihat_bagian" style="width: 100%;">
+                                        <table class="table" id="table_lihat_bagian" style="width: 100%; font-size: smaller;">
                                             <thead class="table-primary">
                                                 <tr>
                                                     <th>No.</th>
@@ -222,7 +222,7 @@
                             </div>
                         </div>
                     </div>
-                    <table class="table" id="table_divisi" style="width: 100%;">
+                    <table class="table" id="table_divisi" style="width: 100%; font-size: smaller;">
                         <thead class="table-primary">
                             <tr>
                                 <th>No.</th>
@@ -257,7 +257,7 @@
         processing: true,
         serverSide: true,
         ajax: {
-            url: "{{ url('divisi-datatable') }}" + '/' + holding,
+            url: "@if(Auth::user()->is_admin=='hrd'){{ url('hrd/divisi-datatable') }}@else{{ url('divisi-datatable') }}@endif" + '/' + holding,
         },
         columns: [{
                 data: "id",
@@ -323,7 +323,7 @@
         }).then((result) => {
             if (result.value) {
                 $.ajax({
-                    url: "{{ url('/divisi/delete/') }}" + '/' + id + '/' + holding,
+                    url: "@if(Auth::user()->is_admin=='hrd'){{ url('/hrd/divisi/delete/') }}@else{{ url('/divisi/delete/') }}@endif" + '/' + id + '/' + holding,
                     type: "GET",
                     error: function() {
                         alert('Something is wrong');
@@ -371,7 +371,7 @@
 
         let id = $(this).data('id');
         let holding = $(this).data("holding");
-        let url = "{{ url('divisi/bagian-datatable') }}" + '/' + id + '/' + holding;
+        let url = "@if(Auth::user()->is_admin=='hrd'){{ url('/hrd/divisi/bagian-datatable') }}@else{{ url('divisi/bagian-datatable') }}@endif" + '/' + id + '/' + holding;
         // console.log(url);
         var table1 = $('#table_lihat_bagian').DataTable({
             "scrollY": true,
@@ -413,7 +413,7 @@
 
         let id = $(this).data('id');
         let holding = $(this).data("holding");
-        let url = "{{ url('divisi/karyawandivisi-datatable') }}" + '/' + id + '/' + holding;
+        let url = "@if(Auth::user()->is_admin=='hrd'){{ url('hrd/divisi/karyawandivisi-datatable') }}@else{{ url('divisi/karyawandivisi-datatable') }}@endif" + '/' + id + '/' + holding;
         console.log(id);
         var table1 = $('#table_lihat_karyawan').DataTable({
             "scrollY": true,

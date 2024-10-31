@@ -62,8 +62,22 @@
                                     <div class="row g-2">
                                         <div class="col mb-2">
                                             <div class="form-floating form-floating-outline">
+                                                <input type="time" id="jam_kerja" name="jam_kerja" class="form-control @error('jam_kerja') is-invalid @enderror" placeholder="Masukkan jam_kerja" value="{{ old('jam_kerja') }}" />
+                                                <label for="jam_kerja">Jam Kerja</label>
+                                            </div>
+                                            @error('jam_kerja')
+                                            <span class="invalid-feedback" role="alert">
+                                                <strong>{{ $message }}</strong>
+                                            </span>
+                                            @enderror
+                                        </div>
+                                    </div>
+                                    <br>
+                                    <div class="row g-2">
+                                        <div class="col mb-2">
+                                            <div class="form-floating form-floating-outline">
                                                 <input type="time" id="jam_keluar" name="jam_keluar" class="form-control @error('jam_keluar') is-invalid @enderror" placeholder="Masukkan jam_keluar" value="{{ old('jam_keluar') }}" />
-                                                <label for="jam_keluar">Jam Masuk</label>
+                                                <label for="jam_keluar">Jam Pulang</label>
                                             </div>
                                             @error('jam_keluar')
                                             <span class="invalid-feedback" role="alert">
@@ -110,10 +124,24 @@
                                     <div class="row g-2">
                                         <div class="col mb-2">
                                             <div class="form-floating form-floating-outline">
-                                                <input type="time" id="jam_masuk_update" name="jam_masuk_update" class="form-control @error('jam_masuk_update') is-invalid @enderror" placeholder="Masukkan jam_masuk_update" value="" />
+                                                <input type="time" id="jam_masuk_update" name="jam_masuk_update" class="form-control @error('jam_masuk_update') is-invalid @enderror" placeholder="Masukkan Jam Masuk" value="" />
                                                 <label for="jam_masuk_update">Jam Masuk</label>
                                             </div>
                                             @error('jam_masuk_update')
+                                            <span class="invalid-feedback" role="alert">
+                                                <strong>{{ $message }}</strong>
+                                            </span>
+                                            @enderror
+                                        </div>
+                                    </div>
+                                    <br>
+                                    <div class="row g-2">
+                                        <div class="col mb-2">
+                                            <div class="form-floating form-floating-outline">
+                                                <input type="time" id="jam_kerja_update" name="jam_kerja_update" class="form-control @error('jam_kerja_update') is-invalid @enderror" placeholder="Masukkan Jam Kerja" value="{{ old('jam_kerja_update') }}" />
+                                                <label for="jam_kerja_update">Jam Kerja</label>
+                                            </div>
+                                            @error('jam_kerja_update')
                                             <span class="invalid-feedback" role="alert">
                                                 <strong>{{ $message }}</strong>
                                             </span>
@@ -150,6 +178,7 @@
                                 <th>No.</th>
                                 <th>Nama&nbsp;Shift</th>
                                 <th>Jam&nbsp;Masuk</th>
+                                <th>Jam&nbsp;Kerja</th>
                                 <th>Jam&nbsp;Keluar</th>
                                 <th>Opsi</th>
                             </tr>
@@ -193,6 +222,10 @@
             {
                 data: 'jam_masuk',
                 name: 'jam_masuk'
+            },
+            {
+                data: 'jam_kerja',
+                name: 'jam_kerja'
             },
             {
                 data: 'jam_keluar',

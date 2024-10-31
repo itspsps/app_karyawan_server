@@ -232,7 +232,7 @@
                                     <img src="{{ asset('assets/assets_users/images/users/user_icon.jpg') }}" alt="/">
                                 </div>
                                 <div class="card-info">
-                                    <h6 class="title"><a href="javascript:void(0);">{{ $dataizin->fullname }}</a></h6>
+                                    <h6 class="title"><a href="javascript:void(0);">{{ $dataizin->name }}</a></h6>
                                     <span class="">{{ $dataizin->izin }}</span>
                                     <div class="d-flex align-items-center">
                                         @if ($dataizin->status_izin == 0)
@@ -254,7 +254,7 @@
                                     <img src="{{ asset('assets/assets_users/images/users/user_icon.jpg') }}" alt="/">
                                 </div>
                                 <div class="card-info">
-                                    <h6 class="title"><a href="javascript:void(0);">{{ $datacuti->fullname }}</a></h6>
+                                    <h6 class="title"><a href="javascript:void(0);">{{ $datacuti->name }}</a></h6>
                                     <span class="">{{ $datacuti->nama_cuti }}</span>
                                     <div class="d-flex align-items-center">
                                         @if ($datacuti->status_cuti == 0)
@@ -277,7 +277,7 @@
                                     <img src="{{ asset('assets/assets_users/images/users/user_icon.jpg') }}" alt="/">
                                 </div>
                                 <div class="card-info">
-                                    <h6 class="title"><a href="javascript:void(0);">{{ $datapenugasan->fullname }}</a></h6>
+                                    <h6 class="title"><a href="javascript:void(0);">{{ $datapenugasan->name }}</a></h6>
                                     <span class="">Penugasan {{ $datapenugasan->penugasan }}</span>
                                     <div class="d-flex align-items-center">
                                         @if ($datapenugasan->status_penugasan == 0)

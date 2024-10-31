@@ -131,7 +131,7 @@
 
 <body>
     <!-- Content -->
-
+    @include('sweetalert::alert')
     <div class="position-relative">
         <div class="authentication-wrapper authentication-basic">
             <div class="container-xxl flex-grow-1">
@@ -139,7 +139,7 @@
                     <h1 class="text-center">Welcome to <span> HRD APP</span></h1>
                     <!-- Congratulations card -->
                     <div class="col-md-4 col-lg-4">
-                        <a href="{{ url('dashboard/holding/sp') }}">
+                        <a href="@if(Auth::user()->is_admin =='hrd'){{ url('hrd/dashboard/holding/sp') }}@else {{ url('dashboard/holding/sp') }} @endif">
                             <div class="card" style="height: 200px;">
                                 <div class="card-body">
                                     <figure>
@@ -158,7 +158,7 @@
                         </a>
                     </div>
                     <div class="col-md-4 col-lg-4">
-                        <a href="{{ url('dashboard/holding/sps') }}">
+                        <a href="@if(Auth::user()->is_admin =='hrd'){{ url('hrd/dashboard/holding/sps') }} @else {{ url('dashboard/holding/sps') }} @endif">
                             <div class="card" style="height: 200px;">
                                 <div class="card-body">
                                     <figure>
@@ -179,7 +179,7 @@
                         </a>
                     </div>
                     <div class="col-md-4 col-lg-4">
-                        <a href="{{ url('dashboard/holding/sip') }}">
+                        <a href="@if(Auth::user()->is_admin =='hrd') {{ url('hrd/dashboard/holding/sip') }} @else {{ url('dashboard/holding/sip') }} @endif">
                             <div class="card" style="height: 200px; display: block;">
                                 <div class="card-body">
                                     <figure>

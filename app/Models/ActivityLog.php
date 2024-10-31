@@ -10,12 +10,15 @@ class ActivityLog extends Model
     use HasFactory;
     protected $fillable = [
         'user_id',
+        'object_id',
+        'kategory_activity',
         'activity',
+        'read_status',
         'description',
     ];
 
     public function user()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(Karyawan::class);
     }
 }

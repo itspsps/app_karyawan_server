@@ -9,7 +9,7 @@ use App\Models\Divisi;
 use App\Models\Izin;
 use App\Models\Jabatan;
 use App\Models\MappingShift;
-use App\Models\User;
+use App\Models\Karyawan;
 use Carbon\Carbon;
 use DateTime;
 use Illuminate\Http\Request;
@@ -47,10 +47,10 @@ class IzinController extends Controller
                 $date2 = date('Y-m-d', strtotime($endDate));
                 // dd($date1, $date2);
                 // dd($tgl_mulai, $tgl_selesai);
-                $table = Izin::leftJoin('users', 'users.id', 'izins.user_id')->where('izin', 'Datang Terlambat')
-                    ->where('users.kontrak_kerja', $holding)
+                $table = Izin::leftJoin('karyawans', 'karyawans.id', 'izins.user_id')->where('izin', 'Datang Terlambat')
+                    ->where('karyawans.kontrak_kerja', $holding)
                     ->whereBetween('tanggal', [$date1, $date2])
-                    ->select('users.kontrak_kerja', 'izins.*')
+                    ->select('karyawans.kontrak_kerja', 'izins.*')
                     ->get();
                 // dd($table);
                 return DataTables::of($table)
@@ -162,9 +162,9 @@ class IzinController extends Controller
                 $now1 = Carbon::now()->endOfMonth();
 
                 // dd($tgl_mulai, $tgl_selesai);
-                $table = Izin::leftJoin('users', 'users.id', 'izins.user_id')->where('izin', 'Datang Terlambat')
-                    ->where('users.kontrak_kerja', $holding)
-                    ->select('users.kontrak_kerja', 'izins.*')
+                $table = Izin::leftJoin('karyawans', 'karyawans.id', 'izins.user_id')->where('izin', 'Datang Terlambat')
+                    ->where('karyawans.kontrak_kerja', $holding)
+                    ->select('karyawans.kontrak_kerja', 'izins.*')
                     ->get();
                 // dd($table);
                 return DataTables::of($table)
@@ -287,10 +287,10 @@ class IzinController extends Controller
                 $date2 = date('Y-m-d', strtotime($endDate));
                 // dd($date1, $date2);
                 // dd($tgl_mulai, $tgl_selesai);
-                $table = Izin::leftJoin('users', 'users.id', 'izins.user_id')->where('izin', 'Pulang Cepat')
-                    ->where('users.kontrak_kerja', $holding)
+                $table = Izin::leftJoin('karyawans', 'karyawans.id', 'izins.user_id')->where('izin', 'Pulang Cepat')
+                    ->where('karyawans.kontrak_kerja', $holding)
                     ->whereBetween('tanggal', [$date1, $date2])
-                    ->select('users.kontrak_kerja', 'izins.*')
+                    ->select('karyawans.kontrak_kerja', 'izins.*')
                     ->get();
                 // dd($table);
                 return DataTables::of($table)
@@ -394,9 +394,9 @@ class IzinController extends Controller
                 $now1 = Carbon::now()->endOfMonth();
 
                 // dd($tgl_mulai, $tgl_selesai);
-                $table = Izin::leftJoin('users', 'users.id', 'izins.user_id')->where('izin', 'Pulang Cepat')
-                    ->where('users.kontrak_kerja', $holding)
-                    ->select('users.kontrak_kerja', 'izins.*')
+                $table = Izin::leftJoin('karyawans', 'karyawans.id', 'izins.user_id')->where('izin', 'Pulang Cepat')
+                    ->where('karyawans.kontrak_kerja', $holding)
+                    ->select('karyawans.kontrak_kerja', 'izins.*')
                     ->get();
                 // dd($table);
                 return DataTables::of($table)
@@ -510,10 +510,10 @@ class IzinController extends Controller
                 $date2 = date('Y-m-d', strtotime($endDate));
                 // dd($date1, $date2);
                 // dd($tgl_mulai, $tgl_selesai);
-                $table = Izin::leftJoin('users', 'users.id', 'izins.user_id')->where('izin', 'Keluar Kantor')
-                    ->where('users.kontrak_kerja', $holding)
+                $table = Izin::leftJoin('karyawans', 'karyawans.id', 'izins.user_id')->where('izin', 'Keluar Kantor')
+                    ->where('karyawans.kontrak_kerja', $holding)
                     ->whereBetween('tanggal', [$date1, $date2])
-                    ->select('users.kontrak_kerja', 'izins.*')
+                    ->select('karyawans.kontrak_kerja', 'izins.*')
                     ->get();
                 // dd($table);
                 return DataTables::of($table)
@@ -625,9 +625,9 @@ class IzinController extends Controller
                 $now1 = Carbon::now()->endOfMonth();
 
                 // dd($tgl_mulai, $tgl_selesai);
-                $table = Izin::leftJoin('users', 'users.id', 'izins.user_id')->where('izin', 'Keluar kantor')
-                    ->where('users.kontrak_kerja', $holding)
-                    ->select('users.kontrak_kerja', 'izins.*')
+                $table = Izin::leftJoin('karyawans', 'karyawans.id', 'izins.user_id')->where('izin', 'Keluar kantor')
+                    ->where('karyawans.kontrak_kerja', $holding)
+                    ->select('karyawans.kontrak_kerja', 'izins.*')
                     ->get();
                 // dd($table);
                 return DataTables::of($table)
@@ -750,10 +750,10 @@ class IzinController extends Controller
                 $date2 = date('Y-m-d', strtotime($endDate));
                 // dd($date1, $date2);
                 // dd($tgl_mulai, $tgl_selesai);
-                $table = Izin::leftJoin('users', 'users.id', 'izins.user_id')->where('izin', 'Sakit')
-                    ->where('users.kontrak_kerja', $holding)
+                $table = Izin::leftJoin('karyawans', 'karyawans.id', 'izins.user_id')->where('izin', 'Sakit')
+                    ->where('karyawans.kontrak_kerja', $holding)
                     ->whereBetween('tanggal', [$date1, $date2])
-                    ->select('users.kontrak_kerja', 'izins.*')
+                    ->select('karyawans.kontrak_kerja', 'izins.*')
                     ->get();
                 // dd($table);
                 return DataTables::of($table)
@@ -832,9 +832,9 @@ class IzinController extends Controller
                 $now1 = Carbon::now()->endOfMonth();
 
                 // dd($tgl_mulai, $tgl_selesai);
-                $table = Izin::leftJoin('users', 'users.id', 'izins.user_id')->where('izin', 'Sakit')
-                    ->where('users.kontrak_kerja', $holding)
-                    ->select('users.kontrak_kerja', 'izins.*')
+                $table = Izin::leftJoin('karyawans', 'karyawans.id', 'izins.user_id')->where('izin', 'Sakit')
+                    ->where('karyawans.kontrak_kerja', $holding)
+                    ->select('karyawans.kontrak_kerja', 'izins.*')
                     ->get();
                 // dd($table);
                 return DataTables::of($table)
@@ -925,10 +925,10 @@ class IzinController extends Controller
                 $date2 = date('Y-m-d', strtotime($endDate));
                 // dd($date1, $date2);
                 // dd($tgl_mulai, $tgl_selesai);
-                $table = Izin::leftJoin('users', 'users.id', 'izins.user_id')->where('izin', 'Tidak Masuk (Mendadak)')
-                    ->where('users.kontrak_kerja', $holding)
+                $table = Izin::leftJoin('karyawans', 'karyawans.id', 'izins.user_id')->where('izin', 'Tidak Masuk (Mendadak)')
+                    ->where('karyawans.kontrak_kerja', $holding)
                     ->whereBetween('tanggal', [$date1, $date2])
-                    ->select('users.kontrak_kerja', 'izins.*')
+                    ->select('karyawans.kontrak_kerja', 'izins.*')
                     ->get();
                 // dd($table);
                 return DataTables::of($table)
@@ -1021,9 +1021,9 @@ class IzinController extends Controller
                 $now1 = Carbon::now()->endOfMonth();
 
                 // dd($tgl_mulai, $tgl_selesai);
-                $table = Izin::leftJoin('users', 'users.id', 'izins.user_id')->where('izin', 'Tidak Masuk (Mendadak)')
-                    ->where('users.kontrak_kerja', $holding)
-                    ->select('users.kontrak_kerja', 'izins.*')
+                $table = Izin::leftJoin('karyawans', 'karyawans.id', 'izins.user_id')->where('izin', 'Tidak Masuk (Mendadak)')
+                    ->where('karyawans.kontrak_kerja', $holding)
+                    ->select('karyawans.kontrak_kerja', 'izins.*')
                     ->get();
                 // dd($table);
                 return DataTables::of($table)
@@ -1116,28 +1116,29 @@ class IzinController extends Controller
     }
     public function cetak_form_izin($id)
     {
+        // dd('p');
         $izin = Izin::where('id', $id)->first();
-        $jabatan = Jabatan::join('users', function ($join) {
-            $join->on('jabatans.id', '=', 'users.jabatan_id');
-            $join->orOn('jabatans.id', '=', 'users.jabatan1_id');
-            $join->orOn('jabatans.id', '=', 'users.jabatan2_id');
-            $join->orOn('jabatans.id', '=', 'users.jabatan3_id');
-            $join->orOn('jabatans.id', '=', 'users.jabatan4_id');
-        })->where('users.id', $izin->user_id)->get();
-        $divisi = Divisi::join('users', function ($join) {
-            $join->on('divisis.id', '=', 'users.divisi_id');
-            $join->orOn('divisis.id', '=', 'users.divisi1_id');
-            $join->orOn('divisis.id', '=', 'users.divisi2_id');
-            $join->orOn('divisis.id', '=', 'users.divisi3_id');
-            $join->orOn('divisis.id', '=', 'users.divisi4_id');
-        })->where('users.id', $izin->user_id)->get();
+        $jabatan = Jabatan::join('karyawans', function ($join) {
+            $join->on('jabatans.id', '=', 'karyawans.jabatan_id');
+            $join->orOn('jabatans.id', '=', 'karyawans.jabatan1_id');
+            $join->orOn('jabatans.id', '=', 'karyawans.jabatan2_id');
+            $join->orOn('jabatans.id', '=', 'karyawans.jabatan3_id');
+            $join->orOn('jabatans.id', '=', 'karyawans.jabatan4_id');
+        })->where('karyawans.id', $izin->user_id)->get();
+        $divisi = Divisi::join('karyawans', function ($join) {
+            $join->on('divisis.id', '=', 'karyawans.divisi_id');
+            $join->orOn('divisis.id', '=', 'karyawans.divisi1_id');
+            $join->orOn('divisis.id', '=', 'karyawans.divisi2_id');
+            $join->orOn('divisis.id', '=', 'karyawans.divisi3_id');
+            $join->orOn('divisis.id', '=', 'karyawans.divisi4_id');
+        })->where('karyawans.id', $izin->user_id)->get();
         $date1          = new DateTime($izin->tanggal);
         $date2          = new DateTime($izin->tanggal_selesai);
         $interval       = $date1->diff($date2);
         $data_interval  = $interval->days + 1;
         // dd($data_interval);
         $departemen = Departemen::where('id', $izin->departements_id)->first();
-        $user_backup = User::where('id', $izin->user_id_backup)->first();
+        $user_backup = Karyawan::where('id', $izin->user_id_backup)->first();
         $jam_kerja = MappingShift::with('Shift')->where('user_id', $izin->user_id)->where('tanggal_masuk', date('Y-m-d'))->first();
         $data = [
             'data_izin' => Izin::with('User')->where('izins.id', $id)->where('izins.status_izin', '2')->first(),
@@ -1148,6 +1149,7 @@ class IzinController extends Controller
             'user_backup' => $user_backup,
             'data_interval' => $data_interval,
         ];
+        // dd($data);
         if ($izin->izin == 'Datang Terlambat') {
             $pdf = PDF::loadView('admin/izin/form_izin_terlambat', $data)->setPaper('A5', 'landscape');
             return $pdf->stream('FORM_KETERANGAN_DATANG_TERLAMBAT_' . $izin->fullname . '_' . date('Y-m-d H:i:s') . '.pdf');
@@ -1166,14 +1168,14 @@ class IzinController extends Controller
     {
         $date = date('YmdHis');
         $holding = request()->segment(count(request()->segments()));
-        $data =  Izin::leftJoin('users', 'users.id', 'izins.user_id')
+        $data =  Izin::leftJoin('karyawans', 'karyawans.id', 'izins.user_id')
             ->leftJoin('departemens', 'departemens.id', 'izins.departements_id')
             ->leftJoin('divisis', 'divisis.id', 'izins.divisi_id')
             ->leftJoin('jabatans', 'jabatans.id', 'izins.jabatan_id')
             ->where('izins.izin', $kategori)
-            ->where('users.kontrak_kerja', $holding)
-            // ->select('izins.no_form_izin', 'users.name', 'departemens.nama_departemen', 'divisis.nama_divisi', 'jabatans.nama_jabatan', 'izins.tanggal', 'izins.jam_masuk_kerja', 'izins.jam', 'izins.terlambat', 'izins.keterangan_izin', 'izins.ttd_pengajuan', 'izins.approve_atasan', 'izins.waktu_approve', 'izins.catatan', 'izins.status_izin')
-            ->select('izins.*', 'users.name', 'departemens.nama_departemen', 'divisis.nama_divisi', 'jabatans.nama_jabatan')
+            ->where('karyawans.kontrak_kerja', $holding)
+            // ->select('izins.no_form_izin', 'karyawans.name', 'departemens.nama_departemen', 'divisis.nama_divisi', 'jabatans.nama_jabatan', 'izins.tanggal', 'izins.jam_masuk_kerja', 'izins.jam', 'izins.terlambat', 'izins.keterangan_izin', 'izins.ttd_pengajuan', 'izins.approve_atasan', 'izins.waktu_approve', 'izins.catatan', 'izins.status_izin')
+            ->select('izins.*', 'karyawans.name', 'departemens.nama_departemen', 'divisis.nama_divisi', 'jabatans.nama_jabatan')
             ->get();
         return Excel::download(new IzinExport($holding, $kategori, $data), 'Data Izin Karyawan_' . $kategori . '_' . $holding . '_' . $date . '.xlsx');
     }

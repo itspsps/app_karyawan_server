@@ -362,7 +362,7 @@
                             </form>
                         </div>
                     </div>
-                    <table class="table" id="table_inventaris" style="width: 100%;">
+                    <table class="table" id="table_inventaris" style="width: 100%;font-size: smaller;">
                         <thead class="table-primary">
                             <tr>
                                 <th>No.</th>
@@ -475,7 +475,7 @@
         $('#serial_number_inventaris_update').val(sn);
         $('#foto_inventaris_lama').val(foto);
         if (foto != '') {
-            $('#template_foto_inventaris_update').attr('src', 'https://karyawan.sumberpangan.store/laravel/storage/app/public/foto_inventaris/' + foto);
+            $('#template_foto_inventaris_update').attr('src', 'https://hrd.sumberpangan.store:4430/storage/app/public/foto_inventaris/' + foto);
         }
         $('#kategori_inventaris_update option').filter(function() {
             // console.log($(this).val().trim());

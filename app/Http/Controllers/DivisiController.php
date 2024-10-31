@@ -7,6 +7,7 @@ use App\Models\Bagian;
 use App\Models\Departemen;
 use App\Models\Divisi;
 use App\Models\Jabatan;
+use App\Models\Karyawan;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
@@ -58,12 +59,13 @@ class DivisiController extends Controller
                     return $jumlah_bagian;
                 })
                 ->addColumn('jumlah_karyawan', function ($row) use ($holding) {
-                    $cek_karyawan = User::where('divisi_id', $row->id)
+                    $cek_karyawan = Karyawan::where('kontrak_kerja', $holding)
+                        ->where('status_aktif', 'AKTIF')
+                        ->where('divisi_id', $row->id)
                         ->orWhere('divisi1_id', $row->id)
                         ->orWhere('divisi2_id', $row->id)
                         ->orWhere('divisi3_id', $row->id)
                         ->orWhere('divisi4_id', $row->id)
-                        ->where('kontrak_kerja', $holding)
                         ->count();
                     if ($cek_karyawan == 0) {
                         $jumlah_karyawan = $cek_karyawan;
@@ -93,13 +95,15 @@ class DivisiController extends Controller
         if (request()->ajax()) {
             return DataTables::of($table)
                 ->addColumn('jumlah_karyawan', function ($row) use ($holding) {
-                    $karyawan = User::where('bagian_id', $row->id)
+                    $karyawan = Karyawan::where('bagian_id', $row->id)
+                        ->leftJoin('users as b', 'b.karyawan_id', 'karyawans.id')
                         ->orWhere('bagian1_id', $row->id)
                         ->orWhere('bagian2_id', $row->id)
                         ->orWhere('bagian3_id', $row->id)
                         ->orWhere('bagian4_id', $row->id)
                         ->where('kontrak_kerja', $holding)
-                        ->where('is_admin', 'user')
+                        ->where('status_aktif', 'AKTIF')
+                        ->where('b.is_admin', 'user')
                         ->count();
                     return $karyawan;
                 })
@@ -110,9 +114,11 @@ class DivisiController extends Controller
     public function karyawandivisi_datatable(Request $request, $id)
     {
         $holding = request()->segment(count(request()->segments()));
-        $table =   User::where('divisi_id', $id)
-            ->where('is_admin', 'user')
+        $table =   Karyawan::where('divisi_id', $id)
+            ->leftJoin('users as b', 'b.karyawan_id', 'karyawans.id')
+            ->where('b.is_admin', 'user')
             ->where('kontrak_kerja', $holding)
+            ->where('status_aktif', 'AKTIF')
             ->get();
         // dd($table);
         if (request()->ajax()) {
@@ -195,7 +201,7 @@ class DivisiController extends Controller
         $holding = request()->segment(count(request()->segments()));
         $cek_bagian = Bagian::where('divisi_id', $id)->where('holding', $holding)->count();
         if ($cek_bagian == 0) {
-            $cek_karyawan = User::where('bagian_id', $id)->where('kontrak_kerja', $holding)->count();
+            $cek_karyawan = Karyawan::where('bagian_id', $id)->where('kontrak_kerja', $holding)->where('status_aktif', 'AKTIF')->count();
             if ($cek_karyawan == 0) {
                 $divisi = Divisi::where('id', $id)->delete();
                 return response()->json(['status' => 1]);

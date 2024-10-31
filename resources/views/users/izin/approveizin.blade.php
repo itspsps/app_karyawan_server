@@ -19,7 +19,7 @@
         <div class="dz-info col-12">
             <span class="location d-block text-left">Form Izin&nbsp;
             </span>
-            @if(auth()->user()->kategori=='Karyawan Bulanan')
+            @if($user_karyawan->kategori=='Karyawan Bulanan')
             <h6 class="title">@if($user->kontrak_kerja == 'SP')
                 CV. SUMBER PANGAN
                 @elseif($user->kontrak_kerja == 'SPS')
@@ -30,8 +30,8 @@
             {{-- @foreach ($user  as $dep) --}}
             <h6 class="title">Department of "{{ $user->nama_departemen }}"</h6>
             {{-- @endforeach --}}
-            @elseif(auth()->user()->kategori=='Karyawan Harian')
-            <h6 class="title">{{auth()->user()->penempatan_kerja}}
+            @elseif($user_karyawan->kategori=='Karyawan Harian')
+            <h6 class="title">{{$user_karyawan->penempatan_kerja}}
             </h6>
             @endif
         </div>
@@ -85,7 +85,7 @@
                         @if($data->ttd_pengajuan=='')
                         <h6 class="text-center">kosong</h6>
                         @else
-                        <img src="{{ asset('public/signature/izin/'.$data->ttd_pengajuan.'.png') }}" style="width: 100%;" alt="">
+                        <img src="{{ asset('signature/izin/'.$data->ttd_pengajuan.'.png') }}" style="width: 100%;" alt="">
                         @endif
                         <p style="text-align: center;font-weight: bold">{{ \Carbon\Carbon::parse($data->waktu_ttd_pengajuan)->isoFormat('D MMMM Y HH:mm')}} WIB</p>
                     </div>
@@ -152,17 +152,21 @@
             <input type="text" class="form-control" value="Tanggal" readonly>
             <input type="date" name="tanggal" id="tanggal" value="{{$data->tanggal}}" readonly style="font-weight: bold" required placeholder="Tanggal" class="form-control">
         </div>
-        <div id="form_tgl_selesai" class="input-group">
-            <input type="text" class="form-control" value="Tanggal Selesai" readonly>
-            <input type="date" name="tanggal_selesai" id="tanggal_selesai" value="{{$data->tanggal_selesai}}" readonly style="font-weight: bold" placeholder="Tanggal" class="form-control">
-        </div>
         <div id="form_jam_pulang_cepat" class="input-group">
             <input type="text" class="form-control" value="Jam Keluar" readonly>
             <input type="time" name="jam_pulang_cepat" id="jam_pulang_cepat" @if($data->status_izin=='0') @else readonly @endif value="@if($jam_kerja=='') @else{{ \Carbon\Carbon::parse($jam_kerja->Shift->jam_keluar)->addHour(-3)->format('H:i')}}@endif" min="" style="font-weight: bold" placeholder="Jam Pulang" class="form-control">
         </div>
+        <div id="form_tgl_selesai" class="input-group">
+            <input type="text" class="form-control" value="Tanggal Selesai" readonly>
+            <input type="date" name="tanggal_selesai" id="tanggal_selesai" value="{{$data->tanggal_selesai}}" readonly style="font-weight: bold" placeholder="Tanggal" class="form-control">
+        </div>
         <div id="jam_masuk_kerja" class="input-group">
             <input type="text" class="form-control" value="Jam Masuk Kerja" readonly>
             <input type="time" id="jam_masuk" name="jam_masuk" value="{{$data->jam_masuk_kerja}}" readonly style="font-weight: bold" placeholder="Jam Masuk Kerja" class="form-control">
+        </div>
+        <div id="form_jam_kembali" class="input-group">
+            <input type="text" class="form-control" value="Jam Kembali" readonly>
+            <input type="time" id="jam_kembali" name="jam_kembali" value="{{$data->jam_kembali}}" readonly style="font-weight: bold" placeholder="Jam Kembali" class="form-control">
         </div>
         <div id="jam_datang" class="input-group">
             <input type="text" class="form-control" value="Jam Datang" readonly>
@@ -188,7 +192,7 @@
                 <div>
                     <div id="note" onmouseover="my_function();"></div>
                     <canvas id="the_canvas" width="auto" height="100px"></canvas>
-                    <p class="text-primary" style="text-align: center">Ttd : {{ Auth::user()->fullname }} {{ date('Y-m-d') }}</p>
+                    <p class="text-primary" style="text-align: center">Ttd : {{ $user_karyawan->name }} {{ date('Y-m-d') }}</p>
                     <hr>
                     <div class="text-center">
                         <input type="hidden" id="signature" name="signature">
@@ -239,6 +243,7 @@
         var izin = '{{$data->izin}}';
         var foto_izin = '{{$data->foto_izin}}';
         if (izin == 'Datang Terlambat') {
+            $('#form_jam_kembali').hide();
             $('#jam_masuk_kerja').show();
             $('#jam_datang').show();
             $('#form_terlambat').show();
@@ -250,6 +255,7 @@
                 $('#jam_masuk_kerja').hide();
                 $('#jam_datang').hide();
                 $('#form_terlambat').hide();
+                $('#form_jam_kembali').hide();
                 $('#form_jam_pulang_cepat').hide();
                 $('#form_user_backup').hide();
                 $('#form_tgl_selesai').show();
@@ -257,11 +263,13 @@
                 $('#jam_masuk_kerja').hide();
                 $('#jam_datang').hide();
                 $('#form_terlambat').hide();
+                $('#form_jam_kembali').hide();
                 $('#form_jam_pulang_cepat').hide();
                 $('#form_user_backup').hide();
                 $('#form_tgl_selesai').hide();
             }
         } else if (izin == 'Pulang Cepat') {
+            $('#form_jam_kembali').hide();
             $('#form_jam_pulang_cepat').show();
             $('#jam_masuk_kerja').hide();
             $('#form_terlambat').hide();
@@ -270,11 +278,21 @@
             $('#form_tgl_selesai').hide();
         } else if (izin == 'Tidak Masuk (Mendadak)') {
             $('#form_user_backup').show();
+            $('#form_jam_kembali').hide();
             $('#form_tgl_selesai').show();
             $('#jam_masuk_kerja').hide();
             $('#jam_datang').hide();
             $('#form_terlambat').hide();
             $('#form_jam_pulang_cepat').hide();
+        } else if (izin == 'Keluar Kantor') {
+            $('#form_user_backup').hide();
+            $('#jam_masuk_kerja').hide();
+            $('#jam_datang').hide();
+            $('#form_terlambat').hide();
+            $('#form_jam_pulang_cepat').show();
+            $('#form_jam_kembali').show();
+            $('#form_tgl_selesai').show();
+
         }
     });
 </script>

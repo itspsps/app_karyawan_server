@@ -13,11 +13,11 @@
     <table border="0" style="margin-top: -45px;" class="kop" width="100%">
         <tr>
             @if($data_izin->User->kontrak_kerja=='SP')
-            <td style="width:10%;"> <img src="{{ url('public/holding/assets/img/logosp.png') }}" width="80px" class="images"> </td>
+            <td style="width:10%;"> <img src="{{ url('holding/assets/img/logosp.png') }}" width="80px" class="images"> </td>
             @elseif($data_izin->User->kontrak_kerja=='SPS')
-            <td style="width:10%;"> <img src="{{ url('public/holding/assets/img/logosps.png') }}" width="80px" class="images"> </td>
+            <td style="width:10%;"> <img src="{{ url('holding/assets/img/logosps.png') }}" width="80px" class="images"> </td>
             @elseif($data_izin->User->kontrak_kerja=='SIP')
-            <td style="width:10%;"> <img src="{{ url('public/holding/assets/img/logosip.png') }}" width="80px" class="images"> </td>
+            <td style="width:10%;"> <img src="{{ url('holding/assets/img/logosip.png') }}" width="80px" class="images"> </td>
             @endif
             <td style="width:60%;">
                 @if($data_izin->User->kontrak_kerja=='SP')
@@ -30,7 +30,7 @@
             </td>
             <td style="width: 30%; vertical-align: bottom; font-size:6pt; text-align: right;">
                 @if($data_izin->User->kontrak_kerja=='SP')
-                @if($data_izin->User->kontrak_site=='KEDIRI')
+                @if($data_izin->User->penempatan_kerja=='CV. SUMBER PANGAN - KEDIRI')
                 <p>Jl. Raya Sambirobyong No.88 Kayen Kidul - KEDIRI <br>
                     Telp: 0354-548466, 0354-546859, Fax: 0354548465 <br>
                     Website:
@@ -38,8 +38,16 @@
                         www.beraskediri.com
                     </a>
                 </p>
-                @elseif($data_izin->User->kontrak_site=='TUBAN')
+                @elseif($data_izin->User->penempatan_kerja=='CV. SUMBER PANGAN - TUBAN')
                 <p>Jl. Raya Sambirobyong No.88 Kayen Kidul - TUBAN <br>
+                    Telp: 0354-548466, 0354-546859, Fax: 0354548465 <br>
+                    Website:
+                    <a href="www.beraskediri.com">
+                        www.beraskediri.com
+                    </a>
+                </p>
+                @else
+                <p>Jl. Raya Sambirobyong No.88 Kayen Kidul - KEDIRI <br>
                     Telp: 0354-548466, 0354-546859, Fax: 0354548465 <br>
                     Website:
                     <a href="www.beraskediri.com">
@@ -48,7 +56,7 @@
                 </p>
                 @endif
                 @elseif($data_izin->User->kontrak_kerja=='SPS')
-                @if($data_izin->User->kontrak_site=='KEDIRI')
+                @if($data_izin->User->penempatan_kerja=='PT. SURYA PANGAN SEMESTA - KEDIRI')
 
                 <p>Jl. Dusun Bringin No.300, Bringin, Wonosari - KEDIRI <br>
                     Telp: 0354-548466, 0354-546859, Fax: 0354548465 <br>
@@ -57,7 +65,7 @@
                         www.beraskediri.com
                     </a>
                 </p>
-                @elseif($data_izin->User->kontrak_site=='NGAWI')
+                @elseif($data_izin->User->penempatan_kerja=='PT. SURYA PANGAN SEMESTA - NGAWI')
                 <p>Jl. Raya Madiun-Ngawi KM No.13, Tambakromo - NGAWI <br>
                     Telp: 0354-548466, 0354-546859, Fax: 0354548465 <br>
                     Website:
@@ -65,7 +73,7 @@
                         www.beraskediri.com
                     </a>
                 </p>
-                @elseif($data_izin->User->kontrak_site=='SUBUANG')
+                @elseif($data_izin->User->penempatan_kerja=='PT. SURYA PANGAN SEMESTA - SUBANG')
                 <p>Jl. Pusaka Jaya Kebondanas - SUBANG <br>
                     Telp: 0354-548466, 0354-546859, Fax: 0354548465 <br>
                     Website:
@@ -112,7 +120,7 @@
             </tr>
             <tr>
                 <td>Nama Karyawan</td>
-                <td>:&nbsp;{{$data_izin->User->fullname}}</td>
+                <td>:&nbsp;{{$data_izin->User->name}}</td>
             </tr>
             <tr>
                 <td>Departemen</td>
@@ -153,15 +161,15 @@
         <tbody>
             <tr style="font-weight: bold;">
                 <td style="text-align: center;">
-                    <img src="{{ url('https://karyawan.sumberpangan.store/laravel/public/signature/'.$data_izin->ttd_pengajuan.'.png') }}" width="100%" alt="">
+                    <img src="{{ url('https://hrd.sumberpangan.store:4430/signature/'.$data_izin->ttd_pengajuan.'.png') }}" width="100%" alt="">
                     <p>({{$data_izin->fullname}})</p>
                 </td>
                 <td style="text-align: center;">
-                    <img src="{{ url('https://karyawan.sumberpangan.store/laravel/public/signature/'.$data_izin->ttd_atasan.'.png') }}" width="100%" alt="">
+                    <img src="{{ url('https://hrd.sumberpangan.store:4430/signature/'.$data_izin->ttd_atasan.'.png') }}" width="100%" alt="">
                     <p>({{$data_izin->approve_atasan}})</p>
                 </td>
                 <td style="text-align: center;">
-                    <img src="{{ url('https://karyawan.sumberpangan.store/laravel/public/signature/'.$data_izin->ttd_atasan.'.png') }}" width="100%" alt="">
+                    <img src="{{ url('https://hrd.sumberpangan.store:4430/signature/'.$data_izin->ttd_atasan.'.png') }}" width="100%" alt="">
                     <p>({{$data_izin->approve_atasan}})</p>
                 </td>
             </tr>

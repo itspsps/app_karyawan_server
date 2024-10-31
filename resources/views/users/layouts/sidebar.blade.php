@@ -2,10 +2,10 @@
 	<div class="sidebar">
 		<div class="author-box">
 			<div class="dz-media">
-				@if(Auth::user()->foto_karyawan == '' || Auth::user()->foto_karyawan == NULL)
+				@if($user_karyawan->foto_karyawan == '' || $user_karyawan->foto_karyawan == NULL)
 				<img src="{{asset('admin/assets/img/avatars/1.png')}}" class="rounded-circle" alt="author-image">
 				@else
-				<img src="{{ url('https://karyawan.sumberpangan.store/laravel/storage/app/public/foto_karyawan/'.Auth::user()->foto_karyawan) }}" class="rounded-circle" alt="author-image">
+				<img src="{{ asset('../storage/app/public/foto_karyawan/'.$user_karyawan->foto_karyawan) }}" class="rounded-circle" alt="author-image">
 				@endif
 			</div>
 			<div class="dz-info">
@@ -33,7 +33,7 @@
 								}
 					?>
 				</span>
-				<h5 class="name">{{ Auth::user()->name }}</h5>
+				<h5 class="name">{{$user_karyawan->name }}</h5>
 			</div>
 		</div>
 		<ul class="nav navbar-nav">

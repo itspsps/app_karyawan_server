@@ -30,7 +30,7 @@
                     </div>
                     <div class="modal fade" id="modal_import_jabatan" data-bs-backdrop="static" tabindex="-1">
                         <div class="modal-dialog modal-dialog-scrollable modal-lg">
-                            <form method="post" action="{{ url('/jabatan/ImportJabatan/'.$holding) }}" class="modal-content" enctype="multipart/form-data">
+                            <form method="post" action="@if(Auth::user()->is_admin =='hrd'){{ url('/hrd/jabatan/ImportJabatan/'.$holding) }}@else{{ url('/jabatan/ImportJabatan/'.$holding) }}@endif" class="modal-content" enctype="multipart/form-data">
                                 @csrf
                                 <div class="modal-header">
                                     <h4 class="modal-title" id="backDropModalTitle">Import Jabatan</h4>
@@ -68,7 +68,7 @@
                                         <p class="card-text">Departemen : </p>@if($divisi->Departemen==NULL)@else {{$divisi->Departemen->nama_departemen}} @endif
                                     </h6>
                                     <p class="card-text">({{$divisi->nama_divisi}})</p>
-                                    <a href="{{url('detail_jabatan',$divisi->id).'/'.$holding}}" class="btn btn-primary btn-sm waves-effect waves-light">Lihat Jabatan ({{count($divisi->Jabatan)}})</a>
+                                    <a href="@if(Auth::user()->is_admin =='hrd'){{url('hrd/detail_jabatan',$divisi->id).'/'.$holding}}@else{{url('detail_jabatan',$divisi->id).'/'.$holding}}@endif" class="btn btn-primary btn-sm waves-effect waves-light">Lihat Jabatan ({{count($divisi->Jabatan)}})</a>
                                 </div>
                             </div>
                         </div>
@@ -111,7 +111,7 @@
 <script>
     $('#nama_divisi').on('change', function() {
         let id_divisi = $(this).val();
-        let url = "{{url('/jabatan/get_bagian')}}" + "/" + id_divisi;
+        let url = "@if(Auth::user()->is_admin =='hrd'){{url('/hrd/jabatan/get_bagian')}}@else{{url('/jabatan/get_bagian')}}@endif" + "/" + id_divisi;
         // console.log(id_divisi);
         // console.log(url);
         $.ajax({
@@ -179,7 +179,7 @@
         let divisi = $('#nama_divisi').val();
         let level = $('#level_jabatan').val();
         let holding = '{{$holding}}';
-        let url = "{{url('atasan/get_jabatan')}}" + "/" + holding;
+        let url = "@if(Auth::user()->is_admin =='hrd'){{url('hrd/atasan/get_jabatan')}}@else{{url('atasan/get_jabatan')}}@endif" + "/" + holding;
         console.log(divisi);
         // console.log(url);
         $.ajax({
@@ -251,7 +251,7 @@
         let divisi = $('#nama_divisi_update').val();
         let level = $('#level_jabatan_update').val();
         let holding = '{{$holding}}';
-        let url = "{{url('atasan/get_jabatan')}}" + "/" + holding;
+        let url = "@if(Auth::user()->is_admin =='hrd'){{url('hrd/atasan/get_jabatan')}}@else{{url('atasan/get_jabatan')}}@endif" + "/" + holding;
         console.log(divisi);
         // console.log(url);
         $.ajax({
@@ -295,7 +295,7 @@
             // console.log($(this).val().trim());
             return $(this).val().trim() == bagian
         }).prop('selected', true)
-        let url = "{{url('atasan/edit/get_jabatan')}}" + "/" + holding;
+        let url = "@if(Auth::user()->is_admin =='hrd'){{url('hrd/atasan/edit/get_jabatan')}}@else{{url('atasan/edit/get_jabatan')}}@endif" + "/" + holding;
         console.log(divisi);
         // console.log(url);
         $.ajax({
@@ -341,7 +341,7 @@
         }).then((result) => {
             if (result.value) {
                 $.ajax({
-                    url: "{{ url('/jabatan/delete/') }}" + '/' + id + '/' + holding,
+                    url: "@if(Auth::user()->is_admin =='hrd'){{ url('/hrd/jabatan/delete/') }}@else{{ url('/jabatan/delete/') }}@endif" + '/' + id + '/' + holding,
                     type: "GET",
                     error: function() {
                         alert('Something is wrong');

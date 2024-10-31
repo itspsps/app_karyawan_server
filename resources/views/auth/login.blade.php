@@ -10,11 +10,15 @@
     <meta name="author" content="DexignZone" />
     <meta name="keywords" content="" />
     <meta name="robots" content="" />
-    <meta name="description" content="Jobie - Job Portal Mobile App Template ( Bootstrap 5 + PWA )" />
-    <meta property="og:title" content="Jobie - Job Portal Mobile App Template ( Bootstrap 5 + PWA )" />
-    <meta property="og:description" content="Jobie - Job Portal Mobile App Template ( Bootstrap 5 + PWA )" />
-    <meta property="og:image" content="https://jobie.dexignzone.com/mobile-app/xhtml/social-image.png" />
+    <meta name="description" content="HRD-APPS - SUMBER PANGAN -SURYA PANGAN SEMESTA" />
+    <meta property="og:title" content="HRD-APPS - SUMBER PANGAN -SURYA PANGAN SEMESTA" />
+    <meta property="og:description" content="HRD-APPS - SUMBER PANGAN -SURYA PANGAN SEMESTA" />
+    <meta property="og:image" content="{{ asset('holding/assets/img/logosp.png') }}" />
     <meta name="format-detection" content="telephone=no">
+    <!-- PWA  -->
+    <meta name="theme-color" content="#6777ef" />
+    <link rel="apple-touch-icon" href="{{ asset('holding/assets/img/logosp.png') }}">
+    <link rel="manifest" href="{{ asset('/manifest.json') }}">
 
     <!-- Favicons Icon -->
     <link rel="shortcut icon" type="image/x-icon" href="{{ asset('holding/assets/img/logosp.png') }}" />
@@ -86,7 +90,7 @@
 
                         </svg>
                         <h5 class="title">ANDA GAGAL LOGIN</h5>
-                        <p class="pwa-text">Pastikan Username dan Password Sesuai</p>
+                        <p class="pwa-text">PASTIKAN USERNAME DAN PASSWORD SESUAI</p>
                     </div>
                 </div>
             </div>
@@ -135,7 +139,105 @@
 
                         </svg>
                         <h5 class="title">ANDA GAGAL LOGIN</h5>
-                        <p class="pwa-text">User Non Aktif</p>
+                        <p class="pwa-text">USER NON AKTIF</p>
+                    </div>
+                </div>
+            </div>
+            @elseif(Session::has('karyawan_nonaktif'))
+            <div class="offcanvas offcanvas-bottom show text-center">
+                <div class="container">
+                    <div class="offcanvas-body small">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" viewBox="0 0 24 24">
+
+                            <defs>
+
+                                <style>
+                                    .cls-1 {
+                                        fill: #669df6;
+                                    }
+
+                                    .cls-1,
+                                    .cls-2 {
+                                        fill-rule: evenodd;
+                                    }
+
+                                    .cls-2 {
+                                        fill: #4285f4;
+                                    }
+                                </style>
+
+                            </defs>
+
+                            <title>Icon_24px_ErrorReporting_Color</title>
+
+                            <g data-name="Product Icons">
+
+                                <g>
+
+                                    <polygon id="Fill-1" class="cls-1" points="7 2 2 7 2 17 7 22 12 22 9.5 19.14 8.25 19.14 4.86 15.75 4.86 8.25 8.25 4.86 9.5 4.86 12 2 7 2" />
+
+                                    <polygon id="Fill-2" class="cls-1" points="14.5 2 12 4.86 15.75 4.86 19.14 8.25 19.14 15.75 15.75 19.14 12 19.14 14.5 22 17 22 22 17 22 7 17 2 14.5 2" />
+
+                                    <polygon id="Fill-3" class="cls-2" points="12 17 9.5 14.5 12 12 9.5 9.5 12 7 9.5 7 7 9.5 7 14.5 9.5 17 12 17" />
+
+                                    <polygon id="Fill-4" class="cls-2" points="14.5 7 12 9.5 14.5 12 12 14.5 14.5 17 17 14.5 17 9.5 14.5 7" />
+
+                                </g>
+
+                            </g>
+
+                        </svg>
+                        <h5 class="title">ANDA GAGAL LOGIN</h5>
+                        <p class="pwa-text">KARYAWAN NON AKTIF</p>
+                    </div>
+                </div>
+            </div>
+            @elseif(Session::has('karyawan_null'))
+            <div class="offcanvas offcanvas-bottom show text-center">
+                <div class="container">
+                    <div class="offcanvas-body small">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" viewBox="0 0 24 24">
+
+                            <defs>
+
+                                <style>
+                                    .cls-1 {
+                                        fill: #669df6;
+                                    }
+
+                                    .cls-1,
+                                    .cls-2 {
+                                        fill-rule: evenodd;
+                                    }
+
+                                    .cls-2 {
+                                        fill: #4285f4;
+                                    }
+                                </style>
+
+                            </defs>
+
+                            <title>Icon_24px_ErrorReporting_Color</title>
+
+                            <g data-name="Product Icons">
+
+                                <g>
+
+                                    <polygon id="Fill-1" class="cls-1" points="7 2 2 7 2 17 7 22 12 22 9.5 19.14 8.25 19.14 4.86 15.75 4.86 8.25 8.25 4.86 9.5 4.86 12 2 7 2" />
+
+                                    <polygon id="Fill-2" class="cls-1" points="14.5 2 12 4.86 15.75 4.86 19.14 8.25 19.14 15.75 15.75 19.14 12 19.14 14.5 22 17 22 22 17 22 7 17 2 14.5 2" />
+
+                                    <polygon id="Fill-3" class="cls-2" points="12 17 9.5 14.5 12 12 9.5 9.5 12 7 9.5 7 7 9.5 7 14.5 9.5 17 12 17" />
+
+                                    <polygon id="Fill-4" class="cls-2" points="14.5 7 12 9.5 14.5 12 12 14.5 14.5 17 17 14.5 17 9.5 14.5 7" />
+
+                                </g>
+
+                            </g>
+
+                        </svg>
+                        <h5 class="title">ANDA GAGAL LOGIN</h5>
+                        <p class="pwa-text">KARYAWAN NULL</p>
                     </div>
                 </div>
             </div>
@@ -224,6 +326,23 @@
     <script src="{{ asset('assets/assets_users/js/custom.js') }}"></script> -->
     <script src="{{asset('assets/assets_users/vendor/swiper/swiper-bundle.min.js')}}"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+    <script src="{{ asset('/sw.js') }}"></script>
+    <script>
+        if ("serviceWorker" in navigator) {
+            // Register a service worker hosted at the root of the
+            // site using the default scope.
+            navigator.serviceWorker.register("/sw.js").then(
+                (registration) => {
+                    console.log("Service worker registration succeeded:", registration);
+                },
+                (error) => {
+                    console.error(`Service worker registration failed: ${error}`);
+                },
+            );
+        } else {
+            console.error("Service workers are not supported.");
+        }
+    </script>
     <script>
         $("document").ready(function() {
             // console.log('ok');

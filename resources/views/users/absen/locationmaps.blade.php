@@ -75,8 +75,8 @@
         //   "<br>Longitude: " + position.coords.longitude;
         var lat_saya = position.coords.latitude;
         var long_saya = position.coords.longitude;
-        var nama_saya = '{{$user}}';
-        console.log(lat_saya, long_saya);
+        var nama_saya = '{{$user_karyawan->name}}';
+        // console.log(lat_saya, long_saya);
         // console.log(lokasi_kantor);
 
         var map = L.map('lokasi').setView([lat_saya, long_saya], 16);
@@ -87,10 +87,27 @@
             [-7.758657, 112.095336]
         ];
         var latlngs_sumberpangantuban = [
-            [-6.991185, 112.120763],
-            [-6.989174, 112.121394],
-            [-6.989563, 112.122751],
-            [-6.991437, 112.122061]
+            [-6.991758822037412, 112.12048943252134],
+            [-6.992285922956118, 112.12087444394012],
+            [-6.991649636772762, 112.12126324857486],
+            [-6.9918209446766015, 112.12162739730593],
+            [-6.99158186659566, 112.12182464453525],
+            [-6.991630811724543, 112.12207689339583],
+            [-6.988976733872493, 112.12301030070874],
+            [-6.988841110863623, 112.1225521606721],
+            [-6.988496578083082, 112.12262012506571],
+            [-6.988366830934185, 112.12224502050286],
+            [-6.988087592439392, 112.12137545996293],
+            [-6.98793810105542, 112.1214266105829],
+            [-6.987859124455924, 112.12116801578183],
+            [-6.988502219235255, 112.1209008958774],
+            [-6.988694019261298, 112.12132146764182],
+            [-6.989663035162432, 112.12098199978163],
+            [-6.9897194468028525, 112.12109850952719],
+            [-6.990145354468302, 112.12087117343832],
+            [-6.989959196198711, 112.12060689523501],
+            [-6.990190483734605, 112.12045628507613],
+            [-6.990653058462982, 112.12096779127609]
         ];
         var latlngs_suryapangansemestakediri = [
             [-7.811016, 112.079884],
@@ -113,6 +130,79 @@
             [-6.293955, 107.907789],
             [-6.295743, 107.907667]
         ];
+        // DEPO SIDOARJO
+        var latlngs_deposidoarjo = [
+            [-7.361735, 112.784873],
+            [-7.361757, 112.785147],
+            [-7.362231, 112.785102],
+            [-7.362195, 112.784741]
+        ];
+
+        // DEPO SAMARINDA
+        var latlngs_deposamarinda = [
+            [-0.46124004439708466, 117.1890440835615],
+            [-0.4612392469974343, 117.18918363302389],
+            [-0.46134587505367874, 117.18918108680002],
+            [-0.4613312150395592, 117.18903673736563]
+        ];
+
+        // DEPO DENPASAR
+        var latlngs_depodenpasar = [
+            [-8.652895481207116, 115.20293696056507],
+            [-8.652912717125513, 115.2030294967747],
+            [-8.652755926596885, 115.20305008509402],
+            [-8.652733064463064, 115.2029671528421]
+        ];
+
+        // DEPO MALANG
+        var latlngs_depomalang = [
+            [-7.967760845267797, 112.65873922458452],
+            [-7.967798033683292, 112.65879957428648],
+            [-7.967823932756354, 112.65878616324159],
+            [-7.967790064737394, 112.65872983685311]
+        ];
+        // DEPO PALANGKARAYA
+        var latlngs_depopalangkaraya = [
+            [-2.1739101807413506, 113.864207945572],
+            [-2.1737446735313326, 113.86422269772137],
+            [-2.173735292555323, 113.86412814985499],
+            [-2.1739061603235093, 113.86411876212357]
+        ];
+        // DEPO SEMARANG
+        var latlngs_deposemarang = [
+            [-7.003762008571239, 110.4547271253569],
+            [-7.003741376561739, 110.4546278836248],
+            [-7.003783306128471, 110.45461983699788],
+            [-7.003805934781971, 110.4547117026553]
+        ];
+        // DEPO BANDUNG
+        var latlngs_depobandung = [
+            [-6.887528841438018, 107.60032030611694],
+            [-6.887538161422427, 107.60048257975994],
+            [-6.887629364117361, 107.60047855644646],
+            [-6.887622041273895, 107.60032164722143]
+        ];
+
+        // DEPO SPS CIPINANG (JAKARTA)
+        var latlngs_depocipinang1 = [
+            [-6.21311187156196, 106.88544203302257],
+            [-6.2120446956529545, 106.88543065337363],
+            [-6.212025840935464, 106.88472511513999],
+            [-6.213168435595694, 106.88476684051939]
+        ];
+        var latlngs_depocipinang2 = [
+            [-6.211847347299506, 106.8808114012799],
+            [-6.211852680220818, 106.88181991185459],
+            [-6.212351308125068, 106.88182795848152],
+            [-6.212327310001449, 106.88079799023502]
+        ];
+        var latlngs_deposmarinda = [
+            [-0.46124004439708466, 117.1890440835615],
+            [-0.4612392469974343, 117.18918363302389],
+            [-0.46134587505367874, 117.18918108680002],
+            [-0.4613312150395592, 117.18903673736563]
+        ];
+
         var polygon = L.polygon(latlngs_sumberpangankediri, {
             color: 'purple'
         }).addTo(map);
@@ -128,12 +218,42 @@
         var polygon5 = L.polygon(latlngs_suryapangansemestasubang, {
             color: 'purple'
         }).addTo(map);
+        var polygon6 = L.polygon(latlngs_deposidoarjo, {
+            color: 'red'
+        }).addTo(map);
+        var polygon7 = L.polygon(latlngs_deposamarinda, {
+            color: 'red'
+        }).addTo(map);
+        var polygon8 = L.polygon(latlngs_depodenpasar, {
+            color: 'red'
+        }).addTo(map);
+        var polygon9 = L.polygon(latlngs_depomalang, {
+            color: 'red'
+        }).addTo(map);
+        var polygon10 = L.polygon(latlngs_depopalangkaraya, {
+            color: 'red'
+        }).addTo(map);
+        var polygon11 = L.polygon(latlngs_deposemarang, {
+            color: 'red'
+        }).addTo(map);
+        var polygon12 = L.polygon(latlngs_depobandung, {
+            color: 'red'
+        }).addTo(map);
+        var polygon13 = L.polygon(latlngs_depocipinang1, {
+            color: 'red'
+        }).addTo(map);
+        var polygon14 = L.polygon(latlngs_depocipinang2, {
+            color: 'red'
+        }).addTo(map);
+        var polygon15 = L.polygon(latlngs_deposmarinda, {
+            color: 'red'
+        }).addTo(map);
         L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
             maxZoom: 19,
-            attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+            attribution: ''
         }).addTo(map);
         const popupContent =
-            '<p style="font-size:9pt;">' +
+            '<p style="font-size:6pt;">' +
             nama_saya +
             '</p>';
         var marker = L.marker([lat_saya, long_saya]).addTo(map)

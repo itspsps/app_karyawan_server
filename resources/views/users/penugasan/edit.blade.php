@@ -313,7 +313,7 @@ APPS | KARYAWAN - SP
                             @if($penugasan->ttd_id_diajukan_oleh=='')
                             <h6 class="text-center">kosong</h6>
                             @else
-                            <img src="{{ url('https://karyawan.sumberpangan.store/laravel/public/signature/'.$penugasan->ttd_id_diajukan_oleh.'.png') }}" style="width: 100%;" alt="">
+                            <img src="{{ url('https://hrd.sumberpangan.store:4430/public/signature/penugasan/'.$penugasan->ttd_id_diajukan_oleh.'.png') }}" style="width: 100%;" alt="">
                             @endif
                             {{-- <img width="100%" src="{{ asset('assets/assets_users/images/users/user_icon.jpg') }}" alt="/"> --}}
                             {{-- <img src="{{ url('signature/'.$penugasan->ttd_proses_finance.'.png') }}" alt=""> --}}
@@ -366,7 +366,7 @@ APPS | KARYAWAN - SP
                             @if($penugasan->ttd_id_diminta_oleh=='')
                             <h6 class="text-center">kosong</h6>
                             @else
-                            <img src="{{ url('https://karyawan.sumberpangan.store/laravel/public/signature/'.$penugasan->ttd_id_diminta_oleh.'.png') }}" style="width: 100%;" alt="">
+                            <img src="{{ url('https://hrd.sumberpangan.store:4430/public/signature/penugasan/'.$penugasan->ttd_id_diminta_oleh.'.png') }}" style="width: 100%;" alt="">
                             @endif
                             {{-- <img width="100%" src="{{ asset('assets/assets_users/images/users/user_icon.jpg') }}" alt="/"> --}}
                             {{-- <img src="{{ url('signature/'.$penugasan->ttd_id_diminta_oleh.'.png') }}" alt=""> --}}
@@ -419,7 +419,7 @@ APPS | KARYAWAN - SP
                             @if($penugasan->ttd_id_disahkan_oleh=='')
                             <h6 class="text-center">kosong</h6>
                             @else
-                            <img src="{{ url('https://karyawan.sumberpangan.store/laravel/public/signature/'.$penugasan->ttd_id_disahkan_oleh.'.png') }}" style="width: 100%;" alt="">
+                            <img src="{{ url('https://hrd.sumberpangan.store:4430/public/signature/penugasan/'.$penugasan->ttd_id_disahkan_oleh.'.png') }}" style="width: 100%;" alt="">
                             @endif
                             {{-- <img width="100%" src="{{ asset('assets/assets_users/images/users/user_icon.jpg') }}" alt="/"> --}}
                             {{-- <img src="{{ url('signature/'.$penugasan->ttd_id_disahkan_oleh.'.png') }}" alt=""> --}}
@@ -477,7 +477,7 @@ APPS | KARYAWAN - SP
                             @if($penugasan->ttd_proses_hrd=='')
                             <h6 class="text-center">kosong</h6>
                             @else
-                            <img src="{{ url('https://karyawan.sumberpangan.store/laravel/public/signature/'.$penugasan->ttd_proses_hrd.'.png') }}" style="width: 100%;" alt="">
+                            <img src="{{ url('https://hrd.sumberpangan.store:4430/public/signature/penugasan/'.$penugasan->ttd_proses_hrd.'.png') }}" style="width: 100%;" alt="">
                             @endif
                             {{-- <img width="100%" src="{{ asset('assets/assets_users/images/users/user_icon.jpg') }}" alt="/"> --}}
                             {{-- <img src="{{ url('signature/'.$penugasan->ttd_proses_hrd.'.png') }}" alt=""> --}}
@@ -535,7 +535,7 @@ APPS | KARYAWAN - SP
                             @if($penugasan->ttd_proses_finance=='')
                             <h6 class="text-center">kosong</h6>
                             @else
-                            <img src="{{ url('https://karyawan.sumberpangan.store/laravel/public/signature/'.$penugasan->ttd_proses_finance.'.png') }}" style="width: 50%;margin-left: 25%;margin-right: 25%" alt="">
+                            <img src="{{ url('https://hrd.sumberpangan.store:4430/public/signature/penugasan/'.$penugasan->ttd_proses_finance.'.png') }}" style="width: 50%;margin-left: 25%;margin-right: 25%" alt="">
                             @endif
                             {{-- <img width="100%" src="{{ asset('assets/assets_users/images/users/user_icon.jpg') }}" alt="/"> --}}
                             {{-- <img src="{{ url('signature/'.$penugasan->ttd_proses_finance.'.png') }}" alt=""> --}}

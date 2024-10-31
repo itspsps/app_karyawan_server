@@ -27,8 +27,8 @@
     <!-- PWA Version -->
     {{-- <link rel="manifest" href="{{ asset('assets/assets_users/manifest.json') }}"> --}}
 
-    <!-- Stylesheets -->
     @include('users.layouts.css')
+    <!-- Stylesheets -->
     @yield('css')
 
     <!-- Google Fonts -->
@@ -49,8 +49,8 @@
                 <div class="container">
                     <div class="header-content">
                         <div class="left-content">
-                            <a href="{{url('/logout')}}">
-                                <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24" height="24" viewBox="0 0 24 24" version="1.1" class="svg-main-icon">
+                            <a href="javascript:void(0);" data-bs-toggle="offcanvas" data-bs-target="#offcanvas_logout" aria-controls="offcanvasBottom">
+                                <svg xmlns=" http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24" height="24" viewBox="0 0 24 24" version="1.1" class="svg-main-icon">
                                     <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
                                         <rect x="0" y="0" width="24" height="24" />
                                         <path d="M14.0069431,7.00607258 C13.4546584,7.00607258 13.0069431,6.55855153 13.0069431,6.00650634 C13.0069431,5.45446114 13.4546584,5.00694009 14.0069431,5.00694009 L15.0069431,5.00694009 C17.2160821,5.00694009 19.0069431,6.7970243 19.0069431,9.00520507 L19.0069431,15.001735 C19.0069431,17.2099158 17.2160821,19 15.0069431,19 L3.00694311,19 C0.797804106,19 -0.993056895,17.2099158 -0.993056895,15.001735 L-0.993056895,8.99826498 C-0.993056895,6.7900842 0.797804106,5 3.00694311,5 L4.00694793,5 C4.55923268,5 5.00694793,5.44752105 5.00694793,5.99956624 C5.00694793,6.55161144 4.55923268,6.99913249 4.00694793,6.99913249 L3.00694311,6.99913249 C1.90237361,6.99913249 1.00694311,7.89417459 1.00694311,8.99826498 L1.00694311,15.001735 C1.00694311,16.1058254 1.90237361,17.0008675 3.00694311,17.0008675 L15.0069431,17.0008675 C16.1115126,17.0008675 17.0069431,16.1058254 17.0069431,15.001735 L17.0069431,9.00520507 C17.0069431,7.90111468 16.1115126,7.00607258 15.0069431,7.00607258 L14.0069431,7.00607258 Z" fill="#fff" fill-rule="nonzero" opacity="0.3" transform="translate(9.006943, 12.000000) scale(-1, 1) rotate(-90.000000) translate(-9.006943, -12.000000) " />
@@ -98,9 +98,7 @@
         </div>
         <!-- Preloader end-->
 
-        <!-- Sidebar -->
-        @include('users.layouts.sidebar')
-        <!-- Sidebar End -->
+
 
         <!-- Banner -->
         <div class="banner-wrapper author-notification">
@@ -130,13 +128,13 @@
                                     }
                         ?>
                     </span>
-                    <h5 class="name mb-0">{{ Auth::user()->name }}</h5>
+                    <h5 class="name mb-0">{{ $user_karyawan->name }} </h5>
                 </div>
                 <div class="dz-media media-50 rounded-circle">
-                    @if(Auth::user()->foto_karyawan == '' || Auth::user()->foto_karyawan == NULL)
+                    @if($user_karyawan->foto_karyawan == '' || $user_karyawan->foto_karyawan == NULL)
                     <a href="{{route('profile')}}"><img src="{{asset('admin/assets/img/avatars/1.png')}}" class="rounded-circle" alt="author-image"></a>
                     @else
-                    <a href="{{route('profile')}}"><img src="{{ url('https://karyawan.sumberpangan.store/laravel/storage/app/public/foto_karyawan/'.Auth::user()->foto_karyawan) }}" class="rounded-circle" alt="author-image"></a>
+                    <a href="{{route('profile')}}"><img src="{{ asset('../storage/app/public/foto_karyawan/'.$user_karyawan->foto_karyawan) }}" class="rounded-circle" alt="author-image"></a>
                     @endif
                 </div>
             </div>

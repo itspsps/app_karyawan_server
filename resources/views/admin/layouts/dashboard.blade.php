@@ -11,26 +11,26 @@
     <meta name="description" content="" />
 
     <!-- Favicon -->
-    <link rel="icon" type="image/x-icon" href="{{asset('admin/assets/img/favicon/favicon.ico')}}" />
+    <link rel="icon" type="image/x-icon" href="{{asset('holding/assets/img/logosp.png')}}" />
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&ampdisplay=swap" rel="stylesheet" />
 
-    <link rel="stylesheet" href="{{asset('admin/assets/vendor/fonts/materialdesignicons.css')}}" />
+    <link rel="preload" href="{{asset('admin/assets/vendor/fonts/materialdesignicons.css')}}" as="style" onload="this.onload=null;this.rel='stylesheet'" />
 
     <!-- Menu waves for no-customizer fix -->
-    <link rel="stylesheet" href="{{asset('admin/assets/vendor/libs/node-waves/node-waves.css')}}" />
+    <link rel="preload" href="{{asset('admin/assets/vendor/libs/node-waves/node-waves.css')}}" as="style" onload="this.onload=null;this.rel='stylesheet'" />
 
     <!-- Core CSS -->
-    <link rel="stylesheet" href="{{asset('admin/assets/vendor/css/core.css')}}" class="template-customizer-core-css" />
-    <link rel="stylesheet" href="{{asset('admin/assets/vendor/css/theme-default.css')}}" class="template-customizer-theme-css" />
-    <link rel="stylesheet" href="{{asset('admin/assets/css/demo.css')}}" />
+    <link rel="preload" href="{{asset('admin/assets/vendor/css/core.css')}}" class="template-customizer-core-css" as="style" onload="this.onload=null;this.rel='stylesheet'" />
+    <link rel="preload" href="{{asset('admin/assets/vendor/css/theme-default.css')}}" class="template-customizer-theme-css" as="style" onload="this.onload=null;this.rel='stylesheet'" />
+    <link rel="preload" href="{{asset('admin/assets/css/demo.css')}}" as="style" onload="this.onload=null;this.rel='stylesheet'" />
 
     <!-- Vendors CSS -->
-    <link rel="stylesheet" href="{{asset('admin/assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.css')}}" />
-    <link rel="stylesheet" href="{{asset('admin/assets/vendor/libs/apex-charts/apex-charts.css')}}" />
+    <link rel="preload" href="{{asset('admin/assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.css')}}" as="style" onload="this.onload=null;this.rel='stylesheet'" />
+    <link rel="preload" href="{{asset('admin/assets/vendor/libs/apex-charts/apex-charts.css')}}" as="style" onload="this.onload=null;this.rel='stylesheet'" />
     @yield('css')
     <!-- Page CSS -->
 
@@ -119,6 +119,7 @@
     <!-- Place this tag in your head or just before your close body tag. -->
     <script async defer src="https://buttons.github.io/buttons.js"></script>
     @yield('js')
+
 
 </body>
 

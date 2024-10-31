@@ -46,6 +46,14 @@
                         www.beraskediri.com
                     </a>
                 </p>
+                @else
+                <p>Jl. Raya Sambirobyong No.88 Kayen Kidul - KEDIRI <br>
+                    Telp: 0354-548466, 0354-546859, Fax: 0354548465 <br>
+                    Website:
+                    <a href="www.beraskediri.com">
+                        www.beraskediri.com
+                    </a>
+                </p>
                 @endif
                 @elseif($data_izin->User->kontrak_kerja=='SPS')
                 @if($data_izin->User->penempatan_kerja=='PT.SURYA PANGAN SEMESTA - KEDIRI')
@@ -120,7 +128,7 @@
             </tr>
             <tr>
                 <td>Nama Karyawan</td>
-                <td>:&nbsp;{{$data_izin->User->fullname}}</td>
+                <td>:&nbsp;{{$data_izin->User->name}}</td>
             </tr>
             <tr>
                 <td>Departemen</td>
@@ -163,15 +171,15 @@
         <tbody>
             <tr style="font-weight: bold;font-size: 10pt;">
                 <td style="text-align: center;">
-                    <img src="{{ url('https://karyawan.sumberpangan.store/laravel/public/signature/'.$data_izin->ttd_pengajuan.'.png') }}" width="100%" alt="">
+                    <img src="{{ url('https://hrd.sumberpangan.store:4430/public/signature/izin/'.$data_izin->ttd_pengajuan.'.png') }}" width="100%" alt="">
                     <p>({{$data_izin->fullname}})</p>
                 </td>
                 <td style="text-align: center;">
-                    <img src="{{ url('https://karyawan.sumberpangan.store/laravel/public/signature/'.$data_izin->ttd_atasan.'.png') }}" width="100%" alt="">
+                    <img src="{{ url('https://hrd.sumberpangan.store:4430/public/signature/izin/'.$data_izin->ttd_atasan.'.png') }}" width="100%" alt="">
                     <p>({{$data_izin->approve_atasan}})</p>
                 </td>
                 <td style="text-align: center;">
-                    <img src="{{ url('https://karyawan.sumberpangan.store/laravel/public/signature/'.$data_izin->ttd_atasan.'.png') }}" width="100%" alt="">
+                    <img src="{{ url('https://hrd.sumberpangan.store:4430/public/signature/izin/'.$data_izin->ttd_atasan.'.png') }}" width="100%" alt="">
                     <p>({{$data_izin->approve_atasan}})</p>
                 </td>
             </tr>

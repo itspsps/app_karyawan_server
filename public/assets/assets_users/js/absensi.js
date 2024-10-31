@@ -9,7 +9,7 @@ let nomorTable
 function onLoadData(face, karyawan, angka) {
     // console.log(face);
     dataFaceJson = JSON.parse(face);
-    // console.log(dataFaceJson);
+    console.log(dataFaceJson);
     dataKaryawanJson = JSON.parse(karyawan);
     nomorTable = angka;
 }
@@ -31,10 +31,10 @@ const startVideo = () => {
 
 // console.log('as');
 Promise.all([
-    faceapi.nets.tinyFaceDetector.loadFromUri('../assets/assets_users/js/face-api.js/models'),
-    faceapi.nets.faceLandmark68Net.loadFromUri('../assets/assets_users/js/face-api.js/models'),
-    faceapi.nets.faceRecognitionNet.loadFromUri('../assets/assets_users/js/face-api.js/models'),
-    faceapi.nets.ssdMobilenetv1.loadFromUri('../assets/assets_users/js/face-api.js/models'),
+    faceapi.nets.tinyFaceDetector.loadFromUri('../public/assets/assets_users/js/face-api.js/models'),
+    faceapi.nets.faceLandmark68Net.loadFromUri('../public/assets/assets_users/js/face-api.js/models'),
+    faceapi.nets.faceRecognitionNet.loadFromUri('../public/assets/assets_users/js/face-api.js/models'),
+    faceapi.nets.ssdMobilenetv1.loadFromUri('../public/assets/assets_users/js/face-api.js/models'),
 ]).then(startVideo);
 
 Swal.fire({

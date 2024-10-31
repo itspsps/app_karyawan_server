@@ -1,6 +1,7 @@
 @extends('admin.layouts.dashboard')
 @section('css')
 <link rel="stylesheet" href="https://cdn.datatables.net/2.0.5/css/dataTables.bootstrap5.css">
+<link rel="stylesheet" type="text/css" href="{{ asset('assets/assets_users/css/daterangepicker.css') }}" />
 <style type="text/css">
     .my-swal {
         z-index: X;
@@ -15,14 +16,20 @@
     <div class="row">
         <div class="col-md-12">
             <div class="card mb-4">
-                <h4 class="card-header"><a href="{{url('karyawan/'.$holding)}}"><i class="mdi mdi-arrow-left-bold"></i></a>&nbsp;Profil</h4>
+                <div class="card-header">
+                    <a href="@if(Auth::user()->is_admin=='hrd'){{url('hrd/karyawan/detail/'.$karyawan->id.'/'.$holding)}}@else{{url('karyawan/detail/'.$karyawan->id.'/'.$holding)}}@endif" class="btn btn-sm btn-primary">
+                        <i class="mdi mdi-account-arrow-left"></i>
+                        &nbsp;Profil
+                    </a>
+                </div>
+                </ul>
                 <!-- Account -->
                 <div class="card-body">
                     <div class="d-flex align-items-start align-items-sm-center gap-4">
                         @if($karyawan->foto_karyawan == null)
                         <img src="{{asset('admin/assets/img/avatars/1.png')}}" alt="user-avatar" class="d-block w-px-120 h-px-120 rounded" id="template_foto_karyawan" />
                         @else
-                        <img src="https://karyawan.sumberpangan.store/laravel/storage/app/public/foto_karyawan/{{$karyawan->foto_karyawan}}" alt="user-avatar" class="d-block w-px-120 h-px-120 rounded" id="template_foto_karyawan" />
+                        <img src="https://hrd.sumberpangan.store:4430/storage/app/public/foto_karyawan/{{$karyawan->foto_karyawan}}" alt="user-avatar" class="d-block w-px-120 h-px-120 rounded" id="template_foto_karyawan" />
                         @endif
                         @if($karyawan->kategori=='Karyawan Bulanan')
                         <table>
@@ -30,7 +37,7 @@
                                 <th>Nama</th>
                                 <td>&nbsp;</td>
                                 <td>:</td>
-                                <td>{{$karyawan->fullname}}</td>
+                                <td>{{$karyawan->name}}</td>
                             </tr>
                             <tr>
                                 <th>Divisi</th>
@@ -65,7 +72,7 @@
                                 <td>&nbsp;</td>
                                 <td>:</td>
                                 <td>
-                                    @if($karyawan->kontrak_kerja=='SP') CV. SUMBER PANGAN @elseif($karyawan->kontrak_kerja=='SPS') PT. SURYA PANGAN SEMESTA @endif
+                                    @if($karyawan->kontrak_kerja=='SP') CV. SUMBER PANGAN @elseif($karyawan->kontrak_kerja=='SPS') PT. SURYA PANGAN SEMESTA @else CV. SUMBER INTI PANGAN @endif
                                 </td>
                             </tr>
                             <tr>
@@ -83,7 +90,7 @@
                                 <th>Nama</th>
                                 <td>&nbsp;</td>
                                 <td>:</td>
-                                <td>{{$karyawan->fullname}}</td>
+                                <td>{{$karyawan->name}}</td>
                             </tr>
                             <tr>
                                 <th>Jabatan</th>
@@ -111,10 +118,25 @@
                 <h4 class="card-header">Mapping Shift</h4>
                 <!-- Account -->
                 <div class="card-body">
-                    <button type="button" class="btn btn-sm btn-primary waves-effect waves-light mb-3" data-bs-toggle="modal" data-bs-target="#modal_tambah_shift"><i class="menu-icon tf-icons mdi mdi-plus"></i>Tambah&nbsp;Shift</button>
+                    <div class="row">
+                        <div class="col-md-3">
+                            <button type="button" class="btn btn-sm btn-primary waves-effect waves-light mb-3" data-bs-toggle="modal" data-bs-target="#modal_tambah_shift"><i class="menu-icon tf-icons mdi mdi-plus"></i>Tambah&nbsp;Shift</button>
+                        </div>
+                        <div class="col-md-9">
+                            <div id="reportrange" style="background: #fff; cursor: pointer; padding: 5px 10px; width: 100%">
+                                <button class="btn btn-outline-secondary waves-effect">
+                                    FILTER DATE : &nbsp;
+                                    <i class="mdi mdi-calendar-filter-outline"></i>&nbsp;
+                                    <span></span> <i class="mdi mdi-menu-down"></i>
+                                    <input type="date" id="start_date" name="start_date" hidden value="">
+                                    <input type="date" id="end_date" name="end_date" hidden value="">
+                                </button>
+                            </div>
+                        </div>
+                    </div>
                     <div class="modal fade" id="modal_tambah_shift" data-bs-backdrop="static" tabindex="-1">
                         <div class="modal-dialog modal-dialog-scrollable ">
-                            <form method="post" action="{{ url('/karyawan/shift/proses-tambah-shift/'.$holding) }}" class=" modal-content" enctype="multipart/form-data">
+                            <form method="post" action="@if(Auth::user()->is_admin=='hrd'){{ url('/hrd/karyawan/shift/proses-tambah-shift/'.$holding) }}@else{{ url('/karyawan/shift/proses-tambah-shift/'.$holding) }}@endif" class=" modal-content" enctype="multipart/form-data">
                                 @csrf
                                 <div class="modal-header">
                                     <h4 class="modal-title" id="backDropModalTitle">Tambah Shift</h4>
@@ -177,7 +199,7 @@
                     <!-- modal edit -->
                     <div class="modal fade" id="modal_edit_shift" data-bs-backdrop="static" tabindex="-1">
                         <div class="modal-dialog modal-dialog-scrollable ">
-                            <form method="post" action="{{ url('/karyawan/proses-edit-shift/'.$holding) }}" class=" modal-content" enctype="multipart/form-data">
+                            <form method="post" action="@if(Auth::user()->is_admin=='hrd'){{ url('hrd/karyawan/proses-edit-shift/'.$holding) }}@else{{ url('karyawan/proses-edit-shift/'.$holding) }}@endif" class=" modal-content" enctype="multipart/form-data">
                                 @method('put')
                                 @csrf
                                 <div class="modal-header">
@@ -206,12 +228,21 @@
                                             <input type="date" class="form-control @error('tanggal_update') is-invalid @enderror" id="tanggal_update" name="tanggal_update" value="{{ old('tanggal_update') }}">
                                             <label for="tanggal_update">Tanggal</label>
                                         </div>
-                                        @error('tanggal')
+                                        @error('tanggal_update')
                                         <span class="invalid-feedback" role="alert">
                                             <strong>{{ $message }}</strong>
                                         </span>
                                         @enderror
                                         <br>
+                                        <div class="form-floating form-floating-outline">
+                                            <input type="text" class="form-control @error('keterangan_update') is-invalid @enderror" id="keterangan_update" name="keterangan_update" value="{{ old('keterangan_update') }}">
+                                            <label for="keterangan_update">Keterangan</label>
+                                        </div>
+                                        @error('keterangan_update')
+                                        <span class="invalid-feedback" role="alert">
+                                            <strong>{{ $message }}</strong>
+                                        </span>
+                                        @enderror
                                     </div>
                                 </div>
                                 <div class="modal-footer">
@@ -248,82 +279,156 @@
 <script src="https://cdn.datatables.net/2.0.5/js/dataTables.js"></script>
 <script src="https://cdn.datatables.net/2.0.5/js/dataTables.bootstrap5.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
-<script>
-    let holding = window.location.pathname.split("/");
-    console.log(holding[3]);
-    console.log(holding[4]);
-    var table = $('#table_mapping_shift').DataTable({
-        pageLength: 50,
-        "scrollY": true,
-        "scrollX": true,
-        processing: true,
-        serverSide: true,
-        ajax: {
-            url: "{{ url('karyawan/mapping_shift_datatable') }}" + '/' + holding[3] + '/' + holding[4],
-        },
-        columns: [{
-                data: "id",
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
+<script type="text/javascript" src="{{ asset('assets/assets_users/js/daterangepicker.js') }}"></script>
+<script type="text/javascript">
+    $(function() {
 
-                render: function(data, type, row, meta) {
-                    return meta.row + meta.settings._iDisplayStart + 1;
+        var start = moment().subtract(29, 'days');
+        var end = moment();
+        var lstart, lend;
+        var start_date = document.getElementById("start_date");
+        var end_date = document.getElementById("end_date");
+
+        function cb(start, end) {
+            $('#reportrange span').html(start.format('D MMMM YYYY') + ' - ' + end.format('D MMMM YYYY'));
+            lstart = moment($('#reportrange').data('daterangepicker').startDate).format('YYYY-MM-DD');
+            lend = moment($('#reportrange').data('daterangepicker').endDate).format('YYYY-MM-DD');
+            start_date.value = lstart;
+            end_date.value = lend;
+            // console.log(lstart, lend)
+            load_data(lstart, lend);
+        }
+
+        $('#reportrange').daterangepicker({
+            startDate: start,
+            endDate: end,
+            ranges: {
+                'Today': [moment(), moment()],
+                'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+                'Last 7 Days': [moment().subtract(6, 'days'), moment()],
+                'Last 30 Days': [moment().subtract(29, 'days'), moment()],
+                'This Month': [moment().startOf('month'), moment().endOf('month')],
+                'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+            }
+        }, cb);
+
+        cb(start, end);
+
+    });
+</script>
+<script type="text/javascript">
+    let holding = window.location.pathname.split("/");
+    let auth = '{{ Auth::user()->is_admin }}';
+    if (auth == 'hrd') {
+        var holding1 = holding[4];
+        var holding2 = holding[5];
+    } else {
+        var holding1 = holding[3];
+        var holding2 = holding[4];
+    }
+    end_date = $('#end_date').val();
+    start_date = $('#start_date').val();
+    // $('#start_date').change(function() {
+    // })
+    // load_data(start_date, end_date);
+    // console.log(start_date, end_date);
+    // load_data();
+
+    function load_data(start_date = '', end_date = '') {
+        $('#table_mapping_shift').DataTable().destroy();
+        // console.log(start_date);
+        var table = $('#table_mapping_shift').DataTable({
+            pageLength: 50,
+            "scrollY": true,
+            "scrollX": true,
+            processing: true,
+            serverSide: true,
+            ajax: {
+                url: "@if(Auth::user()->is_admin=='hrd'){{ url('hrd/karyawan/mapping_shift_datatable') }}@else{{ url('karyawan/mapping_shift_datatable') }}@endif" + '/' + holding1 + '/' + holding2,
+                data: {
+                    start_date: start_date,
+                    end_date: end_date,
                 }
             },
-            {
-                data: 'nama_shift',
-                name: 'nama_shift'
-            },
-            {
-                data: 'tanggal_masuk',
-                name: 'tanggal_masuk'
-            },
-            {
-                data: 'jam_masuk',
-                name: 'jam_masuk'
-            },
-            {
-                data: 'tanggal_pulang',
-                name: 'tanggal_pulang'
-            },
-            {
-                data: 'jam_keluar',
-                name: 'jam_keluar'
-            },
-            {
-                data: 'status_absen',
-                name: 'status_absen'
-            },
-            {
-                data: 'option',
-                name: 'option'
-            },
+            columns: [{
+                    data: "id",
 
-        ],
-        order: [
-            [2, 'DESC'],
-            [0, 'DESC']
-        ]
-    });
+                    render: function(data, type, row, meta) {
+                        return meta.row + meta.settings._iDisplayStart + 1;
+                    }
+                },
+                {
+                    data: 'nama_shift',
+                    name: 'nama_shift'
+                },
+                {
+                    data: 'tanggal_masuk',
+                    name: 'tanggal_masuk'
+                },
+                {
+                    data: 'jam_masuk',
+                    name: 'jam_masuk'
+                },
+                {
+                    data: 'tanggal_pulang',
+                    name: 'tanggal_pulang'
+                },
+                {
+                    data: 'jam_keluar',
+                    name: 'jam_keluar'
+                },
+                {
+                    data: 'status_absen',
+                    name: 'status_absen'
+                },
+                {
+                    data: 'option',
+                    name: 'option'
+                },
+
+            ],
+            order: [
+                [2, 'ASC'],
+                [0, 'ASC']
+            ]
+        });
+    }
 </script>
 <script>
     $(document).on("click", "#btn_edit_mapping_shift", function() {
         let id = $(this).data('id');
         let user_id = $(this).data('userid');
         let tanggal = $(this).data("tanggal");
+        let tgl = new Date(tanggal);
+        let date_now = new Date();
         let shift = $(this).data("shift");
         let holding = $(this).data("holding");
-        console.log(tanggal);
+        let keterangan = $(this).data("keterangan");
+        console.log(tgl.getTime(), date_now.getTime());
         $('#id_shift').val(id);
         $('#tanggal_update').val(tanggal);
+        $('#keterangan_update').val(keterangan);
         $('#user_id').val(user_id);
         $('#shift_id_update option').filter(function() {
             // console.log($(this).val().trim());
             return $(this).val().trim() == shift
         }).prop('selected', true)
+        if (tgl.getTime() <= date_now.getTime()) {
+            Swal.fire({
+                title: 'Info!',
+                text: 'Tidak Bisa Di Ubah Ketika Melebihi Tanggal Sekarang',
+                icon: 'warning',
+                timer: 3000
+            })
+        } else {
+            $('#modal_edit_shift').modal('show');
+        }
     });
     $(document).on('click', '#btn_delete_mapping_shift', function() {
         var id = $(this).data('id');
         let holding = $(this).data("holding");
-        console.log(id);
+        // console.log(id);
         Swal.fire({
             title: 'Apakah kamu yakin?',
             text: "Kamu tidak dapat mengembalikan data ini",
@@ -335,7 +440,7 @@
         }).then((result) => {
             if (result.value) {
                 $.ajax({
-                    url: "{{ url('/karyawan/delete-shift') }}" + '/' + id + '/' + holding,
+                    url: "@if(Auth::user()->is_admin=='hrd'){{ url('/hrd/karyawan/delete-shift') }}@else{{ url('karyawan/mapping_shift_datatable') }}@endif" + '/' + id + '/' + holding,
                     type: "GET",
                     error: function() {
                         alert('Something is wrong');
@@ -362,4 +467,5 @@
 
     });
 </script>
+
 @endsection

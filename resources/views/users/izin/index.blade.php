@@ -13,7 +13,7 @@
         <div class="dz-info col-12">
             <span class="location d-block text-left">Form Izin&nbsp;
             </span>
-            @if(auth()->user()->kategori=='Karyawan Bulanan')
+            @if($user_karyawan->kategori=='Karyawan Bulanan')
             <h6 class="title">@if($user->kontrak_kerja == 'SP')
                 CV. SUMBER PANGAN
                 @elseif($user->kontrak_kerja == 'SPS')
@@ -24,8 +24,8 @@
             {{-- @foreach ($user  as $dep) --}}
             <h6 class="title">Department of "{{ $user->nama_departemen }}"</h6>
             {{-- @endforeach --}}
-            @elseif(auth()->user()->kategori=='Karyawan Harian')
-            <h6 class="title">{{auth()->user()->penempatan_kerja}}
+            @elseif($user_karyawan->kategori=='Karyawan Harian')
+            <h6 class="title">{{$user_karyawan->penempatan_kerja}}
             </h6>
             @endif
         </div>
@@ -96,6 +96,18 @@
             <line x1="9" y1="9" x2="15" y2="15"></line>
         </svg>
         <strong>error!</strong> &nbsp;Mapping Shift Kosong. Hubungi HRD.
+        <button class="btn-close" data-bs-dismiss="alert" aria-label="btn-close">
+            <i class="fa-solid fa-xmark"></i>
+        </button>
+    </div>
+    @elseif(Session::has('dataizin_duplicate'))
+    <div id="alert_izinduplicate" class="alert alert-danger light alert-lg alert-dismissible fade show">
+        <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" class="me-2">
+            <polygon points="7.86 2 16.14 2 22 7.86 22 16.14 16.14 22 7.86 22 2 16.14 2 7.86 7.86 2"></polygon>
+            <line x1="15" y1="9" x2="9" y2="15"></line>
+            <line x1="9" y1="9" x2="15" y2="15"></line>
+        </svg>
+        <strong>error!</strong> &nbsp;Data Izin Duplicate.
         <button class="btn-close" data-bs-dismiss="alert" aria-label="btn-close">
             <i class="fa-solid fa-xmark"></i>
         </button>
@@ -204,13 +216,27 @@
                                 <i class="fa-solid fa-xmark"></i>
                             </button>
                         </div>
+                        @if($getUserAtasan==NULL)
+                        <div class="alert alert-danger light alert-dismissible fade show">
+                            <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" class="me-2">
+                                <polygon points="7.86 2 16.14 2 22 7.86 22 16.14 16.14 22 7.86 22 2 16.14 2 7.86 7.86 2"></polygon>
+                                <line x1="15" y1="9" x2="9" y2="15"></line>
+                                <line x1="9" y1="9" x2="15" y2="15"></line>
+                            </svg>
+                            <strong>Info!</strong>&nbsp;Karyawan Atasan Kosong.
+                            <button class="btn-close" data-bs-dismiss="alert" aria-label="btn-close">
+                                <i class="fa-solid fa-xmark"></i>
+                            </button>
+                        </div>
+                        @else
+                        @endif
                         <div class="input-group">
-                            <input type="hidden" name="id_user" value="{{ Auth::user()->id }}">
+                            <input type="hidden" name="id_user" value="{{ $user_karyawan->id }}">
                             <input type="hidden" name="telp" value="{{ $data_user->telepon }}">
                             <input type="hidden" name="email" value="{{ $data_user->email }}">
                             <input type="hidden" name="departements" value="{{ $user->dept_id }}">
                             <input type="hidden" name="jabatan" value="{{ $user->jabatan_id }}">
-                            <input type="hidden" name="level_jabatan" value="@if(Auth::user()->kategori=='Karyawan Harian')@else{{ $user->level_jabatan }}@endif">
+                            <input type="hidden" name="level_jabatan" value="@if($user_karyawan->kategori=='Karyawan Harian')@else{{ $user->level_jabatan }}@endif">
                             <input type="hidden" name="divisi" value="{{ $user->divisi_id }}" id="">
                             @if($getUserAtasan==NULL)
                             <input type="hidden" name="id_user_atasan" value="">
@@ -220,7 +246,7 @@
                         </div>
                         <div class="input-group">
                             <input type="text" class="form-control" value="Name" readonly>
-                            <input type="text" class="form-control" name="fullname" value="{{ Auth::user()->name }}" style="font-weight: bold" readonly required>
+                            <input type="text" class="form-control" name="fullname" value="{{ $user_karyawan->name }}" style="font-weight: bold" readonly required>
                         </div>
                         <div class="input-group">
                             <input type="text" class="form-control" value="Kategori Izin" readonly>
@@ -471,30 +497,10 @@
         setTimeout(function() {
             // console.log('ok1');
             $("#alert_hapus_izin_sukses").remove();
-        }, 7000); // 7 secs
-
-    });
-    $("document").ready(function() {
-        // console.log('ok');
-        setTimeout(function() {
-            // console.log('ok1');
             $("#alert_izineditsuccess").remove();
-        }, 7000); // 7 secs
-
-    });
-    $("document").ready(function() {
-        // console.log('ok');
-        setTimeout(function() {
-            // console.log('ok1');
             $("#alert_addizin_success").remove();
-        }, 7000); // 7 secs
-
-    });
-    $("document").ready(function() {
-        // console.log('ok');
-        setTimeout(function() {
-            // console.log('ok1');
             $("#alert_atasankosong").remove();
+            $("#alert_izinduplicate").remove();
         }, 7000); // 7 secs
 
     });
@@ -503,7 +509,7 @@
     $(document).ready(function() {
         var jm_plg_cpt = '{{$jam_min_plg_cpt}}';
         var jm_kerja = '{{$jam_kerja}}';
-        console.log(jm_kerja);
+        // console.log(jm_kerja);
         $('#modal_surat').hide();
         $('#jam_masuk_kerja').hide();
         $('#jam_datang').hide();
@@ -711,7 +717,7 @@
         $('body').on("change", "#file_sakit", function() {
 
             let reader = new FileReader();
-            console.log(reader);
+            // console.log(reader);
             reader.onload = (e) => {
 
                 $('#template_foto_izin').attr('src', e.target.result);
