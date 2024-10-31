@@ -1297,7 +1297,6 @@
     </ul>
 </div>
 <!-- Categorie End -->
-<hr style="margin: 0;">
 
 @if($data_count > 0)
 <div class="mb10" style="margin-bottom: 5%; padding: 0%;">
