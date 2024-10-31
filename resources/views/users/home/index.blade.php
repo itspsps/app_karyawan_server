@@ -1317,8 +1317,8 @@
                 <div class="swiper-slide swiper-slide-prev" role="group" aria-label="1 / 4" style="margin-right: 10px;">
                     <a id="btn_klik" href="{{ url('/izin/approve/'.$a->id) }}">
                         <div class="card job-post" style="box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.2), 0 3px 10px 0 rgba(0, 0, 0, 0.1);">
-                            <div class="card-body" style="padding: 5px;">
-                                <div class="media media-50">
+                            <div class="card-body" style="padding: 6x;">
+                                <div class="media media-70">
                                     @if($a->User != '')
                                     @if($a->User->foto_karyawan != '')
                                     <img src="{{asset('../storage/app/public/foto_karyawan/'.$a->User->foto_karyawan)}}" alt="/">
@@ -1377,8 +1377,8 @@
                 <div class="swiper-slide swiper-slide-prev" role="group" aria-label="1 / 4" style="margin-right: 10px;">
                     <a id="btn_klik" href="{{ url('/cuti/approve/'.$a->id) }}">
                         <div class="card job-post" style="box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.2), 0 3px 10px 0 rgba(0, 0, 0, 0.1);">
-                            <div class="card-body" style="padding: 5px;">
-                                <div class="media media-50">
+                            <div class="card-body" style="padding: 6x;">
+                                <div class="media media-70">
                                     @if($a->User->foto_karyawan != '')
                                     <img src="{{asset('../storage/app/public/foto_karyawan/'.$a->User->foto_karyawan)}}" alt="/">
                                     @else
@@ -1437,8 +1437,8 @@
                 <div class="swiper-slide swiper-slide-prev" role="group" aria-label="1 / 4" style="margin-right: 10px;">
                     <a id="btn_klik" href="{{ url('/cuti/approve/'.$a->id) }}">
                         <div class="card job-post" style="box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.2), 0 3px 10px 0 rgba(0, 0, 0, 0.1);">
-                            <div class="card-body">
-                                <div class="media media-80">
+                            <div class="card-body" style="padding: 6x;">
+                                <div class="media media-70">
                                     @if($a->User->foto_karyawan != '')
                                     <img src="{{asset('../storage/app/public/foto_karyawan/'.$a->User->foto_karyawan)}}" alt="/">
                                     @else
@@ -1500,8 +1500,8 @@
                 <div class="swiper-slide swiper-slide-prev" role="group" aria-label="1 / 4" style="margin-right: 10px;">
                     <a id="btn_klik" href="{{ url('/penugasan/approve/diminta/show/'.$datapenugasan->id) }}">
                         <div class="card job-post" style="box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.2), 0 3px 10px 0 rgba(0, 0, 0, 0.1);">
-                            <div class="card-body">
-                                <div class="media media-80">
+                            <div class="card-body" style="padding: 6x;">
+                                <div class="media media-70">
                                     <img src="{{ asset('assets/assets_users/images/users/user_icon.jpg') }}" alt="/">
                                 </div>
                                 <div class="card-info">
@@ -1525,8 +1525,8 @@
                 <div class="swiper-slide swiper-slide-prev" role="group" aria-label="1 / 4" style="margin-right: 10px;">
                     <a id="btn_klik" href="{{ url('/penugasan/approve/diminta/show/'.$datapenugasan->id) }}">
                         <div class="card job-post" style="box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.2), 0 3px 10px 0 rgba(0, 0, 0, 0.1);">
-                            <div class="card-body">
-                                <div class="media media-80">
+                            <div class="card-body" style="padding: 6x;">
+                                <div class="media media-70">
                                     <img src="{{ asset('assets/assets_users/images/users/user_icon.jpg') }}" alt="/">
                                 </div>
                                 <div class="card-info">
