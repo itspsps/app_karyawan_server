@@ -83,7 +83,7 @@ class ReportController extends Controller
             ->where('kategori', 'Karyawan Bulanan')
             ->where('status_aktif', 'AKTIF')
             // ->where('name', 'MUHAMMAD FAIZAL IZAK')
-            ->select('karyawans.id', 'karyawans.name', 'karyawans.nomor_identitas_karyawan')
+            ->select('karyawans.name', 'karyawans.nomor_identitas_karyawan')
             ->orderBy('karyawans.name', 'ASC')
             // ->limit(2)
             ->get();

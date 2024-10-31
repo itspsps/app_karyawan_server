@@ -230,7 +230,8 @@
                 <span>Approval</span>
             </li>
             <li class="text-center">
-                <a class="nav-link" id="btn_klik" href="javascript:void(0);" onclick="event.preventDefault();document.getElementById('logout-form').submit();">
+                <a class="nav-link" href="javascript:void(0);" href="javascript:void(0);" data-bs-toggle="offcanvas" data-bs-target="#offcanvas_logout" aria-controls="offcanvasBottom">
+
                     <span class="dz-icon bg-red light">
                         <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="18" height="18" viewBox="0 0 24 24" version="1.1" class="svg-main-icon">
                             <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
@@ -243,9 +244,6 @@
                     </span>
                 </a>
                 <span>Logout</span>
-                <form id="logout-form" action="{{ route('logout') }}" method="GET" style="display: none;">
-                    {{ csrf_field() }}
-                </form>
             </li>
         </ul>
         <ul class="d-flex align-items-center">

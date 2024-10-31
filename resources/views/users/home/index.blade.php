@@ -1202,8 +1202,8 @@
 
 </div> -->
 <!-- Categorie -->
-<div class="categorie-section">
-    <div class="title-bar">
+<div class="categorie-section" style="margin-bottom: 5%; padding: 0%;">
+    <div class="title-bar" style="margin: 0;">
         <h6 class="dz-title">Layanan</h6>
     </div>
     <ul class="d-flex align-items-center">
@@ -1297,10 +1297,10 @@
     </ul>
 </div>
 <!-- Categorie End -->
-
+<hr style="margin: 0;">
 
 @if($data_count > 0)
-<div class="m-b10">
+<div class="mb10" style="margin-bottom: 5%; padding: 0%;">
     <div class="title-bar">
         <h5 class="dz-title">Approval</h5>
         <div class="swiper-defult-pagination pagination-dots style-1 p-0 swiper-pagination-clickable swiper-pagination-bullets">
@@ -1317,8 +1317,8 @@
                 <div class="swiper-slide swiper-slide-prev" role="group" aria-label="1 / 4" style="margin-right: 10px;">
                     <a id="btn_klik" href="{{ url('/izin/approve/'.$a->id) }}">
                         <div class="card job-post" style="box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.2), 0 3px 10px 0 rgba(0, 0, 0, 0.1);">
-                            <div class="card-body">
-                                <div class="media media-80">
+                            <div class="card-body" style="padding: 5px;">
+                                <div class="media media-50">
                                     @if($a->User != '')
                                     @if($a->User->foto_karyawan != '')
                                     <img src="{{asset('../storage/app/public/foto_karyawan/'.$a->User->foto_karyawan)}}" alt="/">
@@ -1377,8 +1377,8 @@
                 <div class="swiper-slide swiper-slide-prev" role="group" aria-label="1 / 4" style="margin-right: 10px;">
                     <a id="btn_klik" href="{{ url('/cuti/approve/'.$a->id) }}">
                         <div class="card job-post" style="box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.2), 0 3px 10px 0 rgba(0, 0, 0, 0.1);">
-                            <div class="card-body">
-                                <div class="media media-80">
+                            <div class="card-body" style="padding: 5px;">
+                                <div class="media media-50">
                                     @if($a->User->foto_karyawan != '')
                                     <img src="{{asset('../storage/app/public/foto_karyawan/'.$a->User->foto_karyawan)}}" alt="/">
                                     @else
@@ -1601,13 +1601,13 @@
         </div>
     </div>
 </div>
+<hr style="margin: 0;">
 @else
 @endif
 
-
 <!-- Features End -->
-<div class="categorie-section">
-    <div class="title-bar">
+<div class="categorie-section" style="margin: 0;">
+    <div class="title-bar" style="margin: 0;">
         <h6 class="title"> Absen&nbsp;Bulan&nbsp;
             <select class="month" style="width: max-content;border-radius: 0px; background-color:transparent; color: var(--primary); border: none;outline: none;" name="" id="month">
                 <option value="01">Januari</option>
@@ -1823,6 +1823,8 @@
         </div>
     </div>
 </div>
+
+<hr style="margin: 0;">
 <!-- Categorie -->
 <div class="categorie-section">
     <div class="title-bar">

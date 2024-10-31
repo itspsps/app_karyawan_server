@@ -89,21 +89,24 @@ class HomeUserController extends Controller
                 ->whereNotNull('ttd_user')
                 ->select('cutis.*', 'karyawans.name', 'karyawans.foto_karyawan')
                 ->get();
-            $datapenugasan  = DB::table('penugasans')->join('karyawans', 'karyawans.id', 'penugasans.id_user')
-                ->where('penugasans.status_penugasan', '!=', 5)
-                ->where('id_diminta_oleh', $user)
-                ->orWhere('id_disahkan_oleh', $user)
-                ->orWhere('id_user_hrd', $user)
-                ->orWhere('id_user_finance', $user)
-                ->select('penugasans.*', 'karyawans.name')
+            $datapenugasan  = Penugasan::with('User')
+                ->where('status_penugasan', '>', 1)
+                ->where('status_penugasan', '<', 5)
+                ->where(function ($query) use ($user) {
+                    $query->where('id_diminta_oleh', '=', $user)
+                        ->orWhere('id_disahkan_oleh', '=', $user)
+                        ->orWhere('id_user_hrd', '=', $user)
+                        ->orWhere('id_user_finance', '=', $user);
+                })
+                // ->select('penugasans.*', 'karyawans.name')
                 ->get();
             // dd($datapenugasan);
-            $data_user_penugasaan  = DB::table('penugasans')->join('karyawans', 'karyawans.id', 'penugasans.id_user')
+            $data_user_penugasaan  = Penugasan::with('User')
                 ->where('id_user', $user)
                 ->where('penugasans.status_penugasan', '5')
-                ->select('penugasans.*', 'karyawans.name')
+                // ->select('penugasans.*', 'karyawans.name')
                 ->get();
-            // dd($dataizin->count() + $datacuti_tingkat1->count() + $datacuti_tingkat2->count() + $datapenugasan->count());
+            // dd($dataizin, $datacuti_tingkat1, $datacuti_tingkat2, $datapenugasan);
             if (count($data_user_penugasaan) != 0) {
                 foreach ($data_user_penugasaan as $user_penugasan) {
                     if ($user_penugasan->wilayah_penugasan == 'Diluar Kantor') {
@@ -1738,6 +1741,14 @@ class HomeUserController extends Controller
                                 'kategory_activity' => 'ABSENSI',
                                 'activity' => 'Absen Masuk',
                                 'description' => 'Absen Masuk Tanggal ' . $tanggal . ' Jam ' . $update->jam_absen . ' Keterangan ' . $update->keterangan_absensi,
+                                'read_status' => 0
+                            ]);
+                            ActivityLog::create([
+                                'user_id' => Auth::user()->id,
+                                'object_id' => $update->id,
+                                'kategory_activity' => 'IZIN',
+                                'activity' => 'Izin Datang Terlambat',
+                                'description' => 'Pengajuan Datang Terlambat Tanggal ' . $tanggal . ' Jam ' . $update->jam_absen . ', Terlmbat : ' . $data->terlambat . ' Keterangan ' . $data->keterangan_izin,
                                 'read_status' => 0
                             ]);
                             $request->session()->flash('absenmasuksuccess');

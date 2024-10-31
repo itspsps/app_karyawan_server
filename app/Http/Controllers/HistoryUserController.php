@@ -18,10 +18,10 @@ class HistoryUserController extends Controller
     public function index()
     {
         $user_karyawan = Karyawan::where('id', Auth::user()->karyawan_id)->first();
-        $history_absensi = ActivityLog::where('kategory_activity', 'ABSENSI')->where('user_id', Auth::user()->id)->get();
-        $history_izin = ActivityLog::where('kategory_activity', 'IZIN')->where('user_id', Auth::user()->id)->get();
-        $history_cuti = ActivityLog::where('kategory_activity', 'CUTI')->where('user_id', Auth::user()->id)->get();
-        $history_penugasan = ActivityLog::where('kategory_activity', 'PENUGASAN')->where('user_id', Auth::user()->id)->get();
+        $history_absensi = ActivityLog::where('kategory_activity', 'ABSENSI')->where('user_id', Auth::user()->id)->orderBy('created_at', 'DESC')->get();
+        $history_izin = ActivityLog::where('kategory_activity', 'IZIN')->where('user_id', Auth::user()->id)->orderBy('created_at', 'DESC')->get();
+        $history_cuti = ActivityLog::where('kategory_activity', 'CUTI')->where('user_id', Auth::user()->id)->orderBy('created_at', 'DESC')->get();
+        $history_penugasan = ActivityLog::where('kategory_activity', 'PENUGASAN')->where('user_id', Auth::user()->id)->orderBy('created_at', 'DESC')->get();
         return view('users.history.index', [
             'title' => 'History',
             'user_karyawan' => $user_karyawan,
