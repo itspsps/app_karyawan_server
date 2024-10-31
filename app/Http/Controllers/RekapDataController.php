@@ -194,7 +194,7 @@ class RekapDataController extends Controller
             } else {
                 $now = Carbon::parse($request->filter_month)->startOfMonth();
                 $now1 = Carbon::parse($request->filter_month)->endOfMonth();
-                dd('p');
+                // dd('p');
                 // dd($tgl_mulai, $tgl_selesai);
                 $table = Karyawan::with('MappingShift')
                     ->where('kontrak_kerja', $holding)

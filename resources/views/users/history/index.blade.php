@@ -59,7 +59,7 @@
                             </div>
                             @else
                             @foreach($history_absensi as $history_absensi)
-                            <a href="">
+                            <a href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#modal_more_history_absensi_{{$history_absensi->id}}">
                                 <div class="notification" style="box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.2), 0 3px 10px 0 rgba(0, 0, 0, 0.1);">
                                     <h6>{{$history_absensi->activity}}</h6>
                                     <p>{{ \Illuminate\Support\Str::limit(strip_tags($history_absensi->description), 70) }}
@@ -79,6 +79,23 @@
                                     </div>
                                 </div>
                             </a>
+                            <div class="modal fade" id="modal_more_history_absensi_{{$history_absensi->id}}">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title">Modal title</h5>
+                                            <button class="btn-close" data-bs-dismiss="modal">
+                                                <i class="fa-solid fa-xmark"></i>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">Modal body text goes here.</div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-sm btn-danger light" data-bs-dismiss="modal">Close</button>
+                                            <button type="button" class="btn btn-sm btn-primary">Save changes</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                             @endforeach
                             @endif
                         </div>
@@ -93,7 +110,7 @@
                             </div>
                             @else
                             @foreach($history_izin as $history_izin)
-                            <a href="">
+                            <a href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#modal_more_history_izin_{{$history_izin->id}}">
                                 <div class="notification" style="box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.2), 0 3px 10px 0 rgba(0, 0, 0, 0.1);">
                                     <h6>{{$history_izin->activity}}</h6>
                                     <p>{{ \Illuminate\Support\Str::limit(strip_tags($history_izin->description), 70) }}
@@ -113,6 +130,23 @@
                                     </div>
                                 </div>
                             </a>
+                            <div class="modal fade" id="modal_more_history_izin_{{$history_izin->id}}">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title">Modal title</h5>
+                                            <button class="btn-close" data-bs-dismiss="modal">
+                                                <i class="fa-solid fa-xmark"></i>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">Modal body text goes here.</div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-sm btn-danger light" data-bs-dismiss="modal">Close</button>
+                                            <button type="button" class="btn btn-sm btn-primary">Save changes</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                             @endforeach
                             @endif
                         </div>
@@ -127,7 +161,7 @@
                             </div>
                             @else
                             @foreach($history_cuti as $history_cuti)
-                            <a href="">
+                            <a href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#modal_more_history_cuti_{{$history_cuti->id}}">
                                 <div class="notification" style="box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.2), 0 3px 10px 0 rgba(0, 0, 0, 0.1);">
                                     <h6>{{$history_cuti->activity}}</h6>
                                     <p>{{ \Illuminate\Support\Str::limit(strip_tags($history_cuti->description), 70) }}
@@ -147,6 +181,23 @@
                                     </div>
                                 </div>
                             </a>
+                            <div class="modal fade" id="modal_more_history_cuti_{{$history_cuti->id}}">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title">Modal title</h5>
+                                            <button class="btn-close" data-bs-dismiss="modal">
+                                                <i class="fa-solid fa-xmark"></i>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">Modal body text goes here.</div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-sm btn-danger light" data-bs-dismiss="modal">Close</button>
+                                            <button type="button" class="btn btn-sm btn-primary">Save changes</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                             @endforeach
                             @endif
                         </div>
@@ -161,7 +212,7 @@
                             </div>
                             @else
                             @foreach($history_penugasan as $history_penugasan)
-                            <a href="">
+                            <a href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#modal_more_history_penugasan_{{$history_penugasan->id}}">
                                 <div class="notification" style="box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.2), 0 3px 10px 0 rgba(0, 0, 0, 0.1);">
                                     <h6>{{$history_penugasan->activity}}</h6>
                                     <p>{{ \Illuminate\Support\Str::limit(strip_tags($history_penugasan->description), 70) }}

@@ -38,7 +38,7 @@
                                         </div>
                                         <div class="col-9 card-info" style="font-size: 9pt; text-align: left;">
                                             <h6 class="title">{{ $a->name }}</h6>
-                                            <span class="location">{{ $a->name }}</span>
+                                            <span class="location">{{ $a->Jabatan->nama_jabatan }}({{$a->Divisi->nama_divisi}})</span>
                                             <div class="d-flex">
                                                 <span style="font-size: 9pt;" class="ms-2 price-item"></span>
                                             </div>

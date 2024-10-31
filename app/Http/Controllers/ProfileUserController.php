@@ -298,7 +298,7 @@ class ProfileUserController extends Controller
     }
     public function lihat_jabatan()
     {
-        $user_karyawan = Karyawan::With('Departemen')->with('Divisi')->with('Bagian')->with('Jabatan')->where('id', Auth::user()->karyawan_id)->first();
+        $user_karyawan = Karyawan::With('Departemen')->with('Divisi')->with('Bagian')->with('Jabatan')->where('id', Auth::user()->karyawan_id)->where('status_aktif', 'AKTIF')->first();
         return view('users.profile.lihat_jabatan', [
             'title' => 'Profile',
             'user_karyawan' => $user_karyawan
@@ -323,7 +323,7 @@ class ProfileUserController extends Controller
     public function lihat_rekan_kerja()
     {
         $user_karyawan = Karyawan::where('id', Auth::user()->karyawan_id)->first();
-        $rekan_kerja = Karyawan::where('dept_id', $user_karyawan->dept_id)->get();
+        $rekan_kerja = Karyawan::With('Departemen')->with('Divisi')->with('Jabatan')->with('Bagian')->where('dept_id', $user_karyawan->dept_id)->where('divisi_id', $user_karyawan->divisi_id)->where('status_aktif', 'AKTIF')->get();
         return view('users.profile.lihat_rekan_kerja', [
             'title' => 'Profile',
             'rekan_kerja' => $rekan_kerja,
