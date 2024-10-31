@@ -135,6 +135,34 @@
                 </li>
             </ul>
         </li>
+        <li class="menu-item {{ Request::is('pg-data-recruitment*') ? 'active open' : '' }}{{ Request::is('pg-data-interview*') ? 'active open' : '' }} {{ Request::is('pg-data-ranking*') ? 'active open' : '' }} {{ Request::is('pg-data-ujian*') ? 'active open' : '' }}">
+            <a href="javascript:void(0);" class="menu-link menu-toggle">
+                <i class="menu-icon tf-icons mdi mdi-table-account"></i>
+                <div style="font-size: 10pt;" data-i18n="Data Master">Recruitment</div>
+            </a>
+            <ul class="menu-sub">
+                <li class="menu-item {{ Request::is('pg-data-recruitment*') ? 'active' : '' }}">
+                    <a href="{{ url('/pg-data-recruitment/'.$holding) }}" class=" menu-link">
+                        <div style="font-size: 10pt;" data-i18n="Without navbar"><i class="mdi mdi-account-arrow-left"></i>&nbsp;Data&nbsp;Recruitment</div>
+                    </a>
+                </li>
+                <li class="menu-item {{ Request::is('pg-data-interview*') ? 'active' : '' }}">
+                    <a href="{{ url('/pg-data-interview/'.$holding) }}" class="menu-link">
+                        <div style="font-size: 10pt;" data-i18n="Container"><i class="mdi mdi-file-chart-check-outline"></i>&nbsp;Data&nbsp;Interview</div>
+                    </a>
+                </li>
+                <li class="menu-item {{ Request::is('pg-data-ranking*') ? 'active' : '' }}">
+                    <a href="{{ url('/pg-data-ranking/'.$holding) }}" class="menu-link">
+                        <div style="font-size: 10pt;" data-i18n="Container"><i class="mdi mdi-file-chart-check-outline"></i>&nbsp;Ranking&nbsp;Interview</div>
+                    </a>
+                </li>
+                <li class="menu-item {{ Request::is('pg-data-ujian*') ? 'active' : '' }}">
+                    <a href="{{ url('/pg-data-ujian/'.$holding) }}" class=" menu-link">
+                        <div style="font-size: 10pt;" data-i18n="Without navbar"><i class="mdi mdi-account-arrow-left"></i>&nbsp;Data&nbsp;Ujian</div>
+                    </a>
+                </li>
+            </ul>
+        </li>
         <li class="menu-item {{ Request::is('izin*') ? 'active' : '' }}">
             <a href="{{ url('/izin/'.$holding) }}" class=" menu-link">
                 <i class="menu-icon tf-icons mdi mdi-calendar-filter-outline"></i>
