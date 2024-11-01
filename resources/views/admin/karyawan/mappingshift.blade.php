@@ -284,8 +284,8 @@
 <script type="text/javascript">
     $(function() {
 
-        var start = moment().subtract(29, 'days');
-        var end = moment();
+        var start = moment().startOf('month');
+        var end = moment().endOf('month');
         var lstart, lend;
         var start_date = document.getElementById("start_date");
         var end_date = document.getElementById("end_date");
