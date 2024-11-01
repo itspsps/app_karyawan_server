@@ -1515,6 +1515,10 @@ class HomeUserController extends Controller
             // dd($status_absen_skrg);
         }
         // dd($status_absen_skrg->status_absen);
+        if ($status_absen_skrg == NULL) {
+            $request->session()->flash('Mapping_shift_kosong');
+            return redirect('home');
+        }
         if ($status_absen_skrg->status_absen == "LIBUR") {
             $request->session()->flash('jam_kerja_libur');
             return redirect('home');

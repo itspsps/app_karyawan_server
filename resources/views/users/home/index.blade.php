@@ -807,7 +807,7 @@
         </button>
     </div>
 </div>
-@elseif(Session::has('penugasan_wilayah_kantor'))
+@elseif(Session::has('mapping_shift_null'))
 <div class="container" style="margin-top:-5%">
     <div class="alert alert-warning light alert-dismissible fade show">
         <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" class="me-2">
