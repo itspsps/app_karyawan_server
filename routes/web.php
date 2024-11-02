@@ -189,9 +189,6 @@ Route::middleware('auth:web', 'log.activity')->group(function () {
 
 
     // Mapping Shift User
-    Route::get('/mapping_shift/dashboard/', [MappingShiftController::class, 'index']);
-    Route::post('/mapping_shift/prosesAddMappingShift', [MappingShiftController::class, 'prosesAddMappingShift']);
-    Route::post('/mapping_shift/prosesEditMappingShift', [MappingShiftController::class, 'prosesEditMappingShift']);
 });
 Route::get('/tes', [authController::class, 'tes'])->name('tes');
 Route::get('/', [authController::class, 'index'])->name('login');
@@ -326,6 +323,9 @@ Route::middleware('admin')->group(function () {
     Route::get('/karyawan/mapping_shift/sp', [MappingShiftController::class, 'mapping_shift_index']);
     Route::get('/karyawan/mapping_shift/sps', [MappingShiftController::class, 'mapping_shift_index']);
     Route::get('/karyawan/mapping_shift/sip', [MappingShiftController::class, 'mapping_shift_index']);
+    Route::get('/karyawan/mapping_shift/{id}/sp', [MappingShiftController::class, 'mapping_shift_detail_index']);
+    Route::get('/karyawan/mapping_shift/{id}/sps', [MappingShiftController::class, 'mapping_shift_detail_index']);
+    Route::get('/karyawan/mapping_shift/{id}/sip', [MappingShiftController::class, 'mapping_shift_detail_index']);
     Route::get('/mapping_shift_datatable/sp', [MappingShiftController::class, 'mapping_shift_datatable']);
     Route::get('/mapping_shift_datatable/sps', [MappingShiftController::class, 'mapping_shift_datatable']);
     Route::get('/mapping_shift_datatable/sip', [MappingShiftController::class, 'mapping_shift_datatable']);
@@ -338,10 +338,19 @@ Route::middleware('admin')->group(function () {
     Route::get('/karyawan/edit-shift/sp', [MappingShiftController::class, 'editShift']);
     Route::get('/karyawan/edit-shift/sps', [MappingShiftController::class, 'editShift']);
     Route::get('/karyawan/edit-shift/sip', [MappingShiftController::class, 'editShift']);
+    Route::get('/karyawan/get_karyawan_selected', [MappingShiftController::class, 'get_karyawan_selected']);
 
     Route::get('/mapping_shift/get_divisi', [MappingShiftController::class, 'get_divisi']);
     Route::get('/mapping_shift/get_bagian', [MappingShiftController::class, 'get_bagian']);
     Route::get('/mapping_shift/get_jabatan', [MappingShiftController::class, 'get_jabatan']);
+
+
+    Route::get('mapping_shift/dashboard/', [MappingShiftController::class, 'index']);
+    Route::post('/karyawan/mapping_shift/prosesAddMappingShift/sp', [MappingShiftController::class, 'prosesAddMappingShift']);
+    Route::post('/karyawan/mapping_shift/prosesAddMappingShift/sps', [MappingShiftController::class, 'prosesAddMappingShift']);
+    Route::post('/karyawan/mapping_shift/prosesAddMappingShift/sip', [MappingShiftController::class, 'prosesAddMappingShift']);
+    Route::post('/karyawan/mapping_shift/prosesEditMappingShift', [MappingShiftController::class, 'prosesEditMappingShift']);
+
 
     //
     Route::get('/karyawan/get_departemen', [karyawanController::class, 'get_departemen']);
