@@ -440,7 +440,7 @@
         }).then((result) => {
             if (result.value) {
                 $.ajax({
-                    url: "@if(Auth::user()->is_admin=='hrd'){{ url('/hrd/karyawan/delete-shift') }}@else{{ url('karyawan/mapping_shift_datatable') }}@endif" + '/' + id + '/' + holding,
+                    url: "@if(Auth::user()->is_admin=='hrd'){{ url('/hrd/karyawan/delete-shift') }}@else{{ url('karyawan/delete-shift') }}@endif" + '/' + id + '/' + holding,
                     type: "GET",
                     error: function() {
                         alert('Something is wrong');
