@@ -65,6 +65,20 @@ class ReportController extends Controller
             $data_columns[] = ['data' => 'tanggal_' . $date->format('dmY'), 'name' => 'tanggal_' . $date->format('dmY')];
         }
         $count_period = count($period);
+
+        return array('data_columns_header' => $data_columns_header, 'count_period' => $count_period, 'datacolumn' => $data_columns, 'filter_month' => $request->filter_month);
+    }
+    public function get_filter_month(Request $request)
+    {
+        // dd($request->filter_month);
+        $start_date = Carbon::parse($request->filter_month)->startOfMonth();
+        $end_date = Carbon::parse($request->filter_month)->endOfMonth();
+        $period = CarbonPeriod::create($start_date, $end_date);
+        foreach ($period as $date) {
+            $data_columns_header[] = ['header' => $date->format('d/m/Y')];
+            $data_columns[] = ['data' => 'tanggal_' . $date->format('dmY'), 'name' => 'tanggal_' . $date->format('dmY')];
+        }
+        $count_period = count($period);
         return array('data_columns_header' => $data_columns_header, 'count_period' => $count_period, 'datacolumn' => $data_columns, 'filter_month' => $request->filter_month);
     }
     public function datatable(Request $request)
@@ -109,22 +123,37 @@ class ReportController extends Controller
         // dd($oke);
         $column->addColumn('total_tidak_hadir_kerja', function ($row) use ($now, $now1) {
             $id_karyawan = Karyawan::where('nomor_identitas_karyawan', $row->nomor_identitas_karyawan)->value('id');
-            $total_tidak_hadir_kerja = MappingShift::where('user_id', $id_karyawan)->whereBetween('tanggal_masuk', [$now, $now1])->where('status_absen', 'TIDAK HADIR KERJA')->whereIn('keterangan_dinas', ['FALSE', 'false', ''])->whereIn('keterangan_cuti', ['FALSE', 'false', ''])->whereIn('keterangan_izin', ['FALSE', 'false', ''])->count() . " x";
+            $total_tidak_hadir_kerja = MappingShift::where('user_id', $id_karyawan)->whereBetween('tanggal_masuk', [$now, $now1])->where('keterangan_absensi', '')->where('keterangan_absensi_pulang', '')->whereIn('status_absen', ['TIDAK HADIR KERJA', ''])->whereIn('keterangan_dinas', ['FALSE', 'false', ''])->whereIn('keterangan_cuti', ['FALSE', 'false', ''])->whereIn('keterangan_izin', ['FALSE', 'false', ''])->count();
+            return $total_tidak_hadir_kerja;
+        });
+        $column->addColumn('total_cuti', function ($row) use ($now, $now1) {
+            $id_karyawan = Karyawan::where('nomor_identitas_karyawan', $row->nomor_identitas_karyawan)->value('id');
+            $total_tidak_hadir_kerja = MappingShift::where('user_id', $id_karyawan)->whereBetween('tanggal_masuk', [$now, $now1])->where('keterangan_absensi', 'CUTI')->where('keterangan_absensi_pulang', 'CUTI')->where('status_absen', 'TIDAK HADIR KERJA')->whereIn('keterangan_cuti', ['TRUE', 'True', 'true'])->count();
+            return $total_tidak_hadir_kerja;
+        });
+        $column->addColumn('total_izin_sakit', function ($row) use ($now, $now1) {
+            $id_karyawan = Karyawan::where('nomor_identitas_karyawan', $row->nomor_identitas_karyawan)->value('id');
+            $total_tidak_hadir_kerja = MappingShift::where('user_id', $id_karyawan)->whereBetween('tanggal_masuk', [$now, $now1])->where('keterangan_absensi', 'IZIN SAKIT')->where('keterangan_absensi_pulang', 'IZIN SAKIT')->where('status_absen', 'TIDAK HADIR KERJA')->whereIn('keterangan_dinas', ['TRUE', 'true', 'True'])->whereIn('keterangan_cuti', ['FALSE', 'false', ''])->whereIn('keterangan_izin', ['FALSE', 'false', ''])->count();
+            return $total_tidak_hadir_kerja;
+        });
+        $column->addColumn('total_izin_lainnya', function ($row) use ($now, $now1) {
+            $id_karyawan = Karyawan::where('nomor_identitas_karyawan', $row->nomor_identitas_karyawan)->value('id');
+            $total_tidak_hadir_kerja = MappingShift::where('user_id', $id_karyawan)->whereBetween('tanggal_masuk', [$now, $now1])->where('keterangan_absensi', 'IZIN TIDAK MASUK')->where('keterangan_absensi_pulang', 'IZIN TIDAK MASUK')->where('status_absen', 'TIDAK HADIR KERJA')->whereIn('keterangan_dinas', ['FALSE', 'false', ''])->whereIn('keterangan_cuti', ['FALSE', 'false', ''])->whereIn('keterangan_izin', ['TRUE', 'True', 'true'])->count();
             return $total_tidak_hadir_kerja;
         });
         $column->addColumn('total_libur', function ($row) use ($now, $now1) {
             $id_karyawan = Karyawan::where('nomor_identitas_karyawan', $row->nomor_identitas_karyawan)->value('id');
-            $total_libur = MappingShift::where('user_id', $id_karyawan)->whereBetween('tanggal_masuk', [$now, $now1])->where('status_absen', 'LIBUR')->count() . " x";
+            $total_libur = MappingShift::where('user_id', $id_karyawan)->whereBetween('tanggal_masuk', [$now, $now1])->where('status_absen', 'LIBUR')->count();
             return $total_libur;
         });
         $column->addColumn('total_semua', function ($row) use ($now, $now1) {
             $id_karyawan = Karyawan::where('nomor_identitas_karyawan', $row->nomor_identitas_karyawan)->value('id');
             $total_hadir = MappingShift::where('user_id', $id_karyawan)->whereBetween('tanggal_masuk', [$now, $now1])->where('status_absen', 'HADIR KERJA')->count();
-            $total_tidak_hadir = MappingShift::where('user_id', $id_karyawan)->whereBetween('tanggal_masuk', [$now, $now1])->where('status_absen', 'TIDAK HADIR KERJA')->count();
+            $total_tidak_hadir = MappingShift::where('user_id', $id_karyawan)->whereBetween('tanggal_masuk', [$now, $now1])->where('keterangan_absensi', '')->where('keterangan_absensi_pulang', '')->whereIn('status_absen', ['TIDAK HADIR KERJA', ''])->whereIn('keterangan_dinas', ['FALSE', 'false', ''])->whereIn('keterangan_cuti', ['FALSE', 'false', ''])->whereIn('keterangan_izin', ['FALSE', 'false', ''])->count();
             $total_semua = ($total_hadir + $total_tidak_hadir);
             return $total_semua;
         });
-        return $column->rawColumns(['total_hadir_kerja', 'total_tidak_hadir_kerja', 'total_libur', 'total_semua'])
+        return $column->rawColumns(['total_hadir_kerja', 'total_tidak_hadir_kerja', 'total_libur', 'total_semua', 'total_izin_lainnya', 'total_izin_sakit', 'total_cuti'])
             ->make(true);
         // }
     }

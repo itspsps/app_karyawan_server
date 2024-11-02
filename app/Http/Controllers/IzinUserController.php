@@ -1596,13 +1596,14 @@ class IzinUserController extends Controller
 
                             foreach ($daterange as $date) {
                                 $tanggal = $date->format("Y-m-d");
-                                $update = MappingShift::where('user_id', $request->id_user)
-                                    ->whereDate('tanggal_masuk', $tanggal)
-                                    ->update([
-                                        'status_absen' => 'TIDAK HADIR KERJA',
-                                        'keterangan_izin' => 'FALSE',
-                                        'izin_id' => $request->id
-                                    ]);
+                                $update_mapping = MappingShift::where('user_id', $request->id_user)->whereDate('tanggal_masuk', $tanggal)->first();
+                                $update_mapping->keterangan_absensi = 'IZIN SAKIT';
+                                $update_mapping->keterangan_absensi_pulang = 'IZIN SAKIT';
+                                $update_mapping->kelengkapan_absensi = 'IZIN SAKIT NOT APPROVED, POTONG SALDO CUTI 2';
+                                $update_mapping->status_absen = 'TIDAK HADIR KERJA';
+                                $update_mapping->keterangan_izin = 'FALSE';
+                                $update_mapping->izin_id = $request->id;
+                                $update_mapping->update();
                             }
                             $alert = $request->session()->flash('approveizin_not_approve');
                             return response()->json($alert);
@@ -1628,14 +1629,14 @@ class IzinUserController extends Controller
 
                             foreach ($daterange as $date) {
                                 $tanggal = $date->format("Y-m-d");
-                                $update = MappingShift::where('user_id', $request->id_user)
-                                    ->whereDate('tanggal_masuk', $tanggal)
-                                    ->update([
-                                        'kelengkapan_absensi' => 'Izin Sakit Disetujui',
-                                        'status_absen' => 'TIDAK HADIR KERJA',
-                                        'keterangan_izin' => 'TRUE',
-                                        'izin_id' => $request->id
-                                    ]);
+                                $update_mapping = MappingShift::where('user_id', $request->id_user)->whereDate('tanggal_masuk', $tanggal)->first();
+                                $update_mapping->keterangan_absensi = 'IZIN SAKIT';
+                                $update_mapping->keterangan_absensi_pulang = 'IZIN SAKIT';
+                                $update_mapping->kelengkapan_absensi = 'IZIN SAKIT APPROVED, POTONG SALDO CUTI 2';
+                                $update_mapping->status_absen = 'TIDAK HADIR KERJA';
+                                $update_mapping->keterangan_izin = 'TRUE';
+                                $update_mapping->izin_id = $request->id;
+                                $update_mapping->update();
                             }
                             $alert = $request->session()->flash('approveizin_success');
                             return response()->json($alert);
@@ -1659,13 +1660,14 @@ class IzinUserController extends Controller
 
                             foreach ($daterange as $date) {
                                 $tanggal = $date->format("Y-m-d");
-                                $update = MappingShift::where('user_id', $request->id_user)
-                                    ->whereDate('tanggal_masuk', $tanggal)
-                                    ->update([
-                                        'status_absen' => 'TIDAK HADIR KERJA',
-                                        'keterangan_izin' => 'FALSE',
-                                        'izin_id' => $request->id
-                                    ]);
+                                $update_mapping = MappingShift::where('user_id', $request->id_user)->whereDate('tanggal_masuk', $tanggal)->first();
+                                $update_mapping->keterangan_absensi = 'IZIN SAKIT';
+                                $update_mapping->keterangan_absensi_pulang = 'IZIN SAKIT';
+                                $update_mapping->kelengkapan_absensi = 'IZIN SAKIT NOT APPROVED, POTONG GAJI KETERANGAN TANPA SKD';
+                                $update_mapping->status_absen = 'TIDAK HADIR KERJA';
+                                $update_mapping->keterangan_izin = 'FALSE';
+                                $update_mapping->izin_id = $request->id;
+                                $update_mapping->update();
                             }
                             $alert = $request->session()->flash('approveizin_not_approve');
                             return response()->json($alert);
@@ -1687,14 +1689,14 @@ class IzinUserController extends Controller
 
                             foreach ($daterange as $date) {
                                 $tanggal = $date->format("Y-m-d");
-                                $update = MappingShift::where('user_id', $request->id_user)
-                                    ->whereDate('tanggal_masuk', $tanggal)
-                                    ->update([
-                                        'kelengkapan_absensi' => 'Potong Gaji ,izin sakit tanpa SKD',
-                                        'status_absen' => 'TIDAK HADIR KERJA',
-                                        'keterangan_izin' => 'TRUE',
-                                        'izin_id' => $request->id
-                                    ]);
+                                $update_mapping = MappingShift::where('user_id', $request->id_user)->whereDate('tanggal_masuk', $tanggal)->first();
+                                $update_mapping->keterangan_absensi = 'IZIN SAKIT';
+                                $update_mapping->keterangan_absensi_pulang = 'IZIN SAKIT';
+                                $update_mapping->kelengkapan_absensi = 'IZIN SAKIT APPROVED, POTONG GAJI KETERANGAN TANPA SKD';
+                                $update_mapping->status_absen = 'TIDAK HADIR KERJA';
+                                $update_mapping->keterangan_izin = 'TRUE';
+                                $update_mapping->izin_id = $request->id;
+                                $update_mapping->update();
                             }
                             $alert = $request->session()->flash('approveizin_success');
                             return response()->json($alert);
@@ -1719,13 +1721,14 @@ class IzinUserController extends Controller
 
                             foreach ($daterange as $date) {
                                 $tanggal = $date->format("Y-m-d");
-                                $update = MappingShift::where('user_id', $request->id_user)
-                                    ->whereDate('tanggal_masuk', $tanggal)
-                                    ->update([
-                                        'status_absen' => 'TIDAK HADIR KERJA',
-                                        'keterangan_izin' => 'FALSE',
-                                        'izin_id' => $request->id
-                                    ]);
+                                $update_mapping = MappingShift::where('user_id', $request->id_user)->whereDate('tanggal_masuk', $tanggal)->first();
+                                $update_mapping->keterangan_absensi = 'IZIN SAKIT';
+                                $update_mapping->keterangan_absensi_pulang = 'IZIN SAKIT';
+                                $update_mapping->kelengkapan_absensi = 'IZIN SAKIT NOT APPROVED, POTONG SALDO CUTI 1';
+                                $update_mapping->status_absen = 'TIDAK HADIR KERJA';
+                                $update_mapping->keterangan_izin = 'FALSE';
+                                $update_mapping->izin_id = $request->id;
+                                $update_mapping->update();
                             }
 
                             $alert = $request->session()->flash('approveizin_not_approve');
@@ -1752,14 +1755,14 @@ class IzinUserController extends Controller
 
                             foreach ($daterange as $date) {
                                 $tanggal = $date->format("Y-m-d");
-                                $update = MappingShift::where('user_id', $request->id_user)
-                                    ->whereDate('tanggal_masuk', $tanggal)
-                                    ->update([
-                                        'kelengkapan_absensi' => 'Potong Gaji ,izin sakit tanpa SKD',
-                                        'status_absen' => 'TIDAK HADIR KERJA',
-                                        'keterangan_izin' => 'TRUE',
-                                        'izin_id' => $request->id
-                                    ]);
+                                $update_mapping = MappingShift::where('user_id', $request->id_user)->whereDate('tanggal_masuk', $tanggal)->first();
+                                $update_mapping->keterangan_absensi = 'IZIN SAKIT';
+                                $update_mapping->keterangan_absensi_pulang = 'IZIN SAKIT';
+                                $update_mapping->kelengkapan_absensi = 'IZIN SAKIT APPROVED, POTONG SALDO CUTI 1';
+                                $update_mapping->status_absen = 'TIDAK HADIR KERJA';
+                                $update_mapping->keterangan_izin = 'TRUE';
+                                $update_mapping->izin_id = $request->id;
+                                $update_mapping->update();
                             }
                             $alert = $request->session()->flash('approveizin_success');
                             return response()->json($alert);
@@ -1783,13 +1786,14 @@ class IzinUserController extends Controller
 
                             foreach ($daterange as $date) {
                                 $tanggal = $date->format("Y-m-d");
-                                $update = MappingShift::where('user_id', $request->id_user)
-                                    ->whereDate('tanggal_masuk', $tanggal)
-                                    ->update([
-                                        'status_absen' => 'TIDAK HADIR KERJA',
-                                        'keterangan_izin' => 'FALSE',
-                                        'izin_id' => $request->id
-                                    ]);
+                                $update_mapping = MappingShift::where('user_id', $request->id_user)->whereDate('tanggal_masuk', $tanggal)->first();
+                                $update_mapping->keterangan_absensi = 'IZIN SAKIT';
+                                $update_mapping->keterangan_absensi_pulang = 'IZIN SAKIT';
+                                $update_mapping->kelengkapan_absensi = 'IZIN SAKIT NOT APPROVED';
+                                $update_mapping->status_absen = 'TIDAK HADIR KERJA';
+                                $update_mapping->keterangan_izin = 'FALSE';
+                                $update_mapping->izin_id = $request->id;
+                                $update_mapping->update();
                             }
                             $alert = $request->session()->flash('approveizin_not_approve');
                             return response()->json($alert);
@@ -1811,14 +1815,14 @@ class IzinUserController extends Controller
 
                             foreach ($daterange as $date) {
                                 $tanggal = $date->format("Y-m-d");
-                                $update = MappingShift::where('user_id', $request->id_user)
-                                    ->whereDate('tanggal_masuk', $tanggal)
-                                    ->update([
-                                        'kelengkapan_absensi' => 'IZIN SAKIT',
-                                        'status_absen' => 'TIDAK HADIR KERJA',
-                                        'keterangan_izin' => 'TRUE',
-                                        'izin_id' => $request->id
-                                    ]);
+                                $update_mapping = MappingShift::where('user_id', $request->id_user)->whereDate('tanggal_masuk', $tanggal)->first();
+                                $update_mapping->keterangan_absensi = 'IZIN SAKIT';
+                                $update_mapping->keterangan_absensi_pulang = 'IZIN SAKIT';
+                                $update_mapping->kelengkapan_absensi = 'IZIN SAKIT APPROVED';
+                                $update_mapping->status_absen = 'TIDAK HADIR KERJA';
+                                $update_mapping->keterangan_izin = 'TRUE';
+                                $update_mapping->izin_id = $request->id;
+                                $update_mapping->update();
                             }
                             $alert = $request->session()->flash('approveizin_success');
                             return response()->json($alert);
@@ -1871,14 +1875,14 @@ class IzinUserController extends Controller
 
                         foreach ($daterange as $date) {
                             $tanggal = $date->format("Y-m-d");
-                            $update = MappingShift::where('user_id', $request->id_user)
-                                ->whereDate('tanggal_masuk', $tanggal)
-                                ->update([
-                                    'kelengkapan_absensi' => 'Potong saldo cuti 2  ,Atasan Not Approve',
-                                    'status_absen' => 'TIDAK HADIR KERJA',
-                                    'keterangan_izin' => 'FALSE',
-                                    'izin_id' => $request->id
-                                ]);
+                            $update_mapping = MappingShift::where('user_id', $request->id_user)->whereDate('tanggal_masuk', $tanggal)->first();
+                            $update_mapping->keterangan_absensi = 'IZIN TIDAK MASUK';
+                            $update_mapping->keterangan_absensi_pulang = 'IZIN TIDAK MASUK';
+                            $update_mapping->kelengkapan_absensi = 'IZIN TIDAK MASUK NOT APPROVED, POTONG SALDO CUTI 2';
+                            $update_mapping->status_absen = 'TIDAK HADIR KERJA';
+                            $update_mapping->keterangan_izin = 'FALSE';
+                            $update_mapping->izin_id = $request->id;
+                            $update_mapping->update();
                         }
                         $alert = $request->session()->flash('approveizin_not_approve');
                         return response()->json($alert);
@@ -1904,14 +1908,14 @@ class IzinUserController extends Controller
 
                         foreach ($daterange as $date) {
                             $tanggal = $date->format("Y-m-d");
-                            $update = MappingShift::where('user_id', $request->id_user)
-                                ->whereDate('tanggal_masuk', $tanggal)
-                                ->update([
-                                    'kelengkapan_absensi' => 'Potong saldo cuti 2',
-                                    'status_absen' => 'TIDAK HADIR KERJA',
-                                    'keterangan_izin' => 'TRUE',
-                                    'izin_id' => $request->id,
-                                ]);
+                            $update_mapping = MappingShift::where('user_id', $request->id_user)->whereDate('tanggal_masuk', $tanggal)->first();
+                            $update_mapping->keterangan_absensi = 'IZIN TIDAK MASUK';
+                            $update_mapping->keterangan_absensi_pulang = 'IZIN TIDAK MASUK';
+                            $update_mapping->kelengkapan_absensi = 'IZIN TIDAK MASUK APPROVED, POTONG SALDO CUTI 1';
+                            $update_mapping->status_absen = 'TIDAK HADIR KERJA';
+                            $update_mapping->keterangan_izin = 'TRUE';
+                            $update_mapping->izin_id = $request->id;
+                            $update_mapping->update();
                         }
                         $alert = $request->session()->flash('approveizin_success');
                         return response()->json($alert);
@@ -1940,14 +1944,14 @@ class IzinUserController extends Controller
 
                         foreach ($daterange as $date) {
                             $tanggal = $date->format("Y-m-d");
-                            $update = MappingShift::where('user_id', $request->id_user)
-                                ->whereDate('tanggal_masuk', $tanggal)
-                                ->update([
-                                    'kelengkapan_absensi' => 'Potong Gaji ,izin Tidak Masuk,belum dapat saldo Cuti',
-                                    'status_absen' => 'TIDAK HADIR KERJA',
-                                    'keteragan_izin' => 'FALSE',
-                                    'izin_id' => $request->id,
-                                ]);
+                            $update_mapping = MappingShift::where('user_id', $request->id_user)->whereDate('tanggal_masuk', $tanggal)->first();
+                            $update_mapping->keterangan_absensi = 'IZIN TIDAK MASUK';
+                            $update_mapping->keterangan_absensi_pulang = 'IZIN TIDAK MASUK';
+                            $update_mapping->kelengkapan_absensi = 'IZIN TIDAK MASUK APPROVED, POTONG GAJI KUOTA CUTI TIDAK CUKUP';
+                            $update_mapping->status_absen = 'TIDAK HADIR KERJA';
+                            $update_mapping->keterangan_izin = 'FALSE';
+                            $update_mapping->izin_id = $request->id;
+                            $update_mapping->update();
                         }
                         $alert = $request->session()->flash('approveizin_not_approve');
                         return response()->json($alert);
@@ -1956,9 +1960,9 @@ class IzinUserController extends Controller
                         $data->status_izin  = $request->status_izin;
                         $data->ttd_atasan   = $uniqid;
                         $data->catatan      = $request->catatan;
-                        $data->no_form_izin      = $no_form;
                         $data->waktu_approve = date('Y-m-d H:i:s');
                         $data->update();
+
                         $begin = new \DateTime($data->tanggal);
                         $end = new \DateTime($data->tanggal_selesai);
                         $end = $end->modify('+1 day');
@@ -1969,15 +1973,14 @@ class IzinUserController extends Controller
 
                         foreach ($daterange as $date) {
                             $tanggal = $date->format("Y-m-d");
-                            $update = MappingShift::where('user_id', $request->id_user)
-                                ->whereDate('tanggal_masuk', $tanggal)
-                                ->update([
-                                    'kelengkapan_absensi'    => 'Potong Gaji ,izin Tidak Masuk,belum dapat saldo Cuti',
-                                    'status_absen'          => 'TIDAK HADIR KERJA',
-                                    'no_form_izin'          => $no_form,
-                                    'keterangan_izin'       => 'TRUE',
-                                    'izin_id'               => $request->id,
-                                ]);
+                            $update_mapping = MappingShift::where('user_id', $request->id_user)->whereDate('tanggal_masuk', $tanggal)->first();
+                            $update_mapping->keterangan_absensi = 'IZIN TIDAK MASUK';
+                            $update_mapping->keterangan_absensi_pulang = 'IZIN TIDAK MASUK';
+                            $update_mapping->kelengkapan_absensi = 'IZIN TIDAK MASUK APPROVED, POTONG GAJI KUOTA CUTI TIDAK CUKUP';
+                            $update_mapping->status_absen = 'TIDAK HADIR KERJA';
+                            $update_mapping->keterangan_izin = 'TRUE';
+                            $update_mapping->izin_id = $request->id;
+                            $update_mapping->update();
                         }
                         $alert = $request->session()->flash('approveizin_success');
                         return response()->json($alert);
@@ -1989,9 +1992,6 @@ class IzinUserController extends Controller
                 return redirect()->back()->with('info', 'Tanda Tangan Harus Terisi');
             }
         } else if ($request->izin == 'Pulang Cepat') {
-            // dd($request->signature);
-            // dd('ok');
-            $no_form = $user_karyawan->kontrak_kerja . '/IP/' . date('Y/m/d') . '/' . $no;
             if ($request->signature != null) {
                 $folderPath     = public_path('signature/izin/');
                 $image_parts    = explode(";base64,", $request->signature);
@@ -2010,10 +2010,12 @@ class IzinUserController extends Controller
                     $data->waktu_approve = date('Y-m-d H:i:s');
                     $data->update();
 
-                    $mapping                       = MappingShift::where('tanggal_masuk', $request->tanggal)->where('user_id', $request->id_user)->first();
-                    $mapping->keterangan_izin      = 'FALSE';
-                    $mapping->izin_id              = $data->id;
-                    $mapping->update();
+                    $update_mapping                             = MappingShift::where('tanggal_masuk', $request->tanggal)->where('user_id', $request->id_user)->first();
+                    $update_mapping->keterangan_absensi_pulang  = 'IZIN PULANG CEPAT';
+                    $update_mapping->kelengkapan_absensi        = 'IZIN PULANG CEPAT NOT APPROVED';
+                    $update_mapping->keterangan_izin            = 'FALSE';
+                    $update_mapping->izin_id                    = $data->id;
+                    $update_mapping->update();
                     $alert = $request->session()->flash('approveizin_not_approve');
                     return response()->json($alert);
                 } else if ($request->approve == 'approve') {
@@ -2024,13 +2026,14 @@ class IzinUserController extends Controller
                     $data->catatan      = $request->catatan;
                     $data->ttd_atasan   = $uniqid;
                     $data->waktu_approve = date('Y-m-d H:i:s');
-                    $data->no_form_izin         = $no_form;
                     $data->update();
 
-                    $mapping                       = MappingShift::where('tanggal_masuk', $request->tanggal)->where('user_id', $request->id_user)->first();
-                    $mapping->keterangan_izin      = 'TRUE';
-                    $mapping->izin_id              = $data->id;
-                    $mapping->update();
+                    $update_mapping                             = MappingShift::where('tanggal_masuk', $request->tanggal)->where('user_id', $request->id_user)->first();
+                    $update_mapping->keterangan_izin            = 'TRUE';
+                    $update_mapping->keterangan_absensi_pulang  = 'IZIN PULANG CEPAT';
+                    $update_mapping->kelengkapan_absensi        = 'IZIN PULANG CEPAT APPROVED';
+                    $update_mapping->izin_id                    = $data->id;
+                    $update_mapping->update();
 
                     $alert = $request->session()->flash('approveizin_success');
                     return response()->json($alert);
@@ -2058,10 +2061,11 @@ class IzinUserController extends Controller
                     $data->waktu_approve = date('Y-m-d H:i:s');
                     $data->update();
 
-                    $mapping                       = MappingShift::where('user_id', $data->user_id)->where('tanggal_masuk', $data->tanggal)->first();
-                    $mapping->keterangan_izin      = 'FALSE';
-                    $mapping->izin_id              = $data->id;
-                    $mapping->update();
+                    $update_mapping                             = MappingShift::where('user_id', $data->user_id)->where('tanggal_masuk', $data->tanggal)->first();
+                    $update_mapping->keterangan_izin            = 'FALSE';
+                    $update_mapping->keterangan_absensi         = 'IZIN TERLAMBAT';
+                    $update_mapping->izin_id                    = $data->id;
+                    $update_mapping->update();
                     $alert = $request->session()->flash('approveizin_not_approve');
                     return response()->json($alert);
                 } else if ($request->approve == 'approve') {
@@ -2072,10 +2076,11 @@ class IzinUserController extends Controller
                     $data->waktu_approve = date('Y-m-d H:i:s');
                     $data->update();
 
-                    $mapping                       = MappingShift::where('user_id', $request->id_user)->where('tanggal_masuk', $request->tanggal)->first();
-                    $mapping->keterangan_izin      = 'TRUE';
-                    $mapping->izin_id              = $data->id;
-                    $mapping->update();
+                    $update_mapping                             = MappingShift::where('user_id', $request->id_user)->where('tanggal_masuk', $request->tanggal)->first();
+                    $update_mapping->keterangan_izin            = 'TRUE';
+                    $update_mapping->keterangan_absensi         = 'IZIN TERLAMBAT';
+                    $update_mapping->izin_id                    = $data->id;
+                    $update_mapping->update();
                     // dd($mapping);
                     $alert = $request->session()->flash('approveizin_success');
                     return response()->json($alert);
@@ -2105,10 +2110,10 @@ class IzinUserController extends Controller
                     $data->waktu_approve = date('Y-m-d H:i:s');
                     $data->update();
 
-                    $mapping                       = MappingShift::where('tanggal_masuk', $request->tanggal)->where('user_id', $request->id_user)->first();
-                    $mapping->keterangan_izin      = 'FALSE';
-                    $mapping->izin_id              = $data->id;
-                    $mapping->update();
+                    $update_mapping                             = MappingShift::where('tanggal_masuk', $request->tanggal)->where('user_id', $request->id_user)->first();
+                    $update_mapping->keterangan_izin            = 'FALSE';
+                    $update_mapping->izin_id                    = $data->id;
+                    $update_mapping->update();
                     $alert = $request->session()->flash('approveizin_not_approve');
                     return response()->json($alert);
                 } else if ($request->approve == 'approve') {
@@ -2121,10 +2126,9 @@ class IzinUserController extends Controller
                     $data->waktu_approve = date('Y-m-d H:i:s');
                     $data->update();
 
-                    $mapping                       = MappingShift::where('tanggal_masuk', $request->tanggal)->where('user_id', $request->id_user)->first();
-                    $mapping->keterangan_izin      = 'TRUE';
-                    $mapping->izin_id              = $data->id;
-                    $mapping->update();
+                    $update_mapping                             = MappingShift::where('tanggal_masuk', $request->tanggal)->where('user_id', $request->id_user)->first();
+                    $update_mapping->keterangan_izin            = 'TRUE';
+                    $update_mapping->update();
 
                     $alert = $request->session()->flash('approveizin_success');
                     return response()->json($alert);

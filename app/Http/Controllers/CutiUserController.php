@@ -1740,6 +1740,9 @@ class CutiUserController extends Controller
                     $update_mapping_cuti = MappingShift::where('user_id', $data->user_id)->where('tanggal_masuk', $tanggal)->first();
                     $update_mapping_cuti->status_absen = 'TIDAK HADIR KERJA';
                     $update_mapping_cuti->keterangan_cuti = 'TRUE';
+                    $update_mapping_cuti->keterangan_absensi = 'CUTI';
+                    $update_mapping_cuti->keterangan_absensi_pulang = 'CUTI';
+                    $update_mapping_cuti->kelengkapan_absensi = 'CUTI APPROVED';
                     $update_mapping_cuti->cuti_id = $data->id;
                     $update_mapping_cuti->update();
                 }
@@ -1776,6 +1779,9 @@ class CutiUserController extends Controller
                         $update_mapping_cuti = MappingShift::where('user_id', $data->user_id)->where('tanggal_masuk', $tanggal)->first();
                         $update_mapping_cuti->status_absen = 'TIDAK HADIR KERJA';
                         $update_mapping_cuti->keterangan_cuti = 'TRUE';
+                        $update_mapping_cuti->keterangan_absensi = 'CUTI';
+                        $update_mapping_cuti->keterangan_absensi_pulang = 'CUTI';
+                        $update_mapping_cuti->kelengkapan_absensi = 'CUTI APPROVED';
                         $update_mapping_cuti->cuti_id = $data->id;
                         $update_mapping_cuti->update();
                     }

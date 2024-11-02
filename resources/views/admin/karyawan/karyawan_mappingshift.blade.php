@@ -199,17 +199,16 @@
                     success: function(msg) {
                         // console.log(msg);
                         // $('#id_divisi').html(msg);
-                        $('#table_mapping_shift').show();
                         $('#divisi_filter').html(msg);
-                        $('#bagian_filter').html('<option value="">Pilih Bagian</option>');
-                        $('#jabatan_filter').html('<option value="">Pilih Jabatan</option>');
+                        $('#bagian_filter').html('<option selected value="">Pilih Bagian</option>');
+                        $('#jabatan_filter').html('<option selected value="">Pilih Jabatan</option>');
+                        load_data(departemen_filter, divisi_filter, bagian_filter, jabatan_filter, filter_month);
                     },
                     error: function(data) {
                         console.log('error:', data)
                     },
 
                 })
-                load_data(departemen_filter, divisi_filter, bagian_filter, jabatan_filter, filter_month);
             })
             $('#divisi_filter').change(function() {
                 divisi_filter = $(this).val();
@@ -218,13 +217,15 @@
                 jabatan_filter = $('#jabatan_filter').val();
                 filter_month = $('#date_filter').val();
                 $('#btn_selected_karyawan').hide();
-                $('#table_mapping_shift').DataTable().destroy();
+                // $('#table_mapping_shift').DataTable().destroy();
                 $.ajax({
                     type: 'GET',
                     url: "{{url('mapping_shift/get_bagian')}}",
                     data: {
                         holding: holding,
-                        divisi_filter: divisi_filter
+                        departemen_filter: departemen_filter,
+                        divisi_filter: divisi_filter,
+                        filter_month: filter_month,
                     },
                     cache: false,
 
@@ -232,14 +233,14 @@
                         // console.log(msg);
                         // $('#id_divisi').html(msg);
                         $('#bagian_filter').html(msg);
-                        $('#jabatan_filter').html('<option value="">Pilih Jabatan..</option>');
+                        $('#jabatan_filter').html('<option selected value="">Pilih Jabatan..</option>');
+                        load_data(departemen_filter, divisi_filter, bagian_filter, jabatan_filter, filter_month);
                     },
                     error: function(data) {
                         console.log('error:', data)
                     },
 
                 })
-                load_data(departemen_filter, divisi_filter, bagian_filter, jabatan_filter, filter_month);
             })
             $('#bagian_filter').change(function() {
                 bagian_filter = $(this).val();
@@ -248,12 +249,14 @@
                 jabatan_filter = $('#jabatan_filter').val();
                 filter_month = $('#date_filter').val();
                 $('#btn_selected_karyawan').hide();
-                $('#table_mapping_shift').DataTable().destroy();
                 $.ajax({
                     type: 'GET',
                     url: "{{url('mapping_shift/get_jabatan')}}",
                     data: {
                         holding: holding,
+                        departemen_filter: departemen_filter,
+                        divisi_filter: divisi_filter,
+                        filter_month: filter_month,
                         bagian_filter: bagian_filter
                     },
                     cache: false,
@@ -262,13 +265,14 @@
                         // console.log(msg);
                         // $('#id_bagian').html(msg);
                         $('#jabatan_filter').html(msg);
+                        load_data(departemen_filter, divisi_filter, bagian_filter, jabatan_filter, filter_month);
+                        // $('#table_mapping_shift').DataTable().destroy();
                     },
                     error: function(data) {
                         console.log('error:', data)
                     },
 
                 })
-                load_data(departemen_filter, divisi_filter, bagian_filter, jabatan_filter, filter_month);
             })
             $('#jabatan_filter').change(function() {
                 jabatan_filter = $(this).val();
@@ -277,7 +281,7 @@
                 bagian_filter = $('#bagian_filter').val();
                 filter_month = $('#date_filter').val();
                 $('#btn_selected_karyawan').hide();
-                $('#table_mapping_shift').DataTable().destroy();
+                // $('#table_mapping_shift').DataTable().destroy();
                 load_data(departemen_filter, divisi_filter, bagian_filter, jabatan_filter, filter_month);
             })
             $('#date_filter').change(function() {
@@ -288,7 +292,7 @@
                 bagian_filter = $('#bagian_filter').val();
                 jabatan_filter = $('#jabatan_filter').val();
                 $('#btn_selected_karyawan').hide();
-                $('#table_mapping_shift').DataTable().destroy();
+                // $('#table_mapping_shift').DataTable().destroy();
                 load_data(departemen_filter, divisi_filter, bagian_filter, jabatan_filter, filter_month);
             })
             // load_data(departemen_filter, divisi_filter, bagian_filter, jabatan_filter);
@@ -405,7 +409,7 @@
                 $('.group_select:checked').each(function() {
                     value.push($(this).val());
                 });
-                console.log(value);
+                // console.log(value);
                 var count = value.length;
                 $.ajax({
                     url: "{{ url('karyawan/get_karyawan_selected')}}",

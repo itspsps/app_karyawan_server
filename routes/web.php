@@ -495,6 +495,7 @@ Route::middleware('admin')->group(function () {
     Route::get('/report/get_bagian', [ReportController::class, 'get_bagian']);
     Route::get('/report/get_jabatan', [ReportController::class, 'get_jabatan']);
     Route::get('/report/get_columns', [ReportController::class, 'get_columns']);
+    Route::get('/report/get_filter_month', [ReportController::class, 'get_filter_month']);
 
     Route::get('/data-cuti', [CutiController::class, 'dataCuti']);
     Route::get('/data-cuti/tambah', [CutiController::class, 'tambahAdmin']);
