@@ -181,14 +181,17 @@
                 divisi_filter = $('#divisi_filter').val();
                 bagian_filter = $('#bagian_filter').val();
                 jabatan_filter = $('#jabatan_filter').val();
-                // filter_month = $('#date_filter').val();
-                $('#table_mapping_shift').show();
+                filter_month = $('#date_filter').val();
+                $('#btn_selected_karyawan').hide();
+                console.log(filter_month);
                 // $('#table_mapping_shift').DataTable().destroy();
+
                 $.ajax({
                     type: 'GET',
                     url: "{{url('mapping_shift/get_divisi')}}",
                     data: {
                         holding: holding,
+                        filter_month: filter_month,
                         departemen_filter: departemen_filter
                     },
                     cache: false,
@@ -206,7 +209,7 @@
                     },
 
                 })
-                load_data(departemen_filter, divisi_filter, bagian_filter, jabatan_filter);
+                load_data(departemen_filter, divisi_filter, bagian_filter, jabatan_filter, filter_month);
             })
             $('#divisi_filter').change(function() {
                 divisi_filter = $(this).val();
@@ -214,6 +217,7 @@
                 bagian_filter = $('#bagian_filter').val();
                 jabatan_filter = $('#jabatan_filter').val();
                 filter_month = $('#date_filter').val();
+                $('#btn_selected_karyawan').hide();
                 $('#table_mapping_shift').DataTable().destroy();
                 $.ajax({
                     type: 'GET',
@@ -243,7 +247,7 @@
                 divisi_filter = $('#divisi_filter').val();
                 jabatan_filter = $('#jabatan_filter').val();
                 filter_month = $('#date_filter').val();
-
+                $('#btn_selected_karyawan').hide();
                 $('#table_mapping_shift').DataTable().destroy();
                 $.ajax({
                     type: 'GET',
@@ -272,16 +276,18 @@
                 divisi_filter = $('#divisi_filter').val();
                 bagian_filter = $('#bagian_filter').val();
                 filter_month = $('#date_filter').val();
+                $('#btn_selected_karyawan').hide();
                 $('#table_mapping_shift').DataTable().destroy();
                 load_data(departemen_filter, divisi_filter, bagian_filter, jabatan_filter, filter_month);
             })
             $('#date_filter').change(function() {
                 filter_month = $(this).val();
-                console.log(filter_month);
+                // console.log(filter_month);
                 departemen_filter = $('#departemen_filter').val();
                 divisi_filter = $('#divisi_filter').val();
                 bagian_filter = $('#bagian_filter').val();
                 jabatan_filter = $('#jabatan_filter').val();
+                $('#btn_selected_karyawan').hide();
                 $('#table_mapping_shift').DataTable().destroy();
                 load_data(departemen_filter, divisi_filter, bagian_filter, jabatan_filter, filter_month);
             })
@@ -289,7 +295,7 @@
             load_data();
 
             function load_data(departemen_filter = '', divisi_filter = '', bagian_filter = '', jabatan_filter = '', filter_month = '') {
-                console.log(departemen_filter);
+                // console.log(departemen_filter);
                 $('#table_mapping_shift').DataTable().destroy();
                 var table = $('#table_mapping_shift').DataTable({
                     "scrollY": true,
@@ -347,6 +353,13 @@
                     order: [2, 'ASC'],
 
                 });
+            }
+            if ($(".group_select:checked").length > 0) {
+                $('#btn_selected_karyawan').show();
+                $('#count_checked').html($(".group_select:checked").length);
+            } else {
+                $('#btn_selected_karyawan').hide();
+                $('#count_checked').html($(".group_select:checked").length);
             }
             $(document).on("click", ".group_select", function(e) {
                 // console.log($(this).is(':checked'));

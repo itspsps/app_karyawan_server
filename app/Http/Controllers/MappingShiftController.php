@@ -248,14 +248,10 @@ class MappingShiftController extends Controller
     public function mapping_shift_datatable(Request $request)
     {
         $holding = request()->segment(count(request()->segments()));
-        // dd(Carbon::now()->month);
-        // $now = Carbon::parse($request->filter_month)->startOfMonth();
-        // dd($now);
-        // dd($request->filter_month);
+        // dd($request->filter_month, $request->departemen_filter);
         if (!empty($request->departemen_filter)) {
             $date1 = Carbon::parse($request->filter_month)->startOfMonth()->format('m');
             $date2 = Carbon::parse($request->filter_month)->endOfMonth()->format('m');
-            // dd($date1, $date2);
             if (!empty($request->divisi_filter)) {
                 if (!empty($request->bagian_filter)) {
                     if (!empty($request->jabatan_filter)) {
@@ -298,7 +294,6 @@ class MappingShiftController extends Controller
                     ->where('status_aktif', 'AKTIF')
                     ->orderBy('name', 'ASC')
                     ->get();
-                // dd($table);
             }
             return DataTables::of($table)
                 ->addColumn('jabatan', function ($row) use ($date1, $date2) {
@@ -362,8 +357,8 @@ class MappingShiftController extends Controller
                 ->rawColumns(['jabatan', 'mapping_shift', 'select'])
                 ->make(true);
         } else {
-            $now1 = Carbon::parse($request->filter_month)->startOfMonth();
-            $now2 = Carbon::parse($request->filter_month)->endOfMonth();
+            $now1 = Carbon::parse($request->filter_month)->startOfMonth()->format('m');
+            $now2 = Carbon::parse($request->filter_month)->endOfMonth()->format('m');
             // dd($now1);
             // dd($tgl_mulai, $tgl_selesai);
             $table = Karyawan::with('Mappingshift')
@@ -371,6 +366,7 @@ class MappingShiftController extends Controller
                 ->where('kontrak_kerja', $holding)
                 ->where('kategori', 'Karyawan Bulanan')
                 ->where('status_aktif', 'AKTIF')
+                ->select('name', 'nomor_identitas_karyawan')
                 // ->limit(210)
                 ->get();
             return DataTables::of($table)
@@ -387,9 +383,9 @@ class MappingShiftController extends Controller
                         $result = '<span class="badge bg-label-danger">Kosong</span>';
                         return $result;
                     } else {
-
-                        $first = MappingShift::where('user_id', $row->id)->whereMonth('tanggal_masuk', $now1)->orderBy('tanggal_masuk', 'ASC')->first();
-                        $last = MappingShift::where('user_id', $row->id)->whereMonth('tanggal_masuk', $now1)->orderBy('tanggal_masuk', 'DESC')->first();
+                        $id_karyawan = Karyawan::where('nomor_identitas_karyawan', $row->nomor_identitas_karyawan)->value('id');
+                        $first = MappingShift::where('user_id', $id_karyawan)->whereMonth('tanggal_masuk', $now1)->orderBy('tanggal_masuk', 'ASC')->first();
+                        $last = MappingShift::where('user_id', $id_karyawan)->whereMonth('tanggal_masuk', $now1)->orderBy('tanggal_masuk', 'DESC')->first();
                         if ($first == NULL || $last == NULL) {
                             $result = '<span class="badge bg-label-danger">Kosong</span>';
                             return $result;
@@ -397,7 +393,7 @@ class MappingShiftController extends Controller
 
                             // dd($first);
                             // dd($mapping);
-                            $get_month = MappingShift::With('Shift')->where('user_id', $row->id)->whereBetween('tanggal_masuk', [$first->tanggal_masuk, $last->tanggal_masuk])->orderBy('tanggal_masuk', 'ASC')->get();
+                            $get_month = MappingShift::With('Shift')->where('user_id', $id_karyawan)->whereBetween('tanggal_masuk', [$first->tanggal_masuk, $last->tanggal_masuk])->orderBy('tanggal_masuk', 'ASC')->get();
                             $get = '<span class="badge bg-label-success">' . Carbon::parse($first->tanggal_masuk)->isoFormat('DD MMMM YYYY')  . ' - ' . Carbon::parse($last->tanggal_masuk)->isoFormat('DD MMMM YYYY') . '</span>';
                             // dd($get_month->toArray());
                             if (count($get_month) >= 7) {
@@ -410,10 +406,10 @@ class MappingShiftController extends Controller
                                 $mapping_shift1 = str_replace(['[', ']'], '', json_encode($mapping_shift));
                                 $mapping_shift2 = str_replace(['"', ','], "", $mapping_shift1);
                                 $mapping_shift3 = str_replace(['\/'], "/", $mapping_shift2);
-                                $mapping_shift4 = $mapping_shift3 . '<li>....</li><li>....</li>' . $mapping_shift5 . '<li><a href="/karyawan/mapping_shift/' . $row->id . '/sp"><span class="badge bg-label-info">Lihat Detail..</span></a></li>';
+                                $mapping_shift4 = $mapping_shift3 . '<li>....</li><li>....</li>' . $mapping_shift5 . '<li><a href="/karyawan/mapping_shift/' . $id_karyawan . '/sp"><span class="badge bg-label-info">Lihat Detail..</span></a></li>';
                             } else {
                                 foreach ($get_month as $a) {
-                                    $mapping_shift[] = '<li>' . $a['tanggal_masuk'] . '</li>';
+                                    $mapping_shift[] = '<li>' . Carbon::parse($a['tanggal_masuk'])->isoFormat('DD-MM-YYYY') . ' (Jam Kerja : ' . $a['shift']['jam_kerja'] . ' - ' . $a['shift']['jam_keluar'] . ')</li>';
                                 }
                                 $mapping_shift1 = str_replace(['[', ']'], '', json_encode($mapping_shift));
                                 $mapping_shift2 = str_replace(['"', ','], "", $mapping_shift1);
@@ -427,8 +423,9 @@ class MappingShiftController extends Controller
                     }
                 })
                 ->addColumn('select', function ($row) use ($now1, $now2) {
+                    $id_karyawan = Karyawan::where('nomor_identitas_karyawan', $row->nomor_identitas_karyawan)->value('id');
                     $select = '<div class="form-check">
-                          <input class="group_select form-check-input" type="checkbox"  id="select_karyawan_' . $row->id . '" name="select_karyawan[]"  data-id="' . $row->id . '" value="' . $row->id . '">
+                          <input class="group_select form-check-input" type="checkbox"  id="select_karyawan_' . $id_karyawan . '" name="select_karyawan[]"  data-id="' . $id_karyawan . '" value="' . $id_karyawan . '">
                         </div>';
                     return $select;
                 })
