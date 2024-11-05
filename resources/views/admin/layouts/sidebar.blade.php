@@ -35,7 +35,7 @@
 
     <ul class="menu-inner py-1">
         <!-- Dashboards -->
-        <li class="menu-item 
+        <li class="menu-item
         @if(Auth::user()->is_admin =='hrd')
         {{ Request::is('hrd/dashboard*') ? 'active' : '' }}
         @else {{ Request::is('dashboard*') ? 'active' : '' }}
@@ -44,7 +44,7 @@
             {{ url('/hrd/dashboard/holding/'.$holding) }}
             @else
             {{ url('/dashboard/holding/'.$holding) }}
-        @endif 
+        @endif
             " class="menu-link">
                 <i class="menu-icon tf-icons mdi mdi-home-outline"></i>
                 <div style="font-size: 10pt;" data-i18n="Dashboards">Dashboards</div>
@@ -53,62 +53,62 @@
         <li class="menu-header fw-medium mt-4">
             <span class="menu-header-text">MAIN MENU</span>
         </li>
-        <li class="menu-item 
-        @if(Auth::user()->is_admin =='hrd'){{ Request::is('hrd/karyawan/tambah-karyawan*') ? 'active open' : '' }} 
-        @else 
+        <li class="menu-item
+        @if(Auth::user()->is_admin =='hrd'){{ Request::is('hrd/karyawan/tambah-karyawan*') ? 'active open' : '' }}
+        @else
         {{ Request::is('karyawan/tambah-karyawan*') ? 'active open' : '' }}
-        @endif 
-        @if(Auth::user()->is_admin =='hrd'){{ Request::is('hrd/karyawan/detail*') ? 'active open' : '' }} 
-        @else 
+        @endif
+        @if(Auth::user()->is_admin =='hrd'){{ Request::is('hrd/karyawan/detail*') ? 'active open' : '' }}
+        @else
         {{ Request::is('karyawan/detail*') ? 'active open' : '' }}
         @endif
         @if(Auth::user()->is_admin =='hrd'){{ Request::is('hrd/karyawan/karyawan_masa_tenggang_kontrak/'.$holding) ? 'active open' : '' }}
-        @else 
+        @else
         {{ Request::is('karyawan/karyawan_masa_tenggang_kontrak/'.$holding) ? 'active open' : '' }}
-        @endif 
-        @if(Auth::user()->is_admin =='hrd'){{ Request::is('hrd/karyawan_ingin_bergabung/'.$holding) ? 'active open' : '' }} 
-        @else 
+        @endif
+        @if(Auth::user()->is_admin =='hrd'){{ Request::is('hrd/karyawan_ingin_bergabung/'.$holding) ? 'active open' : '' }}
+        @else
         {{ Request::is('karyawan_ingin_bergabung/'.$holding) ? 'active open' : '' }}
-        @endif 
-        @if(Auth::user()->is_admin =='hrd'){{ Request::is('hrd/karyawan/'.$holding) ? 'active open' : '' }} 
-        @else 
+        @endif
+        @if(Auth::user()->is_admin =='hrd'){{ Request::is('hrd/karyawan/'.$holding) ? 'active open' : '' }}
+        @else
         {{ Request::is('karyawan/'.$holding) ? 'active open' : '' }}
-        @endif 
-        @if(Auth::user()->is_admin =='hrd'){{ Request::is('hrd/users*') ? 'active open' : '' }} 
-        @else 
+        @endif
+        @if(Auth::user()->is_admin =='hrd'){{ Request::is('hrd/users*') ? 'active open' : '' }}
+        @else
         {{ Request::is('users*') ? 'active open' : '' }}
-        @endif 
-        @if(Auth::user()->is_admin =='hrd'){{ Request::is('hrd/karyawan_non_aktif*') ? 'active open' : '' }} 
-        @else 
+        @endif
+        @if(Auth::user()->is_admin =='hrd'){{ Request::is('hrd/karyawan_non_aktif*') ? 'active open' : '' }}
+        @else
         {{ Request::is('karyawan_non_aktif*') ? 'active open' : '' }}
         @endif
-        @if(Auth::user()->is_admin =='hrd'){{ Request::is('hrd/detail_jabatan*') ? 'active open' : '' }} 
-        @else 
+        @if(Auth::user()->is_admin =='hrd'){{ Request::is('hrd/detail_jabatan*') ? 'active open' : '' }}
+        @else
         {{ Request::is('detail_jabatan*') ? 'active open' : '' }}
         @endif
         @if(Auth::user()->is_admin =='hrd')
-        {{ Request::is('hrd/struktur_organisasi*') ? 'active open' : '' }} 
-        @else 
-        {{ Request::is('struktur_organisasi*') ? 'active open' : '' }} 
+        {{ Request::is('hrd/struktur_organisasi*') ? 'active open' : '' }}
+        @else
+        {{ Request::is('struktur_organisasi*') ? 'active open' : '' }}
         @endif
-        @if(Auth::user()->is_admin =='hrd'){{ Request::is('hrd/reset-cuti*') ? 'active open' : '' }} 
-        @else 
+        @if(Auth::user()->is_admin =='hrd'){{ Request::is('hrd/reset-cuti*') ? 'active open' : '' }}
+        @else
         {{ Request::is('reset-cuti*') ? 'active open' : '' }}
         @endif
-        @if(Auth::user()->is_admin =='hrd'){{ Request::is('hrd/departemen*') ? 'active open' : '' }} 
-        @else 
-        {{ Request::is('departemen*') ? 'active open' : '' }} 
+        @if(Auth::user()->is_admin =='hrd'){{ Request::is('hrd/departemen*') ? 'active open' : '' }}
+        @else
+        {{ Request::is('departemen*') ? 'active open' : '' }}
         @endif
-        @if(Auth::user()->is_admin =='hrd'){{ Request::is('hrd/divisi*') ? 'active open' : '' }} 
-        @else 
+        @if(Auth::user()->is_admin =='hrd'){{ Request::is('hrd/divisi*') ? 'active open' : '' }}
+        @else
         {{ Request::is('divisi*') ? 'active open' : '' }}
-        @endif 
-        @if(Auth::user()->is_admin =='hrd'){{ Request::is('hrd/bagian*') ? 'active open' : '' }} 
-        @else 
+        @endif
+        @if(Auth::user()->is_admin =='hrd'){{ Request::is('hrd/bagian*') ? 'active open' : '' }}
+        @else
         {{ Request::is('bagian*') ? 'active open' : '' }}
-        @endif 
-        @if(Auth::user()->is_admin =='hrd'){{ Request::is('hrd/jabatan*') ? 'active open' : '' }} 
-        @else 
+        @endif
+        @if(Auth::user()->is_admin =='hrd'){{ Request::is('hrd/jabatan*') ? 'active open' : '' }}
+        @else
         {{ Request::is('jabatan*') ? 'active open' : '' }}
         @endif
           @if(Auth::user()->is_admin =='hrd')
@@ -123,41 +123,41 @@
             </a>
 
             <ul class="menu-sub">
-                <li class="menu-item 
+                <li class="menu-item
                 @if(Auth::user()->is_admin =='hrd')
                 {{ Request::is('hrd/karyawan/tambah-karyawan*') ? 'active open' : '' }}
                 @else
-                {{ Request::is('karyawan/tambah-karyawan*') ? 'active open' : '' }} 
+                {{ Request::is('karyawan/tambah-karyawan*') ? 'active open' : '' }}
                 @endif
                 @if(Auth::user()->is_admin =='hrd')
                 {{ Request::is('hrd/karyawan/detail*') ? 'active open' : '' }}
                 @else
-                {{ Request::is('karyawan/detail*') ? 'active open' : '' }} 
+                {{ Request::is('karyawan/detail*') ? 'active open' : '' }}
                 @endif
                 @if(Auth::user()->is_admin =='hrd')
                 {{ Request::is('hrd/karyawan/karyawan_masa_tenggang_kontrak/'.$holding) ? 'active open' : '' }}
-                 @else 
+                 @else
                 {{ Request::is('karyawan/karyawan_masa_tenggang_kontrak/'.$holding) ? 'active open' : '' }}
-                @endif 
-                @if(Auth::user()->is_admin =='hrd')
-                {{ Request::is('hrd/karyawan_ingin_bergabung/'.$holding) ? 'active open' : '' }} 
-                 @else 
-                 {{ Request::is('hrd/karyawan_ingin_bergabung/'.$holding) ? 'active open' : '' }} 
-                @endif 
-                @if(Auth::user()->is_admin =='hrd')
-                {{ Request::is('hrd/karyawan/'.$holding) ? 'active open' : '' }} 
-                @else 
-                {{ Request::is('karyawan/'.$holding) ? 'active open' : '' }} 
                 @endif
                 @if(Auth::user()->is_admin =='hrd')
-                {{ Request::is('hrd/karyawan/edit-password/*') ? 'active' : '' }} 
+                {{ Request::is('hrd/karyawan_ingin_bergabung/'.$holding) ? 'active open' : '' }}
+                 @else
+                 {{ Request::is('hrd/karyawan_ingin_bergabung/'.$holding) ? 'active open' : '' }}
+                @endif
+                @if(Auth::user()->is_admin =='hrd')
+                {{ Request::is('hrd/karyawan/'.$holding) ? 'active open' : '' }}
                 @else
-                {{ Request::is('karyawan/edit-password/*') ? 'active' : '' }} 
+                {{ Request::is('karyawan/'.$holding) ? 'active open' : '' }}
+                @endif
+                @if(Auth::user()->is_admin =='hrd')
+                {{ Request::is('hrd/karyawan/edit-password/*') ? 'active' : '' }}
+                @else
+                {{ Request::is('karyawan/edit-password/*') ? 'active' : '' }}
                  @endif
                  @if(Auth::user()->is_admin =='hrd')
-                 {{ Request::is('hrd/users*') ? 'active open' : '' }} 
+                 {{ Request::is('hrd/users*') ? 'active open' : '' }}
                 @else
-                 {{ Request::is('users*') ? 'active open' : '' }} 
+                 {{ Request::is('users*') ? 'active open' : '' }}
                   @endif
                  @if(Auth::user()->is_admin =='hrd')
                  {{ Request::is('hrd/karyawan_non_aktif*') ? 'active open' : '' }}
@@ -175,16 +175,16 @@
                         <div style="font-size: 10pt;" data-i18n="Data Master">&nbsp;Karyawan</div>
                     </a>
                     <ul class="menu-sub">
-                        <li class="menu-item 
+                        <li class="menu-item
                         @if(Auth::user()->is_admin =='hrd')
-                        {{ Request::is('hrd/karyawan/'.$holding) ? 'active' : '' }} 
-                        {{ Request::is('hrd/karyawan/tambah-karyawan/'.$holding) ? 'active' : '' }} 
-                        {{ Request::is('hrd/karyawan/detail*') ? 'active' : '' }} 
+                        {{ Request::is('hrd/karyawan/'.$holding) ? 'active' : '' }}
+                        {{ Request::is('hrd/karyawan/tambah-karyawan/'.$holding) ? 'active' : '' }}
+                        {{ Request::is('hrd/karyawan/detail*') ? 'active' : '' }}
                         {{ Request::is('hrd/karyawan/shift*') ? 'active' : '' }}
-                        @else 
-                        {{ Request::is('karyawan/'.$holding) ? 'active' : '' }} 
-                        {{ Request::is('karyawan/tambah-karyawan/'.$holding) ? 'active' : '' }} 
-                        {{ Request::is('karyawan/detail*') ? 'active' : '' }} 
+                        @else
+                        {{ Request::is('karyawan/'.$holding) ? 'active' : '' }}
+                        {{ Request::is('karyawan/tambah-karyawan/'.$holding) ? 'active' : '' }}
+                        {{ Request::is('karyawan/detail*') ? 'active' : '' }}
                         {{ Request::is('karyawan/shift*') ? 'active' : '' }}
                          @endif
                          ">
@@ -192,32 +192,32 @@
                             {{ url('/hrd/karyawan/'.$holding) }}
                             @else
                             {{ url('/karyawan/'.$holding) }}
-                            @endif 
+                            @endif
                             " class="menu-link">
                                 <i class="menu-icon tf-icons mdi mdi-database-outline"></i>
                                 <div style="font-size: 10pt;" data-i18n="Data Karyawan">&nbsp;Database&nbsp;Karyawan</div>
                             </a>
                         </li>
-                        <li class="menu-item 
+                        <li class="menu-item
                         @if(Auth::user()->is_admin =='hrd')
-                        {{ Request::is('hrd/users*') ? 'active' : '' }} 
+                        {{ Request::is('hrd/users*') ? 'active' : '' }}
                         {{ Request::is('hrd/karyawan/edit-password/*') ? 'active' : '' }}
                         @else
-                        {{ Request::is('users*') ? 'active' : '' }} 
+                        {{ Request::is('users*') ? 'active' : '' }}
                        {{ Request::is('karyawan/edit-password/*') ? 'active' : '' }}
-                       @endif 
+                       @endif
                        ">
                             <a href="@if(Auth::user()->is_admin=='hrd')
                             {{ url('/hrd/users/'.$holding) }}
                             @else
                             {{ url('/users/'.$holding) }}
-                            @endif 
+                            @endif
                             " class="menu-link">
                                 <i class="menu-icon tf-icons mdi mdi-account-key"></i>
                                 <div style="font-size: 10pt;" data-i18n="Users">&nbsp;User Karyawan&nbsp;</div>
                             </a>
                         </li>
-                        <li class="menu-item 
+                        <li class="menu-item
                         @if(Auth::user()->is_admin =='hrd')
                         {{ Request::is('hrd/karyawan_ingin_bergabung*') ? 'active' : '' }}
                          @else
@@ -228,13 +228,13 @@
                             {{ url('/hrd/karyawan_ingin_bergabung/'.$holding) }}
                             @else
                             {{ url('/karyawan_ingin_bergabung/'.$holding) }}
-                            @endif 
+                            @endif
                             " class="menu-link">
                                 <i class="menu-icon tf-icons mdi mdi-account-clock-outline"></i>
                                 <div style="font-size: 10pt;" data-i18n="Karyawan Non Aktif">&nbsp;Karyawan&nbsp;Yang&nbsp;Ingin&nbsp;Bergabung</div>
                             </a>
                         </li>
-                        <li class="menu-item 
+                        <li class="menu-item
                         @if(Auth::user()->is_admin =='hrd')
                         {{ Request::is('hrd/karyawan/karyawan_masa_tenggang_kontrak*') ? 'active' : '' }}
                         @else
@@ -250,7 +250,7 @@
                                 <div style="font-size: 10pt;" data-i18n="Karyawan Masa Tenggang Kontrak">&nbsp;Karyawan&nbsp;Masa&nbsp;Tenggang&nbsp;Kontrak</div>
                             </a>
                         </li>
-                        <li class="menu-item 
+                        <li class="menu-item
                         @if(Auth::user()->is_admin =='hrd')
                         {{ Request::is('hrd/karyawan_non_aktif*') ? 'active' : '' }}
                         @else
@@ -268,7 +268,7 @@
                         </li>
                     </ul>
                 </li>
-                <li class="menu-item 
+                <li class="menu-item
                 @if(Auth::user()->is_admin =='hrd')
                 {{ Request::is('hrd/struktur_organisasi*') ? 'active' : '' }}
                 @else
@@ -284,7 +284,7 @@
                         <div style="font-size: 10pt;" data-i18n="Struktur Organisasi">&nbsp;Struktur&nbsp;Organisasi</div>
                     </a>
                 </li>
-                <li class="menu-item 
+                <li class="menu-item
                 @if(Auth::user()->is_admin =='hrd')
                 {{ Request::is('hrd/departemen*') ? 'active' : '' }}
                 @else
@@ -300,7 +300,7 @@
                         <div style="font-size: 10pt;" data-i18n="Blank">&nbsp;Master&nbsp;Departmen</div>
                     </a>
                 </li>
-                <li class="menu-item 
+                <li class="menu-item
                 @if(Auth::user()->is_admin =='hrd')
                 {{ Request::is('hrd/divisi*') ? 'active' : '' }}
                 @else
@@ -315,7 +315,7 @@
                         <div style="font-size: 10pt;" data-i18n="Blank">&nbsp;Master&nbsp;Divisi</div>
                     </a>
                 </li>
-                <li class="menu-item 
+                <li class="menu-item
                 @if(Auth::user()->is_admin =='hrd')
                 {{ Request::is('hrd/bagian*') ? 'active' : '' }}
                 @else
@@ -331,12 +331,12 @@
                         <div style="font-size: 10pt;" data-i18n="Blank">&nbsp;Master&nbsp;Bagian</div>
                     </a>
                 </li>
-                <li class="menu-item 
+                <li class="menu-item
                 @if(Auth::user()->is_admin =='hrd')
-                {{ Request::is('hrd/jabatan*') ? 'active' : '' }} 
+                {{ Request::is('hrd/jabatan*') ? 'active' : '' }}
                 {{ Request::is('hrd/detail_jabatan*') ? 'active' : '' }}
                 @else
-                {{ Request::is('jabatan*') ? 'active' : '' }} 
+                {{ Request::is('jabatan*') ? 'active' : '' }}
                 {{ Request::is('detail_jabatan*') ? 'active' : '' }}
                  @endif
                  ">
@@ -351,10 +351,10 @@
                 </li>
             </ul>
         </li>
-        <li class="menu-item 
+        <li class="menu-item
         {{ Request::is('shift*') ? 'active open' : '' }}
         {{ Request::is('lokasi-kantor*') ? 'active open' : '' }}
-        {{ Request::is('rekap-data*') ? 'active open' : '' }} 
+        {{ Request::is('rekap-data*') ? 'active open' : '' }}
          {{ Request::is('report/*') ? 'active open' : '' }}
         {{ Request::is('karyawan/mapping_shift*') ? 'active open' : '' }}">
             <a href="javascript:void(0);" class="menu-link menu-toggle">
@@ -362,16 +362,16 @@
                 <div style="font-size: 10pt;" data-i18n="Data Master">Absensi&nbsp;Karyawan</div>
             </a>
             <ul class="menu-sub">
-                <li class="menu-item 
+                <li class="menu-item
                 {{ Request::is('lokasi-kantor*') ? 'active' : '' }}
-                 
+
                  ">
                     <a href="{{ url('/lokasi-kantor/'.$holding) }}" class="menu-link">
                         <i class="menu-icon tf-icons mdi mdi-database-marker-outline"></i>
                         <div style="font-size: 10pt;" data-i18n="Fluid">&nbsp;Master&nbsp;Lokasi</div>
                     </a>
                 </li>
-                <li class="menu-item 
+                <li class="menu-item
                 {{ Request::is('shift*') ? 'active' : '' }}
                 ">
                     <a href="{{ url('/shift/'.$holding) }}" class=" menu-link">
@@ -383,8 +383,8 @@
                         <div style="font-size: 10pt;" data-i18n="Without navbar"><i class="mdi mdi-account-clock-outline"></i>&nbsp;Mapping&nbsp;Absensi&nbsp;Karyawan</div>
                     </a>
                 </li>
-                <li class="menu-item 
-                    {{ Request::is('rekap-data*') ? 'active open' : '' }} 
+                <li class="menu-item
+                    {{ Request::is('rekap-data*') ? 'active open' : '' }}
                     {{ Request::is('report/*') ? 'active open' : '' }}">
                     <a href="javascript:void(0);" class="menu-link menu-toggle">
                         <i class="menu-icon tf-icons mdi mdi-file-document-multiple-outline"></i>
