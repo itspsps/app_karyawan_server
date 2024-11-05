@@ -134,7 +134,7 @@
                                     <div class="row g-2">
                                         <div class="col mb-2">
                                             <div class="form-floating form-floating-outline">
-                                                <textarea class="form-control @error('desc_recruitment') is-invalid @enderror" id="desc_recruitment" name="desc_recruitment" autofocus value="{{ old('desc_recruitment') }}" id="" cols="30" rows="10"></textarea>
+                                                <textarea class="form-control @error('desc_recruitment') is-invalid @enderror" id="desc_recruitment" name="desc_recruitment" autofocus value="{{ old('desc_recruitment') }}" id="" cols="30" rows="10" style="height: 70%"></textarea>
                                                 <label for="desc_recruitment">Syarat Ketentuan</label>
                                             </div>
                                             @error('desc_recruitment')
@@ -180,7 +180,9 @@
                                 <div class="modal-body">
                                     <div class="col-lg-12">
                                         <div class="form-floating form-floating-outline">
-                                            <textarea class="form-control @error('show_desc_recruitment') is-invalid @enderror" id="show_desc_recruitment" name="show_desc_recruitment" autofocus value="{{ old('show_desc_recruitment') }}" id="" cols="30" rows="10"></textarea>
+                                            <textarea class="form-control @error('show_desc_recruitment') is-invalid @enderror" id="show_desc_recruitment" name="show_desc_recruitment" autofocus value="{{ old('show_desc_recruitment') }}" cols="30" rows="20" style="height: auto" disabled></textarea>
+                                            {{-- <input class="form-control @error('show_desc_recruitment') is-invalid @enderror" id="show_desc_recruitment" name="show_desc_recruitment" autofocus value="{{ old('show_desc_recruitment') }}"> --}}
+                                            {{-- <input type="text" id="show_desc_recruitment"> --}}
                                             <label for="show_desc_recruitment">SYARAT KETENTUAN</label>
                                         </div>
                                         @error('show_desc_recruitment')
@@ -282,7 +284,7 @@
                                     <div class="row g-2">
                                         <div class="col mb-2">
                                             <div class="form-floating form-floating-outline">
-                                                <textarea class="form-control @error('desc_recruitment_update') is-invalid @enderror" id="desc_recruitment_update" name="desc_recruitment_update" autofocus value="{{ old('desc_recruitment_update') }}" id="" cols="30" rows="10"></textarea>
+                                                <textarea class="form-control @error('desc_recruitment_update') is-invalid @enderror" id="desc_recruitment_update" name="desc_recruitment_update" autofocus value="{{ old('desc_recruitment_update') }}" id="" cols="30" rows="10" style="height: 50%"></textarea>
                                                 <label for="desc_recruitment_update">Syarat Ketentuan</label>
                                             </div>
                                             @error('desc_recruitment_update')
@@ -332,15 +334,15 @@
 <script src="https://cdn.datatables.net/2.0.5/js/dataTables.js"></script>
 <script src="https://cdn.datatables.net/2.0.5/js/dataTables.bootstrap5.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
-<script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.min.js"></script>
-<script>
+{{-- <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.min.js"></script> --}}
+{{-- <script>
     $(document).ready(function() {
         $("#desc_recruitment").summernote();
         // $("#show_desc_recruitment").summernote();
         $("#desc_recruitment_update").summernote();
         $('.dropdown-toggle').dropdown();
     });
-</script>
+</script> --}}
 {{-- start datatable  --}}
 <script>
     let holding = window.location.pathname.split("/").pop();
@@ -373,7 +375,7 @@
             },
             {
                 data: 'desc_recruitment',
-                name: 'desc_recruitment'
+                name: 'desc_recruitment',
             },
             {
                 data: 'pelamar',
@@ -455,11 +457,11 @@
     // show modal syarat
     $(document).on('click', '#btn_lihat_syarat', function() {
         let id = $(this).data('id');
-        let desc = $(this).data('desc'); // Mendapatkan data dengan HTML
-        // desc = $('<div>').html(desc).text();
+        let desc = $(this).data('desc');
+        console.log(desc);
         let holding = $(this).data("holding");
-        $('#show_desc_recruitment').summernote('code',desc);
-        $('#show_desc_recruitment').summernote('disable');
+        $('#show_desc_recruitment').val(desc);
+        // $('#show_desc_recruitment').summernote('disable');
         // let url = "{{ url('recruitment/show/') }}" + '/' + id + '/' + holding;
         $('#modal_lihat_syarat').modal('show');
     });
@@ -551,28 +553,22 @@
     });
     // edit data
     $(document).on("click", "#btn_edit_recruitment", function() {
-        let id = $(this).data('id');
-        let dept = $(this).data("dept");
-        let divisi = $(this).data("divisi");
-        let bagian = $(this).data("bagian");
+        let id      = $(this).data('id');
+        let dept    = $(this).data("dept");
+        let divisi  = $(this).data("divisi");
+        let bagian  = $(this).data("bagian");
         let tanggal = $(this).data("tanggal");
         let holding = $(this).data("holding");
-        console.log(dept);
-        console.log(divisi);
-        console.log(bagian);
-        console.log(tanggal);
-        // console.log(desc);
-        console.log(holding);
+        let desc    = $(this).data("desc");
         $('#id_recruitment').val(id);
         $('#nama_departemen_update option').filter(function() {
-            // console.log($(this).val().trim());
             return $(this).val().trim() == dept
         }).prop('selected', true)
         $('#nama_divisi_update option').filter(function() {
-            // console.log($(this).val().trim());
             return $(this).val().trim() == divisi
         }).prop('selected', true)
         $('#nama_bagian_update').val(bagian);
+        $('#desc_recruitment_update').val(desc);
         $('#created_recruitment_update').val(tanggal);
         $('#modal_edit_recruitment').modal('show');
 
@@ -596,8 +592,13 @@
                 $.ajax({
                     url: "{{ url('/recruitment/delete/') }}" + '/' + id + '/' + holding,
                     type: "GET",
-                    error: function() {
-                        alert('Something is wrong');
+                    error: function(data) {
+                        Swal.fire({
+                            title: 'Gagal!',
+                            text: 'Terdapat data tidak dapat dihapus.',
+                            icon: 'error',
+                            confirmButtonText: 'Tutup'
+                        });
                     },
                     success: function(data) {
                         Swal.fire({

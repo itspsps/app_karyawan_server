@@ -36,12 +36,12 @@ class RecruitmentController extends Controller
         $holding = request()->segment(count(request()->segments()));
         return view('admin.recruitment-users.index', [
             // return view('karyawan.index', [
-            'title' => 'Data Recruitment',
-            'holding'   => $holding,
-            'data_departemen' => Departemen::all(),
-            'data_bagian' => Bagian::with('Divisi')->where('holding', $holding)->get(),
-            'data_dept' => Departemen::orderBy('nama_departemen', 'asc')->where('holding', $holding)->get(),
-            'data_divisi' => Divisi::orderBy('nama_divisi', 'asc')->where('holding', $holding)->get()
+            'title'             => 'Data Recruitment',
+            'holding'           => $holding,
+            'data_departemen'   => Departemen::all(),
+            'data_bagian'       => Bagian::with('Divisi')->where('holding', $holding)->get(),
+            'data_dept'         => Departemen::orderBy('nama_departemen', 'asc')->where('holding', $holding)->get(),
+            'data_divisi'       => Divisi::orderBy('nama_divisi', 'asc')->where('holding', $holding)->get()
         ]);
     }
 
@@ -60,12 +60,13 @@ class RecruitmentController extends Controller
                 }]);
                 $query->orderBy('nama_bagian', 'ASC');
             },
-        ])->where('holding_recruitment', $holding)->orderBy('nama_bagian', 'ASC')->get();
+        ])->orderBy('created_recruitment', 'desc')->get();
+        // dd($table);
         if (request()->ajax()) {
             return DataTables::of($table)
                 ->addColumn('nama_departemen', function ($row) {
                     if ($row->Bagian == NULL) {
-                        $nama_departemen = NULL;
+                        $nama_departemen = 'vv';
                     } else {
                         $nama_departemen = $row->Bagian->Divisi->Departemen->nama_departemen;
                     }
@@ -73,7 +74,7 @@ class RecruitmentController extends Controller
                 })
                 ->addColumn('nama_divisi', function ($row) {
                     if ($row->Bagian == NULL) {
-                        $nama_divisi = NULL;
+                        $nama_divisi = 'v';
                     } else {
                         $nama_divisi = $row->Bagian->Divisi->nama_divisi;
                     }
@@ -81,7 +82,7 @@ class RecruitmentController extends Controller
                 })
                 ->addColumn('nama_bagian', function ($row) {
                     if ($row->Bagian == NULL) {
-                        $nama_bagian = NULL;
+                        $nama_bagian = 'a';
                     } else {
                         $nama_bagian = $row->Bagian->nama_bagian;
                     }
@@ -94,7 +95,7 @@ class RecruitmentController extends Controller
                                 data-desc="' . $row->desc_recruitment . '"
                                 type="button" class="btn btn-sm btn-info ">
                                 <i class="tf-icons mdi mdi-eye-circle-outline me-1"></i>
-                                Lihat Syarat
+                                Lihat&nbsp;Syarat
                             </button>';
                     return $btn;
                 })
@@ -102,7 +103,7 @@ class RecruitmentController extends Controller
                     $url = url('/pg/data-list-pelamar/'. $row->id .'/'.$holding);
                     $btn = '<a href="' . $url . '" class="btn btn-sm btn-info">
                                 <i class="tf-icons mdi mdi-eye-circle-outline me-1"></i>
-                                Lihat Pelamar
+                                Lihat&nbsp;Pelamar
                             </a>';
                     return $btn;
                 })
@@ -136,6 +137,7 @@ class RecruitmentController extends Controller
                             data-bagian="' . $row->nama_bagian . '"
                             data-tanggal="' . $row->created_recruitment . '"
                             data-holding="' . $holding . '"
+                            data-desc="' . $row->desc_recruitment . '"
                             type="button"
                             class="btn btn-icon btn-warning waves-effect waves-light">
                                 <span class="tf-icons mdi mdi-pencil-outline"></span>
@@ -223,9 +225,9 @@ class RecruitmentController extends Controller
                 'activity' => 'update',
                 'description' => 'Update data Recruitment Description' . Auth::user()->name,
             ]);
-            return redirect('/recruitment/' . $holding)->with('success', 'Data Berhasil di Diupdate');
+            return redirect()->back()->with('success', 'Data Berhasil di Diupdate');
         } else {
-            return redirect('/recruitment/' . $holding)->with('error', 'Data  Gagal di Diupdate');
+            return redirect()->back()->with('error', 'Data  Gagal di Diupdate');
         }
     }
 
@@ -233,17 +235,23 @@ class RecruitmentController extends Controller
     {
         // dd($id);
         $holding = request()->segment(count(request()->segments()));
-        $hapus = Recruitment::where('id', $id)->where('holding_recruitment', $holding)->delete();
-        if ($hapus) {
-            ActivityLog::create([
-                'user_id' => Auth::user()->id,
-                'activity' => 'hapus',
-                'description' => 'Hapus data Recruitment' . Auth::user()->name,
-            ]);
-            return redirect('/recruitment/' . $holding)->with('success', 'Data Berhasil di Hapus');
-        } else {
-            return redirect('/recruitment/' . $holding)->with('error', 'Data  Gagal di Hapus');
+        $data = DB::table('recruitment_user')->where('recruitment_admin_id', $id)->first();
+        if($data == null){
+            $hapus = Recruitment::where('id', $id)->where('holding_recruitment', $holding)->delete();
+            if ($hapus) {
+                ActivityLog::create([
+                    'user_id' => Auth::user()->id,
+                    'activity' => 'hapus',
+                    'description' => 'Hapus data Recruitment' . Auth::user()->name,
+                ]);
+                return redirect()->back()->with('success', 'Data Berhasil di Hapus');
+            } else {
+                return redirect()->back()->with('error', 'Data  Gagal di Hapus');
+            }
+        }else{
+            dd('stop');
         }
+
     }
 
     function pg_list_pelamar($id)
@@ -288,51 +296,50 @@ class RecruitmentController extends Controller
         ->get();
         if (request()->ajax()) {
             return DataTables::of($table)
-
                 ->addColumn('detail_cv', function ($row) use ($holding) {
                     $btn = '<button id="btn_lihat_cv"
                                 data-id="' . $row->id . '"
-                                data-nama_pelamar="' . $row->nama_depan . ' ' . $row->nama_tengah . ' ' . $row->nama_belakang . '"
-                                data-tempat_lahir="' . $row->tempat_lahir . '"
-                                data-tanggal_lahir="' . $row->tanggal_lahir . '"
-                                data-gender="' . $row->gender . '"
-                                data-status_nikah="' . $row->status_nikah . '"
-                                data-nik="' . $row->nik . '"
+                                data-nama_pelamar="' . $row->Cv->nama_depan . ' ' . $row->Cv->nama_tengah . ' ' . $row->Cv->nama_belakang . '"
+                                data-tempat_lahir="' . $row->Cv->tempat_lahir . '"
+                                data-tanggal_lahir="' . $row->Cv->tanggal_lahir . '"
+                                data-gender="' . $row->Cv->gender . '"
+                                data-status_nikah="' . $row->Cv->status_nikah . '"
+                                data-nik="' . $row->Cv->nik . '"
                                 data-departemen="' . $row->Bagian->Divisi->Departemen->nama_departemen . '"
                                 data-divisi="' . $row->Bagian->Divisi->nama_divisi . '"
                                 data-bagian="' . $row->Bagian->nama_bagian . '"
                                 data-email="' . $row->email . '"
-                                data-no_hp="' . $row->no_hp . '"
-                                data-alamatktp="' . $row->alamat_ktp . '"
-                                data-nama_sdmi="' . $row->nama_sdmi . '"
-                                data-tahun_sdmi="' . $row->tahun_sdmi . '"
-                                data-nama_smpmts="' . $row->nama_smpmts . '"
-                                data-tahun_smpmts="' . $row->tahun_smpmts . '"
-                                data-nama_smamasmk="' . $row->nama_smamasmk . '"
-                                data-tahun_smamasmk="' . $row->tahun_smamasmk . '"
-                                data-nama_universitas="' . $row->nama_universitas . '"
-                                data-tahun_universitas="' . $row->tahun_universitas . '"
-                                data-judul_keterampilan1="' . $row->judul_keterampilan1 . '"
-                                data-ket_keterampilan1="' . $row->ket_keterampilan1 . '"
-                                data-judul_keterampilan2="' . $row->judul_keterampilan2 . '"
-                                data-ket_keterampilan2="' . $row->ket_keterampilan2 . '"
-                                data-judul_keterampilan3="' . $row->judul_keterampilan3 . '"
-                                data-ket_keterampilan3="' . $row->ket_keterampilan3 . '"
-                                data-judul_pengalaman1="' . $row->judul_pengalaman1 . '"
-                                data-lokasi_pengalaman1="' . $row->lokasi_pengalaman1 . '"
-                                data-tahun_pengalaman1="' . $row->tahun_pengalaman1 . '"
-                                data-judul_pengalaman2="' . $row->judul_pengalaman2 . '"
-                                data-lokasi_pengalaman2="' . $row->lokasi_pengalaman2 . '"
-                                data-tahun_pengalaman2="' . $row->tahun_pengalaman2 . '"
-                                data-judul_pengalaman3="' . $row->judul_pengalaman3 . '"
-                                data-lokasi_pengalaman3="' . $row->lokasi_pengalaman3 . '"
-                                data-tahun_pengalaman3="' . $row->tahun_pengalaman3 . '"
-                                data-prestasi1="' . $row->prestasi1 . '"
-                                data-prestasi2="' . $row->prestasi2 . '"
-                                data-prestasi3="' . $row->prestasi3 . '"
-                                data-img_ktp="' . $row->file_ktp . '"
-                                data-img_kk="' . $row->file_kk . '"
-                                data-img_ijazah="' . $row->file_ijazah . '"
+                                data-no_hp="' . $row->Cv->no_hp . '"
+                                data-alamatktp="' . $row->Cv->alamat_ktp . '"
+                                data-nama_sdmi="' . $row->Cv->nama_sdmi . '"
+                                data-tahun_sdmi="' . $row->Cv->tahun_sdmi . '"
+                                data-nama_smpmts="' . $row->Cv->nama_smpmts . '"
+                                data-tahun_smpmts="' . $row->Cv->tahun_smpmts . '"
+                                data-nama_smamasmk="' . $row->Cv->nama_smamasmk . '"
+                                data-tahun_smamasmk="' . $row->Cv->tahun_smamasmk . '"
+                                data-nama_universitas="' . $row->Cv->nama_universitas . '"
+                                data-tahun_universitas="' . $row->Cv->tahun_universitas . '"
+                                data-judul_keterampilan1="' . $row->Cv->judul_keterampilan1 . '"
+                                data-ket_keterampilan1="' . $row->Cv->ket_keterampilan1 . '"
+                                data-judul_keterampilan2="' . $row->Cv->judul_keterampilan2 . '"
+                                data-ket_keterampilan2="' . $row->Cv->ket_keterampilan2 . '"
+                                data-judul_keterampilan3="' . $row->Cv->judul_keterampilan3 . '"
+                                data-ket_keterampilan3="' . $row->Cv->ket_keterampilan3 . '"
+                                data-judul_pengalaman1="' . $row->Cv->judul_pengalaman1 . '"
+                                data-lokasi_pengalaman1="' . $row->Cv->lokasi_pengalaman1 . '"
+                                data-tahun_pengalaman1="' . $row->Cv->tahun_pengalaman1 . '"
+                                data-judul_pengalaman2="' . $row->Cv->judul_pengalaman2 . '"
+                                data-lokasi_pengalaman2="' . $row->Cv->lokasi_pengalaman2 . '"
+                                data-tahun_pengalaman2="' . $row->Cv->tahun_pengalaman2 . '"
+                                data-judul_pengalaman3="' . $row->Cv->judul_pengalaman3 . '"
+                                data-lokasi_pengalaman3="' . $row->Cv->lokasi_pengalaman3 . '"
+                                data-tahun_pengalaman3="' . $row->Cv->tahun_pengalaman3 . '"
+                                data-prestasi1="' . $row->Cv->prestasi1 . '"
+                                data-prestasi2="' . $row->Cv->prestasi2 . '"
+                                data-prestasi3="' . $row->Cv->prestasi3 . '"
+                                data-img_ktp="' . $row->Cv->file_ktp . '"
+                                data-img_kk="' . $row->Cv->file_kk . '"
+                                data-img_ijazah="' . $row->Cv->file_ijazah . '"
                                 data-img_pp="' . $row->file_pp . '"
                                 type="button" class="btn btn-sm btn-info ">
                                 <i class="tf-icons mdi mdi-eye-circle-outline me-1"></i>
@@ -502,6 +509,7 @@ class RecruitmentController extends Controller
                 $query->orderBy('nama_bagian', 'ASC');
             },
         ])->where('holding_recruitment', $holding)->orderBy('nama_bagian', 'ASC')->get();
+        // dd($table);
         if (request()->ajax()) {
             return DataTables::of($table)
                 ->addColumn('nama_departemen', function ($row) {

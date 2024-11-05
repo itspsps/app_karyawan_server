@@ -934,22 +934,14 @@
         $('input[type="checkbox"]', rows).prop('checked', this.checked);
     });
 
-    // Ketika tombol submit ditekan
     $('#submit-btny').on('click', function(e) {
         e.preventDefault();
-
-        // Ambil semua checkbox yang dipilih
         var selectedUsers = [];
         $('input[name="selected_users[]"]:checked').each(function() {
             selectedUsers.push($(this).val());
         });
-
-        // Tampilkan modal jika ada checkbox yang dipilih
         if (selectedUsers.length > 0) {
-            // Kosongkan input sebelumnya dari modal
             $('#input-users-list-y').empty();
-
-            // Tambahkan input text untuk setiap ID user yang dipilih
             selectedUsers.forEach(function(userId) {
                 $('#input-users-list-y').append(
                     '<div class="form-group">' +
@@ -957,8 +949,6 @@
                     '</div>'
                 );
             });
-
-            // Tampilkan modal
             $('#confirmModalY').modal('show');
         } else {
             alert('Please select at least one user.');
@@ -995,9 +985,7 @@
         }
     });
 
-    // Ketika tombol "Confirm" di modal ditekan
     $('#confirm-submit').on('click', function() {
-        // Kirim form
         $('#users-form').submit();
     });
 
@@ -1090,7 +1078,7 @@
         $('#show_prestasi1').text(nama_prestasi1);
         $('#show_prestasi2').text(nama_prestasi2);
         $('#show_prestasi3').text(nama_prestasi3);
-        $('#show_imgktp').attr('src', 'http://127.0.0.1:8000/images/' + nama_imgktp);
+        $('#show_imgktp').attr('src', asset('assets/img/') + nama_imgktp);
         $('#show_imgkk').attr('src', 'http://127.0.0.1:8000/images/' + nama_imgkk);
         $('#show_imgijazah').attr('src', 'http://127.0.0.1:8000/images/' + nama_imgijazah);
         if (nama_pp == "") {
