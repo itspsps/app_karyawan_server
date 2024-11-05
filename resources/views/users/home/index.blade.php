@@ -1717,6 +1717,44 @@
                 <div class="card-body" style="padding: 5%; margin: 2%;">
                     <div class="row">
                         <div class="col">
+                            <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="Layer_1" viewBox="0 0 496 496" xml:space="preserve" class="icon_kategori">
+                                <path style="fill:#50BB75;" d="M416,462.4c0,19.2-12.8,33.6-32.8,33.6H112.8c-20,0-32.8-14.4-32.8-33.6V52.8  C80,33.6,92.8,16,112.8,16h269.6c20.8,0,33.6,17.6,33.6,36.8V462.4z" />
+                                <path style="fill:#0AA06E;" d="M80,52.8C80,33.6,92.8,16,112.8,16h269.6c20.8,0,33.6,17.6,33.6,36.8v409.6  c0,19.2-14.4,33.6-35.2,33.6" />
+                                <path style="fill:#40406B;" d="M320,36c0,3.2-4.8,4-8,4H184c-3.2,0-8-0.8-8-4V4.8c0-2.4,4.8-4.8,8-4.8h128c3.2,0,8,2.4,8,4.8V36z" />
+                                <rect x="128" y="72" style="fill:#EAEAEA;" width="240" height="376" />
+                                <polyline style="fill:#DDDDDD;" points="128,72 368,72 368,448 " />
+                                <rect x="160" y="104" style="fill:#A8A8A8;" width="56" height="56" />
+                                <g>
+                                    <rect x="152" y="184" style="fill:#C4C4C4;" width="192" height="16" />
+                                    <rect x="152" y="232" style="fill:#C4C4C4;" width="192" height="16" />
+                                    <rect x="152" y="280" style="fill:#C4C4C4;" width="192" height="16" />
+                                    <rect x="152" y="328" style="fill:#C4C4C4;" width="192" height="16" />
+                                    <rect x="152" y="376" style="fill:#C4C4C4;" width="88" height="16" />
+                                </g>
+                                <polygon style="fill:#F15249;" points="344,376 320,376 320,360 296,360 296,376 272,376 272,400 296,400 296,424 320,424 320,400   344,400 " />
+                                <rect x="248" y="112" style="fill:#E88610;" width="96" height="32" />
+                            </svg>
+                        </div>
+                        <div class="col" style="position: relative;">
+                            <h6 class="icon_text title">IZIN</h6>
+                            <span class="">
+                                <h3 id="count_izin">
+                                    <div class="spinner-border spinner-border-sm mb-2 text-primary" role="status">
+                                        <span class="sr-only">Loading...</span>
+                                    </div>
+                                </h3>
+                            </span>
+                        </div>
+                    </div>
+                    <p style="font-size: 5pt; text-align: center; position: absolute; font-weight: bold;">(Sakit&nbsp;&&nbsp;Tidak&nbsp;Masuk)</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-6">
+            <div class="card" style="box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.2), 0 3px 10px 0 rgba(0, 0, 0, 0.1);">
+                <div class="card-body" style="padding: 5%; margin: 2%;">
+                    <div class="row">
+                        <div class="col">
                             <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" class="icon_kategori" version="1.1" id="Capa_1" viewBox="0 0 512 512" xml:space="preserve">
                                 <path style="fill:#F5CDB3;" d="M65.782,447.977c-26.082,0.131-47.724-20.174-49.271-46.224L0.089,125.22  C-0.69,112.118,3.68,99.498,12.394,89.682c8.714-9.815,20.729-15.649,33.832-16.426l197.075-11.705  c27.292-1.634,50.364,19.195,51.964,46.14l16.424,276.531c1.608,27.046-19.092,50.358-46.137,51.965L68.477,447.889  C67.576,447.943,66.674,447.973,65.782,447.977z" />
                                 <path style="fill:#F0A479;" d="M295.266,107.69c-1.6-26.944-24.672-47.774-51.964-46.14l-96.81,5.75l21.531,374.677l97.531-5.793  c27.046-1.607,47.744-24.918,46.137-51.965L295.266,107.69z" />
@@ -1736,46 +1774,9 @@
                                 </g>
                             </svg>
                         </div>
-                        <div class="col" style="position: relative;">
-                            <h6 class="icon_text title">IZIN</h6>
-                            <span class="">
-                                <h3 id="count_izin">
-                                    <div class="spinner-border spinner-border-sm mb-2 text-primary" role="status">
-                                        <span class="sr-only">Loading...</span>
-                                    </div>
-                                </h3>
-                            </span>
-                        </div>
-                    </div>
-                    <p style="font-size: 5pt; text-align: center; position: absolute; font-weight: bold;">(Terlambat, Pulang&nbsp;Cepat, Keluar&nbsp;Kantor)</p>
-                </div>
-            </div>
-        </div>
-        <div class="col-6">
-            <div class="card" style="box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.2), 0 3px 10px 0 rgba(0, 0, 0, 0.1);">
-                <div class="card-body" style="padding: 5%; margin: 2%;">
-                    <div class="row">
+
                         <div class="col">
-                            <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="Layer_1" viewBox="0 0 496 496" xml:space="preserve" class="icon_kategori">
-                                <path style="fill:#50BB75;" d="M416,462.4c0,19.2-12.8,33.6-32.8,33.6H112.8c-20,0-32.8-14.4-32.8-33.6V52.8  C80,33.6,92.8,16,112.8,16h269.6c20.8,0,33.6,17.6,33.6,36.8V462.4z" />
-                                <path style="fill:#0AA06E;" d="M80,52.8C80,33.6,92.8,16,112.8,16h269.6c20.8,0,33.6,17.6,33.6,36.8v409.6  c0,19.2-14.4,33.6-35.2,33.6" />
-                                <path style="fill:#40406B;" d="M320,36c0,3.2-4.8,4-8,4H184c-3.2,0-8-0.8-8-4V4.8c0-2.4,4.8-4.8,8-4.8h128c3.2,0,8,2.4,8,4.8V36z" />
-                                <rect x="128" y="72" style="fill:#EAEAEA;" width="240" height="376" />
-                                <polyline style="fill:#DDDDDD;" points="128,72 368,72 368,448 " />
-                                <rect x="160" y="104" style="fill:#A8A8A8;" width="56" height="56" />
-                                <g>
-                                    <rect x="152" y="184" style="fill:#C4C4C4;" width="192" height="16" />
-                                    <rect x="152" y="232" style="fill:#C4C4C4;" width="192" height="16" />
-                                    <rect x="152" y="280" style="fill:#C4C4C4;" width="192" height="16" />
-                                    <rect x="152" y="328" style="fill:#C4C4C4;" width="192" height="16" />
-                                    <rect x="152" y="376" style="fill:#C4C4C4;" width="88" height="16" />
-                                </g>
-                                <polygon style="fill:#F15249;" points="344,376 320,376 320,360 296,360 296,376 272,376 272,400 296,400 296,424 320,424 320,400   344,400 " />
-                                <rect x="248" y="112" style="fill:#E88610;" width="96" height="32" />
-                            </svg>
-                        </div>
-                        <div class="col">
-                            <h6 class="icon_text title"><a href="javascript:void(0);">SAKIT</a></h6>
+                            <h6 class="icon_text title"><a href="javascript:void(0);">CUTI</a></h6>
                             <span class="">
                                 <h3 id="count_sakit">
                                     <div class="spinner-border spinner-border-sm mb-2 text-primary" role="status">
@@ -1907,7 +1908,7 @@
                     alert('Something is wrong');
                 },
                 success: function(data) {
-                    console.log(data.count_absen_hadir)
+                    // console.log(data.count_absen_hadir)
                     $('#count_absen_hadir').html(data.count_absen_hadir);
                     $('#count_telat').html(data.count_telat);
                     $('#count_izin').html(data.count_izin);

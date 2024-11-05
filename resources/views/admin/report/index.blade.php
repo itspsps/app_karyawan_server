@@ -24,119 +24,8 @@
                 <div class="card-body">
                     <hr class="">
                     <div class="row mt-3 g-3">
-                        <div class="col-lg-3">
+                        <div class="col-lg-6">
                             <input type="month" name="filter_month" id="filter_month" class="form-control" value="{{date('Y-m')}}">
-                        </div>
-                    </div>
-                    <div class="modal fade" id="modal_import_absensi" data-bs-backdrop="static" tabindex="-1">
-                        <div class="modal-dialog modal-dialog-scrollable modal-lg">
-                            <form method="post" action="{{ url('/rekapdata/ImportAbsensi/'.$holding) }}" class="modal-content" enctype="multipart/form-data">
-                                @csrf
-                                <div class="modal-header">
-                                    <h4 class="modal-title" id="backDropModalTitle">Import Data Absensi</h4>
-                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                </div>
-                                <div class="modal-body">
-                                    <div class="row g-2 mt-2">
-                                        <div class="col mb-2">
-                                            <div class="form-floating form-floating-outline">
-                                                <input type="file" id="file_excel" name="file_excel" accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel" class="form-control" placeholder="Masukkan File" />
-                                                <label for="file_excel">File Excel</label>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="row g-2 mt-2">
-                                        <a href="" type="button" download="" class="btn btn-sm btn-primary"> Download Format Excel</a>
-                                    </div>
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
-                                        Close
-                                    </button>
-                                    <button type="submit" class="btn btn-primary">Save</button>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                    <div class="modal fade" id="modal_export_absensi" data-bs-backdrop="static" tabindex="-1">
-                        <div class="modal-dialog modal-dialog-scrollable modal-lg">
-                            <form method="get" action="{{url('rekap-data/ExportAbsensi/'.$holding)}}" class="modal-content" enctype="multipart/form-data">
-                                @csrf
-                                <div class="modal-header">
-                                    <h4 class="modal-title" id="backDropModalTitle">Export Excel Absensi</h4>
-                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                </div>
-                                <div class="modal-body">
-                                    <div class="row g-2 mt-2">
-                                        <div class="col mb-2">
-                                            <div class="form-floating form-floating-outline">
-                                                <h6>Download File Excel Data Absensi</h6>
-                                                <button type="submit" class="btn btn-sm btn-success"> Download Excel</button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
-                                        Close
-                                    </button>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                    <div class="modal fade" id="modal_detail" data-bs-backdrop="static" tabindex="-1">
-                        <div class="modal-dialog modal-dialog-scrollable modal-xl">
-                            <form method="post" action="{{ url('/rekapdata/ImportAbsensi/'.$holding) }}" class="modal-content" enctype="multipart/form-data">
-                                @csrf
-                                <div class="modal-header">
-                                    <h4 class="modal-title" id="backDropModalTitle">Detail Absensi</h4>
-                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                </div>
-                                <div class="modal-body">
-                                    <!-- Transactions -->
-                                    <div class="col-lg-12">
-                                        <div class="card">
-                                            <div class="card-header">
-                                                <div class="d-flex align-items-center justify-content-between">
-                                                    <h5 id="title_detail" class="card-title m-0 me-2">DATA ABSENSI KARYAWAN </h5>
-                                                </div>
-                                            </div>
-                                            <div class="card-body">
-                                                <table class="table" id="table_rekapdata2" style="width: 100%;">
-                                                    <thead class="table-primary">
-                                                        <tr>
-                                                            <th rowspan="2" class="text-center">Detail</th>
-                                                            <th rowspan="2" class="text-center">No.</th>
-                                                            <th rowspan="2" class="text-center">ID&nbsp;Karyawan</th>
-                                                            <th rowspan="2" class="text-center">Nama&nbsp;Karyawan</th>
-                                                            <th colspan="2" class="text-center">Hadir&nbsp;Kerja</th>
-                                                            <th colspan="3" class="text-center">Keterangan</th>
-                                                            <th colspan="1" class="text-center">Tidak&nbsp;Hadir&nbsp;Kerja</th>
-                                                            <th rowspan="2" class="text-center">Total&nbsp;Keseluruhan</th>
-                                                        </tr>
-                                                        <tr>
-                                                            <th>Tepat&nbsp;Waktu</th>
-                                                            <th>Telat&nbsp;Hadir</th>
-                                                            <th>Izin</th>
-                                                            <th>Cuti</th>
-                                                            <th>Dinas</th>
-                                                            <th>Alfa</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody class="table-border-bottom-0">
-                                                    </tbody>
-                                                </table>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
-                                        Close
-                                    </button>
-
-                                </div>
-                            </form>
                         </div>
                     </div>
                     <hr class="my-5">
@@ -304,7 +193,8 @@
                         },
                         {
                             data: 'total_tidak_hadir_kerja',
-                            name: 'total_tidak_hadir_kerja'
+                            name: 'total_tidak_hadir_kerja',
+                            className: 'red-cell'
                         },
                         {
                             data: 'total_cuti',
@@ -411,7 +301,18 @@
                 });
                 // console.log(filter_month);
             });
+
+
             // console.log(datacolumn);
+            var xlsLetters = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M',
+                'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
+                'AA', 'AB', 'AC', 'AD', 'AE', 'AF', 'AG', 'AH', 'AI', 'AJ', 'AK',
+                'AL', 'AM', 'AN', 'AO', 'AP', 'AQ', 'AR', 'AS', 'AT', 'AU', 'AV',
+                'AW', 'AX', 'AY', 'AZ',
+                'BA', 'BB', 'BC', 'BD', 'BE', 'BF', 'BG', 'BH', 'BI', 'BJ', 'BK',
+                'BL', 'BM', 'BN', 'BO', 'BP', 'BQ', 'BR', 'BS', 'BT', 'BU', 'BV',
+                'BW', 'BX', 'BY', 'BZ'
+            ];
 
             function load_data(filter_month = '', datacolumn = '', colspan1 = '') {
                 // console.log(colspan1);
@@ -430,7 +331,7 @@
                     buttons: [{
 
                             extend: 'excelHtml5',
-                            className: 'btn btn-sm btn-success',
+                            className: 'btn btn-xs btn-success waves-effect waves-light',
                             text: '<i class="menu-icon tf-icons mdi mdi-file-excel"></i>Excel',
                             titleAttr: 'Excel',
                             title: 'DATA ABSENSI KARYAWAN ',
@@ -443,6 +344,28 @@
                                 var l = d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate();
                                 var n = d.getHours() + ':' + d.getMinutes() + ':' + d.getSeconds();
                                 return 'REKAP_DATA_ABSENSI_KARYAWAN_{{$holding}}_' + l + ' ' + n;
+                            },
+                            customize: function(xlsx) {
+                                var sheet = xlsx.xl.worksheets['sheet1.xml'];
+                                var headerRowIndex = 1;
+                                var headerRowIndex1 = 2;
+
+                                // Inject XML into worksheet
+                                $('sheetData', sheet).after(mergeCellsHtml);
+                                // Select the header row
+                                var headerRow = sheet.getElementsByTagName('row')[headerRowIndex];
+                                var headerRow1 = sheet.getElementsByTagName('row')[headerRowIndex1];
+                                // Iterate through cells in the header row
+                                for (var i = 0, len = headerRow1.childNodes.length; i < len; i++) {
+                                    var cell = headerRow1.childNodes[i];
+                                    cell.setAttribute('s', '22'); // Assuming style index 2 is defined for light blue background
+                                }
+                                for (var i = 0, len = headerRow.childNodes.length; i < len; i++) {
+                                    var cell = headerRow.childNodes[i];
+
+                                    // Apply the desired style to the cell
+                                    cell.setAttribute('s', '22'); // Assuming style index 2 is defined for light blue background
+                                }
                             },
                         },
                         {

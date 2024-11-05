@@ -17,7 +17,7 @@
             <div class="card">
                 <div class="card-header">
                     <div class="d-flex align-items-center justify-content-between">
-                        <h5 class="card-title m-0 me-2">REKAP IZIN KARYAWAN</h5>
+                        <h5 class="card-title m-0 me-2">REKAP FORM IZIN KARYAWAN</h5>
                     </div>
                 </div>
                 <div class="card-body">
@@ -311,7 +311,7 @@
             load_data();
 
             function load_data(filter_month = '') {
-                console.log(filter_month);
+                // console.log(filter_month);
                 var table = $('#table_izin_terlambat').DataTable({
                     pageLength: 50,
                     "scrollY": true,
@@ -320,6 +320,10 @@
                     autoWidth: false,
                     responsive: true,
                     serverSide: true,
+                    aaSorting: [
+                        [6, 'asc'],
+                        [8, 'asc'],
+                    ],
                     ajax: {
                         url: "{{ url('izin/datatable-terlambat') }}" + '/' + holding,
                         data: {
@@ -395,10 +399,7 @@
                         },
 
                     ],
-                    order: [
-                        [2, 'ASC'],
-                        [1, 'ASC'],
-                    ]
+
                 });
                 var table1 = $('#table_izin_pulangcepat').DataTable({
                     "scrollY": true,
@@ -407,6 +408,10 @@
                     responsive: true,
                     processing: true,
                     serverSide: true,
+                    aaSorting: [
+                        [6, 'asc'],
+                        [7, 'asc'],
+                    ],
                     ajax: {
                         url: "{{ url('izin/datatable-pulangcepat') }}" + '/' + holding,
                     },
@@ -471,12 +476,8 @@
                         },
 
                     ],
-                    order: [
-                        [2, 'ASC'],
-                        [1, 'ASC'],
-                    ]
-                });
 
+                });
                 var table2 = $('#table_izin_sakit').DataTable({
                     "scrollY": true,
                     "scrollX": true,
@@ -484,6 +485,9 @@
                     responsive: true,
                     processing: true,
                     serverSide: true,
+                    aaSorting: [
+                        [6, 'asc'],
+                    ],
                     ajax: {
                         url: "{{ url('izin/datatable-sakit') }}" + '/' + holding,
                     },
@@ -544,10 +548,7 @@
                         },
 
                     ],
-                    order: [
-                        [2, 'ASC'],
-                        [1, 'ASC'],
-                    ]
+
                 });
                 var table3 = $('#table_izin_tidak_masuk').DataTable({
                     "scrollY": true,
@@ -556,6 +557,9 @@
                     responsive: true,
                     processing: true,
                     serverSide: true,
+                    aaSorting: [
+                        [6, 'asc'],
+                    ],
                     ajax: {
                         url: "{{ url('izin/datatable-tidak_masuk') }}" + '/' + holding,
                     },
@@ -640,6 +644,9 @@
                     responsive: true,
                     processing: true,
                     serverSide: true,
+                    aaSorting: [
+                        [6, 'asc'],
+                    ],
                     ajax: {
                         url: "{{ url('izin/datatable-keluar_kantor') }}" + '/' + holding,
                     },
@@ -708,10 +715,7 @@
                         },
 
                     ],
-                    order: [
-                        [2, 'ASC'],
-                        [1, 'ASC'],
-                    ]
+
                 });
                 document.querySelectorAll('a[data-bs-toggle="tab"]').forEach((el) => {
                     el.addEventListener('shown.bs.tab', () => {
@@ -743,7 +747,7 @@
             let tgl = $(this).data("tgl");
             let nama = $(this).data("nama");
             let ttd = $(this).data("ttd");
-            $('#ttd_pengajuan').attr('src', 'https://hrd.sumberpangan.store:4430/public/signature/izin' + ttd + '.png');
+            $('#ttd_pengajuan').attr('src', 'https://hrd.sumberpangan.store:4430/public/signature/izin/' + ttd + '.png');
             $('#nama_pengajuan').html(nama);
             $('#tgl_pengajuan').html(tgl);
 
@@ -754,7 +758,7 @@
             let tgl = $(this).data("tgl");
             let nama = $(this).data("nama");
             let ttd = $(this).data("ttd");
-            $('#ttd_atasan').attr('src', 'https://hrd.sumberpangan.store:4430/public/signature/izin' + ttd + '.png');
+            $('#ttd_atasan').attr('src', 'https://hrd.sumberpangan.store:4430/public/signature/izin/' + ttd + '.png');
             $('#nama_atasan').html(nama);
             $('#tgl_atasan').html(tgl);
 

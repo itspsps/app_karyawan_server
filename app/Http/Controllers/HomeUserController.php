@@ -1314,14 +1314,14 @@ class HomeUserController extends Controller
             if (!empty($request->filter_month)) {
                 $count_absen_hadir = MappingShift::where('user_id', $user_login)->whereMonth('tanggal_masuk', $request->filter_month)->where('status_absen', 'HADIR KERJA')->count();
                 $count_telat = MappingShift::where('user_id', $user_login)->whereMonth('tanggal_masuk', $request->filter_month)->where('keterangan_absensi', 'TELAT HADIR')->where('status_absen', 'HADIR KERJA')->count();
-                $count_izin = Izin::where('user_id', $user_login)->whereMonth('tanggal', $request->filter_month)->where('izin', '!=', 'Sakit')->where('status_izin', '2')->count();
-                $count_sakit = Izin::where('user_id', $user_login)->whereMonth('tanggal', $request->filter_month)->where('izin', 'Sakit')->where('status_izin', '2')->count();
+                $count_izin = MappingShift::where('user_id', $user_login)->whereMonth('tanggal_masuk', $request->filter_month)->where('status_absen', 'TIDAK HADIR KERJA')->where('keterangan_absensi', 'IZIN TIDAK MASUK')->count();
+                $count_sakit = MappingShift::where('user_id', $user_login)->whereMonth('tanggal_masuk', $request->filter_month)->where('status_absen', 'TIDAK HADIR KERJA')->where('keterangan_absensi', 'IZIN SAKIT')->count();
                 // dd($count_absen_hadir);
             } else {
                 $count_absen_hadir = MappingShift::where('user_id', $user_login)->whereMonth('tanggal_masuk', $blnskrg)->where('status_absen', 'HADIR KERJA')->count();
                 $count_telat = MappingShift::where('user_id', $user_login)->whereMonth('tanggal_masuk', $blnskrg)->where('keterangan_absensi', 'TELAT HADIR')->where('status_absen', 'HADIR KERJA')->count();
-                $count_izin = Izin::where('user_id', $user_login)->whereMonth('tanggal', $blnskrg)->where('izin', '!=', 'Sakit')->where('status_izin', '2')->count();
-                $count_sakit = Izin::where('user_id', $user_login)->whereMonth('tanggal', $blnskrg)->where('izin', 'Sakit')->where('status_izin', '2')->count();
+                $count_izin = MappingShift::where('user_id', $user_login)->whereMonth('tanggal_masuk', $blnskrg)->where('status_absen', 'TIDAK HADIR KERJA')->where('keterangan_absensi', 'IZIN TIDAK MASUK')->count();
+                $count_sakit = MappingShift::where('user_id', $user_login)->whereMonth('tanggal_masuk', $blnskrg)->where('status_absen', 'TIDAK HADIR KERJA')->where('keterangan_absensi', 'IZIN SAKIT')->count();
             }
         }
         $result = [

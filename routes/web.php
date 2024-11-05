@@ -101,6 +101,7 @@ Route::middleware('auth:web', 'log.activity')->group(function () {
     Route::post('/izin/approve/proses', [IzinUserController::class, 'izinApproveProses']);
     Route::get('/izin/cetak_form_izin_user/{id}', [IzinUserController::class, 'cetak_form_izin_user']);
     Route::get('/izin/delete_izin/{id}', [IzinUserController::class, 'delete_izin']);
+    Route::get('/izin/get_filter_month', [IzinUserController::class, 'get_filter_month']);
     Route::post('/izin/datang_terlambat_proses', [HomeUserController::class, 'proses_izin_datang_terlambat']);
 
     Route::get('/get_cuti', [CutiUserController::class, 'get_cuti']);
@@ -496,6 +497,7 @@ Route::middleware('admin')->group(function () {
     Route::get('/report/get_jabatan', [ReportController::class, 'get_jabatan']);
     Route::get('/report/get_columns', [ReportController::class, 'get_columns']);
     Route::get('/report/get_filter_month', [ReportController::class, 'get_filter_month']);
+    Route::get('/report/ExportReport', [ReportController::class, 'ExportReport']);
 
     Route::get('/data-cuti', [CutiController::class, 'dataCuti']);
     Route::get('/data-cuti/tambah', [CutiController::class, 'tambahAdmin']);

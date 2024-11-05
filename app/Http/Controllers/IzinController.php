@@ -22,6 +22,7 @@ class IzinController extends Controller
 {
     public function index()
     {
+        // dd(date('Y-m-d H:i:s'));
         $holding = request()->segment(count(request()->segments()));
         return view('admin.izin.index', [
             'holding' => $holding,
@@ -51,6 +52,7 @@ class IzinController extends Controller
                     ->where('karyawans.kontrak_kerja', $holding)
                     ->whereBetween('tanggal', [$date1, $date2])
                     ->select('karyawans.kontrak_kerja', 'izins.*')
+                    // ->orderBy('izins.waktu_ttd_pengajuan', 'ASC')
                     ->get();
                 // dd($table);
                 return DataTables::of($table)
@@ -165,6 +167,7 @@ class IzinController extends Controller
                 $table = Izin::leftJoin('karyawans', 'karyawans.id', 'izins.user_id')->where('izin', 'Datang Terlambat')
                     ->where('karyawans.kontrak_kerja', $holding)
                     ->select('karyawans.kontrak_kerja', 'izins.*')
+                    // ->orderBy('izins.waktu_ttd_pengajuan', 'ASC')
                     ->get();
                 // dd($table);
                 return DataTables::of($table)

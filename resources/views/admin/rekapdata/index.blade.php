@@ -23,58 +23,56 @@
                 </div>
                 <div class="card-body">
                     <hr class="">
-                    <form action="{{ url('/rekap-data/'.$holding) }}">
-                        <div class="row g-3 text-center">
-                            <div class="col-3">
-                                <div class="form-floating form-floating-outline">
-                                    <select type="text" class="form-control" name="departemen_filter" id="departemen_filter">
-                                        <option selected disabled value="">--</option>
-                                        @foreach($departemen as $dept)
-                                        <option value="{{$dept->id}}">{{$dept->nama_departemen}}</option>
-                                        @endforeach
-                                    </select>
-                                    <label for="departemen_filter">Departemen</label>
-                                </div>
-                            </div>
-                            <div class="col-3">
-                                <div class="form-floating form-floating-outline">
-                                    <select type="text" class="form-control" name="divisi_filter" placeholder="Date Filter" id="divisi_filter">
-                                        <option selected disabled value="">--</option>
-                                    </select>
-                                    <label for="divisi_filter">Divisi</label>
-                                </div>
-                            </div>
-                            <div class="col-3">
-                                <div class="form-floating form-floating-outline">
-                                    <select type="text" class="form-control" name="bagian_filter" placeholder="Date Filter" id="bagian_filter">
-                                        <option selected disabled value="">--</option>
-                                    </select>
-                                    <label for="bagian_filter">Bagian</label>
-                                </div>
-                            </div>
-                            <div class="col-3">
-                                <div class="form-floating form-floating-outline">
-                                    <select type="text" class="form-control" name="jabatan_filter" placeholder="Date Filter" id="jabatan_filter">
-                                        <option selected disabled value="">--</option>
-                                    </select>
-                                    <label for="jabatan_filter">Jabatan</label>
-                                </div>
+                    <div class="row g-3 text-center">
+                        <div class="col-3">
+                            <div class="form-floating form-floating-outline">
+                                <select type="text" class="form-control" name="departemen_filter" id="departemen_filter">
+                                    <option selected disabled value="">--</option>
+                                    @foreach($departemen as $dept)
+                                    <option value="{{$dept->id}}">{{$dept->nama_departemen}}</option>
+                                    @endforeach
+                                </select>
+                                <label for="departemen_filter">Departemen</label>
                             </div>
                         </div>
-                        <div class="row mt-3 g-3">
-                            <div class="col-lg-6">
-                                <div id="reportrange" style="background: #fff; cursor: pointer; padding: 5px 10px; width: 100%">
-                                    <button class="btn btn-outline-secondary waves-effect">
-                                        FILTER DATE : &nbsp;
-                                        <i class="mdi mdi-calendar-filter-outline"></i>&nbsp;
-                                        <span></span> <i class="mdi mdi-menu-down"></i>
-                                        <input type="date" id="start_date" name="start_date" hidden value="">
-                                        <input type="date" id="end_date" name="end_date" hidden value="">
-                                    </button>
-                                </div>
+                        <div class="col-3">
+                            <div class="form-floating form-floating-outline">
+                                <select type="text" class="form-control" name="divisi_filter" placeholder="Date Filter" id="divisi_filter">
+                                    <option selected disabled value="">--</option>
+                                </select>
+                                <label for="divisi_filter">Divisi</label>
                             </div>
                         </div>
-                    </form>
+                        <div class="col-3">
+                            <div class="form-floating form-floating-outline">
+                                <select type="text" class="form-control" name="bagian_filter" placeholder="Date Filter" id="bagian_filter">
+                                    <option selected disabled value="">--</option>
+                                </select>
+                                <label for="bagian_filter">Bagian</label>
+                            </div>
+                        </div>
+                        <div class="col-3">
+                            <div class="form-floating form-floating-outline">
+                                <select type="text" class="form-control" name="jabatan_filter" placeholder="Date Filter" id="jabatan_filter">
+                                    <option selected disabled value="">--</option>
+                                </select>
+                                <label for="jabatan_filter">Jabatan</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mt-3 g-3">
+                        <div class="col-lg-6">
+                            <div id="reportrange" style="background: #fff; cursor: pointer; width: 100%">
+                                <button class="btn btn-outline-secondary waves-effect">
+                                    FILTER DATE : &nbsp;
+                                    <i class="mdi mdi-calendar-filter-outline"></i>&nbsp;
+                                    <span></span> <i class="mdi mdi-menu-down"></i>
+                                    <input type="date" id="start_date" name="start_date" hidden value="">
+                                    <input type="date" id="end_date" name="end_date" hidden value="">
+                                </button>
+                            </div>
+                        </div>
+                    </div>
                     <div class="modal fade" id="modal_import_absensi" data-bs-backdrop="static" tabindex="-1">
                         <div class="modal-dialog modal-dialog-scrollable modal-lg">
                             <form method="post" action="{{ url('/rekapdata/ImportAbsensi/'.$holding) }}" class="modal-content" enctype="multipart/form-data">
@@ -275,7 +273,7 @@
     <script src="https://cdn.datatables.net/2.0.5/js/dataTables.bootstrap5.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+    <script type="text/javascript" src="{{ asset('assets/assets_users/js/daterangepicker.js') }}"></script>
     <script src="https://cdn.datatables.net/buttons/3.1.2/js/dataTables.buttons.js"></script>
     <script src="https://cdn.datatables.net/buttons/3.1.2/js/buttons.dataTables.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
@@ -283,18 +281,24 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
     <script src="https://cdn.datatables.net/buttons/3.1.2/js/buttons.html5.min.js"></script>
     <script src="https://cdn.datatables.net/buttons/3.1.2/js/buttons.print.min.js"></script>
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
-    <script type="text/javascript" src="{{ asset('assets/assets_users/js/daterangepicker.js') }}"></script>
+
     <script>
         let holding = window.location.pathname.split("/").pop();
         $(document).ready(function() {
+            start_date = $('#start_date').val();
+            end_date = $('#end_date').val();
+            departemen_filter = $('#departemen_filter').val();
+            divisi_filter = $('#divisi_filter').val();
+            bagian_filter = $('#bagian_filter').val();
+            jabatan_filter = $('#jabatan_filter').val();
             $('#departemen_filter').change(function() {
                 departemen_filter = $(this).val();
                 divisi_filter = $('#divisi_filter').val();
                 bagian_filter = $('#bagian_filter').val();
                 jabatan_filter = $('#jabatan_filter').val();
-                filter_month = $('#date_filter').val();
-                $('#table_rekapdata').DataTable().destroy();
+                start_date = $('#start_date').val();
+                end_date = $('#end_date').val();
+                // $('#table_rekapdata').DataTable().destroy();
                 $.ajax({
                     type: 'GET',
                     url: "{{url('rekapdata/get_divisi')}}",
@@ -316,15 +320,16 @@
                     },
 
                 })
-                load_data(departemen_filter, divisi_filter, bagian_filter, jabatan_filter, filter_month);
+                load_data(departemen_filter, divisi_filter, bagian_filter, jabatan_filter, start_date, end_date);
             })
             $('#divisi_filter').change(function() {
                 divisi_filter = $(this).val();
                 departemen_filter = $('#departemen_filter').val();
                 bagian_filter = $('#bagian_filter').val();
                 jabatan_filter = $('#jabatan_filter').val();
-                filter_month = $('#date_filter').val();
-                $('#table_rekapdata').DataTable().destroy();
+                start_date = $('#start_date').val();
+                end_date = $('#end_date').val();
+                // $('#table_rekapdata').DataTable().destroy();
                 $.ajax({
                     type: 'GET',
                     url: "{{url('rekapdata/get_bagian')}}",
@@ -345,16 +350,17 @@
                     },
 
                 })
-                load_data(departemen_filter, divisi_filter, bagian_filter, jabatan_filter, filter_month);
+                load_data(departemen_filter, divisi_filter, bagian_filter, jabatan_filter, start_date, end_date);
             })
             $('#bagian_filter').change(function() {
                 bagian_filter = $(this).val();
                 departemen_filter = $('#departemen_filter').val();
                 divisi_filter = $('#divisi_filter').val();
                 jabatan_filter = $('#jabatan_filter').val();
-                filter_month = $('#date_filter').val();
+                start_date = $('#start_date').val();
+                end_date = $('#end_date').val();
 
-                $('#table_rekapdata').DataTable().destroy();
+                // $('#table_rekapdata').DataTable().destroy();
                 $.ajax({
                     type: 'GET',
                     url: "{{url('rekapdata/get_jabatan')}}",
@@ -374,28 +380,19 @@
                     },
 
                 })
-                load_data(departemen_filter, divisi_filter, bagian_filter, jabatan_filter, filter_month);
+                load_data(departemen_filter, divisi_filter, bagian_filter, jabatan_filter, start_date, end_date);
             })
             $('#jabatan_filter').change(function() {
                 jabatan_filter = $(this).val();
                 departemen_filter = $('#departemen_filter').val();
                 divisi_filter = $('#divisi_filter').val();
                 bagian_filter = $('#bagian_filter').val();
-                filter_month = $('#date_filter').val();
-                $('#table_rekapdata').DataTable().destroy();
-                load_data(departemen_filter, divisi_filter, bagian_filter, jabatan_filter, filter_month);
+                fstart_date = $('#start_date').val();
+                end_date = $('#end_date').val();
+                // $('#table_rekapdata').DataTable().destroy();
+                load_data(departemen_filter, divisi_filter, bagian_filter, jabatan_filter, start_date, end_date);
             })
-            $('#date_filter').change(function() {
-                filter_month = $(this).val();
-                // console.log(filter_month);
-                departemen_filter = $('#departemen_filter').val();
-                divisi_filter = $('#divisi_filter').val();
-                bagian_filter = $('#bagian_filter').val();
-                jabatan_filter = $('#jabatan_filter').val();
-                $('#table_rekapdata').DataTable().destroy();
-                load_data(departemen_filter, divisi_filter, bagian_filter, jabatan_filter, filter_month);
-            })
-            load_data();
+            load_data(departemen_filter, divisi_filter, bagian_filter, jabatan_filter, start_date, end_date);
 
             function newexportaction(e, dt, button, config) {
                 var self = this;
@@ -439,9 +436,11 @@
                 dt.ajax.reload();
             }
 
-            function load_data(departemen_filter = '', divisi_filter = '', bagian_filter = '', jabatan_filter = '', filter_month = '') {
-                filter_month = $('#date_filter').val();
-                // console.log(filter_month);
+            function load_data(departemen_filter = '', divisi_filter = '', bagian_filter = '', jabatan_filter = '', start_date = '', end_date = '') {
+                start_date = $('#start_date').val();
+                end_date = $('#end_date').val();
+                // console.log(start_date, end_date);
+                $('#table_rekapdata').DataTable().destroy();
                 var table = $('#table_rekapdata').DataTable({
                     "scrollY": true,
                     "scrollX": true,
@@ -505,7 +504,8 @@
                     ajax: {
                         url: "{{ url('rekapdata-datatable') }}" + '/' + holding,
                         data: {
-                            filter_month: filter_month,
+                            start_date: start_date,
+                            end_date: end_date,
                             departemen_filter: departemen_filter,
                             divisi_filter: divisi_filter,
                             bagian_filter: bagian_filter,
@@ -634,91 +634,26 @@
             })
         });
     </script>
-    <script>
-        // console.log(now);
-        // $('input[id="date_filter"]').daterangepicker({
-        //     drops: 'auto',
-        //     autoUpdateInput: true,
-        //     locale: {
-        //         cancelLabel: 'Clear'
-        //     },
-        //     autoApply: false,
-        // }, function(start, end, label) {
-        //     console.log("A new date selection was made: " + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD'));
-        // });
-        $(document).on("click", "#btn_edit_shift", function() {
-            let id = $(this).data('id');
-            let shift = $(this).data("shift");
-            let jammasuk = $(this).data("jammasuk");
-            let jamkeluar = $(this).data("jamkeluar");
-            let holding = $(this).data("holding");
-            // console.log(jamkeluar);
-            $('#id_shift').val(id);
-            $('#nama_shift_update').val(shift);
-            $('#jam_masuk_update').val(jammasuk);
-            $('#jam_keluar_update').val(jamkeluar);
-            $('#modal_edit_shift').modal('show');
-
-        });
-        $(document).on('click', '#btn_delete_shift', function() {
-            var id = $(this).data('id');
-            let holding = $(this).data("holding");
-            console.log(id);
-            Swal.fire({
-                title: 'Apakah kamu yakin?',
-                text: "Kamu tidak dapat mengembalikan data ini",
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Yes!'
-            }).then((result) => {
-                if (result.value) {
-                    $.ajax({
-                        url: "{{ url('/shift/delete/') }}" + '/' + id + '/' + holding,
-                        type: "GET",
-                        error: function() {
-                            alert('Something is wrong');
-                        },
-                        success: function(data) {
-                            Swal.fire({
-                                title: 'Terhapus!',
-                                text: 'Data anda berhasil di hapus.',
-                                icon: 'success',
-                                timer: 1500
-                            })
-                            $('#table_rekapdata').DataTable().ajax.reload();
-                        }
-                    });
-                } else {
-                    Swal.fire({
-                        title: 'Cancelled!',
-                        text: 'Your data is safe :',
-                        icon: 'error',
-                        timer: 1500
-                    })
-                }
-            });
-
-        });
-    </script>
     <script type="text/javascript">
         $(function() {
 
-            var start = moment().subtract(29, 'days');
-            var end = moment();
+            var start = moment().startOf('month');
+            var end = moment().endOf('month');
             var lstart, lend;
             var start_date = document.getElementById("start_date");
             var end_date = document.getElementById("end_date");
+            var departemen_filter = $('#departemen_filter').val();
+            var divisi_filter = $('#divisi_filter').val();
+            var bagian_filter = $('#bagian_filter').val();
+            var jabatan_filter = $('#jabatan_filter').val();
 
-            function cb(start, end) {
+            function detail(departemen_filter, divisi_filter, bagian_filter, jabatan_filter, start, end) {
                 $('#reportrange span').html(start.format('D MMMM YYYY') + ' - ' + end.format('D MMMM YYYY'));
                 lstart = moment($('#reportrange').data('daterangepicker').startDate).format('YYYY-MM-DD');
                 lend = moment($('#reportrange').data('daterangepicker').endDate).format('YYYY-MM-DD');
                 start_date.value = lstart;
                 end_date.value = lend;
-                // console.log(lstart, lend)
-                load_data(lstart, lend);
+                // load_data(departemen_filter, divisi_filter, bagian_filter, jabatan_filter, start_date, end_date);
             }
 
             $('#reportrange').daterangepicker({
@@ -732,10 +667,11 @@
                     'This Month': [moment().startOf('month'), moment().endOf('month')],
                     'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
                 }
-            }, cb);
+            }, detail);
 
-            cb(start, end);
+            detail(departemen_filter, divisi_filter, bagian_filter, jabatan_filter, start, end);
 
         });
     </script>
+
     @endsection

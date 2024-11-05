@@ -387,7 +387,7 @@
                     {{ Request::is('rekap-data*') ? 'active open' : '' }} 
                     {{ Request::is('report/*') ? 'active open' : '' }}">
                     <a href="javascript:void(0);" class="menu-link menu-toggle">
-                        <i class="menu-icon tf-icons mdi mdi-table-account"></i>
+                        <i class="menu-icon tf-icons mdi mdi-file-document-multiple-outline"></i>
                         <div style="font-size: 10pt;" data-i18n="Data Master">Report</div>
                     </a>
                     <ul class="menu-sub">
@@ -398,39 +398,39 @@
                         </li>
                         <li class="menu-item {{ Request::is('report*') ? 'active' : '' }}">
                             <a href="{{ url('/report/'.$holding) }}" class=" menu-link">
-                                <div style="font-size: 10pt;" data-i18n="Without navbar"><i class="mdi mdi-account-clock-outline"></i>&nbsp;Report&nbsp;Absensi&nbsp;Karyawan</div>
+                                <div style="font-size: 10pt;" data-i18n="Without navbar"><i class="mdi mdi-file-document-outline"></i>&nbsp;Report&nbsp;Absensi&nbsp;Karyawan</div>
                             </a>
                         </li>
                     </ul>
                 </li>
             </ul>
         </li>
-        <li class="menu-item {{ Request::is('hrd/izin*') ? 'active' : '' }}">
+        <li class="menu-item {{ Request::is('izin*') ? 'active' : '' }}">
             <a href="{{ url('/izin/'.$holding) }}" class=" menu-link">
                 <i class="menu-icon tf-icons mdi mdi-calendar-filter-outline"></i>
                 <div style="font-size: 10pt;" data-i18n="Blank">Izin</div>
             </a>
         </li>
-        <li class="menu-item {{ Request::is('hrd/cuti*') ? 'active' : '' }}">
+        <li class="menu-item {{ Request::is('cuti*') ? 'active' : '' }}">
             <a href="{{ url('/cuti/'.$holding) }}" class=" menu-link">
                 <i class="menu-icon tf-icons mdi mdi-clipboard-text-clock-outline"></i>
                 <div style="font-size: 10pt;" data-i18n="Blank">Cuti</div>
             </a>
         </li>
-        <li class="menu-item {{ Request::is('hrd/penugasan*') ? 'active' : '' }}">
+        <li class="menu-item {{ Request::is('penugasan*') ? 'active' : '' }}">
             <a href="{{ url('/penugasan/'.$holding) }}" class=" menu-link">
                 <i class="menu-icon tf-icons mdi mdi-airplane-clock"></i>
                 <div style="font-size: 10pt;" data-i18n="Blank">Perjalanan Dinas</div>
             </a>
         </li>
 
-        <li class="menu-item {{ Request::is('hrd/inventaris*') ? 'active' : '' }}">
+        <li class="menu-item {{ Request::is('inventaris*') ? 'active' : '' }}">
             <a href="{{ url('/inventaris/'.$holding) }}" class="menu-link">
                 <i class="menu-icon tf-icons mdi mdi-archive-outline"></i>
                 <div style="font-size: 10pt;" data-i18n="Blank">Data Inventaris</div>
             </a>
         </li>
-        <li class="menu-item {{ Request::is('hrd/access*') ? 'active' : '' }}">
+        <li class="menu-item {{ Request::is('access*') ? 'active' : '' }}">
             <a href="{{ url('/access/'.$holding) }}" class="menu-link">
                 <i class="menu-icon tf-icons mdi mdi-account-key"></i>
                 <div style="font-size: 10pt;" data-i18n="Blank">User Level Access</div>

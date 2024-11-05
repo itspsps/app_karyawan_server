@@ -329,11 +329,6 @@
     }
     end_date = $('#end_date').val();
     start_date = $('#start_date').val();
-    // $('#start_date').change(function() {
-    // })
-    // load_data(start_date, end_date);
-    // console.log(start_date, end_date);
-    // load_data();
 
     function load_data(start_date = '', end_date = '') {
         $('#table_mapping_shift').DataTable().destroy();
@@ -405,7 +400,7 @@
         let shift = $(this).data("shift");
         let holding = $(this).data("holding");
         let keterangan = $(this).data("keterangan");
-        console.log(tgl.getTime(), date_now.getTime());
+        // console.log(tgl.getTime(), date_now.getTime());
         $('#id_shift').val(id);
         $('#tanggal_update').val(tanggal);
         $('#keterangan_update').val(keterangan);

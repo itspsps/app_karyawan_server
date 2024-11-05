@@ -99,8 +99,8 @@ class RekapDataController extends Controller
         // dd(request()->ajax());
         if (request()->ajax()) {
             if (!empty($request->departemen_filter)) {
-                $date1 = Carbon::parse($request->filter_month)->startOfMonth();
-                $date2 = Carbon::parse($request->filter_month)->endOfMonth();
+                $date1 = Carbon::parse($request->start_date);
+                $date2 = Carbon::parse($request->end_date);
                 // dd($date1, $date2);
                 if (!empty($request->divisi_filter)) {
                     if (!empty($request->bagian_filter)) {
@@ -192,8 +192,8 @@ class RekapDataController extends Controller
                     ->rawColumns(['total_hadir_tepat_waktu', 'btn_detail', 'total_hadir_telat_hadir', 'total_hadir_telat_hadir1', 'total_izin_true', 'total_cuti_true', 'total_dinas_true', 'total_pulang_cepat', 'tidak_hadir_kerja', 'total_semua'])
                     ->make(true);
             } else {
-                $now = Carbon::parse($request->filter_month)->startOfMonth();
-                $now1 = Carbon::parse($request->filter_month)->endOfMonth();
+                $now = Carbon::parse($request->start_date);
+                $now1 = Carbon::parse($request->end_date);
                 // dd('p');
                 // dd($tgl_mulai, $tgl_selesai);
                 $table = Karyawan::with('MappingShift')

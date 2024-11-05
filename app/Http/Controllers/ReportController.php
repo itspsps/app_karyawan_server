@@ -11,6 +11,7 @@ use App\Models\MappingShift;
 use Carbon\Carbon;
 use Carbon\CarbonPeriod;
 use Illuminate\Http\Request;
+use Maatwebsite\Excel\Facades\Excel;
 use Yajra\DataTables\Facades\DataTables;
 
 class ReportController extends Controller
@@ -99,7 +100,7 @@ class ReportController extends Controller
             // ->where('name', 'MUHAMMAD FAIZAL IZAK')
             ->select('karyawans.name', 'karyawans.nomor_identitas_karyawan')
             ->orderBy('karyawans.name', 'ASC')
-            // ->limit(2)
+            ->limit(2)
             ->get();
         // dd($table);
         $column = DataTables::of($table);
@@ -186,5 +187,11 @@ class ReportController extends Controller
         foreach ($jabatan as $jabatan) {
             echo "<option value='$jabatan->id'>$jabatan->nama_jabatan</option>";
         }
+    }
+    public function ExportReport(Request $request)
+    {
+        $date = date('YmdHis');
+        $holding = request()->segment(count(request()->segments()));
+        return Excel::download(new ReportExport($holding), 'Data Karyawan_' . $holding . '_' . $date . '.xlsx');
     }
 }

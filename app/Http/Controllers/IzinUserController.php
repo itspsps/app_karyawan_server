@@ -1072,6 +1072,7 @@ class IzinUserController extends Controller
         }
         // dd($getUserAtasan);
         $jam_kerja = MappingShift::with('Shift')->where('user_id', $user_karyawan->id)->where('tanggal_masuk', date('Y-m-d'))->first();
+
         $record_data    = Izin::where('user_id', $user_karyawan->id)->orderBy('created_at', 'DESC')->get();
         $kategori_izin = KategoriIzin::orderBy('id', 'ASC')->whereNotIn('nama_izin', ['Pulang Cepat', 'Datang Terlambat'])->get();
         if ($jam_kerja == '' || $jam_kerja == NULL) {
@@ -1091,6 +1092,7 @@ class IzinUserController extends Controller
             $jam_min_plg_cpt = \Carbon\Carbon::parse($req_jm_klr)->addHour(6)->isoFormat('H:mm');
         }
         // dd($req_jm_klr);
+        $thnskrg = date('Y');
         return view('users.izin.index', [
             'title'             => 'Tambah Permintaan Cuti Karyawan',
             'data_user'         => $user,
@@ -1103,6 +1105,7 @@ class IzinUserController extends Controller
             'jam_kerja'       => $jam_kerja,
             'get_user_backup'       => $get_user_backup,
             'jam_min_plg_cpt'       => $jam_min_plg_cpt,
+            'thnskrg'       => $thnskrg,
         ]);
     }
     public function izinEdit($id)
@@ -1313,7 +1316,7 @@ class IzinUserController extends Controller
             $data->approve_atasan   = $request->approve_atasan;
             $data->id_approve_atasan = $request->id_user_atasan;
             $data->ttd_pengajuan    = $uniqid;
-            $data->waktu_ttd_pengajuan    = date('Y-m-d H:i:s');
+            $data->waktu_ttd_pengajuan  = date('Y-m-d H:i:s');
             if ($request->level_jabatan == '1') {
                 $data->status_izin      = 2;
             } else {
@@ -2011,8 +2014,6 @@ class IzinUserController extends Controller
                     $data->update();
 
                     $update_mapping                             = MappingShift::where('tanggal_masuk', $request->tanggal)->where('user_id', $request->id_user)->first();
-                    $update_mapping->keterangan_absensi_pulang  = 'IZIN PULANG CEPAT';
-                    $update_mapping->kelengkapan_absensi        = 'IZIN PULANG CEPAT NOT APPROVED';
                     $update_mapping->keterangan_izin            = 'FALSE';
                     $update_mapping->izin_id                    = $data->id;
                     $update_mapping->update();
@@ -2030,8 +2031,6 @@ class IzinUserController extends Controller
 
                     $update_mapping                             = MappingShift::where('tanggal_masuk', $request->tanggal)->where('user_id', $request->id_user)->first();
                     $update_mapping->keterangan_izin            = 'TRUE';
-                    $update_mapping->keterangan_absensi_pulang  = 'IZIN PULANG CEPAT';
-                    $update_mapping->kelengkapan_absensi        = 'IZIN PULANG CEPAT APPROVED';
                     $update_mapping->izin_id                    = $data->id;
                     $update_mapping->update();
 
@@ -2063,7 +2062,6 @@ class IzinUserController extends Controller
 
                     $update_mapping                             = MappingShift::where('user_id', $data->user_id)->where('tanggal_masuk', $data->tanggal)->first();
                     $update_mapping->keterangan_izin            = 'FALSE';
-                    $update_mapping->keterangan_absensi         = 'IZIN TERLAMBAT';
                     $update_mapping->izin_id                    = $data->id;
                     $update_mapping->update();
                     $alert = $request->session()->flash('approveizin_not_approve');
@@ -2078,7 +2076,6 @@ class IzinUserController extends Controller
 
                     $update_mapping                             = MappingShift::where('user_id', $request->id_user)->where('tanggal_masuk', $request->tanggal)->first();
                     $update_mapping->keterangan_izin            = 'TRUE';
-                    $update_mapping->keterangan_absensi         = 'IZIN TERLAMBAT';
                     $update_mapping->izin_id                    = $data->id;
                     $update_mapping->update();
                     // dd($mapping);
@@ -2197,5 +2194,18 @@ class IzinUserController extends Controller
             $pdf = PDF::loadView('users/izin/form_izin_keluar', $data)->setPaper('A5', 'landscape');
             return $pdf->download('FORM_PENGAJUAN_IZIN_KELUAR_KANTOR_' . $user_karyawan->name . '_' . date('Y-m-d H:i:s') . '.pdf');
         }
+    }
+    public function get_filter_month(Request $request)
+    {
+        $blnskrg = date('m');
+        $user_karyawan = Karyawan::where('id', Auth::user()->karyawan_id)->first();
+
+        if ($request->filter_month == '') {
+            $data    = Izin::where('user_id', $user_karyawan->id)->whereMonth('tanggal', $blnskrg)->orderBy('created_at', 'DESC')->get();
+        } else {
+            $data    = Izin::where('user_id', $user_karyawan->id)->whereMonth('tanggal', $request->filter_month)->orderBy('created_at', 'DESC')->get();
+        }
+        // dd($data);
+        return response()->json($data);
     }
 }

@@ -106,7 +106,7 @@
                                         </div>
                                     </div>
                                     <div class="row g-2 mt-2">
-                                        <a href="{{asset('admin/template_import/TEMPLATE IMPORT TAMBAH KARYAWAN BULANAN SP_SPS.xlsx')}}" type="button" download="" class="btn btn-xs btn-primary"> Download Format Excel</a>
+                                        <a href="{{asset('admin/template_import/TEMPLATE IMPORT TAMBAH KARYAWAN BULANAN SP_SPS.xlsx')}}" type="button" download="" class="btn btn-xs btn-primary">Excel Download Format Excel</a>
                                     </div>
                                 </div>
                                 <div class="modal-footer">
@@ -160,7 +160,7 @@
                                         <div class="col mb-2">
                                             <div class="form-floating form-floating-outline">
                                                 <h6>Download File Excel Data Karyawan</h6>
-                                                <a href="@if(Auth::user()->is_admin=='hrd'){{url('/hrd/karyawan/ExportKaryawan/'.$holding)}}@else{{url('karyawan/ExportKaryawan/'.$holding)}}@endif" type="button" class="btn btn-xs btn-success"> Download Excel</a>
+                                                <a href="@if(Auth::user()->is_admin=='hrd'){{url('/hrd/karyawan/ExportKaryawan/'.$holding)}}@else{{url('karyawan/ExportKaryawan/'.$holding)}}@endif" type="button" class="btn btn-xs btn-success"> <i class="menu-icon tf-icons mdi mdi-file-excel-outline"></i> Download Excel</a>
                                             </div>
                                         </div>
                                     </div>
