@@ -228,6 +228,16 @@ class BagianController extends Controller
         return redirect('/bagian/' . $holding)->with('success', 'Data Berhasil di Update');
     }
 
+    public function get_bagian($id)
+    {
+        // dd($id);
+        $get_bagian = Bagian::where('divisi_id', $id)->get();
+        echo "<option value=''>Pilih Bagian...</option>";
+        foreach ($get_bagian as $bagian) {
+            echo "<option value='$bagian->id'>$bagian->nama_bagian</option>";
+        }
+    }
+
     public function delete(Request $request, $id)
     {
         // dd($request->all());
