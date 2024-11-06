@@ -113,6 +113,7 @@ Route::middleware('auth:web', 'log.activity')->group(function () {
     Route::post('/cuti/approve/proses', [CutiUserController::class, 'cutiApproveProses']);
     Route::get('/cuti/cetak_form_cuti/cetak/{id}', [CutiUserController::class, 'cetak_form_cuti']);
     Route::get('/cuti/delete_cuti/{id}', [CutiUserController::class, 'delete_cuti']);
+    Route::get('/cuti/get_filter_month', [CutiUserController::class, 'get_filter_month']);
 
     Route::get('/penugasan/dashboard', [PenugasanUserController::class, 'index']);
     Route::get('/penugasan/detail/edit/{id}', [PenugasanUserController::class, 'penugasanEdit']);
