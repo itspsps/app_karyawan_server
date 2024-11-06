@@ -29,7 +29,7 @@ class Jabatan extends Model
     }
     public function User(): HasMany
     {
-        return $this->hasMany(Karyawan::class);
+        return $this->hasMany(Karyawan::class, 'jabatan_id', 'id');
     }
     public function User1(): HasMany
     {

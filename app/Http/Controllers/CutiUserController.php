@@ -1330,6 +1330,7 @@ class CutiUserController extends Controller
     }
     public function cutiEdit($id)
     {
+
         $user_karyawan = Karyawan::where('id', Auth::user()->karyawan_id)->first();
         $user = Karyawan::join('jabatans', 'jabatans.id', '=', 'karyawans.jabatan_id')
             ->join('level_jabatans', 'jabatans.level_id', '=', 'level_jabatans.id')

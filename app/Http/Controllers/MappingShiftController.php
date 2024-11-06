@@ -296,7 +296,7 @@ class MappingShiftController extends Controller
                     ->get();
             }
             return DataTables::of($table)
-                ->addColumn('jabatan', function ($row) use ($date1, $date2) {
+                ->addColumn('jabatan', function ($row) {
                     if ($row->Jabatan == NULL) {
                         $jabatan = '-';
                     } else {
@@ -366,9 +366,10 @@ class MappingShiftController extends Controller
                 ->where('kontrak_kerja', $holding)
                 ->where('kategori', 'Karyawan Bulanan')
                 ->where('status_aktif', 'AKTIF')
-                ->select('name', 'nomor_identitas_karyawan')
+                ->select('name', 'nomor_identitas_karyawan', 'jabatan_id')
                 // ->limit(210)
                 ->get();
+            // dd($table);
             return DataTables::of($table)
                 ->addColumn('jabatan', function ($row) use ($now1, $now2) {
                     if ($row->Jabatan == NULL) {

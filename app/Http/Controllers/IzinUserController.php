@@ -1110,6 +1110,7 @@ class IzinUserController extends Controller
     }
     public function izinEdit($id)
     {
+        // dd($id);
         $user_karyawan = Karyawan::where('id', Auth::user()->karyawan_id)->first();
         if ($user_karyawan->kategori == 'Karyawan Bulanan') {
             $user = Karyawan::Join('jabatans', 'jabatans.id', '=', 'karyawans.jabatan_id')
@@ -2145,7 +2146,7 @@ class IzinUserController extends Controller
     }
     public function cetak_form_izin_user($id)
     {
-        // dd('ok');
+        // dd($id);
         $user_karyawan = Karyawan::where('id', Auth::user()->karyawan_id)->first();
         $jabatan = Jabatan::join('karyawans', function ($join) {
             $join->on('jabatans.id', '=', 'karyawans.jabatan_id');
