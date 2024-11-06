@@ -52,12 +52,14 @@ class RecruitmentController extends Controller
             'Bagian' =>  function ($query) {
                 $query->with([
                     'Divisi' => function ($query) {
-                    $query->with([
-                        'Departemen' => function ($query) {
-                        $query->orderBy('nama_departemen', 'ASC');
-                    }]);
-                    $query->orderBy('nama_divisi', 'ASC');
-                }]);
+                        $query->with([
+                            'Departemen' => function ($query) {
+                                $query->orderBy('nama_departemen', 'ASC');
+                            }
+                        ]);
+                        $query->orderBy('nama_divisi', 'ASC');
+                    }
+                ]);
                 $query->orderBy('nama_bagian', 'ASC');
             },
         ])->orderBy('created_recruitment', 'desc')->get();
@@ -100,7 +102,7 @@ class RecruitmentController extends Controller
                     return $btn;
                 })
                 ->addColumn('pelamar', function ($row) use ($holding) {
-                    $url = url('/pg/data-list-pelamar/'. $row->id .'/'.$holding);
+                    $url = url('/pg/data-list-pelamar/' . $row->id . '/' . $holding);
                     $btn = '<a href="' . $url . '" class="btn btn-sm btn-info">
                                 <i class="tf-icons mdi mdi-eye-circle-outline me-1"></i>
                                 Lihat&nbsp;Pelamar
@@ -111,7 +113,7 @@ class RecruitmentController extends Controller
                     if ($row->status_recruitment == 0) {
                         $status = '<button id="btn_status_aktif"
                             data-id="' . $row->id . '"
-                            data-holding="' .$holding. '"
+                            data-holding="' . $holding . '"
                             type="button" class="btn btn-sm btn-success ">
                             <i class="tf-icons mdi mdi-account-search"> </i>
                             &nbsp;AKTIF
@@ -151,7 +153,7 @@ class RecruitmentController extends Controller
                         ';
                     return $btn;
                 })
-                ->rawColumns(['nama_departemen','nama_divisi','nama_bagian','desc_recruitment','pelamar','status_recruitment','option'])
+                ->rawColumns(['nama_departemen', 'nama_divisi', 'nama_bagian', 'desc_recruitment', 'pelamar', 'status_recruitment', 'option'])
                 ->make(true);
         }
     }
@@ -195,11 +197,11 @@ class RecruitmentController extends Controller
         // dd($id);
         $holding = request()->segment(count(request()->segments()));
         $recruitment = Recruitment::where('id', $id)->where('holding_recruitment', $holding)->first();
-        if($recruitment->status_recruitment == 0){
+        if ($recruitment->status_recruitment == 0) {
             Recruitment::where('id', $id)->where('holding_recruitment', $holding)->update([
                 'status_recruitment' => 1,
             ]);
-        }else{
+        } else {
             Recruitment::where('id', $id)->where('holding_recruitment', $holding)->update([
                 'status_recruitment' => 0,
             ]);
@@ -236,7 +238,7 @@ class RecruitmentController extends Controller
         // dd($id);
         $holding = request()->segment(count(request()->segments()));
         $data = DB::table('recruitment_user')->where('recruitment_admin_id', $id)->first();
-        if($data == null){
+        if ($data == null) {
             $hapus = Recruitment::where('id', $id)->where('holding_recruitment', $holding)->delete();
             if ($hapus) {
                 ActivityLog::create([
@@ -248,16 +250,15 @@ class RecruitmentController extends Controller
             } else {
                 return redirect()->back()->with('error', 'Data  Gagal di Hapus');
             }
-        }else{
+        } else {
             dd('stop');
         }
-
     }
 
     function pg_list_pelamar($id)
     {
         $holding = request()->segment(count(request()->segments()));
-        return view('admin.recruitment-users.list_pelamar',[
+        return view('admin.recruitment-users.list_pelamar', [
             'title' => 'Data Recruitment',
             'holding'   => $holding,
             'id_recruitment'        => $id,
@@ -275,25 +276,29 @@ class RecruitmentController extends Controller
             'Bagian' =>  function ($query) {
                 $query->with([
                     'Divisi' => function ($query) {
-                    $query->with([
-                        'Departemen' => function ($query) {
-                        $query->orderBy('nama_departemen', 'ASC');
-                    }]);
-                    $query->orderBy('nama_divisi', 'ASC');
-                }]);
+                        $query->with([
+                            'Departemen' => function ($query) {
+                                $query->orderBy('nama_departemen', 'ASC');
+                            }
+                        ]);
+                        $query->orderBy('nama_divisi', 'ASC');
+                    }
+                ]);
                 $query->orderBy('nama_bagian', 'ASC');
             },
             'Cv' => function ($query) {
+
                 $query->whereNotNull('users_career_id')->orderBy('id', 'ASC');
             },
             'AuthLogin' => function ($query) {
                 $query->orderBy('id', 'ASC');
             },
         ])
-        ->where('holding', $holding)
-        ->where('recruitment_admin_id', $id)
-        ->orderBy('nama_bagian', 'ASC')
-        ->get();
+            ->where('holding', $holding)
+            ->where('recruitment_admin_id', $id)
+            ->orderBy('nama_bagian', 'ASC')
+            ->get();
+        // dd($table);
         if (request()->ajax()) {
             return DataTables::of($table)
                 ->addColumn('detail_cv', function ($row) use ($holding) {
@@ -308,9 +313,9 @@ class RecruitmentController extends Controller
                                 data-departemen="' . $row->Bagian->Divisi->Departemen->nama_departemen . '"
                                 data-divisi="' . $row->Bagian->Divisi->nama_divisi . '"
                                 data-bagian="' . $row->Bagian->nama_bagian . '"
-                                data-email="' . $row->email . '"
+                                data-email="' . $row->AuthLogin->email . '"
                                 data-no_hp="' . $row->Cv->no_hp . '"
-                                data-alamatktp="' . $row->Cv->alamat_ktp . '"
+                                data-alamat_ktp="' . $row->Cv->tempat_lahir . '"
                                 data-nama_sdmi="' . $row->Cv->nama_sdmi . '"
                                 data-tahun_sdmi="' . $row->Cv->tahun_sdmi . '"
                                 data-nama_smpmts="' . $row->Cv->nama_smpmts . '"
@@ -352,17 +357,17 @@ class RecruitmentController extends Controller
                     return $select;
                 })
                 ->addColumn('status_recruitment', function ($row) {
-                    if($row->status_recruitmentuser == 0){
+                    if ($row->status_recruitmentuser == 0) {
                         $return = '<span class="badge rounded-pill bg-warning">Panggil Interview</span>';
-                    }elseif($row->status_recruitmentuser == 1){
+                    } elseif ($row->status_recruitmentuser == 1) {
                         $return = '<span class="badge rounded-pill bg-info">Terjadwal Interview</span>';
-                    }elseif($row->status_recruitmentuser == 2 && $row->tanggal_interview < Carbon::now()->format('d/m/Y')){
+                    } elseif ($row->status_recruitmentuser == 2 && $row->tanggal_interview < Carbon::now()->format('d/m/Y')) {
                         $return = '<span class="badge rounded-pill bg-danger">Tidak Konfirmasi</span>';
-                    }elseif($row->status_recruitmentuser == 3){
+                    } elseif ($row->status_recruitmentuser == 3) {
                         $return = '<span class="badge rounded-pill bg-success">Lolos Interview</span>';
-                    }elseif($row->status_recruitmentuser == 4){
+                    } elseif ($row->status_recruitmentuser == 4) {
                         $return = '<span class="badge rounded-pill bg-success">Hadir Interview</span>';
-                    }elseif($row->status_recruitmentuser == 5){
+                    } elseif ($row->status_recruitmentuser == 5) {
                         $return = '<span class="badge rounded-pill bg-dark">Tidak Lolos Administrasi</span>';
                     }
                     return $return;
@@ -399,7 +404,7 @@ class RecruitmentController extends Controller
                     }
                     return $nama_bagian;
                 })
-                ->rawColumns(['detail_cv','select','status_recruitment','departemen_id','email','nama_departemen','nama_divisi','nama_bagian'])
+                ->rawColumns(['detail_cv', 'select', 'status_recruitment', 'departemen_id', 'email', 'nama_departemen', 'nama_divisi', 'nama_bagian'])
                 ->make(true);
         }
     }
@@ -440,7 +445,7 @@ class RecruitmentController extends Controller
                         'lokasi_interview'      => $request->lokasi_interview,
                     ]
                 );
-                RecruitmentUser::where('status_recruitmentuser', 0)->where('id',$user->id)->update(['status_recruitmentuser' => 1]);
+                RecruitmentUser::where('status_recruitmentuser', 0)->where('id', $user->id)->update(['status_recruitmentuser' => 1]);
                 // Merekam aktivitas pengguna
                 ActivityLog::create([
                     'user_id' => $request->user()->id,
@@ -452,7 +457,6 @@ class RecruitmentController extends Controller
             $data_user = collect();
         }
         return redirect()->back()->with('success', 'Data Berhasil di informasikan');
-
     }
 
     // Tidak Lolos Administrasi -> konfirmasi
@@ -468,7 +472,7 @@ class RecruitmentController extends Controller
                 },
             ])->whereIn('id', $userIds)->get();
             foreach ($data_user as $user) {
-                RecruitmentUser::where('status_recruitmentuser', 0)->where('id',$user->id)->update(['status_recruitmentuser' => 5]);
+                RecruitmentUser::where('status_recruitmentuser', 0)->where('id', $user->id)->update(['status_recruitmentuser' => 5]);
                 // Merekam aktivitas pengguna
                 ActivityLog::create([
                     'user_id' => $request->user()->id,
@@ -480,7 +484,6 @@ class RecruitmentController extends Controller
             $data_user = collect();
         }
         return redirect()->back()->with('success', 'Data Berhasil diupdate');
-
     }
 
     function pg_data_interview()
@@ -500,12 +503,14 @@ class RecruitmentController extends Controller
             'Bagian' =>  function ($query) {
                 $query->with([
                     'Divisi' => function ($query) {
-                    $query->with([
-                        'Departemen' => function ($query) {
-                        $query->orderBy('nama_departemen', 'ASC');
-                    }]);
-                    $query->orderBy('nama_divisi', 'ASC');
-                }]);
+                        $query->with([
+                            'Departemen' => function ($query) {
+                                $query->orderBy('nama_departemen', 'ASC');
+                            }
+                        ]);
+                        $query->orderBy('nama_divisi', 'ASC');
+                    }
+                ]);
                 $query->orderBy('nama_bagian', 'ASC');
             },
         ])->where('holding_recruitment', $holding)->orderBy('nama_bagian', 'ASC')->get();
@@ -548,7 +553,7 @@ class RecruitmentController extends Controller
                     return $btn;
                 })
                 ->addColumn('pelamar', function ($row) use ($holding) {
-                    $url = url('/pg/data-list-interview/'. $row->id .'/'.$holding);
+                    $url = url('/pg/data-list-interview/' . $row->id . '/' . $holding);
                     $btn = '<a href="' . $url . '" class="btn btn-sm btn-info">
                                 <i class="tf-icons mdi mdi-eye-circle-outline me-1"></i>
                                 List&nbsp;Interview
@@ -559,7 +564,7 @@ class RecruitmentController extends Controller
                     if ($row->status_recruitment == 0) {
                         $status = '<button id="btn_status_aktif"
                             data-id="' . $row->id . '"
-                            data-holding="' .$holding. '"
+                            data-holding="' . $holding . '"
                             type="button" class="btn btn-sm btn-success ">
                             <i class="tf-icons mdi mdi-account-search"> </i>
                             &nbsp;AKTIF
@@ -598,7 +603,7 @@ class RecruitmentController extends Controller
                         ';
                     return $btn;
                 })
-                ->rawColumns(['nama_departemen','nama_divisi','nama_bagian','pelamar','status_recruitment'])
+                ->rawColumns(['nama_departemen', 'nama_divisi', 'nama_bagian', 'pelamar', 'status_recruitment'])
                 ->make(true);
         }
     }
@@ -606,7 +611,7 @@ class RecruitmentController extends Controller
     function pg_list_interview($id)
     {
         $holding = request()->segment(count(request()->segments()));
-        return view('admin.recruitment-users.data_listinterview',[
+        return view('admin.recruitment-users.data_listinterview', [
             'title' => 'Data Recruitment',
             'holding'   => $holding,
             'id_recruitment'        => $id,
@@ -622,33 +627,35 @@ class RecruitmentController extends Controller
         $holding = request()->segment(count(request()->segments()));
         // dd($holding);
         $table =  RecruitmentUser::with([
-                'Bagian' =>  function ($query) {
-                    $query->with([
-                        'Divisi' => function ($query) {
+            'Bagian' =>  function ($query) {
+                $query->with([
+                    'Divisi' => function ($query) {
                         $query->with([
                             'Departemen' => function ($query) {
-                            $query->orderBy('nama_departemen', 'ASC');
-                        }]);
+                                $query->orderBy('nama_departemen', 'ASC');
+                            }
+                        ]);
                         $query->orderBy('nama_divisi', 'ASC');
-                    }]);
-                    $query->orderBy('nama_bagian', 'ASC');
-                },
-                'AuthLogin' => function ($query) {
-                    $query->orderBy('id', 'ASC');
-                },
-                'WaktuUjian' => function($query){
-                    $query->orderBy('id','ASC');
-                },
-                'DataInterview' => function ($query){
-                    $query->orderBy('id', 'ASC');
-                }
-            ])
+                    }
+                ]);
+                $query->orderBy('nama_bagian', 'ASC');
+            },
+            'AuthLogin' => function ($query) {
+                $query->orderBy('id', 'ASC');
+            },
+            'WaktuUjian' => function ($query) {
+                $query->orderBy('id', 'ASC');
+            },
+            'DataInterview' => function ($query) {
+                $query->orderBy('id', 'ASC');
+            },
+        ])
             ->where('holding', $holding)
             ->where('recruitment_admin_id', $id)
             ->where('status_recruitmentuser', '!=', 0)
             ->where('status_recruitmentuser', '!=', 5)
             ->orderBy('nama_bagian', 'ASC')->get();
-            // dd($table);
+        // dd($table);
         if (request()->ajax()) {
             return DataTables::of($table)
                 ->addColumn('email', function ($row) {
@@ -656,7 +663,7 @@ class RecruitmentController extends Controller
                     return $return;
                 })
                 ->addColumn('ujian', function ($row) use ($holding) {
-                    if(!$row->WaktuUjian != null){
+                    if (!$row->WaktuUjian != null) {
                         $btn = '<button id="btn_ujian"
                                 data-id_recruitment_user="' . $row->id . '"
                                 data-id_users_career="' . $row->AuthLogin->id . '"
@@ -666,7 +673,7 @@ class RecruitmentController extends Controller
                                 Mulai&nbsp;Ujian
                             </button>';
                         return $btn;
-                    }else{
+                    } else {
                         $btn = '<button id="btn_prosesujian"
                                     type="button" class="btn btn-sm" style="background-color:#e9ddff;">
                                     <i class="tf-icons mdi mdi-book"></i>
@@ -763,7 +770,7 @@ class RecruitmentController extends Controller
                     // return 'b';
                 })
                 ->addColumn('status_kehadiran', function ($row) use ($holding) {
-                    if($row->DataInterview->status_interview == 0 || $row->DataInterview->status_interview == 1){
+                    if ($row->DataInterview->status_interview == 0 || $row->DataInterview->status_interview == 1) {
                         $btn = '<button id="btn_kehadiran"
                                 data-recruitment_user_id="' . $row->id . '"
                                 data-recruitment_interview_id="' . $row->DataInterview->id . '"
@@ -772,10 +779,10 @@ class RecruitmentController extends Controller
                                 &nbsp;Absensi
                             </button>';
                         return $btn;
-                    }elseif($row->DataInterview->status_interview == 3){
+                    } elseif ($row->DataInterview->status_interview == 3) {
                         $return = '<span class="badge rounded-pill bg-success">Hadir</span>';
                         return $return;
-                    }elseif($row->DataInterview->status_interview == 4){
+                    } elseif ($row->DataInterview->status_interview == 4) {
                         $return = '<span class="badge rounded-pill bg-danger">Tidak Hadir</span>';
                         return $return;
                     }
@@ -810,14 +817,14 @@ class RecruitmentController extends Controller
                     }
                     return $nama_bagian;
                 })
-                ->rawColumns(['email','ujian','detail_cv','penilaian','status_kehadiran','departemen_id','nama_departemen','nama_divisi','nama_bagian'])
+                ->rawColumns(['email', 'ujian', 'detail_cv', 'penilaian', 'status_kehadiran', 'departemen_id', 'nama_departemen', 'nama_divisi', 'nama_bagian'])
                 ->make(true);
         }
     }
 
     function absensi_kehadiran_interview(Request $request)
     {
-        if($request->status_interview == 3){
+        if ($request->status_interview == 3) {
             RecruitmentInterview::where('id', $request->show_recruitmentinterviewid3)->update([
                 'status_interview'  => 3,
             ]);
@@ -831,7 +838,7 @@ class RecruitmentController extends Controller
                 'description' => 'Menambahkan data kehadrian ' . $request->name,
             ]);
             return redirect()->back()->with('success', 'Data Berhasil di Tambahkan');
-        }else{
+        } else {
             RecruitmentInterview::where('id', $request->show_recruitmentinterviewid3)->update([
                 'status_interview'  => 4,
             ]);
@@ -866,8 +873,8 @@ class RecruitmentController extends Controller
     function pg_ujian()
     {
         $holding = request()->segment(count(request()->segments()));
-        return view('admin.recruitment-users.ujian.data_ujian',[
-            'holding'=> $holding,
+        return view('admin.recruitment-users.ujian.data_ujian', [
+            'holding' => $holding,
             'title' => 'Data Ujian',
             'plugin' => '
                 <link rel="stylesheet" type="text/css" href="' . url("/public/assets/cbt-malela/plugins/table/datatable/datatables.css") . '">
@@ -887,7 +894,7 @@ class RecruitmentController extends Controller
     function pg_ujian_pg()
     {
         $holding = request()->segment(count(request()->segments()));
-        return view('admin.recruitment-users.ujian.data_ujian_create',[
+        return view('admin.recruitment-users.ujian.data_ujian_create', [
             'holding'   => $holding,
             'title' => 'Tambah Ujian Pilihan Ganda',
             'plugin' => '
@@ -1039,12 +1046,14 @@ class RecruitmentController extends Controller
             'Bagian' =>  function ($query) {
                 $query->with([
                     'Divisi' => function ($query) {
-                    $query->with([
-                        'Departemen' => function ($query) {
-                        $query->orderBy('nama_departemen', 'ASC');
-                    }]);
-                    $query->orderBy('nama_divisi', 'ASC');
-                }]);
+                        $query->with([
+                            'Departemen' => function ($query) {
+                                $query->orderBy('nama_departemen', 'ASC');
+                            }
+                        ]);
+                        $query->orderBy('nama_divisi', 'ASC');
+                    }
+                ]);
                 $query->orderBy('nama_bagian', 'ASC');
             },
         ])->where('holding_recruitment', $holding)->orderBy('nama_bagian', 'ASC')->get();
@@ -1075,7 +1084,7 @@ class RecruitmentController extends Controller
                     return $nama_bagian;
                 })
                 ->addColumn('pelamar', function ($row) use ($holding) {
-                    $url = url('/pg/data-list-ranking/'. $row->id .'/'.$holding);
+                    $url = url('/pg/data-list-ranking/' . $row->id . '/' . $holding);
                     $btn = '<a href="' . $url . '" class="btn btn-sm btn-primary">
                                 <i class="tf-icons mdi mdi-podium-gold me-1"></i>
                                 List Ranking
@@ -1086,7 +1095,7 @@ class RecruitmentController extends Controller
                     $return = $row->created_recruitment;
                     return $return;
                 })
-                ->rawColumns(['nama_departemen','nama_divisi','nama_bagian','pelamar','tanggal'])
+                ->rawColumns(['nama_departemen', 'nama_divisi', 'nama_bagian', 'pelamar', 'tanggal'])
                 ->make(true);
         }
     }
@@ -1094,7 +1103,7 @@ class RecruitmentController extends Controller
     function pg_list_ranking($id)
     {
         $holding = request()->segment(count(request()->segments()));
-        return view('admin.recruitment-users.data_listranking',[
+        return view('admin.recruitment-users.data_listranking', [
             'title' => 'Data Recruitment',
             'holding'   => $holding,
             'id_recruitment'        => $id,
@@ -1109,35 +1118,37 @@ class RecruitmentController extends Controller
     {
         $holding = request()->segment(count(request()->segments()));
         $table =  RecruitmentUser::with([
-                'Bagian' =>  function ($query) {
-                    $query->with([
-                        'Divisi' => function ($query) {
+            'Bagian' =>  function ($query) {
+                $query->with([
+                    'Divisi' => function ($query) {
                         $query->with([
                             'Departemen' => function ($query) {
-                            $query->orderBy('nama_departemen', 'ASC');
-                        }]);
+                                $query->orderBy('nama_departemen', 'ASC');
+                            }
+                        ]);
                         $query->orderBy('nama_divisi', 'ASC');
-                    }]);
-                    $query->orderBy('nama_bagian', 'ASC');
-                },
-            ])->with([
-                'DataInterview' => function ($query){
-                    $query->orderBy('id', 'ASC');
-                },
-            ])
+                    }
+                ]);
+                $query->orderBy('nama_bagian', 'ASC');
+            },
+        ])->with([
+            'DataInterview' => function ($query) {
+                $query->orderBy('id', 'ASC');
+            },
+        ])
             ->where('holding', $holding)
             // ->where('status_recruitmentuser','!=', 0)
             // ->where('status_recruitmentuser','!=', 5)
             ->orderBy('nama_bagian', 'ASC')->get();
-            // dd($table);
+        // dd($table);
         if (request()->ajax()) {
             return DataTables::of($table)
                 ->addColumn('nama_pelamar', function ($row) {
-                    if(($row->nama_depan != '' && $row->nama_tengah != '' && $row->nama_belakang != '')){
-                        $nama_pelamar = $row->nama_depan.' '.$row->nama_tengah.' '.$row->nama_belakang;
-                    }elseif($row->nama_depan != '' && $row->nama_tengah != '' && $row->nama_belakang == ''){
-                        $nama_pelamar = $row->nama_depan.' '.$row->nama_tengah;
-                    }else{
+                    if (($row->nama_depan != '' && $row->nama_tengah != '' && $row->nama_belakang != '')) {
+                        $nama_pelamar = $row->nama_depan . ' ' . $row->nama_tengah . ' ' . $row->nama_belakang;
+                    } elseif ($row->nama_depan != '' && $row->nama_tengah != '' && $row->nama_belakang == '') {
+                        $nama_pelamar = $row->nama_depan . ' ' . $row->nama_tengah;
+                    } else {
                         $nama_pelamar = $row->nama_depan;
                     }
                     return $nama_pelamar;
@@ -1147,14 +1158,14 @@ class RecruitmentController extends Controller
                         if ($row->DataInterview->nilai_ujian != 0 && $row->DataInterview->status_interview == 3) {
                             $return = '<span class="badge rounded-pill bg-success">Penilaian Interview</span>';
                             return $return;
-                        }elseif($row->DataInterview->status_interview == 4){
+                        } elseif ($row->DataInterview->status_interview == 4) {
                             $return = '<span class="badge rounded-pill bg-danger">Tidak Hadir Interview</span>';
                             return $return;
-                        }elseif($row->DataInterview->nilai_ujian == 0 && $row->DataInterview->status_interview == 0){
+                        } elseif ($row->DataInterview->nilai_ujian == 0 && $row->DataInterview->status_interview == 0) {
                             $return = '<span class="badge rounded-pill bg-warning">Belum Absen Interview</span>';
                             return $return;
                         }
-                    }else{
+                    } else {
                         $return = '<span class="badge rounded-pill bg-dark">Tidak Lolos Administrasi</span>';
                         return $return;
                     }
@@ -1213,16 +1224,16 @@ class RecruitmentController extends Controller
                 ->addColumn('nilai_ujian', function ($row) {
                     if (isset($row->DataInterview) && $row->DataInterview !== null) {
                         if ($row->DataInterview->nilai_ujian != 0 && $row->DataInterview->status_interview == 3) {
-                            $return = '<span class="badge badge-center rounded-pill bg-primary">'.$row->DataInterview->nilai_ujian.'</span>';
+                            $return = '<span class="badge badge-center rounded-pill bg-primary">' . $row->DataInterview->nilai_ujian . '</span>';
                             return $return;
-                        }elseif($row->DataInterview->status_interview == 4){
-                            $return = '<span class="badge badge-center rounded-pill bg-primary">'.$row->DataInterview->nilai_ujian.'</span>';
+                        } elseif ($row->DataInterview->status_interview == 4) {
+                            $return = '<span class="badge badge-center rounded-pill bg-primary">' . $row->DataInterview->nilai_ujian . '</span>';
                             return $return;
-                        }elseif($row->DataInterview->nilai_ujian == 0 && $row->DataInterview->status_interview == 0){
-                            $return = '<span class="badge badge-center rounded-pill bg-primary">'.$row->DataInterview->nilai_ujian.'</span>';
+                        } elseif ($row->DataInterview->nilai_ujian == 0 && $row->DataInterview->status_interview == 0) {
+                            $return = '<span class="badge badge-center rounded-pill bg-primary">' . $row->DataInterview->nilai_ujian . '</span>';
                             return $return;
                         }
-                    }else{
+                    } else {
                         $return = '<span class="badge badge-center rounded-pill bg-primary">0</span>';
                         return $return;
                     }
@@ -1240,16 +1251,16 @@ class RecruitmentController extends Controller
                 ->addColumn('nilai_interview_hrd1', function ($row) {
                     if (isset($row->DataInterview) && $row->DataInterview !== null) {
                         if ($row->DataInterview->nilai_ujian != 0 && $row->DataInterview->status_interview == 3) {
-                            $return = '<span class="badge badge-center rounded-pill bg-primary">'.$row->DataInterview->nilai_interview_hrd1.'</span>';
+                            $return = '<span class="badge badge-center rounded-pill bg-primary">' . $row->DataInterview->nilai_interview_hrd1 . '</span>';
                             return $return;
-                        }elseif($row->DataInterview->status_interview == 4){
-                            $return = '<span class="badge badge-center rounded-pill bg-primary">'.$row->DataInterview->nilai_interview_hrd1.'</span>';
+                        } elseif ($row->DataInterview->status_interview == 4) {
+                            $return = '<span class="badge badge-center rounded-pill bg-primary">' . $row->DataInterview->nilai_interview_hrd1 . '</span>';
                             return $return;
-                        }elseif($row->DataInterview->nilai_ujian == 0 && $row->DataInterview->status_interview == 0){
-                            $return = '<span class="badge badge-center rounded-pill bg-primary">'.$row->DataInterview->nilai_interview_hrd1.'</span>';
+                        } elseif ($row->DataInterview->nilai_ujian == 0 && $row->DataInterview->status_interview == 0) {
+                            $return = '<span class="badge badge-center rounded-pill bg-primary">' . $row->DataInterview->nilai_interview_hrd1 . '</span>';
                             return $return;
                         }
-                    }else{
+                    } else {
                         $return = '<span class="badge badge-center rounded-pill bg-primary">0</span>';
                         return $return;
                     }
@@ -1258,16 +1269,16 @@ class RecruitmentController extends Controller
                 ->addColumn('nilai_interview_hrd2', function ($row) {
                     if (isset($row->DataInterview) && $row->DataInterview !== null) {
                         if ($row->DataInterview->nilai_ujian != 0 && $row->DataInterview->status_interview == 3) {
-                            $return = '<span class="badge badge-center rounded-pill bg-primary">'.$row->DataInterview->nilai_interview_hrd2.'</span>';
+                            $return = '<span class="badge badge-center rounded-pill bg-primary">' . $row->DataInterview->nilai_interview_hrd2 . '</span>';
                             return $return;
-                        }elseif($row->DataInterview->status_interview == 4){
-                            $return = '<span class="badge badge-center rounded-pill bg-primary">'.$row->DataInterview->nilai_interview_hrd2.'</span>';
+                        } elseif ($row->DataInterview->status_interview == 4) {
+                            $return = '<span class="badge badge-center rounded-pill bg-primary">' . $row->DataInterview->nilai_interview_hrd2 . '</span>';
                             return $return;
-                        }elseif($row->DataInterview->nilai_ujian == 0 && $row->DataInterview->status_interview == 0){
-                            $return = '<span class="badge badge-center rounded-pill bg-primary">'.$row->DataInterview->nilai_interview_hrd2.'</span>';
+                        } elseif ($row->DataInterview->nilai_ujian == 0 && $row->DataInterview->status_interview == 0) {
+                            $return = '<span class="badge badge-center rounded-pill bg-primary">' . $row->DataInterview->nilai_interview_hrd2 . '</span>';
                             return $return;
                         }
-                    }else{
+                    } else {
                         $return = '<span class="badge badge-center rounded-pill bg-primary">0</span>';
                         return $return;
                     }
@@ -1276,16 +1287,16 @@ class RecruitmentController extends Controller
                 ->addColumn('nilai_interview_hrd3', function ($row) {
                     if (isset($row->DataInterview) && $row->DataInterview !== null) {
                         if ($row->DataInterview->nilai_ujian != 0 && $row->DataInterview->status_interview == 3) {
-                            $return = '<span class="badge badge-center rounded-pill bg-primary">'.$row->DataInterview->nilai_interview_hrd3.'</span>';
+                            $return = '<span class="badge badge-center rounded-pill bg-primary">' . $row->DataInterview->nilai_interview_hrd3 . '</span>';
                             return $return;
-                        }elseif($row->DataInterview->status_interview == 4){
-                            $return = '<span class="badge badge-center rounded-pill bg-primary">'.$row->DataInterview->nilai_interview_hrd3.'</span>';
+                        } elseif ($row->DataInterview->status_interview == 4) {
+                            $return = '<span class="badge badge-center rounded-pill bg-primary">' . $row->DataInterview->nilai_interview_hrd3 . '</span>';
                             return $return;
-                        }elseif($row->DataInterview->nilai_ujian == 0 && $row->DataInterview->status_interview == 0){
-                            $return = '<span class="badge badge-center rounded-pill bg-primary">'.$row->DataInterview->nilai_interview_hrd3.'</span>';
+                        } elseif ($row->DataInterview->nilai_ujian == 0 && $row->DataInterview->status_interview == 0) {
+                            $return = '<span class="badge badge-center rounded-pill bg-primary">' . $row->DataInterview->nilai_interview_hrd3 . '</span>';
                             return $return;
                         }
-                    }else{
+                    } else {
                         $return = '<span class="badge badge-center rounded-pill bg-primary">0</span>';
                         return $return;
                     }
@@ -1294,16 +1305,16 @@ class RecruitmentController extends Controller
                 ->addColumn('nilai_interview_hrd4', function ($row) {
                     if (isset($row->DataInterview) && $row->DataInterview !== null) {
                         if ($row->DataInterview->nilai_ujian != 0 && $row->DataInterview->status_interview == 3) {
-                            $return = '<span class="badge badge-center rounded-pill bg-primary">'.$row->DataInterview->nilai_interview_hrd4.'</span>';
+                            $return = '<span class="badge badge-center rounded-pill bg-primary">' . $row->DataInterview->nilai_interview_hrd4 . '</span>';
                             return $return;
-                        }elseif($row->DataInterview->status_interview == 4){
-                            $return = '<span class="badge badge-center rounded-pill bg-primary">'.$row->DataInterview->nilai_interview_hrd4.'</span>';
+                        } elseif ($row->DataInterview->status_interview == 4) {
+                            $return = '<span class="badge badge-center rounded-pill bg-primary">' . $row->DataInterview->nilai_interview_hrd4 . '</span>';
                             return $return;
-                        }elseif($row->DataInterview->nilai_ujian == 0 && $row->DataInterview->status_interview == 0){
-                            $return = '<span class="badge badge-center rounded-pill bg-primary">'.$row->DataInterview->nilai_interview_hrd4.'</span>';
+                        } elseif ($row->DataInterview->nilai_ujian == 0 && $row->DataInterview->status_interview == 0) {
+                            $return = '<span class="badge badge-center rounded-pill bg-primary">' . $row->DataInterview->nilai_interview_hrd4 . '</span>';
                             return $return;
                         }
-                    }else{
+                    } else {
                         $return = '<span class="badge badge-center rounded-pill bg-primary">0</span>';
                         return $return;
                     }
@@ -1312,16 +1323,16 @@ class RecruitmentController extends Controller
                 ->addColumn('nilai_interview_hrd5', function ($row) {
                     if (isset($row->DataInterview) && $row->DataInterview !== null) {
                         if ($row->DataInterview->nilai_ujian != 0 && $row->DataInterview->status_interview == 3) {
-                            $return = '<span class="badge badge-center rounded-pill bg-primary">'.$row->DataInterview->nilai_interview_hrd5.'</span>';
+                            $return = '<span class="badge badge-center rounded-pill bg-primary">' . $row->DataInterview->nilai_interview_hrd5 . '</span>';
                             return $return;
-                        }elseif($row->DataInterview->status_interview == 4){
-                            $return = '<span class="badge badge-center rounded-pill bg-primary">'.$row->DataInterview->nilai_interview_hrd5.'</span>';
+                        } elseif ($row->DataInterview->status_interview == 4) {
+                            $return = '<span class="badge badge-center rounded-pill bg-primary">' . $row->DataInterview->nilai_interview_hrd5 . '</span>';
                             return $return;
-                        }elseif($row->DataInterview->nilai_ujian == 0 && $row->DataInterview->status_interview == 0){
-                            $return = '<span class="badge badge-center rounded-pill bg-primary">'.$row->DataInterview->nilai_interview_hrd5.'</span>';
+                        } elseif ($row->DataInterview->nilai_ujian == 0 && $row->DataInterview->status_interview == 0) {
+                            $return = '<span class="badge badge-center rounded-pill bg-primary">' . $row->DataInterview->nilai_interview_hrd5 . '</span>';
                             return $return;
                         }
-                    }else{
+                    } else {
                         $return = '<span class="badge badge-center rounded-pill bg-primary">0</span>';
                         return $return;
                     }
@@ -1332,11 +1343,11 @@ class RecruitmentController extends Controller
                         if ($row->DataInterview->nilai_ujian != 0 && $row->DataInterview->status_interview == 3) {
                             $return = $row->DataInterview->catatan_interview_hrd;
                             return $return;
-                        }else{
+                        } else {
                             $return = '-';
                             return $return;
                         }
-                    }else{
+                    } else {
                         $return = '-';
                         return $return;
                     }
@@ -1345,16 +1356,16 @@ class RecruitmentController extends Controller
                 ->addColumn('nilai_interview_manager', function ($row) {
                     if (isset($row->DataInterview) && $row->DataInterview !== null) {
                         if ($row->DataInterview->nilai_ujian != 0 && $row->DataInterview->status_interview == 3) {
-                            $return = '<span class="badge badge-center rounded-pill bg-primary">'.$row->DataInterview->nilai_interview_manager.'</span>';
+                            $return = '<span class="badge badge-center rounded-pill bg-primary">' . $row->DataInterview->nilai_interview_manager . '</span>';
                             return $return;
-                        }elseif($row->DataInterview->status_interview == 4){
-                            $return = '<span class="badge badge-center rounded-pill bg-primary">'.$row->DataInterview->nilai_interview_manager.'</span>';
+                        } elseif ($row->DataInterview->status_interview == 4) {
+                            $return = '<span class="badge badge-center rounded-pill bg-primary">' . $row->DataInterview->nilai_interview_manager . '</span>';
                             return $return;
-                        }elseif($row->DataInterview->nilai_ujian == 0 && $row->DataInterview->status_interview == 0){
-                            $return = '<span class="badge badge-center rounded-pill bg-primary">'.$row->DataInterview->nilai_interview_manager.'</span>';
+                        } elseif ($row->DataInterview->nilai_ujian == 0 && $row->DataInterview->status_interview == 0) {
+                            $return = '<span class="badge badge-center rounded-pill bg-primary">' . $row->DataInterview->nilai_interview_manager . '</span>';
                             return $return;
                         }
-                    }else{
+                    } else {
                         $return = '<span class="badge badge-center rounded-pill bg-primary">0</span>';
                         return $return;
                     }
@@ -1365,11 +1376,11 @@ class RecruitmentController extends Controller
                         if ($row->DataInterview->nilai_ujian != 0 && $row->DataInterview->status_interview == 3) {
                             $return = $row->DataInterview->catatan_interview_manager;
                             return $return;
-                        }else{
+                        } else {
                             $return = '-';
                             return $return;
                         }
-                    }else{
+                    } else {
                         $return = '-';
                         return $return;
                     }
@@ -1378,30 +1389,37 @@ class RecruitmentController extends Controller
                 ->addColumn('nilai_interview_manager', function ($row) {
                     if (isset($row->DataInterview) && $row->DataInterview !== null) {
                         if ($row->DataInterview->nilai_ujian != 0 && $row->DataInterview->status_interview == 3) {
-                            $return = '<span class="badge badge-center rounded-pill bg-primary">'.$row->DataInterview->nilai_interview_manager.'</span>';
+                            $return = '<span class="badge badge-center rounded-pill bg-primary">' . $row->DataInterview->nilai_interview_manager . '</span>';
                             return $return;
-                        }elseif($row->DataInterview->status_interview == 4){
-                            $return = '<span class="badge badge-center rounded-pill bg-primary">'.$row->DataInterview->nilai_interview_manager.'</span>';
+                        } elseif ($row->DataInterview->status_interview == 4) {
+                            $return = '<span class="badge badge-center rounded-pill bg-primary">' . $row->DataInterview->nilai_interview_manager . '</span>';
                             return $return;
-                        }elseif($row->DataInterview->nilai_ujian == 0 && $row->DataInterview->status_interview == 0){
-                            $return = '<span class="badge badge-center rounded-pill bg-primary">'.$row->DataInterview->nilai_interview_manager.'</span>';
+                        } elseif ($row->DataInterview->nilai_ujian == 0 && $row->DataInterview->status_interview == 0) {
+                            $return = '<span class="badge badge-center rounded-pill bg-primary">' . $row->DataInterview->nilai_interview_manager . '</span>';
                             return $return;
                         }
-                    }else{
+                    } else {
                         $return = '<span class="badge badge-center rounded-pill bg-primary">0</span>';
                         return $return;
                     }
                     return;
                 })
-                ->rawColumns(['nama_pelamar','status_kehadiran','detail_cv',
-                    'nilai_ujian','catatan_ujian','nilai_interview_hrd1',
-                    'nilai_interview_hrd2','nilai_interview_hrd3',
-                    'nilai_interview_hrd4','nilai_interview_hrd5',
-                    'catatan_interview_hrd','nilai_interview_manager',
+                ->rawColumns([
+                    'nama_pelamar',
+                    'status_kehadiran',
+                    'detail_cv',
+                    'nilai_ujian',
+                    'catatan_ujian',
+                    'nilai_interview_hrd1',
+                    'nilai_interview_hrd2',
+                    'nilai_interview_hrd3',
+                    'nilai_interview_hrd4',
+                    'nilai_interview_hrd5',
+                    'catatan_interview_hrd',
+                    'nilai_interview_manager',
                     'catatan_interview_manager'
-                    ])
+                ])
                 ->make(true);
         }
     }
-
 }
