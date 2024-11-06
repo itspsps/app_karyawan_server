@@ -1300,23 +1300,22 @@ class CutiUserController extends Controller
 
             // dd($getUseratasan2);
             // $getUserAtasan  = Karyawan::where('jabatan_id', $getAsatan->id)->first();
-            $record_data    = Cuti::with('KategoriCuti')->where('user_id', $user_karyawan->id)
-                // ->select('cutis.*', '_cuti')
-                ->orderBy('tanggal', 'DESC')->get();
+
             // dd($record_data);
-            $get_kategori_cuti = KategoriCuti::where('status', 1)->get();
+            $get_kategori_cuti = KategoriCuti::where('status', 1)->orderBy('nama_cuti', 'ASC')->get();
             // dd($get_user_backup);
+            $thnskrg = date('Y');
             return view('users.cuti.index', [
-                'title'             => 'Tambah Permintaan Cuti Karyawan',
-                'data_user'         => $user,
+                'title'                 => 'Tambah Permintaan Cuti Karyawan',
+                'data_user'             => $user,
                 'user_karyawan'         => $user_karyawan,
-                'data_cuti_user'    => Cuti::where('user_id', $user_karyawan->id)->orderBy('id', 'desc')->get(),
-                'getUserAtasan'     => $getUserAtasan,
-                'getUserAtasan2'     => $getUserAtasan2,
-                'get_user_backup'     => $get_user_backup,
+                'data_cuti_user'        => Cuti::where('user_id', $user_karyawan->id)->orderBy('id', 'desc')->get(),
+                'getUserAtasan'         => $getUserAtasan,
+                'getUserAtasan2'        => $getUserAtasan2,
+                'get_user_backup'       => $get_user_backup,
                 'get_kategori_cuti'     => $get_kategori_cuti,
-                'user'              => $user,
-                'record_data'       => $record_data
+                'user'                  => $user,
+                'thnskrg'               => $thnskrg,
             ]);
         }
     }
@@ -1841,5 +1840,21 @@ class CutiUserController extends Controller
         ];
         $pdf = PDF::loadView('users/cuti/form_cuti', $data);
         return $pdf->download('FORM_PENGAJUAN_CUTI_' . $user_karyawan->name . '_' . date('Y-m-d H:i:s') . '.pdf');
+    }
+    public function get_filter_month(Request $request)
+    {
+        $blnskrg = date('m');
+        $user_karyawan = Karyawan::where('id', Auth::user()->karyawan_id)->first();
+        if ($request->filter_month == '') {
+            $data    = Cuti::with('KategoriCuti')->where('user_id', $user_karyawan->id)
+                ->whereMonth('tanggal', $blnskrg)
+                ->orderBy('tanggal', 'DESC')->get();
+        } else {
+            $data    = Cuti::with('KategoriCuti')->where('user_id', $user_karyawan->id)
+                ->whereMonth('tanggal', $request->filter_month)
+                ->orderBy('tanggal', 'DESC')->get();
+        }
+        // dd($data);
+        return response()->json($data);
     }
 }
