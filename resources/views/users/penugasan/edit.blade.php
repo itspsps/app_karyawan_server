@@ -20,9 +20,9 @@ APPS | KARYAWAN - SP
     <div class=" container">
         <div class="dz-info">
             <span class="location d-block">Form Penugasan
-                @if($user->kontrak_kerja == 'CV. SUMBER PANGAN')
+                @if($user->kontrak_kerja == 'SP')
                 CV. SUMBER PANGAN
-                @elseif($user->kontrak_kerja == 'PT. SURYA PANGAN SEMESTA')
+                @elseif($user->kontrak_kerja == 'SPS')
                 PT. SURYA PANGAN SEMESTA
                 @endif
             </span>
@@ -98,20 +98,16 @@ APPS | KARYAWAN - SP
             <input type="hidden" name="id_disahkan_oleh" value="{{ $penugasan->id_disahkan_oleh }}">
             <input type="hidden" name="proses_hrd" value="proses hrd">
             <input type="hidden" name="proses_finance" value="proses finance">
-            <input type="hidden" name="tanggal_pengajuan" value="{{ date('Y-m-d') }}">
+            <input type="hidden" name="tanggal_pengajuan" value="{{$penugasan->tanggal_pengajuan}}">
             <input type="hidden" name="jam_pengajuan" value="{{ date('h:i:s') }}">
         </div>
         <div class="input-group">
             <input type="text" class="form-control" value="Nama" readonly>
-            <input type="text" class="form-control" name="" value="{{ Auth::user()->fullname }}" style="font-weight: bold" readonly required>
+            <input type="text" class="form-control" name="" value="{{$user->name }}" style="font-weight: bold" readonly required>
         </div>
         <div class="input-group">
             <input type="text" class="form-control" value="NIK" readonly>
-            <input type="text" class="form-control" name="" value="{{ Auth::user()->nik }}" style="font-weight: bold" readonly required>
-        </div>
-        <div class="input-group">
-            <input type="text" class="form-control" value="Jabatan" readonly>
-            <input type="text" class="form-control" name="" value="{{ $penugasan->nama_jabatan }}" style="font-weight: bold" readonly required>
+            <input type="text" class="form-control" name="" value="{{ $user->nik }}" style="font-weight: bold" readonly required>
         </div>
         <div class="input-group">
             <input type="text" class="form-control" value="Depaartemen" readonly>
@@ -120,6 +116,10 @@ APPS | KARYAWAN - SP
         <div class="input-group">
             <input type="text" class="form-control" value="Divisi" readonly>
             <input type="text" class="form-control" name="" value="{{ $penugasan->nama_divisi }}" style="font-weight: bold" readonly required>
+        </div>
+        <div class="input-group">
+            <input type="text" class="form-control" value="Jabatan" readonly>
+            <input type="text" class="form-control" name="" value="{{ $penugasan->nama_jabatan }}" style="font-weight: bold" readonly required>
         </div>
         <div class="input-group">
             <input type="text" class="form-control" value="Asal Kerja" readonly>
@@ -187,7 +187,7 @@ APPS | KARYAWAN - SP
         <div class="input-group">
             <input type="text" class="form-control" value="Tanggal Kunjungan" readonly>
             @if ($penugasan->status_penugasan == 0)
-            <input type="text" id="tanggal_kunjungan" name="tanggal_kunjungan" value="" style="font-weight: bold" required readonly placeholder="Phone number" class="form-control">
+            <input type="text" id="tanggal_kunjungan" name="tanggal_kunjungan" value="" style="font-weight: bold" required readonly placeholder="Tanggal Kunjungan" class="form-control">
             @else
             <input type="text" class="form-control" name="" id="" value="{{$penugasan->tanggal_kunjungan}}-{{$penugasan->selesai_kunjungan}}" readonly>
             @endif
@@ -245,7 +245,7 @@ APPS | KARYAWAN - SP
                 <option value="400.000 sd 500.000" {{ $penugasan->budget_hotel == '400.000 sd 500.000' ? 'selected' : '' }}>Rp 400.000 sd 500.000</option>
                 <option value="300.000 sd 400.000" {{ $penugasan->budget_hotel == '300.000 sd 400.000' ? 'selected' : '' }}>Rp 300.000 sd 400.000</option>
                 <option value="200.000 sd 300.000" {{ $penugasan->budget_hotel == '200.000 sd 300.000' ? 'selected' : '' }}>Rp 200.000 sd 300.000</option>
-                <option value="Kost Harian < Rp 200.000" {{ $penugasan->budget_hotel == 'Kost Harian < Rp 200.000' ? 'selected' : '' }}>Kost Harian < Rp 200.000</option>
+                <option value="Kost Harian < 200.000" {{ $penugasan->budget_hotel == 'Kost Harian < 200.000' ? 'selected' : '' }}>Kost Harian < 200.000</option>
                 <option value="0" {{ $penugasan->budget_hotel == '0' ? 'selected' : '' }}>Tidak Ada</option>
             </select>
             @else
@@ -554,7 +554,7 @@ APPS | KARYAWAN - SP
                 <div>
                     <div id="note" onmouseover="my_function();"></div>
                     <canvas id="the_canvas" width="auto" height="100px"></canvas>
-                    <p class="text-primary" style="text-align: center">Ttd : {{ Auth::user()->fullname }} {{ date('Y-m-d') }}</p>
+                    <p class="text-primary" style="text-align: center">Ttd : {{ $user->name }} ({{ date('d-m-Y') }})</p>
                     <hr>
                     <div class="text-center">
                         <input type="hidden" id="signature" name="signature">

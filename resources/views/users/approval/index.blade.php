@@ -45,22 +45,56 @@
                         @foreach ($dataizin as $dataizin)
                         <a id="btn_klik" href="{{ url('/izin/approve/'.$dataizin->id) }}">
                             <div class="swiper-slide">
-                                <div class="card job-post" style="box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.2), 0 3px 10px 0 rgba(0, 0, 0, 0.1);">
-                                    <div class="card-body">
-                                        <div class="media media-80">
+                                <div class="card job-post" style="box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.2), 0 3px 10px 0 rgba(0, 0, 0, 0.1); margin-bottom: 4%;">
+                                    <div class="card-body" style="padding: 6px;">
+                                        <div class="media media-70">
+                                            @if($dataizin->User != '')
                                             @if($dataizin->User->foto_karyawan != '')
-                                            <img src="https://hrd.sumberpangan.store:4430/storage/app/public/foto_karyawan/{{$dataizin->User->foto_karyawan}}" alt="/">
+                                            <img src="{{asset('../storage/app/public/foto_karyawan/'.$dataizin->User->foto_karyawan)}}" alt="/">
                                             @else
-                                            <img src="{{ asset('assets/assets_users/images/users/user_icon.jpg') }}" alt="/">
+                                            <img src="{{ asset('admin/assets/img/avatars/1.png') }}" alt="/">
+                                            @endif
+                                            @else
+                                            <img src="{{ asset('admin/assets/img/avatars/1.png') }}" alt="/">
                                             @endif
                                         </div>
                                         <div class="card-info">
-                                            <h6 class="title">{{ $dataizin->fullname }}</h6>
-                                            <span class="">{{ $dataizin->izin }}</span>
+                                            <h6 class="title" style="font-size: 9pt;">{{ $dataizin->fullname }}</h6>
+                                            <span class="location">{{ $dataizin->izin }}</span>
                                             <div class="d-flex align-items-center">
-                                                @if ($dataizin->status_izin == 1)
-                                                <small class="badge badge-danger"><i class="fa fa-spinner"></i>&nbsp;Pending</small>
-                                                @endif
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="Layer_1" viewBox="0 0 460 460" xml:space="preserve">
+                                                    <g id="XMLID_1011_">
+                                                        <path id="XMLID_1012_" style="fill:#354A67;" d="M230,0c127.03,0,230,102.97,230,230S357.03,460,230,460l-60-230L230,0z" />
+                                                        <path id="XMLID_1013_" style="fill:#466289;" d="M230,460C102.97,460,0,357.03,0,230S102.97,0,230,0V460z" />
+                                                        <path id="XMLID_1014_" style="fill:#BEC8D6;" d="M230,420l-20-200l210,10C420,334.77,334.77,420,230,420z" />
+                                                        <path id="XMLID_1015_" style="fill:#DAE0E7;" d="M230,40c104.77,0,190,85.23,190,190H210L230,40z" />
+                                                        <path id="XMLID_1016_" style="fill:#DAE0E7;" d="M230,230v190c-104.77,0-190-85.23-190-190l95-30L230,230z" />
+                                                        <path id="XMLID_1017_" style="fill:#FFFFFF;" d="M230,40v190H40C40,125.23,125.23,40,230,40z" />
+
+                                                        <rect id="XMLID_1018_" x="142.496" y="89.424" transform="matrix(-0.866 0.5 -0.5 -0.866 346.103 116.1065)" style="fill:#DAE0E7;" width="29.999" height="29.999" />
+
+                                                        <rect id="XMLID_1019_" x="89.423" y="142.503" transform="matrix(-0.5 0.866 -0.866 -0.5 293.0349 145.8244)" style="fill:#DAE0E7;" width="29.999" height="29.999" />
+
+                                                        <rect id="XMLID_1020_" x="89.419" y="287.503" transform="matrix(0.5 0.866 -0.866 0.5 314.1816 60.8195)" style="fill:#BEC8D6;" width="29.999" height="29.999" />
+
+                                                        <rect id="XMLID_1021_" x="142.505" y="340.583" transform="matrix(0.866 0.5 -0.5 0.866 198.8977 -31.1126)" style="fill:#BEC8D6;" width="29.999" height="29.999" />
+
+                                                        <rect id="XMLID_1022_" x="287.508" y="340.583" transform="matrix(0.866 -0.5 0.5 0.866 -137.2649 198.8984)" style="fill:#A3B1C4;" width="29.999" height="29.999" />
+
+                                                        <rect id="XMLID_1023_" x="340.582" y="287.492" transform="matrix(0.5 -0.866 0.866 0.5 -84.1765 459.1824)" style="fill:#A3B1C4;" width="29.999" height="29.999" />
+                                                        <polygon id="XMLID_1024_" style="fill:#354A67;" points="333.241,106.256 230.711,208.787 230.711,251.213 354.454,127.47  " />
+                                                        <polygon id="XMLID_1025_" style="fill:#466289;" points="181.213,159.289 160,180.502 230.711,251.213 230.711,208.787  " />
+                                                        <rect id="XMLID_1026_" x="230" y="360" style="fill:#A3B1C4;" width="15" height="30" />
+                                                        <rect id="XMLID_1027_" x="230" y="70" style="fill:#BEC8D6;" width="15" height="30" />
+                                                        <rect id="XMLID_1028_" x="215" y="360" style="fill:#BEC8D6;" width="15" height="30" />
+                                                        <rect id="XMLID_1029_" x="215" y="70" style="fill:#DAE0E7;" width="15" height="30" />
+                                                        <rect id="XMLID_1030_" x="360" y="230" style="fill:#A3B1C4;" width="30" height="15" />
+                                                        <rect id="XMLID_1031_" x="360" y="215" style="fill:#BEC8D6;" width="30" height="15" />
+                                                        <rect id="XMLID_1032_" x="70" y="230" style="fill:#BEC8D6;" width="30" height="15" />
+                                                        <rect id="XMLID_1033_" x="70" y="215" style="fill:#DAE0E7;" width="30" height="15" />
+                                                    </g>
+                                                </svg>
+                                                <span style="font-size: 9pt;" class="ms-2 price-item">{{\Carbon\Carbon::parse($dataizin->tanggal)->format('d-m-Y')}}</span>
                                             </div>
                                         </div>
                                     </div>
@@ -80,27 +114,55 @@
                         <a id="btn_klik" href="{{ url('/cuti/approve/'.$datacuti->id) }}">
                             <div class="swiper-slide">
                                 <div class="card job-post">
-                                    <div class="card-body">
-                                        <div class="media media-80">
-                                            @if($datacuti->foto_karyawan!='')
-                                            <img src="https://hrd.sumberpangan.store:4430/storage/app/public/foto_karyawan/{{$datacuti->foto_karyawan}}" alt="/">
+                                    <div class="card-body" style="padding: 6x;">
+                                        <div class="media media-70">
+                                            @if($datacuti->User->foto_karyawan != '')
+                                            <img src="{{asset('../storage/app/public/foto_karyawan/'.$datacuti->User->foto_karyawan)}}" alt="/">
                                             @else
-                                            <img src="{{ asset('assets/assets_users/images/users/user_icon.jpg') }}" alt="/">
+                                            <img src="{{ asset('admin/assets/img/avatars/1.png') }}" alt="/">
                                             @endif
                                         </div>
                                         <div class="card-info">
-                                            <h6 class="title">{{ $datacuti->name }}</h6>
+                                            <h6 class="title" style="font-size: 9pt;"><a href="javascript:void(0);">{{$datacuti->name}}</a></h6>
                                             @if($datacuti->nama_cuti=='Diluar Cuti Tahunan')
-                                            <span class="">{{ $datacuti->KategoriCuti->nama_cuti }}</span>
+                                            <span class="location">{{ $datacuti->KategoriCuti->nama_cuti }}</span>
                                             @else
-                                            <span class="">{{ $datacuti->nama_cuti }}</span>
+                                            <span class="location">{{ $datacuti->nama_cuti }}</span>
                                             @endif
                                             <div class="d-flex align-items-center">
-                                                @if ($datacuti->status_cuti == 1)
-                                                <small class="badge badge-danger"><i class="fa fa-spinner"></i>&nbsp;Pending</small>
-                                                @elseif ($datacuti->status_cuti == 0)
-                                                <small class="badge badge-danger"><i class="fa fa-spinner"></i>&nbsp;Pending</small>
-                                                @endif
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="Layer_1" viewBox="0 0 460 460" xml:space="preserve">
+                                                    <g id="XMLID_1011_">
+                                                        <path id="XMLID_1012_" style="fill:#354A67;" d="M230,0c127.03,0,230,102.97,230,230S357.03,460,230,460l-60-230L230,0z" />
+                                                        <path id="XMLID_1013_" style="fill:#466289;" d="M230,460C102.97,460,0,357.03,0,230S102.97,0,230,0V460z" />
+                                                        <path id="XMLID_1014_" style="fill:#BEC8D6;" d="M230,420l-20-200l210,10C420,334.77,334.77,420,230,420z" />
+                                                        <path id="XMLID_1015_" style="fill:#DAE0E7;" d="M230,40c104.77,0,190,85.23,190,190H210L230,40z" />
+                                                        <path id="XMLID_1016_" style="fill:#DAE0E7;" d="M230,230v190c-104.77,0-190-85.23-190-190l95-30L230,230z" />
+                                                        <path id="XMLID_1017_" style="fill:#FFFFFF;" d="M230,40v190H40C40,125.23,125.23,40,230,40z" />
+
+                                                        <rect id="XMLID_1018_" x="142.496" y="89.424" transform="matrix(-0.866 0.5 -0.5 -0.866 346.103 116.1065)" style="fill:#DAE0E7;" width="29.999" height="29.999" />
+
+                                                        <rect id="XMLID_1019_" x="89.423" y="142.503" transform="matrix(-0.5 0.866 -0.866 -0.5 293.0349 145.8244)" style="fill:#DAE0E7;" width="29.999" height="29.999" />
+
+                                                        <rect id="XMLID_1020_" x="89.419" y="287.503" transform="matrix(0.5 0.866 -0.866 0.5 314.1816 60.8195)" style="fill:#BEC8D6;" width="29.999" height="29.999" />
+
+                                                        <rect id="XMLID_1021_" x="142.505" y="340.583" transform="matrix(0.866 0.5 -0.5 0.866 198.8977 -31.1126)" style="fill:#BEC8D6;" width="29.999" height="29.999" />
+
+                                                        <rect id="XMLID_1022_" x="287.508" y="340.583" transform="matrix(0.866 -0.5 0.5 0.866 -137.2649 198.8984)" style="fill:#A3B1C4;" width="29.999" height="29.999" />
+
+                                                        <rect id="XMLID_1023_" x="340.582" y="287.492" transform="matrix(0.5 -0.866 0.866 0.5 -84.1765 459.1824)" style="fill:#A3B1C4;" width="29.999" height="29.999" />
+                                                        <polygon id="XMLID_1024_" style="fill:#354A67;" points="333.241,106.256 230.711,208.787 230.711,251.213 354.454,127.47  " />
+                                                        <polygon id="XMLID_1025_" style="fill:#466289;" points="181.213,159.289 160,180.502 230.711,251.213 230.711,208.787  " />
+                                                        <rect id="XMLID_1026_" x="230" y="360" style="fill:#A3B1C4;" width="15" height="30" />
+                                                        <rect id="XMLID_1027_" x="230" y="70" style="fill:#BEC8D6;" width="15" height="30" />
+                                                        <rect id="XMLID_1028_" x="215" y="360" style="fill:#BEC8D6;" width="15" height="30" />
+                                                        <rect id="XMLID_1029_" x="215" y="70" style="fill:#DAE0E7;" width="15" height="30" />
+                                                        <rect id="XMLID_1030_" x="360" y="230" style="fill:#A3B1C4;" width="30" height="15" />
+                                                        <rect id="XMLID_1031_" x="360" y="215" style="fill:#BEC8D6;" width="30" height="15" />
+                                                        <rect id="XMLID_1032_" x="70" y="230" style="fill:#BEC8D6;" width="30" height="15" />
+                                                        <rect id="XMLID_1033_" x="70" y="215" style="fill:#DAE0E7;" width="30" height="15" />
+                                                    </g>
+                                                </svg>
+                                                <span style="font-size: 9pt;" class="ms-2 price-item">{{\Carbon\Carbon::parse($datacuti->tanggal)->format('d-m-Y')}}</span>
                                             </div>
                                         </div>
                                     </div>
@@ -112,27 +174,55 @@
                         <a id="btn_klik" href="{{ url('/cuti/approve/'.$datacuti->id) }}">
                             <div class="swiper-slide">
                                 <div class="card job-post">
-                                    <div class="card-body">
-                                        <div class="media media-80">
-                                            @if($datacuti->foto_karyawan!='')
-                                            <img src="https://hrd.sumberpangan.store:4430/storage/app/public/foto_karyawan/{{$datacuti->foto_karyawan}}" alt="/">
+                                    <div class="card-body" style="padding: 6x;">
+                                        <div class="media media-70">
+                                            @if($datacuti->User->foto_karyawan != '')
+                                            <img src="{{asset('../storage/app/public/foto_karyawan/'.$datacuti->User->foto_karyawan)}}" alt="/">
                                             @else
-                                            <img src="{{ asset('assets/assets_users/images/users/user_icon.jpg') }}" alt="/">
+                                            <img src="{{ asset('admin/assets/img/avatars/1.png') }}" alt="/">
                                             @endif
                                         </div>
                                         <div class="card-info">
-                                            <h6 class="title">{{ $datacuti->fullname }}</h6>
+                                            <h6 class="title" style="font-size: 9pt;"><a href="javascript:void(0);">{{$datacuti->name}}</a></h6>
                                             @if($datacuti->nama_cuti=='Diluar Cuti Tahunan')
-                                            <span class="">{{ $datacuti->KategoriCuti->nama_cuti }}</span>
+                                            <span class="location">{{ $datacuti->KategoriCuti->nama_cuti }}</span>
                                             @else
-                                            <span class="">{{ $datacuti->nama_cuti }}</span>
+                                            <span class="location">{{ $datacuti->nama_cuti }}</span>
                                             @endif
                                             <div class="d-flex align-items-center">
-                                                @if ($datacuti->status_cuti == 2)
-                                                <small class="badge badge-danger"><i class="fa fa-spinner"></i>&nbsp;Pending</small>
-                                                @elseif ($datacuti->status_cuti == 3)
-                                                <small class="badge badge-success"><i class="fa fa-spinner"></i>&nbsp;Selesai</small>
-                                                @endif
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="Layer_1" viewBox="0 0 460 460" xml:space="preserve">
+                                                    <g id="XMLID_1011_">
+                                                        <path id="XMLID_1012_" style="fill:#354A67;" d="M230,0c127.03,0,230,102.97,230,230S357.03,460,230,460l-60-230L230,0z" />
+                                                        <path id="XMLID_1013_" style="fill:#466289;" d="M230,460C102.97,460,0,357.03,0,230S102.97,0,230,0V460z" />
+                                                        <path id="XMLID_1014_" style="fill:#BEC8D6;" d="M230,420l-20-200l210,10C420,334.77,334.77,420,230,420z" />
+                                                        <path id="XMLID_1015_" style="fill:#DAE0E7;" d="M230,40c104.77,0,190,85.23,190,190H210L230,40z" />
+                                                        <path id="XMLID_1016_" style="fill:#DAE0E7;" d="M230,230v190c-104.77,0-190-85.23-190-190l95-30L230,230z" />
+                                                        <path id="XMLID_1017_" style="fill:#FFFFFF;" d="M230,40v190H40C40,125.23,125.23,40,230,40z" />
+
+                                                        <rect id="XMLID_1018_" x="142.496" y="89.424" transform="matrix(-0.866 0.5 -0.5 -0.866 346.103 116.1065)" style="fill:#DAE0E7;" width="29.999" height="29.999" />
+
+                                                        <rect id="XMLID_1019_" x="89.423" y="142.503" transform="matrix(-0.5 0.866 -0.866 -0.5 293.0349 145.8244)" style="fill:#DAE0E7;" width="29.999" height="29.999" />
+
+                                                        <rect id="XMLID_1020_" x="89.419" y="287.503" transform="matrix(0.5 0.866 -0.866 0.5 314.1816 60.8195)" style="fill:#BEC8D6;" width="29.999" height="29.999" />
+
+                                                        <rect id="XMLID_1021_" x="142.505" y="340.583" transform="matrix(0.866 0.5 -0.5 0.866 198.8977 -31.1126)" style="fill:#BEC8D6;" width="29.999" height="29.999" />
+
+                                                        <rect id="XMLID_1022_" x="287.508" y="340.583" transform="matrix(0.866 -0.5 0.5 0.866 -137.2649 198.8984)" style="fill:#A3B1C4;" width="29.999" height="29.999" />
+
+                                                        <rect id="XMLID_1023_" x="340.582" y="287.492" transform="matrix(0.5 -0.866 0.866 0.5 -84.1765 459.1824)" style="fill:#A3B1C4;" width="29.999" height="29.999" />
+                                                        <polygon id="XMLID_1024_" style="fill:#354A67;" points="333.241,106.256 230.711,208.787 230.711,251.213 354.454,127.47  " />
+                                                        <polygon id="XMLID_1025_" style="fill:#466289;" points="181.213,159.289 160,180.502 230.711,251.213 230.711,208.787  " />
+                                                        <rect id="XMLID_1026_" x="230" y="360" style="fill:#A3B1C4;" width="15" height="30" />
+                                                        <rect id="XMLID_1027_" x="230" y="70" style="fill:#BEC8D6;" width="15" height="30" />
+                                                        <rect id="XMLID_1028_" x="215" y="360" style="fill:#BEC8D6;" width="15" height="30" />
+                                                        <rect id="XMLID_1029_" x="215" y="70" style="fill:#DAE0E7;" width="15" height="30" />
+                                                        <rect id="XMLID_1030_" x="360" y="230" style="fill:#A3B1C4;" width="30" height="15" />
+                                                        <rect id="XMLID_1031_" x="360" y="215" style="fill:#BEC8D6;" width="30" height="15" />
+                                                        <rect id="XMLID_1032_" x="70" y="230" style="fill:#BEC8D6;" width="30" height="15" />
+                                                        <rect id="XMLID_1033_" x="70" y="215" style="fill:#DAE0E7;" width="30" height="15" />
+                                                    </g>
+                                                </svg>
+                                                <span style="font-size: 9pt;" class="ms-2 price-item">{{\Carbon\Carbon::parse($datacuti->tanggal)->format('d-m-Y')}}</span>
                                             </div>
                                         </div>
                                     </div>
@@ -150,22 +240,60 @@
                         @if($datapenugasan->count() > 0)
                         @foreach ($datapenugasan as $datapenugasan)
                         @if($datapenugasan->status_penugasan == 1)
-                        @if($datapenugasan->id_user_atasan == auth::user()->id)
+                        @if($datapenugasan->id_user_atasan == $user_karyawan->id)
                         @if($datapenugasan->ttd_id_diminta_oleh == NULL)
                         <a id="btn_klik" href="{{ url('/penugasan/approve/diminta/show/'.$datapenugasan->id) }}">
                             <div class="swiper-slide swiper-slide-active">
                                 <div class="card job-post">
-                                    <div class="card-body">
-                                        <div class="media media-80">
-                                            <img src="{{ asset('assets/assets_users/images/users/user_icon.jpg') }}" alt="/">
+                                    <div class="card-body" style="padding: 6px;">
+                                        <div class="media media-70">
+                                            @if($datapenugasan->User != '')
+                                            @if($datapenugasan->User->foto_karyawan != '')
+                                            <img src="{{asset('../storage/app/public/foto_karyawan/'.$datapenugasan->User->foto_karyawan)}}" alt="/">
+                                            @else
+                                            <img src="{{ asset('admin/assets/img/avatars/1.png') }}" alt="/">
+                                            @endif
+                                            @else
+                                            <img src="{{ asset('admin/assets/img/avatars/1.png') }}" alt="/">
+                                            @endif
                                         </div>
                                         <div class="card-info">
-                                            <h6 class="title">{{ $datapenugasan->name }}</h6>
-                                            <span class="" style="font-size: 12px">Penugasan {{ $datapenugasan->penugasan }}</span>
+                                            <h6 class="title" style="font-size: 9pt;">{{ $datapenugasan->nama_diajukan }}</h6>
+                                            <span class="location">Penugasan {{ $datapenugasan->penugasan }}</span>
                                             <div class="d-flex align-items-center">
-                                                {{-- @if ($datapenugasan->status_penugasan = 1) --}}
-                                                <small class="badge badge-danger">Pending</small>
-                                                {{-- @endif --}}
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="Layer_1" viewBox="0 0 460 460" xml:space="preserve">
+                                                    <g id="XMLID_1011_">
+                                                        <path id="XMLID_1012_" style="fill:#354A67;" d="M230,0c127.03,0,230,102.97,230,230S357.03,460,230,460l-60-230L230,0z" />
+                                                        <path id="XMLID_1013_" style="fill:#466289;" d="M230,460C102.97,460,0,357.03,0,230S102.97,0,230,0V460z" />
+                                                        <path id="XMLID_1014_" style="fill:#BEC8D6;" d="M230,420l-20-200l210,10C420,334.77,334.77,420,230,420z" />
+                                                        <path id="XMLID_1015_" style="fill:#DAE0E7;" d="M230,40c104.77,0,190,85.23,190,190H210L230,40z" />
+                                                        <path id="XMLID_1016_" style="fill:#DAE0E7;" d="M230,230v190c-104.77,0-190-85.23-190-190l95-30L230,230z" />
+                                                        <path id="XMLID_1017_" style="fill:#FFFFFF;" d="M230,40v190H40C40,125.23,125.23,40,230,40z" />
+
+                                                        <rect id="XMLID_1018_" x="142.496" y="89.424" transform="matrix(-0.866 0.5 -0.5 -0.866 346.103 116.1065)" style="fill:#DAE0E7;" width="29.999" height="29.999" />
+
+                                                        <rect id="XMLID_1019_" x="89.423" y="142.503" transform="matrix(-0.5 0.866 -0.866 -0.5 293.0349 145.8244)" style="fill:#DAE0E7;" width="29.999" height="29.999" />
+
+                                                        <rect id="XMLID_1020_" x="89.419" y="287.503" transform="matrix(0.5 0.866 -0.866 0.5 314.1816 60.8195)" style="fill:#BEC8D6;" width="29.999" height="29.999" />
+
+                                                        <rect id="XMLID_1021_" x="142.505" y="340.583" transform="matrix(0.866 0.5 -0.5 0.866 198.8977 -31.1126)" style="fill:#BEC8D6;" width="29.999" height="29.999" />
+
+                                                        <rect id="XMLID_1022_" x="287.508" y="340.583" transform="matrix(0.866 -0.5 0.5 0.866 -137.2649 198.8984)" style="fill:#A3B1C4;" width="29.999" height="29.999" />
+
+                                                        <rect id="XMLID_1023_" x="340.582" y="287.492" transform="matrix(0.5 -0.866 0.866 0.5 -84.1765 459.1824)" style="fill:#A3B1C4;" width="29.999" height="29.999" />
+                                                        <polygon id="XMLID_1024_" style="fill:#354A67;" points="333.241,106.256 230.711,208.787 230.711,251.213 354.454,127.47  " />
+                                                        <polygon id="XMLID_1025_" style="fill:#466289;" points="181.213,159.289 160,180.502 230.711,251.213 230.711,208.787  " />
+                                                        <rect id="XMLID_1026_" x="230" y="360" style="fill:#A3B1C4;" width="15" height="30" />
+                                                        <rect id="XMLID_1027_" x="230" y="70" style="fill:#BEC8D6;" width="15" height="30" />
+                                                        <rect id="XMLID_1028_" x="215" y="360" style="fill:#BEC8D6;" width="15" height="30" />
+                                                        <rect id="XMLID_1029_" x="215" y="70" style="fill:#DAE0E7;" width="15" height="30" />
+                                                        <rect id="XMLID_1030_" x="360" y="230" style="fill:#A3B1C4;" width="30" height="15" />
+                                                        <rect id="XMLID_1031_" x="360" y="215" style="fill:#BEC8D6;" width="30" height="15" />
+                                                        <rect id="XMLID_1032_" x="70" y="230" style="fill:#BEC8D6;" width="30" height="15" />
+                                                        <rect id="XMLID_1033_" x="70" y="215" style="fill:#DAE0E7;" width="30" height="15" />
+                                                    </g>
+                                                </svg>
+                                                <span style="font-size: 9pt;" class="ms-2 price-item">{{\Carbon\Carbon::parse($datapenugasan->tanggal_pengajuan)->format('d-m-Y')}}</span>
                                             </div>
                                         </div>
                                     </div>
@@ -175,22 +303,60 @@
                         @endif
                         @endif
                         @elseif($datapenugasan->status_penugasan == 2)
-                        @if($datapenugasan->id_user_atasan2 == auth::user()->id)
+                        @if($datapenugasan->id_user_atasan2 == $user_karyawan->id)
                         @if($datapenugasan->ttd_id_disahkan_oleh == NULL)
                         <a id="btn_klik" href="{{ url('/penugasan/approve/diminta/show/'.$datapenugasan->id) }}">
                             <div class="swiper-slide  swiper-slide-active">
                                 <div class="card job-post">
-                                    <div class="card-body">
-                                        <div class="media media-80">
-                                            <img src="{{ asset('assets/assets_users/images/users/user_icon.jpg') }}" alt="/">
+                                    <div class="card-body" style="padding: 6px;">
+                                        <div class="media media-70">
+                                            @if($datapenugasan->User != '')
+                                            @if($datapenugasan->User->foto_karyawan != '')
+                                            <img src="{{asset('../storage/app/public/foto_karyawan/'.$datapenugasan->User->foto_karyawan)}}" alt="/">
+                                            @else
+                                            <img src="{{ asset('admin/assets/img/avatars/1.png') }}" alt="/">
+                                            @endif
+                                            @else
+                                            <img src="{{ asset('admin/assets/img/avatars/1.png') }}" alt="/">
+                                            @endif
                                         </div>
                                         <div class="card-info">
-                                            <h6 class="title">{{ $datapenugasan->name }}</h6>
-                                            <span class="" style="font-size: 12px">Penugasan {{ $datapenugasan->penugasan }}</span>
+                                            <h6 class="title" style="font-size: 9pt;">{{ $datapenugasan->nama_diajukan }}</h6>
+                                            <span class="location">Penugasan {{ $datapenugasan->penugasan }}</span>
                                             <div class="d-flex align-items-center">
-                                                {{-- @if ($datapenugasan->status_penugasan = 1) --}}
-                                                <small class="badge badge-danger">Pending</small>
-                                                {{-- @endif --}}
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="Layer_1" viewBox="0 0 460 460" xml:space="preserve">
+                                                    <g id="XMLID_1011_">
+                                                        <path id="XMLID_1012_" style="fill:#354A67;" d="M230,0c127.03,0,230,102.97,230,230S357.03,460,230,460l-60-230L230,0z" />
+                                                        <path id="XMLID_1013_" style="fill:#466289;" d="M230,460C102.97,460,0,357.03,0,230S102.97,0,230,0V460z" />
+                                                        <path id="XMLID_1014_" style="fill:#BEC8D6;" d="M230,420l-20-200l210,10C420,334.77,334.77,420,230,420z" />
+                                                        <path id="XMLID_1015_" style="fill:#DAE0E7;" d="M230,40c104.77,0,190,85.23,190,190H210L230,40z" />
+                                                        <path id="XMLID_1016_" style="fill:#DAE0E7;" d="M230,230v190c-104.77,0-190-85.23-190-190l95-30L230,230z" />
+                                                        <path id="XMLID_1017_" style="fill:#FFFFFF;" d="M230,40v190H40C40,125.23,125.23,40,230,40z" />
+
+                                                        <rect id="XMLID_1018_" x="142.496" y="89.424" transform="matrix(-0.866 0.5 -0.5 -0.866 346.103 116.1065)" style="fill:#DAE0E7;" width="29.999" height="29.999" />
+
+                                                        <rect id="XMLID_1019_" x="89.423" y="142.503" transform="matrix(-0.5 0.866 -0.866 -0.5 293.0349 145.8244)" style="fill:#DAE0E7;" width="29.999" height="29.999" />
+
+                                                        <rect id="XMLID_1020_" x="89.419" y="287.503" transform="matrix(0.5 0.866 -0.866 0.5 314.1816 60.8195)" style="fill:#BEC8D6;" width="29.999" height="29.999" />
+
+                                                        <rect id="XMLID_1021_" x="142.505" y="340.583" transform="matrix(0.866 0.5 -0.5 0.866 198.8977 -31.1126)" style="fill:#BEC8D6;" width="29.999" height="29.999" />
+
+                                                        <rect id="XMLID_1022_" x="287.508" y="340.583" transform="matrix(0.866 -0.5 0.5 0.866 -137.2649 198.8984)" style="fill:#A3B1C4;" width="29.999" height="29.999" />
+
+                                                        <rect id="XMLID_1023_" x="340.582" y="287.492" transform="matrix(0.5 -0.866 0.866 0.5 -84.1765 459.1824)" style="fill:#A3B1C4;" width="29.999" height="29.999" />
+                                                        <polygon id="XMLID_1024_" style="fill:#354A67;" points="333.241,106.256 230.711,208.787 230.711,251.213 354.454,127.47  " />
+                                                        <polygon id="XMLID_1025_" style="fill:#466289;" points="181.213,159.289 160,180.502 230.711,251.213 230.711,208.787  " />
+                                                        <rect id="XMLID_1026_" x="230" y="360" style="fill:#A3B1C4;" width="15" height="30" />
+                                                        <rect id="XMLID_1027_" x="230" y="70" style="fill:#BEC8D6;" width="15" height="30" />
+                                                        <rect id="XMLID_1028_" x="215" y="360" style="fill:#BEC8D6;" width="15" height="30" />
+                                                        <rect id="XMLID_1029_" x="215" y="70" style="fill:#DAE0E7;" width="15" height="30" />
+                                                        <rect id="XMLID_1030_" x="360" y="230" style="fill:#A3B1C4;" width="30" height="15" />
+                                                        <rect id="XMLID_1031_" x="360" y="215" style="fill:#BEC8D6;" width="30" height="15" />
+                                                        <rect id="XMLID_1032_" x="70" y="230" style="fill:#BEC8D6;" width="30" height="15" />
+                                                        <rect id="XMLID_1033_" x="70" y="215" style="fill:#DAE0E7;" width="30" height="15" />
+                                                    </g>
+                                                </svg>
+                                                <span style="font-size: 9pt;" class="ms-2 price-item">{{\Carbon\Carbon::parse($datapenugasan->tanggal_pengajuan)->format('d-m-Y')}}</span>
                                             </div>
                                         </div>
                                     </div>
@@ -205,17 +371,55 @@
                         <a id="btn_klik" href="{{ url('/penugasan/approve/diminta/show/'.$datapenugasan->id) }}">
                             <div class="swiper-slide  swiper-slide-active">
                                 <div class="card job-post">
-                                    <div class="card-body">
-                                        <div class="media media-80">
-                                            <img src="{{ asset('assets/assets_users/images/users/user_icon.jpg') }}" alt="/">
+                                    <div class="card-body" style="padding: 6px;">
+                                        <div class="media media-70">
+                                            @if($datapenugasan->User != '')
+                                            @if($datapenugasan->User->foto_karyawan != '')
+                                            <img src="{{asset('../storage/app/public/foto_karyawan/'.$datapenugasan->User->foto_karyawan)}}" alt="/">
+                                            @else
+                                            <img src="{{ asset('admin/assets/img/avatars/1.png') }}" alt="/">
+                                            @endif
+                                            @else
+                                            <img src="{{ asset('admin/assets/img/avatars/1.png') }}" alt="/">
+                                            @endif
                                         </div>
                                         <div class="card-info">
-                                            <h6 class="title">{{ $datapenugasan->name }}</h6>
-                                            <span class="" style="font-size: 12px">Penugasan {{ $datapenugasan->penugasan }}</span>
+                                            <h6 class="title" style="font-size: 9pt;">{{ $datapenugasan->nama_diajukan }}</h6>
+                                            <span class="location">Penugasan {{ $datapenugasan->penugasan }}</span>
                                             <div class="d-flex align-items-center">
-                                                {{-- @if ($datapenugasan->status_penugasan = 1) --}}
-                                                <small class="badge badge-danger">Pending</small>
-                                                {{-- @endif --}}
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="Layer_1" viewBox="0 0 460 460" xml:space="preserve">
+                                                    <g id="XMLID_1011_">
+                                                        <path id="XMLID_1012_" style="fill:#354A67;" d="M230,0c127.03,0,230,102.97,230,230S357.03,460,230,460l-60-230L230,0z" />
+                                                        <path id="XMLID_1013_" style="fill:#466289;" d="M230,460C102.97,460,0,357.03,0,230S102.97,0,230,0V460z" />
+                                                        <path id="XMLID_1014_" style="fill:#BEC8D6;" d="M230,420l-20-200l210,10C420,334.77,334.77,420,230,420z" />
+                                                        <path id="XMLID_1015_" style="fill:#DAE0E7;" d="M230,40c104.77,0,190,85.23,190,190H210L230,40z" />
+                                                        <path id="XMLID_1016_" style="fill:#DAE0E7;" d="M230,230v190c-104.77,0-190-85.23-190-190l95-30L230,230z" />
+                                                        <path id="XMLID_1017_" style="fill:#FFFFFF;" d="M230,40v190H40C40,125.23,125.23,40,230,40z" />
+
+                                                        <rect id="XMLID_1018_" x="142.496" y="89.424" transform="matrix(-0.866 0.5 -0.5 -0.866 346.103 116.1065)" style="fill:#DAE0E7;" width="29.999" height="29.999" />
+
+                                                        <rect id="XMLID_1019_" x="89.423" y="142.503" transform="matrix(-0.5 0.866 -0.866 -0.5 293.0349 145.8244)" style="fill:#DAE0E7;" width="29.999" height="29.999" />
+
+                                                        <rect id="XMLID_1020_" x="89.419" y="287.503" transform="matrix(0.5 0.866 -0.866 0.5 314.1816 60.8195)" style="fill:#BEC8D6;" width="29.999" height="29.999" />
+
+                                                        <rect id="XMLID_1021_" x="142.505" y="340.583" transform="matrix(0.866 0.5 -0.5 0.866 198.8977 -31.1126)" style="fill:#BEC8D6;" width="29.999" height="29.999" />
+
+                                                        <rect id="XMLID_1022_" x="287.508" y="340.583" transform="matrix(0.866 -0.5 0.5 0.866 -137.2649 198.8984)" style="fill:#A3B1C4;" width="29.999" height="29.999" />
+
+                                                        <rect id="XMLID_1023_" x="340.582" y="287.492" transform="matrix(0.5 -0.866 0.866 0.5 -84.1765 459.1824)" style="fill:#A3B1C4;" width="29.999" height="29.999" />
+                                                        <polygon id="XMLID_1024_" style="fill:#354A67;" points="333.241,106.256 230.711,208.787 230.711,251.213 354.454,127.47  " />
+                                                        <polygon id="XMLID_1025_" style="fill:#466289;" points="181.213,159.289 160,180.502 230.711,251.213 230.711,208.787  " />
+                                                        <rect id="XMLID_1026_" x="230" y="360" style="fill:#A3B1C4;" width="15" height="30" />
+                                                        <rect id="XMLID_1027_" x="230" y="70" style="fill:#BEC8D6;" width="15" height="30" />
+                                                        <rect id="XMLID_1028_" x="215" y="360" style="fill:#BEC8D6;" width="15" height="30" />
+                                                        <rect id="XMLID_1029_" x="215" y="70" style="fill:#DAE0E7;" width="15" height="30" />
+                                                        <rect id="XMLID_1030_" x="360" y="230" style="fill:#A3B1C4;" width="30" height="15" />
+                                                        <rect id="XMLID_1031_" x="360" y="215" style="fill:#BEC8D6;" width="30" height="15" />
+                                                        <rect id="XMLID_1032_" x="70" y="230" style="fill:#BEC8D6;" width="30" height="15" />
+                                                        <rect id="XMLID_1033_" x="70" y="215" style="fill:#DAE0E7;" width="30" height="15" />
+                                                    </g>
+                                                </svg>
+                                                <span style="font-size: 9pt;" class="ms-2 price-item">{{\Carbon\Carbon::parse($datapenugasan->tanggal_pengajuan)->format('d-m-Y')}}</span>
                                             </div>
                                         </div>
                                     </div>
@@ -230,17 +434,55 @@
                         <a id="btn_klik" href="{{ url('/penugasan/approve/diminta/show/'.$datapenugasan->id) }}">
                             <div class="swiper-slide  swiper-slide-active">
                                 <div class="card job-post">
-                                    <div class="card-body">
-                                        <div class="media media-80">
-                                            <img src="{{ asset('assets/assets_users/images/users/user_icon.jpg') }}" alt="/">
+                                    <div class="card-body" style="padding: 6px;">
+                                        <div class="media media-70">
+                                            @if($datapenugasan->User != '')
+                                            @if($datapenugasan->User->foto_karyawan != '')
+                                            <img src="{{asset('../storage/app/public/foto_karyawan/'.$datapenugasan->User->foto_karyawan)}}" alt="/">
+                                            @else
+                                            <img src="{{ asset('admin/assets/img/avatars/1.png') }}" alt="/">
+                                            @endif
+                                            @else
+                                            <img src="{{ asset('admin/assets/img/avatars/1.png') }}" alt="/">
+                                            @endif
                                         </div>
                                         <div class="card-info">
-                                            <h6 class="title">{{ $datapenugasan->name }}</h6>
-                                            <span class="" style="font-size: 12px">Penugasan {{ $datapenugasan->penugasan }}</span>
+                                            <h6 class="title" style="font-size: 9pt;">{{ $datapenugasan->nama_diajukan }}</h6>
+                                            <span class="location">Penugasan {{ $datapenugasan->penugasan }}</span>
                                             <div class="d-flex align-items-center">
-                                                {{-- @if ($datapenugasan->status_penugasan = 1) --}}
-                                                <small class="badge badge-danger">Pending</small>
-                                                {{-- @endif --}}
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="Layer_1" viewBox="0 0 460 460" xml:space="preserve">
+                                                    <g id="XMLID_1011_">
+                                                        <path id="XMLID_1012_" style="fill:#354A67;" d="M230,0c127.03,0,230,102.97,230,230S357.03,460,230,460l-60-230L230,0z" />
+                                                        <path id="XMLID_1013_" style="fill:#466289;" d="M230,460C102.97,460,0,357.03,0,230S102.97,0,230,0V460z" />
+                                                        <path id="XMLID_1014_" style="fill:#BEC8D6;" d="M230,420l-20-200l210,10C420,334.77,334.77,420,230,420z" />
+                                                        <path id="XMLID_1015_" style="fill:#DAE0E7;" d="M230,40c104.77,0,190,85.23,190,190H210L230,40z" />
+                                                        <path id="XMLID_1016_" style="fill:#DAE0E7;" d="M230,230v190c-104.77,0-190-85.23-190-190l95-30L230,230z" />
+                                                        <path id="XMLID_1017_" style="fill:#FFFFFF;" d="M230,40v190H40C40,125.23,125.23,40,230,40z" />
+
+                                                        <rect id="XMLID_1018_" x="142.496" y="89.424" transform="matrix(-0.866 0.5 -0.5 -0.866 346.103 116.1065)" style="fill:#DAE0E7;" width="29.999" height="29.999" />
+
+                                                        <rect id="XMLID_1019_" x="89.423" y="142.503" transform="matrix(-0.5 0.866 -0.866 -0.5 293.0349 145.8244)" style="fill:#DAE0E7;" width="29.999" height="29.999" />
+
+                                                        <rect id="XMLID_1020_" x="89.419" y="287.503" transform="matrix(0.5 0.866 -0.866 0.5 314.1816 60.8195)" style="fill:#BEC8D6;" width="29.999" height="29.999" />
+
+                                                        <rect id="XMLID_1021_" x="142.505" y="340.583" transform="matrix(0.866 0.5 -0.5 0.866 198.8977 -31.1126)" style="fill:#BEC8D6;" width="29.999" height="29.999" />
+
+                                                        <rect id="XMLID_1022_" x="287.508" y="340.583" transform="matrix(0.866 -0.5 0.5 0.866 -137.2649 198.8984)" style="fill:#A3B1C4;" width="29.999" height="29.999" />
+
+                                                        <rect id="XMLID_1023_" x="340.582" y="287.492" transform="matrix(0.5 -0.866 0.866 0.5 -84.1765 459.1824)" style="fill:#A3B1C4;" width="29.999" height="29.999" />
+                                                        <polygon id="XMLID_1024_" style="fill:#354A67;" points="333.241,106.256 230.711,208.787 230.711,251.213 354.454,127.47  " />
+                                                        <polygon id="XMLID_1025_" style="fill:#466289;" points="181.213,159.289 160,180.502 230.711,251.213 230.711,208.787  " />
+                                                        <rect id="XMLID_1026_" x="230" y="360" style="fill:#A3B1C4;" width="15" height="30" />
+                                                        <rect id="XMLID_1027_" x="230" y="70" style="fill:#BEC8D6;" width="15" height="30" />
+                                                        <rect id="XMLID_1028_" x="215" y="360" style="fill:#BEC8D6;" width="15" height="30" />
+                                                        <rect id="XMLID_1029_" x="215" y="70" style="fill:#DAE0E7;" width="15" height="30" />
+                                                        <rect id="XMLID_1030_" x="360" y="230" style="fill:#A3B1C4;" width="30" height="15" />
+                                                        <rect id="XMLID_1031_" x="360" y="215" style="fill:#BEC8D6;" width="30" height="15" />
+                                                        <rect id="XMLID_1032_" x="70" y="230" style="fill:#BEC8D6;" width="30" height="15" />
+                                                        <rect id="XMLID_1033_" x="70" y="215" style="fill:#DAE0E7;" width="30" height="15" />
+                                                    </g>
+                                                </svg>
+                                                <span style="font-size: 9pt;" class="ms-2 price-item">{{\Carbon\Carbon::parse($datapenugasan->tanggal_pengajuan)->format('d-m-Y')}}</span>
                                             </div>
                                         </div>
                                     </div>

@@ -1361,6 +1361,7 @@ class PenugasanUserController extends Controller
         $lokasi_kantor = Lokasi::whereNotIn('kategori_kantor', ['all', 'all sp', 'all sps', 'all sip'])->where('lokasi_kantor', '!=', $user->penempatan_kerja)->get();
         $get_kategori_cuti  = KategoriCuti::where('status', 1)->get();
         $get_user_backup    = Karyawan::where('dept_id', $user_karyawan->dept_id)->where('divisi_id', $user_karyawan->divisi_id)->where('id', '!=', $user_karyawan->id)->get();
+        $thnskrg = date('Y');
         return view(
             'users.penugasan.index',
             [
@@ -1377,6 +1378,7 @@ class PenugasanUserController extends Controller
                 'lokasi_kantor'         => $lokasi_kantor,
                 'departemen'            => $departemen,
                 'master_lokasi'         => $master_lokasi,
+                'thnskrg'              => $thnskrg,
             ]
         );
     }
@@ -1643,7 +1645,7 @@ class PenugasanUserController extends Controller
 
     public function penugasanUpdate(Request $request, $id)
     {
-        dd($request->all());
+        // dd($request->all());
         if ($request->alamat_dikunjungi == NULL) {
             $alamat_dikunjungi = $request->alamat_dikunjungi1;
         } else {
@@ -1657,10 +1659,26 @@ class PenugasanUserController extends Controller
         $uniqid         = date('y-m-d') . '-' . uniqid();
         $file           = $folderPath . $uniqid . '.' . $image_type;
         file_put_contents($file, $image_base64);
+        $count_tbl_penugasan = Penugasan::whereDate('tanggal_pengajuan', $request->tanggal_pengajuan)->whereNotNull('no_form_penugasan')->count();
+        // dd($count_tbl_penugasan);
+        $countstr = strlen($count_tbl_penugasan + 1);
+        if ($countstr == '1') {
+            $no = '0000' . $count_tbl_penugasan + 1;
+        } else if ($countstr == '2') {
+            $no = '000' . $count_tbl_penugasan + 1;
+        } else if ($countstr == '3') {
+            $no = '00' . $count_tbl_penugasan + 1;
+        } else if ($countstr == '4') {
+            $no = '0' . $count_tbl_penugasan + 1;
+        } else {
+            $no = $count_tbl_penugasan + 1;
+        }
+        $user_karyawan = Karyawan::where('id', Auth::user()->karyawan_id)->first();
+        $no_form = $user_karyawan->kontrak_kerja . '/FPD/' . date('Y/m/d') . '/' . $no;
         $data                               = Penugasan::find($id);
         $data->asal_kerja                   = $request->asal_kerja;
         $data->penugasan                    = $request->penugasan;
-        $data->wilayah_penugasan                    = $request->wilayah_penugasan;
+        $data->wilayah_penugasan            = $request->wilayah_penugasan;
         $data->tanggal_kunjungan            = $request->tanggal_kunjungan;
         $data->selesai_kunjungan            = $request->selesai_kunjungan;
         $data->kegiatan_penugasan           = $request->kegiatan_penugasan;
@@ -1677,6 +1695,7 @@ class PenugasanUserController extends Controller
         $data->ttd_id_diajukan_oleh         = $uniqid;
         $data->waktu_ttd_id_diajukan_oleh   = date('Y-m-d H:i:s');
         $data->status_penugasan             = 1;
+        $data->no_form_penugasan            = $no_form;
         $data->save();
         $request->session()->flash('updatesukses', 'Berhasil Membuat Perdin');
         return redirect('/penugasan/dashboard');
@@ -1688,7 +1707,7 @@ class PenugasanUserController extends Controller
         $user       = Karyawan::join('jabatans', 'jabatans.id', '=', 'karyawans.jabatan_id')
             ->join('departemens', 'departemens.id', '=', 'karyawans.dept_id')
             ->join('divisis', 'divisis.id', '=', 'karyawans.divisi_id')
-            ->where('karyawans.id', $user_karyawan->id)->first();
+            ->where('karyawans.id', Auth::user()->karyawan_id)->first();
         $penugasan  = Penugasan::join('jabatans', 'jabatans.id', 'penugasans.id_jabatan')
             ->join('departemens', 'departemens.id', 'penugasans.id_departemen')
             ->join('karyawans', 'karyawans.id', 'penugasans.id_user')
@@ -1788,5 +1807,21 @@ class PenugasanUserController extends Controller
         ];
         $pdf = PDF::loadView('karyawans/penugasan/form_penugasan', $data)->setPaper('F4', 'landscape');;
         return $pdf->stream('FORM_PENGAJUAN_PENUGASAN_' . $user_karyawan->name . '_' . date('Y-m-d H:i:s') . '.pdf');
+    }
+    public function get_filter_month(Request $request)
+    {
+        $blnskrg = date('m');
+        $user_karyawan = Karyawan::where('id', Auth::user()->karyawan_id)->first();
+        if ($request->filter_month == '') {
+            $data    = Penugasan::join('karyawans', 'karyawans.id', 'penugasans.id_user')->where('id_user', $user_karyawan->id)
+                ->whereMonth('tanggal_pengajuan', $blnskrg)
+                ->select('penugasans.*', 'karyawans.name')->orderBy('tanggal_pengajuan', 'DESC')->get();
+        } else {
+            $data    = Penugasan::join('karyawans', 'karyawans.id', 'penugasans.id_user')->where('id_user', $user_karyawan->id)
+                ->whereMonth('tanggal_pengajuan', $request->filter_month)
+                ->select('penugasans.*', 'karyawans.name')->orderBy('tanggal_pengajuan', 'DESC')->get();
+        }
+        // dd($data);
+        return response()->json($data);
     }
 }

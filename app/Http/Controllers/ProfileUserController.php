@@ -55,8 +55,8 @@ class ProfileUserController extends Controller
         // $image_base64 = base64_decode($image_parts[1]);
         $fileName =  date('y-m-d') . '-' . Uuid::uuid4() . '.jpeg';
         $file = $folderPath . $fileName;
-        $width = 300;
-        $height = null;
+        $width = 200;
+        $height = 200;
         $img = Image::read($img->getRealPath());
         // dd($img);
         $img->resize($width, $height, function ($constraint) {

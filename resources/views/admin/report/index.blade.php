@@ -345,28 +345,40 @@
                                 var n = d.getHours() + ':' + d.getMinutes() + ':' + d.getSeconds();
                                 return 'REKAP_DATA_ABSENSI_KARYAWAN_{{$holding}}_' + l + ' ' + n;
                             },
-                            customize: function(xlsx) {
-                                var sheet = xlsx.xl.worksheets['sheet1.xml'];
-                                var headerRowIndex = 1;
-                                var headerRowIndex1 = 2;
+                            // customize: function(xlsx) {
+                            //     var sheet = xlsx.xl.worksheets['sheet1.xml'];
 
-                                // Inject XML into worksheet
-                                $('sheetData', sheet).after(mergeCellsHtml);
-                                // Select the header row
-                                var headerRow = sheet.getElementsByTagName('row')[headerRowIndex];
-                                var headerRow1 = sheet.getElementsByTagName('row')[headerRowIndex1];
-                                // Iterate through cells in the header row
-                                for (var i = 0, len = headerRow1.childNodes.length; i < len; i++) {
-                                    var cell = headerRow1.childNodes[i];
-                                    cell.setAttribute('s', '22'); // Assuming style index 2 is defined for light blue background
-                                }
-                                for (var i = 0, len = headerRow.childNodes.length; i < len; i++) {
-                                    var cell = headerRow.childNodes[i];
+                            //     // var mergeCell = $('mergeCell', sheet);
+                            //     // var row = $('row c', sheet); // First row
+                            //     var mergeCells = [{
+                            //             ref: 'A1:C1'
+                            //         }, // Merge cells A1, B1, and C1
+                            //         {
+                            //             ref: 'D1:E1'
+                            //         } // Merge cells D1 and E1
+                            //     ];
 
-                                    // Apply the desired style to the cell
-                                    cell.setAttribute('s', '22'); // Assuming style index 2 is defined for light blue background
-                                }
-                            },
+                            //     // Add merge cells to the XML
+                            //     var mergeCellsNode = sheet.getElementsByTagName('mergeCells')[0];
+                            //     mergeCells.forEach(function(mergeCell) {
+                            //         var mergeCellNode = sheet.createElement('mergeCell');
+                            //         mergeCellNode.setAttribute('ref', mergeCell.ref);
+                            //         mergeCellsNode.appendChild(sheet.createTextNode('\n'));
+                            //         mergeCellsNode.appendChild(sheet.createTextNode('  '));
+                            //         mergeCellsNode.appendChild(mergeCellNode);
+                            //     });
+                            //     // mergeCell.attr('ref', 'A2:A3');
+                            //     // mergeCell.attr('ref', 'B2:B3');
+                            //     // mergeCell.attr('ref', 'C2:C3');
+                            //     // mergeCell.attr('ref', 'B:D3');
+                            //     // mergeCell.attr('ref', 'E2:E3');
+                            //     // mergeCell.attr('ref', 'F2:F3');
+                            //     // mergeCell.attr('ref', 'G2:G3');
+                            //     // mergeCell.attr('ref', 'H2:H3');
+                            //     // mergeCell.attr('ref', 'I2:I3');
+                            //     // mergeCell.attr('ref', 'I2:I3');
+                            //     // <mergeCell ref=\"A2:A3\"/>
+                            // },
                         },
                         {
 

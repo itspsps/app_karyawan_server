@@ -6,6 +6,9 @@
         z-index: 1051 !important;
     }
 </style>
+<link href="{{asset('assets/assets_users/vendor/lightgallery/dist/css/lightgallery.css')}}" rel="stylesheet">
+<link href="{{asset('assets/assets_users/vendor/lightgallery/dist/css/lg-thumbnail.css')}}" rel="stylesheet">
+<link href="{{asset('assets/assets_users/vendor/lightgallery/dist/css/lg-zoom.css')}}" rel="stylesheet">
 @endsection
 @section('content')
 <div class="fixed-content p-0" style=" border-radius: 10px; margin-top: 0%;box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19); ">
@@ -48,11 +51,16 @@
         </div>
         <div class="container profile-area">
             <div class="profile">
-                <div class="media media-100">
+                <div class="media media-100" id="lightgallery">
                     @if($user_karyawan->foto_karyawan == '' || $user_karyawan->foto_karyawan == NULL)
-                    <img width="60px" src="{{asset('admin/assets/img/avatars/1.png')}}" alt="/">
+                    <a href="{{asset('admin/assets/img/avatars/1.png')}}">
+                        <img width="100%" src="{{asset('admin/assets/img/avatars/1.png')}}" alt="/">
+                    </a>
                     @else
-                    <img width="60px" src="{{ asset('../storage/app/public/foto_karyawan/'.$user_karyawan->foto_karyawan) }}" alt="author-image">
+                    <a href="assets/images/office/pic1.jpg">
+                        <img width="100%" src="{{ asset('../storage/app/public/foto_karyawan/'.$user_karyawan->foto_karyawan) }}" alt="author-image">
+                        <!-- <img width="100%" src="{{ url('https://hrd.sumberpangan.store:4430/storage/app/public/foto_karyawan/'.$user_karyawan->foto_karyawan) }}" alt="author-image"> -->
+                    </a>
                     @endif
                 </div>
                 <div class="" style="margin-top: -8%; padding: 0;">
@@ -412,6 +420,9 @@
 @endsection
 @section('js')
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+<script src="{{asset('assets/assets_users/vendor/lightgallery/dist/lightgallery.umd.js')}}"></script>
+<script src="{{asset('assets/assets_users/vendor/lightgallery/dist/plugins/thumbnail/lg-thumbnail.umd.js')}}"></script>
+<script src="{{asset('assets/assets_users/vendor/lightgallery/dist/plugins/zoom/lg-zoom.umd.js')}}"></script>
 <script>
     function readURL(input) {
         if (input.files && input.files[0]) {

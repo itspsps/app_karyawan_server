@@ -176,7 +176,7 @@
                     <polygon id="primary-2" data-name="primary" points="16 3 16 5 18 5 16 3" style="fill: none; stroke: rgb(255,255,255); stroke-linecap: round; stroke-linejoin: round; stroke-width: 2;" />
                 </svg>
                 <div class="card-info">
-                    <h4 style="color: white;">TAMBAH PENGAJUAN IZIN</h4>
+                    <h5 style="color: white;">TAMBAH PENGAJUAN IZIN</h5>
                 </div>
             </div>
         </div>

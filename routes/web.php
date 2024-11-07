@@ -124,6 +124,7 @@ Route::middleware('auth:web', 'log.activity')->group(function () {
     Route::get('/penugasan/approve/diproseshrd/show/{id}', [PenugasanUserController::class, 'approveShow']);
     Route::get('/penugasan/approve/diprosesfinance/show/{id}', [PenugasanUserController::class, 'approveShow']);
     Route::post('/penugasan/approve/diminta/ttd/{id}', [PenugasanUserController::class, 'approvePenugasan']);
+    Route::get('/penugasan/get_filter_month', [PenugasanUserController::class, 'get_filter_month']);
 
     Route::get('/penugasan/get_diminta', [PenugasanUserController::class, 'get_diminta']);
     Route::get('/penugasan/get_diminta_departemen', [PenugasanUserController::class, 'get_diminta_departemen']);
