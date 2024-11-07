@@ -43,6 +43,7 @@ use App\Http\Controllers\StrukturOrganisasiController;
 use App\Http\Controllers\RecruitmentController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\UserKaryawanController;
+use App\Http\Controllers\RecruitmentUserController;
 use App\Models\Jabatan;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Artisan;
