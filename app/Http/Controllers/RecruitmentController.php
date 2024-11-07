@@ -27,6 +27,7 @@ use Yajra\DataTables\Facades\DataTables;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Log;
 use DB;
 
 class RecruitmentController extends Controller
@@ -412,45 +413,63 @@ class RecruitmentController extends Controller
     // Lolos Administrasi -> Panggil INterview
     function lolos_administrasi(Request $request)
     {
-        // dd($request->all());
         $holding = request()->segment(count(request()->segments()));
         $selectedUsers = $request->users;
+
         if (!empty($selectedUsers) && is_array($selectedUsers)) {
             $userIds = array_keys($selectedUsers);
             $data_user = RecruitmentUser::with([
-                'Bagian' =>  function ($query) {
+                'Bagian' => function ($query) {
                     $query->orderBy('nama_bagian', 'ASC');
                 },
+                'Cv' => function ($query) {
+                    $query->orderBy('id', 'ASC');
+                },
+                'AuthLogin' => function ($query) {
+                    $query->orderBy('id', 'ASC');
+                }
             ])->whereIn('id', $userIds)->get();
+            // dd($data_user);
             foreach ($data_user as $user) {
-                // Mail::send('admin.recruitment-users.email.email_interview', [
-                //     'user' => $user,
-                //     'tanggal_interview' => $request->tanggal_interview,
-                //     'jam_interview' => $request->jam_interview,
-                //     'lokasi_interview' => $request->lokasi_interview,
-                // ], function ($message) use ($user) {
-                //     $message->to(
-                //         $user->email,
-                //         $user->nama_depan,
-                //         $user->nama_belakang);
-                //     $message->subject('Interview Invitation');
-                // });
-                $insert = RecruitmentInterview::create(
-                    [
-                        'id'                    => Uuid::uuid4(),
-                        'holding'               => $holding,
-                        'recruitment_userid'    => $user->id,
-                        'tanggal_interview'     => $request->tanggal_interview,
-                        'jam_interview'         => $request->tanggal_interview,
-                        'lokasi_interview'      => $request->lokasi_interview,
-                    ]
-                );
-                RecruitmentUser::where('status_recruitmentuser', 0)->where('id', $user->id)->update(['status_recruitmentuser' => 1]);
-                // Merekam aktivitas pengguna
+                // Check if email exists and is not empty
+                if (!empty($user->AuthLogin->email)) {
+                    Mail::send('admin.recruitment-users.email.email_interview', [
+                        'user' => $user,
+                        'tanggal_interview' => $request->tanggal_interview,
+                        'jam_interview' => $request->jam_interview,
+                        'lokasi_interview' => $request->lokasi_interview,
+                    ], function ($message) use ($user) {
+                        $message->to(
+                            $user->AuthLogin->email,
+                            $user->Cv->nama_depan,
+                            $user->Cv->nama_belakang
+                        );
+                        $message->subject('Interview Invitation');
+                    });
+                } else {
+                    // Log or handle users with missing emails
+                    Log::warning("User ID {$user->id} has no email address.");
+                }
+
+                // Insert interview data
+                RecruitmentInterview::create([
+                    'id' => Uuid::uuid4(),
+                    'holding' => $holding,
+                    'recruitment_userid' => $user->id,
+                    'tanggal_interview' => $request->tanggal_interview,
+                    'jam_interview' => $request->jam_interview,
+                    'lokasi_interview' => $request->lokasi_interview,
+                ]);
+
+                // Update user status
+                RecruitmentUser::where('status_recruitmentuser', 0)
+                    ->where('id', $user->id)
+                    ->update(['status_recruitmentuser' => 1]);
+                //Merekam aktivitas pengguna
                 ActivityLog::create([
                     'user_id' => $request->user()->id,
                     'activity' => 'create',
-                    'description' => 'Menambahkan data Recruitment Interview ' . $request->name,
+                    'description' => 'Pemanggilan Interview' . $request->name,
                 ]);
             }
         } else {
@@ -664,15 +683,24 @@ class RecruitmentController extends Controller
                 })
                 ->addColumn('ujian', function ($row) use ($holding) {
                     if (!$row->WaktuUjian != null) {
-                        $btn = '<button id="btn_ujian"
-                                data-id_recruitment_user="' . $row->id . '"
-                                data-id_users_career="' . $row->AuthLogin->id . '"
-                                data-id_users_auth="' . $row->WaktuUjian . '"
-                                type="button" class="btn btn-sm" style="background-color:#e9ddff;">
-                                <i class="tf-icons mdi mdi-book"></i>
-                                Mulai&nbsp;Ujian
-                            </button>';
-                        return $btn;
+                        if ($row->DataInterview->status_interview == 0) {
+                            $btn = '<button id="btn_warning"
+                                        type="button" class="btn btn-sm" style="background-color:#e9ddff;">
+                                        <i class="tf-icons mdi mdi-book"></i>
+                                        Mulai&nbsp;Ujian
+                                    </button>';
+                            return $btn;
+                        } else {
+                            $btn = '<button id="btn_ujian"
+                                    data-id_recruitment_user="' . $row->id . '"
+                                    data-id_users_career="' . $row->AuthLogin->id . '"
+                                    data-id_users_auth="' . $row->WaktuUjian . '"
+                                    type="button" class="btn btn-sm" style="background-color:#e9ddff;">
+                                    <i class="tf-icons mdi mdi-book"></i>
+                                    Mulai&nbsp;Ujian
+                                </button>';
+                            return $btn;
+                        }
                     } else {
                         $btn = '<button id="btn_prosesujian"
                                     type="button" class="btn btn-sm" style="background-color:#e9ddff;">
@@ -857,10 +885,10 @@ class RecruitmentController extends Controller
 
     function kategori_ujian(Request $request)
     {
+        dd($request->all());
         $insert = DB::table('waktu_ujian')->insert([
             'kode' => $request->psikotes,
             'auth_id' => $request->id_userscareer,
-            'recruitmentuser_id' => $request->id_recruitmentuser
         ]);
         ActivityLog::create([
             'user_id' => Auth::user()->id,
