@@ -365,7 +365,7 @@ class RecruitmentController extends Controller
                     } elseif ($row->status_recruitmentuser == 2 && $row->tanggal_interview < Carbon::now()->format('d/m/Y')) {
                         $return = '<span class="badge rounded-pill bg-danger">Tidak Konfirmasi</span>';
                     } elseif ($row->status_recruitmentuser == 3) {
-                        $return = '<span class="badge rounded-pill bg-success">Lolos Interview</span>';
+                        $return = '<span class="badge rounded-pill bg-success">Proses Ujian</span>';
                     } elseif ($row->status_recruitmentuser == 4) {
                         $return = '<span class="badge rounded-pill bg-success">Hadir Interview</span>';
                     } elseif ($row->status_recruitmentuser == 5) {
@@ -885,15 +885,17 @@ class RecruitmentController extends Controller
 
     function kategori_ujian(Request $request)
     {
-        dd($request->all());
-        $insert = DB::table('waktu_ujian')->insert([
-            'kode' => $request->psikotes,
-            'auth_id' => $request->id_userscareer,
-        ]);
+        $ujian = Ujian::where('kelas_id', $request->kelas)->get();
+        foreach ($ujian as $u) {
+            WaktuUjian::insert([
+                'kode'      => $u->kode,
+                'auth_id'   => $request->id_userscareer,
+            ]);
+        }
         ActivityLog::create([
-            'user_id' => Auth::user()->id,
-            'activity' => 'created',
-            'description' => 'Created data exam status on ' . Auth::user()->name,
+            'user_id' => $request->user()->id,
+            'activity' => 'create',
+            'description' => 'Mengaktifkan ujian user' . $request->name,
         ]);
         return redirect()->back()->with('success', 'Data Berhasil di Dibuat');
     }
