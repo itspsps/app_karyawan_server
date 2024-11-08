@@ -24,7 +24,7 @@
                 <div class="card-body">
                     <hr class="">
                     <div class="row mt-3 g-3">
-                        <div class="col-lg-6">
+                        <div class="col-lg-3">
                             <input type="month" name="filter_month" id="filter_month" class="form-control" value="{{date('Y-m')}}">
                         </div>
                     </div>

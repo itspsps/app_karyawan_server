@@ -1385,7 +1385,7 @@ class HomeUserController extends Controller
                 }
                 return DataTables::of($data)->addIndexColumn()
                     ->addColumn('tanggal_masuk', function ($row) {
-                        $result = Carbon::parse($row->tanggal_masuk)->isoFormat('D-MM-Y');;
+                        $result = Carbon::parse($row->tanggal_masuk)->isoFormat('DD-MM-Y');;
                         return $result;
                     })
                     ->addColumn('jam_absen', function ($row) {
@@ -1405,18 +1405,25 @@ class HomeUserController extends Controller
                         }
                     })
                     ->addColumn('keterangan', function ($row) {
-                        if ($row->status_absen == NULL) {
-                            return '-';
-                        } else if ($row->status_absen == 'CUTI') {
-                            return '<span class="badge w-100 light badge-warning">CUTI</span>';
-                        } else if ($row->status_absen == 'LIBUR') {
-                            return '<span class="badge w-100 light badge-warning">LIBUR</span>';
-                        } else if ($row->status_absen == 'TIDAK HADIR KERJA') {
-                            return '<span class="badge w-100 light badge-warning">TIDAK HADIR KERJA</span>';
-                        } else if ($row->status_absen == 'HADIR KERJA') {
-                            return '<span class="badge w-100 light badge-success">HADIR KERJA</span>';
+                        $now = date('Y-m-d');
+                        if ($row->tanggal_masuk == $now) {
+                            if ($row->keterangan_absensi == '' || $row->keterangan_absensi == NULL) {
+                                return '<span class="badge w-100 light badge-info">BELUM ABSENSI</span>';
+                            }
                         } else {
-                            return $row->status_absen;
+                            if ($row->status_absen == NULL) {
+                                return '-';
+                            } else if ($row->status_absen == 'CUTI') {
+                                return '<span class="badge w-100 light badge-secondary">CUTI</span>';
+                            } else if ($row->status_absen == 'LIBUR') {
+                                return '<span class="badge w-100 light badge-warning">LIBUR</span>';
+                            } else if ($row->status_absen == 'TIDAK HADIR KERJA') {
+                                return '<span class="badge w-100 light badge-danger">TIDAK HADIR KERJA</span>';
+                            } else if ($row->status_absen == 'HADIR KERJA') {
+                                return '<span class="badge w-100 light badge-success">HADIR KERJA</span>';
+                            } else {
+                                return $row->status_absen;
+                            }
                         }
                     })
                     ->rawColumns(['tanggal_masuk', 'jam_absen', 'jam_pulang', 'keterangan'])
@@ -1426,7 +1433,7 @@ class HomeUserController extends Controller
                 // dd($data);
                 return DataTables::of($data)
                     ->addColumn('tanggal_masuk', function ($row) {
-                        $result = Carbon::parse($row->tanggal_masuk)->isoFormat('D-MM-Y');;
+                        $result = Carbon::parse($row->tanggal_masuk)->isoFormat('DD-MM-Y');;
                         return $result;
                     })
                     ->addColumn('jam_absen', function ($row) {
@@ -1446,18 +1453,25 @@ class HomeUserController extends Controller
                         }
                     })
                     ->addColumn('keterangan', function ($row) {
-                        if ($row->status_absen == NULL) {
-                            return '-';
-                        } else if ($row->status_absen == 'CUTI') {
-                            return '<span class="badge w-100 light badge-warning">CUTI</span>';
-                        } else if ($row->status_absen == 'LIBUR') {
-                            return '<span class="badge w-100 light badge-warning">LIBUR</span>';
-                        } else if ($row->status_absen == 'TIDAK HADIR KERJA') {
-                            return '<span class="badge w-100 light badge-warning">TIDAK HADIR KERJA</span>';
-                        } else if ($row->status_absen == 'HADIR KERJA') {
-                            return '<span class="badge w-100 light badge-success">HADIR KERJA</span>';
+                        $now = date('Y-m-d');
+                        if ($row->tanggal_masuk == $now) {
+                            if ($row->keterangan_absensi == '' || $row->keterangan_absensi == NULL) {
+                                return '<span class="badge w-100 light badge-info">BELUM ABSENSI</span>';
+                            }
                         } else {
-                            return $row->status_absen;
+                            if ($row->status_absen == NULL) {
+                                return '-';
+                            } else if ($row->status_absen == 'CUTI') {
+                                return '<span class="badge w-100 light badge-secondary">CUTI</span>';
+                            } else if ($row->status_absen == 'LIBUR') {
+                                return '<span class="badge w-100 light badge-warning">LIBUR</span>';
+                            } else if ($row->status_absen == 'TIDAK HADIR KERJA') {
+                                return '<span class="badge w-100 light badge-danger">TIDAK HADIR KERJA</span>';
+                            } else if ($row->status_absen == 'HADIR KERJA') {
+                                return '<span class="badge w-100 light badge-success">HADIR KERJA</span>';
+                            } else {
+                                return $row->status_absen;
+                            }
                         }
                     })
                     ->rawColumns(['tanggal_masuk', 'jam_absen', 'jam_pulang', 'keterangan'])

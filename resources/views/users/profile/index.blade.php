@@ -57,9 +57,10 @@
                         <img width="100%" src="{{asset('admin/assets/img/avatars/1.png')}}" alt="/">
                     </a>
                     @else
-                    <a href="assets/images/office/pic1.jpg">
-                        <img width="100%" src="{{ asset('../storage/app/public/foto_karyawan/'.$user_karyawan->foto_karyawan) }}" alt="author-image">
-                        <!-- <img width="100%" src="{{ url('https://hrd.sumberpangan.store:4430/storage/app/public/foto_karyawan/'.$user_karyawan->foto_karyawan) }}" alt="author-image"> -->
+                    <a href="{{ url('https://hrd.sumberpangan.store:4430/storage/app/public/foto_karyawan/'.$user_karyawan->foto_karyawan) }}">
+                        <!-- <a href="{{ asset('../storage/app/public/foto_karyawan/'.$user_karyawan->foto_karyawan) }}"> -->
+                        <!-- <img width="100%" src="{{ asset('../storage/app/public/foto_karyawan/'.$user_karyawan->foto_karyawan) }}" alt="author-image"> -->
+                        <img width="100%" src="{{ url('https://hrd.sumberpangan.store:4430/storage/app/public/foto_karyawan/'.$user_karyawan->foto_karyawan) }}" alt="author-image">
                     </a>
                     @endif
                 </div>
@@ -77,69 +78,76 @@
                 </div>
                 <p>{{ $user_karyawan->penempatan_kerja }}</p>
             </div>
-            <ul class="contact-profile">
-                <li class="d-flex align-items-center">
-                    <a href="{{url('detail_profile')}}" class="contact-icon">
-                        <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" fill="#000000" height="26" width="26" version="1.1" id="Layer_1" viewBox="0 0 376.178 376.178" xml:space="preserve">
-                            <g>
-                                <g>
-                                    <path d="M282.44,62.966h-44.8V51.394c0-5.818-4.719-10.408-10.408-10.408h-7.499V10.408C219.733,4.59,215.014,0,209.325,0h-42.731    c-5.818,0-10.408,4.719-10.408,10.408v30.578h-7.499c-5.818,0-10.408,4.719-10.408,10.408v11.572H93.414    c-17.067,0-30.966,13.899-30.966,30.966v251.281c0,17.067,13.899,30.966,30.966,30.966h189.349    c17.067,0,30.966-13.899,30.966-30.966V93.931C313.471,76.865,299.507,62.966,282.44,62.966z M198.788,20.816v20.105h-21.851    l-0.065-20.105H198.788z M158.901,61.867h57.794v17.067h-57.794V61.867z M282.505,355.232H93.156c-5.56,0-10.02-4.461-10.02-10.02    V198.594h20.299c5.818,0,10.408-4.719,10.408-10.408s-4.719-10.408-10.408-10.408H83.071v-20.105h40.792    c5.818,0,10.408-4.719,10.408-10.408s-4.719-10.408-10.408-10.408H83.071V94.19c0-5.56,4.461-10.02,10.02-10.02h44.929v5.495    c0,5.818,4.719,10.408,10.408,10.408h78.675c5.818,0,10.408-4.719,10.408-10.408V84.17h44.8c5.56,0,10.02,4.461,10.02,10.02    v251.152h0.188C292.45,350.84,288.021,355.232,282.505,355.232z" />
-                                </g>
-                            </g>
-                            <g>
-                                <g>
-                                    <path d="M234.925,250.44c-30.319-11.184-64-11.184-94.255,0c-16.226,6.012-27.216,21.657-27.216,38.788v35.491    c0,5.818,4.719,10.408,10.408,10.408h127.806c5.818,0,10.408-4.719,10.408-10.408v-35.491    C262.141,272.032,251.216,256.453,234.925,250.44z M241.261,314.246H134.4v-24.953c0-8.469,5.43-16.226,13.511-19.135    c25.665-9.438,54.174-9.438,79.838,0c8.145,3.038,13.511,10.731,13.511,19.135V314.246z" />
-                                </g>
-                            </g>
-                            <g>
-                                <g>
-                                    <path d="M187.798,142.028c-23.273,0-42.214,18.877-42.214,42.15s18.941,42.214,42.214,42.214s42.214-18.941,42.214-42.214    S211.071,142.028,187.798,142.028z M187.798,205.446c-11.766,0-21.269-9.568-21.269-21.269s9.632-21.204,21.269-21.204    c11.766,0,21.269,9.568,21.269,21.269C209.067,195.943,199.434,205.446,187.798,205.446z" />
-                                </g>
-                            </g>
-                        </svg>
-                    </a>
-                </li>
-                <li class="d-flex align-items-center px-4">
-                    <a href="{{url('detail_alamat')}}" class="contact-icon">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 64 64" fill="none">
-                            <g clip-path="url(#clip0_14_1983)">
-                                <path d="M25.926 53.099V47.174C25.926 45.563 26.5659 44.0179 27.705 42.8787C28.844 41.7394 30.389 41.0993 32 41.099V41.099C32.7977 41.099 33.5876 41.2561 34.3246 41.5615C35.0616 41.8668 35.7313 42.3143 36.2953 42.8784C36.8593 43.4425 37.3067 44.1122 37.6119 44.8493C37.9171 45.5863 38.0741 46.3763 38.074 47.174V53.099" stroke="#000000" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" />
-                                <path d="M12.8 24.47V48.599C12.8 49.7925 13.2741 50.9371 14.118 51.781C14.9619 52.6249 16.1065 53.099 17.3 53.099H25.931" stroke="#000000" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" />
-                                <path d="M38.079 53.099H46.7C47.8935 53.099 49.0381 52.6249 49.882 51.781C50.7259 50.9371 51.2 49.7925 51.2 48.599V26.549C51.1992 25.8505 51.0362 25.1618 50.7239 24.5371C50.4115 23.9123 49.9583 23.3687 49.4 22.949" stroke="#000000" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" />
-                                <path d="M8 28.194L29.28 11.927C30.0625 11.329 31.0191 11.0033 32.004 10.9995C32.9888 10.9958 33.9479 11.3141 34.735 11.906L56 27.9" stroke="#426AB2" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" />
-                                <path d="M12.8 24.527V16.697C12.8 16.1666 13.0107 15.6579 13.3858 15.2828C13.7608 14.9077 14.2696 14.697 14.8 14.697H18C18.5304 14.697 19.0391 14.9077 19.4142 15.2828C19.7893 15.6579 20 16.1666 20 16.697V18.73" stroke="#426AB2" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" />
-                            </g>
-                            <defs>
-                                <clipPath id="clip0_14_1983">
-                                    <rect width="51.999" height="46.1" fill="white" transform="translate(6 9)" />
-                                </clipPath>
-                            </defs>
-                        </svg>
-                    </a>
-                </li>
-                <li class="d-flex align-items-center">
-                    <a href="{{url('detail_account')}}" class="contact-icon">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" viewBox="0 0 24 24" id="Layer_1" data-name="Layer 1">
-                            <defs>
-                                <style>
-                                    .cls-1 {
-                                        fill: none;
-                                        stroke: #020202;
-                                        stroke-miterlimit: 10;
-                                        stroke-width: 1.91px;
-                                    }
-                                </style>
-                            </defs>
-                            <circle class="cls-1" cx="12.02" cy="7.24" r="5.74" />
-                            <path class="cls-1" d="M2.46,23.5V21.59a9.55,9.55,0,0,1,7-9.21" />
-                            <path class="cls-1" d="M16.8,14.89l-1,1.91H9.15L7.24,18.72l1.91,1.91h6.7l1,1.91h2.87a2.86,2.86,0,0,0,2.87-2.87V17.76a2.87,2.87,0,0,0-2.87-2.87Z" />
-                            <line class="cls-1" x1="12.02" y1="18.72" x2="12.02" y2="20.63" />
-                            <line class="cls-1" x1="19.67" y1="17.76" x2="19.67" y2="19.67" />
-                        </svg>
-                    </a>
-                </li>
-            </ul>
-            <div class="skill-section">
+            <div class="card" style="padding: 0px; margin: 3px; margin-bottom: 5px; box-shadow: 0 1px 0px 0 rgba(0, 0, 0, 0.1), 0 6px 10px 0 rgba(0, 0, 0, 0.1);">
+                <div class="card-header border-0" style="padding: 0px; margin: 0px; display: block; ">
+                    <h6 class="text-center" style="text-align: center;">Update Profile</h6>
+                </div>
+                <div class="card-body" style="padding: 0px; margin: 0px;">
+                    <ul class="contact-profile" style="padding: 5px; margin: 5px; ">
+                        <li class="d-flex align-items-center">
+                            <a href="{{url('detail_profile')}}" class="contact-icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" fill="#000000" height="26" width="26" version="1.1" id="Layer_1" viewBox="0 0 376.178 376.178" xml:space="preserve">
+                                    <g>
+                                        <g>
+                                            <path d="M282.44,62.966h-44.8V51.394c0-5.818-4.719-10.408-10.408-10.408h-7.499V10.408C219.733,4.59,215.014,0,209.325,0h-42.731    c-5.818,0-10.408,4.719-10.408,10.408v30.578h-7.499c-5.818,0-10.408,4.719-10.408,10.408v11.572H93.414    c-17.067,0-30.966,13.899-30.966,30.966v251.281c0,17.067,13.899,30.966,30.966,30.966h189.349    c17.067,0,30.966-13.899,30.966-30.966V93.931C313.471,76.865,299.507,62.966,282.44,62.966z M198.788,20.816v20.105h-21.851    l-0.065-20.105H198.788z M158.901,61.867h57.794v17.067h-57.794V61.867z M282.505,355.232H93.156c-5.56,0-10.02-4.461-10.02-10.02    V198.594h20.299c5.818,0,10.408-4.719,10.408-10.408s-4.719-10.408-10.408-10.408H83.071v-20.105h40.792    c5.818,0,10.408-4.719,10.408-10.408s-4.719-10.408-10.408-10.408H83.071V94.19c0-5.56,4.461-10.02,10.02-10.02h44.929v5.495    c0,5.818,4.719,10.408,10.408,10.408h78.675c5.818,0,10.408-4.719,10.408-10.408V84.17h44.8c5.56,0,10.02,4.461,10.02,10.02    v251.152h0.188C292.45,350.84,288.021,355.232,282.505,355.232z" />
+                                        </g>
+                                    </g>
+                                    <g>
+                                        <g>
+                                            <path d="M234.925,250.44c-30.319-11.184-64-11.184-94.255,0c-16.226,6.012-27.216,21.657-27.216,38.788v35.491    c0,5.818,4.719,10.408,10.408,10.408h127.806c5.818,0,10.408-4.719,10.408-10.408v-35.491    C262.141,272.032,251.216,256.453,234.925,250.44z M241.261,314.246H134.4v-24.953c0-8.469,5.43-16.226,13.511-19.135    c25.665-9.438,54.174-9.438,79.838,0c8.145,3.038,13.511,10.731,13.511,19.135V314.246z" />
+                                        </g>
+                                    </g>
+                                    <g>
+                                        <g>
+                                            <path d="M187.798,142.028c-23.273,0-42.214,18.877-42.214,42.15s18.941,42.214,42.214,42.214s42.214-18.941,42.214-42.214    S211.071,142.028,187.798,142.028z M187.798,205.446c-11.766,0-21.269-9.568-21.269-21.269s9.632-21.204,21.269-21.204    c11.766,0,21.269,9.568,21.269,21.269C209.067,195.943,199.434,205.446,187.798,205.446z" />
+                                        </g>
+                                    </g>
+                                </svg>
+                            </a>
+                        </li>
+                        <li class="d-flex align-items-center px-4">
+                            <a href="{{url('detail_alamat')}}" class="contact-icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 64 64" fill="none">
+                                    <g clip-path="url(#clip0_14_1983)">
+                                        <path d="M25.926 53.099V47.174C25.926 45.563 26.5659 44.0179 27.705 42.8787C28.844 41.7394 30.389 41.0993 32 41.099V41.099C32.7977 41.099 33.5876 41.2561 34.3246 41.5615C35.0616 41.8668 35.7313 42.3143 36.2953 42.8784C36.8593 43.4425 37.3067 44.1122 37.6119 44.8493C37.9171 45.5863 38.0741 46.3763 38.074 47.174V53.099" stroke="#000000" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" />
+                                        <path d="M12.8 24.47V48.599C12.8 49.7925 13.2741 50.9371 14.118 51.781C14.9619 52.6249 16.1065 53.099 17.3 53.099H25.931" stroke="#000000" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" />
+                                        <path d="M38.079 53.099H46.7C47.8935 53.099 49.0381 52.6249 49.882 51.781C50.7259 50.9371 51.2 49.7925 51.2 48.599V26.549C51.1992 25.8505 51.0362 25.1618 50.7239 24.5371C50.4115 23.9123 49.9583 23.3687 49.4 22.949" stroke="#000000" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" />
+                                        <path d="M8 28.194L29.28 11.927C30.0625 11.329 31.0191 11.0033 32.004 10.9995C32.9888 10.9958 33.9479 11.3141 34.735 11.906L56 27.9" stroke="#426AB2" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" />
+                                        <path d="M12.8 24.527V16.697C12.8 16.1666 13.0107 15.6579 13.3858 15.2828C13.7608 14.9077 14.2696 14.697 14.8 14.697H18C18.5304 14.697 19.0391 14.9077 19.4142 15.2828C19.7893 15.6579 20 16.1666 20 16.697V18.73" stroke="#426AB2" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" />
+                                    </g>
+                                    <defs>
+                                        <clipPath id="clip0_14_1983">
+                                            <rect width="51.999" height="46.1" fill="white" transform="translate(6 9)" />
+                                        </clipPath>
+                                    </defs>
+                                </svg>
+                            </a>
+                        </li>
+                        <li class="d-flex align-items-center">
+                            <a href="{{url('detail_account')}}" class="contact-icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" viewBox="0 0 24 24" id="Layer_1" data-name="Layer 1">
+                                    <defs>
+                                        <style>
+                                            .cls-1 {
+                                                fill: none;
+                                                stroke: #020202;
+                                                stroke-miterlimit: 10;
+                                                stroke-width: 1.91px;
+                                            }
+                                        </style>
+                                    </defs>
+                                    <circle class="cls-1" cx="12.02" cy="7.24" r="5.74" />
+                                    <path class="cls-1" d="M2.46,23.5V21.59a9.55,9.55,0,0,1,7-9.21" />
+                                    <path class="cls-1" d="M16.8,14.89l-1,1.91H9.15L7.24,18.72l1.91,1.91h6.7l1,1.91h2.87a2.86,2.86,0,0,0,2.87-2.87V17.76a2.87,2.87,0,0,0-2.87-2.87Z" />
+                                    <line class="cls-1" x1="12.02" y1="18.72" x2="12.02" y2="20.63" />
+                                    <line class="cls-1" x1="19.67" y1="17.76" x2="19.67" y2="19.67" />
+                                </svg>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="skill-section" style="margin-top: 2%;">
                 <h5>Informasi</h5>
                 <div class="row g-3">
                     <div class="col-4">
