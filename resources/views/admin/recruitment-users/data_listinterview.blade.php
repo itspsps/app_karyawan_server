@@ -388,7 +388,7 @@
     <div class="row gy-4">
         <!-- Transactions -->
         <div class="col-lg-12">
-            <div class="card">
+            <div class="card container">
                 <div class="card-header">
                     <div class="d-flex align-items-center justify-content-between">
                         <h5 class="card-title m-0 me-2">DATA INTERVIEW</h5>
@@ -504,63 +504,61 @@
                             <div class="col mb-2">
                                 <div class="form-floating form-floating-outline">
                                     <div class="row">
-                                        <input type="hidden" name="id_recruitmentuser" id="show_recruitmentuserid">
-                                        <input type="hidden" name="id_userscareer" id="show_userscareerid">
-                                        <!-- <div class="col-4">
+                                        <div class="col-4">
                                             <input type="hidden" name="id_recruitmentuser" id="show_recruitmentuserid">
                                             <input type="hidden" name="id_userscareer" id="show_userscareerid">
                                             <div class="form-check">
-                                                <input class="form-check-input" name="sd-6" type="checkbox" value="6-SD" id="defaultCheck1">
+                                                <input class="form-check-input" name="sd-6" disabled type="checkbox" value="6-SD" id="defaultCheck1">
                                                 <label class="form-check-label" for="defaultCheck1">
                                                     6-SD
                                                 </label>
                                             </div>
                                             <div class="form-check">
-                                                <input class="form-check-input" name="smp-1" type="checkbox" value="SPM-1" id="defaultCheck1">
+                                                <input class="form-check-input" name="smp-1" disabled type="checkbox" value="SPM-1" id="defaultCheck1">
                                                 <label class="form-check-label" for="defaultCheck1">
                                                     SMP-1
                                                 </label>
                                             </div>
                                             <div class="form-check">
-                                                <input class="form-check-input" name="smp-2" type="checkbox" value="SMP-2" id="defaultCheck1">
+                                                <input class="form-check-input" name="smp-2" disabled type="checkbox" value="SMP-2" id="defaultCheck1">
                                                 <label class="form-check-label" for="defaultCheck1">
                                                     SMP-2
                                                 </label>
                                             </div>
                                             <div class="form-check">
-                                                <input class="form-check-input" name="smp-3" type="checkbox" value="SMP-2" id="defaultCheck1">
+                                                <input class="form-check-input" name="smp-3" disabled type="checkbox" value="SMP-2" id="defaultCheck1">
                                                 <label class="form-check-label" for="defaultCheck1">
                                                     SMP-3
                                                 </label>
                                             </div>
-                                        </div> -->
-                                        <!-- <div class="col-4">
+                                        </div>
+                                        <div class="col-4">
                                             <div class="form-check">
-                                                <input class="form-check-input" name="sma-1" type="checkbox" value="SMA-1" id="defaultCheck1">
+                                                <input class="form-check-input" name="sma-1" disabled type="checkbox" value="SMA-1" id="defaultCheck1">
                                                 <label class="form-check-label" for="defaultCheck1">
                                                     SMA-1
                                                 </label>
                                             </div>
                                             <div class="form-check">
-                                                <input class="form-check-input" name="sma-2" type="checkbox" value="SMA-2" id="defaultCheck1">
+                                                <input class="form-check-input" name="sma-2" disabled type="checkbox" value="SMA-2" id="defaultCheck1">
                                                 <label class="form-check-label" for="defaultCheck1">
                                                     SMA-2
                                                 </label>
                                             </div>
                                             <div class="form-check">
-                                                <input class="form-check-input" name="sma-3" type="checkbox" value="SMA-3" id="defaultCheck1">
+                                                <input class="form-check-input" name="sma-3" disabled type="checkbox" value="SMA-3" id="defaultCheck1">
                                                 <label class="form-check-label" for="defaultCheck1">
                                                     SMA-3
                                                 </label>
                                             </div>
                                             <div class="form-check">
-                                                <input class="form-check-input" name="sbmptn" type="checkbox" value="SBMPTN" id="defaultCheck1">
+                                                <input class="form-check-input" name="sbmptn" disabled type="checkbox" value="SBMPTN" id="defaultCheck1">
                                                 <label class="form-check-label" for="defaultCheck1">
                                                     SBMPTN
                                                 </label>
                                             </div>
-                                        </div> -->
-                                        <div class="col-12">
+                                        </div>
+                                        <div class="col-4">
                                             <!-- <div class="form-check">
                                                 <input class="form-check-input" name="cpns" type="checkbox" value="CPNS" id="defaultCheck1">
                                                 <label class="form-check-label" for="defaultCheck1">
@@ -568,13 +566,13 @@
                                                 </label>
                                             </div> -->
                                             <div class="form-check">
-                                                <input class="form-check-input" name="toefl" type="checkbox" value="TOEFL" id="defaultCheck1">
+                                                <input class="form-check-input" name="kelas" disabled type="checkbox" value="TOEFL" id="defaultCheck1">
                                                 <label class="form-check-label" for="defaultCheck1">
                                                     TOEFL
                                                 </label>
                                             </div>
                                             <div class="form-check">
-                                                <input class="form-check-input" name="psikotes" type="checkbox" value="L33XqPU6fdLwNiyS8z0lyJrcts8PGz" id="defaultCheck1">
+                                                <input class="form-check-input" name="kelas" checked type="checkbox" value="11" id="defaultCheck1">
                                                 <label class="form-check-label" for="defaultCheck1">
                                                     PSIKOTES
                                                 </label>
