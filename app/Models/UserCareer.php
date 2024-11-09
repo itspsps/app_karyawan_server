@@ -50,6 +50,6 @@ class UserCareer extends Authenticatable
 
     public function waktuujian()
     {
-        return $this->hasMany(WaktuUjian::class);
+        return $this->belongsTo(WaktuUjian::class, 'id', 'auth_id');
     }
 }

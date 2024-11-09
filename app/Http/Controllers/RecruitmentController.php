@@ -288,10 +288,14 @@ class RecruitmentController extends Controller
                 $query->orderBy('nama_bagian', 'ASC');
             },
             'Cv' => function ($query) {
-
                 $query->whereNotNull('users_career_id')->orderBy('id', 'ASC');
             },
             'AuthLogin' => function ($query) {
+                $query->with([
+                    'waktuujian' => function ($query) {
+                        $query->orderBy('id', 'ASC');
+                    }
+                ]);
                 $query->orderBy('id', 'ASC');
             },
         ])
@@ -365,7 +369,11 @@ class RecruitmentController extends Controller
                     } elseif ($row->status_recruitmentuser == 2 && $row->tanggal_interview < Carbon::now()->format('d/m/Y')) {
                         $return = '<span class="badge rounded-pill bg-danger">Tidak Konfirmasi</span>';
                     } elseif ($row->status_recruitmentuser == 3) {
-                        $return = '<span class="badge rounded-pill bg-success">Proses Ujian</span>';
+                        if ($row->AuthLogin->waktu_berakhir != null) {
+                            $return = '<span class="badge rounded-pill bg-success">1Proses Ujian</span>';
+                        } else {
+                            $return = '<span class="badge rounded-pill bg-success">Ujian Selesai</span>';
+                        }
                     } elseif ($row->status_recruitmentuser == 4) {
                         $return = '<span class="badge rounded-pill bg-success">Hadir Interview</span>';
                     } elseif ($row->status_recruitmentuser == 5) {
@@ -665,6 +673,9 @@ class RecruitmentController extends Controller
             'WaktuUjian' => function ($query) {
                 $query->orderBy('id', 'ASC');
             },
+            'Cv' => function ($query) {
+                $query->whereNotNull('users_career_id')->orderBy('id', 'ASC');
+            },
             'DataInterview' => function ($query) {
                 $query->orderBy('id', 'ASC');
             },
@@ -713,48 +724,48 @@ class RecruitmentController extends Controller
                 ->addColumn('detail_cv', function ($row) use ($holding) {
                     $btn = '<button id="btn_lihat_cv"
                                 data-id="' . $row->id . '"
-                                data-nama_pelamar="' . $row->nama_depan . ' ' . $row->nama_tengah . ' ' . $row->nama_belakang . '"
-                                data-tempat_lahir="' . $row->tempat_lahir . '"
-                                data-tanggal_lahir="' . $row->tanggal_lahir . '"
-                                data-gender="' . $row->gender . '"
-                                data-status_nikah="' . $row->status_nikah . '"
-                                data-nik="' . $row->nik . '"
+                                data-nama_pelamar="' . $row->Cv->nama_depan . ' ' . $row->Cv->nama_tengah . ' ' . $row->Cv->nama_belakang . '"
+                                data-tempat_lahir="' . $row->Cv->tempat_lahir . '"
+                                data-tanggal_lahir="' . $row->Cv->tanggal_lahir . '"
+                                data-gender="' . $row->Cv->gender . '"
+                                data-status_nikah="' . $row->Cv->status_nikah . '"
+                                data-nik="' . $row->Cv->nik . '"
                                 data-departemen="' . $row->Bagian->Divisi->Departemen->nama_departemen . '"
                                 data-divisi="' . $row->Bagian->Divisi->nama_divisi . '"
                                 data-bagian="' . $row->Bagian->nama_bagian . '"
-                                data-email="' . $row->email . '"
-                                data-no_hp="' . $row->no_hp . '"
-                                data-alamatktp="' . $row->alamat_ktp . '"
-                                data-nama_sdmi="' . $row->nama_sdmi . '"
-                                data-tahun_sdmi="' . $row->tahun_sdmi . '"
-                                data-nama_smpmts="' . $row->nama_smpmts . '"
-                                data-tahun_smpmts="' . $row->tahun_smpmts . '"
-                                data-nama_smamasmk="' . $row->nama_smamasmk . '"
-                                data-tahun_smamasmk="' . $row->tahun_smamasmk . '"
-                                data-nama_universitas="' . $row->nama_universitas . '"
-                                data-tahun_universitas="' . $row->tahun_universitas . '"
-                                data-judul_keterampilan1="' . $row->judul_keterampilan1 . '"
-                                data-ket_keterampilan1="' . $row->ket_keterampilan1 . '"
-                                data-judul_keterampilan2="' . $row->judul_keterampilan2 . '"
-                                data-ket_keterampilan2="' . $row->ket_keterampilan2 . '"
-                                data-judul_keterampilan3="' . $row->judul_keterampilan3 . '"
-                                data-ket_keterampilan3="' . $row->ket_keterampilan3 . '"
-                                data-judul_pengalaman1="' . $row->judul_pengalaman1 . '"
-                                data-lokasi_pengalaman1="' . $row->lokasi_pengalaman1 . '"
-                                data-tahun_pengalaman1="' . $row->tahun_pengalaman1 . '"
-                                data-judul_pengalaman2="' . $row->judul_pengalaman2 . '"
-                                data-lokasi_pengalaman2="' . $row->lokasi_pengalaman2 . '"
-                                data-tahun_pengalaman2="' . $row->tahun_pengalaman2 . '"
-                                data-judul_pengalaman3="' . $row->judul_pengalaman3 . '"
-                                data-lokasi_pengalaman3="' . $row->lokasi_pengalaman3 . '"
-                                data-tahun_pengalaman3="' . $row->tahun_pengalaman3 . '"
-                                data-prestasi1="' . $row->prestasi1 . '"
-                                data-prestasi2="' . $row->prestasi2 . '"
-                                data-prestasi3="' . $row->prestasi3 . '"
-                                data-img_ktp="' . $row->file_ktp . '"
-                                data-img_kk="' . $row->file_kk . '"
-                                data-img_ijazah="' . $row->file_ijazah . '"
-                                data-img_pp="' . $row->file_pp . '"
+                                data-email="' . $row->Cv->email . '"
+                                data-no_hp="' . $row->Cv->no_hp . '"
+                                data-alamatktp="' . $row->Cv->detail_alamat . '"
+                                data-nama_sdmi="' . $row->Cv->nama_sdmi . '"
+                                data-tahun_sdmi="' . $row->Cv->tahun_sdmi . '"
+                                data-nama_smpmts="' . $row->Cv->nama_smpmts . '"
+                                data-tahun_smpmts="' . $row->Cv->tahun_smpmts . '"
+                                data-nama_smamasmk="' . $row->Cv->nama_smamasmk . '"
+                                data-tahun_smamasmk="' . $row->Cv->tahun_smamasmk . '"
+                                data-nama_universitas="' . $row->Cv->nama_universitas . '"
+                                data-tahun_universitas="' . $row->Cv->tahun_universitas . '"
+                                data-judul_keterampilan1="' . $row->Cv->judul_keterampilan1 . '"
+                                data-ket_keterampilan1="' . $row->Cv->ket_keterampilan1 . '"
+                                data-judul_keterampilan2="' . $row->Cv->judul_keterampilan2 . '"
+                                data-ket_keterampilan2="' . $row->Cv->ket_keterampilan2 . '"
+                                data-judul_keterampilan3="' . $row->Cv->judul_keterampilan3 . '"
+                                data-ket_keterampilan3="' . $row->Cv->ket_keterampilan3 . '"
+                                data-judul_pengalaman1="' . $row->Cv->judul_pengalaman1 . '"
+                                data-lokasi_pengalaman1="' . $row->Cv->lokasi_pengalaman1 . '"
+                                data-tahun_pengalaman1="' . $row->Cv->tahun_pengalaman1 . '"
+                                data-judul_pengalaman2="' . $row->Cv->judul_pengalaman2 . '"
+                                data-lokasi_pengalaman2="' . $row->Cv->lokasi_pengalaman2 . '"
+                                data-tahun_pengalaman2="' . $row->Cv->tahun_pengalaman2 . '"
+                                data-judul_pengalaman3="' . $row->Cv->judul_pengalaman3 . '"
+                                data-lokasi_pengalaman3="' . $row->Cv->lokasi_pengalaman3 . '"
+                                data-tahun_pengalaman3="' . $row->Cv->tahun_pengalaman3 . '"
+                                data-prestasi1="' . $row->Cv->prestasi1 . '"
+                                data-prestasi2="' . $row->Cv->prestasi2 . '"
+                                data-prestasi3="' . $row->Cv->prestasi3 . '"
+                                data-img_ktp="' . $row->Cv->file_ktp . '"
+                                data-img_kk="' . $row->Cv->file_kk . '"
+                                data-img_ijazah="' . $row->Cv->file_ijazah . '"
+                                data-img_pp="' . $row->Cv->file_pp . '"
                                 type="button" class="btn btn-sm" style="background-color:#e9ddff">
                                 <i class="tf-icons mdi mdi-eye-circle-outline me-1"></i>
                                 Detail&nbsp;CV
