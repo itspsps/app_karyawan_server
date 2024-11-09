@@ -1409,6 +1409,8 @@ class HomeUserController extends Controller
                         if ($row->tanggal_masuk == $now) {
                             if ($row->keterangan_absensi == '' || $row->keterangan_absensi == NULL) {
                                 return '<span class="badge w-100 light badge-info">BELUM ABSENSI</span>';
+                            } else if ($row->keterangan_absensi_pulang == '' || $row->keterangan_absensi_pulang == NULL) {
+                                return '<span class="badge w-100 light badge-success">HADIR KERJA</span>';
                             } else {
                                 return '-';
                             }
@@ -1459,6 +1461,8 @@ class HomeUserController extends Controller
                         if ($row->tanggal_masuk == $now) {
                             if ($row->keterangan_absensi == '' || $row->keterangan_absensi == NULL) {
                                 return '<span class="badge w-100 light badge-info">BELUM ABSENSI</span>';
+                            } else if ($row->keterangan_absensi_pulang != '' || $row->keterangan_absensi_pulang != NULL) {
+                                return '<span class="badge w-100 light badge-success">HADIR KERJA</span>';
                             } else {
                                 return '-';
                             }

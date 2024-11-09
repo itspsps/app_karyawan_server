@@ -58,10 +58,10 @@
                         <img width="100%" src="{{asset('admin/assets/img/avatars/1.png')}}" alt="/">
                     </a>
                     @else
-                    <a href="{{ url('https://hrd.sumberpangan.store:4430/storage/app/public/foto_karyawan/'.$user_karyawan->foto_karyawan) }}">
-                        <!-- <a href="{{ asset('../storage/app/public/foto_karyawan/'.$user_karyawan->foto_karyawan) }}"> -->
-                        <!-- <img width="100%" src="{{ asset('../storage/app/public/foto_karyawan/'.$user_karyawan->foto_karyawan) }}" alt="author-image"> -->
-                        <img width="100%" src="{{ url('https://hrd.sumberpangan.store:4430/storage/app/public/foto_karyawan/'.$user_karyawan->foto_karyawan) }}" alt="author-image">
+                    <!-- <a href="{{ url('https://hrd.sumberpangan.store:4430/storage/app/public/foto_karyawan/'.$user_karyawan->foto_karyawan) }}"> -->
+                    <a href="{{ asset('../storage/app/public/foto_karyawan/'.$user_karyawan->foto_karyawan) }}">
+                        <img width="100%" src="{{ asset('../storage/app/public/foto_karyawan/'.$user_karyawan->foto_karyawan) }}" alt="{{$user_karyawan->name}}">
+                        <!-- <img width="100%" src="{{ url('https://hrd.sumberpangan.store:4430/storage/app/public/foto_karyawan/'.$user_karyawan->foto_karyawan) }}" alt="{{$user_karyawan->name}}"> -->
                     </a>
                     @endif
                 </div>

@@ -255,7 +255,7 @@
         </div>
         <br>
         <div class="row gy-4">
-            <div class="col-xl-6 col-md-6">
+            <div class="col-xl-7 col-md-7">
                 <div class="card">
                     <div class="card-header">
                         <div class="d-flex justify-content-between">
@@ -269,7 +269,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-xl-6 col-md-6">
+            <div class="col-xl-5 col-md-5">
                 <div class="card">
                     <div class="card-header">
                         <div class="d-flex justify-content-between">
@@ -319,6 +319,22 @@
                     </div>
                     <div class="card-body">
                         <div id="grafik_status"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row gy-4">
+            <div class="col-xl-12 col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="d-flex justify-content-between">
+                            <h6 class="mb-1">Grafik Absensi Karyawan Kontrak Kerja @if($holding=='sps') PT. SURYA PANGAN SEMESTA @elseif($holding=='sp') CV. SUMBER PANGAN @else CV. SURYA INTI PANGAN @endif</h6>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div id="grafik_absensi"></div>
+                        <div class="mt-1 mt-md-3">
+                        </div>
                     </div>
                 </div>
             </div>
@@ -397,11 +413,17 @@
                     chart: {
                         type: 'bar',
                         height: 300,
+                        width: "100%",
                         offsetY: -9,
                         offsetX: -16,
                         parentHeightOffset: 0,
                         toolbar: {
                             show: true
+                        },
+                        animations: {
+                            initialAnimation: {
+                                enabled: false
+                            }
                         }
                     },
                     series: [{
@@ -468,7 +490,7 @@
                         tickPlacement: 'on',
                         labels: {
                             style: {
-                                fontSize: '6pt',
+                                fontSize: '5pt',
                             },
                             show: true
                         },
@@ -508,6 +530,15 @@
                         }
                     },
                     responsive: [{
+                            breakpoint: 2000,
+                            options: {
+                                plotOptions: {
+                                    bar: {
+                                        columnWidth: '50%'
+                                    }
+                                }
+                            }
+                        }, {
                             breakpoint: 1500,
                             options: {
                                 plotOptions: {
@@ -666,7 +697,7 @@
                     breakpoint: 2000,
                     options: {
                         chart: {
-                            width: 600
+                            width: 520,
                         },
                         legend: {
                             position: 'right'
@@ -945,6 +976,103 @@
         };
 
         var chart = new ApexCharts(document.querySelector("#grafik_status"), options_status);
+        chart.render();
+    </script>
+    <script>
+        var label_absensi = '{{$label_absensi}}';
+        var label_absensi1 = label_absensi.replaceAll('&quot;', '"');
+        var label_absensi2 = label_absensi1.replaceAll('[', '');
+        var label_absensi3 = label_absensi2.replaceAll(']', '');
+        var label_absensi4 = label_absensi3.replaceAll(',', ', ');
+        var label_absensi5 = JSON.parse('[' + label_absensi4 + ']');
+
+        var data_absensi_masuk = '{{$data_absensi_masuk}}';
+        var data_absensi_masuk1 = data_absensi_masuk.replaceAll('&quot;', '"');
+        var data_absensi_masuk2 = data_absensi_masuk1.replaceAll('[', '');
+        var data_absensi_masuk3 = data_absensi_masuk2.replaceAll(']', '');
+        var data_absensi_masuk4 = data_absensi_masuk3.replaceAll(',', ', ');
+        var data_absensi_masuk5 = JSON.parse('[' + data_absensi_masuk4 + ']');
+
+        var data_absensi_pulang = '{{$data_absensi_pulang}}';
+        var data_absensi_pulang1 = data_absensi_pulang.replaceAll('&quot;', '"');
+        var data_absensi_pulang2 = data_absensi_pulang1.replaceAll('[', '');
+        var data_absensi_pulang3 = data_absensi_pulang2.replaceAll(']', '');
+        var data_absensi_pulang4 = data_absensi_pulang3.replaceAll(',', ', ');
+        var data_absensi_pulang5 = JSON.parse('[' + data_absensi_pulang4 + ']');
+        var options = {
+            series: [{
+                name: 'Jumlah Karyawan Absen Masuk ',
+                data: data_absensi_masuk5
+            }, {
+                name: 'Jumlah Karyawan Absen Pulang ',
+                data: data_absensi_pulang5
+            }],
+            annotations: {
+                points: [{
+                    x: 'Bananas',
+                    seriesIndex: 0,
+                    label: {
+                        borderColor: '#775DD0',
+                        offsetY: 0,
+                        style: {
+                            color: '#fff',
+                            background: '#775DD0',
+                        },
+                        text: 'Bananas are good',
+                    }
+                }]
+            },
+            chart: {
+                height: 350,
+                type: 'line',
+            },
+            plotOptions: {
+                bar: {
+                    borderRadius: 10,
+                    columnWidth: '50%',
+                }
+            },
+            dataLabels: {
+                enabled: false
+            },
+            stroke: {
+                width: [4, 4]
+            },
+            grid: {
+                row: {
+                    colors: ['#fff', '#f2f2f2']
+                }
+            },
+            xaxis: {
+                labels: {
+                    rotate: -45
+                },
+                categories: label_absensi5,
+                tickAmount: 31
+            },
+            yaxis: {
+                title: {
+                    text: 'Jumlah Karyawan Absensi',
+                },
+            },
+            fill: {
+                type: 'gradient',
+                gradient: {
+                    shade: 'light',
+                    type: "horizontal",
+                    shadeIntensity: 0.25,
+                    gradientToColors: undefined,
+                    inverseColors: true,
+                    opacityFrom: 0.85,
+                    opacityTo: 0.85,
+                    stops: [50, 0, 100]
+                },
+            }
+        };
+
+
+        var chart = new ApexCharts(document.querySelector("#grafik_absensi"), options);
+
         chart.render();
     </script>
     @endsection

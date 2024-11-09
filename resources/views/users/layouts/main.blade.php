@@ -132,9 +132,9 @@
                 </div>
                 <div class="dz-media media-50 rounded-circle">
                     @if($user_karyawan->foto_karyawan == '' || $user_karyawan->foto_karyawan == NULL)
-                    <a href="{{route('profile')}}"><img src="{{asset('admin/assets/img/avatars/1.png')}}" class="rounded-circle" alt="author-image"></a>
+                    <a href="{{route('profile')}}"><img src="{{asset('admin/assets/img/avatars/1.png')}}" class="rounded-circle" alt="{{$user_karyawan->name}}"></a>
                     @else
-                    <a href="{{route('profile')}}"><img src="{{ asset('../storage/app/public/foto_karyawan/'.$user_karyawan->foto_karyawan) }}" class="rounded-circle" alt="author-image"></a>
+                    <a href="{{route('profile')}}"><img src="{{ asset('../storage/app/public/foto_karyawan/'.$user_karyawan->foto_karyawan) }}" class="rounded-circle" alt="{{$user_karyawan->name}}"></a>
                     @endif
                 </div>
             </div>

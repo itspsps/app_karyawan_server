@@ -12,6 +12,7 @@ use App\Models\ActivityLog;
 use App\Models\Jabatan;
 use App\Models\Karyawan;
 use Carbon\Carbon;
+use Carbon\CarbonPeriod;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Ramsey\Uuid\Uuid;
@@ -146,6 +147,16 @@ class dashboardController extends Controller
         $nama_status = $count_karyawan_status->keys();
         $jumlah_karyawan_status = $count_karyawan_status->values();
         // dd(json_encode($nama_jabatan));
+        $start_date = Carbon::now()->startOfMonth();
+        $end_date = Carbon::now()->endOfMonth();
+        $period = CarbonPeriod::create($start_date, $end_date);
+
+        foreach ($period as $date) {
+            $label_absensi[] = $date->format('d/m/Y');
+            $data_absensi_masuk[] = MappingShift::Join('karyawans', 'karyawans.id', 'mapping_shifts.user_id')->where('mapping_shifts.tanggal_masuk', $date->format('Y-m-d'))->whereIn('mapping_shifts.keterangan_absensi', ['TELAT HADIR', 'TEPAT WAKTU'])->where('mapping_shifts.status_absen', 'HADIR KERJA')->where('karyawans.kontrak_kerja', $holding)->count();
+            $data_absensi_pulang[] = MappingShift::Join('karyawans', 'karyawans.id', 'mapping_shifts.user_id')->where('mapping_shifts.tanggal_masuk', $date->format('Y-m-d'))->whereIn('mapping_shifts.keterangan_absensi_pulang', ['PULANG CEPAT', 'TEPAT WAKTU'])->where('mapping_shifts.status_absen', 'HADIR KERJA')->where('karyawans.kontrak_kerja', $holding)->count();
+        }
+        // dd(json_encode($label_absensi));
         return view('admin.dashboard.index', [
             // 'arr' => $arr,
             'labels' => $nama_departemen,
@@ -170,6 +181,9 @@ class dashboardController extends Controller
             'labels_status' => $nama_status,
             'data_karyawan_status' => str_replace('"', '', $jumlah_karyawan_status),
             'title' => 'Dashboard',
+            'label_absensi' => json_encode($label_absensi),
+            'data_absensi_masuk' => json_encode($data_absensi_masuk),
+            'data_absensi_pulang' => json_encode($data_absensi_pulang),
             "karyawan_laki" => Karyawan::where('gender', 'Laki-Laki')->where('status_aktif', 'AKTIF')->where('kontrak_kerja', $holding)->count(),
             "karyawan_perempuan" => Karyawan::where('gender', 'Perempuan')->where('status_aktif', 'AKTIF')->where('kontrak_kerja', $holding)->count(),
             "karyawan_office" => Karyawan::where('kategori', 'Karyawan Bulanan')->where('status_aktif', 'AKTIF')->where('kontrak_kerja', $holding)->count(),
