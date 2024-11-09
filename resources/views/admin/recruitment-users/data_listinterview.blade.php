@@ -661,17 +661,17 @@
                                             <i class="mdi mdi-book-education-outline"></i>
                                             <span id="show_namasdmi"></span>&nbsp;(<span id="show_tahunsdmi"></span>)
                                         </div>
-                                        <p>SMP/MTS</p>
+                                        <p style="font-weight: bold">SMP/MTS</p>
                                         <div class="mb-3">
                                             <i class="mdi mdi-book-education-outline"></i>
                                             <span id="show_namasmpmts"></span>&nbsp;(<span id="show_tahunsmpmts"></span>)
                                         </div>
-                                        <p>SMA/MA/SMK</p>
+                                        <p style="font-weight: bold">SMA/MA/SMK</p>
                                         <div class=" mb-3">
                                             <i class="mdi mdi-book-education-outline"></i>
                                             <span id="show_namasmamasmk"></span>&nbsp;(<span id="show_tahunsmamasm"></span>)
                                         </div>
-                                        <p>UNIVERSITAS</p>
+                                        <p style="font-weight: bold">UNIVERSITAS</p>
                                         <div class=" mb-3">
                                             <i class="mdi mdi-book-education-outline"></i>
                                             <span id="show_namauniversitas"></span>&nbsp;(<span id="show_tahununiversitas"></span>)
@@ -727,15 +727,6 @@
                                                     <div class="form-floating form-floating-outline">
                                                         <input type="text" id="show_tanggallahir" readonly name="" class="form-control" />
                                                         <label for="holding_recruitment">TANGGAL LAHIR</label>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <br>
-                                            <div class="row g-2">
-                                                <div class="col mb-2">
-                                                    <div class="form-floating form-floating-outline">
-                                                        <textarea type="text" id="show_alamatktp2" readonly name="" class="form-control"></textarea>
-                                                        <label for="holding_recruitment">ALAMAT</label>
                                                     </div>
                                                 </div>
                                             </div>
@@ -1376,10 +1367,10 @@
         $('#show_recruitmentinterviewid1').val(recruitment_interview_id);
         $('#show_recruitmentinterviewid2').val(recruitment_interview_id);
         $('#show_nama_pelamar3').text(nama_pelamar);
-        3
+
         $('#show_email3').text(nama_email);
         $('#show_nohp3').text(nama_nohp);
-        3
+
         $('#show_alamatktp3').text(nama_alamatktp);
         $('#show_namasdmi3').text(nama_sdmi);
         $('#show_tahunsdmi3').text(nama_tahunsdmi);
