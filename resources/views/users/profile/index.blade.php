@@ -9,6 +9,7 @@
 <link href="{{asset('assets/assets_users/vendor/lightgallery/dist/css/lightgallery.css')}}" rel="stylesheet">
 <link href="{{asset('assets/assets_users/vendor/lightgallery/dist/css/lg-thumbnail.css')}}" rel="stylesheet">
 <link href="{{asset('assets/assets_users/vendor/lightgallery/dist/css/lg-zoom.css')}}" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.6/cropper.css" />
 @endsection
 @section('content')
 <div class="fixed-content p-0" style=" border-radius: 10px; margin-top: 0%;box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19); ">
@@ -389,6 +390,9 @@
         <h5 class="title">Konfirmasi</h5>
         <p>Konfirmasi Pengambilan Foto</p>
         <img src="" id="preview_gallery" alt="">
+        <div class="col-md-4">
+            <div class="preview"></div>
+        </div>
         <form method="POST" action="{{ url('save_capture_profile') }}" enctype="multipart/form-data">
             @csrf
             <div class="col-md-6">
@@ -431,7 +435,11 @@
 <script src="{{asset('assets/assets_users/vendor/lightgallery/dist/lightgallery.umd.js')}}"></script>
 <script src="{{asset('assets/assets_users/vendor/lightgallery/dist/plugins/thumbnail/lg-thumbnail.umd.js')}}"></script>
 <script src="{{asset('assets/assets_users/vendor/lightgallery/dist/plugins/zoom/lg-zoom.umd.js')}}"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.6/cropper.js"></script>
 <script>
+    var cropper;
+    var image = document.getElementById('preview_gallery');
+
     function readURL(input) {
         if (input.files && input.files[0]) {
             var reader = new FileReader();
@@ -444,12 +452,21 @@
         }
     }
 
+
     $("#gallery_image").change(function() {
         var result = $(this).val();
         console.log(result);
         readURL(this);
+        Crop(this);
         var bsOffcanvas = new bootstrap.Offcanvas(document.getElementById('offcanvas_konfirmasi_edit_profile'))
-        bsOffcanvas.show()
+        bsOffcanvas.on('shown.bs.offcanvas', function() {
+            cropper = new Cropper(image, {
+                aspectRatio: 1,
+                viewMode: 3,
+                preview: '.preview'
+            });
+
+        });
     });
 
     function thisFileUpload() {

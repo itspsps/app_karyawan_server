@@ -208,7 +208,7 @@
                         </div>
                         <div class="tab-content">
                             <div class="tab-pane fade show active" id="navs-pills-justified-home" role="tabpanel">
-                                <table class="table" id="table_rekapdata" style="width: 100%;">
+                                <table class="table" id="table_rekapdata" style="width: 100%; font-size: 10pt;">
                                     <thead class="table-primary">
                                         <tr>
                                             <th rowspan="2" class="text-center">Detail</th>
@@ -216,18 +216,18 @@
                                             <th rowspan="2" class="text-center">ID&nbsp;Karyawan</th>
                                             <th rowspan="2" class="text-center">Nama&nbsp;Karyawan</th>
                                             <th colspan="3" class="text-center">Hadir&nbsp;Kerja</th>
-                                            <th colspan="3" class="text-center">Keterangan</th>
+                                            <th colspan="4" class="text-center">Keterangan</th>
                                             <th colspan="1" class="text-center">Tidak&nbsp;Hadir&nbsp;Kerja</th>
                                             <th rowspan="2" class="text-center">Total&nbsp;Keseluruhan</th>
                                         </tr>
                                         <tr>
                                             <th>Tepat&nbsp;Waktu</th>
-                                            <th>Telat&nbsp;Hadir&nbsp;<span>(>&nbsp;15&nbsp;Menit)</span></th>
-                                            <th>Telat&nbsp;Hadir&nbsp;<span>(<&nbsp;15&nbsp;Menit)< /span>
-                                            </th>
+                                            <th>Telat&nbsp;Hadir&nbsp;<span>(&nbsp;+&nbsp;15&nbsp;Menit)</span></th>
+                                            <th>Telat&nbsp;Hadir&nbsp;<span>(-&nbsp;15&nbsp;Menit)</span></th>
                                             <th>Izin</th>
                                             <th>Cuti</th>
                                             <th>Dinas</th>
+                                            <th>Libur</th>
                                             <th>Alfa</th>
                                         </tr>
                                     </thead>
@@ -239,21 +239,23 @@
                                 <table class="table" id="table_rekapdata1" style="width: 100%;">
                                     <thead class="table-primary">
                                         <tr>
+                                            <th rowspan="2" class="text-center">Detail</th>
                                             <th rowspan="2" class="text-center">No.</th>
                                             <th rowspan="2" class="text-center">ID&nbsp;Karyawan</th>
                                             <th rowspan="2" class="text-center">Nama&nbsp;Karyawan</th>
                                             <th colspan="3" class="text-center">Hadir&nbsp;Kerja</th>
-                                            <th colspan="3" class="text-center">Keterangan</th>
+                                            <th colspan="4" class="text-center">Keterangan</th>
                                             <th colspan="1" class="text-center">Tidak&nbsp;Hadir&nbsp;Kerja</th>
                                             <th rowspan="2" class="text-center">Total&nbsp;Keseluruhan</th>
                                         </tr>
                                         <tr>
                                             <th>Tepat&nbsp;Waktu</th>
-                                            <th>Telat&nbsp;Hadir(>15 Menit)</th>
-                                            <th>Telat&nbsp;Hadir('<'15 Menit)</th>
+                                            <th>Telat&nbsp;Hadir&nbsp;<span>(&nbsp;+&nbsp;15&nbsp;Menit)</span></th>
+                                            <th>Telat&nbsp;Hadir&nbsp;<span>(-&nbsp;15&nbsp;Menit)</span></th>
                                             <th>Izin</th>
                                             <th>Cuti</th>
                                             <th>Dinas</th>
+                                            <th>Libur</th>
                                             <th>Alfa</th>
                                         </tr>
                                     </thead>
@@ -281,16 +283,50 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
     <script src="https://cdn.datatables.net/buttons/3.1.2/js/buttons.html5.min.js"></script>
     <script src="https://cdn.datatables.net/buttons/3.1.2/js/buttons.print.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function() {
 
+
+        });
+    </script>
     <script>
         let holding = window.location.pathname.split("/").pop();
         $(document).ready(function() {
-            start_date = $('#start_date').val();
-            end_date = $('#end_date').val();
+            var start = moment().startOf('month');
+            var end = moment().endOf('month');
+            var lstart, lend;
+            var start_date = document.getElementById("start_date");
+            var end_date = document.getElementById("end_date");
+
             departemen_filter = $('#departemen_filter').val();
             divisi_filter = $('#divisi_filter').val();
             bagian_filter = $('#bagian_filter').val();
             jabatan_filter = $('#jabatan_filter').val();
+
+            function detail(start, end) {
+                // console.log(start, end);
+                $('#reportrange span').html(start.format('D MMMM YYYY') + ' - ' + end.format('D MMMM YYYY'));
+                lstart = moment($('#reportrange').data('daterangepicker').startDate).format('YYYY-MM-DD');
+                lend = moment($('#reportrange').data('daterangepicker').endDate).format('YYYY-MM-DD');
+                start_date.value = lstart;
+                end_date.value = lend;
+                load_data(departemen_filter, divisi_filter, bagian_filter, jabatan_filter, lstart, lend);
+            }
+
+            $('#reportrange').daterangepicker({
+                startDate: start,
+                endDate: end,
+                ranges: {
+                    'Today': [moment(), moment()],
+                    'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+                    'Last 7 Days': [moment().subtract(6, 'days'), moment()],
+                    'Last 30 Days': [moment().subtract(29, 'days'), moment()],
+                    'This Month': [moment().startOf('month'), moment().endOf('month')],
+                    'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+                }
+            }, detail);
+
+            detail(start, end);
             $('#departemen_filter').change(function() {
                 departemen_filter = $(this).val();
                 divisi_filter = $('#divisi_filter').val();
@@ -392,7 +428,7 @@
                 // $('#table_rekapdata').DataTable().destroy();
                 load_data(departemen_filter, divisi_filter, bagian_filter, jabatan_filter, start_date, end_date);
             })
-            load_data(departemen_filter, divisi_filter, bagian_filter, jabatan_filter, start_date, end_date);
+            // load_data(departemen_filter, divisi_filter, bagian_filter, jabatan_filter, start_date, end_date);
 
             function newexportaction(e, dt, button, config) {
                 var self = this;
@@ -437,8 +473,6 @@
             }
 
             function load_data(departemen_filter = '', divisi_filter = '', bagian_filter = '', jabatan_filter = '', start_date = '', end_date = '') {
-                start_date = $('#start_date').val();
-                end_date = $('#end_date').val();
                 // console.log(start_date, end_date);
                 $('#table_rekapdata').DataTable().destroy();
                 var table = $('#table_rekapdata').DataTable({
@@ -556,6 +590,10 @@
                             name: 'total_dinas_true'
                         },
                         {
+                            data: 'total_libur',
+                            name: 'total_libur'
+                        },
+                        {
                             data: 'tidak_hadir_kerja',
                             name: 'tidak_hadir_kerja'
                         },
@@ -634,44 +672,6 @@
             })
         });
     </script>
-    <script type="text/javascript">
-        $(function() {
 
-            var start = moment().startOf('month');
-            var end = moment().endOf('month');
-            var lstart, lend;
-            var start_date = document.getElementById("start_date");
-            var end_date = document.getElementById("end_date");
-            var departemen_filter = $('#departemen_filter').val();
-            var divisi_filter = $('#divisi_filter').val();
-            var bagian_filter = $('#bagian_filter').val();
-            var jabatan_filter = $('#jabatan_filter').val();
-
-            function detail(departemen_filter, divisi_filter, bagian_filter, jabatan_filter, start, end) {
-                $('#reportrange span').html(start.format('D MMMM YYYY') + ' - ' + end.format('D MMMM YYYY'));
-                lstart = moment($('#reportrange').data('daterangepicker').startDate).format('YYYY-MM-DD');
-                lend = moment($('#reportrange').data('daterangepicker').endDate).format('YYYY-MM-DD');
-                start_date.value = lstart;
-                end_date.value = lend;
-                // load_data(departemen_filter, divisi_filter, bagian_filter, jabatan_filter, start_date, end_date);
-            }
-
-            $('#reportrange').daterangepicker({
-                startDate: start,
-                endDate: end,
-                ranges: {
-                    'Today': [moment(), moment()],
-                    'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
-                    'Last 7 Days': [moment().subtract(6, 'days'), moment()],
-                    'Last 30 Days': [moment().subtract(29, 'days'), moment()],
-                    'This Month': [moment().startOf('month'), moment().endOf('month')],
-                    'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
-                }
-            }, detail);
-
-            detail(departemen_filter, divisi_filter, bagian_filter, jabatan_filter, start, end);
-
-        });
-    </script>
 
     @endsection

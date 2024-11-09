@@ -349,7 +349,7 @@
                                             <th>Divisi</th>
                                             <th>Jabatan</th>
                                             <th>Penempatan&nbsp;Kerja</th>
-                                            <th>Opsi</th>
+                                            <th>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Opsi&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
                                         </tr>
                                     </thead>
                                     <tbody class="table-border-bottom-0">

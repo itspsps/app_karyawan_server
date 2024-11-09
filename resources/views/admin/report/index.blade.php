@@ -18,7 +18,7 @@
             <div class="card">
                 <div class="card-header">
                     <div class="d-flex align-items-center justify-content-between">
-                        <h5 class="card-title m-0 me-2">REKAP DATA ABSENSI KARYAWAN</h5>
+                        <h5 class="card-title m-0 me-2">REPORT ABSENSI KARYAWAN</h5>
                     </div>
                 </div>
                 <div class="card-body">

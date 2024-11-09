@@ -82,17 +82,25 @@ class IzinUserController extends Controller
                                         ->where('jabatans.nama_jabatan', $get_atasan_site->nama_jabatan)
                                         ->where('divisis.nama_divisi', $get_atasan_site->nama_divisi)
                                         ->where('bagians.nama_bagian', $get_atasan_site->nama_bagian)
-                                        ->whereIn('jabatans.holding', ['sp', 'sip'])
+                                        ->where(function ($query) {
+                                            $query->where('jabatans.holding', 'sp')
+                                                ->orWhere('jabatans.holding', 'sip');
+                                        })
                                         ->orderBy('jabatans.holding', 'DESC')
                                         ->select('jabatans.id', 'jabatans.atasan_id', 'divisis.nama_divisi', 'jabatans.nama_jabatan', 'bagians.nama_bagian', 'jabatans.holding')
                                         ->first();
+                                    // dd($get_atasan_more);
                                 } else if ($get_atasan_site->holding == 'sip') {
                                     $get_atasan_more = Jabatan::Join('divisis', 'divisis.id', 'jabatans.divisi_id')
                                         ->Join('bagians', 'bagians.id', 'jabatans.bagian_id')
                                         ->where('jabatans.nama_jabatan', $get_atasan_site->nama_jabatan)
                                         ->where('divisis.nama_divisi', $get_atasan_site->nama_divisi)
                                         ->where('bagians.nama_bagian', $get_atasan_site->nama_bagian)
-                                        ->whereIn('jabatans.holding', ['sp', 'sps'])
+                                        ->where(function ($query) {
+                                            $query->where('jabatans.holding', 'sp')
+                                                ->orWhere('jabatans.holding', 'sps');
+                                        })
+                                        // ->whereIn('jabatans.holding', ['sp', 'sps'])
                                         ->orderBy('jabatans.holding', 'ASC')
                                         ->select('jabatans.id', 'jabatans.atasan_id', 'divisis.nama_divisi', 'jabatans.nama_jabatan', 'bagians.nama_bagian', 'jabatans.holding')
                                         ->first();
@@ -102,10 +110,12 @@ class IzinUserController extends Controller
                                         ->where('jabatans.nama_jabatan', $get_atasan_site->nama_jabatan)
                                         ->where('divisis.nama_divisi', $get_atasan_site->nama_divisi)
                                         ->where('bagians.nama_bagian', $get_atasan_site->nama_bagian)
-                                        ->whereIn('jabatans.holding', ['sps', 'sip'])
+                                        ->where(function ($query) {
+                                            $query->where('jabatans.holding', 'sps')
+                                                ->orWhere('jabatans.holding', 'sip');
+                                        })
                                         ->orderBy('jabatans.holding', 'DESC')
                                         ->select('jabatans.id', 'jabatans.atasan_id', 'divisis.nama_divisi', 'jabatans.nama_jabatan', 'bagians.nama_bagian', 'jabatans.holding')
-                                        ->orderBy('jabatans.holding', 'DESC')
                                         ->first();
                                 }
                                 // dd($get_atasan_more);
@@ -156,10 +166,12 @@ class IzinUserController extends Controller
                                             ->where('jabatans.nama_jabatan', $get_atasan_site->nama_jabatan)
                                             ->where('divisis.nama_divisi', $get_atasan_site->nama_divisi)
                                             ->where('bagians.nama_bagian', $get_atasan_site->nama_bagian)
-                                            ->whereIn('jabatans.holding', ['sp', 'sip'])
+                                            ->where(function ($query) {
+                                                $query->where('jabatans.holding', 'sp')
+                                                    ->orWhere('jabatans.holding', 'sip');
+                                            })
                                             ->orderBy('jabatans.holding', 'DESC')
                                             ->select('jabatans.id', 'jabatans.atasan_id', 'divisis.nama_divisi', 'jabatans.nama_jabatan', 'bagians.nama_bagian', 'jabatans.holding')
-                                            ->orderBy('jabatans.holding', 'DESC')
                                             ->first();
                                         // dd($get_atasan_more);
                                     } else if ($get_atasan_site->holding == 'sip') {
@@ -168,7 +180,11 @@ class IzinUserController extends Controller
                                             ->where('jabatans.nama_jabatan', $get_atasan_site->nama_jabatan)
                                             ->where('divisis.nama_divisi', $get_atasan_site->nama_divisi)
                                             ->where('bagians.nama_bagian', $get_atasan_site->nama_bagian)
-                                            ->whereIn('jabatans.holding', ['sp', 'sps'])
+                                            ->where(function ($query) {
+                                                $query->where('jabatans.holding', 'sp')
+                                                    ->orWhere('jabatans.holding', 'sps');
+                                            })
+                                            // ->whereIn('jabatans.holding', ['sp', 'sps'])
                                             ->orderBy('jabatans.holding', 'ASC')
                                             ->select('jabatans.id', 'jabatans.atasan_id', 'divisis.nama_divisi', 'jabatans.nama_jabatan', 'bagians.nama_bagian', 'jabatans.holding')
                                             ->first();
@@ -178,10 +194,12 @@ class IzinUserController extends Controller
                                             ->where('jabatans.nama_jabatan', $get_atasan_site->nama_jabatan)
                                             ->where('divisis.nama_divisi', $get_atasan_site->nama_divisi)
                                             ->where('bagians.nama_bagian', $get_atasan_site->nama_bagian)
-                                            ->whereIn('jabatans.holding', ['sps', 'sip'])
+                                            ->where(function ($query) {
+                                                $query->where('jabatans.holding', 'sps')
+                                                    ->orWhere('jabatans.holding', 'sip');
+                                            })
                                             ->orderBy('jabatans.holding', 'DESC')
                                             ->select('jabatans.id', 'jabatans.atasan_id', 'divisis.nama_divisi', 'jabatans.nama_jabatan', 'bagians.nama_bagian', 'jabatans.holding')
-                                            ->orderBy('jabatans.holding', 'DESC')
                                             ->first();
                                     }
                                     if ($get_atasan_more == NULL) {
@@ -241,18 +259,25 @@ class IzinUserController extends Controller
                                         ->where('jabatans.nama_jabatan', $get_atasan_site->nama_jabatan)
                                         ->where('divisis.nama_divisi', $get_atasan_site->nama_divisi)
                                         ->where('bagians.nama_bagian', $get_atasan_site->nama_bagian)
-                                        ->whereIn('jabatans.holding', ['sp', 'sip'])
+                                        ->where(function ($query) {
+                                            $query->where('jabatans.holding', 'sp')
+                                                ->orWhere('jabatans.holding', 'sip');
+                                        })
                                         ->orderBy('jabatans.holding', 'DESC')
                                         ->select('jabatans.id', 'jabatans.atasan_id', 'divisis.nama_divisi', 'jabatans.nama_jabatan', 'bagians.nama_bagian', 'jabatans.holding')
-                                        ->orderBy('jabatans.holding', 'DESC')
                                         ->first();
+                                    // dd($get_atasan_more);
                                 } else if ($get_atasan_site->holding == 'sip') {
                                     $get_atasan_more = Jabatan::Join('divisis', 'divisis.id', 'jabatans.divisi_id')
                                         ->Join('bagians', 'bagians.id', 'jabatans.bagian_id')
                                         ->where('jabatans.nama_jabatan', $get_atasan_site->nama_jabatan)
                                         ->where('divisis.nama_divisi', $get_atasan_site->nama_divisi)
                                         ->where('bagians.nama_bagian', $get_atasan_site->nama_bagian)
-                                        ->whereIn('jabatans.holding', ['sp', 'sps'])
+                                        ->where(function ($query) {
+                                            $query->where('jabatans.holding', 'sp')
+                                                ->orWhere('jabatans.holding', 'sps');
+                                        })
+                                        // ->whereIn('jabatans.holding', ['sp', 'sps'])
                                         ->orderBy('jabatans.holding', 'ASC')
                                         ->select('jabatans.id', 'jabatans.atasan_id', 'divisis.nama_divisi', 'jabatans.nama_jabatan', 'bagians.nama_bagian', 'jabatans.holding')
                                         ->first();
@@ -262,10 +287,12 @@ class IzinUserController extends Controller
                                         ->where('jabatans.nama_jabatan', $get_atasan_site->nama_jabatan)
                                         ->where('divisis.nama_divisi', $get_atasan_site->nama_divisi)
                                         ->where('bagians.nama_bagian', $get_atasan_site->nama_bagian)
-                                        ->whereIn('jabatans.holding', ['sps', 'sip'])
+                                        ->where(function ($query) {
+                                            $query->where('jabatans.holding', 'sps')
+                                                ->orWhere('jabatans.holding', 'sip');
+                                        })
                                         ->orderBy('jabatans.holding', 'DESC')
                                         ->select('jabatans.id', 'jabatans.atasan_id', 'divisis.nama_divisi', 'jabatans.nama_jabatan', 'bagians.nama_bagian', 'jabatans.holding')
-                                        ->orderBy('jabatans.holding', 'DESC')
                                         ->first();
                                 }
                                 // dd($get_atasan_more);
@@ -312,17 +339,25 @@ class IzinUserController extends Controller
                                             ->where('jabatans.nama_jabatan', $get_atasan_site->nama_jabatan)
                                             ->where('divisis.nama_divisi', $get_atasan_site->nama_divisi)
                                             ->where('bagians.nama_bagian', $get_atasan_site->nama_bagian)
-                                            ->whereIn('jabatans.holding', ['sp', 'sip'])
+                                            ->where(function ($query) {
+                                                $query->where('jabatans.holding', 'sp')
+                                                    ->orWhere('jabatans.holding', 'sip');
+                                            })
                                             ->orderBy('jabatans.holding', 'DESC')
                                             ->select('jabatans.id', 'jabatans.atasan_id', 'divisis.nama_divisi', 'jabatans.nama_jabatan', 'bagians.nama_bagian', 'jabatans.holding')
                                             ->first();
+                                        // dd($get_atasan_more);
                                     } else if ($get_atasan_site->holding == 'sip') {
                                         $get_atasan_more = Jabatan::Join('divisis', 'divisis.id', 'jabatans.divisi_id')
                                             ->Join('bagians', 'bagians.id', 'jabatans.bagian_id')
                                             ->where('jabatans.nama_jabatan', $get_atasan_site->nama_jabatan)
                                             ->where('divisis.nama_divisi', $get_atasan_site->nama_divisi)
                                             ->where('bagians.nama_bagian', $get_atasan_site->nama_bagian)
-                                            ->whereIn('jabatans.holding', ['sp', 'sps'])
+                                            ->where(function ($query) {
+                                                $query->where('jabatans.holding', 'sp')
+                                                    ->orWhere('jabatans.holding', 'sps');
+                                            })
+                                            // ->whereIn('jabatans.holding', ['sp', 'sps'])
                                             ->orderBy('jabatans.holding', 'ASC')
                                             ->select('jabatans.id', 'jabatans.atasan_id', 'divisis.nama_divisi', 'jabatans.nama_jabatan', 'bagians.nama_bagian', 'jabatans.holding')
                                             ->first();
@@ -332,7 +367,10 @@ class IzinUserController extends Controller
                                             ->where('jabatans.nama_jabatan', $get_atasan_site->nama_jabatan)
                                             ->where('divisis.nama_divisi', $get_atasan_site->nama_divisi)
                                             ->where('bagians.nama_bagian', $get_atasan_site->nama_bagian)
-                                            ->whereIn('jabatans.holding', ['sps', 'sip'])
+                                            ->where(function ($query) {
+                                                $query->where('jabatans.holding', 'sps')
+                                                    ->orWhere('jabatans.holding', 'sip');
+                                            })
                                             ->orderBy('jabatans.holding', 'DESC')
                                             ->select('jabatans.id', 'jabatans.atasan_id', 'divisis.nama_divisi', 'jabatans.nama_jabatan', 'bagians.nama_bagian', 'jabatans.holding')
                                             ->first();
@@ -395,18 +433,25 @@ class IzinUserController extends Controller
                                         ->where('jabatans.nama_jabatan', $get_atasan_site->nama_jabatan)
                                         ->where('divisis.nama_divisi', $get_atasan_site->nama_divisi)
                                         ->where('bagians.nama_bagian', $get_atasan_site->nama_bagian)
-                                        ->whereIn('jabatans.holding', ['sp', 'sip'])
+                                        ->where(function ($query) {
+                                            $query->where('jabatans.holding', 'sp')
+                                                ->orWhere('jabatans.holding', 'sip');
+                                        })
                                         ->orderBy('jabatans.holding', 'DESC')
                                         ->select('jabatans.id', 'jabatans.atasan_id', 'divisis.nama_divisi', 'jabatans.nama_jabatan', 'bagians.nama_bagian', 'jabatans.holding')
-                                        ->orderBy('jabatans.holding', 'DESC')
                                         ->first();
+                                    // dd($get_atasan_more);
                                 } else if ($get_atasan_site->holding == 'sip') {
                                     $get_atasan_more = Jabatan::Join('divisis', 'divisis.id', 'jabatans.divisi_id')
                                         ->Join('bagians', 'bagians.id', 'jabatans.bagian_id')
                                         ->where('jabatans.nama_jabatan', $get_atasan_site->nama_jabatan)
                                         ->where('divisis.nama_divisi', $get_atasan_site->nama_divisi)
                                         ->where('bagians.nama_bagian', $get_atasan_site->nama_bagian)
-                                        ->whereIn('jabatans.holding', ['sp', 'sps'])
+                                        ->where(function ($query) {
+                                            $query->where('jabatans.holding', 'sp')
+                                                ->orWhere('jabatans.holding', 'sps');
+                                        })
+                                        // ->whereIn('jabatans.holding', ['sp', 'sps'])
                                         ->orderBy('jabatans.holding', 'ASC')
                                         ->select('jabatans.id', 'jabatans.atasan_id', 'divisis.nama_divisi', 'jabatans.nama_jabatan', 'bagians.nama_bagian', 'jabatans.holding')
                                         ->first();
@@ -416,11 +461,12 @@ class IzinUserController extends Controller
                                         ->where('jabatans.nama_jabatan', $get_atasan_site->nama_jabatan)
                                         ->where('divisis.nama_divisi', $get_atasan_site->nama_divisi)
                                         ->where('bagians.nama_bagian', $get_atasan_site->nama_bagian)
-                                        ->where('jabatans.holding', 'sps')
-                                        ->whereIn('jabatans.holding', ['sps', 'sip'])
+                                        ->where(function ($query) {
+                                            $query->where('jabatans.holding', 'sps')
+                                                ->orWhere('jabatans.holding', 'sip');
+                                        })
                                         ->orderBy('jabatans.holding', 'DESC')
                                         ->select('jabatans.id', 'jabatans.atasan_id', 'divisis.nama_divisi', 'jabatans.nama_jabatan', 'bagians.nama_bagian', 'jabatans.holding')
-                                        ->orderBy('jabatans.holding', 'DESC')
                                         ->first();
                                 }
                                 // dd($get_atasan_more);
@@ -471,17 +517,25 @@ class IzinUserController extends Controller
                                             ->where('jabatans.nama_jabatan', $get_atasan_site->nama_jabatan)
                                             ->where('divisis.nama_divisi', $get_atasan_site->nama_divisi)
                                             ->where('bagians.nama_bagian', $get_atasan_site->nama_bagian)
-                                            ->whereIn('jabatans.holding', ['sp', 'sip'])
+                                            ->where(function ($query) {
+                                                $query->where('jabatans.holding', 'sp')
+                                                    ->orWhere('jabatans.holding', 'sip');
+                                            })
                                             ->orderBy('jabatans.holding', 'DESC')
                                             ->select('jabatans.id', 'jabatans.atasan_id', 'divisis.nama_divisi', 'jabatans.nama_jabatan', 'bagians.nama_bagian', 'jabatans.holding')
                                             ->first();
+                                        // dd($get_atasan_more);
                                     } else if ($get_atasan_site->holding == 'sip') {
                                         $get_atasan_more = Jabatan::Join('divisis', 'divisis.id', 'jabatans.divisi_id')
                                             ->Join('bagians', 'bagians.id', 'jabatans.bagian_id')
                                             ->where('jabatans.nama_jabatan', $get_atasan_site->nama_jabatan)
                                             ->where('divisis.nama_divisi', $get_atasan_site->nama_divisi)
                                             ->where('bagians.nama_bagian', $get_atasan_site->nama_bagian)
-                                            ->whereIn('jabatans.holding', ['sp', 'sps'])
+                                            ->where(function ($query) {
+                                                $query->where('jabatans.holding', 'sp')
+                                                    ->orWhere('jabatans.holding', 'sps');
+                                            })
+                                            // ->whereIn('jabatans.holding', ['sp', 'sps'])
                                             ->orderBy('jabatans.holding', 'ASC')
                                             ->select('jabatans.id', 'jabatans.atasan_id', 'divisis.nama_divisi', 'jabatans.nama_jabatan', 'bagians.nama_bagian', 'jabatans.holding')
                                             ->first();
@@ -491,8 +545,10 @@ class IzinUserController extends Controller
                                             ->where('jabatans.nama_jabatan', $get_atasan_site->nama_jabatan)
                                             ->where('divisis.nama_divisi', $get_atasan_site->nama_divisi)
                                             ->where('bagians.nama_bagian', $get_atasan_site->nama_bagian)
-                                            ->where('jabatans.holding', 'sps')
-                                            ->whereIn('jabatans.holding', ['sps', 'sip'])
+                                            ->where(function ($query) {
+                                                $query->where('jabatans.holding', 'sps')
+                                                    ->orWhere('jabatans.holding', 'sip');
+                                            })
                                             ->orderBy('jabatans.holding', 'DESC')
                                             ->select('jabatans.id', 'jabatans.atasan_id', 'divisis.nama_divisi', 'jabatans.nama_jabatan', 'bagians.nama_bagian', 'jabatans.holding')
                                             ->first();
@@ -555,18 +611,25 @@ class IzinUserController extends Controller
                                         ->where('jabatans.nama_jabatan', $get_atasan_site->nama_jabatan)
                                         ->where('divisis.nama_divisi', $get_atasan_site->nama_divisi)
                                         ->where('bagians.nama_bagian', $get_atasan_site->nama_bagian)
-                                        ->whereIn('jabatans.holding', ['sp', 'sip'])
+                                        ->where(function ($query) {
+                                            $query->where('jabatans.holding', 'sp')
+                                                ->orWhere('jabatans.holding', 'sip');
+                                        })
                                         ->orderBy('jabatans.holding', 'DESC')
                                         ->select('jabatans.id', 'jabatans.atasan_id', 'divisis.nama_divisi', 'jabatans.nama_jabatan', 'bagians.nama_bagian', 'jabatans.holding')
-                                        ->orderBy('jabatans.holding', 'DESC')
                                         ->first();
+                                    // dd($get_atasan_more);
                                 } else if ($get_atasan_site->holding == 'sip') {
                                     $get_atasan_more = Jabatan::Join('divisis', 'divisis.id', 'jabatans.divisi_id')
                                         ->Join('bagians', 'bagians.id', 'jabatans.bagian_id')
                                         ->where('jabatans.nama_jabatan', $get_atasan_site->nama_jabatan)
                                         ->where('divisis.nama_divisi', $get_atasan_site->nama_divisi)
                                         ->where('bagians.nama_bagian', $get_atasan_site->nama_bagian)
-                                        ->whereIn('jabatans.holding', ['sp', 'sps'])
+                                        ->where(function ($query) {
+                                            $query->where('jabatans.holding', 'sp')
+                                                ->orWhere('jabatans.holding', 'sps');
+                                        })
+                                        // ->whereIn('jabatans.holding', ['sp', 'sps'])
                                         ->orderBy('jabatans.holding', 'ASC')
                                         ->select('jabatans.id', 'jabatans.atasan_id', 'divisis.nama_divisi', 'jabatans.nama_jabatan', 'bagians.nama_bagian', 'jabatans.holding')
                                         ->first();
@@ -576,10 +639,12 @@ class IzinUserController extends Controller
                                         ->where('jabatans.nama_jabatan', $get_atasan_site->nama_jabatan)
                                         ->where('divisis.nama_divisi', $get_atasan_site->nama_divisi)
                                         ->where('bagians.nama_bagian', $get_atasan_site->nama_bagian)
-                                        ->whereIn('jabatans.holding', ['sps', 'sip'])
+                                        ->where(function ($query) {
+                                            $query->where('jabatans.holding', 'sps')
+                                                ->orWhere('jabatans.holding', 'sip');
+                                        })
                                         ->orderBy('jabatans.holding', 'DESC')
                                         ->select('jabatans.id', 'jabatans.atasan_id', 'divisis.nama_divisi', 'jabatans.nama_jabatan', 'bagians.nama_bagian', 'jabatans.holding')
-                                        ->orderBy('jabatans.holding', 'DESC')
                                         ->first();
                                 }
                                 // dd($get_atasan_more);
@@ -630,18 +695,26 @@ class IzinUserController extends Controller
                                             ->where('jabatans.nama_jabatan', $get_atasan_site->nama_jabatan)
                                             ->where('divisis.nama_divisi', $get_atasan_site->nama_divisi)
                                             ->where('bagians.nama_bagian', $get_atasan_site->nama_bagian)
-                                            ->whereIn('jabatans.holding', ['sp', 'sip'])
-                                            ->orderBy('jabatans.holding', 'ASC')
+                                            ->where(function ($query) {
+                                                $query->where('jabatans.holding', 'sp')
+                                                    ->orWhere('jabatans.holding', 'sip');
+                                            })
+                                            ->orderBy('jabatans.holding', 'DESC')
                                             ->select('jabatans.id', 'jabatans.atasan_id', 'divisis.nama_divisi', 'jabatans.nama_jabatan', 'bagians.nama_bagian', 'jabatans.holding')
                                             ->first();
+                                        // dd($get_atasan_more);
                                     } else if ($get_atasan_site->holding == 'sip') {
                                         $get_atasan_more = Jabatan::Join('divisis', 'divisis.id', 'jabatans.divisi_id')
                                             ->Join('bagians', 'bagians.id', 'jabatans.bagian_id')
                                             ->where('jabatans.nama_jabatan', $get_atasan_site->nama_jabatan)
                                             ->where('divisis.nama_divisi', $get_atasan_site->nama_divisi)
                                             ->where('bagians.nama_bagian', $get_atasan_site->nama_bagian)
-                                            ->whereIn('jabatans.holding', ['sp', 'sps'])
-                                            ->orderBy('jabatans.holding', 'DESC')
+                                            ->where(function ($query) {
+                                                $query->where('jabatans.holding', 'sp')
+                                                    ->orWhere('jabatans.holding', 'sps');
+                                            })
+                                            // ->whereIn('jabatans.holding', ['sp', 'sps'])
+                                            ->orderBy('jabatans.holding', 'ASC')
                                             ->select('jabatans.id', 'jabatans.atasan_id', 'divisis.nama_divisi', 'jabatans.nama_jabatan', 'bagians.nama_bagian', 'jabatans.holding')
                                             ->first();
                                     } else {
@@ -650,7 +723,10 @@ class IzinUserController extends Controller
                                             ->where('jabatans.nama_jabatan', $get_atasan_site->nama_jabatan)
                                             ->where('divisis.nama_divisi', $get_atasan_site->nama_divisi)
                                             ->where('bagians.nama_bagian', $get_atasan_site->nama_bagian)
-                                            ->whereIn('jabatans.holding', ['sps', 'sip'])
+                                            ->where(function ($query) {
+                                                $query->where('jabatans.holding', 'sps')
+                                                    ->orWhere('jabatans.holding', 'sip');
+                                            })
                                             ->orderBy('jabatans.holding', 'DESC')
                                             ->select('jabatans.id', 'jabatans.atasan_id', 'divisis.nama_divisi', 'jabatans.nama_jabatan', 'bagians.nama_bagian', 'jabatans.holding')
                                             ->first();
@@ -713,18 +789,25 @@ class IzinUserController extends Controller
                                         ->where('jabatans.nama_jabatan', $get_atasan_site->nama_jabatan)
                                         ->where('divisis.nama_divisi', $get_atasan_site->nama_divisi)
                                         ->where('bagians.nama_bagian', $get_atasan_site->nama_bagian)
-                                        ->whereIn('jabatans.holding', ['sp', 'sip'])
+                                        ->where(function ($query) {
+                                            $query->where('jabatans.holding', 'sp')
+                                                ->orWhere('jabatans.holding', 'sip');
+                                        })
                                         ->orderBy('jabatans.holding', 'DESC')
                                         ->select('jabatans.id', 'jabatans.atasan_id', 'divisis.nama_divisi', 'jabatans.nama_jabatan', 'bagians.nama_bagian', 'jabatans.holding')
-                                        ->orderBy('jabatans.holding', 'DESC')
                                         ->first();
+                                    // dd($get_atasan_more);
                                 } else if ($get_atasan_site->holding == 'sip') {
                                     $get_atasan_more = Jabatan::Join('divisis', 'divisis.id', 'jabatans.divisi_id')
                                         ->Join('bagians', 'bagians.id', 'jabatans.bagian_id')
                                         ->where('jabatans.nama_jabatan', $get_atasan_site->nama_jabatan)
                                         ->where('divisis.nama_divisi', $get_atasan_site->nama_divisi)
                                         ->where('bagians.nama_bagian', $get_atasan_site->nama_bagian)
-                                        ->whereIn('jabatans.holding', ['sp', 'sps'])
+                                        ->where(function ($query) {
+                                            $query->where('jabatans.holding', 'sp')
+                                                ->orWhere('jabatans.holding', 'sps');
+                                        })
+                                        // ->whereIn('jabatans.holding', ['sp', 'sps'])
                                         ->orderBy('jabatans.holding', 'ASC')
                                         ->select('jabatans.id', 'jabatans.atasan_id', 'divisis.nama_divisi', 'jabatans.nama_jabatan', 'bagians.nama_bagian', 'jabatans.holding')
                                         ->first();
@@ -734,10 +817,12 @@ class IzinUserController extends Controller
                                         ->where('jabatans.nama_jabatan', $get_atasan_site->nama_jabatan)
                                         ->where('divisis.nama_divisi', $get_atasan_site->nama_divisi)
                                         ->where('bagians.nama_bagian', $get_atasan_site->nama_bagian)
-                                        ->whereIn('jabatans.holding', ['sps', 'sip'])
+                                        ->where(function ($query) {
+                                            $query->where('jabatans.holding', 'sps')
+                                                ->orWhere('jabatans.holding', 'sip');
+                                        })
                                         ->orderBy('jabatans.holding', 'DESC')
                                         ->select('jabatans.id', 'jabatans.atasan_id', 'divisis.nama_divisi', 'jabatans.nama_jabatan', 'bagians.nama_bagian', 'jabatans.holding')
-                                        ->orderBy('jabatans.holding', 'DESC')
                                         ->first();
                                 }
                                 // dd($get_atasan_more);
@@ -790,17 +875,25 @@ class IzinUserController extends Controller
                                             ->where('jabatans.nama_jabatan', $get_atasan_site->nama_jabatan)
                                             ->where('divisis.nama_divisi', $get_atasan_site->nama_divisi)
                                             ->where('bagians.nama_bagian', $get_atasan_site->nama_bagian)
-                                            ->whereIn('jabatans.holding', ['sp', 'sip'])
+                                            ->where(function ($query) {
+                                                $query->where('jabatans.holding', 'sp')
+                                                    ->orWhere('jabatans.holding', 'sip');
+                                            })
                                             ->orderBy('jabatans.holding', 'DESC')
                                             ->select('jabatans.id', 'jabatans.atasan_id', 'divisis.nama_divisi', 'jabatans.nama_jabatan', 'bagians.nama_bagian', 'jabatans.holding')
                                             ->first();
+                                        // dd($get_atasan_more);
                                     } else if ($get_atasan_site->holding == 'sip') {
                                         $get_atasan_more = Jabatan::Join('divisis', 'divisis.id', 'jabatans.divisi_id')
                                             ->Join('bagians', 'bagians.id', 'jabatans.bagian_id')
                                             ->where('jabatans.nama_jabatan', $get_atasan_site->nama_jabatan)
                                             ->where('divisis.nama_divisi', $get_atasan_site->nama_divisi)
                                             ->where('bagians.nama_bagian', $get_atasan_site->nama_bagian)
-                                            ->whereIn('jabatans.holding', ['sp', 'sps'])
+                                            ->where(function ($query) {
+                                                $query->where('jabatans.holding', 'sp')
+                                                    ->orWhere('jabatans.holding', 'sps');
+                                            })
+                                            // ->whereIn('jabatans.holding', ['sp', 'sps'])
                                             ->orderBy('jabatans.holding', 'ASC')
                                             ->select('jabatans.id', 'jabatans.atasan_id', 'divisis.nama_divisi', 'jabatans.nama_jabatan', 'bagians.nama_bagian', 'jabatans.holding')
                                             ->first();
@@ -810,11 +903,13 @@ class IzinUserController extends Controller
                                             ->where('jabatans.nama_jabatan', $get_atasan_site->nama_jabatan)
                                             ->where('divisis.nama_divisi', $get_atasan_site->nama_divisi)
                                             ->where('bagians.nama_bagian', $get_atasan_site->nama_bagian)
-                                            ->whereIn('jabatans.holding', ['sps', 'sip'])
+                                            ->where(function ($query) {
+                                                $query->where('jabatans.holding', 'sps')
+                                                    ->orWhere('jabatans.holding', 'sip');
+                                            })
                                             ->orderBy('jabatans.holding', 'DESC')
                                             ->select('jabatans.id', 'jabatans.atasan_id', 'divisis.nama_divisi', 'jabatans.nama_jabatan', 'bagians.nama_bagian', 'jabatans.holding')
                                             ->first();
-                                        // dd($get_atasan_more);
                                     }
                                     if ($get_atasan_more == NULL) {
                                         $getUserAtasan  = NULL;
@@ -872,17 +967,25 @@ class IzinUserController extends Controller
                                         ->where('jabatans.nama_jabatan', $get_atasan_site->nama_jabatan)
                                         ->where('divisis.nama_divisi', $get_atasan_site->nama_divisi)
                                         ->where('bagians.nama_bagian', $get_atasan_site->nama_bagian)
-                                        ->whereIn('jabatans.holding', ['sp', 'sip'])
-                                        ->select('jabatans.id', 'jabatans.atasan_id', 'divisis.nama_divisi', 'jabatans.nama_jabatan', 'bagians.nama_bagian', 'jabatans.holding')
+                                        ->where(function ($query) {
+                                            $query->where('jabatans.holding', 'sp')
+                                                ->orWhere('jabatans.holding', 'sip');
+                                        })
                                         ->orderBy('jabatans.holding', 'DESC')
+                                        ->select('jabatans.id', 'jabatans.atasan_id', 'divisis.nama_divisi', 'jabatans.nama_jabatan', 'bagians.nama_bagian', 'jabatans.holding')
                                         ->first();
+                                    // dd($get_atasan_more);
                                 } else if ($get_atasan_site->holding == 'sip') {
                                     $get_atasan_more = Jabatan::Join('divisis', 'divisis.id', 'jabatans.divisi_id')
                                         ->Join('bagians', 'bagians.id', 'jabatans.bagian_id')
                                         ->where('jabatans.nama_jabatan', $get_atasan_site->nama_jabatan)
                                         ->where('divisis.nama_divisi', $get_atasan_site->nama_divisi)
                                         ->where('bagians.nama_bagian', $get_atasan_site->nama_bagian)
-                                        ->whereIn('jabatans.holding', ['sps', 'sp'])
+                                        ->where(function ($query) {
+                                            $query->where('jabatans.holding', 'sp')
+                                                ->orWhere('jabatans.holding', 'sps');
+                                        })
+                                        // ->whereIn('jabatans.holding', ['sp', 'sps'])
                                         ->orderBy('jabatans.holding', 'ASC')
                                         ->select('jabatans.id', 'jabatans.atasan_id', 'divisis.nama_divisi', 'jabatans.nama_jabatan', 'bagians.nama_bagian', 'jabatans.holding')
                                         ->first();
@@ -892,9 +995,12 @@ class IzinUserController extends Controller
                                         ->where('jabatans.nama_jabatan', $get_atasan_site->nama_jabatan)
                                         ->where('divisis.nama_divisi', $get_atasan_site->nama_divisi)
                                         ->where('bagians.nama_bagian', $get_atasan_site->nama_bagian)
-                                        ->where('jabatans.holding', ['sps'])
-                                        ->select('jabatans.id', 'jabatans.atasan_id', 'divisis.nama_divisi', 'jabatans.nama_jabatan', 'bagians.nama_bagian', 'jabatans.holding')
+                                        ->where(function ($query) {
+                                            $query->where('jabatans.holding', 'sps')
+                                                ->orWhere('jabatans.holding', 'sip');
+                                        })
                                         ->orderBy('jabatans.holding', 'DESC')
+                                        ->select('jabatans.id', 'jabatans.atasan_id', 'divisis.nama_divisi', 'jabatans.nama_jabatan', 'bagians.nama_bagian', 'jabatans.holding')
                                         ->first();
                                 }
                                 if ($get_atasan_more == NULL) {
@@ -945,18 +1051,25 @@ class IzinUserController extends Controller
                                             ->where('jabatans.nama_jabatan', $get_atasan_site->nama_jabatan)
                                             ->where('divisis.nama_divisi', $get_atasan_site->nama_divisi)
                                             ->where('bagians.nama_bagian', $get_atasan_site->nama_bagian)
-                                            ->whereIn('jabatans.holding', ['sp', 'sip'])
+                                            ->where(function ($query) {
+                                                $query->where('jabatans.holding', 'sp')
+                                                    ->orWhere('jabatans.holding', 'sip');
+                                            })
                                             ->orderBy('jabatans.holding', 'DESC')
                                             ->select('jabatans.id', 'jabatans.atasan_id', 'divisis.nama_divisi', 'jabatans.nama_jabatan', 'bagians.nama_bagian', 'jabatans.holding')
-                                            ->orderBy('jabatans.holding', 'DESC')
                                             ->first();
+                                        // dd($get_atasan_more);
                                     } else if ($get_atasan_site->holding == 'sip') {
                                         $get_atasan_more = Jabatan::Join('divisis', 'divisis.id', 'jabatans.divisi_id')
                                             ->Join('bagians', 'bagians.id', 'jabatans.bagian_id')
                                             ->where('jabatans.nama_jabatan', $get_atasan_site->nama_jabatan)
                                             ->where('divisis.nama_divisi', $get_atasan_site->nama_divisi)
                                             ->where('bagians.nama_bagian', $get_atasan_site->nama_bagian)
-                                            ->whereIn('jabatans.holding', ['sps', 'sp'])
+                                            ->where(function ($query) {
+                                                $query->where('jabatans.holding', 'sp')
+                                                    ->orWhere('jabatans.holding', 'sps');
+                                            })
+                                            // ->whereIn('jabatans.holding', ['sp', 'sps'])
                                             ->orderBy('jabatans.holding', 'ASC')
                                             ->select('jabatans.id', 'jabatans.atasan_id', 'divisis.nama_divisi', 'jabatans.nama_jabatan', 'bagians.nama_bagian', 'jabatans.holding')
                                             ->first();
@@ -966,9 +1079,12 @@ class IzinUserController extends Controller
                                             ->where('jabatans.nama_jabatan', $get_atasan_site->nama_jabatan)
                                             ->where('divisis.nama_divisi', $get_atasan_site->nama_divisi)
                                             ->where('bagians.nama_bagian', $get_atasan_site->nama_bagian)
-                                            ->where('jabatans.holding', ['sps'])
-                                            ->select('jabatans.id', 'jabatans.atasan_id', 'divisis.nama_divisi', 'jabatans.nama_jabatan', 'bagians.nama_bagian', 'jabatans.holding')
+                                            ->where(function ($query) {
+                                                $query->where('jabatans.holding', 'sps')
+                                                    ->orWhere('jabatans.holding', 'sip');
+                                            })
                                             ->orderBy('jabatans.holding', 'DESC')
+                                            ->select('jabatans.id', 'jabatans.atasan_id', 'divisis.nama_divisi', 'jabatans.nama_jabatan', 'bagians.nama_bagian', 'jabatans.holding')
                                             ->first();
                                     }
                                     // dd($get_atasan_more);
@@ -1023,39 +1139,45 @@ class IzinUserController extends Controller
                                 ->first();
                             // dd($get_atasan_site);
                             if ($get_atasan_site->holding == 'sps') {
-                                // dd('ok');
                                 $get_atasan_more = Jabatan::Join('divisis', 'divisis.id', 'jabatans.divisi_id')
                                     ->Join('bagians', 'bagians.id', 'jabatans.bagian_id')
                                     ->where('jabatans.nama_jabatan', $get_atasan_site->nama_jabatan)
                                     ->where('divisis.nama_divisi', $get_atasan_site->nama_divisi)
                                     ->where('bagians.nama_bagian', $get_atasan_site->nama_bagian)
-                                    ->whereIn('jabatans.holding', ['sp', 'sip'])
+                                    ->where(function ($query) {
+                                        $query->where('jabatans.holding', 'sp')
+                                            ->orWhere('jabatans.holding', 'sip');
+                                    })
                                     ->orderBy('jabatans.holding', 'DESC')
-                                    ->select('jabatans.id', 'jabatans.atasan_id', 'divisis.nama_divisi', 'jabatans.nama_jabatan', 'bagians.nama_bagian', 'jabatans.holding')
-                                    ->orderBy('jabatans.holding', 'DESC')
-                                    ->first();
-                            } else if ($get_atasan_site->holding == 'sip') {
-                                // dd('ok');
-                                $get_atasan_more = Jabatan::Join('divisis', 'divisis.id', 'jabatans.divisi_id')
-                                    ->Join('bagians', 'bagians.id', 'jabatans.bagian_id')
-                                    ->where('jabatans.nama_jabatan', $get_atasan_site->nama_jabatan)
-                                    ->where('divisis.nama_divisi', $get_atasan_site->nama_divisi)
-                                    ->where('bagians.nama_bagian', $get_atasan_site->nama_bagian)
-                                    ->whereIn('jabatans.holding', ['sp', 'sps'])
-                                    ->orderBy('jabatans.holding', 'ASC')
                                     ->select('jabatans.id', 'jabatans.atasan_id', 'divisis.nama_divisi', 'jabatans.nama_jabatan', 'bagians.nama_bagian', 'jabatans.holding')
                                     ->first();
                                 // dd($get_atasan_more);
+                            } else if ($get_atasan_site->holding == 'sip') {
+                                $get_atasan_more = Jabatan::Join('divisis', 'divisis.id', 'jabatans.divisi_id')
+                                    ->Join('bagians', 'bagians.id', 'jabatans.bagian_id')
+                                    ->where('jabatans.nama_jabatan', $get_atasan_site->nama_jabatan)
+                                    ->where('divisis.nama_divisi', $get_atasan_site->nama_divisi)
+                                    ->where('bagians.nama_bagian', $get_atasan_site->nama_bagian)
+                                    ->where(function ($query) {
+                                        $query->where('jabatans.holding', 'sp')
+                                            ->orWhere('jabatans.holding', 'sps');
+                                    })
+                                    // ->whereIn('jabatans.holding', ['sp', 'sps'])
+                                    ->orderBy('jabatans.holding', 'ASC')
+                                    ->select('jabatans.id', 'jabatans.atasan_id', 'divisis.nama_divisi', 'jabatans.nama_jabatan', 'bagians.nama_bagian', 'jabatans.holding')
+                                    ->first();
                             } else {
                                 $get_atasan_more = Jabatan::Join('divisis', 'divisis.id', 'jabatans.divisi_id')
                                     ->Join('bagians', 'bagians.id', 'jabatans.bagian_id')
                                     ->where('jabatans.nama_jabatan', $get_atasan_site->nama_jabatan)
                                     ->where('divisis.nama_divisi', $get_atasan_site->nama_divisi)
                                     ->where('bagians.nama_bagian', $get_atasan_site->nama_bagian)
-                                    ->whereIn('jabatans.holding', ['sps', 'sip'])
+                                    ->where(function ($query) {
+                                        $query->where('jabatans.holding', 'sps')
+                                            ->orWhere('jabatans.holding', 'sip');
+                                    })
                                     ->orderBy('jabatans.holding', 'DESC')
                                     ->select('jabatans.id', 'jabatans.atasan_id', 'divisis.nama_divisi', 'jabatans.nama_jabatan', 'bagians.nama_bagian', 'jabatans.holding')
-                                    ->orderBy('jabatans.holding', 'DESC')
                                     ->first();
                             }
                             // dd($get_atasan_more);

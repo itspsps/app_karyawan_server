@@ -185,7 +185,7 @@ class MappingShiftController extends Controller
                 if ($week == 1) {
                     $request["status_absen"] = "LIBUR";
                 } else {
-                    $request["status_absen"] = NULL;
+                    $request["status_absen"] = 'TIDAK HADIR KERJA';
                 }
                 $cek_date_same = MappingShift::where('tanggal_masuk', $tanggal_masuk)->where('tanggal_pulang', $tanggal_pulang)->where('user_id', $validatedData1['id_karyawan'])->where('shift_id', $request->shift_id)->count();
                 if ($cek_date_same != 0) {
@@ -214,6 +214,7 @@ class MappingShiftController extends Controller
                 $insert->tanggal_masuk = $validatedData['tanggal_masuk'];
                 $insert->tanggal_pulang = $validatedData['tanggal_pulang'];
                 $insert->status_absen = $request['status_absen'];
+                $insert->kelengkapan_absensi = 'BELUM ABSENSI';
                 $insert->save();
             }
         }

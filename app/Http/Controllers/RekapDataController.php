@@ -194,14 +194,13 @@ class RekapDataController extends Controller
             } else {
                 $now = Carbon::parse($request->start_date);
                 $now1 = Carbon::parse($request->end_date);
-                // dd('p');
+                // dd($now, $now1);
                 // dd($tgl_mulai, $tgl_selesai);
-                $table = Karyawan::with('MappingShift')
-                    ->where('kontrak_kerja', $holding)
+                $table = Karyawan::where('kontrak_kerja', $holding)
                     ->where('kategori', 'Karyawan Bulanan')
                     ->where('status_aktif', 'AKTIF')
                     ->select('karyawans.name', 'karyawans.nomor_identitas_karyawan')
-                    // ->limit(111)
+                    // ->limit(2)
                     ->get();
                 return DataTables::of($table)
                     ->addColumn('btn_detail', function ($row) use ($holding) {
@@ -212,47 +211,81 @@ class RekapDataController extends Controller
                         $id_karyawan = Karyawan::where('nomor_identitas_karyawan', $row->nomor_identitas_karyawan)->value('id');
                         $jumlah_hadir_tepat_waktu = MappingShift::where('user_id', $id_karyawan)->whereBetween('tanggal_masuk', [$now, $now1])->where('keterangan_absensi', 'TEPAT WAKTU')->where('status_absen', 'HADIR KERJA')->count();
                         // dd($jumlah_hadir_tepat_waktu);
-                        return $jumlah_hadir_tepat_waktu . " x";
+                        return $jumlah_hadir_tepat_waktu;
                     })
                     ->addColumn('total_hadir_telat_hadir', function ($row) use ($now, $now1) {
                         $id_karyawan = Karyawan::where('nomor_identitas_karyawan', $row->nomor_identitas_karyawan)->value('id');
                         $jumlah_hadir_telat_hadir = MappingShift::where('user_id', $id_karyawan)->whereBetween('tanggal_masuk', [$now, $now1])->where('status_absen', 'HADIR KERJA')->where('keterangan_absensi', 'TELAT HADIR')->where('telat', '<', '00:10:59')->count();
-                        return $jumlah_hadir_telat_hadir . " x";
+                        return $jumlah_hadir_telat_hadir;
                     })
                     ->addColumn('total_hadir_telat_hadir1', function ($row) use ($now, $now1) {
                         $id_karyawan = Karyawan::where('nomor_identitas_karyawan', $row->nomor_identitas_karyawan)->value('id');
                         $total_hadir_telat_hadir1 = MappingShift::where('user_id', $id_karyawan)->whereBetween('tanggal_masuk', [$now, $now1])->where('status_absen', 'HADIR KERJA')->where('keterangan_absensi', 'TELAT HADIR')->where('telat', '>', '00:10:59')->count();
-                        return $total_hadir_telat_hadir1 . " x";
+                        return $total_hadir_telat_hadir1;
                     })
                     ->addColumn('total_izin_true', function ($row) use ($now, $now1) {
                         $id_karyawan = Karyawan::where('nomor_identitas_karyawan', $row->nomor_identitas_karyawan)->value('id');
-                        $total_izin_true = MappingShift::where('user_id', $id_karyawan)->whereBetween('tanggal_masuk', [$now, $now1])->where('status_absen', 'TIDAK HADIR KERJA')->where('keterangan_izin', 'TRUE')->count();
-                        return $total_izin_true  . " x";
+                        $total_izin_true = MappingShift::where('user_id', $id_karyawan)->whereBetween('tanggal_masuk', [$now, $now1])->where('status_absen', 'TIDAK HADIR KERJA')
+                            ->where(function ($query) {
+                                $query->where('keterangan_absensi', 'IZIN SAKIT')
+                                    ->orWhere('keterangan_absensi', 'IZIN TIDAK MASUK');
+                            })->where('keterangan_izin', 'TRUE')
+                            ->count();
+                        return $total_izin_true;
                     })
                     ->addColumn('total_cuti_true', function ($row) use ($now, $now1) {
                         $id_karyawan = Karyawan::where('nomor_identitas_karyawan', $row->nomor_identitas_karyawan)->value('id');
-                        $total_cuti_true = MappingShift::where('user_id', $id_karyawan)->whereBetween('tanggal_masuk', [$now, $now1])->where('status_absen', 'TIDAK HADIR KERJA')->where('keterangan_cuti', 'TRUE')->count();
-                        return $total_cuti_true  . " x";
+                        $total_cuti_true = MappingShift::where('user_id', $id_karyawan)->whereBetween('tanggal_masuk', [$now, $now1])->where('status_absen', 'TIDAK HADIR KERJA')
+                            ->where(function ($query) {
+                                $query->where('keterangan_absensi', 'CUTI');
+                            })->where('keterangan_cuti', 'TRUE')->count();
+                        return $total_cuti_true;
                     })
                     ->addColumn('total_dinas_true', function ($row) use ($now, $now1) {
                         $id_karyawan = Karyawan::where('nomor_identitas_karyawan', $row->nomor_identitas_karyawan)->value('id');
-                        $total_dinas_true = MappingShift::where('user_id', $id_karyawan)->whereBetween('tanggal_masuk', [$now, $now1])->where('status_absen', 'TIDAK HADIR KERJA')->where('keterangan_dinas', 'TRUE')->count();
-                        return $total_dinas_true  . " x";
+                        $total_dinas_true = MappingShift::where('user_id', $id_karyawan)->whereBetween('tanggal_masuk', [$now, $now1])->where('status_absen', 'TIDAK HADIR KERJA')
+                            ->where(function ($query) {
+                                $query->where('keterangan_absensi', 'PENUGASAN');
+                            })->where('keterangan_dinas', 'TRUE')->count();
+                        return $total_dinas_true;
                     })
 
                     ->addColumn('tidak_hadir_kerja', function ($row) use ($now, $now1) {
                         $id_karyawan = Karyawan::where('nomor_identitas_karyawan', $row->nomor_identitas_karyawan)->value('id');
-                        $tidak_hadir_kerja = MappingShift::where('user_id', $id_karyawan)->whereBetween('tanggal_masuk', [$now, $now1])->where('status_absen', 'TIDAK HADIR KERJA')->where('keterangan_dinas', 'FALSE')->where('keterangan_cuti', 'FALSE')->where('keterangan_izin', 'FALSE')->count() . " x";
+                        $tidak_hadir_kerja = MappingShift::where('user_id', $id_karyawan)->whereBetween('tanggal_masuk', [$now, $now1])->where('status_absen', 'TIDAK HADIR KERJA')->where('keterangan_dinas', 'FALSE')->where('keterangan_cuti', 'FALSE')->where('keterangan_izin', 'FALSE')->count();
                         return $tidak_hadir_kerja;
+                    })
+                    ->addColumn('total_libur', function ($row) use ($now, $now1) {
+                        $id_karyawan = Karyawan::where('nomor_identitas_karyawan', $row->nomor_identitas_karyawan)->value('id');
+                        $total_libur = MappingShift::where('user_id', $id_karyawan)->whereBetween('tanggal_masuk', [$now, $now1])->where('status_absen', 'LIBUR')->count();
+                        return $total_libur;
                     })
                     ->addColumn('total_semua', function ($row) use ($now, $now1) {
                         $id_karyawan = Karyawan::where('nomor_identitas_karyawan', $row->nomor_identitas_karyawan)->value('id');
                         $total_hadir = MappingShift::where('user_id', $id_karyawan)->whereBetween('tanggal_masuk', [$now, $now1])->where('status_absen', 'HADIR KERJA')->count();
+                        $total_libur = MappingShift::where('user_id', $id_karyawan)->whereBetween('tanggal_masuk', [$now, $now1])->where('status_absen', 'LIBUR')->count();
+                        $total_dinas_true = MappingShift::where('user_id', $id_karyawan)->whereBetween('tanggal_masuk', [$now, $now1])->where('status_absen', 'TIDAK HADIR KERJA')
+                            ->where(function ($query) {
+                                $query->where('keterangan_absensi', 'PENUGASAN');
+                            })->where('keterangan_dinas', 'TRUE')->count();
                         $total_tidak_hadir = MappingShift::where('user_id', $id_karyawan)->whereBetween('tanggal_masuk', [$now, $now1])->where('status_absen', 'TIDAK HADIR KERJA')->count();
-                        $total_semua = ($total_hadir + $total_tidak_hadir) . ' x';
+                        $total_cuti_true = MappingShift::where('user_id', $id_karyawan)->whereBetween('tanggal_masuk', [$now, $now1])->where('status_absen', 'TIDAK HADIR KERJA')
+                            ->where(function ($query) {
+                                $query->where('keterangan_absensi', 'CUTI');
+                            })->where('keterangan_cuti', 'TRUE')->count();
+                        $total_izin_true = MappingShift::where('user_id', $id_karyawan)->whereBetween('tanggal_masuk', [$now, $now1])
+                            ->where('status_absen', 'TIDAK HADIR KERJA')
+                            ->where(function ($query) {
+                                $query->where('keterangan_absensi', 'IZIN SAKIT')
+                                    ->orWhere('keterangan_absensi', 'IZIN TIDAK MASUK');
+                            })
+                            ->where('keterangan_izin', 'TRUE')
+                            ->count();
+                        $total_dinas_true = MappingShift::where('user_id', $id_karyawan)->whereBetween('tanggal_masuk', [$now, $now1])->where('status_absen', 'TIDAK HADIR KERJA')->where('keterangan_dinas', 'TRUE')->count();
+                        $total_semua = ($total_hadir + $total_cuti_true + $total_libur + $total_izin_true + $total_dinas_true + $total_tidak_hadir);
                         return $total_semua;
                     })
-                    ->rawColumns(['total_hadir_tepat_waktu', 'btn_detail', 'total_hadir_telat_hadir', 'total_hadir_telat_hadir1', 'total_izin_true', 'total_cuti_true', 'total_dinas_true', 'total_pulang_cepat', 'tidak_hadir_kerja', 'total_semua'])
+                    ->rawColumns(['total_hadir_tepat_waktu', 'total_libur', 'btn_detail', 'total_hadir_telat_hadir', 'total_hadir_telat_hadir1', 'total_izin_true', 'total_cuti_true', 'total_dinas_true', 'total_pulang_cepat', 'tidak_hadir_kerja', 'total_semua'])
                     ->make(true);
             }
         }
@@ -552,23 +585,23 @@ class RekapDataController extends Controller
             return DataTables::of($table)
                 ->addColumn('total_hadir_tepat_waktu', function ($row) {
                     $jumlah_hadir_tepat_waktu = $row->MappingShift->where('status_absen', 'HADIR KERJA')->where('keterangan_absensi', 'TEPAT WAKTU')->count();
-                    return $jumlah_hadir_tepat_waktu . " x";
+                    return $jumlah_hadir_tepat_waktu;
                 })
                 ->addColumn('total_hadir_telat_hadir', function ($row) {
                     $jumlah_hadir_telat_hadir = $row->MappingShift->where('status_absen', 'HADIR KERJA')->where('keterangan_absensi', 'TELAT HADIR')->count();
-                    return $jumlah_hadir_telat_hadir . " x";
+                    return $jumlah_hadir_telat_hadir;
                 })
                 ->addColumn('total_izin_true', function ($row) {
                     $total_izin_true = $row->MappingShift->where('status_absen', 'TIDAK HADIR KERJA')->where('keterangan_izin', 'TRUE')->count();
-                    return $total_izin_true  . " x";
+                    return $total_izin_true;
                 })
                 ->addColumn('total_cuti_true', function ($row) {
                     $total_cuti_true = $row->MappingShift->where('status_absen', 'TIDAK HADIR KERJA')->where('keterangan_cuti', 'TRUE')->count();
-                    return $total_cuti_true  . " x";
+                    return $total_cuti_true;
                 })
                 ->addColumn('total_dinas_true', function ($row) {
                     $total_dinas_true = $row->MappingShift->where('status_absen', 'TIDAK HADIR KERJA')->where('keterangan_dinas', 'TRUE')->count();
-                    return $total_dinas_true  . " x";
+                    return $total_dinas_true;
                 })
                 ->addColumn('total_menit_terlambat', function ($row) {
                     $total = $row->MappingShift->sum('telat');
@@ -597,7 +630,7 @@ class RekapDataController extends Controller
                     return $total_pulang_cepat;
                 })
                 ->addColumn('tidak_hadir_kerja', function ($row) {
-                    $tidak_hadir_kerja = $row->MappingShift->where('status_absen', 'TIDAK HADIR KERJA')->where('keterangan_dinas', 'FALSE')->where('keterangan_cuti', 'FALSE')->where('keterangan_izin', 'FALSE')->count() . " x";
+                    $tidak_hadir_kerja = $row->MappingShift->where('status_absen', 'TIDAK HADIR KERJA')->where('keterangan_dinas', 'FALSE')->where('keterangan_cuti', 'FALSE')->where('keterangan_izin', 'FALSE')->count();
                     return $tidak_hadir_kerja;
                 })
                 ->addColumn('total_semua', function ($row) {
