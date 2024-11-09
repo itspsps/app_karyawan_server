@@ -359,7 +359,15 @@ class RecruitmentController extends Controller
                 })
                 ->addColumn('select', function ($row) {
                     $select = $row->id;
-                    return $select;
+                    if ($row->AuthLogin->waktuujian != null) {
+                        return '<input type="checkbox" disabled name="selected_users[]" value="' . $select . '">';
+                    } else {
+                        if ($row->status_recruitmentuser != 0) {
+                            return '<input type="checkbox" disabled name="selected_users[]" value="' . $select . '">';
+                        } else {
+                            return '<input type="checkbox" name="selected_users[]" value="' . $select . '">';
+                        }
+                    }
                 })
                 ->addColumn('status_recruitment', function ($row) {
                     if ($row->status_recruitmentuser == 0) {
@@ -370,7 +378,7 @@ class RecruitmentController extends Controller
                         $return = '<span class="badge rounded-pill bg-danger">Tidak Konfirmasi</span>';
                     } elseif ($row->status_recruitmentuser == 3) {
                         if ($row->AuthLogin->waktu_berakhir != null) {
-                            $return = '<span class="badge rounded-pill bg-success">1Proses Ujian</span>';
+                            $return = '<span class="badge rounded-pill bg-success">Proses Ujian</span>';
                         } else {
                             $return = '<span class="badge rounded-pill bg-success">Ujian Selesai</span>';
                         }
@@ -685,7 +693,6 @@ class RecruitmentController extends Controller
             ->where('status_recruitmentuser', '!=', 0)
             ->where('status_recruitmentuser', '!=', 5)
             ->orderBy('nama_bagian', 'ASC')->get();
-        // dd($table);
         if (request()->ajax()) {
             return DataTables::of($table)
                 ->addColumn('email', function ($row) {
@@ -713,12 +720,20 @@ class RecruitmentController extends Controller
                             return $btn;
                         }
                     } else {
-                        $btn = '<button id="btn_prosesujian"
+                        if ($row->WaktuUjian->waktu_berakhir != null) {
+                            return '<button
                                     type="button" class="btn btn-sm" style="background-color:#e9ddff;">
                                     <i class="tf-icons mdi mdi-book"></i>
-                                    Proses&nbsp;Ujian
+                                    Ujian&nbsp;Selesai
                                 </button>';
-                        return $btn;
+                        } else {
+                            $btn = '<button id="btn_prosesujian"
+                                        type="button" class="btn btn-sm" style="background-color:#e9ddff;">
+                                        <i class="tf-icons mdi mdi-book"></i>
+                                        Proses&nbsp;Ujian
+                                    </button>';
+                            return $btn;
+                        }
                     }
                 })
                 ->addColumn('detail_cv', function ($row) use ($holding) {
@@ -776,18 +791,23 @@ class RecruitmentController extends Controller
                     $btn = '<button id="btn_penilaian"
                                 data-recruitment_user_id="' . $row->id . '"
                                 data-recruitment_interview_id="' . $row->DataInterview->id . '"
-                                data-nama_pelamar="' . $row->nama_depan . ' ' . $row->nama_tengah . ' ' . $row->nama_belakang . '"
-                                data-email="' . $row->email . '"
-                                data-no_hp="' . $row->no_hp . '"
-                                data-alamatktp="' . $row->alamat_ktp . '"
-                                data-nama_sdmi="' . $row->nama_sdmi . '"
-                                data-tahun_sdmi="' . $row->tahun_sdmi . '"
-                                data-nama_smpmts="' . $row->nama_smpmts . '"
-                                data-tahun_smpmts="' . $row->tahun_smpmts . '"
-                                data-nama_smamasmk="' . $row->nama_smamasmk . '"
-                                data-tahun_smamasmk="' . $row->tahun_smamasmk . '"
-                                data-nama_universitas="' . $row->nama_universitas . '"
-                                data-tahun_universitas="' . $row->tahun_universitas . '"
+                                data-nama_pelamar="' . $row->Cv->nama_depan . ' ' . $row->Cv->nama_tengah . ' ' . $row->Cv->nama_belakang . '"
+                                data-email="' . $row->Cv->email . '"
+                                data-no_hp="' . $row->Cv->no_hp . '"
+                                data-alamatktp="' . $row->Cv->detail_alamat . '"
+                                data-nama_sdmi="' . $row->Cv->nama_sdmi . '"
+                                data-tahun_sdmi="' . $row->Cv->tahun_sdmi . '"
+                                data-nama_smpmts="' . $row->Cv->nama_smpmts . '"
+                                data-tahun_smpmts="' . $row->Cv->tahun_smpmts . '"
+                                data-nama_smamasmk="' . $row->Cv->nama_smamasmk . '"
+                                data-tahun_smamasmk="' . $row->Cv->tahun_smamasmk . '"
+                                data-nama_universitas="' . $row->Cv->nama_universitas . '"
+                                data-tahun_universitas="' . $row->Cv->tahun_universitas . '"
+                                data-nilai_ujian_analogi_verbal_antonim="' . $row->DataInterview->nilai_analogi_antonim . '"
+                                data-nilai_ujian_analogi_verbal_sinonim="' . $row->DataInterview->nilai_analogi_sinonim . '"
+                                data-nilai_ujian_nilai_penalaran="' . $row->DataInterview->nilai_penalaran . '"
+                                data-nilai_ujian_nilai_aritmatika="' . $row->DataInterview->nilai_aritmatika . '"
+                                data-nilai_total_psikotes="' . $row->DataInterview->nilai_aritmatika + $row->DataInterview->nilai_analogi_antonim + $row->DataInterview->nilai_analogi_sinonim + $row->DataInterview->nilai_penalaran . '"
                                 data-nilai_ujian="' . $row->DataInterview->nilai_ujian . '"
                                 data-catatan_ujian="' . $row->DataInterview->catatan_ujian . '"
                                 data-nilai_interview_hrd1="' . $row->DataInterview->nilai_interview_hrd1 . '"
@@ -819,11 +839,17 @@ class RecruitmentController extends Controller
                             </button>';
                         return $btn;
                     } elseif ($row->DataInterview->status_interview == 3) {
-                        $return = '<span class="badge rounded-pill bg-success">Hadir</span>';
-                        return $return;
+                        return '<button id="btn_kehadiran"
+                                type="button" class="btn btn-sm btn-success ">
+                                <i class="tf-icons mdi mdi-account-clock"></i>
+                                &nbsp;Hadir
+                            </button>';
                     } elseif ($row->DataInterview->status_interview == 4) {
-                        $return = '<span class="badge rounded-pill bg-danger">Tidak Hadir</span>';
-                        return $return;
+                        return '<button id="btn_kehadiran"
+                                type="button" class="btn btn-sm btn-primary ">
+                                <i class="tf-icons mdi mdi-account-clock"></i>
+                                &nbsp;Tidak&nbsp;Hadir
+                            </button>';
                     }
                     // return 'a';
 

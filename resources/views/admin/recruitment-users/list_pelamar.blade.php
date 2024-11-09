@@ -891,14 +891,18 @@
                 name: 'detail_cv'
             },
             {
-                data: 'select', // id atau primary key
-                name: 'select',
-                render: function(data, type, row) {
-                    return '<input type="checkbox" name="selected_users[]" value="' + row.id + '">';
-                },
-                orderable: false,
-                searchable: false
+                data: 'select',
+                name: 'select'
             },
+            //{
+            //    data: 'select', 
+            //    name: 'select',
+            //    render: function(data, type, row) {
+            //        return '<input type="checkbox" name="selected_users[]" value="' + row.id + '">';
+            //    },
+            //    orderable: false,
+            //    searchable: false
+            //},
             {
                 data: 'status_recruitment',
                 name: 'status_recruitment'

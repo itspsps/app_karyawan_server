@@ -30,7 +30,7 @@ class WaktuUjian extends Model
     // Relasi ke ph siswa
     public function pgsiswa()
     {
-        return $this->hasMany(PgSiswa::class, 'siswa_id', 'siswa_id');
+        return $this->hasMany(PgSiswa::class, 'siswa_id', 'auth_id');
     }
 
     // Relasi ke essay siswa

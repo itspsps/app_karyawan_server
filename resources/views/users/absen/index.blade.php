@@ -173,7 +173,7 @@
                                 <div class="text-center">
                                     <h2 style="color: white">Absen Masuk: </h2>
                                     <canvas id="canvas"></canvas>
-                                    <video id="video" class="webcam" width="300" height="400" autoplay muted>
+                                    <video id="video" class="webcam" width="300" height="500" autoplay muted>
 
                                     </video>
                                     <!-- <div class="webcam" id="results"></div> -->
@@ -191,16 +191,6 @@
                                     <button id="btn_submit" hidden style="background-color: white; display: none;" type="submit" class="btn btn-lokasisaya" value="Ambil Foto">Masuk</button>
                                 </div>
                             </form>
-                            <script type="text/javascript" src="{{ asset('webcamjs/webcam.min.js') }}"></script>
-                            <script language="JavaScript">
-                                Webcam.set({
-                                    width: 300,
-                                    height: 400,
-                                    image_format: 'jpeg',
-                                    jpeg_quality: 50
-                                });
-                                Webcam.attach('.webcam');
-                            </script>
                             @elseif($shift_karyawan->jam_absen != NULL && $shift_karyawan->jam_pulang == NULL)
                             <form id="form" method="post" action="absenPulang">
                                 <!-- @method('put') -->
@@ -208,7 +198,7 @@
                                 <div class="text-center">
                                     <h2 style="color: white">Absen Pulang: </h2>
                                     <canvas id="canvas"></canvas>
-                                    <video id="video" class="webcam" width="300" height="400" autoplay muted></video>
+                                    <video id="video" class="webcam" width="300" height="500" autoplay muted></video>
                                     <!-- <div class="webcam" id="results"></div> -->
                                     <input type="hidden" name="jam_pulang" value="{{ date('H:i') }}">
                                     <input type="hidden" name="foto_jam_pulang" class="image-tag">
@@ -226,16 +216,7 @@
 
                                 </div>
                             </form>
-                            <script type="text/javascript" src="{{ asset('webcamjs/webcam.min.js') }}"></script>
-                            <script language="JavaScript">
-                                Webcam.set({
-                                    width: 300,
-                                    height: 400,
-                                    image_format: 'jpeg',
-                                    jpeg_quality: 50
-                                });
-                                Webcam.attach('.webcam');
-                            </script>
+
                             @else
                             <div class="card col-lg-12">
                                 <div class="mt-5">
@@ -277,6 +258,16 @@
 @endsection
 @section('js')
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+<script type="text/javascript" src="{{ asset('webcamjs/webcam.min.js') }}"></script>
+<script language="JavaScript">
+    Webcam.set({
+        width: 300,
+        height: 500,
+        image_format: 'jpeg',
+        jpeg_quality: 50
+    });
+    Webcam.attach('.webcam');
+</script>
 <script defer src="{{ asset('assets/assets_users/js/face-api.js/face-api.min.js') }}"></script>
 <script defer src="{{ asset('assets/assets_users/js/absensi.js')}}" onload="onLoadData('{{ $face }}', '{{ $karyawan }}', '{{ $angka }}')"></script>
 <script defer src="{{ asset('assets/assets_users/js/submitFormAbsensi.js')}}" onload="onLoadDataAbsensi('{{ $absensi }}','{{$jumlah_absensi}}')"></script>

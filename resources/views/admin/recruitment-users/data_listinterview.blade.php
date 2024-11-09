@@ -659,22 +659,22 @@
                                         <p style="font-weight: bold">SD/MI</p>
                                         <div class=" mb-3">
                                             <i class="mdi mdi-book-education-outline"></i>
-                                            <span id="show_namasdmi"></span>&nbsp;(<span id="show_tahunsdmi"></span>)
+                                            <span id="show_namasdmi"></span>&nbsp;<br>(<span id="show_tahunsdmi"></span>)
                                         </div>
                                         <p style="font-weight: bold">SMP/MTS</p>
                                         <div class="mb-3">
                                             <i class="mdi mdi-book-education-outline"></i>
-                                            <span id="show_namasmpmts"></span>&nbsp;(<span id="show_tahunsmpmts"></span>)
+                                            <span id="show_namasmpmts"></span>&nbsp;<br>(<span id="show_tahunsmpmts"></span>)
                                         </div>
                                         <p style="font-weight: bold">SMA/MA/SMK</p>
                                         <div class=" mb-3">
                                             <i class="mdi mdi-book-education-outline"></i>
-                                            <span id="show_namasmamasmk"></span>&nbsp;(<span id="show_tahunsmamasm"></span>)
+                                            <span id="show_namasmamasmk"></span>&nbsp;<br>(<span id="show_tahunsmamasm"></span>)
                                         </div>
                                         <p style="font-weight: bold">UNIVERSITAS</p>
                                         <div class=" mb-3">
                                             <i class="mdi mdi-book-education-outline"></i>
-                                            <span id="show_namauniversitas"></span>&nbsp;(<span id="show_tahununiversitas"></span>)
+                                            <span id="show_namauniversitas"></span>&nbsp;<br>(<span id="show_tahununiversitas"></span>)
                                         </div>
                                     </div>
                                 </div>
@@ -942,22 +942,22 @@
                                         <p style="font-weight: bold">SD/MI</p>
                                         <div class=" mb-3">
                                             <i class="mdi mdi-book-education-outline"></i>
-                                            <span id="show_namasdmi3"></span>&nbsp;(<span id="show_tahunsdmi3"></span>)
+                                            <span id="show_namasdmi3"></span>&nbsp;<br>(<span id="show_tahunsdmi3"></span>)
                                         </div>
                                         <p style="font-weight: bold">SMP/MTS</p>
                                         <div class="mb-3">
                                             <i class="mdi mdi-book-education-outline"></i>
-                                            <span id="show_namasmpmts3"></span>&nbsp;(<span id="show_tahunsmpmts3"></span>)
+                                            <span id="show_namasmpmts3"></span>&nbsp;<br>(<span id="show_tahunsmpmts3"></span>)
                                         </div>
                                         <p style="font-weight: bold">SMA/MA/SMK</p>
                                         <div class=" mb-3">
                                             <i class="mdi mdi-book-education-outline"></i>
-                                            <span id="show_namasmamasmk3"></span>&nbsp;(<span id="show_tahunsmamasm3"></span>)
+                                            <span id="show_namasmamasmk3"></span>&nbsp;<br>(<span id="show_tahunsmamasm3"></span>)
                                         </div>
                                         <p style="font-weight: bold">S1/S2/S3</p>
                                         <div class=" mb-3">
                                             <i class="mdi mdi-book-education-outline"></i>
-                                            <span id="show_namauniversitas3"></span>&nbsp;(<span id="show_tahununiversitas3"></span>)
+                                            <span id="show_namauniversitas3"></span>&nbsp;<br>(<span id="show_tahununiversitas3"></span>)
                                         </div>
                                     </div>
                                 </div>
@@ -985,8 +985,8 @@
                                             <div class="row g-2">
                                                 <div class="col mb-2">
                                                     <div class="form-floating form-floating-outline">
-                                                        <input type="text" disabled name="" id="show_nilaiujian" class="form-control" />
-                                                        <label for="holding_recruitment">NILAI</label>
+                                                        <input type="text" disabled name="" id="show_nama_nilai_ujian_analogi_verbal_antonim" class="form-control" />
+                                                        <label for="holding_recruitment">ANALOGI VERBAL (ANTONIM)</label>
                                                     </div>
                                                 </div>
                                             </div>
@@ -994,11 +994,47 @@
                                             <div class="row g-2">
                                                 <div class="col mb-2">
                                                     <div class="form-floating form-floating-outline">
+                                                        <input type="text" disabled name="" id="show_nama_nilai_ujian_analogi_verbal_sinonim" class="form-control" />
+                                                        <label for="holding_recruitment">ANALOGI VERBAL (SINONIM)</label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <br>
+                                            <div class="row g-2">
+                                                <div class="col mb-2">
+                                                    <div class="form-floating form-floating-outline">
+                                                        <input type="text" disabled name="" id="show_nama_nilai_ujian_penalaran" class="form-control" />
+                                                        <label for="holding_recruitment">PENALARAN ATAU LOGIKA</label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <br>
+                                            <div class="row g-2">
+                                                <div class="col mb-2">
+                                                    <div class="form-floating form-floating-outline">
+                                                        <input type="text" disabled name="" id="show_nama_nilai_ujian_aritmatika" class="form-control" />
+                                                        <label for="holding_recruitment">ARITMATIKA</label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <br>
+                                            <div class="row g-2">
+                                                <div class="col mb-2">
+                                                    <div class="form-floating form-floating-outline">
+                                                        <input type="text" disabled name="" id="show_nama_nilai_total_psikotes" class="form-control" />
+                                                        <label for="holding_recruitment">TOTAL NILAI PSIKOTES</label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <!-- <br> -->
+                                            <!-- <div class="row g-2">
+                                                <div class="col mb-2">
+                                                    <div class="form-floating form-floating-outline">
                                                         <textarea type="text" disabled id="show_catatanujian" name="" class="form-control" style="height: 200px;"></textarea>
                                                         <label for="holding_recruitment">CATATAN</label>
                                                     </div>
                                                 </div>
-                                            </div>
+                                            </div> -->
                                         </div>
                                         <div class="tab-pane fade" id="tabs-dua" role="tabpanel">
                                             <form method="post" action="{{ url('/nilai-interview-hrd/update/'.$holding) }}" enctype="multipart/form-data">
@@ -1282,23 +1318,23 @@
         $('#show_nama_pelamar2').val(nama_pelamar);
         $('#show_tempatlahir').val(nama_tempatlahir);
         $('#show_tanggallahir').val(nama_tanggallahir);
-        $('#show_gender').val(nama_gender);
-        $('#show_statusnikah').val(nama_statusnikah);
+        $('#show_gender').val(nama_gender.toUpperCase());
+        $('#show_statusnikah').val(nama_statusnikah.toUpperCase());
         $('#show_departemen').text(nama_departemen);
         $('#show_divisi').text(nama_divisi);
         $('#show_bagian').text(nama_bagian);
-        $('#show_email').text(nama_email);
+        $('#show_email').text(nama_email.toUpperCase());
         $('#show_nohp').text(nama_nohp);
         $('#show_nik').val(nama_nik);
         $('#show_alamatktp1').text(nama_alamatktp);
         $('#show_alamatktp2').val(nama_alamatktp);
-        $('#show_namasdmi').text(nama_sdmi);
+        $('#show_namasdmi').text(nama_sdmi.toUpperCase());
         $('#show_tahunsdmi').text(nama_tahunsdmi);
-        $('#show_namasmpmts').text(nama_smpmts);
+        $('#show_namasmpmts').text(nama_smpmts.toUpperCase());
         $('#show_tahunsmpmts').text(nama_tahunsmpmts);
-        $('#show_namasmamasmk').text(nama_smamasmk);
+        $('#show_namasmamasmk').text(nama_smamasmk.toUpperCase());
         $('#show_tahunsmamasm').text(nama_tahunsmamasmk);
-        $('#show_namauniversitas').text(nama_universitas);
+        $('#show_namauniversitas').text(nama_universitas.toUpperCase());
         $('#show_tahununiversitas').text(nama_tahununiversitas);
         $('#show_judulketerampilan1').text(nama_judulketerampilan1);
         $('#show_ketketerampilan1').text(nama_ketketerampilan1);
@@ -1349,8 +1385,11 @@
         let nama_imgktp = $(this).data('img_ktp');
         let nama_imgkk = $(this).data('img_kk');
         let nama_imgijazah = $(this).data('img_ijazah');
-        let nama_nilaiujian = $(this).data('nilai_ujian');
-        let nama_catatanujian = $(this).data('catatan_ujian');
+        let nama_nilai_ujian_analogi_verbal_antonim = $(this).data('nilai_ujian_analogi_verbal_antonim');
+        let nama_nilai_ujian_analogi_verbal_sinonim = $(this).data('nilai_ujian_analogi_verbal_sinonim');
+        let nama_nilai_ujian_penalaran = $(this).data('nilai_ujian_nilai_penalaran');
+        let nama_nilai_ujian_aritmatika = $(this).data('nilai_ujian_nilai_aritmatika');
+        let nama_nilai_total_psikotes = $(this).data('nilai_total_psikotes');
         let nama_nilaiinterviewhrd1 = $(this).data('nilai_interview_hrd1');
         let nama_nilaiinterviewhrd2 = $(this).data('nilai_interview_hrd2');
         let nama_nilaiinterviewhrd3 = $(this).data('nilai_interview_hrd3');
@@ -1368,20 +1407,22 @@
         $('#show_recruitmentinterviewid2').val(recruitment_interview_id);
         $('#show_nama_pelamar3').text(nama_pelamar);
 
-        $('#show_email3').text(nama_email);
+        $('#show_email3').text(nama_email.toUpperCase());
         $('#show_nohp3').text(nama_nohp);
-
-        $('#show_alamatktp3').text(nama_alamatktp);
-        $('#show_namasdmi3').text(nama_sdmi);
+        $('#show_alamatktp3').text(nama_alamatktp.toUpperCase());
+        $('#show_namasdmi3').text(nama_sdmi.toUpperCase());
         $('#show_tahunsdmi3').text(nama_tahunsdmi);
-        $('#show_namasmpmts3').text(nama_smpmts);
+        $('#show_namasmpmts3').text(nama_smpmts.toUpperCase());
         $('#show_tahunsmpmts3').text(nama_tahunsmpmts);
-        $('#show_namasmamasmk3').text(nama_smamasmk);
+        $('#show_namasmamasmk3').text(nama_smamasmk.toUpperCase());
         $('#show_tahunsmamasm3').text(nama_tahunsmamasmk);
-        $('#show_namauniversitas3').text(nama_universitas);
+        $('#show_namauniversitas3').text(nama_universitas.toUpperCase());
         $('#show_tahununiversitas3').text(nama_tahununiversitas);
-        $('#show_nilaiujian').val(nama_nilaiujian);
-        $('#show_catatanujian').text(nama_catatanujian);
+        $('#show_nama_nilai_ujian_analogi_verbal_antonim').val(nama_nilai_ujian_analogi_verbal_antonim);
+        $('#show_nama_nilai_ujian_analogi_verbal_sinonim').val(nama_nilai_ujian_analogi_verbal_sinonim);
+        $('#show_nama_nilai_ujian_penalaran').val(nama_nilai_ujian_penalaran);
+        $('#show_nama_nilai_ujian_aritmatika').val(nama_nilai_ujian_aritmatika);
+        $('#show_nama_nilai_total_psikotes').val(nama_nilai_total_psikotes);
         $('#show_nilaiinterviewmanager').val(nama_nilaiinterviewmanager);
         $('#show_catataninterviewmanager').text(nama_catataninterviewmanager);
         // console.log(nama_status_interview);
