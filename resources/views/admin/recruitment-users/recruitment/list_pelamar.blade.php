@@ -730,9 +730,11 @@
                                     <div class="modal-body">
                                         <div id="input-users-list-y">
                                             <!-- Input fields akan ditambahkan di sini -->
+
                                         </div>
                                         <div class="row">
                                             <div class="form-floating form-floating-outline">
+                                                <input type="hidden" value="{{$id_recruitment}}" name="recruitment_admin_id">
                                                 <input type="date" id="tanggal_interview" name="tanggal_interview" class="form-control @error('tanggal_interview') is-invalid @enderror" placeholder="Masukkan Bagian" value="{{ old('tanggal_interview') }}" />
                                                 <label for="tanggal_interview">Tanggal</label>
                                             </div>

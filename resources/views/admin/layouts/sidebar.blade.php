@@ -423,7 +423,7 @@
                 </li>
                 <li class="menu-item {{ Request::is('pg-data-ranking*') ? 'active' : '' }}">
                     <a href="{{ url('/pg-data-ranking/'.$holding) }}" class="menu-link">
-                        <div style="font-size: 10pt;" data-i18n="Container"><i class="mdi mdi-file-chart-check-outline"></i>&nbsp;Ranking&nbsp;Interview</div>
+                        <div style="font-size: 10pt;" data-i18n="Container"><i class="mdi mdi-file-chart-check-outline"></i>&nbsp;Data&nbsp;Rangking</div>
                     </a>
                 </li>
                 <li class="menu-item {{ Request::is('pg-data-ujian*') ? 'active' : '' }}">
