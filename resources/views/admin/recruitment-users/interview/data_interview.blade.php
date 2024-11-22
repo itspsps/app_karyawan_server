@@ -5,30 +5,33 @@
     .my-swal {
         z-index: X;
     }
+
+    .nowrap {
+        white-space: nowrap;
+    }
 </style>
-<link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.css" rel="stylesheet">
-<link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.min.css" rel="stylesheet">
 @endsection
 @section('isi')
 @include('sweetalert::alert')
 <div class="container-xxl flex-grow-1 container-p-y">
     <div class="row gy-4">
+        <!-- Transactions -->
         <div class="col-lg-12">
-            <div class="card">
+            <div class="container card">
                 <div class="card-header">
                     <div class="d-flex align-items-center justify-content-between">
-                        <h5 class="card-title m-0 me-2">DATA RANKING</h5>
+                        <h5 class="card-title m-0 me-2">DATA INTERVIEW</h5>
                     </div>
                 </div>
-                <table class="table" id="table_recruitment_ranking" style="width: 100%;">
+                <table class="table" id="table_recruitment_interview" style="width: 100%;">
                     <thead class="table-primary">
                         <tr>
-                            <th>No.</th>
+                            <th>Tanggal</th>
                             <th>Departemen</th>
                             <th>Divisi</th>
                             <th>Bagian</th>
-                            <th>Ranking</th>
-                            <th>Tanggal</th>
+                            <th>Pelamar</th>
+                            <th>Status</th>
                         </tr>
                     </thead>
                     <tbody class="table-border-bottom-0">
@@ -36,6 +39,8 @@
                 </table>
             </div>
         </div>
+        <!--/ Transactions -->
+        <!--/ Data Tables -->
     </div>
 </div>
 
@@ -44,23 +49,31 @@
 <script src="https://cdn.datatables.net/2.0.5/js/dataTables.js"></script>
 <script src="https://cdn.datatables.net/2.0.5/js/dataTables.bootstrap5.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+<script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.min.js"></script>
+<script>
+    $(document).ready(function() {
+        $("#desc_recruitment").summernote();
+        // $("#show_desc_recruitment").summernote();
+        $("#desc_recruitment_update").summernote();
+        $('.dropdown-toggle').dropdown();
+    });
+</script>
+{{-- start datatable  --}}
 
 <script>
     let holding = window.location.pathname.split("/").pop();
-    var table = $('#table_recruitment_ranking').DataTable({
+    var table = $('#table_recruitment_interview').DataTable({
         "scrollY": true,
         "scrollX": true,
         processing: true,
         serverSide: true,
         ajax: {
-            url: "{{ url('/dt/data-ranking') }}" + '/' + holding,
+            url: "{{ url('/dt/data-interview') }}" + '/' + holding,
         },
         columns: [{
-                data: "id",
-
-                render: function(data, type, row, meta) {
-                    return meta.row + meta.settings._iDisplayStart + 1;
-                }
+                data: 'created_at',
+                name: 'created_at',
+                className: 'nowrap'
             },
             {
                 data: 'nama_departemen',
@@ -79,12 +92,8 @@
                 name: 'pelamar'
             },
             {
-                data: 'tanggal',
-                render: function(data, type, row, meta) {
-                    let dateParts = data.split('-');
-                    let formattedDate = dateParts[2] + '-' + dateParts[1] + '-' + dateParts[0];
-                    return '<pre style="font-size: inherit;font-family: inherit;margin: 0;">' + formattedDate + '</pre>';
-                }
+                data: 'status_recruitment',
+                name: 'status_recruitment'
             },
         ]
     });
@@ -149,7 +158,7 @@
         let desc = $(this).data('desc'); // Mendapatkan data dengan HTML
         // desc = $('<div>').html(desc).text();
         let holding = $(this).data("holding");
-        $('#show_desc_recruitment').summernote('code',desc);
+        $('#show_desc_recruitment').summernote('code', desc);
         $('#show_desc_recruitment').summernote('disable');
         // let url = "{{ url('recruitment/show/') }}" + '/' + id + '/' + holding;
         $('#modal_lihat_syarat').modal('show');
@@ -311,6 +320,5 @@
         });
 
     });
-
 </script>
 @endsection

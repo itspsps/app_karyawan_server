@@ -28,6 +28,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Log;
+use Carbon\Carbon;
 use DB;
 
 class RecruitmentController extends Controller
@@ -35,7 +36,7 @@ class RecruitmentController extends Controller
     public function pg_recruitment()
     {
         $holding = request()->segment(count(request()->segments()));
-        return view('admin.recruitment-users.index', [
+        return view('admin.recruitment-users.recruitment.index', [
             // return view('karyawan.index', [
             'title'             => 'Data Recruitment',
             'holding'           => $holding,
@@ -63,10 +64,13 @@ class RecruitmentController extends Controller
                 ]);
                 $query->orderBy('nama_bagian', 'ASC');
             },
-        ])->orderBy('created_recruitment', 'desc')->get();
+        ])->where('holding_Recruitment', $holding)->orderBy('created_at', 'DESC')->get();
         // dd($table);
         if (request()->ajax()) {
             return DataTables::of($table)
+                ->addColumn('created_at', function ($row) {
+                    return Carbon::parse($row->created_at)->format('d-m-Y');
+                })
                 ->addColumn('nama_departemen', function ($row) {
                     if ($row->Bagian == NULL) {
                         $nama_departemen = 'vv';
@@ -154,7 +158,7 @@ class RecruitmentController extends Controller
                         ';
                     return $btn;
                 })
-                ->rawColumns(['nama_departemen', 'nama_divisi', 'nama_bagian', 'desc_recruitment', 'pelamar', 'status_recruitment', 'option'])
+                ->rawColumns(['created_at', 'nama_departemen', 'nama_divisi', 'nama_bagian', 'desc_recruitment', 'pelamar', 'status_recruitment', 'option'])
                 ->make(true);
         }
     }
@@ -259,7 +263,7 @@ class RecruitmentController extends Controller
     function pg_list_pelamar($id)
     {
         $holding = request()->segment(count(request()->segments()));
-        return view('admin.recruitment-users.list_pelamar', [
+        return view('admin.recruitment-users.recruitment.list_pelamar', [
             'title' => 'Data Recruitment',
             'holding'   => $holding,
             'id_recruitment'        => $id,
@@ -447,30 +451,31 @@ class RecruitmentController extends Controller
             ])->whereIn('id', $userIds)->get();
             // dd($data_user);
             foreach ($data_user as $user) {
-                // Check if email exists and is not empty
-                if (!empty($user->AuthLogin->email)) {
-                    Mail::send('admin.recruitment-users.email.email_interview', [
-                        'user' => $user,
-                        'tanggal_interview' => $request->tanggal_interview,
-                        'jam_interview' => $request->jam_interview,
-                        'lokasi_interview' => $request->lokasi_interview,
-                    ], function ($message) use ($user) {
-                        $message->to(
-                            $user->AuthLogin->email,
-                            $user->Cv->nama_depan,
-                            $user->Cv->nama_belakang
-                        );
-                        $message->subject('Interview Invitation');
-                    });
-                } else {
-                    // Log or handle users with missing emails
-                    Log::warning("User ID {$user->id} has no email address.");
-                }
+                //Check if email exists and is not empty
+                // if (!empty($user->AuthLogin->email)) {
+                //     Mail::send('admin.recruitment-users.email.email_interview', [
+                //         'user' => $user,
+                //         'tanggal_interview' => $request->tanggal_interview,
+                //         'jam_interview' => $request->jam_interview,
+                //         'lokasi_interview' => $request->lokasi_interview,
+                //     ], function ($message) use ($user) {
+                //         $message->to(
+                //             $user->AuthLogin->email,
+                //             $user->Cv->nama_depan,
+                //             $user->Cv->nama_belakang
+                //         );
+                //         $message->subject('Interview Invitation');
+                //     });
+                // } else {
+                //     // Log or handle users with missing emails
+                //     Log::warning("User ID {$user->id} has no email address.");
+                // }
 
                 // Insert interview data
                 RecruitmentInterview::create([
                     'id' => Uuid::uuid4(),
                     'holding' => $holding,
+                    'recruitment_admin_id' => $request->recruitment_admin_id,
                     'recruitment_userid' => $user->id,
                     'tanggal_interview' => $request->tanggal_interview,
                     'jam_interview' => $request->jam_interview,
@@ -524,7 +529,7 @@ class RecruitmentController extends Controller
     function pg_data_interview()
     {
         $holding = request()->segment(count(request()->segments()));
-        return view('admin.recruitment-users.data_interview', [
+        return view('admin.recruitment-users.interview.data_interview', [
             // return view('karyawan.index', [
             'title' => 'Data Interview',
             'holding'   => $holding,
@@ -548,10 +553,13 @@ class RecruitmentController extends Controller
                 ]);
                 $query->orderBy('nama_bagian', 'ASC');
             },
-        ])->where('holding_recruitment', $holding)->orderBy('nama_bagian', 'ASC')->get();
+        ])->where('holding_recruitment', $holding)->orderBy('created_at', 'DESC')->get();
         // dd($table);
         if (request()->ajax()) {
             return DataTables::of($table)
+                ->addColumn('created_at', function ($row) {
+                    return Carbon::parse($row->created_at)->format('d-m-Y');
+                })
                 ->addColumn('nama_departemen', function ($row) {
                     if ($row->Bagian == NULL) {
                         $nama_departemen = NULL;
@@ -638,7 +646,7 @@ class RecruitmentController extends Controller
                         ';
                     return $btn;
                 })
-                ->rawColumns(['nama_departemen', 'nama_divisi', 'nama_bagian', 'pelamar', 'status_recruitment'])
+                ->rawColumns(['created_at', 'nama_departemen', 'nama_divisi', 'nama_bagian', 'pelamar', 'status_recruitment'])
                 ->make(true);
         }
     }
@@ -646,7 +654,7 @@ class RecruitmentController extends Controller
     function pg_list_interview($id)
     {
         $holding = request()->segment(count(request()->segments()));
-        return view('admin.recruitment-users.data_listinterview', [
+        return view('admin.recruitment-users.interview.data_listinterview', [
             'title' => 'Data Recruitment',
             'holding'   => $holding,
             'id_recruitment'        => $id,
@@ -693,6 +701,7 @@ class RecruitmentController extends Controller
             ->where('status_recruitmentuser', '!=', 0)
             ->where('status_recruitmentuser', '!=', 5)
             ->orderBy('nama_bagian', 'ASC')->get();
+        // dd($table);
         if (request()->ajax()) {
             return DataTables::of($table)
                 ->addColumn('email', function ($row) {
@@ -808,14 +817,21 @@ class RecruitmentController extends Controller
                                 data-nilai_ujian_nilai_penalaran="' . $row->DataInterview->nilai_penalaran . '"
                                 data-nilai_ujian_nilai_aritmatika="' . $row->DataInterview->nilai_aritmatika . '"
                                 data-nilai_total_psikotes="' . $row->DataInterview->nilai_aritmatika + $row->DataInterview->nilai_analogi_antonim + $row->DataInterview->nilai_analogi_sinonim + $row->DataInterview->nilai_penalaran . '"
-                                data-nilai_ujian="' . $row->DataInterview->nilai_ujian . '"
+                                data-nilai_kehadiran="' . $row->DataInterview->nilai_kehadiran . '"
                                 data-catatan_ujian="' . $row->DataInterview->catatan_ujian . '"
-                                data-nilai_interview_hrd1="' . $row->DataInterview->nilai_interview_hrd1 . '"
-                                data-nilai_interview_hrd2="' . $row->DataInterview->nilai_interview_hrd2 . '"
-                                data-nilai_interview_hrd3="' . $row->DataInterview->nilai_interview_hrd3 . '"
-                                data-nilai_interview_hrd4="' . $row->DataInterview->nilai_interview_hrd4 . '"
-                                data-nilai_interview_hrd5="' . $row->DataInterview->nilai_interview_hrd5 . '"
-                                data-catatan_interview_hrd="' . $row->DataInterview->catatan_interview_hrd . '"
+                                data-nilai_leadership="' . $row->DataInterview->nilai_leadership . '"
+                                data-catatan_leadership="' . $row->DataInterview->catatan_leadership . '"
+                                data-nilai_planning="' . $row->DataInterview->nilai_planning . '"
+                                data-catatan_planning="' . $row->DataInterview->catatan_planning . '"
+                                data-nilai_problemsolving="' . $row->DataInterview->nilai_problemsolving . '"
+                                data-catatan_problem_solving="' . $row->DataInterview->catatan_problem_solving . '"
+                                data-nilai_quallity="' . $row->DataInterview->nilai_quallity . '"
+                                data-catatan_quality="' . $row->DataInterview->catatan_quality . '"
+                                data-nilai_creativity="' . $row->DataInterview->nilai_creativity . '"
+                                data-catatan_creativity="' . $row->DataInterview->catatan_creativity . '"
+                                data-nilai_teamwork="' . $row->DataInterview->nilai_teamwork . '"
+                                data-catatan_teamwork="' . $row->DataInterview->catatan_teamwork . '"
+                                data-total_nilai_interview_hrd="' . $row->DataInterview->total_nilai_interview_hrd . '"
                                 data-nilai_interview_manager="' . $row->DataInterview->nilai_interview_manager . '"
                                 data-catatan_interview_manager="' . $row->DataInterview->catatan_interview_manager . '"
                                 data-img_pp="' . $row->file_pp . '"
@@ -839,13 +855,13 @@ class RecruitmentController extends Controller
                             </button>';
                         return $btn;
                     } elseif ($row->DataInterview->status_interview == 3) {
-                        return '<button id="btn_kehadiran"
+                        return '<button id=""
                                 type="button" class="btn btn-sm btn-success ">
                                 <i class="tf-icons mdi mdi-account-clock"></i>
                                 &nbsp;Hadir
                             </button>';
                     } elseif ($row->DataInterview->status_interview == 4) {
-                        return '<button id="btn_kehadiran"
+                        return '<button id=""
                                 type="button" class="btn btn-sm btn-primary ">
                                 <i class="tf-icons mdi mdi-account-clock"></i>
                                 &nbsp;Tidak&nbsp;Hadir
@@ -892,6 +908,7 @@ class RecruitmentController extends Controller
         if ($request->status_interview == 3) {
             RecruitmentInterview::where('id', $request->show_recruitmentinterviewid3)->update([
                 'status_interview'  => 3,
+                'nilai_kehadiran'   => 4
             ]);
             RecruitmentUser::where('id', $request->show_recruitmentuserid3)->update([
                 'status_recruitmentuser'  => 3,
@@ -906,6 +923,7 @@ class RecruitmentController extends Controller
         } else {
             RecruitmentInterview::where('id', $request->show_recruitmentinterviewid3)->update([
                 'status_interview'  => 4,
+                'nilai_kehadiran'   => 0
             ]);
             RecruitmentUser::where('id', $request->show_recruitmentuserid3)->update([
                 'status_recruitmentuser'  => 4,
@@ -922,11 +940,14 @@ class RecruitmentController extends Controller
 
     function kategori_ujian(Request $request)
     {
+        // dd($request->all());
+        $get_recruitment_admin_id = RecruitmentUser::where('id', $request->id_recruitmentuser)->first();
         $ujian = Ujian::where('kelas_id', $request->kelas)->get();
         foreach ($ujian as $u) {
             WaktuUjian::insert([
                 'kode'      => $u->kode,
                 'auth_id'   => $request->id_userscareer,
+                'recruitment_admin_id' => $get_recruitment_admin_id->recruitment_admin_id
             ]);
         }
         ActivityLog::create([
@@ -955,6 +976,58 @@ class RecruitmentController extends Controller
             ],
             'guru' => User::firstWhere('id', Auth::user()->id),
             'ujian' => Ujian::where('guru_id', Auth::user()->id)->get()
+        ]);
+    }
+
+    function dt_ujian()
+    {
+        $data = Ujian::where('guru_id', Auth::user()->id)->get();
+        if (request()->ajax()) {
+            return DataTables::of($data)
+                ->addColumn('nama', function ($row) {
+                    return $row->nama;
+                })
+                ->addColumn('nama_mapel', function ($row) {
+                    return $row->mapel->nama_mapel;
+                })
+                ->addColumn('nama_kelas', function ($row) {
+                    return $row->kelas->nama_kelas;
+                })
+                ->addColumn('option', function ($row) {
+                    if ($row->jenis == 0) {
+                        $holding = request()->segment(count(request()->segments()));
+                        return '<a href="/show-ujian/' . $row->kode . '/' . $holding . '" class="btn btn-primary btn-sm">
+                                    <span class="mdi mdi-eye-outline"></span>
+                                </a>';
+                    } elseif ($row->jenis == 1) {
+                        return '<a href="/show-ujian_essay/ ' . $row->kode . '" class="btn btn-primary btn-sm">
+                                    <span class="mdi mdi-eye-outline"></span>
+                                </a>';
+                    }
+                })
+                ->rawColumns(['created_at', 'nama_mapel', 'nama_kelas', 'option'])
+                ->make(true);
+        }
+    }
+
+    function show_ujian(Ujian $ujian)
+    {
+        // dd($ujian);
+        $holding = request()->segment(count(request()->segments()));
+
+        return view('admin.recruitment-users.ujian.data_show', [
+            'title' => 'Detail Ujian Pilihan Ganda',
+            'plugin' => '
+                <link href="' . url("/public/assets/ew/css/style.css") . '" rel="stylesheet" type="text/css" />
+                <script src="' . url("/public/assets/ew/js/examwizard.js") . '"></script>
+            ',
+            'menu' => [
+                'menu' => 'ujian',
+                'expanded' => 'ujian'
+            ],
+            'guru' => User::firstWhere('id', Auth::user()->id),
+            'ujian' => $ujian,
+            'holding' => $holding
         ]);
     }
 
@@ -1064,13 +1137,22 @@ class RecruitmentController extends Controller
 
     function nilai_interview_hrd(Request $request)
     {
+        // dd($request->all());
+        // dd($request->nilai_leadership + $request->nilai_planning + $request->nilai_problemsolving + $request->nilai_quallity + $request->nilai_creativity + $request->nilai_teamwork);
         RecruitmentInterview::where('id', $request->recruitment_interview_id1)->update([
-            'nilai_interview_hrd1'       => $request->nilai_interview_hrd1,
-            'nilai_interview_hrd2'       => $request->nilai_interview_hrd2,
-            'nilai_interview_hrd3'       => $request->nilai_interview_hrd3,
-            'nilai_interview_hrd4'       => $request->nilai_interview_hrd4,
-            'nilai_interview_hrd5'       => $request->nilai_interview_hrd5,
-            'catatan_interview_hrd'     => $request->catatan_interview_hrd,
+            'nilai_leadership'          => $request->nilai_leadership,
+            'catatan_leadership'        => $request->catatan_leadership,
+            'nilai_planning'            => $request->nilai_planning,
+            'catatan_planning'          => $request->catatan_planning,
+            'nilai_problemsolving'      => $request->nilai_problemsolving,
+            'catatan_problem_solving'   => $request->catatan_problem_solving,
+            'nilai_quallity'            => $request->nilai_quallity,
+            'catatan_quality'           => $request->catatan_quality,
+            'nilai_creativity'          => $request->nilai_creativity,
+            'catatan_creativity'        => $request->catatan_creativity,
+            'nilai_teamwork'            => $request->nilai_teamwork,
+            'catatan_teamwork'          => $request->catatan_teamwork,
+            'total_nilai_interview_hrd' => 4 + ($request->nilai_leadership + $request->nilai_planning + $request->nilai_problemsolving + $request->nilai_quallity + $request->nilai_creativity + $request->nilai_teamwork),
             'status_interview_manager'  => $request->status_interview_manager
         ]);
         ActivityLog::create([
@@ -1099,7 +1181,7 @@ class RecruitmentController extends Controller
     function pg_ranking()
     {
         $holding = request()->segment(count(request()->segments()));
-        return view('admin.recruitment-users.data_rankinginterview', [
+        return view('admin.recruitment-users.ranking.data_rankinginterview', [
             // return view('karyawan.index', [
             'title' => 'Data Ranking',
             'holding'   => $holding,
@@ -1123,9 +1205,15 @@ class RecruitmentController extends Controller
                 ]);
                 $query->orderBy('nama_bagian', 'ASC');
             },
-        ])->where('holding_recruitment', $holding)->orderBy('nama_bagian', 'ASC')->get();
+        ])
+            ->where('holding_recruitment', $holding)
+            ->orderBy('created_at', 'DESC')
+            ->get();
         if (request()->ajax()) {
             return DataTables::of($table)
+                ->addColumn('created_at', function ($row) {
+                    return Carbon::parse($row->created_at)->format('d-m-Y');
+                })
                 ->addColumn('nama_departemen', function ($row) {
                     if ($row->Bagian == NULL) {
                         $nama_departemen = NULL;
@@ -1154,15 +1242,11 @@ class RecruitmentController extends Controller
                     $url = url('/pg/data-list-ranking/' . $row->id . '/' . $holding);
                     $btn = '<a href="' . $url . '" class="btn btn-sm btn-primary">
                                 <i class="tf-icons mdi mdi-podium-gold me-1"></i>
-                                List Ranking
+                                &nbsp;List&nbsp;Ranking
                             </a>';
                     return $btn;
                 })
-                ->addColumn('tanggal', function ($row) {
-                    $return = $row->created_recruitment;
-                    return $return;
-                })
-                ->rawColumns(['nama_departemen', 'nama_divisi', 'nama_bagian', 'pelamar', 'tanggal'])
+                ->rawColumns(['created_at', 'nama_departemen', 'nama_divisi', 'nama_bagian', 'pelamar'])
                 ->make(true);
         }
     }
@@ -1170,7 +1254,9 @@ class RecruitmentController extends Controller
     function pg_list_ranking($id)
     {
         $holding = request()->segment(count(request()->segments()));
-        return view('admin.recruitment-users.data_listranking', [
+        // dd($holding);
+        $holding = request()->segment(count(request()->segments()));
+        return view('admin.recruitment-users.ranking.data_listranking', [
             'title' => 'Data Recruitment',
             'holding'   => $holding,
             'id_recruitment'        => $id,
@@ -1181,7 +1267,7 @@ class RecruitmentController extends Controller
         ]);
     }
 
-    function dt_list_ranking()
+    function dt_list_ranking($id)
     {
         $holding = request()->segment(count(request()->segments()));
         $table =  RecruitmentUser::with([
@@ -1198,295 +1284,412 @@ class RecruitmentController extends Controller
                 ]);
                 $query->orderBy('nama_bagian', 'ASC');
             },
-        ])->with([
+            'AuthLogin' => function ($query) {
+                $query->orderBy('id', 'ASC');
+            },
+            'WaktuUjian' => function ($query) {
+                $query->orderBy('id', 'ASC');
+            },
+            'Cv' => function ($query) {
+                $query->whereNotNull('users_career_id')->orderBy('id', 'ASC');
+            },
             'DataInterview' => function ($query) {
                 $query->orderBy('id', 'ASC');
             },
         ])
             ->where('holding', $holding)
-            // ->where('status_recruitmentuser','!=', 0)
-            // ->where('status_recruitmentuser','!=', 5)
+            ->where('recruitment_admin_id', $id)
+            ->where('status_recruitmentuser', '!=', 0)
+            ->where('status_recruitmentuser', '!=', 5)
             ->orderBy('nama_bagian', 'ASC')->get();
         // dd($table);
-        if (request()->ajax()) {
-            return DataTables::of($table)
-                ->addColumn('nama_pelamar', function ($row) {
-                    if (($row->nama_depan != '' && $row->nama_tengah != '' && $row->nama_belakang != '')) {
-                        $nama_pelamar = $row->nama_depan . ' ' . $row->nama_tengah . ' ' . $row->nama_belakang;
-                    } elseif ($row->nama_depan != '' && $row->nama_tengah != '' && $row->nama_belakang == '') {
-                        $nama_pelamar = $row->nama_depan . ' ' . $row->nama_tengah;
+        // if (request()->ajax()) {
+        return DataTables::of($table)
+            ->addColumn('nama_pelamar', function ($row) {
+                if (($row->Cv->nama_depan != '' && $row->Cv->nama_tengah != '' && $row->Cv->nama_belakang != '')) {
+                    $nama_pelamar = $row->Cv->nama_depan . ' ' . $row->Cv->nama_tengah . ' ' . $row->Cv->nama_belakang;
+                } elseif ($row->Cv->nama_depan != '' && $row->Cv->nama_tengah != '' && $row->Cv->nama_belakang == '') {
+                    $nama_pelamar = $row->Cv->nama_depan . ' ' . $row->Cv->nama_tengah;
+                } else {
+                    $nama_pelamar = $row->Cv->nama_depan;
+                }
+                return $nama_pelamar;
+            })
+            ->addColumn('status_nilai', function ($row) use ($holding) {
+                $data1 = (($row->DataInterview->nilai_analogi_antonim +
+                    $row->DataInterview->nilai_analogi_sinonim +
+                    $row->DataInterview->nilai_penalaran +
+                    $row->DataInterview->nilai_aritmatika) * 70) / 100;
+                $data2 = (($row->DataInterview->nilai_kehadiran +
+                    $row->DataInterview->nilai_leadership +
+                    $row->DataInterview->nilai_planning +
+                    $row->DataInterview->nilai_problemsolving +
+                    $row->DataInterview->nilai_quallity +
+                    $row->DataInterview->nilai_creativity +
+                    $row->DataInterview->nilai_teamwork) * 30) / 100;
+                $return = $data1 + $data2;
+                if ($return > 90) {
+                    return '<span class="badge bg-label-success rounded-pill">Rekomendasi A+ </span>';
+                } elseif ($return < 90 && $return > 75) {
+                    return '<span class="badge bg-label-success rounded-pill">Rekomendasi A</span>';
+                } elseif ($return < 75 && $return > 61) {
+                    return '<span class="badge bg-label-info rounded-pill">Dipertimbangkan</span>';
+                } else {
+                    return '<span class="badge bg-label-danger rounded-pill">Ditolak</span>';
+                }
+            })
+            ->addColumn('nilai_akhir', function ($row) use ($holding) {
+                if (isset($row->DataInterview) && $row->DataInterview !== null) {
+                    if ($row->DataInterview->status_interview == 3) {
+                        $data1 = (($row->DataInterview->nilai_analogi_antonim +
+                            $row->DataInterview->nilai_analogi_sinonim +
+                            $row->DataInterview->nilai_penalaran +
+                            $row->DataInterview->nilai_aritmatika) * 70) / 100;
+                        $data2 = (($row->DataInterview->nilai_kehadiran +
+                            $row->DataInterview->nilai_leadership +
+                            $row->DataInterview->nilai_planning +
+                            $row->DataInterview->nilai_problemsolving +
+                            $row->DataInterview->nilai_quallity +
+                            $row->DataInterview->nilai_creativity +
+                            $row->DataInterview->nilai_teamwork) * 30) / 100;
+                        $return = '<span class="badge badge-center rounded-pill bg-success" style="width:35%">&nbsp;' . $data1 + $data2 . '&nbsp;</span>';
+                        return $return;
                     } else {
-                        $nama_pelamar = $row->nama_depan;
-                    }
-                    return $nama_pelamar;
-                })
-                ->addColumn('status_kehadiran', function ($row) use ($holding) {
-                    if (isset($row->DataInterview) && $row->DataInterview !== null) {
-                        if ($row->DataInterview->nilai_ujian != 0 && $row->DataInterview->status_interview == 3) {
-                            $return = '<span class="badge rounded-pill bg-success">Penilaian Interview</span>';
-                            return $return;
-                        } elseif ($row->DataInterview->status_interview == 4) {
-                            $return = '<span class="badge rounded-pill bg-danger">Tidak Hadir Interview</span>';
-                            return $return;
-                        } elseif ($row->DataInterview->nilai_ujian == 0 && $row->DataInterview->status_interview == 0) {
-                            $return = '<span class="badge rounded-pill bg-warning">Belum Absen Interview</span>';
-                            return $return;
-                        }
-                    } else {
-                        $return = '<span class="badge rounded-pill bg-dark">Tidak Lolos Administrasi</span>';
+                        $return = '<span class="badge badge-center rounded-pill bg-primary" style="width:35%">&nbsp;0&nbsp;</span>';
                         return $return;
                     }
-                })
-                ->addColumn('detail_cv', function ($row) use ($holding) {
-                    $btn = '<button id="btn_lihat_cv"
+                } else {
+                    $return = '<span class="badge badge-center rounded-pill bg-primary" style="width:35%">&nbsp;0&nbsp;</span>';
+                    return $return;
+                }
+            })
+            ->addColumn('detail_cv', function ($row) use ($holding) {
+                $btn = '<button id="btn_lihat_cv"
                                 data-id="' . $row->id . '"
-                                data-nama_pelamar="' . $row->nama_depan . ' ' . $row->nama_tengah . ' ' . $row->nama_belakang . '"
-                                data-tempat_lahir="' . $row->tempat_lahir . '"
-                                data-tanggal_lahir="' . $row->tanggal_lahir . '"
-                                data-gender="' . $row->gender . '"
-                                data-status_nikah="' . $row->status_nikah . '"
-                                data-nik="' . $row->nik . '"
+                                data-nama_pelamar="' . $row->Cv->nama_depan . ' ' . $row->Cv->nama_tengah . ' ' . $row->Cv->nama_belakang . '"
+                                data-tempat_lahir="' . $row->Cv->tempat_lahir . '"
+                                data-tanggal_lahir="' . $row->Cv->tanggal_lahir . '"
+                                data-gender="' . $row->Cv->gender . '"
+                                data-status_nikah="' . $row->Cv->status_nikah . '"
+                                data-nik="' . $row->Cv->nik . '"
                                 data-departemen="' . $row->Bagian->Divisi->Departemen->nama_departemen . '"
                                 data-divisi="' . $row->Bagian->Divisi->nama_divisi . '"
                                 data-bagian="' . $row->Bagian->nama_bagian . '"
-                                data-email="' . $row->email . '"
-                                data-no_hp="' . $row->no_hp . '"
-                                data-alamatktp="' . $row->alamat_ktp . '"
-                                data-nama_sdmi="' . $row->nama_sdmi . '"
-                                data-tahun_sdmi="' . $row->tahun_sdmi . '"
-                                data-nama_smpmts="' . $row->nama_smpmts . '"
-                                data-tahun_smpmts="' . $row->tahun_smpmts . '"
-                                data-nama_smamasmk="' . $row->nama_smamasmk . '"
-                                data-tahun_smamasmk="' . $row->tahun_smamasmk . '"
-                                data-nama_universitas="' . $row->nama_universitas . '"
-                                data-tahun_universitas="' . $row->tahun_universitas . '"
-                                data-judul_keterampilan1="' . $row->judul_keterampilan1 . '"
-                                data-ket_keterampilan1="' . $row->ket_keterampilan1 . '"
-                                data-judul_keterampilan2="' . $row->judul_keterampilan2 . '"
-                                data-ket_keterampilan2="' . $row->ket_keterampilan2 . '"
-                                data-judul_keterampilan3="' . $row->judul_keterampilan3 . '"
-                                data-ket_keterampilan3="' . $row->ket_keterampilan3 . '"
-                                data-judul_pengalaman1="' . $row->judul_pengalaman1 . '"
-                                data-lokasi_pengalaman1="' . $row->lokasi_pengalaman1 . '"
-                                data-tahun_pengalaman1="' . $row->tahun_pengalaman1 . '"
-                                data-judul_pengalaman2="' . $row->judul_pengalaman2 . '"
-                                data-lokasi_pengalaman2="' . $row->lokasi_pengalaman2 . '"
-                                data-tahun_pengalaman2="' . $row->tahun_pengalaman2 . '"
-                                data-judul_pengalaman3="' . $row->judul_pengalaman3 . '"
-                                data-lokasi_pengalaman3="' . $row->lokasi_pengalaman3 . '"
-                                data-tahun_pengalaman3="' . $row->tahun_pengalaman3 . '"
-                                data-prestasi1="' . $row->prestasi1 . '"
-                                data-prestasi2="' . $row->prestasi2 . '"
-                                data-prestasi3="' . $row->prestasi3 . '"
-                                data-img_ktp="' . $row->file_ktp . '"
-                                data-img_kk="' . $row->file_kk . '"
-                                data-img_ijazah="' . $row->file_ijazah . '"
-                                data-img_pp="' . $row->file_pp . '"
-                                type="button" class="btn btn-sm btn-info ">
+                                data-email="' . $row->Cv->email . '"
+                                data-no_hp="' . $row->Cv->no_hp . '"
+                                data-alamatktp="' . $row->Cv->detail_alamat . '"
+                                data-nama_sdmi="' . $row->Cv->nama_sdmi . '"
+                                data-tahun_sdmi="' . $row->Cv->tahun_sdmi . '"
+                                data-nama_smpmts="' . $row->Cv->nama_smpmts . '"
+                                data-tahun_smpmts="' . $row->Cv->tahun_smpmts . '"
+                                data-nama_smamasmk="' . $row->Cv->nama_smamasmk . '"
+                                data-tahun_smamasmk="' . $row->Cv->tahun_smamasmk . '"
+                                data-nama_universitas="' . $row->Cv->nama_universitas . '"
+                                data-tahun_universitas="' . $row->Cv->tahun_universitas . '"
+                                data-judul_keterampilan1="' . $row->Cv->judul_keterampilan1 . '"
+                                data-ket_keterampilan1="' . $row->Cv->ket_keterampilan1 . '"
+                                data-judul_keterampilan2="' . $row->Cv->judul_keterampilan2 . '"
+                                data-ket_keterampilan2="' . $row->Cv->ket_keterampilan2 . '"
+                                data-judul_keterampilan3="' . $row->Cv->judul_keterampilan3 . '"
+                                data-ket_keterampilan3="' . $row->Cv->ket_keterampilan3 . '"
+                                data-judul_pengalaman1="' . $row->Cv->judul_pengalaman1 . '"
+                                data-lokasi_pengalaman1="' . $row->Cv->lokasi_pengalaman1 . '"
+                                data-tahun_pengalaman1="' . $row->Cv->tahun_pengalaman1 . '"
+                                data-judul_pengalaman2="' . $row->Cv->judul_pengalaman2 . '"
+                                data-lokasi_pengalaman2="' . $row->Cv->lokasi_pengalaman2 . '"
+                                data-tahun_pengalaman2="' . $row->Cv->tahun_pengalaman2 . '"
+                                data-judul_pengalaman3="' . $row->Cv->judul_pengalaman3 . '"
+                                data-lokasi_pengalaman3="' . $row->Cv->lokasi_pengalaman3 . '"
+                                data-tahun_pengalaman3="' . $row->Cv->tahun_pengalaman3 . '"
+                                data-prestasi1="' . $row->Cv->prestasi1 . '"
+                                data-prestasi2="' . $row->Cv->prestasi2 . '"
+                                data-prestasi3="' . $row->Cv->prestasi3 . '"
+                                data-img_ktp="' . $row->Cv->file_ktp . '"
+                                data-img_kk="' . $row->Cv->file_kk . '"
+                                data-img_ijazah="' . $row->Cv->file_ijazah . '"
+                                data-img_pp="' . $row->Cv->file_pp . '"
+                                type="button" class="btn btn-sm" style="background-color:#e9ddff">
                                 <i class="tf-icons mdi mdi-eye-circle-outline me-1"></i>
                                 Detail&nbsp;CV
                             </button>';
-                    return $btn;
-                })
-                ->addColumn('nilai_ujian', function ($row) {
-                    if (isset($row->DataInterview) && $row->DataInterview !== null) {
-                        if ($row->DataInterview->nilai_ujian != 0 && $row->DataInterview->status_interview == 3) {
-                            $return = '<span class="badge badge-center rounded-pill bg-primary">' . $row->DataInterview->nilai_ujian . '</span>';
-                            return $return;
-                        } elseif ($row->DataInterview->status_interview == 4) {
-                            $return = '<span class="badge badge-center rounded-pill bg-primary">' . $row->DataInterview->nilai_ujian . '</span>';
-                            return $return;
-                        } elseif ($row->DataInterview->nilai_ujian == 0 && $row->DataInterview->status_interview == 0) {
-                            $return = '<span class="badge badge-center rounded-pill bg-primary">' . $row->DataInterview->nilai_ujian . '</span>';
-                            return $return;
-                        }
-                    } else {
-                        $return = '<span class="badge badge-center rounded-pill bg-primary">0</span>';
-                        return $return;
-                    }
-                    return;
-                })
-                ->addColumn('catatan_ujian', function ($row) {
-                    // return $return;
-                    if (isset($row->DataInterview) && $row->DataInterview !== null) {
-                        if (isset($row->DataInterview->catatan_ujian)) {
-                            $return = 1;
-                        }
-                    }
-                    $return = 0;
-                })
-                ->addColumn('nilai_interview_hrd1', function ($row) {
-                    if (isset($row->DataInterview) && $row->DataInterview !== null) {
-                        if ($row->DataInterview->nilai_ujian != 0 && $row->DataInterview->status_interview == 3) {
-                            $return = '<span class="badge badge-center rounded-pill bg-primary">' . $row->DataInterview->nilai_interview_hrd1 . '</span>';
-                            return $return;
-                        } elseif ($row->DataInterview->status_interview == 4) {
-                            $return = '<span class="badge badge-center rounded-pill bg-primary">' . $row->DataInterview->nilai_interview_hrd1 . '</span>';
-                            return $return;
-                        } elseif ($row->DataInterview->nilai_ujian == 0 && $row->DataInterview->status_interview == 0) {
-                            $return = '<span class="badge badge-center rounded-pill bg-primary">' . $row->DataInterview->nilai_interview_hrd1 . '</span>';
-                            return $return;
-                        }
-                    } else {
-                        $return = '<span class="badge badge-center rounded-pill bg-primary">0</span>';
-                        return $return;
-                    }
-                    return;
-                })
-                ->addColumn('nilai_interview_hrd2', function ($row) {
-                    if (isset($row->DataInterview) && $row->DataInterview !== null) {
-                        if ($row->DataInterview->nilai_ujian != 0 && $row->DataInterview->status_interview == 3) {
-                            $return = '<span class="badge badge-center rounded-pill bg-primary">' . $row->DataInterview->nilai_interview_hrd2 . '</span>';
-                            return $return;
-                        } elseif ($row->DataInterview->status_interview == 4) {
-                            $return = '<span class="badge badge-center rounded-pill bg-primary">' . $row->DataInterview->nilai_interview_hrd2 . '</span>';
-                            return $return;
-                        } elseif ($row->DataInterview->nilai_ujian == 0 && $row->DataInterview->status_interview == 0) {
-                            $return = '<span class="badge badge-center rounded-pill bg-primary">' . $row->DataInterview->nilai_interview_hrd2 . '</span>';
-                            return $return;
-                        }
-                    } else {
-                        $return = '<span class="badge badge-center rounded-pill bg-primary">0</span>';
-                        return $return;
-                    }
-                    return;
-                })
-                ->addColumn('nilai_interview_hrd3', function ($row) {
-                    if (isset($row->DataInterview) && $row->DataInterview !== null) {
-                        if ($row->DataInterview->nilai_ujian != 0 && $row->DataInterview->status_interview == 3) {
-                            $return = '<span class="badge badge-center rounded-pill bg-primary">' . $row->DataInterview->nilai_interview_hrd3 . '</span>';
-                            return $return;
-                        } elseif ($row->DataInterview->status_interview == 4) {
-                            $return = '<span class="badge badge-center rounded-pill bg-primary">' . $row->DataInterview->nilai_interview_hrd3 . '</span>';
-                            return $return;
-                        } elseif ($row->DataInterview->nilai_ujian == 0 && $row->DataInterview->status_interview == 0) {
-                            $return = '<span class="badge badge-center rounded-pill bg-primary">' . $row->DataInterview->nilai_interview_hrd3 . '</span>';
-                            return $return;
-                        }
-                    } else {
-                        $return = '<span class="badge badge-center rounded-pill bg-primary">0</span>';
-                        return $return;
-                    }
-                    return;
-                })
-                ->addColumn('nilai_interview_hrd4', function ($row) {
-                    if (isset($row->DataInterview) && $row->DataInterview !== null) {
-                        if ($row->DataInterview->nilai_ujian != 0 && $row->DataInterview->status_interview == 3) {
-                            $return = '<span class="badge badge-center rounded-pill bg-primary">' . $row->DataInterview->nilai_interview_hrd4 . '</span>';
-                            return $return;
-                        } elseif ($row->DataInterview->status_interview == 4) {
-                            $return = '<span class="badge badge-center rounded-pill bg-primary">' . $row->DataInterview->nilai_interview_hrd4 . '</span>';
-                            return $return;
-                        } elseif ($row->DataInterview->nilai_ujian == 0 && $row->DataInterview->status_interview == 0) {
-                            $return = '<span class="badge badge-center rounded-pill bg-primary">' . $row->DataInterview->nilai_interview_hrd4 . '</span>';
-                            return $return;
-                        }
-                    } else {
-                        $return = '<span class="badge badge-center rounded-pill bg-primary">0</span>';
-                        return $return;
-                    }
-                    return;
-                })
-                ->addColumn('nilai_interview_hrd5', function ($row) {
-                    if (isset($row->DataInterview) && $row->DataInterview !== null) {
-                        if ($row->DataInterview->nilai_ujian != 0 && $row->DataInterview->status_interview == 3) {
-                            $return = '<span class="badge badge-center rounded-pill bg-primary">' . $row->DataInterview->nilai_interview_hrd5 . '</span>';
-                            return $return;
-                        } elseif ($row->DataInterview->status_interview == 4) {
-                            $return = '<span class="badge badge-center rounded-pill bg-primary">' . $row->DataInterview->nilai_interview_hrd5 . '</span>';
-                            return $return;
-                        } elseif ($row->DataInterview->nilai_ujian == 0 && $row->DataInterview->status_interview == 0) {
-                            $return = '<span class="badge badge-center rounded-pill bg-primary">' . $row->DataInterview->nilai_interview_hrd5 . '</span>';
-                            return $return;
-                        }
-                    } else {
-                        $return = '<span class="badge badge-center rounded-pill bg-primary">0</span>';
-                        return $return;
-                    }
-                    return;
-                })
-                ->addColumn('catatan_interview_hrd', function ($row) {
-                    if (isset($row->DataInterview) && $row->DataInterview !== null) {
-                        if ($row->DataInterview->nilai_ujian != 0 && $row->DataInterview->status_interview == 3) {
-                            $return = $row->DataInterview->catatan_interview_hrd;
+                return $btn;
+            })
+            ->addColumn('nilai_analogi_antonim', function ($row) {
+                if (isset($row->DataInterview) && $row->DataInterview !== null) {
+                    if ($row->DataInterview->nilai_analogi_antonim != 0 && $row->DataInterview->status_interview == 3) {
+                        if ($row->DataInterview->nilai_analogi_antonim == 0) {
+                            $return = '<span class="badge badge-center rounded-pill bg-primary" style="width:35%">&nbsp;0&nbsp;</span>';
                             return $return;
                         } else {
-                            $return = '-';
+                            $return = '<span class="badge badge-center rounded-pill bg-primary" style="width:35%">&nbsp;' . $row->DataInterview->nilai_analogi_antonim . '&nbsp;</span>';
                             return $return;
                         }
                     } else {
-                        $return = '-';
+                        $return = '<span class="badge badge-center rounded-pill bg-primary" style="width:35%">&nbsp;0&nbsp;</span>';
                         return $return;
                     }
-                    return;
-                })
-                ->addColumn('nilai_interview_manager', function ($row) {
-                    if (isset($row->DataInterview) && $row->DataInterview !== null) {
-                        if ($row->DataInterview->nilai_ujian != 0 && $row->DataInterview->status_interview == 3) {
-                            $return = '<span class="badge badge-center rounded-pill bg-primary">' . $row->DataInterview->nilai_interview_manager . '</span>';
-                            return $return;
-                        } elseif ($row->DataInterview->status_interview == 4) {
-                            $return = '<span class="badge badge-center rounded-pill bg-primary">' . $row->DataInterview->nilai_interview_manager . '</span>';
-                            return $return;
-                        } elseif ($row->DataInterview->nilai_ujian == 0 && $row->DataInterview->status_interview == 0) {
-                            $return = '<span class="badge badge-center rounded-pill bg-primary">' . $row->DataInterview->nilai_interview_manager . '</span>';
-                            return $return;
-                        }
-                    } else {
-                        $return = '<span class="badge badge-center rounded-pill bg-primary">0</span>';
-                        return $return;
-                    }
-                    return;
-                })
-                ->addColumn('catatan_interview_manager', function ($row) {
-                    if (isset($row->DataInterview) && $row->DataInterview !== null) {
-                        if ($row->DataInterview->nilai_ujian != 0 && $row->DataInterview->status_interview == 3) {
-                            $return = $row->DataInterview->catatan_interview_manager;
+                } else {
+                    $return = '<span class="badge badge-center rounded-pill bg-primary" style="width:35%">&nbsp;0&nbsp;</span>';
+                    return $return;
+                }
+            })
+            ->addColumn('nilai_analogi_sinonim', function ($row) {
+                if (isset($row->DataInterview) && $row->DataInterview !== null) {
+                    if ($row->DataInterview->nilai_analogi_sinonim != 0 && $row->DataInterview->status_interview == 3) {
+                        if ($row->DataInterview->nilai_analogi_sinonim == 0) {
+                            $return = '<span class="badge badge-center rounded-pill bg-primary" style="width:35%">&nbsp;0&nbsp;</span>';
                             return $return;
                         } else {
-                            $return = '-';
+                            $return = '<span class="badge badge-center rounded-pill bg-primary" style="width:35%">&nbsp;' . $row->DataInterview->nilai_analogi_sinonim . '&nbsp;</span>';
                             return $return;
                         }
                     } else {
-                        $return = '-';
+                        $return = '<span class="badge badge-center rounded-pill bg-primary" style="width:35%">&nbsp;0&nbsp;</span>';
                         return $return;
                     }
-                    return;
-                })
-                ->addColumn('nilai_interview_manager', function ($row) {
-                    if (isset($row->DataInterview) && $row->DataInterview !== null) {
-                        if ($row->DataInterview->nilai_ujian != 0 && $row->DataInterview->status_interview == 3) {
-                            $return = '<span class="badge badge-center rounded-pill bg-primary">' . $row->DataInterview->nilai_interview_manager . '</span>';
+                } else {
+                    $return = '<span class="badge badge-center rounded-pill bg-primary" style="width:35%">&nbsp;0&nbsp;</span>';
+                    return $return;
+                }
+            })
+            ->addColumn('nilai_penalaran', function ($row) {
+                if (isset($row->DataInterview) && $row->DataInterview !== null) {
+                    if ($row->DataInterview->nilai_penalaran != null && $row->DataInterview->status_interview == 3) {
+                        if ($row->DataInterview->nilai_penalaran == 0) {
+                            $return = '<span class="badge badge-center rounded-pill bg-primary" style="width:35%">&nbsp;0&nbsp;</span>';
                             return $return;
-                        } elseif ($row->DataInterview->status_interview == 4) {
-                            $return = '<span class="badge badge-center rounded-pill bg-primary">' . $row->DataInterview->nilai_interview_manager . '</span>';
-                            return $return;
-                        } elseif ($row->DataInterview->nilai_ujian == 0 && $row->DataInterview->status_interview == 0) {
-                            $return = '<span class="badge badge-center rounded-pill bg-primary">' . $row->DataInterview->nilai_interview_manager . '</span>';
+                        } else {
+                            $return = '<span class="badge badge-center rounded-pill bg-primary" style="width:35%">&nbsp;' . $row->DataInterview->nilai_penalaran . '&nbsp;</span>';
                             return $return;
                         }
                     } else {
-                        $return = '<span class="badge badge-center rounded-pill bg-primary">0</span>';
+                        $return = '<span class="badge badge-center rounded-pill bg-primary" style="width:35%">&nbsp;0&nbsp;</span>';
                         return $return;
                     }
-                    return;
-                })
-                ->rawColumns([
-                    'nama_pelamar',
-                    'status_kehadiran',
-                    'detail_cv',
-                    'nilai_ujian',
-                    'catatan_ujian',
-                    'nilai_interview_hrd1',
-                    'nilai_interview_hrd2',
-                    'nilai_interview_hrd3',
-                    'nilai_interview_hrd4',
-                    'nilai_interview_hrd5',
-                    'catatan_interview_hrd',
-                    'nilai_interview_manager',
-                    'catatan_interview_manager'
-                ])
-                ->make(true);
-        }
+                } else {
+                    $return = '<span class="badge badge-center rounded-pill bg-primary" style="width:35%">&nbsp;0&nbsp;</span>';
+                    return $return;
+                }
+            })
+            ->addColumn('nilai_aritmatika', function ($row) {
+                if (isset($row->DataInterview) && $row->DataInterview !== null) {
+                    if ($row->DataInterview->nilai_aritmatika != null && $row->DataInterview->status_interview == 3) {
+                        if ($row->DataInterview->nilai_aritmatika == 0) {
+                            $return = '<span class="badge badge-center rounded-pill bg-primary" style="width:35%">&nbsp;0&nbsp;</span>';
+                            return $return;
+                        } else {
+                            $return = '<span class="badge badge-center rounded-pill bg-primary" style="width:35%">&nbsp;' . $row->DataInterview->nilai_aritmatika . '&nbsp;</span>';
+                            return $return;
+                        }
+                    } else {
+                        $return = '<span class="badge badge-center rounded-pill bg-primary" style="width:35%">&nbsp;0&nbsp;</span>';
+                        return $return;
+                    }
+                } else {
+                    $return = '<span class="badge badge-center rounded-pill bg-primary" style="width:35%">&nbsp;0&nbsp;</span>';
+                    return $return;
+                }
+            })
+            ->addColumn('total_nilai_psikotes', function ($row) {
+                if (isset($row->DataInterview) && $row->DataInterview !== null) {
+                    if ($row->DataInterview->nilai_aritmatika != null && $row->DataInterview->status_interview == 3) {
+                        $return = '<span class="badge badge-center rounded-pill bg-success" style="width:35%">&nbsp;' .
+                            $row->DataInterview->nilai_aritmatika +
+                            $row->DataInterview->nilai_penalaran +
+                            $row->DataInterview->nilai_analogi_antonim +
+                            $row->DataInterview->nilai_analogi_sinonim
+                            . '&nbsp;</span>';
+                        return $return;
+                    } else {
+                        $return = '<span class="badge badge-center rounded-pill bg-success" style="width:35%">&nbsp;0&nbsp;</span>';
+                        return $return;
+                    }
+                } else {
+                    $return = '<span class="badge badge-center rounded-pill bg-success" style="width:35%">&nbsp;0&nbsp;</span>';
+                    return $return;
+                }
+            })
+            ->addColumn('nilai_kehadiran', function ($row) {
+                if (isset($row->DataInterview) && $row->DataInterview !== null) {
+                    if ($row->DataInterview->nilai_kehadiran != null && $row->DataInterview->status_interview == 3) {
+                        if ($row->DataInterview->nilai_kehadiran == 0) {
+                            $return = '<span class="badge badge-center rounded-pill bg-primary" style="width:35%">&nbsp;0&nbsp;</span>';
+                            return $return;
+                        } else {
+                            $return = '<span class="badge badge-center rounded-pill bg-primary" style="width:35%">&nbsp;' . $row->DataInterview->nilai_kehadiran . '&nbsp;</span>';
+                            return $return;
+                        }
+                    } else {
+                        $return = '<span class="badge badge-center rounded-pill bg-primary" style="width:35%">&nbsp;0&nbsp;</span>';
+                        return $return;
+                    }
+                } else {
+                    $return = '<span class="badge badge-center rounded-pill bg-primary" style="width:35%">&nbsp;0&nbsp;</span>';
+                    return $return;
+                }
+            })
+            ->addColumn('nilai_leadership', function ($row) {
+                if (isset($row->DataInterview) && $row->DataInterview !== null) {
+                    if ($row->DataInterview->nilai_leadership != null && $row->DataInterview->status_interview == 3) {
+                        if ($row->DataInterview->nilai_leadership == 0) {
+                            $return = '<span class="badge badge-center rounded-pill bg-primary" style="width:35%">&nbsp;0&nbsp;</span>';
+                            return $return;
+                        } else {
+                            $return = '<span class="badge badge-center rounded-pill bg-primary" style="width:35%">&nbsp;' . $row->DataInterview->nilai_leadership . '&nbsp;</span>';
+                            return $return;
+                        }
+                    } else {
+                        $return = '<span class="badge badge-center rounded-pill bg-primary" style="width:35%">&nbsp;0&nbsp;</span>';
+                        return $return;
+                    }
+                } else {
+                    $return = '<span class="badge badge-center rounded-pill bg-primary" style="width:35%">&nbsp;0&nbsp;</span>';
+                    return $return;
+                }
+            })
+            ->addColumn('nilai_planning', function ($row) {
+                if (isset($row->DataInterview) && $row->DataInterview !== null) {
+                    if ($row->DataInterview->nilai_planning != null && $row->DataInterview->status_interview == 3) {
+                        if ($row->DataInterview->nilai_planning == 0) {
+                            $return = '<span class="badge badge-center rounded-pill bg-primary" style="width:35%">&nbsp;0&nbsp;</span>';
+                            return $return;
+                        } else {
+                            $return = '<span class="badge badge-center rounded-pill bg-primary" style="width:35%">&nbsp;' . $row->DataInterview->nilai_planning . '&nbsp;</span>';
+                            return $return;
+                        }
+                    } else {
+                        $return = '<span class="badge badge-center rounded-pill bg-primary" style="width:35%">&nbsp;0&nbsp;</span>';
+                        return $return;
+                    }
+                } else {
+                    $return = '<span class="badge badge-center rounded-pill bg-primary" style="width:35%">&nbsp;0&nbsp;</span>';
+                    return $return;
+                }
+            })
+            ->addColumn('nilai_problemsolving', function ($row) {
+                if (isset($row->DataInterview) && $row->DataInterview !== null) {
+                    if ($row->DataInterview->nilai_problemsolving != null && $row->DataInterview->status_interview == 3) {
+                        if ($row->DataInterview->nilai_problemsolving == 0) {
+                            $return = '<span class="badge badge-center rounded-pill bg-primary" style="width:35%">&nbsp;0&nbsp;</span>';
+                            return $return;
+                        } else {
+                            $return = '<span class="badge badge-center rounded-pill bg-primary" style="width:35%">&nbsp;' . $row->DataInterview->nilai_problemsolving . '&nbsp;</span>';
+                            return $return;
+                        }
+                    } else {
+                        $return = '<span class="badge badge-center rounded-pill bg-primary" style="width:35%">&nbsp;0&nbsp;</span>';
+                        return $return;
+                    }
+                } else {
+                    $return = '<span class="badge badge-center rounded-pill bg-primary" style="width:35%">&nbsp;0&nbsp;</span>';
+                    return $return;
+                }
+            })
+            ->addColumn('nilai_quallity', function ($row) {
+                if (isset($row->DataInterview) && $row->DataInterview !== null) {
+                    if ($row->DataInterview->nilai_quallity != null && $row->DataInterview->status_interview == 3) {
+                        if ($row->DataInterview->nilai_quallity == 0) {
+                            $return = '<span class="badge badge-center rounded-pill bg-primary" style="width:35%">&nbsp;0&nbsp;</span>';
+                            return $return;
+                        } else {
+                            $return = '<span class="badge badge-center rounded-pill bg-primary" style="width:35%">&nbsp;' . $row->DataInterview->nilai_quallity . '&nbsp;</span>';
+                            return $return;
+                        }
+                    } else {
+                        $return = '<span class="badge badge-center rounded-pill bg-primary" style="width:35%">&nbsp;0&nbsp;</span>';
+                        return $return;
+                    }
+                } else {
+                    $return = '<span class="badge badge-center rounded-pill bg-primary" style="width:35%">&nbsp;0&nbsp;</span>';
+                    return $return;
+                }
+            })
+            ->addColumn('nilai_creativity', function ($row) {
+                if (isset($row->DataInterview) && $row->DataInterview !== null) {
+                    if ($row->DataInterview->nilai_creativity != null && $row->DataInterview->status_interview == 3) {
+                        if ($row->DataInterview->nilai_creativity == 0) {
+                            $return = '<span class="badge badge-center rounded-pill bg-primary" style="width:35%">&nbsp;0&nbsp;</span>';
+                            return $return;
+                        } else {
+                            $return = '<span class="badge badge-center rounded-pill bg-primary" style="width:35%">&nbsp;' . $row->DataInterview->nilai_creativity . '&nbsp;</span>';
+                            return $return;
+                        }
+                    } else {
+                        $return = '<span class="badge badge-center rounded-pill bg-primary" style="width:35%">&nbsp;0&nbsp;</span>';
+                        return $return;
+                    }
+                } else {
+                    $return = '<span class="badge badge-center rounded-pill bg-primary" style="width:35%">&nbsp;0&nbsp;</span>';
+                    return $return;
+                }
+            })
+            ->addColumn('nilai_teamwork', function ($row) {
+                if (isset($row->DataInterview) && $row->DataInterview !== null) {
+                    if ($row->DataInterview->nilai_teamwork != null && $row->DataInterview->status_interview == 3) {
+                        if ($row->DataInterview->nilai_teamwork == 0) {
+                            $return = '<span class="badge badge-center rounded-pill bg-primary" style="width:35%">&nbsp;0&nbsp;</span>';
+                            return $return;
+                        } else {
+                            $return = '<span class="badge badge-center rounded-pill bg-primary" style="width:35%">&nbsp;' . $row->DataInterview->nilai_teamwork . '&nbsp;</span>';
+                            return $return;
+                        }
+                    } else {
+                        $return = '<span class="badge badge-center rounded-pill bg-primary" style="width:35%">&nbsp;0&nbsp;</span>';
+                        return $return;
+                    }
+                } else {
+                    $return = '<span class="badge badge-center rounded-pill bg-primary" style="width:35%">&nbsp;0&nbsp;</span>';
+                    return $return;
+                }
+            })
+            ->addColumn('total_nilai_interview', function ($row) {
+                if (isset($row->DataInterview) && $row->DataInterview !== null) {
+                    if ($row->DataInterview->nilai_teamwork != null && $row->DataInterview->status_interview == 3) {
+                        if ($row->DataInterview->nilai_teamwork == 0) {
+                            $return = '<span class="badge badge-center rounded-pill bg-success" style="width:35%">&nbsp;0&nbsp;</span>';
+                            return $return;
+                        } else {
+                            $return = '<span class="badge badge-center rounded-pill bg-success" style="width:35%">&nbsp;' .
+                                $row->DataInterview->nilai_kehadiran +
+                                $row->DataInterview->nilai_leadership +
+                                $row->DataInterview->nilai_planning +
+                                $row->DataInterview->nilai_problemsolving +
+                                $row->DataInterview->nilai_quallity +
+                                $row->DataInterview->nilai_creativity +
+                                $row->DataInterview->nilai_teamwork
+                                . '&nbsp;</span>';
+                            return $return;
+                        }
+                    } else {
+                        $return = '<span class="badge badge-center rounded-pill bg-success" style="width:35%">&nbsp;0&nbsp;</span>';
+                        return $return;
+                    }
+                } else {
+                    $return = '<span class="badge badge-center rounded-pill bg-success" style="width:35%">&nbsp;0&nbsp;</span>';
+                    return $return;
+                }
+            })
+            ->rawColumns([
+                'nama_pelamar',
+                'status_nilai',
+                'nilai_akhir',
+                'detail_cv',
+                'nilai_analogi_antonim',
+                'nilai_analogi_sinonim',
+                'nilai_penalaran',
+                'nilai_aritmatika',
+                'total_nilai_psikotes',
+                'nilai_kehadiran',
+                'nilai_leadership',
+                'nilai_planning',
+                'nilai_problemsolving',
+                'nilai_quallity',
+                'nilai_creativity',
+                'nilai_teamwork',
+                'total_nilai_interview',
+
+            ])
+            ->make(true);
+        // }
     }
 }

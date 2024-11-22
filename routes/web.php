@@ -1396,6 +1396,14 @@ Route::get('/pg-data-ujian/sp', [RecruitmentController::class, 'pg_ujian'])->mid
 Route::get('/pg-data-ujian/sps', [RecruitmentController::class, 'pg_ujian'])->middleware('admin');
 Route::get('/pg-data-ujian/sip', [RecruitmentController::class, 'pg_ujian'])->middleware('admin');
 
+Route::get('/dt-data-list-ujian/sp', [RecruitmentController::class, 'dt_ujian'])->middleware('admin');
+Route::get('/dt-data-list-ujian/sps', [RecruitmentController::class, 'dt_ujian'])->middleware('admin');
+Route::get('/dt-data-list-ujian/sip', [RecruitmentController::class, 'dt_ujian'])->middleware('admin');
+
+Route::get('/show-ujian/{ujian?}/sp', [RecruitmentController::class, 'show_ujian'])->middleware('admin');
+Route::get('/show-ujian/{ujian?}/sps', [RecruitmentController::class, 'show_ujian'])->middleware('admin');
+Route::get('/show-ujian/{ujian?}/sip', [RecruitmentController::class, 'show_ujian'])->middleware('admin');
+
 Route::get('/pg-data-ujian/ujian_pg/sp', [RecruitmentController::class, 'pg_ujian_pg'])->middleware('admin');
 Route::get('/pg-data-ujian/ujian_pg/sps', [RecruitmentController::class, 'pg_ujian_pg'])->middleware('admin');
 Route::get('/pg-data-ujian/ujian_pg/sip', [RecruitmentController::class, 'pg_ujian_pg'])->middleware('admin');
@@ -1432,7 +1440,7 @@ Route::post('/nilai-interview-manager/update/sps', [RecruitmentController::class
 Route::post('/nilai-interview-manager/update/sip', [RecruitmentController::class, 'nilai_interview_manager'])->middleware('admin');
 
 Route::get('/pg-data-ranking/sp', [RecruitmentController::class, 'pg_ranking'])->middleware('admin');
-Route::get('/pg-data-ranking/sps', [rankingController::class, 'pg_ranking'])->middleware('admin');
+Route::get('/pg-data-ranking/sps', [RecruitmentController::class, 'pg_ranking'])->middleware('admin');
 Route::get('/pg-data-ranking/sip', [RecruitmentController::class, 'pg_ranking'])->middleware('admin');
 
 Route::get('/dt/data-ranking/sp', [RecruitmentController::class, 'dt_data_ranking'])->middleware('admin');

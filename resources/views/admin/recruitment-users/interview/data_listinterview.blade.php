@@ -7,7 +7,6 @@
     }
 </style>
 <style type="text/css">
-
     .left-profile-card .user-profile {
         width: 100px;
         height: 100px;
@@ -379,7 +378,6 @@
         -ms-filter: alpha(opacity=60);
         filter: alpha(opacity=60);
     }
-
 </style>
 
 <link href="https://cdn.jsdelivr.net/npm/@icon/entypo@1.0.3/entypo.css" rel="stylesheet">
@@ -390,29 +388,24 @@
     <div class="row gy-4">
         <!-- Transactions -->
         <div class="col-lg-12">
-            <div class="card">
+            <div class="card container">
                 <div class="card-header">
                     <div class="d-flex align-items-center justify-content-between">
-                        <h5 class="card-title m-0 me-2">DATA RANKING</h5>
+                        <h5 class="card-title m-0 me-2">DATA INTERVIEW</h5>
                     </div>
                 </div>
                 <table class="table" id="table_recruitment_interview" style="width: 100%;">
                     <thead class="table-primary">
                         <tr>
                             <th>No.</th>
-                            <th>Pelamar&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
-                            <th>Status</th>
+                            <th>Email</th>
+                            <th>Kehadiran</th>
+                            <th>Ujian</th>
                             <th>Detail&nbsp;CV</th>
-                            <th>Nilai Ujian</th>
-                            {{-- <th>Catatan&nbsp;Ujian</th> --}}
-                            <th>Nilai Relevansi</th>
-                            <th>Nilai Motivasi</th>
-                            <th>Nilai&nbsp;Kemampuan Problem solving</th>
-                            <th>Nilai&nbsp;Sikap keterampilan</th>
-                            <th>Nilai&nbsp;Individual Competency</th>
-                            <th>Catatan HRD</th>
-                            <th>Nilai Manager</th>
-                            <th>Catatn&nbsp;Manager</th>
+                            <th>Penilaian</th>
+                            <th>Departemen</th>
+                            <th>Divisi</th>
+                            <th>Bagian</th>
                         </tr>
                     </thead>
                     <tbody class="table-border-bottom-0">
@@ -463,6 +456,157 @@
         </div>
     </div>
 </div>
+<div class="modal fade" id="modal_warning" data-bs-backdrop="static" tabindex="-1">
+    <div class="modal-dialog modal-sm modal-dialog-scrollable">
+        <div class=" modal-content">
+            <div class="modal-header">
+                <h6 class="modal-title" id="backDropModalTitle">Kategori Ujian</h6>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="container">
+                    <form method="post" action="{{ url('absensi/kehadrian-interview/'.$holding) }}" enctype="multipart/form-data">
+                        @csrf
+                        <div class="row g-2">
+                            <div class="col mb-2">
+                                <div class="form-floating form-floating-outline">
+                                    <div class="form-check mt-3">
+                                        <span class="badge rounded-pill bg-danger">
+                                            User belum absen kehadiran
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="modal_ujian" data-bs-backdrop="static" tabindex="-1">
+    <div class="modal-dialog modal-lg modal-dialog-scrollable">
+        <div class=" modal-content">
+            <div class="modal-header">
+                <h6 class="modal-title" id="backDropModalTitle">Kategori Ujian</h6>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="container">
+                    <form method="post" action="{{ url('ujian/kategori-ujian/'.$holding) }}" enctype="multipart/form-data">
+                        @csrf
+                        <div class="row g-2">
+                            <div class="col mb-2">
+                                <div class="form-floating form-floating-outline">
+                                    <div class="row">
+                                        <div class="col-4">
+                                            <input type="hidden" name="id_recruitmentuser" id="show_recruitmentuserid">
+                                            <input type="hidden" name="id_userscareer" id="show_userscareerid">
+                                            <div class="form-check">
+                                                <input class="form-check-input" name="sd-6" disabled type="checkbox" value="6-SD" id="defaultCheck1">
+                                                <label class="form-check-label" for="defaultCheck1">
+                                                    6-SD
+                                                </label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" name="smp-1" disabled type="checkbox" value="SPM-1" id="defaultCheck1">
+                                                <label class="form-check-label" for="defaultCheck1">
+                                                    SMP-1
+                                                </label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" name="smp-2" disabled type="checkbox" value="SMP-2" id="defaultCheck1">
+                                                <label class="form-check-label" for="defaultCheck1">
+                                                    SMP-2
+                                                </label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" name="smp-3" disabled type="checkbox" value="SMP-2" id="defaultCheck1">
+                                                <label class="form-check-label" for="defaultCheck1">
+                                                    SMP-3
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div class="col-4">
+                                            <div class="form-check">
+                                                <input class="form-check-input" name="sma-1" disabled type="checkbox" value="SMA-1" id="defaultCheck1">
+                                                <label class="form-check-label" for="defaultCheck1">
+                                                    SMA-1
+                                                </label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" name="sma-2" disabled type="checkbox" value="SMA-2" id="defaultCheck1">
+                                                <label class="form-check-label" for="defaultCheck1">
+                                                    SMA-2
+                                                </label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" name="sma-3" disabled type="checkbox" value="SMA-3" id="defaultCheck1">
+                                                <label class="form-check-label" for="defaultCheck1">
+                                                    SMA-3
+                                                </label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" name="sbmptn" disabled type="checkbox" value="SBMPTN" id="defaultCheck1">
+                                                <label class="form-check-label" for="defaultCheck1">
+                                                    SBMPTN
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div class="col-4">
+                                            <!-- <div class="form-check">
+                                                <input class="form-check-input" name="cpns" type="checkbox" value="CPNS" id="defaultCheck1">
+                                                <label class="form-check-label" for="defaultCheck1">
+                                                    CPNS
+                                                </label>
+                                            </div> -->
+                                            <div class="form-check">
+                                                <input class="form-check-input" name="kelas" disabled type="checkbox" value="TOEFL" id="defaultCheck1">
+                                                <label class="form-check-label" for="defaultCheck1">
+                                                    TOEFL
+                                                </label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" name="kelas" checked type="checkbox" value="11" id="defaultCheck1">
+                                                <label class="form-check-label" for="defaultCheck1">
+                                                    PSIKOTES
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" onclick="location.reload();" class="btn btn-sm btn-outline-secondary waves-effect" data-bs-dismiss="modal">
+                                Cancel
+                            </button>
+                            <button type="submit" class="btn btn-sm btn-primary waves-effect waves-light">Save</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="modal_prosesujian" data-bs-backdrop="static" tabindex="-1">
+    <div class="modal-dialog modal-sm modal-dialog-scrollable">
+        <div class=" modal-content">
+            <div class="modal-header">
+                {{-- <h6 class="modal-title" id="backDropModalTitle">Absensi Kehadiran Interview</h6> --}}
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="container">
+                    <form enctype="multipart/form-data">
+                        @csrf
+                        <h4>Proses Pengerjaan Ujian</h4>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 <div class="modal fade" id="modal_lihat_cv" data-bs-backdrop="static" tabindex="-1">
     <div class="modal-dialog modal-xl modal-dialog-scrollable">
         <div class=" modal-content">
@@ -478,9 +622,9 @@
                                 <div class="card-body">
                                     <div class="text-center">
                                         <img src="" id="show_imgpp" alt class="user-profile">
-                                            <h6 id="show_nama_pelamar1" style="font-weight: bold"></h6>
-                                            {{-- <p>World of Internet</p> --}}
-                                            <div class="d-flex align-items-center justify-content-center mb-3">
+                                        <h6 id="show_nama_pelamar1" style="font-weight: bold"></h6>
+                                        {{-- <p>World of Internet</p> --}}
+                                        <div class="d-flex align-items-center justify-content-center mb-3">
                                             <i class="fas fa-star text-info"></i>
                                             <i class="fas fa-star text-info"></i>
                                             <i class="fas fa-star text-info"></i>
@@ -495,41 +639,41 @@
                                                 <i class="mdi mdi-card-account-mail"></i>
                                                 <span id="show_email"></span>
                                             </li>
-                                        <li>
-                                            <i class="mdi mdi-phone-classic "></i>
-                                            <span id="show_nohp"></span>
-                                        </li>
-                                        <li>
-                                            <i class="mdi mdi-google-maps"></i>
-                                            <span id="show_alamatktp1"></span>
-                                        </li>
-                                    </ul>
-                                </div>
-                                <div class="skill">
-                                    <h3>Riwayat Pendidikan</h3>
-                                    <p style="font-weight: bold">SD/MI</p>
-                                    <div class=" mb-3">
-                                        <i class="mdi mdi-book-education-outline"></i>
-                                        <span id="show_namasdmi"></span>&nbsp;(<span id="show_tahunsdmi"></span>)
+                                            <li>
+                                                <i class="mdi mdi-phone-classic "></i>
+                                                <span id="show_nohp"></span>
+                                            </li>
+                                            <li>
+                                                <i class="mdi mdi-google-maps"></i>
+                                                <span id="show_alamatktp1"></span>
+                                            </li>
+                                        </ul>
                                     </div>
-                                    <p>SMP/MTS</p>
-                                    <div class="mb-3">
-                                        <i class="mdi mdi-book-education-outline"></i>
-                                        <span id="show_namasmpmts"></span>&nbsp;(<span id="show_tahunsmpmts"></span>)
-                                    </div>
-                                    <p>SMA/MA/SMK</p>
-                                    <div class=" mb-3">
-                                        <i class="mdi mdi-book-education-outline"></i>
-                                        <span id="show_namasmamasmk"></span>&nbsp;(<span id="show_tahunsmamasm"></span>)
-                                    </div>
-                                    <p>UNIVERSITAS</p>
-                                    <div class=" mb-3">
-                                        <i class="mdi mdi-book-education-outline"></i>
-                                        <span id="show_namauniversitas"></span>&nbsp;(<span id="show_tahununiversitas"></span>)
+                                    <div class="skill">
+                                        <h3>Riwayat Pendidikan</h3>
+                                        <p style="font-weight: bold">SD/MI</p>
+                                        <div class=" mb-3">
+                                            <i class="mdi mdi-book-education-outline"></i>
+                                            <span id="show_namasdmi"></span>&nbsp;<br>(<span id="show_tahunsdmi"></span>)
+                                        </div>
+                                        <p style="font-weight: bold">SMP/MTS</p>
+                                        <div class="mb-3">
+                                            <i class="mdi mdi-book-education-outline"></i>
+                                            <span id="show_namasmpmts"></span>&nbsp;<br>(<span id="show_tahunsmpmts"></span>)
+                                        </div>
+                                        <p style="font-weight: bold">SMA/MA/SMK</p>
+                                        <div class=" mb-3">
+                                            <i class="mdi mdi-book-education-outline"></i>
+                                            <span id="show_namasmamasmk"></span>&nbsp;<br>(<span id="show_tahunsmamasm"></span>)
+                                        </div>
+                                        <p style="font-weight: bold">UNIVERSITAS</p>
+                                        <div class=" mb-3">
+                                            <i class="mdi mdi-book-education-outline"></i>
+                                            <span id="show_namauniversitas"></span>&nbsp;<br>(<span id="show_tahununiversitas"></span>)
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
                         </div>
                         <div class="col-lg-8">
                             <div class="card right-profile-card">
@@ -558,7 +702,7 @@
                                             <div class="row g-2">
                                                 <div class="col mb-2">
                                                     <div class="form-floating form-floating-outline">
-                                                        <input type="text" id="show_nama_pelamar2" readonly name="" class="form-control"/>
+                                                        <input type="text" id="show_nama_pelamar2" readonly name="" class="form-control" />
                                                         <label for="holding_recruitment">NAMA LENGKAP</label>
                                                     </div>
                                                 </div>
@@ -567,7 +711,7 @@
                                             <div class="row g-2">
                                                 <div class="col mb-2">
                                                     <div class="form-floating form-floating-outline">
-                                                        <input type="text" id="show_tempatlahir" readonly name="" class="form-control"/>
+                                                        <input type="text" id="show_tempatlahir" readonly name="" class="form-control" />
                                                         <label for="holding_recruitment">TEMPAT LAHIR</label>
                                                     </div>
                                                 </div>
@@ -576,7 +720,7 @@
                                             <div class="row g-2">
                                                 <div class="col mb-2">
                                                     <div class="form-floating form-floating-outline">
-                                                        <input type="text" id="show_tanggallahir" readonly name="" class="form-control"/>
+                                                        <input type="text" id="show_tanggallahir" readonly name="" class="form-control" />
                                                         <label for="holding_recruitment">TANGGAL LAHIR</label>
                                                     </div>
                                                 </div>
@@ -585,16 +729,7 @@
                                             <div class="row g-2">
                                                 <div class="col mb-2">
                                                     <div class="form-floating form-floating-outline">
-                                                        <textarea type="text" id="show_alamatktp2" readonly name="" class="form-control"></textarea>
-                                                        <label for="holding_recruitment">ALAMAT</label>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <br>
-                                            <div class="row g-2">
-                                                <div class="col mb-2">
-                                                    <div class="form-floating form-floating-outline">
-                                                        <input type="text" id="show_gender" readonly name="" class="form-control"/>
+                                                        <input type="text" id="show_gender" readonly name="" class="form-control" />
                                                         <label for="holding_recruitment">JENIS KELAMIN</label>
                                                     </div>
                                                 </div>
@@ -603,7 +738,7 @@
                                             <div class="row g-2">
                                                 <div class="col mb-2">
                                                     <div class="form-floating form-floating-outline">
-                                                        <input type="text" id="show_statusnikah" readonly name="" class="form-control"/>
+                                                        <input type="text" id="show_statusnikah" readonly name="" class="form-control" />
                                                         <label for="holding_recruitment">STATUS PERNIKAHAN</label>
                                                     </div>
                                                 </div>
@@ -612,7 +747,7 @@
                                             <div class="row g-2">
                                                 <div class="col mb-2">
                                                     <div class="form-floating form-floating-outline">
-                                                        <input type="text" id="show_nik" readonly name="" class="form-control"/>
+                                                        <input type="text" id="show_nik" readonly name="" class="form-control" />
                                                         <label for="holding_recruitment">NIK</label>
                                                     </div>
                                                 </div>
@@ -760,7 +895,7 @@
         <div class=" modal-content">
             <div class="modal-header">
                 <h4 class="modal-title" id="backDropModalTitle"></h4>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="location.reload();"></button>
             </div>
             <div class="modal-body">
                 <div class="container">
@@ -770,9 +905,9 @@
                                 <div class="card-body">
                                     <div class="text-center">
                                         <img src="" id="show_imgpp3" alt class="user-profile">
-                                            <h6 id="show_nama_pelamar3" style="font-weight: bold"></h6>
-                                            {{-- <p>World of Internet</p> --}}
-                                            <div class="d-flex align-items-center justify-content-center mb-3">
+                                        <h6 id="show_nama_pelamar3" style="font-weight: bold"></h6>
+                                        {{-- <p>World of Internet</p> --}}
+                                        <div class="d-flex align-items-center justify-content-center mb-3">
                                             <i class="fas fa-star text-info"></i>
                                             <i class="fas fa-star text-info"></i>
                                             <i class="fas fa-star text-info"></i>
@@ -787,39 +922,39 @@
                                                 <i class="mdi mdi-card-account-mail"></i>
                                                 <span id="show_email3"></span>
                                             </li>
-                                        <li>
-                                            <i class="mdi mdi-phone-classic "></i>
-                                            <span id="show_nohp3"></span>
-                                        </li>
-                                        <li>
-                                            <i class="mdi mdi-google-maps"></i>
-                                            <span id="show_alamatktp3"></span>
-                                        </li>
-                                    </ul>
-                                </div>
-                                <div class="skill">
-                                    <h3>Riwayat Pendidikan</h3>
-                                    <p style="font-weight: bold">SD/MI</p>
-                                    <div class=" mb-3">
-                                        <i class="mdi mdi-book-education-outline"></i>
-                                        <span id="show_namasdmi3"></span>&nbsp;(<span id="show_tahunsdmi3"></span>)
+                                            <li>
+                                                <i class="mdi mdi-phone-classic "></i>
+                                                <span id="show_nohp3"></span>
+                                            </li>
+                                            <li>
+                                                <i class="mdi mdi-google-maps"></i>
+                                                <span id="show_alamatktp3"></span>
+                                            </li>
+                                        </ul>
                                     </div>
-                                    <p style="font-weight: bold">SMP/MTS</p>
-                                    <div class="mb-3">
-                                        <i class="mdi mdi-book-education-outline"></i>
-                                        <span id="show_namasmpmts3"></span>&nbsp;(<span id="show_tahunsmpmts3"></span>)
+                                    <div class="skill">
+                                        <h3>Riwayat Pendidikan</h3>
+                                        <p style="font-weight: bold">SD/MI</p>
+                                        <div class=" mb-3">
+                                            <i class="mdi mdi-book-education-outline"></i>
+                                            <span id="show_namasdmi3"></span>&nbsp;<br>(<span id="show_tahunsdmi3"></span>)
+                                        </div>
+                                        <p style="font-weight: bold">SMP/MTS</p>
+                                        <div class="mb-3">
+                                            <i class="mdi mdi-book-education-outline"></i>
+                                            <span id="show_namasmpmts3"></span>&nbsp;<br>(<span id="show_tahunsmpmts3"></span>)
+                                        </div>
+                                        <p style="font-weight: bold">SMA/MA/SMK</p>
+                                        <div class=" mb-3">
+                                            <i class="mdi mdi-book-education-outline"></i>
+                                            <span id="show_namasmamasmk3"></span>&nbsp;<br>(<span id="show_tahunsmamasm3"></span>)
+                                        </div>
+                                        <p style="font-weight: bold">S1/S2/S3</p>
+                                        <div class=" mb-3">
+                                            <i class="mdi mdi-book-education-outline"></i>
+                                            <span id="show_namauniversitas3"></span>&nbsp;<br>(<span id="show_tahununiversitas3"></span>)
+                                        </div>
                                     </div>
-                                    <p style="font-weight: bold">SMA/MA/SMK</p>
-                                    <div class=" mb-3">
-                                        <i class="mdi mdi-book-education-outline"></i>
-                                        <span id="show_namasmamasmk3"></span>&nbsp;(<span id="show_tahunsmamasm3"></span>)
-                                    </div>
-                                    <p style="font-weight: bold">S1/S2/S3</p>
-                                    <div class=" mb-3">
-                                        <i class="mdi mdi-book-education-outline"></i>
-                                        <span id="show_namauniversitas3"></span>&nbsp;(<span id="show_tahununiversitas3"></span>)
-                                    </div>
-                                </div>
                                 </div>
                             </div>
                         </div>
@@ -842,11 +977,48 @@
                                     <div class="tab-content" id="pills-tabContent">
                                         <div class="tab-pane fade show active" id="tabs-satu" role="tabpanel" aria-labelledby="tabs-profil-tab">
                                             <h6 style="font-weight: bold">PENILAIAN PSIKOTES</h6>
-                                            <div class="row g-2">
-                                                <div class="col mb-2">
-                                                    <div class="form-floating form-floating-outline">
-                                                        <input type="text" disabled name="" id="show_nilaiujian" class="form-control"/>
-                                                        <label for="holding_recruitment">NILAI</label>
+                                            <div class="row">
+                                                <div class="col-6">
+                                                    <div class="row g-2">
+                                                        <div class="col mb-2">
+                                                            <div class="form-floating form-floating-outline">
+                                                                <input type="text" disabled name="" id="show_nama_nilai_ujian_analogi_verbal_antonim" class="form-control" />
+                                                                <label for="holding_recruitment">ANALOGI VERBAL (ANTONIM)</label>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-6">
+                                                    <div class="row g-2">
+                                                        <div class="col mb-2">
+                                                            <div class="form-floating form-floating-outline">
+                                                                <input type="text" disabled name="" id="show_nama_nilai_ujian_analogi_verbal_sinonim" class="form-control" />
+                                                                <label for="holding_recruitment">ANALOGI VERBAL (SINONIM)</label>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <br>
+                                            <div class="row">
+                                                <div class="col-6">
+                                                    <div class="row g-2">
+                                                        <div class="col mb-2">
+                                                            <div class="form-floating form-floating-outline">
+                                                                <input type="text" disabled name="" id="show_nama_nilai_ujian_penalaran" class="form-control" />
+                                                                <label for="holding_recruitment">PENALARAN ATAU LOGIKA</label>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-6">
+                                                    <div class="row g-2">
+                                                        <div class="col mb-2">
+                                                            <div class="form-floating form-floating-outline">
+                                                                <input type="text" disabled name="" id="show_nama_nilai_ujian_aritmatika" class="form-control" />
+                                                                <label for="holding_recruitment">ARITMATIKA</label>
+                                                            </div>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -854,24 +1026,42 @@
                                             <div class="row g-2">
                                                 <div class="col mb-2">
                                                     <div class="form-floating form-floating-outline">
+                                                        <input type="text" disabled name="" id="show_nama_nilai_total_psikotes" class="form-control" />
+                                                        <label for="holding_recruitment">TOTAL NILAI PSIKOTES</label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <!-- <br> -->
+                                            <!-- <div class="row g-2">
+                                                <div class="col mb-2">
+                                                    <div class="form-floating form-floating-outline">
                                                         <textarea type="text" disabled id="show_catatanujian" name="" class="form-control" style="height: 200px;"></textarea>
                                                         <label for="holding_recruitment">CATATAN</label>
                                                     </div>
                                                 </div>
-                                            </div>
+                                            </div> -->
                                         </div>
                                         <div class="tab-pane fade" id="tabs-dua" role="tabpanel">
                                             <form method="post" action="{{ url('/nilai-interview-hrd/update/'.$holding) }}" enctype="multipart/form-data">
                                                 @csrf
                                                 <h6 style="font-weight: bold">PENILAIAN INTERVIEW</h6>
+                                                <br>
                                                 <div class="row">
                                                     <div class="col-6">
                                                         <div class="row g-2">
                                                             <div class="col mb-2">
                                                                 <div class="form-floating form-floating-outline">
-                                                                    <input type="hidden" id="show_recruitmentinterviewid1" name="recruitment_interview_id1" class="form-control"/>
-                                                                    <input type="number" required step="0.1" id="show_nilaiinterviewhrd1" name="nilai_interview_hrd1" class="form-control"/>
-                                                                    <label for="holding_recruitment">Kualifikasi dan relevansi</label>
+                                                                    <input type="hidden" id="show_recruitmentinterviewid1" name="recruitment_interview_id1" class="form-control" />
+                                                                    <input id="myRange1" required min="1" max="16" step="1.5" type="range" name="nilai_leadership" class="form-range" value="0" />
+                                                                    <button type="button" style="width: 100%;" class="btn btn-outline-primary waves-effect">
+                                                                        Nilai Leadership:
+                                                                        <span class="badge ms-1" id="show_nilai_leadership"></span>
+                                                                    </button>
+                                                                </div>
+                                                                <br>
+                                                                <div class="form-floating form-floating-outline">
+                                                                    <textarea type="text" required id="show_catatan_leadership" name="catatan_leadership" class="form-control" style="height: 100px;"></textarea>
+                                                                    <label for="holding_recruitment">Catatan Leadership</label>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -880,8 +1070,16 @@
                                                         <div class="row g-2">
                                                             <div class="col mb-2">
                                                                 <div class="form-floating form-floating-outline">
-                                                                    <input type="number" required step="0.1" id="show_nilaiinterviewhrd2" name="nilai_interview_hrd2" class="form-control"/>
-                                                                    <label for="holding_recruitment">Etika kerja dan motivasi</label>
+                                                                    <input id="myRange2" require min="1" max="16" step="1.5" type="range" name="nilai_planning" class="form-range" value="0" />
+                                                                    <button type="button" style="width: 100%;" class="btn btn-outline-primary waves-effect">
+                                                                        Nilai Planning:
+                                                                        <span class="badge ms-1" id="show_nilai_planning"></span>
+                                                                    </button>
+                                                                </div>
+                                                                <br>
+                                                                <div class="form-floating form-floating-outline">
+                                                                    <textarea type="text" required id="show_catatan_planning" name="catatan_planning" class="form-control" style="height: 100px;"></textarea>
+                                                                    <label for="holding_recruitment">Catatan Planning</label>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -893,8 +1091,16 @@
                                                         <div class="row g-2">
                                                             <div class="col mb-2">
                                                                 <div class="form-floating form-floating-outline">
-                                                                    <input type="number" required step="0.1" id="show_nilaiinterviewhrd3" name="nilai_interview_hrd3" class="form-control"/>
-                                                                    <label for="holding_recruitment">Kemampuan problem solving</label>
+                                                                    <input id="myRange3" require min="1" max="16" step="1.5" type="range" name="nilai_problemsolving" class="form-range" value="0" />
+                                                                    <button type="button" style="width: 100%;" class="btn btn-outline-primary waves-effect">
+                                                                        Nilai Problem Solving:
+                                                                        <span class="badge ms-1" id="show_nilai_problemsolving"></span>
+                                                                    </button>
+                                                                </div>
+                                                                <br>
+                                                                <div class="form-floating form-floating-outline">
+                                                                    <textarea type="text" required id="show_catatan_problem_solving" name="catatan_problem_solving" class="form-control" style="height: 100px;"></textarea>
+                                                                    <label for="holding_recruitment">Catatan Problem Solving</label>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -903,8 +1109,16 @@
                                                         <div class="row g-2">
                                                             <div class="col mb-2">
                                                                 <div class="form-floating form-floating-outline">
-                                                                    <input type="number" required step="0.1" id="show_nilaiinterviewhrd4" name="nilai_interview_hrd4" class="form-control"/>
-                                                                    <label for="holding_recruitment">Sikap dan keterampilan</label>
+                                                                    <input id="myRange4" require min="1" max="16" step="1.5" type="range" name="nilai_quallity" class="form-range" value="0" />
+                                                                    <button type="button" style="width: 100%;" class="btn btn-outline-primary waves-effect">
+                                                                        Nilai Quality:
+                                                                        <span class="badge ms-1" id="show_nilai_quallity"></span>
+                                                                    </button>
+                                                                </div>
+                                                                <br>
+                                                                <div class="form-floating form-floating-outline">
+                                                                    <textarea type="text" required id="show_catatan_quality" name="catatan_quality" class="form-control" style="height: 100px;"></textarea>
+                                                                    <label for="holding_recruitment">Catatan Quality</label>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -916,8 +1130,16 @@
                                                         <div class="row g-2">
                                                             <div class="col mb-2">
                                                                 <div class="form-floating form-floating-outline">
-                                                                    <input type="number" required step="0.1" id="show_nilaiinterviewhrd5" name="nilai_interview_hrd5" class="form-control"/>
-                                                                    <label for="holding_recruitment">Individual competency</label>
+                                                                    <input id="myRange5" require min="1" max="16" step="1.5" type="range" name="nilai_creativity" class="form-range" value="0" />
+                                                                    <button type="button" style="width: 100%;" class="btn btn-outline-primary waves-effect">
+                                                                        Nilai Creativity:
+                                                                        <span class="badge ms-1" id="show_nilai_creativity"></span>
+                                                                    </button>
+                                                                </div>
+                                                                <br>
+                                                                <div class="form-floating form-floating-outline">
+                                                                    <textarea type="text" required id="show_catatan_creativity" name="catatan_creativity" class="form-control" style="height: 100px;"></textarea>
+                                                                    <label for="holding_recruitment">Catatan Creativity</label>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -926,14 +1148,16 @@
                                                         <div class="row g-2">
                                                             <div class="col mb-2">
                                                                 <div class="form-floating form-floating-outline">
-                                                                    <div class="form-check">
-                                                                        <input name="status_interview_manager" class="form-check-input" type="radio" value="YA" id="ya_interview_manager">
-                                                                        <label class="form-check-label" for="ya_interview_manager"> (Y) Interview Manager </label>
-                                                                      </div>
-                                                                      <div class="form-check">
-                                                                        <input name="status_interview_manager" class="form-check-input" type="radio" value="TIDAK" id="tdk_interview_manager">
-                                                                        <label class="form-check-label" for="tdk_interview_manager"> (T) Interview Manager </label>
-                                                                      </div>
+                                                                    <input id="myRange6" require min="1" max="16" step="1.5" type="range" name="nilai_teamwork" class="form-range" value="0" />
+                                                                    <button type="button" style="width: 100%;" class="btn btn-outline-primary waves-effect">
+                                                                        Nilai Teamwork:
+                                                                        <span class="badge ms-1" id="show_nilai_teamwork"></span>
+                                                                    </button>
+                                                                </div>
+                                                                <br>
+                                                                <div class="form-floating form-floating-outline">
+                                                                    <textarea type="text" required id="show_catatan_teamwork" name="catatan_teamwork" class="form-control" style="height: 100px;"></textarea>
+                                                                    <label for="holding_recruitment">Catatan Teamwork</label>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -941,18 +1165,46 @@
                                                 </div>
                                                 <br>
                                                 <div class="row">
-                                                    <div class="col-12">
+                                                    <div class="col-6">
                                                         <div class="row g-2">
                                                             <div class="col mb-2">
                                                                 <div class="form-floating form-floating-outline">
-                                                                    <textarea type="text" required id="show_catataninterviewhrd" name="catatan_interview_hrd" class="form-control" style="height: 100px;"></textarea>
-                                                                    <label for="holding_recruitment">CATATAN HRD</label>
+                                                                    <input id="myRange7" min="1" max="100" step="1.5" type="range" name="nilai_creativity" class="form-range" value="0" />
+                                                                    <button type="button" class="btn btn-outline-primary waves-effect d-flex justify-content-between align-items-center" style="width: 100%;">
+                                                                        <span>Total Nilai Interview:</span>
+                                                                        <span class="badge ms-1" id="show_total_nilai_interview_hrd"></span>
+                                                                    </button>
+                                                                    <button type="button" class="btn btn-outline-primary waves-effect d-flex justify-content-between align-items-center" style="width: 100%;">
+                                                                        <span>Nilai Kehadiran:</span>
+                                                                        <span class="badge ms-1" id="show_nilai_kehadiran"></span>
+                                                                    </button>
+                                                                    <button type="button" class="btn btn-outline-primary waves-effect d-flex justify-content-between align-items-center" style="width: 100%;">
+                                                                        <span>Total Nilai:</span>
+                                                                        <span class="badge ms-1" id="show_total_nilai_hrd"></span>
+                                                                    </button>
+                                                                    <!-- Nilai Kehadiran:<span class="badge ms-1" id="">4</span> -->
+                                                                    <!-- <h4>Nilai Kehadiran: <span id="" style="color: #00a651;">4</span></h4> -->
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-6">
+                                                        <div class="row g-2">
+                                                            <div class="col mb-2">
+                                                                <div class="form-floating form-floating-outline">
+                                                                    <select id="select_status_interview_manager" name="status_interview_manager" require class="form-select form-select-lg">
+                                                                        <option>--Pilih--</option>
+                                                                        <option value="1">Ya</option>
+                                                                        <option value="2">Tidak</option>
+                                                                    </select>
+                                                                    <label for="holding_recruitment">Interview Manager</label>
                                                                 </div>
                                                             </div>
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <div class="modal-footer">
+                                                <br>
+                                                <div class="modal-footer" id="modalFooter">
                                                     <button type="button" onclick="location.reload();" class="btn btn-outline-secondary waves-effect" data-bs-dismiss="modal">
                                                         Cancel
                                                     </button>
@@ -967,8 +1219,8 @@
                                                 <div class="row g-2">
                                                     <div class="col mb-2">
                                                         <div class="form-floating form-floating-outline">
-                                                            <input type="hidden" id="show_recruitmentinterviewid2" name="recruitment_interview_id2" class="form-control"/>
-                                                            <input type="number" required step="0.1" id="show_nilaiinterviewmanager" name="nilai_interview_manager" class="form-control"/>
+                                                            <input type="hidden" id="show_recruitmentinterviewid2" name="recruitment_interview_id2" class="form-control" />
+                                                            <input type="number" required step="0.1" id="show_nilaiinterviewmanager" name="nilai_interview_manager" class="form-control" />
                                                             <label for="holding_recruitment">NILAI</label>
                                                         </div>
                                                     </div>
@@ -998,7 +1250,7 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal" onclick="location.reload();">
                     Close
                 </button>
             </div>
@@ -1012,7 +1264,26 @@
 <script src="https://cdn.datatables.net/2.0.5/js/dataTables.bootstrap5.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+{{-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> --}}
 
+
+<script>
+    function updateSliderValue(sliderId, outputId) {
+        const slider = document.getElementById(sliderId);
+        const output = document.getElementById(outputId);
+        output.innerText = slider.valueAsNumber;
+        slider.addEventListener('input', () => {
+            output.innerText = slider.valueAsNumber;
+        });
+    }
+    updateSliderValue('myRange1', 'show_nilai_leadership');
+    updateSliderValue('myRange2', 'show_nilai_planning');
+    updateSliderValue('myRange3', 'show_nilai_problemsolving');
+    updateSliderValue('myRange4', 'show_nilai_quallity');
+    updateSliderValue('myRange5', 'show_nilai_creativity');
+    updateSliderValue('myRange6', 'show_nilai_teamwork');
+    updateSliderValue('myRange7', 'show_total_nilai_interview_hrd');
+</script>
 <script>
     let holding = window.location.pathname.split("/").pop();
     let id = @json($id_recruitment);
@@ -1023,7 +1294,7 @@
         processing: true,
         serverSide: true,
         ajax: {
-            url: "{{ url('dt/data-list-ranking') }}" + '/' + id + '/' + holding,
+            url: "{{ url('dt/data-list-interview') }}" + '/' + id + '/' + holding,
         },
         columns: [{
                 data: "id",
@@ -1033,8 +1304,8 @@
                 }
             },
             {
-                data: 'nama_pelamar',
-                name: 'nama_pelamar',
+                data: 'email',
+                name: 'email',
                 render: function(data, type, row, meta) {
                     return '<strong style="white-space: nowrap;">' + data + '</strong>';
                 }
@@ -1044,50 +1315,38 @@
                 name: 'status_kehadiran'
             },
             {
+                data: 'ujian',
+                name: 'ujian'
+            },
+            {
                 data: 'detail_cv',
                 name: 'detail_cv'
             },
             {
-                data: 'nilai_ujian',
-                name: 'nilai_ujian'
-            },
-            // {
-            //     data: 'catatan_ujian',
-            //     name: 'catatan_ujian'
-            // },
-            {
-                data: 'nilai_interview_hrd1',
-                name: 'nilai_interview_hrd1'
+                data: 'penilaian',
+                name: 'penilaian'
             },
             {
-                data: 'nilai_interview_hrd2',
-                name: 'nilai_interview_hrd2'
+                data: 'nama_departemen',
+                name: 'nama_departemen',
+                render: function(data, type, row, meta) {
+                    return '<span style="white-space: nowrap;">' + data + '</span>';
+                }
             },
             {
-                data: 'nilai_interview_hrd3',
-                name: 'nilai_interview_hrd3'
+                data: 'nama_divisi',
+                name: 'nama_divisi',
+                render: function(data, type, row, meta) {
+                    return '<span style="white-space: nowrap;">' + data + '</span>';
+                }
             },
             {
-                data: 'nilai_interview_hrd4',
-                name: 'nilai_interview_hrd4'
+                data: 'nama_bagian',
+                name: 'nama_bagian',
+                render: function(data, type, row, meta) {
+                    return '<span style="white-space: nowrap;">' + data + '</span>';
+                }
             },
-            {
-                data: 'nilai_interview_hrd5',
-                name: 'nilai_interview_hrd5'
-            },
-            {
-                data: 'catatan_interview_hrd',
-                name: 'catatan_interview_hrd'
-            },
-            {
-                data: 'nilai_interview_manager',
-                name: 'nilai_interview_manager'
-            },
-            {
-                data: 'catatan_interview_manager',
-                name: 'catatan_interview_manager'
-            },
-
         ]
     });
 </script>
@@ -1144,23 +1403,23 @@
         $('#show_nama_pelamar2').val(nama_pelamar);
         $('#show_tempatlahir').val(nama_tempatlahir);
         $('#show_tanggallahir').val(nama_tanggallahir);
-        $('#show_gender').val(nama_gender);
-        $('#show_statusnikah').val(nama_statusnikah);
+        $('#show_gender').val(nama_gender.toUpperCase());
+        $('#show_statusnikah').val(nama_statusnikah.toUpperCase());
         $('#show_departemen').text(nama_departemen);
         $('#show_divisi').text(nama_divisi);
         $('#show_bagian').text(nama_bagian);
-        $('#show_email').text(nama_email);
+        $('#show_email').text(nama_email.toUpperCase());
         $('#show_nohp').text(nama_nohp);
         $('#show_nik').val(nama_nik);
         $('#show_alamatktp1').text(nama_alamatktp);
         $('#show_alamatktp2').val(nama_alamatktp);
-        $('#show_namasdmi').text(nama_sdmi);
+        $('#show_namasdmi').text(nama_sdmi.toUpperCase());
         $('#show_tahunsdmi').text(nama_tahunsdmi);
-        $('#show_namasmpmts').text(nama_smpmts);
+        $('#show_namasmpmts').text(nama_smpmts.toUpperCase());
         $('#show_tahunsmpmts').text(nama_tahunsmpmts);
-        $('#show_namasmamasmk').text(nama_smamasmk);
+        $('#show_namasmamasmk').text(nama_smamasmk.toUpperCase());
         $('#show_tahunsmamasm').text(nama_tahunsmamasmk);
-        $('#show_namauniversitas').text(nama_universitas);
+        $('#show_namauniversitas').text(nama_universitas.toUpperCase());
         $('#show_tahununiversitas').text(nama_tahununiversitas);
         $('#show_judulketerampilan1').text(nama_judulketerampilan1);
         $('#show_ketketerampilan1').text(nama_ketketerampilan1);
@@ -1185,7 +1444,7 @@
         $('#show_imgijazah').attr('src', 'http://127.0.0.1:8000/images/' + nama_imgijazah);
         if (nama_pp == "") {
             $('#show_imgpp').attr('src', 'http://127.0.0.1:8000/admin/assets/img/avatars/1.png');
-        }else{
+        } else {
             $('#show_imgpp').attr('src', 'http://127.0.0.1:8000/images/' + nama_pp);
         }
 
@@ -1206,75 +1465,214 @@
         let nama_smamasmk = $(this).data('nama_smamasmk');
         let nama_tahunsmamasmk = $(this).data('tahun_smamasmk');
         let nama_universitas = $(this).data('nama_universitas');
-        let nama_tahununiversitas = $(this).data('tahun_universitas');3
+        let nama_tahununiversitas = $(this).data('tahun_universitas');
+
         let nama_imgktp = $(this).data('img_ktp');
         let nama_imgkk = $(this).data('img_kk');
         let nama_imgijazah = $(this).data('img_ijazah');
-        let nama_nilaiujian = $(this).data('nilai_ujian');
-        let nama_catatanujian = $(this).data('catatan_ujian');
-        let nama_nilaiinterviewhrd1 = $(this).data('nilai_interview_hrd1');
-        let nama_nilaiinterviewhrd2 = $(this).data('nilai_interview_hrd2');
-        let nama_nilaiinterviewhrd3 = $(this).data('nilai_interview_hrd3');
-        let nama_nilaiinterviewhrd4 = $(this).data('nilai_interview_hrd4');
-        let nama_nilaiinterviewhrd5 = $(this).data('nilai_interview_hrd5');
-        let nama_catataninterviewhrd = $(this).data('catatan_interview_hrd');
+        let nama_nilai_ujian_analogi_verbal_antonim = $(this).data('nilai_ujian_analogi_verbal_antonim');
+        let nama_nilai_ujian_analogi_verbal_sinonim = $(this).data('nilai_ujian_analogi_verbal_sinonim');
+        let nama_nilai_ujian_penalaran = $(this).data('nilai_ujian_nilai_penalaran');
+        let nama_nilai_ujian_aritmatika = $(this).data('nilai_ujian_nilai_aritmatika');
+        let nama_nilai_total_psikotes = $(this).data('nilai_total_psikotes');
+        let nama_nilai_kehadiran = $(this).data('nilai_kehadiran');
+        let nama_nilai_leadership = $(this).data('nilai_leadership');
+        let nama_catatan_leadership = $(this).data('catatan_leadership');
+        let nama_nilai_planning = $(this).data('nilai_planning');
+        let nama_catatan_planning = $(this).data('catatan_planning');
+        let nama_nilai_problemsolving = $(this).data('nilai_problemsolving');
+        let nama_catatan_problem_solving = $(this).data('catatan_problem_solving');
+        let nama_nilai_quallity = $(this).data('nilai_quallity');
+        let nama_catatan_quality = $(this).data('catatan_quality');
+        let nama_nilai_creativity = $(this).data('nilai_creativity');
+        let nama_catatan_creativity = $(this).data('catatan_creativity');
+        let nama_nilai_teamwork = $(this).data('nilai_teamwork');
+        let nama_catatan_teamwork = $(this).data('catatan_teamwork');
+        let nama_total_nilai_interview_hrd = $(this).data('total_nilai_interview_hrd');
         let nama_nilaiinterviewmanager = $(this).data('nilai_interview_manager');
         let nama_catataninterviewmanager = $(this).data('catatan_interview_manager');
         let nama_pp = $(this).data('img_pp');
         let nama_status_interview = $(this).data('status_interview');
         let nama_statusinterviewmanager = $(this).data('status_interview_manager');
         let holding = $(this).data("holding");
-
+        console.log('a');
+        console.log(nama_statusinterviewmanager);
+        console.log('b');
         $('#show_recruitmentinterviewid1').val(recruitment_interview_id);
         $('#show_recruitmentinterviewid2').val(recruitment_interview_id);
-        $('#show_nama_pelamar3').text(nama_pelamar);3
-        $('#show_email3').text(nama_email);
-        $('#show_nohp3').text(nama_nohp);3
-        $('#show_alamatktp3').text(nama_alamatktp);
-        $('#show_namasdmi3').text(nama_sdmi);
+        $('#show_nama_pelamar3').text(nama_pelamar);
+
+        $('#show_email3').text(nama_email.toUpperCase());
+        $('#show_nohp3').text(nama_nohp);
+        $('#show_alamatktp3').text(nama_alamatktp.toUpperCase());
+        $('#show_namasdmi3').text(nama_sdmi.toUpperCase());
         $('#show_tahunsdmi3').text(nama_tahunsdmi);
-        $('#show_namasmpmts3').text(nama_smpmts);
+        $('#show_namasmpmts3').text(nama_smpmts.toUpperCase());
         $('#show_tahunsmpmts3').text(nama_tahunsmpmts);
-        $('#show_namasmamasmk3').text(nama_smamasmk);
+        $('#show_namasmamasmk3').text(nama_smamasmk.toUpperCase());
         $('#show_tahunsmamasm3').text(nama_tahunsmamasmk);
-        $('#show_namauniversitas3').text(nama_universitas);
+        $('#show_namauniversitas3').text(nama_universitas.toUpperCase());
         $('#show_tahununiversitas3').text(nama_tahununiversitas);
-        $('#show_nilaiujian').val(nama_nilaiujian);
-        $('#show_catatanujian').text(nama_catatanujian);
+        $('#show_nama_nilai_ujian_analogi_verbal_antonim').val(nama_nilai_ujian_analogi_verbal_antonim);
+        $('#show_nama_nilai_ujian_analogi_verbal_sinonim').val(nama_nilai_ujian_analogi_verbal_sinonim);
+        $('#show_nama_nilai_ujian_penalaran').val(nama_nilai_ujian_penalaran);
+        $('#show_nama_nilai_ujian_aritmatika').val(nama_nilai_ujian_aritmatika);
+        $('#show_nama_nilai_total_psikotes').val(nama_nilai_total_psikotes);
         $('#show_nilaiinterviewmanager').val(nama_nilaiinterviewmanager);
         $('#show_catataninterviewmanager').text(nama_catataninterviewmanager);
         // console.log(nama_status_interview);
-        if (nama_status_interview === 4) {
-            $('#show_nilaiinterviewhrd1').val(nama_nilaiinterviewhrd1).prop('disabled', true);
-            $('#show_nilaiinterviewhrd2').val(nama_nilaiinterviewhrd2).prop('disabled', true);
-            $('#show_nilaiinterviewhrd3').val(nama_nilaiinterviewhrd3).prop('disabled', true);
-            $('#show_nilaiinterviewhrd4').val(nama_nilaiinterviewhrd4).prop('disabled', true);
-            $('#show_nilaiinterviewhrd5').val(nama_nilaiinterviewhrd5).prop('disabled', true);
-            $('#show_catataninterviewhrd').val(nama_catataninterviewhrd).prop('disabled', true);
-            $('#show_nilaiinterviewmanager').val(nama_nilaiinterviewmanager).prop('disabled', true);
-            $('#show_catataninterviewmanager').val(nama_catataninterviewmanager).prop('disabled', true);
+        if (nama_status_interview === 4 || nama_status_interview === 0) {
+            $('#show_nilai_leadership').val(nama_nilai_leadership).prop('disabled', true);
+            $('#show_catatan_leadership').val(nama_catatan_leadership).prop('disabled', true);
+            $('#show_nilai_planning').text(nama_nilai_planning).prop('disabled', true);
+            $('#show_catatan_planning').val(nama_catatan_planning).prop('disabled', true);
+            $('#show_nilai_problemsolving').text(nama_catatan_problem_solving).prop('disabled', true);
+            $('#show_catatan_problem_solving').val(nama_catatan_problem_solving).prop('disabled', true);
+            $('#show_nilai_quallity').text(nama_nilai_quallity).prop('disabled', true);
+            $('#show_catatan_quality').val(nama_catatan_quality).prop('disabled', true);
+            $('#show_nilai_creativity').text(nama_nilai_creativity).prop('disabled', true);
+            $('#show_catatan_creativity').val(nama_catatan_creativity).prop('disabled', true);
+            $('#show_nilai_teamwork').text(nama_nilai_teamwork).prop('disabled', true);
+            $('#show_catatan_teamwork').val(nama_catatan_teamwork).prop('disabled', true);
+            $('#myRange7').val(nama_total_nilai_interview_hrd).prop('disabled', true);
+            $('#show_total_nilai_interview_hrd').text(nama_total_nilai_interview_hrd);
+            $('#myRange7').on('input', function() {
+                $('#show_total_nilai_interview_hrd').text($(this).val());
+            });
+            $('#show_nilai_kehadiran').text(nama_nilai_kehadiran);
+            $('#show_total_nilai_hrd').text(nama_nilai_kehadiran + nama_total_nilai_interview_hrd);
+
             $('input[name="status_interview_manager"]').prop('disabled', true).prop('checked', false);
             $('button[type="submit"]').prop('disabled', true);
         } else if (nama_status_interview === 3) {
-            $('#show_nilaiinterviewhrd1').val(nama_nilaiinterviewhrd1).prop('disabled', false);
-            $('#show_nilaiinterviewhrd2').val(nama_nilaiinterviewhrd2).prop('disabled', false);
-            $('#show_nilaiinterviewhrd3').val(nama_nilaiinterviewhrd3).prop('disabled', false);
-            $('#show_nilaiinterviewhrd4').val(nama_nilaiinterviewhrd4).prop('disabled', false);
-            $('#show_nilaiinterviewhrd5').val(nama_nilaiinterviewhrd5).prop('disabled', false);
-            $('#show_catataninterviewhrd').val(nama_catataninterviewhrd).prop('disabled', false);
-            $('#show_nilaiinterviewmanager').val(nama_nilaiinterviewmanager).prop('disabled', false);
-            $('#show_catataninterviewmanager').val(nama_catataninterviewmanager).prop('disabled', false);
-            $('button[type="submit"]').prop('disabled', false);
-            $('input[name="status_interview_manager"]').prop('disabled', false);
-            if (nama_statusinterviewmanager === 'YA') {
-                $('#ya_interview_manager').prop('checked', true);
+            if (nama_nilai_leadership != 0) {
+                $('#myRange1').val(nama_nilai_leadership).prop('disabled', true);
+                $('#show_nilai_leadership').text(nama_nilai_leadership);
+                $('#myRange1').on('input', function() {
+                    $('#show_nilai_leadership').text($(this).val());
+                });
+                $('#show_catatan_leadership').val(nama_catatan_leadership).prop('disabled', true);
             } else {
-                $('#tdk_interview_manager').prop('checked', true);
+                $('#myRange1').val(nama_nilai_leadership).prop('disabled', false);
+                $('#show_nilai_leadership').text(nama_nilai_leadership);
+                $('#myRange1').on('input', function() {
+                    $('#show_nilai_leadership').text($(this).val());
+                });
+                $('#show_catatan_leadership').val(nama_catatan_leadership).prop('disabled', false);
+            }
+            if (nama_nilai_planning != 0) {
+                $('#myRange2').val(nama_nilai_planning).prop('disabled', true);
+                $('#show_nilai_planning').text(nama_nilai_planning);
+                $('#myRange2').on('input', function() {
+                    $('#show_nilai_planning').text($(this).val());
+                });
+                $('#show_catatan_planning').val(nama_catatan_planning).prop('disabled', true);
+            } else {
+                $('#myRange2').val(nama_nilai_planning).prop('disabled', false);
+                $('#show_nilai_planning').text(nama_nilai_planning);
+                $('#myRange2').on('input', function() {
+                    $('#show_nilai_planning').text($(this).val());
+                });
+                $('#show_catatan_planning').val(nama_catatan_planning).prop('disabled', false);
+            }
+            if (nama_nilai_problemsolving != 0) {
+                $('#myRange3').val(nama_nilai_problemsolving).prop('disabled', true);
+                $('#show_nilai_problemsolving').text(nama_nilai_problemsolving);
+                $('#myRange3').on('input', function() {
+                    $('#show_nilai_problemsolving').text($(this).val());
+                });
+                $('#show_catatan_problem_solving').val(nama_catatan_problem_solving).prop('disabled', true);
+            } else {
+                $('#myRange3').val(nama_nilai_problemsolving).prop('disabled', false);
+                $('#show_nilai_problemsolving').text(nama_nilai_problemsolving);
+                $('#myRange3').on('input', function() {
+                    $('#show_nilai_problemsolving').text($(this).val());
+                });
+                $('#show_catatan_problem_solving').val(nama_catatan_problem_solving).prop('disabled', false);
+            }
+            if (nama_nilai_quallity != 0) {
+                $('#myRange4').val(nama_nilai_quallity).prop('disabled', true);
+                $('#show_nilai_quallity').text(nama_nilai_quallity);
+                $('#myRange4').on('input', function() {
+                    $('#show_nilai_quallity').text($(this).val());
+                });
+                $('#show_catatan_quality').val(nama_catatan_quality).prop('disabled', true);
+            } else {
+                $('#myRange4').val(nama_nilai_quallity).prop('disabled', false);
+                $('#show_nilai_quallity').text(nama_nilai_quallity);
+                $('#myRange4').on('input', function() {
+                    $('#show_nilai_quallity').text($(this).val());
+                });
+                $('#show_catatan_quality').val(nama_catatan_quality).prop('disabled', false);
+            }
+            if (nama_nilai_creativity != 0) {
+                $('#myRange5').val(nama_nilai_creativity).prop('disabled', true);
+                $('#show_nilai_creativity').text(nama_nilai_creativity);
+                $('#myRange5').on('input', function() {
+                    $('#show_nilai_creativity').text($(this).val());
+                });
+                $('#show_catatan_creativity').val(nama_catatan_creativity).prop('disabled', true);
+            } else {
+                $('#myRange5').val(nama_nilai_creativity).prop('disabled', false);
+                $('#show_nilai_creativity').text(nama_nilai_creativity);
+                $('#myRange5').on('input', function() {
+                    $('#show_nilai_creativity').text($(this).val());
+                });
+                $('#show_catatan_creativity').val(nama_catatan_creativity).prop('disabled', false);
+            }
+            if (nama_nilai_teamwork != 0) {
+                $('#myRange6').val(nama_nilai_teamwork).prop('disabled', true);
+                $('#show_nilai_teamwork').text(nama_nilai_teamwork);
+                $('#myRange6').on('input', function() {
+                    $('#show_nilai_teamwork').text($(this).val());
+                });
+                $('#show_catatan_teamwork').val(nama_catatan_teamwork).prop('disabled', true);
+            } else {
+                $('#myRange6').val(nama_nilai_teamwork).prop('disabled', false);
+                $('#show_nilai_teamwork').text(nama_nilai_teamwork);
+                $('#myRange6').on('input', function() {
+                    $('#show_nilai_teamwork').text($(this).val());
+                });
+                $('#show_catatan_teamwork').val(nama_catatan_teamwork).prop('disabled', false);
+            }
+            if (nama_nilai_teamwork != 0 && nama_nilai_creativity != 0 && nama_nilai_quallity !== 0 && nama_nilai_problemsolving != 0 && nama_nilai_planning != 0 && nama_nilai_leadership != 0) {
+                $('#myRange7').val(nama_total_nilai_interview_hrd).prop('disabled', true);
+                $('#show_total_nilai_interview_hrd').text(nama_total_nilai_interview_hrd);
+                $('#myRange7').on('input', function() {
+                    $('#show_total_nilai_interview_hrd').text($(this).val());
+                });
+
+                $('#show_nilai_kehadiran').text(nama_nilai_kehadiran);
+                $('#show_total_nilai_hrd').text(nama_nilai_kehadiran + nama_total_nilai_interview_hrd);
+                $('#modalFooter').hide();
+            } else {
+                $('#myRange7').val(nama_total_nilai_interview_hrd).prop('disabled', true);
+                $('#show_total_nilai_interview_hrd').text(nama_total_nilai_interview_hrd);
+                $('#myRange7').on('input', function() {
+                    $('#show_total_nilai_interview_hrd').text($(this).val());
+                });
+                $('#show_nilai_kehadiran').text(nama_nilai_kehadiran);
+                $('#show_total_nilai_hrd').text(nama_nilai_kehadiran + nama_total_nilai_interview_hrd);
+                $('#modalFooter').show();
+            }
+
+            // $('button[type="submit"]').prop('disabled', false);
+            $('input[name="status_interview_manager"]').prop('disabled', false);
+            if (nama_statusinterviewmanager != 0) {
+                if (nama_statusinterviewmanager == 1) {
+                    $('#select_status_interview_manager').val('1').prop('disabled', true);
+                } else if (nama_statusinterviewmanager == 2) {
+                    $('#select_status_interview_manager').val('2').prop('disabled', true);
+                } else {
+                    $('#select_status_interview_manager').val('--Pilih--').prop('disabled', true);
+                }
+            } else {
+                $('#select_status_interview_manager').val('--Pilih--').prop('disabled', false);
             }
         }
         if (nama_pp == "") {
             $('#show_imgpp3').attr('src', 'http://127.0.0.1:8000/admin/assets/img/avatars/1.png');
-        }else{
+        } else {
             $('#show_imgpp3').attr('src', 'http://127.0.0.1:8000/images/' + nama_pp);
         }
         $('#modal_penilaian').modal('show');
@@ -1285,6 +1683,21 @@
         $('#show_recruitmentuserid3').val(recruitment_user_id);
         $('#show_recruitmentinterviewid3').val(recruitment_interview_id);
         $('#modal_kehadiran').modal('show');
+    });
+    $(document).on('click', '#btn_ujian', function() {
+        let recruitment_user_id = $(this).data('id_recruitment_user');
+        let users_career_id = $(this).data('id_users_career');
+        let users_auth_id = $(this).data('id_users_auth');
+        $('#show_recruitmentuserid').val(recruitment_user_id);
+        $('#show_userscareerid').val(users_career_id);
+        $('#modal_ujian').modal('show');
+
+    });
+    $(document).on('click', '#btn_prosesujian', function() {
+        $('#modal_prosesujian').modal('show');
+    });
+    $(document).on('click', '#btn_warning', function() {
+        $('#modal_warning').modal('show');
     });
 </script>
 @endsection

@@ -148,185 +148,185 @@
                                     {{-- <div class="d-flex align-items-start align-items-sm-center gap-4">
                                         <img src="{{asset('admin/assets/img/avatars/poster_cv.png')}}" alt="user-avatar" class="d-block w-px-120 h-px-120 rounded" id="template_foto_inventaris" />
 
-                                        <div class="button-wrapper">
-                                            <label for="foto_inventaris" class="btn btn-primary me-2 mb-3" tabindex="0">
-                                                <span class="d-none d-sm-block">Upload Foto</span>
-                                                <i class="mdi mdi-tray-arrow-up d-block d-sm-none"></i>
-                                                <input type="file" name="foto_inventaris" id="foto_inventaris" class="account-file-input" hidden accept="image/png, image/jpeg" />
-                                            </label>
+                                    <div class="button-wrapper">
+                                        <label for="foto_inventaris" class="btn btn-primary me-2 mb-3" tabindex="0">
+                                            <span class="d-none d-sm-block">Upload Foto</span>
+                                            <i class="mdi mdi-tray-arrow-up d-block d-sm-none"></i>
+                                            <input type="file" name="foto_inventaris" id="foto_inventaris" class="account-file-input" hidden accept="image/png, image/jpeg" />
+                                        </label>
 
-                                            <div class="text-muted small">Allowed JPG, GIF or PNG. Max size of 800K</div>
-                                        </div>
-                                    </div> --}}
-                                    <br>
+                                        <div class="text-muted small">Allowed JPG, GIF or PNG. Max size of 800K</div>
+                                    </div>
+                                </div> --}}
+                                <br>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+                                Close
+                            </button>
+                            <button type="submit" class="btn btn-primary">Save</button>
+                        </div>
+                        </form>
+                    </div>
+                </div>
+                <div class="modal fade" id="modal_lihat_syarat" data-bs-backdrop="static" tabindex="-1">
+                    <div class="modal-dialog modal-lg modal-dialog-scrollable">
+                        <div class=" modal-content">
+
+                            <div class="modal-header">
+                                <h4 class="modal-title" id="backDropModalTitle"> Syarat Ketentuan</h4>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="col-lg-12">
+                                    <div class="form-floating form-floating-outline">
+                                        <textarea class="form-control @error('show_desc_recruitment') is-invalid @enderror" id="show_desc_recruitment" name="show_desc_recruitment" autofocus value="{{ old('show_desc_recruitment') }}" cols="30" rows="20" style="height: auto" disabled></textarea>
+                                        {{-- <input class="form-control @error('show_desc_recruitment') is-invalid @enderror" id="show_desc_recruitment" name="show_desc_recruitment" autofocus value="{{ old('show_desc_recruitment') }}"> --}}
+                                        {{-- <input type="text" id="show_desc_recruitment"> --}}
+                                        <label for="show_desc_recruitment">SYARAT KETENTUAN</label>
+                                    </div>
+                                    @error('show_desc_recruitment')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                    @enderror
                                 </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
-                                        Close
-                                    </button>
-                                    <button type="submit" class="btn btn-primary">Save</button>
-                                </div>
-                            </form>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+                                    Close
+                                </button>
+                            </div>
                         </div>
                     </div>
-                    <div class="modal fade" id="modal_lihat_syarat" data-bs-backdrop="static" tabindex="-1">
-                        <div class="modal-dialog modal-lg modal-dialog-scrollable">
-                            <div class=" modal-content">
-
-                                <div class="modal-header">
-                                    <h4 class="modal-title" id="backDropModalTitle"> Syarat Ketentuan</h4>
-                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                </div>
-                                <div class="modal-body">
-                                    <div class="col-lg-12">
+                </div>
+                <div class="modal fade" id="modal_edit_recruitment" data-bs-backdrop="static" tabindex="-1">
+                    <div class="modal-dialog modal-dialog-scrollable">
+                        <form method="post" action="{{ url('/recruitment/update/'.$holding) }}" class="modal-content" enctype="multipart/form-data">
+                            @csrf
+                            <div class="modal-header">
+                                <h4 class="modal-title" id="backDropModalTitle">Edit Recruitment</h4>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <input type="hidden" name="id_recruitment" id="id_recruitment" value="">
+                            <div class="modal-body">
+                                <div class="row g-2">
+                                    <div class="col mb-2">
                                         <div class="form-floating form-floating-outline">
-                                            <textarea class="form-control @error('show_desc_recruitment') is-invalid @enderror" id="show_desc_recruitment" name="show_desc_recruitment" autofocus value="{{ old('show_desc_recruitment') }}" cols="30" rows="20" style="height: auto" disabled></textarea>
-                                            {{-- <input class="form-control @error('show_desc_recruitment') is-invalid @enderror" id="show_desc_recruitment" name="show_desc_recruitment" autofocus value="{{ old('show_desc_recruitment') }}"> --}}
-                                            {{-- <input type="text" id="show_desc_recruitment"> --}}
-                                            <label for="show_desc_recruitment">SYARAT KETENTUAN</label>
+                                            <select disabled class="form-control @error('nama_departemen_update') is-invalid @enderror" id="nama_departemen_update" name="nama_departemen_update" autofocus value="{{ old('nama_departemen_update') }}">
+                                                <option value=""> Pilih Departemen</option>
+                                                @foreach($data_dept as $data)
+                                                <option value="{{$data->id}}">{{$data->nama_departemen}}</option>
+                                                @endforeach
+                                            </select>
+                                            <label for="nama_departemen_update">Nama Departemen</label>
                                         </div>
-                                        @error('show_desc_recruitment')
+                                        @error('nama_departemen_update')
+                                        <div class="invalid-feedback">
+                                            {{ $message }}
+                                        </div>
+                                        @enderror
+                                    </div>
+                                </div>
+                                <br>
+                                <div class="row g-2">
+                                    <div class="col mb-2">
+                                        <div class="form-floating form-floating-outline">
+                                            <select disabled class="form-control @error('nama_divisi_update') is-invalid @enderror" id="nama_divisi_update" name="nama_divisi_update" autofocus value="{{ old('nama_divisi_update') }}">
+                                                <option value=""> Pilih Divisi</option>
+                                                @foreach($data_divisi as $data)
+                                                <option value="{{$data->id}}">{{$data->nama_divisi}}</option>
+                                                @endforeach
+                                            </select>
+                                            <label for="nama_divisi_update">Nama Divisi</label>
+                                        </div>
+                                        @error('nama_divisi_update')
+                                        <div class="invalid-feedback">
+                                            {{ $message }}
+                                        </div>
+                                        @enderror
+                                    </div>
+                                </div>
+                                <br>
+                                <div class="row g-2">
+                                    <div class="col mb-2">
+                                        <div class="form-floating form-floating-outline">
+                                            <select disabled class="form-control @error('nama_bagian_update') is-invalid @enderror" id="nama_bagian_update" name="nama_bagian_update" autofocus value="{{ old('nama_bagian_update') }}">
+                                                <option value=""> Pilih Bagian</option>
+                                                @foreach($data_bagian as $data)
+                                                <option value="{{$data->id}}">{{$data->nama_bagian}}</option>
+                                                @endforeach
+                                            </select>
+                                            <label for="nama_bagian_update">Nama Bagian</label>
+                                        </div>
+                                        @error('nama_bagian_update')
+                                        <div class="invalid-feedback">
+                                            {{ $message }}
+                                        </div>
+                                        @enderror
+                                    </div>
+                                </div>
+                                <br>
+                                <div class="row g-2">
+                                    <div class="col mb-2">
+                                        <div class="form-floating form-floating-outline">
+                                            <input type="date" disabled id="created_recruitment_update" name="created_recruitment_update" class="form-control @error('created_recruitment_update') is-invalid @enderror" placeholder="Tanggal" value="{{ old('created_recruitment_update') }}" />
+                                            <label for="bagian_recruitment">Tanggal</label>
+                                        </div>
+                                        @error('created_recruitment_update')
                                         <span class="invalid-feedback" role="alert">
                                             <strong>{{ $message }}</strong>
                                         </span>
                                         @enderror
                                     </div>
                                 </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
-                                        Close
-                                    </button>
+                                <br>
+                                <div class="row g-2">
+                                    <div class="col mb-2">
+                                        <div class="form-floating form-floating-outline">
+                                            <textarea class="form-control @error('desc_recruitment_update') is-invalid @enderror" id="desc_recruitment_update" name="desc_recruitment_update" autofocus value="{{ old('desc_recruitment_update') }}" id="" cols="30" rows="10" style="height: 50%"></textarea>
+                                            <label for="desc_recruitment_update">Syarat Ketentuan</label>
+                                        </div>
+                                        @error('desc_recruitment_update')
+                                        <span class="invalid-feedback" role="alert">
+                                            <strong>{{ $message }}</strong>
+                                        </span>
+                                        @enderror
+                                    </div>
                                 </div>
                             </div>
-                        </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+                                    Close
+                                </button>
+                                <button type="submit" class="btn btn-primary">Save</button>
+                            </div>
+                        </form>
                     </div>
-                    <div class="modal fade" id="modal_edit_recruitment" data-bs-backdrop="static" tabindex="-1">
-                        <div class="modal-dialog modal-dialog-scrollable">
-                            <form method="post" action="{{ url('/recruitment/update/'.$holding) }}" class="modal-content" enctype="multipart/form-data">
-                                @csrf
-                                <div class="modal-header">
-                                    <h4 class="modal-title" id="backDropModalTitle">Edit Recruitment</h4>
-                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                </div>
-                                <input type="hidden" name="id_recruitment" id="id_recruitment" value="">
-                                <div class="modal-body">
-                                    <div class="row g-2">
-                                        <div class="col mb-2">
-                                            <div class="form-floating form-floating-outline">
-                                                <select disabled class="form-control @error('nama_departemen_update') is-invalid @enderror" id="nama_departemen_update" name="nama_departemen_update" autofocus value="{{ old('nama_departemen_update') }}">
-                                                    <option value=""> Pilih Departemen</option>
-                                                    @foreach($data_dept as $data)
-                                                    <option value="{{$data->id}}">{{$data->nama_departemen}}</option>
-                                                    @endforeach
-                                                </select>
-                                                <label for="nama_departemen_update">Nama Departemen</label>
-                                            </div>
-                                            @error('nama_departemen_update')
-                                            <div class="invalid-feedback">
-                                                {{ $message }}
-                                            </div>
-                                            @enderror
-                                        </div>
-                                    </div>
-                                    <br>
-                                    <div class="row g-2">
-                                        <div class="col mb-2">
-                                            <div class="form-floating form-floating-outline">
-                                                <select disabled class="form-control @error('nama_divisi_update') is-invalid @enderror" id="nama_divisi_update" name="nama_divisi_update" autofocus value="{{ old('nama_divisi_update') }}">
-                                                    <option value=""> Pilih Divisi</option>
-                                                    @foreach($data_divisi as $data)
-                                                    <option value="{{$data->id}}">{{$data->nama_divisi}}</option>
-                                                    @endforeach
-                                                </select>
-                                                <label for="nama_divisi_update">Nama Divisi</label>
-                                            </div>
-                                            @error('nama_divisi_update')
-                                            <div class="invalid-feedback">
-                                                {{ $message }}
-                                            </div>
-                                            @enderror
-                                        </div>
-                                    </div>
-                                    <br>
-                                    <div class="row g-2">
-                                        <div class="col mb-2">
-                                            <div class="form-floating form-floating-outline">
-                                                <select disabled class="form-control @error('nama_bagian_update') is-invalid @enderror" id="nama_bagian_update" name="nama_bagian_update" autofocus value="{{ old('nama_bagian_update') }}">
-                                                    <option value=""> Pilih Bagian</option>
-                                                    @foreach($data_bagian as $data)
-                                                    <option value="{{$data->id}}">{{$data->nama_bagian}}</option>
-                                                    @endforeach
-                                                </select>
-                                                <label for="nama_bagian_update">Nama Bagian</label>
-                                            </div>
-                                            @error('nama_bagian_update')
-                                            <div class="invalid-feedback">
-                                                {{ $message }}
-                                            </div>
-                                            @enderror
-                                        </div>
-                                    </div>
-                                    <br>
-                                    <div class="row g-2">
-                                        <div class="col mb-2">
-                                            <div class="form-floating form-floating-outline">
-                                                <input type="date" disabled id="created_recruitment_update" name="created_recruitment_update" class="form-control @error('created_recruitment_update') is-invalid @enderror" placeholder="Tanggal" value="{{ old('created_recruitment_update') }}" />
-                                                <label for="bagian_recruitment">Tanggal</label>
-                                            </div>
-                                            @error('created_recruitment_update')
-                                            <span class="invalid-feedback" role="alert">
-                                                <strong>{{ $message }}</strong>
-                                            </span>
-                                            @enderror
-                                        </div>
-                                    </div>
-                                    <br>
-                                    <div class="row g-2">
-                                        <div class="col mb-2">
-                                            <div class="form-floating form-floating-outline">
-                                                <textarea class="form-control @error('desc_recruitment_update') is-invalid @enderror" id="desc_recruitment_update" name="desc_recruitment_update" autofocus value="{{ old('desc_recruitment_update') }}" id="" cols="30" rows="10" style="height: 50%"></textarea>
-                                                <label for="desc_recruitment_update">Syarat Ketentuan</label>
-                                            </div>
-                                            @error('desc_recruitment_update')
-                                            <span class="invalid-feedback" role="alert">
-                                                <strong>{{ $message }}</strong>
-                                            </span>
-                                            @enderror
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
-                                        Close
-                                    </button>
-                                    <button type="submit" class="btn btn-primary">Save</button>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                    <table class="table" id="table_recruitment" style="width: 100%;">
-                        <thead class="table-primary">
-                            <tr>
-                                <th>No.</th>
-                                <th>Departemen</th>
-                                <th>Divisi</th>
-                                <th>Bagian</th>
-                                <th>Keterangan</th>
-                                <th>Pelamar</th>
-                                <th>Status</th>
-                                <th>Tanggal</th>
-                                <th>Opsi</th>
-                            </tr>
-                        </thead>
-                        <tbody class="table-border-bottom-0">
-                        </tbody>
-                    </table>
                 </div>
+                <table class="table" id="table_recruitment" style="width: 100%;">
+                    <thead class="table-primary">
+                        <tr>
+                            <!-- <th>No.</th> -->
+                            <th>Tanggal</th>
+                            <th>Departemen</th>
+                            <th>Divisi</th>
+                            <th>Bagian</th>
+                            <th>Keterangan</th>
+                            <th>Pelamar</th>
+                            <th>Status</th>
+                            <th>Opsi</th>
+                        </tr>
+                    </thead>
+                    <tbody class="table-border-bottom-0">
+                    </tbody>
+                </table>
             </div>
         </div>
-        <!--/ Transactions -->
-        <!--/ Data Tables -->
     </div>
+    <!--/ Transactions -->
+    <!--/ Data Tables -->
+</div>
 </div>
 
 @endsection
@@ -355,10 +355,11 @@
             url: "{{ url('/dt/data-recruitment') }}" + '/' + holding,
         },
         columns: [{
-                data: "id",
-
+                data: 'created_at',
                 render: function(data, type, row, meta) {
-                    return meta.row + meta.settings._iDisplayStart + 1;
+                    let dateParts = data.split('-');
+                    let formattedDate = dateParts[2] + '-' + dateParts[1] + '-' + dateParts[0];
+                    return '<pre style="font-size: inherit;font-family: inherit;margin: 0;">' + formattedDate + '</pre>';
                 }
             },
             {
@@ -385,14 +386,7 @@
                 data: 'status_recruitment',
                 name: 'status_recruitment'
             },
-            {
-                data: 'created_recruitment',
-                render: function(data, type, row, meta) {
-                    let dateParts = data.split('-');
-                    let formattedDate = dateParts[2] + '-' + dateParts[1] + '-' + dateParts[0];
-                    return '<pre style="font-size: inherit;font-family: inherit;margin: 0;">' + formattedDate + '</pre>';
-                }
-            },
+
             {
                 data: 'option',
                 name: 'option'
@@ -553,13 +547,13 @@
     });
     // edit data
     $(document).on("click", "#btn_edit_recruitment", function() {
-        let id      = $(this).data('id');
-        let dept    = $(this).data("dept");
-        let divisi  = $(this).data("divisi");
-        let bagian  = $(this).data("bagian");
+        let id = $(this).data('id');
+        let dept = $(this).data("dept");
+        let divisi = $(this).data("divisi");
+        let bagian = $(this).data("bagian");
         let tanggal = $(this).data("tanggal");
         let holding = $(this).data("holding");
-        let desc    = $(this).data("desc");
+        let desc = $(this).data("desc");
         $('#id_recruitment').val(id);
         $('#nama_departemen_update option').filter(function() {
             return $(this).val().trim() == dept
@@ -621,6 +615,5 @@
         });
 
     });
-
 </script>
 @endsection
