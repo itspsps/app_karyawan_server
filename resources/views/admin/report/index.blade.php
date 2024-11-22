@@ -167,7 +167,7 @@
             }
             var filter_month = $('#filter_month').val();
             $.ajax({
-                url: "@if(Auth::user()->is_admin=='hrd'){{ url('/hrd/report/get_columns') }}@else{{ url('report/get_columns') }}@endif",
+                url: "@if(Auth::user()->is_admin=='hrd'){{ url('hrd/report/get_columns') }}@else{{ url('report/get_columns') }}@endif",
                 method: "get",
                 data: {
                     filter_month: filter_month,
@@ -194,7 +194,6 @@
                         {
                             data: 'total_tidak_hadir_kerja',
                             name: 'total_tidak_hadir_kerja',
-                            className: 'red-cell'
                         },
                         {
                             data: 'total_cuti',
@@ -234,7 +233,7 @@
                 $('#date_absensi').empty();
                 let filter_month1 = $(this).val();
                 $.ajax({
-                    url: "@if(Auth::user()->is_admin=='hrd'){{ url('/hrd/report/get_columns') }}@else{{ url('report/get_columns') }}@endif",
+                    url: "@if(Auth::user()->is_admin=='hrd'){{ url('hrd/report/get_columns') }}@else{{ url('report/get_columns') }}@endif",
                     type: "GET",
                     data: {
                         filter_month: filter_month1,
@@ -314,11 +313,11 @@
                 'BW', 'BX', 'BY', 'BZ'
             ];
 
-            function load_data(filter_month = '', datacolumn = '', colspan1 = '') {
+            function load_data(filter_month = '', data_column = '', colspan1 = '') {
                 // console.log(colspan1);
-                url = "{{ url('report-datatable') }}" + '/' + holding;
+                url = "@if(Auth::user()->is_admin =='hrd'){{ url('hrd/report-datatable') }}@else {{ url('report-datatable') }} @endif" + '/' + holding;
                 // console.log(filter_month);
-                // console.log(datacolumn);
+                // console.log(data_column);
                 $('#table_report').DataTable().destroy();
                 var table_report = $('#table_report').DataTable({
                     scrollY: '600px',
@@ -419,7 +418,7 @@
                             filter_month: filter_month,
                         },
                     },
-                    columns: datacolumn,
+                    columns: data_column,
 
                     // order: [3, 'ASC'],
                 });

@@ -32,7 +32,7 @@
                 </div>
                 <div class="card-body">
                     <hr class="my-5">
-                    <a type="button" href="{{url('lokasi-kantor/tambah_lokasi/'.$holding)}}" id="btn_tambah_lokasi" class="btn btn-sm btn-primary waves-effect waves-light"><i class="menu-icon tf-icons mdi mdi-plus"></i>Tambah</a>
+                    <a type="button" href="@if(Auth::user()->is_admin =='hrd'){{url('hrd/lokasi-kantor/tambah_lokasi/'.$holding)}} @else {{url('lokasi-kantor/tambah_lokasi/'.$holding)}} @endif " id="btn_tambah_lokasi" class="btn btn-sm btn-primary waves-effect waves-light"><i class="menu-icon tf-icons mdi mdi-plus"></i>Tambah</a>
                     <div class="modal fade" id="modal_lihat_lokasi" data-bs-backdrop="static" tabindex="-1">
                         <div class="modal-dialog modal-dialog-scrollable modal-lg">
                             <div class="modal-content">
@@ -91,7 +91,7 @@
                     <!-- modal edit -->
                     <div class="modal fade" id="modal_edit_lokasi" data-bs-backdrop="static" tabindex="-1">
                         <div class="modal-dialog modal-dialog-scrollable modal-lg">
-                            <form method="post" action="{{ url('/lokasi-kantor/edit/'.$holding) }}" class=" modal-content" enctype="multipart/form-data">
+                            <form method="post" action="@if(Auth::user()->is_admin =='hrd'){{ url('hrd/lokasi-kantor/edit/'.$holding) }} @else {{ url('lokasi-kantor/edit/'.$holding) }} @endif" class=" modal-content" enctype="multipart/form-data">
                                 @csrf
                                 <div class="modal-header">
                                     <h4 class="modal-title" id="backDropModalTitle">Edit Lokasi</h4>
@@ -209,7 +209,7 @@
         processing: true,
         serverSide: true,
         ajax: {
-            url: "{{ url('lokasi-datatable') }}" + '/' + holding,
+            url: "@if(Auth::user()->is_admin =='hrd'){{ url('/hrd/lokasi-datatable') }}@else {{ url('lokasi-datatable') }} @endif" + '/' + holding,
         },
         columns: [{
                 data: "id_titik",
@@ -315,7 +315,7 @@
         }).then((result) => {
             if (result.value) {
                 $.ajax({
-                    url: "{{url('lokasi-kantor/delete/')}}/" + cek + "/" + holding,
+                    url: "@if(Auth::user()->is_admin =='hrd') {{url('/hrd/lokasi-kantor/delete/')}} @else {{url('lokasi-kantor/delete/')}} @endif" + cek + "/" + holding,
                     type: "GET",
                     error: function() {
                         alert('Something is wrong');

@@ -24,7 +24,7 @@
                     <button type="button" class="btn btn-sm btn-primary waves-effect waves-light" data-bs-toggle="modal" data-bs-target="#modal_tambah_shift"><i class="menu-icon tf-icons mdi mdi-plus"></i>Tambah</button>
                     <div class="modal fade" id="modal_tambah_shift" data-bs-backdrop="static" tabindex="-1">
                         <div class="modal-dialog modal-dialog-scrollable">
-                            <form method="post" action="{{ url('/shift/store/'.$holding) }}" class="modal-content" enctype="multipart/form-data">
+                            <form method="post" action="@if(Auth::user()->is_admin =='hrd'){{ url('hrd/shift/store/'.$holding) }}@else {{ url('/shift/store/'.$holding) }} @endif" class="modal-content" enctype="multipart/form-data">
                                 @csrf
                                 <div class="modal-header">
                                     <h4 class="modal-title" id="backDropModalTitle">Tambah Shift</h4>
@@ -99,7 +99,7 @@
                     <!-- modal edit -->
                     <div class="modal fade" id="modal_edit_shift" data-bs-backdrop="static" tabindex="-1">
                         <div class="modal-dialog modal-dialog-scrollable">
-                            <form method="post" action="{{ url('/shift/update/'.$holding) }}" class="modal-content" enctype="multipart/form-data">
+                            <form method="post" action="@if(Auth::user()->is_admin =='hrd'){{ url('hrd/shift/update/'.$holding) }}@else {{ url('/shift/update/'.$holding) }} @endif" class="modal-content" enctype="multipart/form-data">
                                 @csrf
                                 <div class="modal-header">
                                     <h4 class="modal-title" id="backDropModalTitle">Edit Shift</h4>
@@ -206,7 +206,7 @@
         processing: true,
         serverSide: true,
         ajax: {
-            url: "{{ url('shift-datatable') }}" + '/' + holding,
+            url: "@if(Auth::user()->is_admin =='hrd'){{ url('hrd/shift-datatable') }}@else {{ url('shift-datatable') }}@endif" + '/' + holding,
         },
         columns: [{
                 data: "id",
@@ -268,7 +268,7 @@
         }).then((result) => {
             if (result.value) {
                 $.ajax({
-                    url: "{{ url('/shift/delete/') }}" + '/' + id + '/' + holding,
+                    url: "@if(Auth::user()->is_admin =='hrd'){{ url('hrd/shift/delete/') }} @else {{ url('/shift/delete/') }}@endif" + '/' + id + '/' + holding,
                     type: "GET",
                     error: function() {
                         alert('Something is wrong');

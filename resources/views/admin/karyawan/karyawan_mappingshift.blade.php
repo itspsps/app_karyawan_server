@@ -21,7 +21,7 @@
                 </div>
                 <div class="card-body">
                     <hr class="">
-                    <form action="{{ url('/karyawan/mapping_shift/'.$holding) }}">
+                    <form action="@if(Auth::user()->is_admin =='hrd'){{ url('hrd/karyawan/mapping_shift/'.$holding) }}@else {{ url('/karyawan/mapping_shift/'.$holding) }} @endif">
                         <div class="row g-3 text-center">
                             <div class="col-2">
                                 <div class="form-floating form-floating-outline">
@@ -188,7 +188,7 @@
 
                 $.ajax({
                     type: 'GET',
-                    url: "{{url('mapping_shift/get_divisi')}}",
+                    url: "@if(Auth::user()->is_admin =='hrd'){{url('hrd/mapping_shift/get_divisi')}}@else {{url('mapping_shift/get_divisi')}}@endif",
                     data: {
                         holding: holding,
                         filter_month: filter_month,
@@ -220,7 +220,7 @@
                 // $('#table_mapping_shift').DataTable().destroy();
                 $.ajax({
                     type: 'GET',
-                    url: "{{url('mapping_shift/get_bagian')}}",
+                    url: "@if(Auth::user()->is_admin =='hrd'){{url('hrd/mapping_shift/get_bagian')}}@else {{url('mapping_shift/get_bagian')}}@endif",
                     data: {
                         holding: holding,
                         departemen_filter: departemen_filter,
@@ -251,7 +251,7 @@
                 $('#btn_selected_karyawan').hide();
                 $.ajax({
                     type: 'GET',
-                    url: "{{url('mapping_shift/get_jabatan')}}",
+                    url: "@if(Auth::user()->is_admin =='hrd'){{url('hrd/mapping_shift/get_jabatan')}}@else {{url('mapping_shift/get_jabatan')}}@endif",
                     data: {
                         holding: holding,
                         departemen_filter: departemen_filter,
@@ -313,7 +313,7 @@
                         headers: {
                             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
                         },
-                        url: "{{ url('mapping_shift_datatable') }}" + '/' + holding,
+                        url: "@if(Auth::user()->is_admin =='hrd'){{ url('hrd/mapping_shift_datatable') }}@else {{ url('mapping_shift_datatable') }}@endif" + '/' + holding,
                         type: 'get',
                         data: {
                             departemen_filter: departemen_filter,
@@ -412,7 +412,7 @@
                 // console.log(value);
                 var count = value.length;
                 $.ajax({
-                    url: "{{ url('karyawan/get_karyawan_selected')}}",
+                    url: "@if(Auth::user()->is_admin =='hrd'){{ url('hrd/karyawan/get_karyawan_selected')}}@else {{ url('karyawan/get_karyawan_selected')}} @endif",
                     method: "get",
                     data: {
                         value: value

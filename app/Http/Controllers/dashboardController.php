@@ -207,4 +207,33 @@ class dashboardController extends Controller
         $holding = request()->segment(count(request()->segments()));
         return view('admin.dashboard.holding', ['holding' => $holding]);
     }
+    public function get_grafik_absensi_karyawan(Request $request)
+    {
+        if ($request->get_holding == NULL) {
+            $get_holding = request()->segment(count(request()->segments()));
+        } else {
+            $get_holding = $request->get_holding;
+        }
+        // dd($get_holding);
+        if ($get_holding == 'sp') {
+            $holding = 'SP';
+        } else if ($get_holding == 'sps') {
+            $holding = 'SPS';
+        } else if ($get_holding == 'sip') {
+            $holding = 'SIP';
+        }
+
+        $start_date = Carbon::now()->startOfMonth();
+        $end_date = Carbon::now()->endOfMonth();
+        $period = CarbonPeriod::create($start_date, $end_date);
+        // dd($request->all());
+        foreach ($period as $date) {
+            $label_absensi[] = $date->format('d/m/Y');
+            $data_absensi_masuk[] = MappingShift::Join('karyawans', 'karyawans.id', 'mapping_shifts.user_id')->where('mapping_shifts.tanggal_masuk', $date->format('Y-m-d'))->where('mapping_shifts.keterangan_absensi', 'TEPAT WAKTU')->where('mapping_shifts.status_absen', 'HADIR KERJA')->where('karyawans.kontrak_kerja', $holding)->count();
+            $data_absensi_pulang[] = MappingShift::Join('karyawans', 'karyawans.id', 'mapping_shifts.user_id')->where('mapping_shifts.tanggal_masuk', $date->format('Y-m-d'))->whereIn('mapping_shifts.keterangan_absensi_pulang', ['PULANG CEPAT', 'TEPAT WAKTU'])->where('mapping_shifts.status_absen', 'HADIR KERJA')->where('karyawans.kontrak_kerja', $holding)->count();
+        }
+        $data_result = ['label_absensi' => $label_absensi, 'data_absensi_masuk' => $data_absensi_masuk, 'data_absensi_pulang' => $data_absensi_pulang];
+        // dd($data_result);
+        return response()->json($data_result);
+    }
 }

@@ -80,13 +80,13 @@
                         <div class="alert alert-warning" role="alert">
                             <i class="mdi mdi-account-alert-outline "></i>
                             <span>Karyawan Masa Tenggang Kontrak @if($holding=='sps') PT. SURYA PANGAN SEMESTA @elseif($holding=='sp') CV. SUMBER PANGAN @else CV. SURYA INTI PANGAN @endif </span><span>Total : {{$count_karyawan_habis_kontrak}} Orang
-                                <a href="{{url('karyawan/karyawan_masa_tenggang_kontrak/'.$holding)}}">&nbsp;Lihat&nbsp;Semua&nbsp;. .</a>
+                                <a href=" @if(Auth::user()->is_admin =='hrd'){{url('hrd/karyawan/karyawan_masa_tenggang_kontrak/'.$holding)}}@else{{url('karyawan/karyawan_masa_tenggang_kontrak/'.$holding)}}@endif">&nbsp;Lihat&nbsp;Semua&nbsp;. .</a>
                             </span>
 
                         </div>
                         <div class="modal fade" id="modal_perbarui_kontrak" data-bs-backdrop="static" tabindex="-1">
                             <div class="modal-dialog modal-dialog-scrollable modal-lg">
-                                <form id="form_update_kontrak" method="post" action="{{ url('karyawan/update_kontrak_proses') }}" class="modal-content" enctype="multipart/form-data">
+                                <form id="form_update_kontrak" method="post" action="@if(Auth::user()->is_admin =='hrd'){{ url('hrd/karyawan/update_kontrak_proses') }}@else {{ url('karyawan/update_kontrak_proses') }} @endif" class="modal-content" enctype="multipart/form-data">
                                     @csrf
                                     <div class="modal-header">
                                         <h4 class="modal-title" id="backDropModalTitle">Form Pembaruan Kontrak Karyawan</h4>
@@ -245,7 +245,7 @@
                                 </table>
                             </div>
                             <div style="float: right; margin-right: 2px; margin-top: 2px;" class="float-right">
-                                <a href="{{url('karyawan/karyawan_masa_tenggang_kontrak/'.$holding)}}"><span class="badge bg-label-success">Lihat&nbsp;Semua&nbsp;<i class="mdi mdi-chevron-double-right"></i></span></a>
+                                <a href="@if(Auth::user()->is_admin =='hrd'){{url('hrd/karyawan/karyawan_masa_tenggang_kontrak/'.$holding)}}@else {{url('karyawan/karyawan_masa_tenggang_kontrak/'.$holding)}} @endif"><span class="badge bg-label-success">Lihat&nbsp;Semua&nbsp;<i class="mdi mdi-chevron-double-right"></i></span></a>
                             </div>
                         </div>
                         @endif
@@ -328,7 +328,14 @@
                 <div class="card">
                     <div class="card-header">
                         <div class="d-flex justify-content-between">
-                            <h6 class="mb-1">Grafik Absensi Karyawan Kontrak Kerja @if($holding=='sps') PT. SURYA PANGAN SEMESTA @elseif($holding=='sp') CV. SUMBER PANGAN @else CV. SURYA INTI PANGAN @endif</h6>
+                            <h6 class="mb-1">Grafik Absensi Karyawan Kontrak Kerja <div class="btn-group" role="group">
+                                    <select name="change_holding" id="change_holding" style="width: max-content;border-radius: 0px; background-color:transparent; color:#9370DB; border: none;outline: none;">
+                                        <option @if($holding=='sp' ) selected @else @endif value="sp">CV. SUMBER PANGAN</option>
+                                        <option @if($holding=='sps' ) selected @else @endif value="sps">PT. SURYA PANGAN SEMESTA</option>
+                                        <option @if($holding=='sip' ) selected @else @endif value="sip">CV. SURYA INTI PANGAN</option>
+                                    </select>
+                                    <!-- <span class="mdi mdi-menu-down"></span> -->
+                            </h6>
                         </div>
                     </div>
                     <div class="card-body">
@@ -392,7 +399,7 @@
         var data1 = data.replaceAll('[', '');
         var data2 = data1.replaceAll(']', '');
         var data3 = JSON.parse("[" + data2 + "]");
-
+        // console.log(da);
         // Count 
         var get = '{{$jumlah_user}}';
         var count = JSON.parse(get);
@@ -487,7 +494,7 @@
                     },
                     xaxis: {
                         categories: labels6,
-                        tickPlacement: 'on',
+                        // tickPlacement: 'on',
                         labels: {
                             style: {
                                 fontSize: '5pt',
@@ -979,100 +986,119 @@
         chart.render();
     </script>
     <script>
-        var label_absensi = '{{$label_absensi}}';
-        var label_absensi1 = label_absensi.replaceAll('&quot;', '"');
-        var label_absensi2 = label_absensi1.replaceAll('[', '');
-        var label_absensi3 = label_absensi2.replaceAll(']', '');
-        var label_absensi4 = label_absensi3.replaceAll(',', ', ');
-        var label_absensi5 = JSON.parse('[' + label_absensi4 + ']');
+        $(document).ready(function() {
+            let get_holding = window.location.pathname.split("/").pop();
+            get_grafik_absensi(get_holding);
 
-        var data_absensi_masuk = '{{$data_absensi_masuk}}';
-        var data_absensi_masuk1 = data_absensi_masuk.replaceAll('&quot;', '"');
-        var data_absensi_masuk2 = data_absensi_masuk1.replaceAll('[', '');
-        var data_absensi_masuk3 = data_absensi_masuk2.replaceAll(']', '');
-        var data_absensi_masuk4 = data_absensi_masuk3.replaceAll(',', ', ');
-        var data_absensi_masuk5 = JSON.parse('[' + data_absensi_masuk4 + ']');
-
-        var data_absensi_pulang = '{{$data_absensi_pulang}}';
-        var data_absensi_pulang1 = data_absensi_pulang.replaceAll('&quot;', '"');
-        var data_absensi_pulang2 = data_absensi_pulang1.replaceAll('[', '');
-        var data_absensi_pulang3 = data_absensi_pulang2.replaceAll(']', '');
-        var data_absensi_pulang4 = data_absensi_pulang3.replaceAll(',', ', ');
-        var data_absensi_pulang5 = JSON.parse('[' + data_absensi_pulang4 + ']');
-        var options = {
-            series: [{
-                name: 'Jumlah Karyawan Absen Masuk ',
-                data: data_absensi_masuk5
-            }, {
-                name: 'Jumlah Karyawan Absen Pulang ',
-                data: data_absensi_pulang5
-            }],
-            annotations: {
-                points: [{
-                    x: 'Bananas',
-                    seriesIndex: 0,
-                    label: {
-                        borderColor: '#775DD0',
-                        offsetY: 0,
-                        style: {
-                            color: '#fff',
-                            background: '#775DD0',
-                        },
-                        text: 'Bananas are good',
-                    }
-                }]
-            },
-            chart: {
-                height: 350,
-                type: 'line',
-            },
-            plotOptions: {
-                bar: {
-                    borderRadius: 10,
-                    columnWidth: '50%',
-                }
-            },
-            dataLabels: {
-                enabled: false
-            },
-            stroke: {
-                width: [4, 4]
-            },
-            grid: {
-                row: {
-                    colors: ['#fff', '#f2f2f2']
-                }
-            },
-            xaxis: {
-                labels: {
-                    rotate: -45
-                },
-                categories: label_absensi5,
-                tickAmount: 31
-            },
-            yaxis: {
-                title: {
-                    text: 'Jumlah Karyawan Absensi',
-                },
-            },
-            fill: {
-                type: 'gradient',
-                gradient: {
-                    shade: 'light',
-                    type: "horizontal",
-                    shadeIntensity: 0.25,
-                    gradientToColors: undefined,
-                    inverseColors: true,
-                    opacityFrom: 0.85,
-                    opacityTo: 0.85,
-                    stops: [50, 0, 100]
-                },
+            function get_grafik_absensi(get_holding = '') {
+                var url = "@if(Auth::user()->is_admin =='hrd'){{url('hrd/dashboard/get_grafik_absensi_karyawan')}}@else {{url('dashboard/get_grafik_absensi_karyawan')}}@endif" + "/" + get_holding;
+                // console.log(url);
+                // console.log(get_holding);
+                $.ajax({
+                    url: url,
+                    data: {
+                        get_holding: get_holding,
+                    },
+                    method: "GET",
+                    dataType: "json",
+                    success: function(data) {
+                        // console.log(data);
+                        var label_absensi = data.label_absensi;
+                        var data_absensi_masuk = data.data_absensi_masuk;
+                        var data_absensi_pulang = data.data_absensi_pulang;
+                        var options = {
+                            series: [{
+                                name: 'Jumlah Karyawan Absen Masuk ',
+                                data: data_absensi_masuk
+                            }, {
+                                name: 'Jumlah Karyawan Absen Pulang ',
+                                data: data_absensi_pulang
+                            }],
+                            annotations: {
+                                points: [{
+                                    x: 'Bananas',
+                                    seriesIndex: 0,
+                                    label: {
+                                        borderColor: '#775DD0',
+                                        offsetY: 0,
+                                        style: {
+                                            color: '#fff',
+                                            background: '#775DD0',
+                                        },
+                                        text: 'Bananas are good',
+                                    }
+                                }]
+                            },
+                            chart: {
+                                height: 350,
+                                type: 'line',
+                            },
+                            plotOptions: {
+                                bar: {
+                                    borderRadius: 10,
+                                    columnWidth: '50%',
+                                }
+                            },
+                            dataLabels: {
+                                enabled: false
+                            },
+                            stroke: {
+                                width: [4, 4]
+                            },
+                            grid: {
+                                row: {
+                                    colors: ['#fff', '#f2f2f2']
+                                }
+                            },
+                            xaxis: {
+                                labels: {
+                                    rotate: -45
+                                },
+                                categories: label_absensi,
+                                tickAmount: 31
+                            },
+                            yaxis: {
+                                title: {
+                                    text: 'Jumlah Karyawan Absensi',
+                                },
+                            },
+                            fill: {
+                                type: 'gradient',
+                                gradient: {
+                                    shade: 'light',
+                                    type: "horizontal",
+                                    shadeIntensity: 0.25,
+                                    gradientToColors: undefined,
+                                    inverseColors: true,
+                                    opacityFrom: 0.85,
+                                    opacityTo: 0.85,
+                                    stops: [50, 0, 100]
+                                },
+                            }
+                        };
+                        var chart = new ApexCharts(document.querySelector("#grafik_absensi"), options);
+                        chart.render();
+                        chart.updateSeries([{
+                            name: 'Jumlah Karyawan Absen Masuk ',
+                            data: data_absensi_masuk
+                        }, {
+                            name: 'Jumlah Karyawan Absen Pulang ',
+                            data: data_absensi_pulang
+                        }])
+                    },
+                    error: function(data) {
+                        console.error(data);
+                    },
+                });
             }
-        };
+            $('#change_holding').change(function() {
+                get_holding = $(this).val();
+                // console.log(get_holding);
+                // $('#datatableHome').DataTable().destroy();
+                get_grafik_absensi(get_holding);
 
 
-        var chart = new ApexCharts(document.querySelector("#grafik_absensi"), options);
-
-        chart.render();
+            })
+        });
     </script>
     @endsection

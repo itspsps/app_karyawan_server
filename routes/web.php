@@ -206,6 +206,9 @@ Route::middleware('admin')->group(function () {
     Route::get('/dashboard/holding/sps', [dashboardController::class, 'index']);
     Route::get('/dashboard/holding/sip', [dashboardController::class, 'index']);
     Route::get('/dashboard/holding', [dashboardController::class, 'holding']);
+    Route::get('/dashboard/get_grafik_absensi_karyawan/sp', [dashboardController::class, 'get_grafik_absensi_karyawan']);
+    Route::get('/dashboard/get_grafik_absensi_karyawan/sps', [dashboardController::class, 'get_grafik_absensi_karyawan']);
+    Route::get('/dashboard/get_grafik_absensi_karyawan/sip', [dashboardController::class, 'get_grafik_absensi_karyawan']);
     Route::get('/activity-logs/sp', [ActivityLogController::class, 'index']);
     Route::get('/activity-logs/sps', [ActivityLogController::class, 'index']);
     Route::get('/activity-logs/sip', [ActivityLogController::class, 'index']);
@@ -432,9 +435,9 @@ Route::middleware('admin')->group(function () {
     Route::get('/shift/create/sp', [ShiftController::class, 'create'])->middleware('admin');
     Route::get('/shift/create/sps', [ShiftController::class, 'create'])->middleware('admin');
     Route::get('/shift/create/sip', [ShiftController::class, 'create'])->middleware('admin');
-    Route::post('/shift/store/sp', [ShiftController::class, 'store'])->middleware('admin');
-    Route::post('/shift/store/sps', [ShiftController::class, 'store'])->middleware('admin');
-    Route::post('/shift/store/sip', [ShiftController::class, 'store'])->middleware('admin');
+    Route::post('/shift/store/sp', [ShiftController::class, 'store']);
+    Route::post('/shift/store/sps', [ShiftController::class, 'store']);
+    Route::post('/shift/store/sip', [ShiftController::class, 'store']);
     Route::post('/shift/update/sp', [ShiftController::class, 'update'])->middleware('admin');
     Route::post('/shift/update/sps', [ShiftController::class, 'update'])->middleware('admin');
     Route::post('/shift/update/sip', [ShiftController::class, 'update'])->middleware('admin');
@@ -552,10 +555,6 @@ Route::middleware('admin')->group(function () {
     Route::delete('/data-cuti/delete/{id}', [CutiController::class, 'deleteAdmin'])->middleware('admin');
     Route::get('/data-cuti/edit/{id}', [CutiController::class, 'editAdmin'])->middleware('admin');
     Route::put('/data-cuti/edit-proses/{id}', [CutiController::class, 'editAdminProses'])->middleware('admin');
-    // Route::get('/my-profile', [KaryawanController::class, 'myProfile'])->middleware('auth');
-    // Route::put('/my-profile/update/{id}', [KaryawanController::class, 'myProfileUpdate'])->middleware('auth');
-    // Route::get('/my-profile/edit-password', [KaryawanController::class, 'editPassMyProfile'])->middleware('auth');
-    // Route::put('/my-profile/edit-password-proses/{id}', [KaryawanController::class, 'editPassMyProfileProses'])->middleware('auth');
     Route::get('/lokasi-kantor/sp', [LokasiController::class, 'index'])->middleware('admin');
     Route::get('/lokasi-kantor/sps', [LokasiController::class, 'index'])->middleware('admin');
     Route::get('/lokasi-kantor/sip', [LokasiController::class, 'index'])->middleware('admin');
@@ -565,12 +564,12 @@ Route::middleware('admin')->group(function () {
     Route::get('/lokasi-datatable/sp', [LokasiController::class, 'datatable'])->middleware('admin');
     Route::get('/lokasi-datatable/sps', [LokasiController::class, 'datatable'])->middleware('admin');
     Route::get('/lokasi-datatable/sip', [LokasiController::class, 'datatable'])->middleware('admin');
-    Route::post('/lokasi-kantor/add/sp', [LokasiController::class, 'addLokasi'])->middleware('admin');
-    Route::post('/lokasi-kantor/add/sps', [LokasiController::class, 'addLokasi'])->middleware('admin');
-    Route::post('/lokasi-kantor/add/sip', [LokasiController::class, 'addLokasi'])->middleware('admin');
-    Route::post('/lokasi-kantor/edit/sp', [LokasiController::class, 'updateLokasi'])->middleware('admin');
-    Route::post('/lokasi-kantor/edit/sps', [LokasiController::class, 'updateLokasi'])->middleware('admin');
-    Route::post('/lokasi-kantor/edit/sip', [LokasiController::class, 'updateLokasi'])->middleware('admin');
+    Route::post('/lokasi-kantor/add/sp', [LokasiController::class, 'addLokasi']);
+    Route::post('/lokasi-kantor/add/sps', [LokasiController::class, 'addLokasi']);
+    Route::post('/lokasi-kantor/add/sip', [LokasiController::class, 'addLokasi']);
+    Route::post('/lokasi-kantor/edit/sp', [LokasiController::class, 'updateLokasi']);
+    Route::post('/lokasi-kantor/edit/sps', [LokasiController::class, 'updateLokasi']);
+    Route::post('/lokasi-kantor/edit/sip', [LokasiController::class, 'updateLokasi']);
     Route::get('/lokasi-kantor/delete/{id}/sp', [LokasiController::class, 'deleteLokasi'])->middleware('admin');
     Route::get('/lokasi-kantor/delete/{id}/sps', [LokasiController::class, 'deleteLokasi'])->middleware('admin');
     Route::get('/lokasi-kantor/delete/{id}/sip', [LokasiController::class, 'deleteLokasi'])->middleware('admin');
@@ -736,6 +735,7 @@ Route::middleware('admin')->group(function () {
     Route::get('/rekapdata-datatable_harian/sp', [RekapDataController::class, 'datatable_harian']);
     Route::get('/rekapdata-datatable_harian/sps', [RekapDataController::class, 'datatable_harian']);
     Route::get('/rekapdata-datatable_harian/sip', [RekapDataController::class, 'datatable_harian']);
+    Route::get('/rekapdata/get_grafik_absensi', [RekapDataController::class, 'get_grafik_absensi']);
 
     // CETAK FORM
     Route::get('/rekapdata/cetak_form_izin/{id}', [RekapDataController::class, 'cetak_form_izin']);
@@ -765,58 +765,15 @@ Route::middleware('admin')->group(function () {
     Route::get('/report/get_columns', [ReportController::class, 'get_columns']);
     Route::get('/report/get_filter_month', [ReportController::class, 'get_filter_month']);
     Route::get('/report/ExportReport', [ReportController::class, 'ExportReport']);
+    Route::get('/report/get_grafik_absensi', [ReportController::class, 'get_grafik_absensi']);
 
-    Route::get('/data-cuti', [CutiController::class, 'dataCuti']);
-    Route::get('/data-cuti/tambah', [CutiController::class, 'tambahAdmin']);
-    Route::post('/data-cuti/getuserid', [CutiController::class, 'getUserId']);
-    Route::post('/data-cuti/proses-tambah', [CutiController::class, 'tambahAdminProses']);
-    Route::delete('/data-cuti/delete/{id}', [CutiController::class, 'deleteAdmin']);
-    Route::get('/data-cuti/edit/{id}', [CutiController::class, 'editAdmin']);
-    Route::put('/data-cuti/edit-proses/{id}', [CutiController::class, 'editAdminProses']);
-    Route::get('/lokasi-kantor/sp', [LokasiController::class, 'index']);
-    Route::get('/lokasi-kantor/sps', [LokasiController::class, 'index']);
-    Route::get('/lokasi-kantor/sip', [LokasiController::class, 'index']);
-    Route::get('/lokasi-kantor/tambah_lokasi/sp', [LokasiController::class, 'tambah_lokasi']);
-    Route::get('/lokasi-kantor/tambah_lokasi/sps', [LokasiController::class, 'tambah_lokasi']);
-    Route::get('/lokasi-kantor/tambah_lokasi/sip', [LokasiController::class, 'tambah_lokasi']);
-    Route::get('/lokasi-datatable/sp', [LokasiController::class, 'datatable']);
-    Route::get('/lokasi-datatable/sps', [LokasiController::class, 'datatable']);
-    Route::get('/lokasi-datatable/sip', [LokasiController::class, 'datatable']);
-    Route::post('/lokasi-kantor/add/sp', [LokasiController::class, 'addLokasi']);
-    Route::post('/lokasi-kantor/add/sps', [LokasiController::class, 'addLokasi']);
-    Route::post('/lokasi-kantor/add/sip', [LokasiController::class, 'addLokasi']);
-    Route::post('/lokasi-kantor/edit/sp', [LokasiController::class, 'updateLokasi']);
-    Route::post('/lokasi-kantor/edit/sps', [LokasiController::class, 'updateLokasi']);
-    Route::post('/lokasi-kantor/edit/sip', [LokasiController::class, 'updateLokasi']);
-    Route::get('/lokasi-kantor/delete/{id}/sp', [LokasiController::class, 'deleteLokasi']);
-    Route::get('/lokasi-kantor/delete/{id}/sps', [LokasiController::class, 'deleteLokasi']);
-    Route::get('/lokasi-kantor/delete/{id}/sip', [LokasiController::class, 'deleteLokasi']);
-    Route::put('/lokasi-kantor/radius/{id}/sp', [LokasiController::class, 'updateRadiusLokasi']);
-    Route::put('/lokasi-kantor/radius/{id}/sps', [LokasiController::class, 'updateRadiusLokasi']);
-    Route::put('/lokasi-kantor/radius/{id}/sip', [LokasiController::class, 'updateRadiusLokasi']);
-    Route::get('/lokasi_kantor/get_lokasi', [LokasiController::class, 'get_lokasi']);
-
-    Route::get('/shift/sp', [ShiftController::class, 'index']);
-    Route::get('/shift/sps', [ShiftController::class, 'index']);
-    Route::get('/shift/sip', [ShiftController::class, 'index']);
-    Route::get('/shift-datatable/sp', [ShiftController::class, 'datatable']);
-    Route::get('/shift-datatable/sps', [ShiftController::class, 'datatable']);
-    Route::get('/shift-datatable/sip', [ShiftController::class, 'datatable']);
-    Route::get('/shift/edit/sp', [ShiftController::class, 'edit']);
-    Route::get('/shift/edit/sps', [ShiftController::class, 'edit']);
-    Route::get('/shift/edit/sip', [ShiftController::class, 'edit']);
-    Route::get('/shift/create/sp', [ShiftController::class, 'create']);
-    Route::get('/shift/create/sps', [ShiftController::class, 'create']);
-    Route::get('/shift/create/sip', [ShiftController::class, 'create']);
-    Route::post('/shift/store/sp', [ShiftController::class, 'store']);
-    Route::post('/shift/store/sps', [ShiftController::class, 'store']);
-    Route::post('/shift/store/sip', [ShiftController::class, 'store']);
-    Route::post('/shift/update/sp', [ShiftController::class, 'update']);
-    Route::post('/shift/update/sps', [ShiftController::class, 'update']);
-    Route::post('/shift/update/sip', [ShiftController::class, 'update']);
-    Route::get('/shift/delete/{id}/sp', [ShiftController::class, 'destroy']);
-    Route::get('/shift/delete/{id}/sps', [ShiftController::class, 'destroy']);
-    Route::get('/shift/delete/{id}/sip', [ShiftController::class, 'destroy']);
+    Route::get('/report_kedisiplinan/sp', [ReportController::class, 'index_kedisiplinan']);
+    Route::get('/report_kedisiplinan/sps', [ReportController::class, 'index_kedisiplinan']);
+    Route::get('/report_kedisiplinan/sip', [ReportController::class, 'index_kedisiplinan']);
+    Route::get('/report_kedisiplinan-datatable/sp', [ReportController::class, 'datatable_kedisiplinan']);
+    Route::get('/report_kedisiplinan-datatable/sps', [ReportController::class, 'datatable_kedisiplinan']);
+    Route::get('/report_kedisiplinan-datatable/sip', [ReportController::class, 'datatable_kedisiplinan']);
+    Route::get('/report_kedisiplinan/get_columns', [ReportController::class, 'get_columns_kedisiplinan']);
 
     // reset Cuti
     Route::get('/reset-cuti/sp', [KaryawanController::class, 'resetCuti']);
@@ -992,6 +949,9 @@ Route::middleware('hrd')->group(function () {
         Route::get('/dashboard/holding/sps', [dashboardController::class, 'index']);
         Route::get('/dashboard/holding/sip', [dashboardController::class, 'index']);
         Route::get('/dashboard/holding', [dashboardController::class, 'holding']);
+        Route::get('/dashboard/get_grafik_absensi_karyawan/sp', [dashboardController::class, 'get_grafik_absensi_karyawan']);
+        Route::get('/dashboard/get_grafik_absensi_karyawan/sps', [dashboardController::class, 'get_grafik_absensi_karyawan']);
+        Route::get('/dashboard/get_grafik_absensi_karyawan/sip', [dashboardController::class, 'get_grafik_absensi_karyawan']);
 
         Route::put('/karyawan/proses-edit-shift/sp', [karyawanController::class, 'prosesEditShift']);
         Route::put('/karyawan/proses-edit-shift/sps', [karyawanController::class, 'prosesEditShift']);
@@ -1153,12 +1113,40 @@ Route::middleware('hrd')->group(function () {
         Route::get('/mapping_shift/get_divisi', [MappingShiftController::class, 'get_divisi']);
         Route::get('/mapping_shift/get_bagian', [MappingShiftController::class, 'get_bagian']);
         Route::get('/mapping_shift/get_jabatan', [MappingShiftController::class, 'get_jabatan']);
-
+        Route::get('/karyawan/get_karyawan_selected', [MappingShiftController::class, 'get_karyawan_selected']);
+        Route::get('mapping_shift/dashboard/', [MappingShiftController::class, 'index']);
+        Route::post('/karyawan/mapping_shift/prosesAddMappingShift/sp', [MappingShiftController::class, 'prosesAddMappingShift']);
+        Route::post('/karyawan/mapping_shift/prosesAddMappingShift/sps', [MappingShiftController::class, 'prosesAddMappingShift']);
+        Route::post('/karyawan/mapping_shift/prosesAddMappingShift/sip', [MappingShiftController::class, 'prosesAddMappingShift']);
+        Route::post('/karyawan/mapping_shift/prosesEditMappingShift', [MappingShiftController::class, 'prosesEditMappingShift']);
         //
         Route::get('/karyawan/get_departemen', [karyawanController::class, 'get_departemen']);
         Route::get('/karyawan/get_divisi', [karyawanController::class, 'get_divisi']);
         Route::get('/karyawan/get_bagian', [karyawanController::class, 'get_bagian']);
         Route::get('/karyawan/get_jabatan', [karyawanController::class, 'get_jabatan']);
+
+        // REPORT ABSENSI
+        Route::get('/report/sp', [ReportController::class, 'index']);
+        Route::get('/report/sps', [ReportController::class, 'index']);
+        Route::get('/report/sip', [ReportController::class, 'index']);
+        Route::get('/report-datatable/sp', [ReportController::class, 'datatable']);
+        Route::get('/report-datatable/sps', [ReportController::class, 'datatable']);
+        Route::get('/report-datatable/sip', [ReportController::class, 'datatable']);
+        Route::get('/report/get_divisi', [ReportController::class, 'get_divisi']);
+        Route::get('/report/get_bagian', [ReportController::class, 'get_bagian']);
+        Route::get('/report/get_jabatan', [ReportController::class, 'get_jabatan']);
+        Route::get('/report/get_columns', [ReportController::class, 'get_columns']);
+        Route::get('/report/get_filter_month', [ReportController::class, 'get_filter_month']);
+        Route::get('/report/ExportReport', [ReportController::class, 'ExportReport']);
+        Route::get('/report/get_grafik_absensi', [ReportController::class, 'get_grafik_absensi']);
+
+        Route::get('/report_kedisiplinan/sp', [ReportController::class, 'index_kedisiplinan']);
+        Route::get('/report_kedisiplinan/sps', [ReportController::class, 'index_kedisiplinan']);
+        Route::get('/report_kedisiplinan/sip', [ReportController::class, 'index_kedisiplinan']);
+        Route::get('/report_kedisiplinan-datatable/sp', [ReportController::class, 'datatable_kedisiplinan']);
+        Route::get('/report_kedisiplinan-datatable/sps', [ReportController::class, 'datatable_kedisiplinan']);
+        Route::get('/report_kedisiplinan-datatable/sip', [ReportController::class, 'datatable_kedisiplinan']);
+        Route::get('/report_kedisiplinan/get_columns', [ReportController::class, 'get_columns_kedisiplinan']);
 
         // MASTER DEPARTEMEN
         Route::get('/departemen/sp', [DepartemenController::class, 'index']);
@@ -1310,6 +1298,36 @@ Route::middleware('hrd')->group(function () {
         Route::get('/karyawan/get_kabupaten/{id}', [karyawanController::class, 'get_kabupaten']);
         Route::get('/karyawan/get_kecamatan/{id}', [karyawanController::class, 'get_kecamatan']);
         Route::get('/karyawan/get_desa/{id}', [karyawanController::class, 'get_desa']);
+
+        Route::get('/data-cuti', [CutiController::class, 'dataCuti']);
+        Route::get('/data-cuti/tambah', [CutiController::class, 'tambahAdmin']);
+        Route::post('/data-cuti/getuserid', [CutiController::class, 'getUserId']);
+        Route::post('/data-cuti/proses-tambah', [CutiController::class, 'tambahAdminProses']);
+        Route::delete('/data-cuti/delete/{id}', [CutiController::class, 'deleteAdmin']);
+        Route::get('/data-cuti/edit/{id}', [CutiController::class, 'editAdmin']);
+        Route::put('/data-cuti/edit-proses/{id}', [CutiController::class, 'editAdminProses']);
+        Route::get('/lokasi-kantor/sp', [LokasiController::class, 'index']);
+        Route::get('/lokasi-kantor/sps', [LokasiController::class, 'index']);
+        Route::get('/lokasi-kantor/sip', [LokasiController::class, 'index']);
+        Route::get('/lokasi-kantor/tambah_lokasi/sp', [LokasiController::class, 'tambah_lokasi']);
+        Route::get('/lokasi-kantor/tambah_lokasi/sps', [LokasiController::class, 'tambah_lokasi']);
+        Route::get('/lokasi-kantor/tambah_lokasi/sip', [LokasiController::class, 'tambah_lokasi']);
+        Route::get('/lokasi-datatable/sp', [LokasiController::class, 'datatable']);
+        Route::get('/lokasi-datatable/sps', [LokasiController::class, 'datatable']);
+        Route::get('/lokasi-datatable/sip', [LokasiController::class, 'datatable']);
+        Route::post('/lokasi-kantor/add/sp', [LokasiController::class, 'addLokasi']);
+        Route::post('/lokasi-kantor/add/sps', [LokasiController::class, 'addLokasi']);
+        Route::post('/lokasi-kantor/add/sip', [LokasiController::class, 'addLokasi']);
+        Route::post('/lokasi-kantor/edit/sp', [LokasiController::class, 'updateLokasi']);
+        Route::post('/lokasi-kantor/edit/sps', [LokasiController::class, 'updateLokasi']);
+        Route::post('/lokasi-kantor/edit/sip', [LokasiController::class, 'updateLokasi']);
+        Route::get('/lokasi-kantor/delete/{id}/sp', [LokasiController::class, 'deleteLokasi']);
+        Route::get('/lokasi-kantor/delete/{id}/sps', [LokasiController::class, 'deleteLokasi']);
+        Route::get('/lokasi-kantor/delete/{id}/sip', [LokasiController::class, 'deleteLokasi']);
+        Route::put('/lokasi-kantor/radius/{id}/sp', [LokasiController::class, 'updateRadiusLokasi']);
+        Route::put('/lokasi-kantor/radius/{id}/sps', [LokasiController::class, 'updateRadiusLokasi']);
+        Route::put('/lokasi-kantor/radius/{id}/sip', [LokasiController::class, 'updateRadiusLokasi']);
+        Route::get('/lokasi_kantor/get_lokasi', [LokasiController::class, 'get_lokasi']);
     });
 });
 

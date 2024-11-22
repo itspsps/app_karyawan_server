@@ -352,53 +352,75 @@
             </ul>
         </li>
         <li class="menu-item
+        @if(Auth::user()->is_admin =='hrd')
+        {{ Request::is('hrd/shift*') ? 'active open' : '' }}
+        {{ Request::is('hrd/lokasi-kantor*') ? 'active open' : '' }}
+        {{ Request::is('hrd/report_kedisiplinan*') ? 'active open' : '' }}
+         {{ Request::is('hrd/report/*') ? 'active open' : '' }}
+        {{ Request::is('hrd/karyawan/mapping_shift*') ? 'active open' : '' }}
+        @else
         {{ Request::is('shift*') ? 'active open' : '' }}
         {{ Request::is('lokasi-kantor*') ? 'active open' : '' }}
-        {{ Request::is('rekap-data*') ? 'active open' : '' }}
+        {{ Request::is('report_kedisiplinan*') ? 'active open' : '' }}
          {{ Request::is('report/*') ? 'active open' : '' }}
-        {{ Request::is('karyawan/mapping_shift*') ? 'active open' : '' }}">
+        {{ Request::is('karyawan/mapping_shift*') ? 'active open' : '' }}
+         @endif
+         ">
             <a href="javascript:void(0);" class="menu-link menu-toggle">
                 <i class="menu-icon tf-icons mdi mdi-table-account"></i>
                 <div style="font-size: 10pt;" data-i18n="Data Master">Absensi&nbsp;Karyawan</div>
             </a>
             <ul class="menu-sub">
                 <li class="menu-item
-                {{ Request::is('lokasi-kantor*') ? 'active' : '' }}
-
+                 @if(Auth::user()->is_admin =='hrd')
+                 {{ Request::is('hrd/lokasi-kantor*') ? 'active' : '' }}
+                 @else
+                 {{ Request::is('lokasi-kantor*') ? 'active' : '' }}
+                 @endif
                  ">
-                    <a href="{{ url('/lokasi-kantor/'.$holding) }}" class="menu-link">
+                    <a href="@if(Auth::user()->is_admin =='hrd'){{ url('/hrd/lokasi-kantor/'.$holding) }} @else {{ url('/lokasi-kantor/'.$holding)}} @endif" class="menu-link">
                         <i class="menu-icon tf-icons mdi mdi-database-marker-outline"></i>
                         <div style="font-size: 10pt;" data-i18n="Fluid">&nbsp;Master&nbsp;Lokasi</div>
                     </a>
                 </li>
                 <li class="menu-item
+                @if(Auth::user()->is_admin =='hrd')
+                {{ Request::is('hrd/shift*') ? 'active' : '' }}
+                @else
                 {{ Request::is('shift*') ? 'active' : '' }}
+                @endif
                 ">
-                    <a href="{{ url('/shift/'.$holding) }}" class=" menu-link">
+                    <a href=" @if(Auth::user()->is_admin =='hrd'){{ url('hrd/shift/'.$holding) }}@else {{ url('/shift/'.$holding) }}@endif" class=" menu-link">
                         <div style="font-size: 10pt;" data-i18n="Without navbar"><i class="mdi mdi-timetable"></i>&nbsp;Master Shift</div>
                     </a>
                 </li>
-                <li class="menu-item {{ Request::is('karyawan/mapping_shift*') ? 'active' : '' }}">
-                    <a href="{{ url('/karyawan/mapping_shift/'.$holding) }}" class=" menu-link">
+                <li class="menu-item @if(Auth::user()->is_admin =='hrd'){{ Request::is('hrd/karyawan/mapping_shift*') ? 'active' : '' }}@else {{ Request::is('karyawan/mapping_shift*') ? 'active' : '' }} @endif">
+                    <a href="@if(Auth::user()->is_admin =='hrd'){{ url('hrd/karyawan/mapping_shift/'.$holding) }}@else @endif" class=" menu-link">
                         <div style="font-size: 10pt;" data-i18n="Without navbar"><i class="mdi mdi-account-clock-outline"></i>&nbsp;Mapping&nbsp;Absensi&nbsp;Karyawan</div>
                     </a>
                 </li>
                 <li class="menu-item
-                    {{ Request::is('rekap-data*') ? 'active open' : '' }}
-                    {{ Request::is('report/*') ? 'active open' : '' }}">
+                    @if(Auth::user()->is_admin =='hrd')
+                    {{ Request::is('hrd/report_kedisiplinan*') ? 'active open' : '' }}
+                    {{ Request::is('hrd/report/*') ? 'active open' : '' }}
+                    @else 
+                    {{ Request::is('report_kedisiplinan*') ? 'active open' : '' }}
+                    {{ Request::is('report/*') ? 'active open' : '' }}
+                     @endif
+                    ">
                     <a href="javascript:void(0);" class="menu-link menu-toggle">
                         <i class="menu-icon tf-icons mdi mdi-file-document-multiple-outline"></i>
                         <div style="font-size: 10pt;" data-i18n="Data Master">Report</div>
                     </a>
                     <ul class="menu-sub">
-                        <li class="menu-item  {{ Request::is('rekap-data*') ? 'active' : '' }}">
-                            <a href="{{ url('/rekap-data/'.$holding) }}" class="menu-link">
-                                <div style="font-size: 10pt;" data-i18n="Container"><i class="mdi mdi-file-chart-check-outline"></i>&nbsp;Rekap Data Absensi</div>
+                        <li class="menu-item @if(Auth::user()->is_admin =='hrd'){{ Request::is('hrd/report/'.$holding) ? 'active' : '' }}@else {{ Request::is('report/'.$holding) ? 'active' : '' }} @endif">
+                            <a href="@if(Auth::user()->is_admin =='hrd'){{ url('hrd/report/'.$holding) }}@else {{ url('/report/'.$holding) }} @endif" class=" menu-link">
+                                <div style="font-size: 10pt;" data-i18n="Without navbar"><i class="mdi mdi-file-document-outline"></i>&nbsp;Report&nbsp;Absensi&nbsp;Karyawan</div>
                             </a>
                         </li>
-                        <li class="menu-item {{ Request::is('report*') ? 'active' : '' }}">
-                            <a href="{{ url('/report/'.$holding) }}" class=" menu-link">
-                                <div style="font-size: 10pt;" data-i18n="Without navbar"><i class="mdi mdi-file-document-outline"></i>&nbsp;Report&nbsp;Absensi&nbsp;Karyawan</div>
+                        <li class="menu-item  @if(Auth::user()->is_admin =='hrd'){{ Request::is('hrd/report_kedisiplinan*') ? 'active' : '' }}@else {{ Request::is('report_kedisiplinan*') ? 'active' : '' }} @endif">
+                            <a href="@if(Auth::user()->is_admin =='hrd'){{ url('hrd/report_kedisiplinan/'.$holding) }}@else {{ url('/report_kedisiplinan/'.$holding) }}@endif" class="menu-link">
+                                <div style="font-size: 10pt;" data-i18n="Container"><i class="mdi mdi-file-chart-check-outline"></i>&nbsp;Report&nbsp;Kedisiplinan</div>
                             </a>
                         </li>
                     </ul>

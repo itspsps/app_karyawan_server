@@ -11,8 +11,13 @@
     <meta name="description" content="" />
 
     <!-- Favicon -->
+    @if($holding=='sp')
     <link rel="icon" type="image/x-icon" href="{{asset('holding/assets/img/logosp.png')}}" />
-
+    @elseif($holding=='sps')
+    <link rel="icon" type="image/x-icon" href="{{asset('holding/assets/img/logosps.png')}}" />
+    @else
+    <link rel="icon" type="image/x-icon" href="{{asset('holding/assets/img/logosip.png')}}" />
+    @endif
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />

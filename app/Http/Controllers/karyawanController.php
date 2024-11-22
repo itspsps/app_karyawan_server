@@ -769,6 +769,8 @@ class karyawanController extends Controller
             $status_nomor = 'required';
         } else if ($request->status_nomor == "ya") {
             $status_nomor = 'nullable';
+        } else {
+            $status_nomor = 'required';
         }
         if ($request->kategori == 'Karyawan Harian') {
             if ($request->pilihan_alamat_domisili == "ya") {

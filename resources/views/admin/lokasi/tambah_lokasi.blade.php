@@ -33,7 +33,7 @@
                 <div class="card-body">
                     <div class="d-flex align-items-start align-items-sm-center gap-4">
                         <hr class="my-5">
-                        <form method="post" action="{{ url('/lokasi-kantor/add/'.$holding) }}" class="modal-content" enctype="multipart/form-data">
+                        <form method="post" action="{{ url('hrd/lokasi-kantor/add/'.$holding) }}" class="modal-content" enctype="multipart/form-data">
                             @csrf
                             <div class="row mt-2 p-3 gy-4">
                                 <div class="col-md-6">
@@ -71,34 +71,7 @@
                             <div class="row mt-2 p-3 gy-4">
                                 <input type="hidden" class="form-control" id="lat_titik" name="lat_titik" value="">
                                 <input type="hidden" class="form-control" id="long_titik" name="long_titik" value="">
-                                <!-- <div class="col mb-3">
-                                    <div class="form-floating form-floating-outline">
-                                        <label for="lat_titik">Latitude Kantor</label>
-                                    </div>
-                                    @error('lat_titik')
-                                    <div class="invalid-feedback">
-                                        {{ $message }}
-                                    </div>
-                                    @enderror
-                                </div>
-                                <div class="col mb-3">
-                                    <div class="form-floating form-floating-outline">
-                                        <label for="long_titik">Longitude Kantor</label>
-                                    </div>
-                                    @error('long_titik')
-                                    <div class="invalid-feedback">
-                                        {{ $message }}
-                                    </div>
-                                    @enderror
-                                </div> -->
-                                <!-- <button type="button" id="btn_lokasi_saya" class="btn btn-icon btn-outline-success waves-effect" title="Lokasi Saya">
-                                    <span class="tf-icons mdi mdi-map-marker"></span>
-                                </button>
-                                <button id="btn_refresh_lokasi" type="button" id="btn_lokasi_saya" class="btn btn-icon btn-outline-primary waves-effect" title="Refresh">
-                                    <span class="tf-icons mdi mdi-refresh"></span>
-                                </button> -->
-                                <!-- <br>
-                                <br> -->
+
                                 <div class="col-md-3">
                                     <div class="form-floating form-floating-outline">
                                         <input type="text" class="form-control @error('radius') is-invalid @enderror" id="radius" name="radius" value="{{ old('radius') }}">
@@ -116,7 +89,7 @@
                             </div>
                             <div class="row mt-2 p-3 gy-9">
                                 <div class="col mb-3">
-                                    <a type="button" href="{{url('lokasi-kantor/'.$holding)}}" class="btn btn-outline-secondary">
+                                    <a type="button" href="@if(Auth::user()->is_admin =='hrd'){{url('hrd/lokasi-kantor/'.$holding)}}@else {{url('lokasi-kantor/'.$holding)}} @endif" class="btn btn-outline-secondary">
                                         Kembali
                                     </a>
                                     <button type="submit" class="btn btn-primary">Simpan</button>
@@ -149,7 +122,7 @@
             // console.log(holding);
             $.ajax({
                 type: 'GET',
-                url: "{{url('lokasi_kantor/get_lokasi')}}",
+                url: "@if(Auth::user()->is_admin =='hrd'){{url('hrd/lokasi_kantor/get_lokasi')}}@else {{url('lokasi_kantor/get_lokasi')}} @endif",
                 data: {
                     holding: holding,
                     value: value

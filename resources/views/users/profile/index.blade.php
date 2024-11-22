@@ -455,7 +455,7 @@
 
     $("#gallery_image").change(function() {
         var result = $(this).val();
-        console.log(result);
+        // console.log(result);
         readURL(this);
         Crop(this);
         var bsOffcanvas = new bootstrap.Offcanvas(document.getElementById('offcanvas_konfirmasi_edit_profile'))

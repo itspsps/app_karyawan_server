@@ -204,7 +204,7 @@ class AbsenUserController extends Controller
                 }
                 return DataTables::of($data)->addIndexColumn()
                     ->addColumn('tanggal_masuk', function ($row) {
-                        $result = Carbon::parse($row->tanggal_masuk)->isoFormat('D-MM-Y');;
+                        $result = Carbon::parse($row->tanggal_masuk)->isoFormat('DD-MM-Y');;
                         return $result;
                     })
                     ->addColumn('jam_absen', function ($row) {
@@ -231,7 +231,11 @@ class AbsenUserController extends Controller
                         } else if ($row->status_absen == 'LIBUR') {
                             return '<span class="badge w-100 light badge-warning">LIBUR</span>';
                         } else if ($row->status_absen == 'TIDAK HADIR KERJA') {
-                            return '<span class="badge w-100 light badge-warning">TIDAK HADIR KERJA</span>';
+                            if ($row->tanggal_masuk >= date('Y-m-d')) {
+                                return '-';
+                            } else {
+                                return '<span class="badge w-100 light badge-warning">TIDAK HADIR KERJA</span>';
+                            }
                         } else if ($row->status_absen == 'HADIR KERJA') {
                             return '<span class="badge w-100 light badge-success">HADIR KERJA</span>';
                         } else {
@@ -245,7 +249,7 @@ class AbsenUserController extends Controller
                 // dd($data);
                 return DataTables::of($data)
                     ->addColumn('tanggal_masuk', function ($row) {
-                        $result = Carbon::parse($row->tanggal_masuk)->isoFormat('D-MM-Y');;
+                        $result = Carbon::parse($row->tanggal_masuk)->isoFormat('DD-MM-Y');;
                         return $result;
                     })
                     ->addColumn('jam_absen', function ($row) {
@@ -272,7 +276,11 @@ class AbsenUserController extends Controller
                         } else if ($row->status_absen == 'LIBUR') {
                             return '<span class="badge w-100 light badge-warning">LIBUR</span>';
                         } else if ($row->status_absen == 'TIDAK HADIR KERJA') {
-                            return '<span class="badge w-100 light badge-warning">TIDAK HADIR KERJA</span>';
+                            if ($row->tanggal_masuk >= date('Y-m-d')) {
+                                return '-';
+                            } else {
+                                return '<span class="badge w-100 light badge-warning">TIDAK HADIR KERJA</span>';
+                            }
                         } else if ($row->status_absen == 'HADIR KERJA') {
                             return '<span class="badge w-100 light badge-success">HADIR KERJA</span>';
                         } else {

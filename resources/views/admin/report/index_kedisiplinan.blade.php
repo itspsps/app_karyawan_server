@@ -19,7 +19,7 @@
             <div class="card">
                 <div class="card-header">
                     <div class="d-flex align-items-center justify-content-between">
-                        <h5 class="card-title m-0 me-2">REKAP DATA ABSENSI KARYAWAN</h5>
+                        <h5 class="card-title m-0 me-2">REPORT KEDISIPLINAN KARYAWAN</h5>
                     </div>
                 </div>
                 <div class="card-body">
@@ -68,121 +68,10 @@
                                     FILTER DATE : &nbsp;
                                     <i class="mdi mdi-calendar-filter-outline"></i>&nbsp;
                                     <span></span> <i class="mdi mdi-menu-down"></i>
-                                    <input type="date" id="start_date" name="start_date" hidden value="">
-                                    <input type="date" id="end_date" name="end_date" hidden value="">
+                                    <input type="date" id="start_date" name="start_date" value="">
+                                    <input type="date" id="end_date" name="end_date" value="">
                                 </button>
                             </div>
-                        </div>
-                    </div>
-                    <div class="modal fade" id="modal_import_absensi" data-bs-backdrop="static" tabindex="-1">
-                        <div class="modal-dialog modal-dialog-scrollable modal-lg">
-                            <form method="post" action="{{ url('/rekapdata/ImportAbsensi/'.$holding) }}" class="modal-content" enctype="multipart/form-data">
-                                @csrf
-                                <div class="modal-header">
-                                    <h4 class="modal-title" id="backDropModalTitle">Import Data Absensi</h4>
-                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                </div>
-                                <div class="modal-body">
-                                    <div class="row g-2 mt-2">
-                                        <div class="col mb-2">
-                                            <div class="form-floating form-floating-outline">
-                                                <input type="file" id="file_excel" name="file_excel" accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel" class="form-control" placeholder="Masukkan File" />
-                                                <label for="file_excel">File Excel</label>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="row g-2 mt-2">
-                                        <a href="" type="button" download="" class="btn btn-sm btn-primary"> Download Format Excel</a>
-                                    </div>
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
-                                        Close
-                                    </button>
-                                    <button type="submit" class="btn btn-primary">Save</button>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                    <div class="modal fade" id="modal_export_absensi" data-bs-backdrop="static" tabindex="-1">
-                        <div class="modal-dialog modal-dialog-scrollable modal-lg">
-                            <form method="get" action="{{url('rekap-data/ExportAbsensi/'.$holding)}}" class="modal-content" enctype="multipart/form-data">
-                                @csrf
-                                <div class="modal-header">
-                                    <h4 class="modal-title" id="backDropModalTitle">Export Excel Absensi</h4>
-                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                </div>
-                                <div class="modal-body">
-                                    <div class="row g-2 mt-2">
-                                        <div class="col mb-2">
-                                            <div class="form-floating form-floating-outline">
-                                                <h6>Download File Excel Data Absensi</h6>
-                                                <button type="submit" class="btn btn-sm btn-success"> Download Excel</button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
-                                        Close
-                                    </button>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                    <div class="modal fade" id="modal_detail" data-bs-backdrop="static" tabindex="-1">
-                        <div class="modal-dialog modal-dialog-scrollable modal-xl">
-                            <form method="post" action="{{ url('/rekapdata/ImportAbsensi/'.$holding) }}" class="modal-content" enctype="multipart/form-data">
-                                @csrf
-                                <div class="modal-header">
-                                    <h4 class="modal-title" id="backDropModalTitle">Detail Absensi</h4>
-                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                </div>
-                                <div class="modal-body">
-                                    <!-- Transactions -->
-                                    <div class="col-lg-12">
-                                        <div class="card">
-                                            <div class="card-header">
-                                                <div class="d-flex align-items-center justify-content-between">
-                                                    <h5 id="title_detail" class="card-title m-0 me-2">DATA ABSENSI KARYAWAN </h5>
-                                                </div>
-                                            </div>
-                                            <div class="card-body">
-                                                <table class="table" id="table_rekapdata2" style="width: 100%;">
-                                                    <thead class="table-primary">
-                                                        <tr>
-                                                            <th rowspan="2" class="text-center">Detail</th>
-                                                            <th rowspan="2" class="text-center">No.</th>
-                                                            <th rowspan="2" class="text-center">ID&nbsp;Karyawan</th>
-                                                            <th rowspan="2" class="text-center">Nama&nbsp;Karyawan</th>
-                                                            <th colspan="2" class="text-center">Hadir&nbsp;Kerja</th>
-                                                            <th colspan="3" class="text-center">Keterangan</th>
-                                                            <th colspan="1" class="text-center">Tidak&nbsp;Hadir&nbsp;Kerja</th>
-                                                            <th rowspan="2" class="text-center">Total&nbsp;Keseluruhan</th>
-                                                        </tr>
-                                                        <tr>
-                                                            <th>Tepat&nbsp;Waktu</th>
-                                                            <th>Telat&nbsp;Hadir</th>
-                                                            <th>Izin</th>
-                                                            <th>Cuti</th>
-                                                            <th>Dinas</th>
-                                                            <th>Alfa</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody class="table-border-bottom-0">
-                                                    </tbody>
-                                                </table>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
-                                        Close
-                                    </button>
-
-                                </div>
-                            </form>
                         </div>
                     </div>
                     <hr class="my-5">
@@ -232,20 +121,14 @@
                                             <th rowspan="2" class="text-center">No.</th>
                                             <th rowspan="2" class="text-center">ID&nbsp;Karyawan</th>
                                             <th rowspan="2" class="text-center">Nama&nbsp;Karyawan</th>
-                                            <th colspan="3" class="text-center">Hadir&nbsp;Kerja</th>
+                                            <th colspan="3" class="text-center">&nbsp;ABSENSI&nbsp;</th>
                                             <th colspan="4" class="text-center">Keterangan</th>
                                             <th colspan="1" class="text-center">Tidak&nbsp;Hadir&nbsp;Kerja</th>
                                             <th rowspan="2" class="text-center">Total&nbsp;Keseluruhan</th>
+                                            <th id="th_count_date" class="text-center">&nbsp;Tanggal&nbsp;</th>
                                         </tr>
-                                        <tr>
-                                            <th>Tepat&nbsp;Waktu</th>
-                                            <th>Telat&nbsp;Hadir&nbsp;<span>(&nbsp;+&nbsp;15&nbsp;Menit)</span></th>
-                                            <th>Telat&nbsp;Hadir&nbsp;<span>(-&nbsp;15&nbsp;Menit)</span></th>
-                                            <th>Izin</th>
-                                            <th>Cuti</th>
-                                            <th>Dinas</th>
-                                            <th>Libur</th>
-                                            <th>Alfa</th>
+                                        <tr id="date_absensi">
+
                                         </tr>
                                     </thead>
                                     <tbody class="table-border-bottom-0">
@@ -306,26 +189,31 @@
         $(document).ready(function() {
             var start = moment().startOf('month');
             var end = moment().endOf('month');
+            var start_val = moment().startOf('month').format('Y-M-DD');
+            var end_val = moment().endOf('month').format('Y-M-DD');
             var lstart, lend;
             var start_date = document.getElementById("start_date");
             var end_date = document.getElementById("end_date");
             var holding = '{{$holding}}';
             var chart_absensi_masuk;
-            // console.log(holding);
+            var data_column;
+            let table_rekapdata;
+            // console.log(start, end);
             departemen_filter = $('#departemen_filter').val();
             divisi_filter = $('#divisi_filter').val();
             bagian_filter = $('#bagian_filter').val();
             jabatan_filter = $('#jabatan_filter').val();
 
+
             function detail(start, end) {
-                // console.log(start, end);
-                $('#reportrange span').html(start.format('D MMMM YYYY') + ' - ' + end.format('D MMMM YYYY'));
+                $('#reportrange span').html(start.format('DD MMMM YYYY') + ' - ' + end.format('DD MMMM YYYY'));
                 lstart = moment($('#reportrange').data('daterangepicker').startDate).format('YYYY-MM-DD');
                 lend = moment($('#reportrange').data('daterangepicker').endDate).format('YYYY-MM-DD');
                 start_date.value = lstart;
                 end_date.value = lend;
+                // console.log(lstart);
                 get_grafik_absensi(departemen_filter, divisi_filter, bagian_filter, jabatan_filter, lstart, lend);
-                load_data(departemen_filter, divisi_filter, bagian_filter, jabatan_filter, lstart, lend);
+                // load_data(departemen_filter, divisi_filter, bagian_filter, jabatan_filter, lstart, lend, data_column);
             }
 
             $('#reportrange').daterangepicker({
@@ -338,10 +226,9 @@
                     'Last 30 Days': [moment().subtract(29, 'days'), moment()],
                     'This Month': [moment().startOf('month'), moment().endOf('month')],
                     'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
-                }
+                },
             }, detail);
 
-            detail(start, end);
             $('#departemen_filter').change(function() {
                 departemen_filter = $(this).val();
                 divisi_filter = $('#divisi_filter').val();
@@ -448,124 +335,22 @@
                 load_data(departemen_filter, divisi_filter, bagian_filter, jabatan_filter, start_date, end_date);
             })
             // load_data(departemen_filter, divisi_filter, bagian_filter, jabatan_filter, start_date, end_date);
+            detail(start, end);
 
-            function newexportaction(e, dt, button, config) {
-                var self = this;
-                var oldStart = dt.settings()[0]._iDisplayStart;
-                dt.one('preXhr', function(e, s, data) {
-                    // Just this once, load all data from the server...
-                    data.start = 0;
-                    data.length = 2147483647;
-                    dt.one('preDraw', function(e, settings) {
-                        // Call the original action function
-                        if (button[0].className.indexOf('buttons-copy') >= 0) {
-                            $.fn.dataTable.ext.buttons.copyHtml5.action.call(self, e, dt, button, config);
-                        } else if (button[0].className.indexOf('buttons-excel') >= 0) {
-                            $.fn.dataTable.ext.buttons.excelHtml5.available(dt, config) ?
-                                $.fn.dataTable.ext.buttons.excelHtml5.action.call(self, e, dt, button, config) :
-                                $.fn.dataTable.ext.buttons.excelFlash.action.call(self, e, dt, button, config);
-                        } else if (button[0].className.indexOf('buttons-csv') >= 0) {
-                            $.fn.dataTable.ext.buttons.csvHtml5.available(dt, config) ?
-                                $.fn.dataTable.ext.buttons.csvHtml5.action.call(self, e, dt, button, config) :
-                                $.fn.dataTable.ext.buttons.csvFlash.action.call(self, e, dt, button, config);
-                        } else if (button[0].className.indexOf('buttons-pdf') >= 0) {
-                            $.fn.dataTable.ext.buttons.pdfHtml5.available(dt, config) ?
-                                $.fn.dataTable.ext.buttons.pdfHtml5.action.call(self, e, dt, button, config) :
-                                $.fn.dataTable.ext.buttons.pdfFlash.action.call(self, e, dt, button, config);
-                        } else if (button[0].className.indexOf('buttons-print') >= 0) {
-                            $.fn.dataTable.ext.buttons.print.action(e, dt, button, config);
-                        }
-                        dt.one('preXhr', function(e, s, data) {
-                            // DataTables thinks the first item displayed is index 0, but we're not drawing that.
-                            // Set the property to what it was before exporting.
-                            settings._iDisplayStart = oldStart;
-                            data.start = oldStart;
-                        });
-                        // Reload the grid with the original page. Otherwise, API functions like table.cell(this) don't work properly.
-                        setTimeout(dt.ajax.reload, 0);
-                        // Prevent rendering of the full data to the DOM
-                        return false;
-                    });
-                });
-                // Requery the server with the new one-time export settings
-                dt.ajax.reload();
-            }
-
-            function load_data(departemen_filter = '', divisi_filter = '', bagian_filter = '', jabatan_filter = '', start_date = '', end_date = '') {
-                // console.log(start_date, end_date);
-                $('#table_rekapdata').DataTable().destroy();
-                var table = $('#table_rekapdata').DataTable({
-                    "scrollY": true,
-                    "scrollX": true,
-                    processing: true,
-                    autoWidth: false,
-                    serverSide: true,
-                    deferRender: true,
-                    dom: 'Blfrtip',
-                    buttons: [{
-
-                            extend: 'excelHtml5',
-                            className: 'btn btn-sm btn-success',
-                            text: '<i class="menu-icon tf-icons mdi mdi-file-excel"></i>Excel',
-                            titleAttr: 'Excel',
-                            title: 'DATA ABSENSI KARYAWAN ',
-                            messageTop: 'Bulan : '.filter_month,
-                            action: newexportaction,
-                            exportOptions: {
-                                columns: ':not(:first-child)',
-                            },
-                            filename: function() {
-                                var d = new Date();
-                                var l = d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate();
-                                var n = d.getHours() + ':' + d.getMinutes() + ':' + d.getSeconds();
-                                return 'REKAP_DATA_ABSENSI_KARYAWAN_{{$holding}}_' + l + ' ' + n;
-                            },
-                        },
-                        {
-
-                            extend: 'pdf',
-                            className: 'btn btn-sm btn-danger',
-                            text: '<i class="menu-icon tf-icons mdi mdi-file-pdf-box"></i>PDF',
-                            titleAttr: 'PDF',
-                            title: 'DATA ABSENSI KARYAWAN',
-                            orientation: 'potrait',
-                            pageSize: 'LEGAL',
-                            exportOptions: {
-                                columns: ':not(:first-child)',
-                            },
-                            filename: function() {
-                                var d = new Date();
-                                var l = d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate();
-                                var n = d.getHours() + ":" + d.getMinutes() + ":" + d.getSeconds();
-                                return 'REKAP_DATA_ABSENSI_KARYAWAN_{{$holding}}_' + l + ' ' + n;
-                            },
-                        }, {
-                            extend: 'print',
-                            className: 'btn btn-sm btn-info',
-                            title: 'DATA ABSENSI KARYAWAN',
-                            text: '<i class="menu-icon tf-icons mdi mdi-printer-pos-check-outline"></i>PRINT',
-                            titleAttr: 'PRINT',
-                        }, {
-                            extend: 'copy',
-                            title: 'DATA ABSENSI KARYAWAN',
-                            className: 'btn btn-sm btn-secondary',
-                            text: '<i class="menu-icon tf-icons mdi mdi-content-copy"></i>COPY',
-                            titleAttr: 'COPY',
-                        }
-                    ],
-                    pageLength: 50,
-                    ajax: {
-                        url: "{{ url('rekapdata-datatable') }}" + '/' + holding,
-                        data: {
-                            start_date: start_date,
-                            end_date: end_date,
-                            departemen_filter: departemen_filter,
-                            divisi_filter: divisi_filter,
-                            bagian_filter: bagian_filter,
-                            jabatan_filter: jabatan_filter,
-                        }
-                    },
-                    columns: [{
+            $.ajax({
+                url: "@if(Auth::user()->is_admin=='hrd'){{ url('/hrd/report_kedisiplinan/get_columns') }}@else{{ url('report_kedisiplinan/get_columns') }}@endif",
+                method: "get",
+                data: {
+                    start_date: start_val,
+                    end_date: end_val,
+                    departemen_filter: departemen_filter,
+                    divisi_filter: divisi_filter,
+                    bagian_filter: bagian_filter,
+                    jabatan_filter: jabatan_filter,
+                },
+                success: function(data) {
+                    console.log(data);
+                    datacolumn = [{
                             data: 'btn_detail',
                             name: 'btn_detail'
                         },
@@ -620,9 +405,142 @@
                             data: 'total_semua',
                             name: 'total_semua'
                         },
+                    ];
+                    const data_column = datacolumn.concat(data.datacolumn);
+                    // console.log(data_column);
+                    $('#date_absensi').empty();
+                    $('#date_absensi').append('<th>Tepat&nbsp;Waktu</th><th>Telat&nbsp;Hadir&nbsp;<span>(&nbsp;+&nbsp;15&nbsp;Menit)</span></th><th>Telat&nbsp;Hadir&nbsp;<span>(&nbsp;-&nbsp;15&nbsp;Menit)</span></th><th>Izin</th><th>Cuti</th><th>Dinas</th><th>Libur</th><th>Alfa</th>');
 
+                    $.each(data.data_columns_header, function(count) {
+                        $('#date_absensi').append("<th id='th_date'>" + data.data_columns_header[count].header + "</th>");
+                    });
+                    $('#th_count_date').attr('colspan', data.count_period);
+                    load_data(departemen_filter, divisi_filter, bagian_filter, jabatan_filter, start_val, end_val, data_column);
+                },
+                error: function(data) {
+                    var errors = data.errors();
+                    console.log(errors);
+                }
+            });
+
+            function newexportaction(e, dt, button, config) {
+                var self = this;
+                var oldStart = dt.settings()[0]._iDisplayStart;
+                dt.one('preXhr', function(e, s, data) {
+                    // Just this once, load all data from the server...
+                    data.start = 0;
+                    data.length = 2147483647;
+                    dt.one('preDraw', function(e, settings) {
+                        // Call the original action function
+                        if (button[0].className.indexOf('buttons-copy') >= 0) {
+                            $.fn.dataTable.ext.buttons.copyHtml5.action.call(self, e, dt, button, config);
+                        } else if (button[0].className.indexOf('buttons-excel') >= 0) {
+                            $.fn.dataTable.ext.buttons.excelHtml5.available(dt, config) ?
+                                $.fn.dataTable.ext.buttons.excelHtml5.action.call(self, e, dt, button, config) :
+                                $.fn.dataTable.ext.buttons.excelFlash.action.call(self, e, dt, button, config);
+                        } else if (button[0].className.indexOf('buttons-csv') >= 0) {
+                            $.fn.dataTable.ext.buttons.csvHtml5.available(dt, config) ?
+                                $.fn.dataTable.ext.buttons.csvHtml5.action.call(self, e, dt, button, config) :
+                                $.fn.dataTable.ext.buttons.csvFlash.action.call(self, e, dt, button, config);
+                        } else if (button[0].className.indexOf('buttons-pdf') >= 0) {
+                            $.fn.dataTable.ext.buttons.pdfHtml5.available(dt, config) ?
+                                $.fn.dataTable.ext.buttons.pdfHtml5.action.call(self, e, dt, button, config) :
+                                $.fn.dataTable.ext.buttons.pdfFlash.action.call(self, e, dt, button, config);
+                        } else if (button[0].className.indexOf('buttons-print') >= 0) {
+                            $.fn.dataTable.ext.buttons.print.action(e, dt, button, config);
+                        }
+                        dt.one('preXhr', function(e, s, data) {
+                            // DataTables thinks the first item displayed is index 0, but we're not drawing that.
+                            // Set the property to what it was before exporting.
+                            settings._iDisplayStart = oldStart;
+                            data.start = oldStart;
+                        });
+                        // Reload the grid with the original page. Otherwise, API functions like table.cell(this) don't work properly.
+                        setTimeout(dt.ajax.reload, 0);
+                        // Prevent rendering of the full data to the DOM
+                        return false;
+                    });
+                });
+                // Requery the server with the new one-time export settings
+                dt.ajax.reload();
+            }
+
+            function load_data(departemen_filter = '', divisi_filter = '', bagian_filter = '', jabatan_filter = '', start_date = '', end_date = '', data_column = '') {
+                // console.log(data_column);
+                $('#table_rekapdata').DataTable().destroy();
+                var table_rekapdata = $('#table_rekapdata').DataTable({
+                    "scrollY": true,
+                    "scrollX": true,
+                    processing: true,
+                    autoWidth: false,
+                    serverSide: true,
+                    deferRender: true,
+                    dom: 'Blfrtip',
+
+                    buttons: [{
+
+                            extend: 'excelHtml5',
+                            className: 'btn btn-sm btn-success',
+                            text: '<i class="menu-icon tf-icons mdi mdi-file-excel"></i>Excel',
+                            titleAttr: 'Excel',
+                            title: 'DATA ABSENSI KARYAWAN ',
+                            messageTop: 'Bulan : '.filter_month,
+                            action: newexportaction,
+                            exportOptions: {
+                                columns: ':not(:first-child)',
+                            },
+                            filename: function() {
+                                var d = new Date();
+                                var l = d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate();
+                                var n = d.getHours() + ':' + d.getMinutes() + ':' + d.getSeconds();
+                                return 'REKAP_DATA_ABSENSI_KARYAWAN_{{$holding}}_' + l + ' ' + n;
+                            },
+                        },
+                        {
+
+                            extend: 'pdf',
+                            className: 'btn btn-sm btn-danger',
+                            text: '<i class="menu-icon tf-icons mdi mdi-file-pdf-box"></i>PDF',
+                            titleAttr: 'PDF',
+                            title: 'DATA ABSENSI KARYAWAN',
+                            orientation: 'potrait',
+                            pageSize: 'LEGAL',
+                            exportOptions: {
+                                columns: ':not(:first-child)',
+                            },
+                            filename: function() {
+                                var d = new Date();
+                                var l = d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate();
+                                var n = d.getHours() + ":" + d.getMinutes() + ":" + d.getSeconds();
+                                return 'REKAP_DATA_ABSENSI_KARYAWAN_{{$holding}}_' + l + ' ' + n;
+                            },
+                        }, {
+                            extend: 'print',
+                            className: 'btn btn-sm btn-info',
+                            title: 'DATA ABSENSI KARYAWAN',
+                            text: '<i class="menu-icon tf-icons mdi mdi-printer-pos-check-outline"></i>PRINT',
+                            titleAttr: 'PRINT',
+                        }, {
+                            extend: 'copy',
+                            title: 'DATA ABSENSI KARYAWAN',
+                            className: 'btn btn-sm btn-secondary',
+                            text: '<i class="menu-icon tf-icons mdi mdi-content-copy"></i>COPY',
+                            titleAttr: 'COPY',
+                        }
                     ],
-                    order: [3, 'ASC'],
+                    pageLength: 50,
+                    ajax: {
+                        url: "@if(Auth::user()->is_admin=='hrd'){{ url('hrd/report_kedisiplinan-datatable') }}@else {{ url('report_kedisiplinan-datatable') }}@endif" + '/' + holding,
+                        data: {
+                            start_date: start_date,
+                            end_date: end_date,
+                            departemen_filter: departemen_filter,
+                            divisi_filter: divisi_filter,
+                            bagian_filter: bagian_filter,
+                            jabatan_filter: jabatan_filter,
+                        }
+                    },
+                    columns: data_column,
 
                 });
             }
@@ -690,9 +608,11 @@
                 // table.draw();
             })
 
+
             function get_grafik_absensi(departemen_filter = '', divisi_filter = '', bagian_filter = '', jabatan_filter = '', start_date = '', end_date = '') {
+                // console.log(start_date);
                 $.ajax({
-                    url: "{{url('rekapdata/get_grafik_absensi')}}",
+                    url: "@if(Auth::user()->is_admin =='hrd'){{url('hrd/report/get_grafik_absensi')}}@else {{url('report/get_grafik_absensi')}} @endif",
                     data: {
                         holding: holding,
                         start_date: start_date,

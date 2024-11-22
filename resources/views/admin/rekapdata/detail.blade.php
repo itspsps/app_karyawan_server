@@ -45,7 +45,7 @@
                     </form>
                     <hr class="my-5">
                     <div class="nav-align-top">
-                        <table class="table" id="table_rekapdata_detail" style="width: 100%;">
+                        <table class="table" id="table_rekapdata_detail" style="width: 100%; font-size: small;">
                             <thead class="table-primary">
                                 <tr>
                                     <th rowspan="2" class="text-center">No.</th>
@@ -156,7 +156,7 @@
             }
 
             function load_data(filter_month = '') {
-                console.log(filter_month);
+                // console.log(filter_month);
                 var table = $('#table_rekapdata_detail').DataTable({
                     pageLength: 50,
                     "scrollY": true,
