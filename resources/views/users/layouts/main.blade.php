@@ -89,17 +89,15 @@
 
         <!-- Preloader -->
         <div id="preloader">
-            <div class="col-12">
-                <img type="image/x-icon" src="{{asset('holding/assets/img/logosp.png')}}" width="20%" />
+            <div class="spinner-grow text-primary spinner-grow-sm me-2" role="status">
             </div>
-            <div class="col-12">
-                <div class="spinner-grow text-primary spinner-grow-sm me-2" role="status">
-                </div>
-                <div class="spinner-grow text-primary spinner-grow-sm me-2" role="status">
-                </div>
-                <div class="spinner-grow text-primary spinner-grow-sm me-2" role="status">
-                </div>
+            <div class="spinner-grow text-primary spinner-grow-sm me-2" role="status">
             </div>
+            <div class="spinner-grow text-primary spinner-grow-sm me-2" role="status">
+            </div>
+
+            <!-- <div class="col-12">
+            </div> -->
         </div>
         <!-- Preloader end-->
 

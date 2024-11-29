@@ -2169,6 +2169,9 @@
                     $('#id_departemen2').html(msg);
                     $('#id_departemen3').html(msg);
                     $('#id_departemen4').html(msg);
+                    $('#id_divisi').html('<option value=""></option>');
+                    $('#id_bagian').html('<option value=""></option>');
+                    $('#id_jabatan').html('<option value=""></option>');
                 },
                 error: function(data) {
                     console.log('error:', data)
@@ -2198,6 +2201,9 @@
                     $('#id_departemen2').html(msg);
                     $('#id_departemen3').html(msg);
                     $('#id_departemen4').html(msg);
+                    $('#id_divisi').html('<option value=""></option>');
+                    $('#id_bagian').html('<option value=""></option>');
+                    $('#id_jabatan').html('<option value=""></option>');
                 },
                 error: function(data) {
                     console.log('error:', data)
@@ -2227,6 +2233,9 @@
                     $('#id_departemen2').html(msg);
                     $('#id_departemen3').html(msg);
                     $('#id_departemen4').html(msg);
+                    $('#id_divisi').html('<option value=""></option>');
+                    $('#id_bagian').html('<option value=""></option>');
+                    $('#id_jabatan').html('<option value=""></option>');
                 },
                 error: function(data) {
                     console.log('error:', data)

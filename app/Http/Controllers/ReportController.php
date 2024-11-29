@@ -313,7 +313,7 @@ class ReportController extends Controller
         $now1 = Carbon::parse($request->filter_month)->endOfMonth();
         $period = CarbonPeriod::create($now, $now1);
 
-        // dd($now1);
+        // dd($now, $now1);
         // dd($tgl_mulai, $tgl_selesai);
         $table = Karyawan::where('kontrak_kerja', $holding)
             ->where('kategori', 'Karyawan Bulanan')
@@ -321,7 +321,7 @@ class ReportController extends Controller
             // ->where('name', 'MUHAMMAD FAIZAL IZAK')
             ->select('karyawans.name', 'karyawans.id', 'karyawans.nomor_identitas_karyawan')
             ->orderBy('karyawans.name', 'ASC')
-            // ->limit(50)
+            // ->limit(6)
             ->get();
         // dd($table);
         $column = DataTables::of($table);

@@ -67,7 +67,7 @@
                                             <th rowspan="2" class="text-center">&nbsp;Total&nbsp;</th>
                                             <th id="th_count_date" class="text-center">&nbsp;Tanggal&nbsp;</th>
                                         </tr>
-                                        <tr id="date_absensi">
+                                        <tr id="date_absensi" class="date_absensi">
                                         </tr>
                                     </thead>
                                     <tbody class="table-border-bottom-0">
@@ -124,6 +124,7 @@
         $(document).ready(function() {
             // console.log(colspan);
 
+
             function newexportaction(e, dt, button, config) {
                 var self = this;
                 var oldStart = dt.settings()[0]._iDisplayStart;
@@ -166,71 +167,80 @@
                 dt.ajax.reload();
             }
             var filter_month = $('#filter_month').val();
-            $.ajax({
-                url: "@if(Auth::user()->is_admin=='hrd'){{ url('hrd/report/get_columns') }}@else{{ url('report/get_columns') }}@endif",
-                method: "get",
-                data: {
-                    filter_month: filter_month,
-                },
-                success: function(data) {
-                    datacolumn = [{
-                            data: 'no',
-                            render: function(data, type, row, meta) {
-                                return meta.row + meta.settings._iDisplayStart + 1;
-                            }
-                        },
-                        {
-                            data: 'nomor_identitas_karyawan',
-                            name: 'nomor_identitas_karyawan'
-                        },
-                        {
-                            data: 'name',
-                            name: 'name'
-                        },
-                        {
-                            data: 'total_hadir_kerja',
-                            name: 'total_hadir_kerja'
-                        },
-                        {
-                            data: 'total_tidak_hadir_kerja',
-                            name: 'total_tidak_hadir_kerja',
-                        },
-                        {
-                            data: 'total_cuti',
-                            name: 'total_cuti'
-                        },
-                        {
-                            data: 'total_izin_sakit',
-                            name: 'total_izin_sakit'
-                        },
-                        {
-                            data: 'total_izin_lainnya',
-                            name: 'total_izin_lainnya'
-                        },
-                        {
-                            data: 'total_libur',
-                            name: 'total_libur'
-                        },
-                        {
-                            data: 'total_semua',
-                            name: 'total_semua'
-                        },
-                    ];
-                    // console.log(data);
-                    const data_column = datacolumn.concat(data.datacolumn);
-                    $.each(data.data_columns_header, function(count) {
-                        $('#date_absensi').append("<th id='th_date'>" + data.data_columns_header[count].header + "</th>");
-                    });
-                    $('#th_count_date').attr('colspan', data.count_period);
-                    load_data(filter_month, data_column, data.count_period);
-                },
-                error: function(data) {
-                    var errors = data.responseJSON;
-                    console.log(errors);
-                }
-            });
+            var month_now = "{{date('Y-m')}}";
+            // console.log(filter_month, month_now);
+            if (filter_month == month_now) {
+                $.ajax({
+                    url: "@if(Auth::user()->is_admin=='hrd'){{ url('hrd/report/get_columns') }}@else{{ url('report/get_columns') }}@endif",
+                    method: "get",
+                    data: {
+                        filter_month: filter_month,
+                    },
+                    success: function(data) {
+                        // console.log(data);
+                        datacolumn = [{
+                                data: 'no',
+                                render: function(data, type, row, meta) {
+                                    return meta.row + meta.settings._iDisplayStart + 1;
+                                }
+                            },
+                            {
+                                data: 'nomor_identitas_karyawan',
+                                name: 'nomor_identitas_karyawan'
+                            },
+                            {
+                                data: 'name',
+                                name: 'name'
+                            },
+                            {
+                                data: 'total_hadir_kerja',
+                                name: 'total_hadir_kerja'
+                            },
+                            {
+                                data: 'total_tidak_hadir_kerja',
+                                name: 'total_tidak_hadir_kerja',
+                            },
+                            {
+                                data: 'total_cuti',
+                                name: 'total_cuti'
+                            },
+                            {
+                                data: 'total_izin_sakit',
+                                name: 'total_izin_sakit'
+                            },
+                            {
+                                data: 'total_izin_lainnya',
+                                name: 'total_izin_lainnya'
+                            },
+                            {
+                                data: 'total_libur',
+                                name: 'total_libur'
+                            },
+                            {
+                                data: 'total_semua',
+                                name: 'total_semua'
+                            },
+                        ];
+                        $('#th_count_date').attr('colspan', data.count_period);
+                        // $('#date_absensi').empty();
+                        // console.log(data.data_columns_header[count].header);
+                        $.each(data.data_columns_header, function(count) {
+                            $('#date_absensi').append("<th id='th_date" + count + "'>" + data.data_columns_header[count].header + "</th>");
+                        });
+                        // $('#table_report').DataTable().destroy();
+
+                        const data_column = datacolumn.concat(data.datacolumn);
+                        $('#table_report').DataTable().destroy();
+                        load_data(filter_month, data_column, data.count_period, data.data_columns_header);
+                    },
+                    error: function(data) {
+                        var errors = data.responseJSON;
+                        console.log(errors);
+                    }
+                });
+            }
             $(document).on("change", "#filter_month", function(e) {
-                $('#date_absensi').empty();
+                e.preventDefault();
                 let filter_month1 = $(this).val();
                 $.ajax({
                     url: "@if(Auth::user()->is_admin=='hrd'){{ url('hrd/report/get_columns') }}@else{{ url('report/get_columns') }}@endif",
@@ -242,7 +252,7 @@
                         alert('Something is wrong');
                     },
                     success: function(data1) {
-                        console.log(data1);
+                        // console.log(data1);
                         datacolumn1 = [{
                                 data: 'no',
                                 render: function(data, type, row, meta) {
@@ -287,14 +297,13 @@
                             },
                         ];
                         const data_column1 = datacolumn1.concat(data1.datacolumn);
-
+                        $('#table_report').DataTable().destroy();
+                        $('.date_absensi').empty();
                         $.each(data1.data_columns_header, function(count) {
-                            // console.log(data.data_columns_header[count].header);
-                            $('#date_absensi').append("<th id='th_date'>" + data1.data_columns_header[count].header + "</th>");
+                            $('#date_absensi').append("<th id='th_date" + count + "'>" + data1.data_columns_header[count].header + "</th>");
                         });
                         $('#th_count_date').attr('colspan', data1.count_period);
-                        // console.log(filter_month, data_column, data.count_period);
-                        // load_data(filter_month1, data_column1, data1.count_period);
+                        load_data(filter_month1, data_column1, data1.count_period, data1.data_columns_header);
                         // $('#table_report').DataTable().ajax.reload();
                     }
                 });
@@ -313,12 +322,10 @@
                 'BW', 'BX', 'BY', 'BZ'
             ];
 
-            function load_data(filter_month = '', data_column = '', colspan1 = '') {
-                // console.log(colspan1);
+            function load_data(filter_month = '', data_column = '', colspan = '', data_columns_header = '') {
+                // console.log(colspan, data_columns_header);
                 url = "@if(Auth::user()->is_admin =='hrd'){{ url('hrd/report-datatable') }}@else {{ url('report-datatable') }} @endif" + '/' + holding;
-                // console.log(filter_month);
-                // console.log(data_column);
-                $('#table_report').DataTable().destroy();
+
                 var table_report = $('#table_report').DataTable({
                     scrollY: '600px',
                     scrollCollapse: true,
@@ -419,7 +426,13 @@
                         },
                     },
                     columns: data_column,
+                    // initComplete: function() {
+                    //     $('#date_absensi th').each(function(count) {
+                    //         // console.log(data_columns_header[index].header);
+                    //         $(this).text(data_columns_header[count].header);
+                    //     });
 
+                    // }
                     // order: [3, 'ASC'],
                 });
             }

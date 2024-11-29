@@ -62,295 +62,155 @@
                         </div>
                     </div>
                     <div class="row mt-3 g-3">
-                        <div class="col-lg-6">
-                            <div id="reportrange" style="background: #fff; cursor: pointer; width: 100%">
-                                <button class="btn btn-outline-secondary waves-effect">
-                                    FILTER DATE : &nbsp;
-                                    <i class="mdi mdi-calendar-filter-outline"></i>&nbsp;
-                                    <span></span> <i class="mdi mdi-menu-down"></i>
-                                    <input type="date" id="start_date" name="start_date" value="">
-                                    <input type="date" id="end_date" name="end_date" value="">
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                    <hr class="my-5">
-                    <div class="row gy-4">
-                        <div class="col-xl-12 col-md-12">
-                            <div class="card">
-                                <div class="card-header">
-                                    <div class="d-flex justify-content-between">
-                                        <h6 class="mb-1">Grafik Absensi Karyawan Kontrak Kerja @if($holding=='sps') PT. SURYA PANGAN SEMESTA @elseif($holding=='sp') CV. SUMBER PANGAN @else CV. SURYA INTI PANGAN @endif</h6>
-                                    </div>
-                                </div>
-                                <div class="card-body">
-                                    <div id="grafik_absensi"></div>
-                                    <div class="mt-1 mt-md-3">
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="nav-align-top">
-                        <div class="row">
-                            <div class="col-2">
-                            </div>
-                            <div class="col-8">
-                                <ul class="nav nav-pills nav-fill" role="tablist">
-                                    <li class="nav-item">
-                                        <a type=" button" style="width: auto;" class="nav-link active" role="tab" data-bs-toggle="tab" href="#navs-pills-justified-home">
-                                            <i class="tf-icons mdi mdi-account-tie me-1"></i><span class="d-none d-sm-block">Karyawan Bulanan</span>
-                                        </a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a type="button" style="width: auto;" class="nav-link" role="tab" data-bs-toggle="tab" href="#navs-pills-justified-profile">
-                                            <i class="tf-icons mdi mdi-account me-1"></i><span class="d-none d-sm-block">Karyawan Harian</span>
-                                        </a>
-                                    </li>
-                                </ul>
-                            </div>
-                            <div class="col-2">
-                            </div>
-                        </div>
-                        <div class="tab-content">
-                            <div class="tab-pane fade show active" id="navs-pills-justified-home" role="tabpanel">
-                                <table class="table" id="table_rekapdata" style="width: 100%; font-size: small;">
-                                    <thead class="table-primary">
-                                        <tr>
-                                            <th rowspan="2" class="text-center">Detail</th>
-                                            <th rowspan="2" class="text-center">No.</th>
-                                            <th rowspan="2" class="text-center">ID&nbsp;Karyawan</th>
-                                            <th rowspan="2" class="text-center">Nama&nbsp;Karyawan</th>
-                                            <th colspan="3" class="text-center">&nbsp;ABSENSI&nbsp;</th>
-                                            <th colspan="4" class="text-center">Keterangan</th>
-                                            <th colspan="1" class="text-center">Tidak&nbsp;Hadir&nbsp;Kerja</th>
-                                            <th rowspan="2" class="text-center">Total&nbsp;Keseluruhan</th>
-                                            <th id="th_count_date" class="text-center">&nbsp;Tanggal&nbsp;</th>
-                                        </tr>
-                                        <tr id="date_absensi">
+                        <div class="col-lg-3">
+                            <input id="filter_month" class="form-control" name="filter_month" type="month" value="{{date('Y-m')}}">
 
-                                        </tr>
-                                    </thead>
-                                    <tbody class="table-border-bottom-0">
-                                    </tbody>
-                                </table>
+                        </div>
+                    </div>
+                </div>
+                <hr class="my-5">
+                <div class="row gy-4">
+                    <div class="col-xl-12 col-md-12">
+                        <div class="card">
+                            <div class="card-header">
+                                <div class="d-flex justify-content-between">
+                                    <h6 class="mb-1">Grafik Absensi Karyawan Kontrak Kerja @if($holding=='sps') PT. SURYA PANGAN SEMESTA @elseif($holding=='sp') CV. SUMBER PANGAN @else CV. SURYA INTI PANGAN @endif</h6>
+                                </div>
                             </div>
-                            <div class="tab-pane fade" id="navs-pills-justified-profile" role="tabpanel">
-                                <table class="table" id="table_rekapdata1" style="width: 100%; font-size: small;">
-                                    <thead class="table-primary">
-                                        <tr>
-                                            <th rowspan="2" class="text-center">Detail</th>
-                                            <th rowspan="2" class="text-center">No.</th>
-                                            <th rowspan="2" class="text-center">ID&nbsp;Karyawan</th>
-                                            <th rowspan="2" class="text-center">Nama&nbsp;Karyawan</th>
-                                            <th colspan="3" class="text-center">Hadir&nbsp;Kerja</th>
-                                            <th colspan="4" class="text-center">Keterangan</th>
-                                            <th colspan="1" class="text-center">Tidak&nbsp;Hadir&nbsp;Kerja</th>
-                                            <th rowspan="2" class="text-center">Total&nbsp;Keseluruhan</th>
-                                        </tr>
-                                        <tr>
-                                            <th>Tepat&nbsp;Waktu</th>
-                                            <th>Telat&nbsp;Hadir&nbsp;<span>(&nbsp;+&nbsp;15&nbsp;Menit)</span></th>
-                                            <th>Telat&nbsp;Hadir&nbsp;<span>(-&nbsp;15&nbsp;Menit)</span></th>
-                                            <th>Izin</th>
-                                            <th>Cuti</th>
-                                            <th>Dinas</th>
-                                            <th>Libur</th>
-                                            <th>Alfa</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody class="table-border-bottom-0">
-                                    </tbody>
-                                </table>
+                            <div class="card-body">
+                                <div id="grafik_absensi"></div>
+                                <div class="mt-1 mt-md-3">
+                                </div>
                             </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="nav-align-top">
+                    <div class="row">
+                        <div class="col-2">
+                        </div>
+                        <div class="col-8">
+                            <ul class="nav nav-pills nav-fill" role="tablist">
+                                <li class="nav-item">
+                                    <a type=" button" style="width: auto;" class="nav-link active" role="tab" data-bs-toggle="tab" href="#navs-pills-justified-home">
+                                        <i class="tf-icons mdi mdi-account-tie me-1"></i><span class="d-none d-sm-block">Karyawan Bulanan</span>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a type="button" style="width: auto;" class="nav-link" role="tab" data-bs-toggle="tab" href="#navs-pills-justified-profile">
+                                        <i class="tf-icons mdi mdi-account me-1"></i><span class="d-none d-sm-block">Karyawan Harian</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="col-2">
+                        </div>
+                    </div>
+                    <div class="tab-content">
+                        <div class="tab-pane fade show active" id="navs-pills-justified-home" role="tabpanel">
+                            <table class="table" id="table_rekapdata" style="width: 100%; font-size: small;">
+                                <thead class="table-primary">
+                                    <tr>
+                                        <th rowspan="2" class="text-center">Detail</th>
+                                        <th rowspan="2" class="text-center">No.</th>
+                                        <th rowspan="2" class="text-center">ID&nbsp;Karyawan</th>
+                                        <th rowspan="2" class="text-center">Nama&nbsp;Karyawan</th>
+                                        <th colspan="3" class="text-center">&nbsp;ABSENSI&nbsp;</th>
+                                        <th colspan="4" class="text-center">Keterangan</th>
+                                        <th colspan="1" class="text-center">Tidak&nbsp;Hadir&nbsp;Kerja</th>
+                                        <th rowspan="2" class="text-center">Total&nbsp;Keseluruhan</th>
+                                        <th id="th_count_date" class="text-center">&nbsp;Tanggal&nbsp;</th>
+                                    </tr>
+                                    <tr id="date_absensi">
+
+                                    </tr>
+                                </thead>
+                                <tbody class="table-border-bottom-0">
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="tab-pane fade" id="navs-pills-justified-profile" role="tabpanel">
+                            <table class="table" id="table_rekapdata1" style="width: 100%; font-size: small;">
+                                <thead class="table-primary">
+                                    <tr>
+                                        <th rowspan="2" class="text-center">Detail</th>
+                                        <th rowspan="2" class="text-center">No.</th>
+                                        <th rowspan="2" class="text-center">ID&nbsp;Karyawan</th>
+                                        <th rowspan="2" class="text-center">Nama&nbsp;Karyawan</th>
+                                        <th colspan="3" class="text-center">Hadir&nbsp;Kerja</th>
+                                        <th colspan="4" class="text-center">Keterangan</th>
+                                        <th colspan="1" class="text-center">Tidak&nbsp;Hadir&nbsp;Kerja</th>
+                                        <th rowspan="2" class="text-center">Total&nbsp;Keseluruhan</th>
+                                    </tr>
+                                    <tr>
+                                        <th>Tepat&nbsp;Waktu</th>
+                                        <th>Telat&nbsp;Hadir&nbsp;<span>(&nbsp;+&nbsp;15&nbsp;Menit)</span></th>
+                                        <th>Telat&nbsp;Hadir&nbsp;<span>(-&nbsp;15&nbsp;Menit)</span></th>
+                                        <th>Izin</th>
+                                        <th>Cuti</th>
+                                        <th>Dinas</th>
+                                        <th>Libur</th>
+                                        <th>Alfa</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="table-border-bottom-0">
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    @endsection
-    @section('js')
-    <script src="https://cdn.datatables.net/2.0.5/js/dataTables.js"></script>
-    <script src="https://cdn.datatables.net/2.0.5/js/dataTables.bootstrap5.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
-    <script type="text/javascript" src="{{ asset('assets/assets_users/js/daterangepicker.js') }}"></script>
-    <script src="https://cdn.datatables.net/buttons/3.1.2/js/dataTables.buttons.js"></script>
-    <script src="https://cdn.datatables.net/buttons/3.1.2/js/buttons.dataTables.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
-    <script src="https://cdn.datatables.net/buttons/3.1.2/js/buttons.html5.min.js"></script>
-    <script src="https://cdn.datatables.net/buttons/3.1.2/js/buttons.print.min.js"></script>
-    <script src="{{asset('admin/assets/vendor/libs/apex-charts/apexcharts.js')}}"></script>
-    <script>
-        let holding = window.location.pathname.split("/").pop();
-        $(document).ready(function() {
-            var start = moment().startOf('month');
-            var end = moment().endOf('month');
-            var start_val = moment().startOf('month').format('Y-M-DD');
-            var end_val = moment().endOf('month').format('Y-M-DD');
-            var lstart, lend;
-            var start_date = document.getElementById("start_date");
-            var end_date = document.getElementById("end_date");
-            var holding = '{{$holding}}';
-            var chart_absensi_masuk;
-            var data_column;
-            let table_rekapdata;
-            // console.log(start, end);
-            departemen_filter = $('#departemen_filter').val();
-            divisi_filter = $('#divisi_filter').val();
-            bagian_filter = $('#bagian_filter').val();
-            jabatan_filter = $('#jabatan_filter').val();
+</div>
+@endsection
+@section('js')
+<script src="https://cdn.datatables.net/2.0.5/js/dataTables.js"></script>
+<script src="https://cdn.datatables.net/2.0.5/js/dataTables.bootstrap5.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
+<script type="text/javascript" src="{{ asset('assets/assets_users/js/daterangepicker.js') }}"></script>
+<script src="https://cdn.datatables.net/buttons/3.1.2/js/dataTables.buttons.js"></script>
+<script src="https://cdn.datatables.net/buttons/3.1.2/js/buttons.dataTables.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
+<script src="https://cdn.datatables.net/buttons/3.1.2/js/buttons.html5.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/3.1.2/js/buttons.print.min.js"></script>
+<script src="{{asset('admin/assets/vendor/libs/apex-charts/apexcharts.js')}}"></script>
+<script>
+    let holding = window.location.pathname.split("/").pop();
+    $(document).ready(function() {
 
+        var holding = '{{$holding}}';
+        var chart_absensi_masuk;
+        var data_column;
+        let table_rekapdata;
+        var filter_month = $('#filter_month').val();
+        departemen_filter = $('#departemen_filter').val();
+        divisi_filter = $('#divisi_filter').val();
+        bagian_filter = $('#bagian_filter').val();
+        jabatan_filter = $('#jabatan_filter').val();
 
-            function detail(start, end) {
-                $('#reportrange span').html(start.format('DD MMMM YYYY') + ' - ' + end.format('DD MMMM YYYY'));
-                lstart = moment($('#reportrange').data('daterangepicker').startDate).format('YYYY-MM-DD');
-                lend = moment($('#reportrange').data('daterangepicker').endDate).format('YYYY-MM-DD');
-                start_date.value = lstart;
-                end_date.value = lend;
-                // console.log(lstart);
-                get_grafik_absensi(departemen_filter, divisi_filter, bagian_filter, jabatan_filter, lstart, lend);
-                // load_data(departemen_filter, divisi_filter, bagian_filter, jabatan_filter, lstart, lend, data_column);
-            }
-
-            $('#reportrange').daterangepicker({
-                startDate: start,
-                endDate: end,
-                ranges: {
-                    'Today': [moment(), moment()],
-                    'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
-                    'Last 7 Days': [moment().subtract(6, 'days'), moment()],
-                    'Last 30 Days': [moment().subtract(29, 'days'), moment()],
-                    'This Month': [moment().startOf('month'), moment().endOf('month')],
-                    'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
-                },
-            }, detail);
-
-            $('#departemen_filter').change(function() {
-                departemen_filter = $(this).val();
-                divisi_filter = $('#divisi_filter').val();
-                bagian_filter = $('#bagian_filter').val();
-                jabatan_filter = $('#jabatan_filter').val();
-                start_date = $('#start_date').val();
-                end_date = $('#end_date').val();
-                // $('#table_rekapdata').DataTable().destroy();
-                $.ajax({
-                    type: 'GET',
-                    url: "{{url('rekapdata/get_divisi')}}",
-                    data: {
-                        holding: holding,
-                        departemen_filter: departemen_filter
-                    },
-                    cache: false,
-
-                    success: function(msg) {
-                        // console.log(msg);
-                        // $('#id_divisi').html(msg);
-                        $('#divisi_filter').html(msg);
-                        $('#bagian_filter').html('<option value="">Pilih Bagian</option>');
-                        $('#jabatan_filter').html('<option value="">Pilih Jabatan</option>');
-                        get_grafik_absensi(departemen_filter, divisi_filter, bagian_filter, jabatan_filter, start_date, end_date);
-                        load_data(departemen_filter, divisi_filter, bagian_filter, jabatan_filter, start_date, end_date);
-                    },
-                    error: function(data) {
-                        console.log('error:', data)
-                    },
-
-                })
-            })
-            $('#divisi_filter').change(function() {
-                divisi_filter = $(this).val();
-                departemen_filter = $('#departemen_filter').val();
-                bagian_filter = $('#bagian_filter').val();
-                jabatan_filter = $('#jabatan_filter').val();
-                start_date = $('#start_date').val();
-                end_date = $('#end_date').val();
-                // $('#table_rekapdata').DataTable().destroy();
-                $.ajax({
-                    type: 'GET',
-                    url: "{{url('rekapdata/get_bagian')}}",
-                    data: {
-                        holding: holding,
-                        divisi_filter: divisi_filter
-                    },
-                    cache: false,
-
-                    success: function(msg) {
-                        // console.log(msg);
-                        // $('#id_divisi').html(msg);
-                        $('#bagian_filter').html(msg);
-                        $('#jabatan_filter').html('<option value="">Pilih Jabatan..</option>');
-                        get_grafik_absensi(departemen_filter, divisi_filter, bagian_filter, jabatan_filter, start_date, end_date);
-                        load_data(departemen_filter, divisi_filter, bagian_filter, jabatan_filter, start_date, end_date);
-                    },
-                    error: function(data) {
-                        console.log('error:', data)
-                    },
-
-                })
-            })
-            $('#bagian_filter').change(function() {
-                bagian_filter = $(this).val();
-                departemen_filter = $('#departemen_filter').val();
-                divisi_filter = $('#divisi_filter').val();
-                jabatan_filter = $('#jabatan_filter').val();
-                start_date = $('#start_date').val();
-                end_date = $('#end_date').val();
-
-                // $('#table_rekapdata').DataTable().destroy();
-                $.ajax({
-                    type: 'GET',
-                    url: "{{url('rekapdata/get_jabatan')}}",
-                    data: {
-                        holding: holding,
-                        bagian_filter: bagian_filter
-                    },
-                    cache: false,
-
-                    success: function(msg) {
-                        // console.log(msg);
-                        // $('#id_bagian').html(msg);
-                        $('#jabatan_filter').html(msg);
-                        get_grafik_absensi(departemen_filter, divisi_filter, bagian_filter, jabatan_filter, start_date, end_date);
-                        load_data(departemen_filter, divisi_filter, bagian_filter, jabatan_filter, start_date, end_date);
-                    },
-                    error: function(data) {
-                        console.log('error:', data)
-                    },
-
-                })
-            })
-            $('#jabatan_filter').change(function() {
-                jabatan_filter = $(this).val();
-                departemen_filter = $('#departemen_filter').val();
-                divisi_filter = $('#divisi_filter').val();
-                bagian_filter = $('#bagian_filter').val();
-                fstart_date = $('#start_date').val();
-                end_date = $('#end_date').val();
-                // $('#table_rekapdata').DataTable().destroy();
-                get_grafik_absensi(departemen_filter, divisi_filter, bagian_filter, jabatan_filter, start_date, end_date);
-                load_data(departemen_filter, divisi_filter, bagian_filter, jabatan_filter, start_date, end_date);
-            })
-            // load_data(departemen_filter, divisi_filter, bagian_filter, jabatan_filter, start_date, end_date);
-            detail(start, end);
-
+        $(document).on("change", "#filter_month", function(e) {
+            $('#date_absensi').empty();
+            let filter_month1 = $(this).val();
             $.ajax({
                 url: "@if(Auth::user()->is_admin=='hrd'){{ url('/hrd/report_kedisiplinan/get_columns') }}@else{{ url('report_kedisiplinan/get_columns') }}@endif",
                 method: "get",
                 data: {
-                    start_date: start_val,
-                    end_date: end_val,
+                    filter_month: filter_month1,
                     departemen_filter: departemen_filter,
                     divisi_filter: divisi_filter,
                     bagian_filter: bagian_filter,
                     jabatan_filter: jabatan_filter,
                 },
-                success: function(data) {
-                    console.log(data);
-                    datacolumn = [{
+                error: function() {
+                    alert('Something is wrong');
+                },
+                success: function(data1) {
+                    console.log(data1);
+                    datacolumn1 = [{
                             data: 'btn_detail',
                             name: 'btn_detail'
                         },
@@ -406,160 +266,147 @@
                             name: 'total_semua'
                         },
                     ];
-                    const data_column = datacolumn.concat(data.datacolumn);
+                    const data_column1 = datacolumn1.concat(data1.datacolumn);
                     // console.log(data_column);
                     $('#date_absensi').empty();
                     $('#date_absensi').append('<th>Tepat&nbsp;Waktu</th><th>Telat&nbsp;Hadir&nbsp;<span>(&nbsp;+&nbsp;15&nbsp;Menit)</span></th><th>Telat&nbsp;Hadir&nbsp;<span>(&nbsp;-&nbsp;15&nbsp;Menit)</span></th><th>Izin</th><th>Cuti</th><th>Dinas</th><th>Libur</th><th>Alfa</th>');
 
-                    $.each(data.data_columns_header, function(count) {
-                        $('#date_absensi').append("<th id='th_date'>" + data.data_columns_header[count].header + "</th>");
+                    $.each(data1.data_columns_header, function(count) {
+                        $('#date_absensi').append("<th id='th_date'>" + data1.data_columns_header[count].header + "</th>");
                     });
-                    $('#th_count_date').attr('colspan', data.count_period);
-                    load_data(departemen_filter, divisi_filter, bagian_filter, jabatan_filter, start_val, end_val, data_column);
+                    $('#th_count_date').attr('colspan', data1.count_period);
+                    load_data(departemen_filter, divisi_filter, bagian_filter, jabatan_filter, filter_month1, data_column);
+                },
+            });
+            // console.log(filter_month);
+        });
+
+        $('#departemen_filter').change(function() {
+            departemen_filter = $(this).val();
+            divisi_filter = $('#divisi_filter').val();
+            bagian_filter = $('#bagian_filter').val();
+            jabatan_filter = $('#jabatan_filter').val();
+            filter_month = $('#filter_month').val();
+            // $('#table_rekapdata').DataTable().destroy();
+            $.ajax({
+                type: 'GET',
+                url: "{{url('rekapdata/get_divisi')}}",
+                data: {
+                    holding: holding,
+                    departemen_filter: departemen_filter
+                },
+                cache: false,
+
+                success: function(msg) {
+                    // console.log(msg);
+                    // $('#id_divisi').html(msg);
+                    $('#divisi_filter').html(msg);
+                    $('#bagian_filter').html('<option value="">Pilih Bagian</option>');
+                    $('#jabatan_filter').html('<option value="">Pilih Jabatan</option>');
+                    get_grafik_absensi(departemen_filter, divisi_filter, bagian_filter, jabatan_filter, filter_month);
+                    load_data(departemen_filter, divisi_filter, bagian_filter, jabatan_filter, filter_month);
                 },
                 error: function(data) {
-                    var errors = data.errors();
-                    console.log(errors);
-                }
-            });
-
-            function newexportaction(e, dt, button, config) {
-                var self = this;
-                var oldStart = dt.settings()[0]._iDisplayStart;
-                dt.one('preXhr', function(e, s, data) {
-                    // Just this once, load all data from the server...
-                    data.start = 0;
-                    data.length = 2147483647;
-                    dt.one('preDraw', function(e, settings) {
-                        // Call the original action function
-                        if (button[0].className.indexOf('buttons-copy') >= 0) {
-                            $.fn.dataTable.ext.buttons.copyHtml5.action.call(self, e, dt, button, config);
-                        } else if (button[0].className.indexOf('buttons-excel') >= 0) {
-                            $.fn.dataTable.ext.buttons.excelHtml5.available(dt, config) ?
-                                $.fn.dataTable.ext.buttons.excelHtml5.action.call(self, e, dt, button, config) :
-                                $.fn.dataTable.ext.buttons.excelFlash.action.call(self, e, dt, button, config);
-                        } else if (button[0].className.indexOf('buttons-csv') >= 0) {
-                            $.fn.dataTable.ext.buttons.csvHtml5.available(dt, config) ?
-                                $.fn.dataTable.ext.buttons.csvHtml5.action.call(self, e, dt, button, config) :
-                                $.fn.dataTable.ext.buttons.csvFlash.action.call(self, e, dt, button, config);
-                        } else if (button[0].className.indexOf('buttons-pdf') >= 0) {
-                            $.fn.dataTable.ext.buttons.pdfHtml5.available(dt, config) ?
-                                $.fn.dataTable.ext.buttons.pdfHtml5.action.call(self, e, dt, button, config) :
-                                $.fn.dataTable.ext.buttons.pdfFlash.action.call(self, e, dt, button, config);
-                        } else if (button[0].className.indexOf('buttons-print') >= 0) {
-                            $.fn.dataTable.ext.buttons.print.action(e, dt, button, config);
-                        }
-                        dt.one('preXhr', function(e, s, data) {
-                            // DataTables thinks the first item displayed is index 0, but we're not drawing that.
-                            // Set the property to what it was before exporting.
-                            settings._iDisplayStart = oldStart;
-                            data.start = oldStart;
-                        });
-                        // Reload the grid with the original page. Otherwise, API functions like table.cell(this) don't work properly.
-                        setTimeout(dt.ajax.reload, 0);
-                        // Prevent rendering of the full data to the DOM
-                        return false;
-                    });
-                });
-                // Requery the server with the new one-time export settings
-                dt.ajax.reload();
-            }
-
-            function load_data(departemen_filter = '', divisi_filter = '', bagian_filter = '', jabatan_filter = '', start_date = '', end_date = '', data_column = '') {
-                // console.log(data_column);
-                $('#table_rekapdata').DataTable().destroy();
-                var table_rekapdata = $('#table_rekapdata').DataTable({
-                    "scrollY": true,
-                    "scrollX": true,
-                    processing: true,
-                    autoWidth: false,
-                    serverSide: true,
-                    deferRender: true,
-                    dom: 'Blfrtip',
-
-                    buttons: [{
-
-                            extend: 'excelHtml5',
-                            className: 'btn btn-sm btn-success',
-                            text: '<i class="menu-icon tf-icons mdi mdi-file-excel"></i>Excel',
-                            titleAttr: 'Excel',
-                            title: 'DATA ABSENSI KARYAWAN ',
-                            messageTop: 'Bulan : '.filter_month,
-                            action: newexportaction,
-                            exportOptions: {
-                                columns: ':not(:first-child)',
-                            },
-                            filename: function() {
-                                var d = new Date();
-                                var l = d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate();
-                                var n = d.getHours() + ':' + d.getMinutes() + ':' + d.getSeconds();
-                                return 'REKAP_DATA_ABSENSI_KARYAWAN_{{$holding}}_' + l + ' ' + n;
-                            },
-                        },
-                        {
-
-                            extend: 'pdf',
-                            className: 'btn btn-sm btn-danger',
-                            text: '<i class="menu-icon tf-icons mdi mdi-file-pdf-box"></i>PDF',
-                            titleAttr: 'PDF',
-                            title: 'DATA ABSENSI KARYAWAN',
-                            orientation: 'potrait',
-                            pageSize: 'LEGAL',
-                            exportOptions: {
-                                columns: ':not(:first-child)',
-                            },
-                            filename: function() {
-                                var d = new Date();
-                                var l = d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate();
-                                var n = d.getHours() + ":" + d.getMinutes() + ":" + d.getSeconds();
-                                return 'REKAP_DATA_ABSENSI_KARYAWAN_{{$holding}}_' + l + ' ' + n;
-                            },
-                        }, {
-                            extend: 'print',
-                            className: 'btn btn-sm btn-info',
-                            title: 'DATA ABSENSI KARYAWAN',
-                            text: '<i class="menu-icon tf-icons mdi mdi-printer-pos-check-outline"></i>PRINT',
-                            titleAttr: 'PRINT',
-                        }, {
-                            extend: 'copy',
-                            title: 'DATA ABSENSI KARYAWAN',
-                            className: 'btn btn-sm btn-secondary',
-                            text: '<i class="menu-icon tf-icons mdi mdi-content-copy"></i>COPY',
-                            titleAttr: 'COPY',
-                        }
-                    ],
-                    pageLength: 50,
-                    ajax: {
-                        url: "@if(Auth::user()->is_admin=='hrd'){{ url('hrd/report_kedisiplinan-datatable') }}@else {{ url('report_kedisiplinan-datatable') }}@endif" + '/' + holding,
-                        data: {
-                            start_date: start_date,
-                            end_date: end_date,
-                            departemen_filter: departemen_filter,
-                            divisi_filter: divisi_filter,
-                            bagian_filter: bagian_filter,
-                            jabatan_filter: jabatan_filter,
-                        }
-                    },
-                    columns: data_column,
-
-                });
-            }
-            var table1 = $('#table_rekapdata1').DataTable({
-                "scrollY": true,
-                "scrollX": true,
-                autoWidth: false,
-                processing: true,
-                serverSide: true,
-                deferRender: true,
-                ajax: {
-                    url: "{{ url('rekapdata-datatable_harian') }}" + '/' + holding,
+                    console.log('error:', data)
                 },
-                columns: [{
-                        data: "id",
 
+            })
+        })
+        $('#divisi_filter').change(function() {
+            divisi_filter = $(this).val();
+            departemen_filter = $('#departemen_filter').val();
+            bagian_filter = $('#bagian_filter').val();
+            jabatan_filter = $('#jabatan_filter').val();
+            filter_month = $('#filter_month').val();
+            // $('#table_rekapdata').DataTable().destroy();
+            $.ajax({
+                type: 'GET',
+                url: "{{url('rekapdata/get_bagian')}}",
+                data: {
+                    holding: holding,
+                    divisi_filter: divisi_filter
+                },
+                cache: false,
+
+                success: function(msg) {
+                    // console.log(msg);
+                    // $('#id_divisi').html(msg);
+                    $('#bagian_filter').html(msg);
+                    $('#jabatan_filter').html('<option value="">Pilih Jabatan..</option>');
+                    get_grafik_absensi(departemen_filter, divisi_filter, bagian_filter, jabatan_filter, filter_month);
+                    load_data(departemen_filter, divisi_filter, bagian_filter, jabatan_filter, filter_month);
+                },
+                error: function(data) {
+                    console.log('error:', data)
+                },
+
+            })
+        })
+        $('#bagian_filter').change(function() {
+            bagian_filter = $(this).val();
+            departemen_filter = $('#departemen_filter').val();
+            divisi_filter = $('#divisi_filter').val();
+            jabatan_filter = $('#jabatan_filter').val();
+            filter_month = $('#filter_month').val();
+
+            // $('#table_rekapdata').DataTable().destroy();
+            $.ajax({
+                type: 'GET',
+                url: "{{url('rekapdata/get_jabatan')}}",
+                data: {
+                    holding: holding,
+                    bagian_filter: bagian_filter
+                },
+                cache: false,
+
+                success: function(msg) {
+                    // console.log(msg);
+                    // $('#id_bagian').html(msg);
+                    $('#jabatan_filter').html(msg);
+                    get_grafik_absensi(departemen_filter, divisi_filter, bagian_filter, jabatan_filter, filter_month);
+                    load_data(departemen_filter, divisi_filter, bagian_filter, jabatan_filter, filter_month);
+                },
+                error: function(data) {
+                    console.log('error:', data)
+                },
+
+            })
+        })
+        $('#jabatan_filter').change(function() {
+            jabatan_filter = $(this).val();
+            departemen_filter = $('#departemen_filter').val();
+            divisi_filter = $('#divisi_filter').val();
+            bagian_filter = $('#bagian_filter').val();
+            filter_month = $('#filter_month').val();
+            // $('#table_rekapdata').DataTable().destroy();
+            get_grafik_absensi(departemen_filter, divisi_filter, bagian_filter, jabatan_filter, filter_month);
+            load_data(departemen_filter, divisi_filter, bagian_filter, jabatan_filter, filter_month);
+        })
+        // load_data(departemen_filter, divisi_filter, bagian_filter, jabatan_filter, start_date, end_date);
+
+
+        $.ajax({
+            url: "@if(Auth::user()->is_admin=='hrd'){{ url('/hrd/report_kedisiplinan/get_columns') }}@else{{ url('report_kedisiplinan/get_columns') }}@endif",
+            method: "get",
+            data: {
+                filter_month: filter_month,
+                departemen_filter: departemen_filter,
+                divisi_filter: divisi_filter,
+                bagian_filter: bagian_filter,
+                jabatan_filter: jabatan_filter,
+            },
+            success: function(data) {
+                console.log(data);
+                datacolumn = [{
+                        data: 'btn_detail',
+                        name: 'btn_detail'
+                    },
+                    {
+                        data: 'no',
                         render: function(data, type, row, meta) {
                             return meta.row + meta.settings._iDisplayStart + 1;
                         }
+
                     },
                     {
                         data: 'nomor_identitas_karyawan',
@@ -578,6 +425,10 @@
                         name: 'total_hadir_telat_hadir'
                     },
                     {
+                        data: 'total_hadir_telat_hadir1',
+                        name: 'total_hadir_telat_hadir1'
+                    },
+                    {
                         data: 'total_izin_true',
                         name: 'total_izin_true'
                     },
@@ -590,6 +441,10 @@
                         name: 'total_dinas_true'
                     },
                     {
+                        data: 'total_libur',
+                        name: 'total_libur'
+                    },
+                    {
                         data: 'tidak_hadir_kerja',
                         name: 'tidak_hadir_kerja'
                     },
@@ -597,124 +452,234 @@
                         data: 'total_semua',
                         name: 'total_semua'
                     },
+                ];
+                const data_column = datacolumn.concat(data.datacolumn);
+                // console.log(data_column);
+                $('#date_absensi').empty();
+                $('#date_absensi').append('<th>Tepat&nbsp;Waktu</th><th>Telat&nbsp;Hadir&nbsp;<span>(&nbsp;+&nbsp;15&nbsp;Menit)</span></th><th>Telat&nbsp;Hadir&nbsp;<span>(&nbsp;-&nbsp;15&nbsp;Menit)</span></th><th>Izin</th><th>Cuti</th><th>Dinas</th><th>Libur</th><th>Alfa</th>');
 
-                ],
-                order: [
-                    [2, 'asc']
-                ]
+                $.each(data.data_columns_header, function(count) {
+                    $('#date_absensi').append("<th id='th_date'>" + data.data_columns_header[count].header + "</th>");
+                });
+                $('#th_count_date').attr('colspan', data.count_period);
+                load_data(departemen_filter, divisi_filter, bagian_filter, jabatan_filter, filter_month, data_column);
+            },
+            error: function(data) {
+                var errors = data.errors();
+                console.log(errors);
+            }
+        });
+
+        function newexportaction(e, dt, button, config) {
+            var self = this;
+            var oldStart = dt.settings()[0]._iDisplayStart;
+            dt.one('preXhr', function(e, s, data) {
+                // Just this once, load all data from the server...
+                data.start = 0;
+                data.length = 2147483647;
+                dt.one('preDraw', function(e, settings) {
+                    // Call the original action function
+                    if (button[0].className.indexOf('buttons-copy') >= 0) {
+                        $.fn.dataTable.ext.buttons.copyHtml5.action.call(self, e, dt, button, config);
+                    } else if (button[0].className.indexOf('buttons-excel') >= 0) {
+                        $.fn.dataTable.ext.buttons.excelHtml5.available(dt, config) ?
+                            $.fn.dataTable.ext.buttons.excelHtml5.action.call(self, e, dt, button, config) :
+                            $.fn.dataTable.ext.buttons.excelFlash.action.call(self, e, dt, button, config);
+                    } else if (button[0].className.indexOf('buttons-csv') >= 0) {
+                        $.fn.dataTable.ext.buttons.csvHtml5.available(dt, config) ?
+                            $.fn.dataTable.ext.buttons.csvHtml5.action.call(self, e, dt, button, config) :
+                            $.fn.dataTable.ext.buttons.csvFlash.action.call(self, e, dt, button, config);
+                    } else if (button[0].className.indexOf('buttons-pdf') >= 0) {
+                        $.fn.dataTable.ext.buttons.pdfHtml5.available(dt, config) ?
+                            $.fn.dataTable.ext.buttons.pdfHtml5.action.call(self, e, dt, button, config) :
+                            $.fn.dataTable.ext.buttons.pdfFlash.action.call(self, e, dt, button, config);
+                    } else if (button[0].className.indexOf('buttons-print') >= 0) {
+                        $.fn.dataTable.ext.buttons.print.action(e, dt, button, config);
+                    }
+                    dt.one('preXhr', function(e, s, data) {
+                        // DataTables thinks the first item displayed is index 0, but we're not drawing that.
+                        // Set the property to what it was before exporting.
+                        settings._iDisplayStart = oldStart;
+                        data.start = oldStart;
+                    });
+                    // Reload the grid with the original page. Otherwise, API functions like table.cell(this) don't work properly.
+                    setTimeout(dt.ajax.reload, 0);
+                    // Prevent rendering of the full data to the DOM
+                    return false;
+                });
             });
-            $('a[data-bs-toggle="tab"]').on('shown.bs.tab', function(e) {
-                table1.columns.adjust().draw().responsive.recalc();
-                // table.draw();
-            })
+            // Requery the server with the new one-time export settings
+            dt.ajax.reload();
+        }
 
+        function load_data(departemen_filter = '', divisi_filter = '', bagian_filter = '', jabatan_filter = '', filter_month = '', data_column = '') {
+            // console.log(data_column);
+            $('#table_rekapdata').DataTable().destroy();
+            var table_rekapdata = $('#table_rekapdata').DataTable({
+                "scrollY": true,
+                "scrollX": true,
+                processing: true,
+                autoWidth: false,
+                serverSide: true,
+                deferRender: true,
+                dom: 'Blfrtip',
 
-            function get_grafik_absensi(departemen_filter = '', divisi_filter = '', bagian_filter = '', jabatan_filter = '', start_date = '', end_date = '') {
-                // console.log(start_date);
-                $.ajax({
-                    url: "@if(Auth::user()->is_admin =='hrd'){{url('hrd/report/get_grafik_absensi')}}@else {{url('report/get_grafik_absensi')}} @endif",
+                buttons: [{
+
+                        extend: 'excelHtml5',
+                        className: 'btn btn-sm btn-success',
+                        text: '<i class="menu-icon tf-icons mdi mdi-file-excel"></i>Excel',
+                        titleAttr: 'Excel',
+                        title: 'DATA ABSENSI KARYAWAN ',
+                        messageTop: 'Bulan : '.filter_month,
+                        action: newexportaction,
+                        exportOptions: {
+                            columns: ':not(:first-child)',
+                        },
+                        filename: function() {
+                            var d = new Date();
+                            var l = d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate();
+                            var n = d.getHours() + ':' + d.getMinutes() + ':' + d.getSeconds();
+                            return 'REKAP_DATA_ABSENSI_KARYAWAN_{{$holding}}_' + l + ' ' + n;
+                        },
+                    },
+                    {
+
+                        extend: 'pdf',
+                        className: 'btn btn-sm btn-danger',
+                        text: '<i class="menu-icon tf-icons mdi mdi-file-pdf-box"></i>PDF',
+                        titleAttr: 'PDF',
+                        title: 'DATA ABSENSI KARYAWAN',
+                        orientation: 'potrait',
+                        pageSize: 'LEGAL',
+                        exportOptions: {
+                            columns: ':not(:first-child)',
+                        },
+                        filename: function() {
+                            var d = new Date();
+                            var l = d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate();
+                            var n = d.getHours() + ":" + d.getMinutes() + ":" + d.getSeconds();
+                            return 'REKAP_DATA_ABSENSI_KARYAWAN_{{$holding}}_' + l + ' ' + n;
+                        },
+                    }, {
+                        extend: 'print',
+                        className: 'btn btn-sm btn-info',
+                        title: 'DATA ABSENSI KARYAWAN',
+                        text: '<i class="menu-icon tf-icons mdi mdi-printer-pos-check-outline"></i>PRINT',
+                        titleAttr: 'PRINT',
+                    }, {
+                        extend: 'copy',
+                        title: 'DATA ABSENSI KARYAWAN',
+                        className: 'btn btn-sm btn-secondary',
+                        text: '<i class="menu-icon tf-icons mdi mdi-content-copy"></i>COPY',
+                        titleAttr: 'COPY',
+                    }
+                ],
+                pageLength: 50,
+                ajax: {
+                    url: "@if(Auth::user()->is_admin=='hrd'){{ url('hrd/report_kedisiplinan-datatable') }}@else {{ url('report_kedisiplinan-datatable') }}@endif" + '/' + holding,
                     data: {
-                        holding: holding,
                         start_date: start_date,
                         end_date: end_date,
                         departemen_filter: departemen_filter,
                         divisi_filter: divisi_filter,
                         bagian_filter: bagian_filter,
                         jabatan_filter: jabatan_filter,
-                    },
-                    method: "GET",
-                    dataType: "json",
-                    success: function(data) {
-                        // console.log(data);
-                        var label_absensi5 = data.label_absensi;
-                        var data_absensi_masuk_tepatwaktu = data.data_absensi_masuk_tepatwaktu;
-                        var data_absensi_masuk_tidak_hadir = data.data_absensi_masuk_tidak_hadir;
-                        var data_absensi_masuk_telat = data.data_absensi_masuk_telat;
-                        var data_absensi_masuk_cuti = data.data_absensi_masuk_cuti;
-                        var options = {
-                            series: [{
-                                name: 'Jumlah Karyawan Absen Masuk Tepat Waktu',
-                                data: data_absensi_masuk_tepatwaktu
-                            }, {
-                                name: 'Jumlah Karyawan Absen Masuk Terlambat ',
-                                data: data_absensi_masuk_telat
-                            }, {
-                                name: 'Jumlah Karyawan Tidak Hadir ',
-                                data: data_absensi_masuk_tidak_hadir,
-                            }, {
-                                name: 'Jumlah Karyawan Cuti ',
-                                data: data_absensi_masuk_cuti
-                            }],
-                            annotations: {
-                                points: [{
-                                    x: 'Bananas',
-                                    seriesIndex: 0,
-                                    label: {
-                                        borderColor: '#775DD0',
-                                        offsetY: 0,
-                                        style: {
-                                            color: '#fff',
-                                            background: '#775DD0',
-                                        },
-                                        text: 'Bananas are good',
-                                    }
-                                }]
-                            },
-                            chart: {
-                                height: 400,
-                                type: 'line',
-                            },
-                            plotOptions: {
-                                bar: {
-                                    borderRadius: 10,
-                                    columnWidth: '50%',
-                                }
-                            },
-                            dataLabels: {
-                                enabled: false
-                            },
-                            stroke: {
-                                width: [3, 3, 2]
-                            },
-                            colors: ["#008000", "#F8C300", "#8B0000", "#1E90FF"],
-                            grid: {
-                                row: {
-                                    colors: ['#fff', '#f2f2f2']
-                                }
-                            },
-                            xaxis: {
-                                labels: {
-                                    rotate: -45
-                                },
-                                categories: label_absensi5,
-                                tickAmount: 31
-                            },
-                            yaxis: {
-                                title: {
-                                    text: 'Jumlah Karyawan Absensi',
-                                },
-                            },
-                            fill: {
-                                type: 'gradient',
-                                gradient: {
-                                    shade: 'light',
-                                    type: "horizontal",
-                                    shadeIntensity: 0.25,
-                                    gradientToColors: undefined,
-                                    inverseColors: true,
-                                    opacityFrom: 0.85,
-                                    opacityTo: 0.85,
-                                    stops: [50, 0, 100]
-                                },
-                            }
-                        };
-                        if (chart_absensi_masuk) {
-                            chart_absensi_masuk.destroy();
-                        }
-                        var chart_absensi_masuk = new ApexCharts(document.querySelector("#grafik_absensi"), options);
+                    }
+                },
+                columns: data_column,
 
-                        chart_absensi_masuk.render();
-                        chart_absensi_masuk.updateSeries([{
+            });
+        }
+        var table1 = $('#table_rekapdata1').DataTable({
+            "scrollY": true,
+            "scrollX": true,
+            autoWidth: false,
+            processing: true,
+            serverSide: true,
+            deferRender: true,
+            ajax: {
+                url: "{{ url('rekapdata-datatable_harian') }}" + '/' + holding,
+            },
+            columns: [{
+                    data: "id",
+
+                    render: function(data, type, row, meta) {
+                        return meta.row + meta.settings._iDisplayStart + 1;
+                    }
+                },
+                {
+                    data: 'nomor_identitas_karyawan',
+                    name: 'nomor_identitas_karyawan'
+                },
+                {
+                    data: 'name',
+                    name: 'name'
+                },
+                {
+                    data: 'total_hadir_tepat_waktu',
+                    name: 'total_hadir_tepat_waktu'
+                },
+                {
+                    data: 'total_hadir_telat_hadir',
+                    name: 'total_hadir_telat_hadir'
+                },
+                {
+                    data: 'total_izin_true',
+                    name: 'total_izin_true'
+                },
+                {
+                    data: 'total_cuti_true',
+                    name: 'total_cuti_true'
+                },
+                {
+                    data: 'total_dinas_true',
+                    name: 'total_dinas_true'
+                },
+                {
+                    data: 'tidak_hadir_kerja',
+                    name: 'tidak_hadir_kerja'
+                },
+                {
+                    data: 'total_semua',
+                    name: 'total_semua'
+                },
+
+            ],
+            order: [
+                [2, 'asc']
+            ]
+        });
+        $('a[data-bs-toggle="tab"]').on('shown.bs.tab', function(e) {
+            table1.columns.adjust().draw().responsive.recalc();
+            // table.draw();
+        })
+
+
+        function get_grafik_absensi(departemen_filter = '', divisi_filter = '', bagian_filter = '', jabatan_filter = '', start_date = '', end_date = '') {
+            // console.log(start_date);
+            $.ajax({
+                url: "@if(Auth::user()->is_admin =='hrd'){{url('hrd/report/get_grafik_absensi')}}@else {{url('report/get_grafik_absensi')}} @endif",
+                data: {
+                    holding: holding,
+                    start_date: start_date,
+                    end_date: end_date,
+                    departemen_filter: departemen_filter,
+                    divisi_filter: divisi_filter,
+                    bagian_filter: bagian_filter,
+                    jabatan_filter: jabatan_filter,
+                },
+                method: "GET",
+                dataType: "json",
+                success: function(data) {
+                    // console.log(data);
+                    var label_absensi5 = data.label_absensi;
+                    var data_absensi_masuk_tepatwaktu = data.data_absensi_masuk_tepatwaktu;
+                    var data_absensi_masuk_tidak_hadir = data.data_absensi_masuk_tidak_hadir;
+                    var data_absensi_masuk_telat = data.data_absensi_masuk_telat;
+                    var data_absensi_masuk_cuti = data.data_absensi_masuk_cuti;
+                    var options = {
+                        series: [{
                             name: 'Jumlah Karyawan Absen Masuk Tepat Waktu',
                             data: data_absensi_masuk_tepatwaktu
                         }, {
@@ -722,15 +687,97 @@
                             data: data_absensi_masuk_telat
                         }, {
                             name: 'Jumlah Karyawan Tidak Hadir ',
-                            data: data_absensi_masuk_tidak_hadir
+                            data: data_absensi_masuk_tidak_hadir,
                         }, {
                             name: 'Jumlah Karyawan Cuti ',
                             data: data_absensi_masuk_cuti
-                        }])
+                        }],
+                        annotations: {
+                            points: [{
+                                x: 'Bananas',
+                                seriesIndex: 0,
+                                label: {
+                                    borderColor: '#775DD0',
+                                    offsetY: 0,
+                                    style: {
+                                        color: '#fff',
+                                        background: '#775DD0',
+                                    },
+                                    text: 'Bananas are good',
+                                }
+                            }]
+                        },
+                        chart: {
+                            height: 400,
+                            type: 'line',
+                        },
+                        plotOptions: {
+                            bar: {
+                                borderRadius: 10,
+                                columnWidth: '50%',
+                            }
+                        },
+                        dataLabels: {
+                            enabled: false
+                        },
+                        stroke: {
+                            width: [3, 3, 2]
+                        },
+                        colors: ["#008000", "#F8C300", "#8B0000", "#1E90FF"],
+                        grid: {
+                            row: {
+                                colors: ['#fff', '#f2f2f2']
+                            }
+                        },
+                        xaxis: {
+                            labels: {
+                                rotate: -45
+                            },
+                            categories: label_absensi5,
+                            tickAmount: 31
+                        },
+                        yaxis: {
+                            title: {
+                                text: 'Jumlah Karyawan Absensi',
+                            },
+                        },
+                        fill: {
+                            type: 'gradient',
+                            gradient: {
+                                shade: 'light',
+                                type: "horizontal",
+                                shadeIntensity: 0.25,
+                                gradientToColors: undefined,
+                                inverseColors: true,
+                                opacityFrom: 0.85,
+                                opacityTo: 0.85,
+                                stops: [50, 0, 100]
+                            },
+                        }
+                    };
+                    if (chart_absensi_masuk) {
+                        chart_absensi_masuk.destroy();
                     }
-                });
+                    var chart_absensi_masuk = new ApexCharts(document.querySelector("#grafik_absensi"), options);
 
-            }
-        });
-    </script>
-    @endsection
+                    chart_absensi_masuk.render();
+                    chart_absensi_masuk.updateSeries([{
+                        name: 'Jumlah Karyawan Absen Masuk Tepat Waktu',
+                        data: data_absensi_masuk_tepatwaktu
+                    }, {
+                        name: 'Jumlah Karyawan Absen Masuk Terlambat ',
+                        data: data_absensi_masuk_telat
+                    }, {
+                        name: 'Jumlah Karyawan Tidak Hadir ',
+                        data: data_absensi_masuk_tidak_hadir
+                    }, {
+                        name: 'Jumlah Karyawan Cuti ',
+                        data: data_absensi_masuk_cuti
+                    }])
+                }
+            });
+
+        }
+    });
+</script>
+@endsection
