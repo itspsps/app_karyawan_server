@@ -124,48 +124,6 @@
         $(document).ready(function() {
             // console.log(colspan);
 
-
-            function newexportaction(e, dt, button, config) {
-                var self = this;
-                var oldStart = dt.settings()[0]._iDisplayStart;
-                dt.one('preXhr', function(e, s, data) {
-                    // Just this once, load all data from the server...
-                    data.start = 0;
-                    data.length = 2147483647;
-                    dt.one('preDraw', function(e, settings) {
-                        // Call the original action function
-                        if (button[0].className.indexOf('buttons-copy') >= 0) {
-                            $.fn.dataTable.ext.buttons.copyHtml5.action.call(self, e, dt, button, config);
-                        } else if (button[0].className.indexOf('buttons-excel') >= 0) {
-                            $.fn.dataTable.ext.buttons.excelHtml5.available(dt, config) ?
-                                $.fn.dataTable.ext.buttons.excelHtml5.action.call(self, e, dt, button, config) :
-                                $.fn.dataTable.ext.buttons.excelFlash.action.call(self, e, dt, button, config);
-                        } else if (button[0].className.indexOf('buttons-csv') >= 0) {
-                            $.fn.dataTable.ext.buttons.csvHtml5.available(dt, config) ?
-                                $.fn.dataTable.ext.buttons.csvHtml5.action.call(self, e, dt, button, config) :
-                                $.fn.dataTable.ext.buttons.csvFlash.action.call(self, e, dt, button, config);
-                        } else if (button[0].className.indexOf('buttons-pdf') >= 0) {
-                            $.fn.dataTable.ext.buttons.pdfHtml5.available(dt, config) ?
-                                $.fn.dataTable.ext.buttons.pdfHtml5.action.call(self, e, dt, button, config) :
-                                $.fn.dataTable.ext.buttons.pdfFlash.action.call(self, e, dt, button, config);
-                        } else if (button[0].className.indexOf('buttons-print') >= 0) {
-                            $.fn.dataTable.ext.buttons.print.action(e, dt, button, config);
-                        }
-                        dt.one('preXhr', function(e, s, data) {
-                            // DataTables thinks the first item displayed is index 0, but we're not drawing that.
-                            // Set the property to what it was before exporting.
-                            settings._iDisplayStart = oldStart;
-                            data.start = oldStart;
-                        });
-                        // Reload the grid with the original page. Otherwise, API functions like table.cell(this) don't work properly.
-                        setTimeout(dt.ajax.reload, 0);
-                        // Prevent rendering of the full data to the DOM
-                        return false;
-                    });
-                });
-                // Requery the server with the new one-time export settings
-                dt.ajax.reload();
-            }
             var filter_month = $('#filter_month').val();
             var month_now = "{{date('Y-m')}}";
             // console.log(filter_month, month_now);
@@ -177,7 +135,6 @@
                         filter_month: filter_month,
                     },
                     success: function(data) {
-                        // console.log(data);
                         datacolumn = [{
                                 data: 'no',
                                 render: function(data, type, row, meta) {
@@ -222,14 +179,12 @@
                             },
                         ];
                         $('#th_count_date').attr('colspan', data.count_period);
-                        // $('#date_absensi').empty();
-                        // console.log(data.data_columns_header[count].header);
                         $.each(data.data_columns_header, function(count) {
                             $('#date_absensi').append("<th id='th_date" + count + "'>" + data.data_columns_header[count].header + "</th>");
                         });
-                        // $('#table_report').DataTable().destroy();
 
                         const data_column = datacolumn.concat(data.datacolumn);
+
                         $('#table_report').DataTable().destroy();
                         load_data(filter_month, data_column, data.count_period, data.data_columns_header);
                     },
@@ -297,9 +252,11 @@
                             },
                         ];
                         const data_column1 = datacolumn1.concat(data1.datacolumn);
+                        $('#table_report').DataTable().clear();
                         $('#table_report').DataTable().destroy();
                         $('.date_absensi').empty();
                         $.each(data1.data_columns_header, function(count) {
+                            console.log(count);
                             $('#date_absensi').append("<th id='th_date" + count + "'>" + data1.data_columns_header[count].header + "</th>");
                         });
                         $('#th_count_date').attr('colspan', data1.count_period);
@@ -325,6 +282,7 @@
             function load_data(filter_month = '', data_column = '', colspan = '', data_columns_header = '') {
                 // console.log(colspan, data_columns_header);
                 url = "@if(Auth::user()->is_admin =='hrd'){{ url('hrd/report-datatable') }}@else {{ url('report-datatable') }} @endif" + '/' + holding;
+                // $('#table_report').DataTable().destroy();
 
                 var table_report = $('#table_report').DataTable({
                     scrollY: '600px',
@@ -337,11 +295,11 @@
                     buttons: [{
 
                             extend: 'excelHtml5',
-                            className: 'btn btn-xs btn-success waves-effect waves-light',
+                            className: 'btn btn-xs btn-success',
                             text: '<i class="menu-icon tf-icons mdi mdi-file-excel"></i>Excel',
                             titleAttr: 'Excel',
                             title: 'DATA ABSENSI KARYAWAN ',
-                            action: newexportaction,
+                            // action: newexportaction,
                             exportOptions: {
                                 columns: ':not(:first-child)',
                             },

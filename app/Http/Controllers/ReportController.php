@@ -105,8 +105,8 @@ class ReportController extends Controller
     }
     public function get_columns_kedisiplinan(Request $request)
     {
-        $start_date = Carbon::parse($request->start_date);
-        $end_date = Carbon::parse($request->end_date);
+        $start_date = Carbon::parse($request->filter_month)->startOfMonth();
+        $end_date = Carbon::parse($request->filter_month)->endOfMonth();
         // dd($end_date);
         $period = CarbonPeriod::create($start_date, $end_date);
         foreach ($period as $date) {
@@ -135,8 +135,8 @@ class ReportController extends Controller
         // dd($request->all());
         $holding = request()->segment(count(request()->segments()));
         // if (request()->ajax()) {
-        $now = Carbon::parse($request->start_date);
-        $now1 = Carbon::parse($request->end_date);
+        $now = Carbon::parse($request->filter_month)->startOfMonth();
+        $now1 = Carbon::parse($request->filter_month)->endOfMonth();
         $period = CarbonPeriod::create($now, $now1);
         // $now = Carbon::parse($request->filter_month)->startOfMonth();
         // dd(request()->ajax());
@@ -146,48 +146,44 @@ class ReportController extends Controller
                 if (!empty($request->divisi_filter)) {
                     if (!empty($request->bagian_filter)) {
                         if (!empty($request->jabatan_filter)) {
-                            $table = Karyawan::with('Cuti')
-                                ->with('Izin')
-                                ->with('Mappingshift')
-                                ->where('dept_id', $request->departemen_filter)
+                            $table = Karyawan::where('dept_id', $request->departemen_filter)
                                 ->where('divisi_id', $request->divisi_filter)
                                 ->where('bagian_id', $request->bagian_filter)
                                 ->where('jabatan_id', $request->jabatan_filter)
                                 ->where('kontrak_kerja', $holding)
                                 ->where('kategori', 'Karyawan Bulanan')
                                 ->where('status_aktif', 'AKTIF')
+                                ->select('karyawans.name', 'karyawans.id', 'karyawans.nomor_identitas_karyawan')
+                                ->orderBy('karyawans.name', 'ASC')
                                 ->get();
                         } else {
-                            $table = Karyawan::with('Cuti')
-                                ->with('Izin')
-                                ->with('Mappingshift')
-                                ->where('dept_id', $request->departemen_filter)
+                            $table = Karyawan::where('dept_id', $request->departemen_filter)
                                 ->where('divisi_id', $request->divisi_filter)
                                 ->where('bagian_id', $request->bagian_filter)
                                 ->where('kontrak_kerja', $holding)
                                 ->where('kategori', 'Karyawan Bulanan')
                                 ->where('status_aktif', 'AKTIF')
+                                ->select('karyawans.name', 'karyawans.id', 'karyawans.nomor_identitas_karyawan')
+                                ->orderBy('karyawans.name', 'ASC')
                                 ->get();
                         }
                     } else {
-                        $table = Karyawan::with('Cuti')
-                            ->with('Izin')
-                            ->with('Mappingshift')
-                            ->where('dept_id', $request->departemen_filter)
+                        $table = Karyawan::where('dept_id', $request->departemen_filter)
                             ->where('divisi_id', $request->divisi_filter)
                             ->where('kontrak_kerja', $holding)
                             ->where('kategori', 'Karyawan Bulanan')
                             ->where('status_aktif', 'AKTIF')
+                            ->select('karyawans.name', 'karyawans.id', 'karyawans.nomor_identitas_karyawan')
+                            ->orderBy('karyawans.name', 'ASC')
                             ->get();
                     }
                 } else {
-                    $table = Karyawan::with('Cuti')
-                        ->with('Izin')
-                        ->with('Mappingshift')
-                        ->where('dept_id', $request->departemen_filter)
+                    $table = Karyawan::where('dept_id', $request->departemen_filter)
                         ->where('kontrak_kerja', $holding)
                         ->where('kategori', 'Karyawan Bulanan')
                         ->where('status_aktif', 'AKTIF')
+                        ->select('karyawans.name', 'karyawans.id', 'karyawans.nomor_identitas_karyawan')
+                        ->orderBy('karyawans.name', 'ASC')
                         ->get();
                 }
             } else {
@@ -196,11 +192,9 @@ class ReportController extends Controller
                 $table = Karyawan::where('kontrak_kerja', $holding)
                     ->where('kategori', 'Karyawan Bulanan')
                     ->where('status_aktif', 'AKTIF')
-                    ->where('name', 'MUHAMMAD FAIZAL IZAK')
-                    // ->where('name', 'ISMAIL')
                     ->select('karyawans.name', 'karyawans.id', 'karyawans.nomor_identitas_karyawan')
                     ->orderBy('karyawans.name', 'ASC')
-                    // ->limit(2)
+                    // ->limit(6)
                     ->get();
                 // dd($table);
             }
@@ -572,33 +566,83 @@ class ReportController extends Controller
     }
     public function get_divisi(Request $request)
     {
-        // dd($request->all());
+        // dd($request->holding);
         $id_departemen    = $request->departemen_filter;
+        $start_date = Carbon::parse($request->filter_month)->startOfMonth();
+        $end_date = Carbon::parse($request->filter_month)->endOfMonth();
+        // dd($end_date);
+        $period = CarbonPeriod::create($start_date, $end_date);
+        foreach ($period as $date) {
+            $data_columns_header[] = ['header' => $date->format('d/m/Y')];
+            $data_columns[] = ['data' => 'tanggal_' . $date->format('dmY'), 'name' => 'tanggal_' . $date->format('dmY')];
+        }
+        $count_period = count($period);
 
         $divisi      = Divisi::where('dept_id', $id_departemen)->where('holding', $request->holding)->orderBy('nama_divisi', 'ASC')->get();
-        echo "<option value=''>Pilih Divisi...</option>";
-        foreach ($divisi as $divisi) {
-            echo "<option value='$divisi->id'>$divisi->nama_divisi</option>";
+        // dd($divisi);
+        if ($divisi == NULL || $divisi == '' || count($divisi) == '0') {
+            $select = '<option value="">Pilih Divisi...</option>';
+        } else {
+
+            $select_divisi[] = "<option value=''>Pilih Divisi...</option>";
+            foreach ($divisi as $divisi) {
+                $select_divisi1[] = "<option value='$divisi->id'>$divisi->nama_divisi</option>";
+            }
+            $select = array_merge($select_divisi, $select_divisi1);
         }
+        // dd($select);
+        return array('select' => $select, 'data_columns_header' => $data_columns_header, 'count_period' => $count_period, 'datacolumn' => $data_columns, 'filter_month' => $request->filter_month);
     }
     public function get_bagian(Request $request)
     {
+        // dd($request->holding);
         $id_divisi    = $request->divisi_filter;
+        $start_date = Carbon::parse($request->filter_month)->startOfMonth();
+        $end_date = Carbon::parse($request->filter_month)->endOfMonth();
+        // dd($end_date);
+        $period = CarbonPeriod::create($start_date, $end_date);
+        foreach ($period as $date) {
+            $data_columns_header[] = ['header' => $date->format('d/m/Y')];
+            $data_columns[] = ['data' => 'tanggal_' . $date->format('dmY'), 'name' => 'tanggal_' . $date->format('dmY')];
+        }
+        $count_period = count($period);
 
         $bagian      = Bagian::where('divisi_id', $id_divisi)->where('holding', $request->holding)->orderBy('nama_bagian', 'ASC')->get();
-        echo "<option value=''>Pilih Bagian...</option>";
-        foreach ($bagian as $bagian) {
-            echo "<option value='$bagian->id'>$bagian->nama_bagian</option>";
+        if ($bagian == NULL || $bagian == '' || count($bagian) == '0') {
+            $select = "<option value=''>Pilih Bagian...</option>";
+        } else {
+
+            $select_bagian[] = "<option value=''>Pilih Bagian...</option>";
+            foreach ($bagian as $bagian) {
+                $select_bagian1[] = "<option value='$bagian->id'>$bagian->nama_bagian</option>";
+            }
+            $select = array_merge($select_bagian + $select_bagian1);
         }
+        return array('select' => $select, 'data_columns_header' => $data_columns_header, 'count_period' => $count_period, 'datacolumn' => $data_columns, 'filter_month' => $request->filter_month);
     }
     public function get_jabatan(Request $request)
     {
         $id_bagian    = $request->bagian_filter;
-        $jabatan      = Jabatan::where('bagian_id', $id_bagian)->where('holding', $request->holding)->orderBy('nama_jabatan', 'ASC')->get();
-        echo "<option value=''>Pilih Jabatan...</option>";
-        foreach ($jabatan as $jabatan) {
-            echo "<option value='$jabatan->id'>$jabatan->nama_jabatan</option>";
+        $start_date = Carbon::parse($request->filter_month)->startOfMonth();
+        $end_date = Carbon::parse($request->filter_month)->endOfMonth();
+        // dd($end_date);
+        $period = CarbonPeriod::create($start_date, $end_date);
+        foreach ($period as $date) {
+            $data_columns_header[] = ['header' => $date->format('d/m/Y')];
+            $data_columns[] = ['data' => 'tanggal_' . $date->format('dmY'), 'name' => 'tanggal_' . $date->format('dmY')];
         }
+        $count_period = count($period);
+        $jabatan      = Jabatan::where('bagian_id', $id_bagian)->where('holding', $request->holding)->orderBy('nama_jabatan', 'ASC')->get();
+        if ($jabatan == NULL || $jabatan == '' || count($jabatan) == '0') {
+            $select = '<option value="">Pilih Jabatan...</option>';
+        } else {
+            $select_jabatan[] = "<option value=''>Pilih Jabatan...</option>";
+            foreach ($jabatan as $jabatan) {
+                $select_jabatan1[] = "<option value='$jabatan->id'>$jabatan->nama_jabatan</option>";
+            }
+            $select = array_merge($select_jabatan + $select_jabatan1);
+        }
+        return array('select' => $select, 'data_columns_header' => $data_columns_header, 'count_period' => $count_period, 'datacolumn' => $data_columns, 'filter_month' => $request->filter_month);
     }
     public function get_grafik_absensi(Request $request)
     {
@@ -611,8 +655,8 @@ class ReportController extends Controller
             $holding = 'SIP';
         }
 
-        $start_date = Carbon::parse($request->start_date);
-        $end_date = Carbon::parse($request->end_date);
+        $start_date = Carbon::parse($request->filter_month)->startOfMonth();
+        $end_date = Carbon::parse($request->filter_month)->endOfMonth();
         $period = CarbonPeriod::create($start_date, $end_date);
         // dd($request->all());
         foreach ($period as $date) {
