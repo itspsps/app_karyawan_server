@@ -346,6 +346,29 @@
                 </div>
             </div>
         </div>
+        <div class="row gy-4">
+            <div class="col-xl-12 col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="d-flex justify-content-between">
+                            <h6 class="mb-1">Grafik Lokasi  Karyawan Kontrak Kerja <div class="btn-group" role="group">
+                                    <select name="change_holding" id="change_holding" style="width: max-content;border-radius: 0px; background-color:transparent; color:#9370DB; border: none;outline: none;">
+                                        <option @if($holding=='sp' ) selected @else @endif value="sp">CV. SUMBER PANGAN</option>
+                                        <option @if($holding=='sps' ) selected @else @endif value="sps">PT. SURYA PANGAN SEMESTA</option>
+                                        <option @if($holding=='sip' ) selected @else @endif value="sip">CV. SURYA INTI PANGAN</option>
+                                    </select>
+                                    <!-- <span class="mdi mdi-menu-down"></span> -->
+                            </h6>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div id="grafik_absensi"></div>
+                        <div class="mt-1 mt-md-3">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
     @endsection
     @section('js')
