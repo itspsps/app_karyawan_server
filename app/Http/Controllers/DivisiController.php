@@ -163,7 +163,7 @@ class DivisiController extends Controller
                 'dept_id' => Departemen::where('id', $validatedData['nama_departemen'])->value('id'),
             ]
         );
-        return redirect('/divisi/' . $holding)->with('success', 'Data Berhasil di Tambahkan');
+        return redirect('/divisi/' . $holding)->with('success', 'data berhasil ditambahkan');
     }
 
     public function edit($id)
@@ -192,7 +192,7 @@ class DivisiController extends Controller
                 'dept_id' => Departemen::where('id', $validatedData['nama_departemen_update'])->value('id'),
             ]
         );
-        return redirect('/divisi/' . $holding)->with('success', 'Data Berhasil di Update');
+        return redirect('/divisi/' . $holding)->with('success', 'data berhasil diupdate');
     }
 
     public function delete($id)

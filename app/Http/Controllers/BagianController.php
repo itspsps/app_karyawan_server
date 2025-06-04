@@ -225,7 +225,7 @@ class BagianController extends Controller
                 'divisi_id' => Divisi::where('id', $validatedData['nama_divisi_update'])->value('id'),
             ]
         );
-        return redirect('/bagian/' . $holding)->with('success', 'Data Berhasil di Update');
+        return redirect('/bagian/' . $holding)->with('success', 'data berhasil diupdate');
     }
 
     public function get_bagian($id)

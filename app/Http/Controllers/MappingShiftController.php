@@ -219,7 +219,7 @@ class MappingShiftController extends Controller
             }
         }
         $request->session()->flash('mappingshiftsuccess');
-        return redirect()->back()->with('success', 'Data Berhasil di Tambahkan');
+        return redirect()->back()->with('success', 'data berhasil ditambahkan');
     }
     public function prosesEditMappingShift(Request $request)
     {

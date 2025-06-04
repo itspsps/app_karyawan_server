@@ -30,6 +30,7 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Log;
 use Carbon\Carbon;
 use DB;
+use PhpParser\Builder\Function_;
 
 class RecruitmentController extends Controller
 {
@@ -42,6 +43,7 @@ class RecruitmentController extends Controller
             'holding'           => $holding,
             'data_departemen'   => Departemen::all(),
             'data_bagian'       => Bagian::with('Divisi')->where('holding', $holding)->get(),
+            'data_jabatan'      => Jabatan::with('Bagian')->where('holding', $holding)->get(),
             'data_dept'         => Departemen::orderBy('nama_departemen', 'asc')->where('holding', $holding)->get(),
             'data_divisi'       => Divisi::orderBy('nama_divisi', 'asc')->where('holding', $holding)->get()
         ]);
@@ -50,51 +52,64 @@ class RecruitmentController extends Controller
     function dt_recruitment(Request $request)
     {
         $holding = request()->segment(count(request()->segments()));
-        $table =  Recruitment::with([
-            'Bagian' =>  function ($query) {
+        $table = Recruitment::with([
+            'Jabatan' => function ($query) {
                 $query->with([
-                    'Divisi' => function ($query) {
+                    'Bagian' => function ($query) {
                         $query->with([
-                            'Departemen' => function ($query) {
-                                $query->orderBy('nama_departemen', 'ASC');
+                            'Divisi' => function ($query) {
+                                $query->with([
+                                    'Departemen' => function ($query) {
+                                        $query->orderBy('nama_departemen', 'ASC');
+                                    }
+                                ]);
                             }
                         ]);
-                        $query->orderBy('nama_divisi', 'ASC');
                     }
                 ]);
-                $query->orderBy('nama_bagian', 'ASC');
+                $query->orderBy('nama_jabatan', 'ASC');
             },
-        ])->where('holding_Recruitment', $holding)->orderBy('created_at', 'DESC')->get();
+        ])->where('holding_Recruitment', $holding)->orderBy('created_at', 'DESC')->get();;
         // dd($table);
         if (request()->ajax()) {
             return DataTables::of($table)
                 ->addColumn('created_at', function ($row) {
                     return Carbon::parse($row->created_at)->format('d-m-Y');
                 })
-                ->addColumn('nama_departemen', function ($row) {
-                    if ($row->Bagian == NULL) {
-                        $nama_departemen = 'vv';
+                ->addColumn('nama_jabatan', function ($row) {
+                    if ($row->Jabatan == NULL) {
+                        $nama_jabatan = 'vv';
                     } else {
-                        $nama_departemen = $row->Bagian->Divisi->Departemen->nama_departemen;
+                        $nama_jabatan = $row->Jabatan->nama_jabatan;
                     }
-                    return $nama_departemen;
-                })
-                ->addColumn('nama_divisi', function ($row) {
-                    if ($row->Bagian == NULL) {
-                        $nama_divisi = 'v';
-                    } else {
-                        $nama_divisi = $row->Bagian->Divisi->nama_divisi;
-                    }
-                    return $nama_divisi;
+                    return $nama_jabatan;
                 })
                 ->addColumn('nama_bagian', function ($row) {
-                    if ($row->Bagian == NULL) {
+                    if ($row->Jabatan == NULL) {
                         $nama_bagian = 'a';
                     } else {
-                        $nama_bagian = $row->Bagian->nama_bagian;
+                        $nama_bagian = $row->Jabatan->Bagian->nama_bagian;
                     }
                     return $nama_bagian;
                 })
+                ->addColumn('nama_divisi', function ($row) {
+                    if ($row->Jabatan == NULL) {
+                        $nama_divisi = 'v';
+                    } else {
+                        $nama_divisi = $row->Jabatan->Bagian->Divisi->nama_divisi;
+                    }
+                    return $nama_divisi;
+                })
+                ->addColumn('nama_departemen', function ($row) {
+                    if ($row->Jabatan == NULL) {
+                        $nama_departemen = 'vv';
+                    } else {
+                        $nama_departemen = $row->Jabatan->Bagian->Divisi->Departemen->nama_departemen;
+                    }
+                    return $nama_departemen;
+                })
+
+
                 ->addColumn('desc_recruitment', function ($row) {
 
                     $btn = '<button id="btn_lihat_syarat"
@@ -142,7 +157,9 @@ class RecruitmentController extends Controller
                             data-dept="' . $row->nama_dept . '"
                             data-divisi="' . $row->nama_divisi . '"
                             data-bagian="' . $row->nama_bagian . '"
-                            data-tanggal="' . $row->created_recruitment . '"
+                            data-jabatan="' . $row->nama_jabatan . '"
+                            data-tanggal_awal="' . $row->created_recruitment . '"
+                            data-tanggal_akhir="' . $row->deadline_recruitment . '"
                             data-holding="' . $holding . '"
                             data-desc="' . $row->desc_recruitment . '"
                             type="button"
@@ -158,20 +175,23 @@ class RecruitmentController extends Controller
                         ';
                     return $btn;
                 })
-                ->rawColumns(['created_at', 'nama_departemen', 'nama_divisi', 'nama_bagian', 'desc_recruitment', 'pelamar', 'status_recruitment', 'option'])
+                ->rawColumns(['created_at', 'nama_departemen', 'nama_divisi', 'nama_bagian', 'nama_jabatan', 'created_recruitment', 'deadline_recruitment', 'desc_recruitment', 'pelamar', 'status_recruitment', 'option'])
                 ->make(true);
         }
     }
 
     function create(Request $request)
     {
+
         // dd($request->all());
         $validatedData = $request->validate([
             'penempatan'             => 'required',
             'nama_dept'             => 'required',
             'nama_divisi'           => 'required',
             'nama_bagian'           => 'required|max:255',
-            'created_recruitment'   => 'required|max:255',
+            'nama_jabatan'          => 'required',
+            'created_recruitment'   => 'required',
+            'deadline_recruitment'  => 'required',
             'desc_recruitment'      => 'required',
         ]);
         $holding = request()->segment(count(request()->segments()));
@@ -184,17 +204,20 @@ class RecruitmentController extends Controller
                 'nama_dept'             => $validatedData['nama_dept'],
                 'nama_divisi'           => $validatedData['nama_divisi'],
                 'nama_bagian'           => $validatedData['nama_bagian'],
+                'nama_jabatan'          => $validatedData['nama_jabatan'],
                 'created_recruitment'   => $validatedData['created_recruitment'],
+                'deadline_recruitment'  => $validatedData['deadline_recruitment'],
                 'desc_recruitment'      => $validatedData['desc_recruitment'],
             ]
         );
+
         // Merekam aktivitas pengguna
         ActivityLog::create([
             'user_id' => $request->user()->id,
             'activity' => 'create',
             'description' => 'Menambahkan data Recruitment baru ' . $request->name,
         ]);
-        return redirect()->back()->with('success', 'Data Berhasil di Tambahkan');
+        return redirect()->back()->with('success', 'data berhasil ditambahkan');
     }
 
     function update_status($id)
@@ -224,6 +247,8 @@ class RecruitmentController extends Controller
         $holding = request()->segment(count(request()->segments()));
         $recruitment = Recruitment::where('id', $request->id_recruitment)->where('holding_recruitment', $holding)->first();
         $data = Recruitment::where('id', $request->id_recruitment)->where('holding_recruitment', $holding)->update([
+            'created_recruitment' => $request->created_recruitment_update,
+            'deadline_recruitment' => $request->deadline_recruitment_update,
             'desc_recruitment' => $request->desc_recruitment_update,
         ]);
         if ($data) {
@@ -251,7 +276,7 @@ class RecruitmentController extends Controller
                     'activity' => 'hapus',
                     'description' => 'Hapus data Recruitment' . Auth::user()->name,
                 ]);
-                return redirect()->back()->with('success', 'Data Berhasil di Hapus');
+                return redirect()->back()->with('success', 'data berhasil dihapus');
             } else {
                 return redirect()->back()->with('error', 'Data  Gagal di Hapus');
             }
@@ -322,6 +347,7 @@ class RecruitmentController extends Controller
                                 data-departemen="' . $row->Bagian->Divisi->Departemen->nama_departemen . '"
                                 data-divisi="' . $row->Bagian->Divisi->nama_divisi . '"
                                 data-bagian="' . $row->Bagian->nama_bagian . '"
+                                data-jabatan="' . $row->Bagian->nama_jabatan . '"
                                 data-email="' . $row->AuthLogin->email . '"
                                 data-no_hp="' . $row->Cv->no_hp . '"
                                 data-alamat_ktp="' . $row->Cv->tempat_lahir . '"
@@ -631,7 +657,9 @@ class RecruitmentController extends Controller
                             data-dept="' . $row->nama_dept . '"
                             data-divisi="' . $row->nama_divisi . '"
                             data-bagian="' . $row->nama_bagian . '"
-                            data-tanggal="' . $row->created_recruitment . '"
+                            data-jabatan="' . $row->nama_jabatan . '"
+                            data-tanggal_awal="' . $row->created_recruitment . '"
+                            data-tanggal_akhir="' . $row->deadline_recruitment . '"
                             data-holding="' . $holding . '"
                             type="button"
                             class="btn btn-icon btn-warning waves-effect waves-light">
@@ -646,7 +674,7 @@ class RecruitmentController extends Controller
                         ';
                     return $btn;
                 })
-                ->rawColumns(['created_at', 'nama_departemen', 'nama_divisi', 'nama_bagian', 'pelamar', 'status_recruitment'])
+                ->rawColumns(['created_at', 'nama_departemen', 'nama_divisi', 'nama_jabatan', 'nama_bagian', 'pelamar', 'created_recruitment', 'deadline_recruitment', 'status_recruitment'])
                 ->make(true);
         }
     }
@@ -757,6 +785,7 @@ class RecruitmentController extends Controller
                                 data-departemen="' . $row->Bagian->Divisi->Departemen->nama_departemen . '"
                                 data-divisi="' . $row->Bagian->Divisi->nama_divisi . '"
                                 data-bagian="' . $row->Bagian->nama_bagian . '"
+                                data-jabatan="' . $row->Bagian->nama_jabatan . '"
                                 data-email="' . $row->Cv->email . '"
                                 data-no_hp="' . $row->Cv->no_hp . '"
                                 data-alamatktp="' . $row->Cv->detail_alamat . '"
@@ -919,7 +948,7 @@ class RecruitmentController extends Controller
                 'activity' => 'create',
                 'description' => 'Menambahkan data kehadrian ' . $request->name,
             ]);
-            return redirect()->back()->with('success', 'Data Berhasil di Tambahkan');
+            return redirect()->back()->with('success', 'data berhasil ditambahkan');
         } else {
             RecruitmentInterview::where('id', $request->show_recruitmentinterviewid3)->update([
                 'status_interview'  => 4,
@@ -934,7 +963,7 @@ class RecruitmentController extends Controller
                 'activity' => 'create',
                 'description' => 'Menambahkan data kehadrian ' . $request->name,
             ]);
-            return redirect()->back()->with('success', 'Data Berhasil di Tambahkan');
+            return redirect()->back()->with('success', 'data berhasil ditambahkan');
         }
     }
 
@@ -1047,7 +1076,7 @@ class RecruitmentController extends Controller
                 'menu' => 'ujian',
                 'expanded' => 'ujian'
             ],
-            'guru' => User::firstWhere('id', '008ceb79-9d9b-49c5-98a0-bc39c640e34b')->get(),
+            // 'guru' => User::firstWhere('id', '008ceb79-9d9b-49c5-98a0-bc39c640e34b')->get(),
             'guru_kelas' => Gurukelas::where('guru_id', '008ceb79-9d9b-49c5-98a0-bc39c640e34b')->get(),
             'guru_mapel' => Gurumapel::where('guru_id', '008ceb79-9d9b-49c5-98a0-bc39c640e34b')->get(),
         ]);
@@ -1132,7 +1161,7 @@ class RecruitmentController extends Controller
             $data = EssaySiswa::where('kode', $ujian->kode)->delete();
         }
         $data = Ujian::destroy($ujian->id);
-        return redirect()->back()->with('success', 'Data Berhasil di Hapus');
+        return redirect()->back()->with('success', 'data berhasil dihapus');
     }
 
     function nilai_interview_hrd(Request $request)
@@ -1160,7 +1189,7 @@ class RecruitmentController extends Controller
             'activity' => 'create',
             'description' => 'Menambahkan data Nilai Interview ' . $request->name,
         ]);
-        return redirect()->back()->with('success', 'Data Berhasil di Tambahkan');
+        return redirect()->back()->with('success', 'data berhasil ditambahkan');
     }
 
     function nilai_interview_manager(Request $request)
@@ -1175,7 +1204,7 @@ class RecruitmentController extends Controller
             'activity' => 'create',
             'description' => 'Menambahkan data Nilai Interview ' . $request->name,
         ]);
-        return redirect()->back()->with('success', 'Data Berhasil di Tambahkan');
+        return redirect()->back()->with('success', 'data berhasil ditambahkan');
     }
 
     function pg_ranking()
@@ -1375,6 +1404,7 @@ class RecruitmentController extends Controller
                                 data-departemen="' . $row->Bagian->Divisi->Departemen->nama_departemen . '"
                                 data-divisi="' . $row->Bagian->Divisi->nama_divisi . '"
                                 data-bagian="' . $row->Bagian->nama_bagian . '"
+                                data-jabatan="' . $row->Bagian->nama_jabatan . '"
                                 data-email="' . $row->Cv->email . '"
                                 data-no_hp="' . $row->Cv->no_hp . '"
                                 data-alamatktp="' . $row->Cv->detail_alamat . '"

@@ -42,6 +42,15 @@ class jabatanController extends Controller
             'get_level' => LevelJabatan::orderBy('level_jabatan', 'ASC')->get()
         ]);
     }
+    public function get_jabatan($id)
+    {
+        // dd($id);
+        $get_jabatan = Jabatan::where('bagian_id', $id)->get();
+        echo "<option value=''>Pilih Jabatan...</option>";
+        foreach ($get_jabatan as $jabatan) {
+            echo "<option value='$jabatan->id'>$jabatan->nama_jabatan</option>";
+        }
+    }
     public function ImportJabatan(Request $request)
     {
         $holding = request()->segment(count(request()->segments()));
@@ -578,7 +587,7 @@ class jabatanController extends Controller
                 'level_id' => LevelJabatan::where('level_jabatan', $validatedData['level_jabatan'])->value('id'),
             ]
         );
-        return redirect()->back()->with('success', 'Data Berhasil di Tambahkan');
+        return redirect()->back()->with('success', 'data berhasil ditambahkan');
     }
 
     public function edit($id)
@@ -632,7 +641,7 @@ class jabatanController extends Controller
                 'atasan2_id' => $get_atasan2,
             ]
         );
-        return redirect('/detail_jabatan/' . Divisi::where('nama_divisi', $validatedData['nama_divisi_update'])->where('dept_id', $request->nama_departemen_update)->where('holding', $holding)->value('id') . '/' . $holding)->with('success', 'Data Berhasil di Update');
+        return redirect('/detail_jabatan/' . Divisi::where('nama_divisi', $validatedData['nama_divisi_update'])->where('dept_id', $request->nama_departemen_update)->where('holding', $holding)->value('id') . '/' . $holding)->with('success', 'data berhasil diupdate');
     }
 
     public function delete(Request $request, $id)

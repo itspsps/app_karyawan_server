@@ -90,7 +90,7 @@ class InventarisController extends Controller
                 'foto_inventaris' => $img_name,
             ]
         );
-        // 
+        //
 
         // Merekam aktivitas pengguna
         ActivityLog::create([
@@ -98,7 +98,7 @@ class InventarisController extends Controller
             'activity' => 'create',
             'description' => 'Menambahkan data Inventaris baru ' . $request->name,
         ]);
-        return redirect('/inventaris/' . $holding)->with('success', 'Data Berhasil di Tambahkan');
+        return redirect('/inventaris/' . $holding)->with('success', 'data berhasil ditambahkan');
     }
     public function editInventarisProses(Request $request)
     {
@@ -138,7 +138,7 @@ class InventarisController extends Controller
                 'foto_inventaris' => $img_name,
             ]
         );
-        // 
+        //
 
         // Merekam aktivitas pengguna
         ActivityLog::create([

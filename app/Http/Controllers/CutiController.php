@@ -79,7 +79,7 @@ class CutiController extends Controller
             'description' => 'Menambahkan data cuti baru dengan nama cuti ' . $request->nama_cuti,
         ]);
 
-        return redirect('/cuti')->with('success', 'Data Berhasil di Tambahkan');
+        return redirect('/cuti')->with('success', 'data berhasil ditambahkan');
     }
 
     public function delete($id)
@@ -121,7 +121,7 @@ class CutiController extends Controller
         }
 
         Cuti::where('id', $id)->update($validatedData);
-        $request->session()->flash('success', 'Data Berhasil di Update');
+        $request->session()->flash('success', 'data berhasil diupdate');
         return redirect('/cuti');
     }
 
@@ -1011,7 +1011,7 @@ class CutiController extends Controller
             'time' => date('Y-m-d H:i:s')
         ]);
 
-        return redirect('/data-cuti')->with('success', 'Data Berhasil di Tambahkan');
+        return redirect('/data-cuti')->with('success', 'data berhasil ditambahkan');
     }
 
     public function deleteAdmin($id)
@@ -1202,7 +1202,7 @@ class CutiController extends Controller
                 'time' => Carbon::now()
             ]);
 
-            $request->session()->flash('success', 'Data Berhasil di Update');
+            $request->session()->flash('success', 'data berhasil diupdate');
             return redirect('/data-cuti');
         }
     }

@@ -75,7 +75,7 @@ class ShiftController extends Controller
             'activity' => 'create',
             'description' => 'Menambahkan data master shift dengan nama shift ' . $request->nama_shift
         ]);
-        return redirect('/shift/' . $holding)->with('success', 'Data Berhasil di Tambahkan');
+        return redirect('/shift/' . $holding)->with('success', 'data berhasil ditambahkan');
     }
 
     /**
@@ -140,7 +140,7 @@ class ShiftController extends Controller
             'activity' => 'Update Master Shift',
             'description' => 'Mengubah data master shift dengan nama shift ' . $request->nama_shift
         ]);
-        return redirect('/shift/' . $holding)->with('success', 'Data Berhasil di Update');
+        return redirect('/shift/' . $holding)->with('success', 'data berhasil diupdate');
     }
 
     /**

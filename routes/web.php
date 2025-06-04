@@ -681,6 +681,8 @@ Route::middleware('admin')->group(function () {
     Route::get('/jabatan/karyawanjabatan-datatable/{id?}/sp', [BagianController::class, 'karyawanjabatan_datatable'])->middleware('admin');
     Route::get('/jabatan/karyawanjabatan-datatable/{id?}/sps', [BagianController::class, 'karyawanjabatan_datatable'])->middleware('admin');
     Route::get('/jabatan/karyawanjabatan-datatable/{id?}/sip', [BagianController::class, 'karyawanjabatan_datatable'])->middleware('admin');
+    Route::get('/jabatan/get_jabatan/{id}', [JabatanController::class, 'get_jabatan'])->middleware('admin');
+
 
 
     Route::get('/inventaris/sp', [InventarisController::class, 'index']);
@@ -1426,10 +1428,10 @@ Route::post('/ujian/kategori-ujian/sps', [RecruitmentController::class, 'kategor
 Route::post('/ujian/kategori-ujian/sip', [RecruitmentController::class, 'kategori_ujian'])->middleware('admin');
 
 // SUMMERNOTE
-// Route::post('/summernote/upload', [SummernoteController::class, 'upload'])->name('summernote_upload');
-// Route::post('/summernote/delete', [SummernoteController::class, 'delete'])->name('summernote_delete');
-// Route::get('/summernote/unduh/{file}', [SummernoteController::class, 'unduh']);
-// Route::post('/summernote/delete_file', [SummernoteController::class, 'delete_file']);
+Route::post('/summernote/upload', [SummernoteController::class, 'upload'])->name('summernote_upload');
+Route::post('/summernote/delete', [SummernoteController::class, 'delete'])->name('summernote_delete');
+Route::get('/summernote/unduh/{file}', [SummernoteController::class, 'unduh']);
+Route::post('/summernote/delete_file', [SummernoteController::class, 'delete_file']);
 
 Route::post('/nilai-interview-hrd/update/sp', [RecruitmentController::class, 'nilai_interview_hrd'])->middleware('admin');
 Route::post('/nilai-interview-hrd/update/sps', [RecruitmentController::class, 'nilai_interview_hrd'])->middleware('admin');

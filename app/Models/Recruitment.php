@@ -16,17 +16,22 @@ class Recruitment extends Model
         'id',
         'holding_recruitment',
         'penempatan',
+        'nama_jabatan',
         'nama_dept',
         'nama_divisi',
         'nama_bagian',
         'desc_recruitment',
         'status_recruitment',
-        'status_recruitment',
         'created_recruitment',
+        'deadline_recruitment',
     ];
 
-    public function Bagian(): BelongsTo
+    // public function Bagian(): BelongsTo
+    // {
+    //     return $this->belongsTo(Bagian::class, 'nama_bagian', 'id');
+    // }
+    public function Jabatan(): BelongsTo
     {
-        return $this->belongsTo(Bagian::class, 'nama_bagian', 'id');
+        return $this->belongsTo(Jabatan::class, 'nama_jabatan', 'id');
     }
 }

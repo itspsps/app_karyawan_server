@@ -1406,7 +1406,7 @@ class karyawanController extends Controller
                 'kelas_bpjs'                        => $validatedData['kelas_bpjs'],
             ]
         );
-        // 
+        //
 
         // Merekam aktivitas pengguna
         ActivityLog::create([
@@ -1414,7 +1414,7 @@ class karyawanController extends Controller
             'activity' => 'create',
             'description' => 'Menambahkan data karyawan baru ' . $request->name,
         ]);
-        return redirect()->back()->with('success', 'Data Berhasil di Tambahkan');
+        return redirect()->back()->with('success', 'data berhasil ditambahkan');
     }
 
     public function detail($id)
@@ -1872,7 +1872,7 @@ class karyawanController extends Controller
             'description' => 'Mengubah data karyawan ' . $request->name,
         ]);
 
-        $request->session()->flash('success', 'Data Berhasil di Update');
+        $request->session()->flash('success', 'data berhasil diupdate');
         return redirect()->back();
     }
 
@@ -2154,7 +2154,7 @@ class karyawanController extends Controller
             'description' => 'Menambahkan Jadwal shift karyawan ' . $insert->nama_karyawan . ' Shift ' . $insert->nama_shift,
             'read_status' => 0
         ]);
-        return redirect()->back()->with('success', 'Data Berhasil di Tambahkan');
+        return redirect()->back()->with('success', 'data berhasil ditambahkan');
     }
 
     public function deleteShift(Request $request, $id)
@@ -2246,7 +2246,7 @@ class karyawanController extends Controller
             'description' => 'Mengubah shift karyawan ' . $user_karyawan->name,
         ]);
         $holding = request()->segment(count(request()->segments()));
-        return redirect()->back()->with('success', 'Data Berhasil di Update');
+        return redirect()->back()->with('success', 'data berhasil diupdate');
     }
 
     public function myProfile()
@@ -2297,7 +2297,7 @@ class karyawanController extends Controller
             'activity' => 'update',
             'description' => 'Mengubah profile karyawan ' . $request->name,
         ]);
-        $request->session()->flash('success', 'Data Berhasil di Update');
+        $request->session()->flash('success', 'data berhasil diupdate');
         return redirect('/my-profile');
     }
 

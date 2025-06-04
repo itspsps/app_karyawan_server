@@ -171,7 +171,7 @@ class DepartemenController extends Controller
                 'nama_departemen' => $validatedData['nama_departemen'],
             ]
         );
-        return redirect('/departemen/' . $holding)->with('success', 'Data Berhasil di Tambahkan');
+        return redirect('/departemen/' . $holding)->with('success', 'data berhasil ditambahkan');
     }
 
     public function edit($id)
@@ -195,7 +195,7 @@ class DepartemenController extends Controller
             'holding' => $holding,
             'nama_departemen' => $validatedData['nama_departemen_update'],
         ]);
-        return redirect('/departemen/' . $holding)->with('success', 'Data Berhasil di Update');
+        return redirect('/departemen/' . $holding)->with('success', 'data berhasil diupdate');
     }
 
     public function delete($id)
