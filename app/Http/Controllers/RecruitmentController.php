@@ -285,18 +285,122 @@ class RecruitmentController extends Controller
         }
     }
 
+    // function pg_list_pelamar($id)
+    // {
+    //     $holding = request()->segment(count(request()->segments()));
+    //     return view('admin.recruitment-users.recruitment.list_pelamar', [
+    //         'title' => 'Data Recruitment',
+    //         'holding'   => $holding,
+    //         'id_recruitment'        => $id,
+    //         'data_departemen' => Departemen::all(),
+    //         'data_bagian' => Bagian::with('Divisi')->where('holding', $holding)->get(),
+    //         'data_dept' => Departemen::orderBy('nama_departemen', 'asc')->where('holding', $holding)->get(),
+    //         'data_divisi' => Divisi::orderBy('nama_divisi', 'asc')->where('holding', $holding)->get()
+    //     ]);
+    // }
     function pg_list_pelamar($id)
     {
         $holding = request()->segment(count(request()->segments()));
+        $user_meta =  RecruitmentUser::with([
+            'AuthLogin' => function ($query) {
+                $query->with([
+                    'recruitmentCV' => function ($query) {
+                        $query->orderBy('nama_lengkap');
+                    }
+                ]);
+            }
+        ])
+            ->where('holding', $holding)
+            ->where('status', '0')
+            ->where('recruitment_admin_id', $id)
+            ->get();
+        $user_kandidat =  RecruitmentUser::with([
+            'AuthLogin' => function ($query) {
+                $query->with([
+                    'recruitmentCV' => function ($query) {
+                        $query->orderBy('nama_lengkap');
+                    }
+                ]);
+            }
+        ])
+            ->where('holding', $holding)
+            ->where('status', '1')
+            ->where('recruitment_admin_id', $id)
+            ->get();
+        $user_wait =  RecruitmentUser::with([
+            'AuthLogin' => function ($query) {
+                $query->with([
+                    'recruitmentCV' => function ($query) {
+                        $query->orderBy('nama_lengkap');
+                    }
+                ]);
+            }
+        ])
+            ->where('holding', $holding)
+            ->where('status', '2')
+            ->where('recruitment_admin_id', $id)
+            ->get();
+        $user_reject =  RecruitmentUser::with([
+            'AuthLogin' => function ($query) {
+                $query->with([
+                    'recruitmentCV' => function ($query) {
+                        $query->orderBy('nama_lengkap');
+                    }
+                ]);
+            }
+        ])
+            ->where('holding', $holding)
+            ->where('status', '3')
+            ->where('recruitment_admin_id', $id)
+            ->get();
         return view('admin.recruitment-users.recruitment.list_pelamar', [
             'title' => 'Data Recruitment',
             'holding'   => $holding,
-            'id_recruitment'        => $id,
-            'data_departemen' => Departemen::all(),
-            'data_bagian' => Bagian::with('Divisi')->where('holding', $holding)->get(),
-            'data_dept' => Departemen::orderBy('nama_departemen', 'asc')->where('holding', $holding)->get(),
-            'data_divisi' => Divisi::orderBy('nama_divisi', 'asc')->where('holding', $holding)->get()
+        ], compact('user_meta', 'user_wait', 'user_kandidat', 'user_reject'));
+    }
+    function pelamar_detail($id)
+    {
+        $holding = request()->segment(count(request()->segments()));
+        // $user_meta =  RecruitmentUser::with([
+        //     'AuthLogin' => function ($query) use ($id) {
+        //         $query->where('users_career_id', $id)->with([
+        //             'recruitmentCV' => function ($query) {
+        //                 $query->orderBy('nama_lengkap');
+        //             }
+        //         ]);
+        //     }
+        // ])
+        //     ->whereHas('users_career_id', $id)
+        //     ->where('holding', $holding)
+        //     ->where('status', '0')
+
+        //     ->first();
+        $recruitment_user_id = RecruitmentUser::where('id', $id)->first();
+        // dd($recruitment_user_id);
+        return view('admin.recruitment-users.recruitment.user_detail', [
+            'title' => 'Data Recruitment',
+            'holding'   => $holding,
+        ], compact('recruitment_user_id'));
+    }
+    public function pelamar_detail_ubah(Request $request)
+    {
+        $holding = request()->segment(count(request()->segments()));
+        $recruitment_admin_id = RecruitmentUser::where('id', $request->recruitment_user_id)->first();
+        // dd($recruitment_admin_id);
+        $validatedData = $request->validate([
+            'status'             => 'required',
         ]);
+
+        // $holding = request()->segment(count(request()->segments()));
+        // dd($validatedData);
+        $insert = RecruitmentUser::where('id', $request->recruitment_user_id)->update(
+            [
+                'status'   => $request->status,
+            ]
+        );
+
+        // Merekam aktivitas pengguna
+        return redirect('/pg/data-list-pelamar/' . $recruitment_admin_id->recruitment_admin_id . '/' . $holding . '')->with('success', 'data berhasil ditambahkan');
     }
 
     function dt_list_pelamar($id)
