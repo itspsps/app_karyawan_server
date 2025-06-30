@@ -160,7 +160,7 @@
         .timeline-centered .timeline-entry {
             position: relative;
             /*width: 50%;
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        float: right;*/
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            float: right;*/
             margin-top: 5px;
             margin-left: 30px;
             margin-bottom: 10px;
@@ -396,9 +396,10 @@
                         <h3>Detail CV</h3>
                         <div class="row ">
                             <div class="col-4 py-3">
-                                <img src="http://192.168.101.241:8000/storage/file_pp/o8iB7GS5BWxelKIJPADCrdEMv8kXVcsZXKQWqZKF.jpg"
-                                    style="height: 340px; width: 340px;">
-                                <div class="fw-bold py-3">Email :</div>
+                                <div></div>
+                                <img src="http://192.168.101.241:8001/storage/file_pp/{{ $data_cv->AuthLogin->recruitmentCV->file_pp }}"
+                                    style="max-height: 400px; max-width: 340px;">
+                                <div class="fw-bold py-3">Email : {{ $data_cv->AuthLogin->email }}</div>
                             </div>
                             <div class="col-lg">
                                 <ul class="nav nav-tabs" role="tablist">
@@ -454,42 +455,61 @@
                                                     <tr>
                                                         <td class="fw-bold"><small>NAMA LENGKAP</small></td>
                                                         <td>:</td>
-                                                        <td></td>
+                                                        <td>{{ $data_cv->AuthLogin->recruitmentCV->nama_lengkap }}</td>
                                                     </tr>
                                                     <tr>
                                                         <td class="fw-bold"><small>TEMPAT, TANGGAL LAHIR</small></td>
                                                         <td>:</td>
-                                                        <td></td>
+                                                        <td>{{ $data_cv->AuthLogin->recruitmentCV->tempat_lahir }},
+                                                            {{ $data_cv->AuthLogin->recruitmentCV->tanggal_lahir }}</td>
                                                     </tr>
                                                     <tr>
                                                         <td class="fw-bold"><small>NIK</small></td>
                                                         <td>:</td>
-                                                        <td></td>
+                                                        <td>{{ $data_cv->AuthLogin->recruitmentCV->nik }}</td>
                                                     </tr>
                                                     <tr>
                                                         <td class="fw-bold"><small>AGAMA</small></td>
                                                         <td>:</td>
-                                                        <td></td>
+                                                        <td>{{ $data_cv->AuthLogin->recruitmentCV->agama }}</td>
                                                     </tr>
                                                     <tr>
                                                         <td class="fw-bold"><small>JENIS KELAMIN</small></td>
                                                         <td>:</td>
-                                                        <td></td>
+                                                        <td>
+                                                            @if ($data_cv->AuthLogin->recruitmentCV->jenis_kelamin == 'Laki-laki')
+                                                                LAKI - LAKI
+                                                            @else
+                                                                PEREMPUAN
+                                                            @endif
+                                                        </td>
                                                     </tr>
                                                     <tr>
                                                         <td class="fw-bold"><small>STATUS PERNIKAHAN</small></td>
                                                         <td>:</td>
-                                                        <td></td>
+                                                        <td>
+                                                            @if ($data_cv->AuthLogin->recruitmentCV->status_pernikahan == 'lajang')
+                                                                LAJANG
+                                                            @elseif ($data_cv->AuthLogin->recruitmentCV->status_pernikahan == 'menikah')
+                                                                MENIKAH
+                                                            @elseif ($data_cv->AuthLogin->recruitmentCV->status_pernikahan == 'cerai_hidup')
+                                                                CERAI HIDUP
+                                                            @elseif ($data_cv->AuthLogin->recruitmentCV->status_pernikahan == 'cerai_mati')
+                                                                CERAI MATI
+                                                            @endif
+                                                        </td>
                                                     </tr>
                                                     <tr>
                                                         <td class="fw-bold"><small>JUMLAH ANAK</small></td>
                                                         <td>:</td>
-                                                        <td></td>
+                                                        <td>
+                                                            {{ $data_cv->AuthLogin->recruitmentCV->jumlah_anak }}
+                                                        </td>
                                                     </tr>
                                                     <tr>
                                                         <td class="fw-bold"><small>HOBI</small></td>
                                                         <td>:</td>
-                                                        <td></td>
+                                                        <td>{{ $data_cv->AuthLogin->recruitmentCV->hobi }}</td>
                                                     </tr>
                                                     <tr>
                                                         <td class="fw-bold"><small>KTP</small></td>
@@ -508,12 +528,41 @@
                                                     <tr>
                                                         <td class="fw-bold"><small>ALAMAT SESUAI KTP</small></td>
                                                         <td>:</td>
-                                                        <td></td>
+                                                        <td> RT {{ $data_cv->AuthLogin->recruitmentCV->rt_ktp }},
+                                                            RW {{ $data_cv->AuthLogin->recruitmentCV->rw_ktp }},
+                                                            {{ $data_cv->AuthLogin->recruitmentCV->desaKTP->name }},
+                                                            {{ $data_cv->AuthLogin->recruitmentCV->kecamatanKTP->name }},
+                                                            {{ $data_cv->AuthLogin->recruitmentCV->kabupatenKTP->name }},
+                                                            {{ $data_cv->AuthLogin->recruitmentCV->provinsiKTP->name }},
+                                                            KODE POS :
+                                                            {{ $data_cv->AuthLogin->recruitmentCV->kode_pos_ktp }}
+
+                                                        </td>
                                                     </tr>
                                                     <tr>
                                                         <td class="fw-bold"><small>ALAMAT SAAT INI</small></td>
                                                         <td>:</td>
-                                                        <td></td>
+                                                        <td>
+                                                            @if ($data_cv->AuthLogin->recruitmentCV->alamat_sekarang == 'sama')
+                                                                RT {{ $data_cv->AuthLogin->recruitmentCV->rt_ktp }},
+                                                                RW {{ $data_cv->AuthLogin->recruitmentCV->rw_ktp }},
+                                                                {{ $data_cv->AuthLogin->recruitmentCV->desaKTP->name }},
+                                                                {{ $data_cv->AuthLogin->recruitmentCV->kecamatanKTP->name }},
+                                                                {{ $data_cv->AuthLogin->recruitmentCV->kabupatenKTP->name }},
+                                                                {{ $data_cv->AuthLogin->recruitmentCV->provinsiKTP->name }},
+                                                                KODE POS :
+                                                                {{ $data_cv->AuthLogin->recruitmentCV->kode_pos_ktp }}
+                                                            @else
+                                                                RT {{ $data_cv->AuthLogin->recruitmentCV->rt_now }},
+                                                                RW {{ $data_cv->AuthLogin->recruitmentCV->rw_now }},
+                                                                {{ $data_cv->AuthLogin->recruitmentCV->desaNOW->name }},
+                                                                {{ $data_cv->AuthLogin->recruitmentCV->kecamatanNOW->name }},
+                                                                {{ $data_cv->AuthLogin->recruitmentCV->kabupatenNOW->name }},
+                                                                {{ $data_cv->AuthLogin->recruitmentCV->provinsiNOW->name }},
+                                                                KODE POS :
+                                                                {{ $data_cv->AuthLogin->recruitmentCV->kode_pos_now }}
+                                                            @endif
+                                                        </td>
                                                     </tr>
                                                 </tbody>
                                                 <thead class="table-primary">
@@ -527,17 +576,33 @@
                                                     <tr>
                                                         <td class="fw-bold"><small>NOMOR WHATSAPP</small></td>
                                                         <td>:</td>
-                                                        <td></td>
+                                                        <td>{{ $data_cv->AuthLogin->nomor_whatsapp }}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="fw-bold"><small>LAMA NOMOR INI DIGUNAKAN</small></td>
+                                                        <td>:</td>
+                                                        <td>{{ $data_cv->AuthLogin->recruitmentCV->lama_nomor_whatsapp }}
+                                                            TAHUN
+                                                            @if ($data_cv->AuthLogin->recruitmentCV->lama_nomor_bulan == null)
+                                                                -
+                                                            @else
+                                                                {{ $data_cv->AuthLogin->recruitmentCV->lama_nomor_bulan }}
+                                                                BULAN
+                                                            @endif
+
+                                                        </td>
                                                     </tr>
                                                     <tr>
                                                         <td class="fw-bold"><small>KONTAK DARURAT</small></td>
                                                         <td>:</td>
-                                                        <td></td>
+                                                        <td>{{ $data_cv->AuthLogin->recruitmentCV->nomor_whatsapp_darurat }}
+                                                        </td>
                                                     </tr>
                                                     <tr>
                                                         <td class="fw-bold"><small>PEMILIK KONTAK DARURAT</small></td>
                                                         <td>:</td>
-                                                        <td></td>
+                                                        <td>{{ $data_cv->AuthLogin->recruitmentCV->pemilik_nomor_whatsapp }}
+                                                        </td>
                                                     </tr>
                                                 </tbody>
                                             </table>
@@ -718,7 +783,7 @@
                                                 @enderror
                                             </div>
                                             <input type="hidden" name="recruitment_user_id"
-                                                value="{{ $recruitment_user_id->id }}">
+                                                value="{{ $data_cv->id }}">
                                             <div class="py-4">
                                                 <button type="submit" class="btn btn-sm btn-info">
                                                     Ubah&nbsp;Status

@@ -56,4 +56,22 @@ class RecruitmentUser extends Model
     {
         return $this->belongsTo(WaktuUjian::class, 'users_career_id', 'auth_id');
     }
+    // Alamat User
+    public function provinsiKTP(): BelongsTo
+    {
+        return $this->belongsTo(Provincies::class, 'provinsi_ktp', 'code');
+    }
+    public function kabupatenKTP(): BelongsTo
+    {
+        return $this->belongsTo(Cities::class, 'kabupaten_ktp', 'code');
+    }
+    public function kecamatanKTP(): BelongsTo
+    {
+        return $this->belongsTo(District::class, 'kecamatan_ktp', 'code');
+    }
+    public function desaKTP(): BelongsTo
+    {
+        return $this->belongsTo(Village::class, 'desa_ktp', 'code');
+    }
+    // End Alamat User
 }

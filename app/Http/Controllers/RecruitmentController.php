@@ -20,6 +20,7 @@ use App\Models\WaktuUjian;
 use App\Models\PgSiswa;
 use App\Models\EssaySiswa;
 use App\Models\DetailEssay;
+use App\Models\RecruitmentCV;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Ramsey\Uuid\Uuid;
@@ -301,6 +302,9 @@ class RecruitmentController extends Controller
     function pg_list_pelamar($id)
     {
         $holding = request()->segment(count(request()->segments()));
+        // $get_user = RecruitmentUser::where('recruitment_admin_id', $id)->first();
+        // $get_cv = RecruitmentCV::where('users_career_id', $get_user->users_career_id)->first();
+        // $get
         $user_meta =  RecruitmentUser::with([
             'AuthLogin' => function ($query) {
                 $query->with([
@@ -361,26 +365,56 @@ class RecruitmentController extends Controller
     function pelamar_detail($id)
     {
         $holding = request()->segment(count(request()->segments()));
-        // $user_meta =  RecruitmentUser::with([
-        //     'AuthLogin' => function ($query) use ($id) {
-        //         $query->where('users_career_id', $id)->with([
-        //             'recruitmentCV' => function ($query) {
-        //                 $query->orderBy('nama_lengkap');
-        //             }
-        //         ]);
-        //     }
-        // ])
-        //     ->whereHas('users_career_id', $id)
-        //     ->where('holding', $holding)
-        //     ->where('status', '0')
+        $data_cv =  RecruitmentUser::with([
+            'AuthLogin' => function ($query) use ($id) {
+                $query->with([
+                    'recruitmentCV' => function ($query) {
+                        $query->orderBy('nama_lengkap')->with([
+                            'provinsiKTP' => function ($query) {
+                                $query->orderBy('id', 'ASC');
+                            }
+                        ])->with([
+                            'kabupatenKTP' => function ($query) {
+                                $query->orderBy('id', 'ASC');
+                            }
+                        ])->with([
+                            'kecamatanKTP' => function ($query) {
+                                $query->orderBy('id', 'ASC');
+                            }
+                        ])->with([
+                            'desaKTP' => function ($query) {
+                                $query->orderBy('id', 'ASC');
+                            }
+                        ])->with([
+                            'provinsiNOW' => function ($query) {
+                                $query->orderBy('id', 'ASC');
+                            }
+                        ])->with([
+                            'kabupatenNOW' => function ($query) {
+                                $query->orderBy('id', 'ASC');
+                            }
+                        ])->with([
+                            'kecamatanNOW' => function ($query) {
+                                $query->orderBy('id', 'ASC');
+                            }
+                        ])->with([
+                            'desaNOW' => function ($query) {
+                                $query->orderBy('id', 'ASC');
+                            }
+                        ]);
+                    }
+                ]);
+            }
+        ])
+            ->where('id', $id)
 
-        //     ->first();
-        $recruitment_user_id = RecruitmentUser::where('id', $id)->first();
-        // dd($recruitment_user_id);
+            ->first();
+        // $data_cv = RecruitmentUser::where('id', $id)->first();
+        // dd($data_cv);
         return view('admin.recruitment-users.recruitment.user_detail', [
             'title' => 'Data Recruitment',
             'holding'   => $holding,
-        ], compact('recruitment_user_id'));
+        ], compact('data_cv'));
     }
     public function pelamar_detail_ubah(Request $request)
     {
