@@ -160,7 +160,7 @@
         .timeline-centered .timeline-entry {
             position: relative;
             /*width: 50%;
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            float: right;*/
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            float: right;*/
             margin-top: 5px;
             margin-left: 30px;
             margin-bottom: 10px;
@@ -397,7 +397,7 @@
                         <div class="row ">
                             <div class="col-4 py-3">
                                 <div></div>
-                                <img src="http://192.168.101.241:8001/storage/file_pp/{{ $data_cv->AuthLogin->recruitmentCV->file_pp }}"
+                                <img src="{{ url_karir() . '/storage/file_pp/' . $data_cv->AuthLogin->recruitmentCV->file_pp }}"
                                     style="max-height: 400px; max-width: 340px;">
                                 <div class="fw-bold py-3">Email : {{ $data_cv->AuthLogin->email }}</div>
                             </div>
@@ -514,7 +514,12 @@
                                                     <tr>
                                                         <td class="fw-bold"><small>KTP</small></td>
                                                         <td>:</td>
-                                                        <td></td>
+                                                        <td><a href="{{ url_karir() . '/storage/ktp/' . $data_cv->AuthLogin->recruitmentCV->ktp }}"
+                                                                type="button" class="btn btn-sm btn-info" target="_blank">
+                                                                <i class="tf-icons mdi mdi-eye-circle-outline me-1"></i>
+                                                                LIHAT KTP
+                                                            </a></td>
+                                                        </td>
                                                     </tr>
                                                 </tbody>
                                                 <thead class="table-primary">
@@ -528,7 +533,9 @@
                                                     <tr>
                                                         <td class="fw-bold"><small>ALAMAT SESUAI KTP</small></td>
                                                         <td>:</td>
-                                                        <td> RT {{ $data_cv->AuthLogin->recruitmentCV->rt_ktp }},
+                                                        <td>
+                                                            {{ $data_cv->AuthLogin->recruitmentCV->nama_jalan_ktp }},
+                                                            RT {{ $data_cv->AuthLogin->recruitmentCV->rt_ktp }},
                                                             RW {{ $data_cv->AuthLogin->recruitmentCV->rw_ktp }},
                                                             {{ $data_cv->AuthLogin->recruitmentCV->desaKTP->name }},
                                                             {{ $data_cv->AuthLogin->recruitmentCV->kecamatanKTP->name }},
@@ -544,6 +551,7 @@
                                                         <td>:</td>
                                                         <td>
                                                             @if ($data_cv->AuthLogin->recruitmentCV->alamat_sekarang == 'sama')
+                                                                {{ $data_cv->AuthLogin->recruitmentCV->nama_jalan_ktp }},
                                                                 RT {{ $data_cv->AuthLogin->recruitmentCV->rt_ktp }},
                                                                 RW {{ $data_cv->AuthLogin->recruitmentCV->rw_ktp }},
                                                                 {{ $data_cv->AuthLogin->recruitmentCV->desaKTP->name }},
@@ -553,6 +561,7 @@
                                                                 KODE POS :
                                                                 {{ $data_cv->AuthLogin->recruitmentCV->kode_pos_ktp }}
                                                             @else
+                                                                {{ $data_cv->AuthLogin->recruitmentCV->nama_jalan_now }},
                                                                 RT {{ $data_cv->AuthLogin->recruitmentCV->rt_now }},
                                                                 RW {{ $data_cv->AuthLogin->recruitmentCV->rw_now }},
                                                                 {{ $data_cv->AuthLogin->recruitmentCV->desaNOW->name }},
@@ -622,108 +631,65 @@
                                                 <tr>
                                                     <td class="fw-bold"><small>IJAZAH TERAKHIR</small></td>
                                                     <td>:</td>
-                                                    <td></td>
+                                                    <td><a href="{{ url_karir() . '/storage/ijazah/' . $data_cv->AuthLogin->recruitmentCV->ijazah }}"
+                                                            type="button" class="btn btn-sm btn-info" target="_blank">
+                                                            <i class="tf-icons mdi mdi-eye-circle-outline me-1"></i>
+                                                            LIHAT IJAZAH
+                                                        </a>
+                                                    </td>
                                                 </tr>
                                                 <tr>
                                                     <td class="fw-bold"><small>TRANSKRIP NILAI</small></td>
                                                     <td>:</td>
-                                                    <td></td>
+                                                    <td><a href="{{ url_karir() . '/storage/transkrip_nilai/' . $data_cv->AuthLogin->recruitmentCV->transkrip_nilai }}"
+                                                            type="button" class="btn btn-sm btn-primary"
+                                                            target="_blank">
+                                                            <i class="tf-icons mdi mdi-eye-circle-outline me-1"></i>
+                                                            LIHAT TRANSKRIP
+                                                        </a>
+                                                    </td>
                                                 </tr>
                                             </tbody>
-                                        </table>
-                                        <table class="table" id="table_pelamar3" style="width: 100%;">
-                                            <thead class="table-primary">
-                                                <tr>
-                                                    <th class="fw-bold">riwayat pendidikan</th>
-                                                    <th class="fw-bold"></th>
-                                                    <th class="fw-bold"></th>
-                                                </tr>
+                                            @php
+                                                $i = 1;
+                                            @endphp
+                                            @foreach ($pendidikan as $pp)
+                                                <thead class="table-primary">
+                                                    <tr>
+                                                        <th class="fw-bold">riwayat pendidikan ({{ $i++ }})</th>
+                                                        <th class="fw-bold"></th>
+                                                        <th class="fw-bold"></th>
+                                                    </tr>
 
-                                            </thead>
-                                            <tbody class="table-border-bottom-0">
-                                                <tr>
-                                                    <td class="fw-bold"><small>NAMA INSTITUSI</small></td>
-                                                    <td>:</td>
-                                                    <td></td>
-                                                </tr>
-                                                <tr>
-                                                    <td class="fw-bold"><small>JURUSAN</small></td>
-                                                    <td>:</td>
-                                                    <td></td>
-                                                </tr>
-                                                <tr>
-                                                    <td class="fw-bold"><small>JENJANG</small></td>
-                                                    <td>:</td>
-                                                    <td></td>
-                                                </tr>
-                                                <tr>
-                                                    <td class="fw-bold"><small>PERIODE</small></td>
-                                                    <td>:</td>
-                                                    <td></td>
-                                                </tr>
-                                            </tbody>
+                                                </thead>
+                                                <tbody class="table-border-bottom-0">
+                                                    <tr>
+                                                        <td class="fw-bold"><small>NAMA INSTITUSI</small></td>
+                                                        <td>:</td>
+                                                        <td>{{ $pp->institusi }}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="fw-bold"><small>JURUSAN</small></td>
+                                                        <td>:</td>
+                                                        <td>{{ $pp->jurusan }}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="fw-bold"><small>JENJANG</small></td>
+                                                        <td>:</td>
+                                                        <td>{{ $pp->jenjang }}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="fw-bold"><small>PERIODE</small></td>
+                                                        <td>:</td>
+                                                        <td>{{ $pp->tanggal_masuk }} - {{ $pp->tanggal_keluar }}</td>
+                                                    </tr>
+                                                </tbody>
+                                            @endforeach
                                         </table>
 
                                     </div>
                                     <div class="tab-pane" id="icon-tabpanel-2" role="tabpanel"
                                         aria-labelledby="icon-tab-2">
-                                        <table class="table" id="table_pelamar3" style="width: 100%;">
-                                            <thead class="table-primary">
-                                                <tr>
-                                                    <th class="fw-bold">RIWAYAT PEKERJAAN</th>
-                                                    <th class="fw-bold"></th>
-                                                    <th class="fw-bold"></th>
-                                                </tr>
-
-                                            </thead>
-                                            <tbody class="table-border-bottom-0">
-                                                <tr>
-                                                    <td class="fw-bold"><small>PERUSAHAAN</small></td>
-                                                    <td>:</td>
-                                                    <td></td>
-                                                </tr>
-                                                <tr>
-                                                    <td class="fw-bold"><small>ALAMAT PERUSAHAAN</small></td>
-                                                    <td>:</td>
-                                                    <td></td>
-                                                </tr>
-                                                <tr>
-                                                    <td class="fw-bold"><small>POSISI</small></td>
-                                                    <td>:</td>
-                                                    <td></td>
-                                                </tr>
-                                                <tr>
-                                                    <td class="fw-bold"><small>GAJI TERAKHIR</small></td>
-                                                    <td>:</td>
-                                                    <td></td>
-                                                </tr>
-                                                <tr>
-                                                    <td class="fw-bold"><small>TANGGAL MASUK</small></td>
-                                                    <td>:</td>
-                                                    <td></td>
-                                                </tr>
-                                                <tr>
-                                                    <td class="fw-bold"><small>TANGGAL KELUAR</small></td>
-                                                    <td>:</td>
-                                                    <td></td>
-                                                </tr>
-                                                <tr>
-                                                    <td class="fw-bold"><small>SURAT KETERANGAN</small></td>
-                                                    <td>:</td>
-                                                    <td></td>
-                                                </tr>
-                                                <tr>
-                                                    <td class="fw-bold"><small>KONTAK REFERENSI</small></td>
-                                                    <td>:</td>
-                                                    <td></td>
-                                                </tr>
-                                                <tr>
-                                                    <td class="fw-bold"><small>JABATAN REFERENSI</small></td>
-                                                    <td>:</td>
-                                                    <td></td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
                                         <table class="table" id="table_pelamar3" style="width: 100%;">
                                             <thead class="table-primary">
                                                 <tr>
@@ -735,30 +701,160 @@
                                             </thead>
                                             <tbody class="table-border-bottom-0">
                                                 <tr>
-                                                    <td class="fw-bold"><small>BERSEDIA DILAKUKAN BACKGROUND CHECK?</small>
+                                                    <td class="fw-bold"><small>BERSEDIA DILAKUKAN BACKGROUND
+                                                            CHECK?</small>
                                                     </td>
                                                     <td>:</td>
-                                                    <td></td>
+                                                    <td>
+                                                        @if ($data_cv->AuthLogin->recruitmentCV->persetujuan == '1')
+                                                            SETUJU
+                                                        @else
+                                                            TIDAK SETUJU
+                                                        @endif
+                                                    </td>
                                                 </tr>
                                             </tbody>
+                                            @if ($pekerjaan_count == 0)
+                                                <thead class="table-primary">
+                                                    <tr>
+                                                        <th class="fw-bold">RIWAYAT PEKERJAAN
+                                                        </th>
+                                                        <th class="fw-bold"></th>
+                                                        <th class="fw-bold"></th>
+                                                    </tr>
+
+                                                </thead>
+                                                <tbody class="table-border-bottom-0">
+                                                    <tr>
+                                                        <td colspan="3" class="fw-bold" style="text-align: center">
+                                                            <small>PELAMAR
+                                                                TIDAK MEMASUKKAN
+                                                                RIWAYAT PEKERJAAN</small>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            @else
+                                                @php
+                                                    $j = 1;
+                                                @endphp
+                                                @foreach ($pekerjaan as $rr)
+                                                    <thead class="table-primary">
+                                                        <tr>
+                                                            <th class="fw-bold">RIWAYAT PEKERJAAN ({{ $j++ }})
+                                                            </th>
+                                                            <th class="fw-bold"></th>
+                                                            <th class="fw-bold"></th>
+                                                        </tr>
+
+                                                    </thead>
+                                                    <tbody class="table-border-bottom-0">
+                                                        <tr>
+                                                            <td class="fw-bold"><small>PERUSAHAAN</small></td>
+                                                            <td>:</td>
+                                                            <td>{{ $rr->nama_perusahaan }}</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td class="fw-bold"><small>ALAMAT PERUSAHAAN</small></td>
+                                                            <td>:</td>
+                                                            <td>{{ $rr->alamat_perusahaan }}</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td class="fw-bold"><small>POSISI</small></td>
+                                                            <td>:</td>
+                                                            <td>{{ $rr->posisi }}</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td class="fw-bold"><small>GAJI TERAKHIR</small></td>
+                                                            <td>:</td>
+                                                            <td>{{ rupiah($rr->gaji) }}</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td class="fw-bold"><small>TANGGAL MASUK</small></td>
+                                                            <td>:</td>
+                                                            <td>{{ Carbon\Carbon::parse($rr->tanggal_masuk)->format('d M Y') }}
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td class="fw-bold"><small>TANGGAL KELUAR</small></td>
+                                                            <td>:</td>
+                                                            <td>{{ Carbon\Carbon::parse($rr->tanggal_keluar)->format('d M Y') }}
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td class="fw-bold"><small>SURAT KETERANGAN</small></td>
+                                                            <td>:</td>
+                                                            <td>
+                                                                @if ($rr->surat_keterangan == null)
+                                                                    -
+                                                                @else
+                                                                    <a href="{{ url_karir() . '/storage/surat_keterangan/' . $rr->surat_keterangan }}"
+                                                                        type="button" class="btn btn-sm btn-info"
+                                                                        target="_blank">
+                                                                        <i
+                                                                            class="tf-icons mdi mdi-eye-circle-outline me-1"></i>
+                                                                        LIHAT SURAT KETERANGAN
+                                                                    </a>
+                                                                @endif
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td class="fw-bold"><small>KONTAK REFERENSI</small></td>
+                                                            <td>:</td>
+                                                            <td>{{ $rr->nomor_referensi }}</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td class="fw-bold"><small>JABATAN REFERENSI</small></td>
+                                                            <td>:</td>
+                                                            <td>{{ $rr->jabatan_referensi }}</td>
+                                                        </tr>
+                                                    </tbody>
+                                                @endforeach
+                                            @endif
+
                                         </table>
+
                                     </div>
                                     <div class="tab-pane" id="icon-tabpanel-3" role="tabpanel"
                                         aria-labelledby="icon-tab-3">
                                         <table class="table" id="table_pelamar3" style="width: 100%;">
                                             <thead class="table-primary">
                                                 <tr>
+                                                    <th class="fw-bold">No</th>
                                                     <th class="fw-bold">KEAHLIAN</th>
                                                     <th class="fw-bold">DOKUMEN KEAHLIAN</th>
                                                 </tr>
 
                                             </thead>
                                             <tbody class="table-border-bottom-0">
-                                                <tr>
-                                                    <td class="fw-bold"><small></small>
-                                                    </td>
-                                                    <td>:</td>
-                                                </tr>
+                                                @if ($keahlian_count == 0)
+                                                    <tr>
+                                                        <td colspan="3" class="fw-bold" style="text-align: center">
+                                                            <small>PELAMAR
+                                                                TIDAK MEMASUKKAN
+                                                                KEAHLIAN</small>
+                                                        </td>
+                                                    </tr>
+                                                @else
+                                                    @php
+                                                        $k = 1;
+                                                    @endphp
+                                                    @foreach ($keahlian as $kk)
+                                                        <tr>
+                                                            <td class="fw-bold"><small>{{ $k++ }}</small></td>
+                                                            <td class="fw-bold"><small>{{ $kk->keahlian }}</small></td>
+                                                            <td class="fw-bold">
+                                                                <a href="{{ url_karir() . '/storage/file_keahlian/' . $kk->file_keahlian }}"
+                                                                    type="button" class="btn btn-sm btn-info"
+                                                                    target="_blank">
+                                                                    <i
+                                                                        class="tf-icons mdi mdi-eye-circle-outline me-1"></i>
+                                                                    LIHAT DOKUMEN KEAHLIAN
+                                                                </a>
+                                                            </td>
+
+                                                        </tr>
+                                                    @endforeach
+                                                @endif
                                             </tbody>
                                         </table>
                                     </div>
@@ -766,11 +862,11 @@
                                         aria-labelledby="icon-tab-4">
                                         <form method="post" action="{{ url('/pg/pelamar-detail-ubah/' . $holding) }}"
                                             enctype="multipart/form-data">
-                                            <div class="form-floating form-floating-outline">
-                                                @csrf
+                                            @csrf
+                                            <div class="form-floating form-floating-outline py-3">
                                                 <select class="form-select @error('status') is-invalid @enderror"
                                                     id="status" name="status" autofocus value="{{ old('status') }}">
-                                                    <option value="" disabled>PILIH STATUS</option>
+                                                    <option value="" selected>PILIH STATUS</option>
                                                     <option value="1">KANDIDAT</option>
                                                     <option value="2">DAFTAR TUNGGU</option>
                                                     <option value="3">DITOLAK</option>
@@ -782,6 +878,42 @@
                                                     </div>
                                                 @enderror
                                             </div>
+                                            <div class="form-floating form-floating-outline py-3">
+                                                <input type="date" id="tanggal_wawancara" name="tanggal_wawancara"
+                                                    class="form-control @error('tanggal_wawancara') is-invalid @enderror"
+                                                    placeholder="Tanggal" value="{{ old('tanggal_wawancara') }}" />
+                                                <label for="bagian_recruitment">TANGGAL WAWANCARA</label>
+                                            </div>
+                                            @error('tanggal_wawancara')
+                                                <span class="invalid-feedback" role="alert">
+                                                    <strong>{{ $message }}</strong>
+                                                </span>
+                                            @enderror
+                                            <label for="bagian_recruitment px-2"><small>TEMPAT WAWANCARA</small></label>
+                                            <div class="form-floating form-floating-outline mb-2">
+
+                                                <input type="text" id="tempat_wawancara" name="tempat_wawancara"
+                                                    class="form-control @error('tempat_wawancara') is-invalid @enderror"
+                                                    {{-- placeholder="TEMPAT WAWANCARA" --}} value="{{ old('tempat_wawancara') }}" />
+                                            </div>
+                                            @error('tempat_wawancara')
+                                                <span class="invalid-feedback" role="alert">
+                                                    <strong>{{ $message }}</strong>
+                                                </span>
+                                            @enderror
+                                            <label for="bagian_recruitment"><small>WAKTU (JAM)
+                                                    WAWANCARA</small></label>
+                                            <div class="form-floating form-floating-outline ">
+
+                                                <input type="text" id="waktu_wawancara" name="waktu_wawancara"
+                                                    class="form-control @error('waktu_wawancara') is-invalid @enderror"
+                                                    {{-- placeholder="TEMPAT WAWANCARA" --}} value="{{ old('waktu_wawancara') }}" />
+                                            </div>
+                                            @error('waktu_wawancara')
+                                                <span class="invalid-feedback" role="alert">
+                                                    <strong>{{ $message }}</strong>
+                                                </span>
+                                            @enderror
                                             <input type="hidden" name="recruitment_user_id"
                                                 value="{{ $data_cv->id }}">
                                             <div class="py-4">
