@@ -159,7 +159,7 @@
         .timeline-centered .timeline-entry {
             position: relative;
             /*width: 50%;
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        float: right;*/
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    float: right;*/
             margin-top: 5px;
             margin-left: 30px;
             margin-bottom: 10px;
@@ -474,6 +474,9 @@
                                                     <th>No.</th>
                                                     <th>Pelamar</th>
                                                     <th>Nomor Whatsapp</th>
+                                                    <th>Tanggal Wawancara</th>
+                                                    <th>Tempat Wawancara</th>
+                                                    <th>Waktu Wawancara</th>
                                                     <th>Status</th>
                                                     <th>Lihat CV</th>
                                                 </tr>
@@ -487,6 +490,9 @@
                                                         <td>{{ $i++ }}</td>
                                                         <td>{{ $user->AuthLogin->recruitmentCV->nama_lengkap }}</td>
                                                         <td>{{ $user->AuthLogin->nomor_whatsapp }}</td>
+                                                        <td>{{ $user->tanggal_wawancara }}</td>
+                                                        <td>{{ $user->tempat_wawancara }}</td>
+                                                        <td>{{ $user->waktu_wawancara }}</td>
                                                         <td class="bg-success text-white">
                                                             @if ($user->status == '1')
                                                                 Kandidat

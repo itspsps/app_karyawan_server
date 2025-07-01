@@ -433,13 +433,25 @@ class RecruitmentController extends Controller
         $holding = request()->segment(count(request()->segments()));
         $recruitment_admin_id = RecruitmentUser::where('id', $request->recruitment_user_id)->first();
         // dd($recruitment_admin_id);
+        if ($request->status == '1') {
+            $tanggal_wawancara = 'required';
+            $tempat_wawancara = 'required';
+            $waktu_wawancara = 'required';
+        } else {
+            $tanggal_wawancara = 'nullable';
+            $tempat_wawancara = 'nullable';
+            $waktu_wawancara = 'nullable';
+        }
         $rules =
             [
                 'status'             => 'required',
+                'tanggal_wawancara'  => $tanggal_wawancara,
+                'tempat_wawancara'   => $tempat_wawancara,
+                'waktu_wawancara'    => $waktu_wawancara
             ];
         $customessages =
             [
-                'required'             => 'Pilih salah satu status karyawan',
+                'required'             => ':attribute tidak boleh kosong!',
             ];
         $validasi = Validator::make(
             $request->all(),
@@ -449,8 +461,8 @@ class RecruitmentController extends Controller
 
 
         if ($validasi->fails()) {
-            // $error = $validasi->errors()->first();
-            Alert::error('Gagal', 'Pilih salah satu status karyawan');
+            $error = $validasi->errors()->first();
+            Alert::error('Gagal', $error);
             return redirect()->back();
         }
 
@@ -459,6 +471,11 @@ class RecruitmentController extends Controller
         RecruitmentUser::where('id', $request->recruitment_user_id)->update(
             [
                 'status'   => $request->status,
+                'tanggal_wawancara'   => $request->tanggal_wawancara,
+                'tempat_wawancara'   => $request->tempat_wawancara,
+                'waktu_wawancara'   => $request->waktu_wawancara,
+                'updated_at' => date('Y-m-d H:i:s')
+
             ]
         );
 

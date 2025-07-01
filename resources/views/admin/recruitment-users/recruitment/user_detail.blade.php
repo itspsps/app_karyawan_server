@@ -160,7 +160,7 @@
         .timeline-centered .timeline-entry {
             position: relative;
             /*width: 50%;
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            float: right;*/
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                float: right;*/
             margin-top: 5px;
             margin-left: 30px;
             margin-bottom: 10px;
@@ -878,42 +878,46 @@
                                                     </div>
                                                 @enderror
                                             </div>
-                                            <div class="form-floating form-floating-outline py-3">
-                                                <input type="date" id="tanggal_wawancara" name="tanggal_wawancara"
-                                                    class="form-control @error('tanggal_wawancara') is-invalid @enderror"
-                                                    placeholder="Tanggal" value="{{ old('tanggal_wawancara') }}" />
-                                                <label for="bagian_recruitment">TANGGAL WAWANCARA</label>
-                                            </div>
-                                            @error('tanggal_wawancara')
-                                                <span class="invalid-feedback" role="alert">
-                                                    <strong>{{ $message }}</strong>
-                                                </span>
-                                            @enderror
-                                            <label for="bagian_recruitment px-2"><small>TEMPAT WAWANCARA</small></label>
-                                            <div class="form-floating form-floating-outline mb-2">
+                                            <div id="kandidat_form">
 
-                                                <input type="text" id="tempat_wawancara" name="tempat_wawancara"
-                                                    class="form-control @error('tempat_wawancara') is-invalid @enderror"
-                                                    {{-- placeholder="TEMPAT WAWANCARA" --}} value="{{ old('tempat_wawancara') }}" />
-                                            </div>
-                                            @error('tempat_wawancara')
-                                                <span class="invalid-feedback" role="alert">
-                                                    <strong>{{ $message }}</strong>
-                                                </span>
-                                            @enderror
-                                            <label for="bagian_recruitment"><small>WAKTU (JAM)
-                                                    WAWANCARA</small></label>
-                                            <div class="form-floating form-floating-outline ">
+                                                <div class="form-floating form-floating-outline py-3">
+                                                    <input type="date" id="tanggal_wawancara" name="tanggal_wawancara"
+                                                        class="form-control @error('tanggal_wawancara') is-invalid @enderror"
+                                                        placeholder="Tanggal" value="{{ old('tanggal_wawancara') }}" />
+                                                    <label for="bagian_recruitment">TANGGAL WAWANCARA</label>
+                                                </div>
+                                                @error('tanggal_wawancara')
+                                                    <span class="invalid-feedback" role="alert">
+                                                        <strong>{{ $message }}</strong>
+                                                    </span>
+                                                @enderror
+                                                <label for="bagian_recruitment px-2"><small>TEMPAT
+                                                        WAWANCARA</small></label>
+                                                <div class="form-floating form-floating-outline mb-2">
 
-                                                <input type="text" id="waktu_wawancara" name="waktu_wawancara"
-                                                    class="form-control @error('waktu_wawancara') is-invalid @enderror"
-                                                    {{-- placeholder="TEMPAT WAWANCARA" --}} value="{{ old('waktu_wawancara') }}" />
+                                                    <input type="text" id="tempat_wawancara" name="tempat_wawancara"
+                                                        class="form-control @error('tempat_wawancara') is-invalid @enderror"
+                                                        {{-- placeholder="TEMPAT WAWANCARA" --}} value="{{ old('tempat_wawancara') }}" />
+                                                </div>
+                                                @error('tempat_wawancara')
+                                                    <span class="invalid-feedback" role="alert">
+                                                        <strong>{{ $message }}</strong>
+                                                    </span>
+                                                @enderror
+                                                <label for="bagian_recruitment"><small>WAKTU (JAM)
+                                                        WAWANCARA</small></label>
+                                                <div class="form-floating form-floating-outline ">
+
+                                                    <input type="time" id="waktu_wawancara" name="waktu_wawancara"
+                                                        class="form-control @error('waktu_wawancara') is-invalid @enderror"
+                                                        {{-- placeholder="TEMPAT WAWANCARA" --}} value="{{ old('waktu_wawancara') }}" />
+                                                </div>
+                                                @error('waktu_wawancara')
+                                                    <span class="invalid-feedback" role="alert">
+                                                        <strong>{{ $message }}</strong>
+                                                    </span>
+                                                @enderror
                                             </div>
-                                            @error('waktu_wawancara')
-                                                <span class="invalid-feedback" role="alert">
-                                                    <strong>{{ $message }}</strong>
-                                                </span>
-                                            @enderror
                                             <input type="hidden" name="recruitment_user_id"
                                                 value="{{ $data_cv->id }}">
                                             <div class="py-4">
@@ -942,4 +946,28 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
     <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+    <script>
+        $("input[type=text]").keyup(function() {
+            $(this).val($(this).val().toUpperCase());
+        });
+        $('#kandidat_form').hide();
+        $('#status').on('change', function() {
+            let value = $(this).val();
+            if (value == '') {
+                $('#kandidat_form').hide();
+                $('#tanggal_wawancara').val('');
+                $('#tempat_wawancara').val('');
+                $('#waktu_wawancara').val('');
+
+            } else if (value == '1') {
+                $('#kandidat_form').show();
+            } else {
+                $('#kandidat_form').hide();
+                $('#tanggal_wawancara').val('');
+                $('#tempat_wawancara').val('');
+                $('#waktu_wawancara').val('');
+            }
+        });
+    </script>
 @endsection
