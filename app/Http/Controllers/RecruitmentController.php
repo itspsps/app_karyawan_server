@@ -24,6 +24,7 @@ use App\Models\RecruitmentCV;
 use App\Models\RecruitmentKeahlian;
 use App\Models\RecruitmentPendidikan;
 use App\Models\RecruitmentRiwayat;
+use App\Models\RecruitmentUserRecord;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Ramsey\Uuid\Uuid;
@@ -412,9 +413,22 @@ class RecruitmentController extends Controller
                     }
                 ]);
             }
+        ])->with([
+            'Bagian' =>  function ($query) {
+                $query->with([
+                    'Divisi' => function ($query) {
+                        $query->with([
+                            'Departemen' => function ($query) {
+                                $query->orderBy('nama_departemen', 'ASC');
+                            }
+                        ]);
+                        $query->orderBy('nama_divisi', 'ASC');
+                    }
+                ]);
+                $query->orderBy('nama_bagian', 'ASC');
+            },
         ])
             ->where('id', $id)
-
             ->first();
         $pendidikan = RecruitmentPendidikan::where('id_user', $data_cv->AuthLogin->id)->orderBy('tanggal_keluar', 'DESC')->get();
         $pekerjaan = RecruitmentRiwayat::where('id_user', $data_cv->AuthLogin->id)->orderBy('tanggal_keluar', 'DESC')->get();
@@ -432,8 +446,10 @@ class RecruitmentController extends Controller
     {
         $holding = request()->segment(count(request()->segments()));
         $recruitment_admin_id = RecruitmentUser::where('id', $request->recruitment_user_id)->first();
+        // dd($request->nomor_whatsapp);
         // dd($recruitment_admin_id);
         if ($request->status == '1') {
+            // Rule Untuk form wawancara
             $tanggal_wawancara = 'required';
             $tempat_wawancara = 'required';
             $waktu_wawancara = 'required';
@@ -465,20 +481,88 @@ class RecruitmentController extends Controller
             Alert::error('Gagal', $error);
             return redirect()->back();
         }
+        if ($request->status == '1') {
+            // mencari nama PT
+            if ($request->nama_holding == 'sp') {
+                $nama_holding = 'CV SUMBER PANGAN';
+            } elseif ($request->nama_holding == 'sps') {
+                $nama_holding = 'PT SURYA PANGAN SEMESTA';
+            } elseif ($request->nama_holding == 'sip') {
+                $nama_holding = 'PT SURYA INTI PANGAN';
+            }
+            Carbon::setLocale('id');
+            $tanggal_wawancara = Carbon::parse($request->tanggal_wawancara);
+            $hari = $tanggal_wawancara->translatedFormat('l, j F Y');
+            //kirim pesan ke whatsapp
+            $curl = curl_init();
+            curl_setopt_array($curl, array(
+                CURLOPT_URL => 'https://api.fonnte.com/send',
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_ENCODING => '',
+                CURLOPT_MAXREDIRS => 10,
+                CURLOPT_TIMEOUT => 0,
+                CURLOPT_FOLLOWLOCATION => true,
+                CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                CURLOPT_CUSTOMREQUEST => 'POST',
+                CURLOPT_POSTFIELDS => array(
+                    'target' => $request->nomor_whatsapp,
+                    'message' =>
+                    "PEMBERITAHUAN WAWANCARA!
+
+Selamat $request->nama
+Anda dinyatakan *LOLOS* tahap seleksi administrasi di $nama_holding, untuk posisi $request->nama_bagian
+
+Kami ingin mengundang Anda untuk wawancara pada :
+
+Tanggal : $hari
+Waktu   : $request->waktu_wawancara WIB
+Tempat  : $request->tempat_wawancara
+
+untuk konfirmasi kehadiran bisa dilakukan di
+asoy.com
+
+*Konfirmasi maksimal 24 jam setelah pesan ini dikirim*
+",
+
+                    'countryCode' => '62', //optional
+                ),
+                CURLOPT_HTTPHEADER => array(
+                    'Authorization: Xp5bwZZN22VPhojYcPEB' //change TOKEN to your actual token
+                ),
+            ));
+            $response = curl_exec($curl);
+            if (curl_errno($curl)) {
+                $error_msg = curl_error($curl);
+            }
+            curl_close($curl);
+
+            if (isset($error_msg)) {
+                echo $error_msg;
+            }
+            // end kirim pesan ke whatsapp
+        }
 
         // $holding = request()->segment(count(request()->segments()));
         // dd($validatedData);
         RecruitmentUser::where('id', $request->recruitment_user_id)->update(
             [
-                'status'   => $request->status,
-                'tanggal_wawancara'   => $request->tanggal_wawancara,
+                'status'             => $request->status,
+                'tanggal_wawancara'  => $request->tanggal_wawancara,
+                'tanggal_konfirmasi' => date('Y-m-d H:i:s', strtotime('+1 days')),
                 'tempat_wawancara'   => $request->tempat_wawancara,
-                'waktu_wawancara'   => $request->waktu_wawancara,
+                'waktu_wawancara'    => $request->waktu_wawancara,
                 'updated_at' => date('Y-m-d H:i:s')
 
             ]
         );
-
+        RecruitmentUserRecord::insert(
+            [
+                'id'                    => Uuid::uuid4(),
+                'recruitment_user_id'   => $request->recruitment_user_id,
+                'status'                => $request->status,
+                'created_at'            => date('Y-m-d H:i:s'),
+            ]
+        );
         // Merekam aktivitas pengguna
         return redirect('/pg/data-list-pelamar/' . $recruitment_admin_id->recruitment_admin_id . '/' . $holding . '')->with('success', 'data berhasil ditambahkan');
     }
