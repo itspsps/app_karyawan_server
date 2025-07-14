@@ -469,6 +469,7 @@ class RecruitmentController extends Controller
     }
     public function pelamar_detail_ubah(Request $request)
     {
+        // dd($request->all());
         $holding = request()->segment(count(request()->segments()));
         $recruitment_admin_id = RecruitmentUser::where('id', $request->recruitment_user_id)->first();
         // dd($request->nomor_whatsapp);
@@ -476,18 +477,24 @@ class RecruitmentController extends Controller
         if ($request->status == '1') {
             // Rule Untuk form wawancara
             $tanggal_wawancara = 'required';
-            $tempat_wawancara = 'required';
             $waktu_wawancara = 'required';
         } else {
             $tanggal_wawancara = 'nullable';
-            $tempat_wawancara = 'nullable';
             $waktu_wawancara = 'nullable';
+        }
+        if ($request->status == '1' && $request->online == '1') {
+            $tempat_wawancara = 'required';
+            $link_wawancara = 'nullable';
+        } elseif ($request->status == '1' && $request->online == '2') {
+            $tempat_wawancara = 'nullable';
+            $link_wawancara = 'required';
         }
         $rules =
             [
                 'status'             => 'required',
                 'tanggal_wawancara'  => $tanggal_wawancara,
                 'tempat_wawancara'   => $tempat_wawancara,
+                'link_wawancara'   => $link_wawancara,
                 'waktu_wawancara'    => $waktu_wawancara
             ];
         $customessages =
@@ -506,6 +513,11 @@ class RecruitmentController extends Controller
             Alert::error('Gagal', $error);
             return redirect()->back();
         }
+        if ($request->online == '1') {
+            $tempat_wawancara = $request->tempat_wawancara;
+        } elseif ($request->online == '2') {
+            $tempat_wawancara = $request->link_wawancara;
+        }
         if ($request->status == '1') {
             // mencari nama PT
             if ($request->nama_holding == 'sp') {
@@ -515,6 +527,7 @@ class RecruitmentController extends Controller
             } elseif ($request->nama_holding == 'sip') {
                 $nama_holding = 'PT SURYA INTI PANGAN';
             }
+
             Carbon::setLocale('id');
             $tanggal_wawancara = Carbon::parse($request->tanggal_wawancara);
             $hari = $tanggal_wawancara->translatedFormat('l, j F Y');
@@ -541,7 +554,7 @@ Kami ingin mengundang Anda untuk wawancara pada :
 
 Tanggal : $hari
 Waktu   : $request->waktu_wawancara WIB
-Tempat  : $request->tempat_wawancara
+Tempat  : $tempat_wawancara
 
 untuk konfirmasi kehadiran bisa dilakukan di
 asoy.com
@@ -575,7 +588,7 @@ asoy.com
                 'status_user'        => $request->status,
                 'tanggal_wawancara'  => $request->tanggal_wawancara,
                 'tanggal_konfirmasi' => date('Y-m-d H:i:s', strtotime('+1 days')),
-                'tempat_wawancara'   => $request->tempat_wawancara,
+                'tempat_wawancara'   => $tempat_wawancara,
                 'waktu_wawancara'    => $request->waktu_wawancara,
                 'updated_at' => date('Y-m-d H:i:s')
 
