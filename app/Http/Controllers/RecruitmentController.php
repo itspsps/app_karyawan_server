@@ -22,6 +22,10 @@ use App\Models\EssaySiswa;
 use App\Models\DetailEssay;
 use App\Models\RecruitmentCV;
 use App\Models\RecruitmentKeahlian;
+use App\Models\RecruitmentKesehatan;
+use App\Models\RecruitmentKesehatanKecelakaan;
+use App\Models\RecruitmentKesehatanPengobatan;
+use App\Models\RecruitmentKesehatanRS;
 use App\Models\RecruitmentPendidikan;
 use App\Models\RecruitmentRiwayat;
 use App\Models\RecruitmentUserRecord;
@@ -312,7 +316,12 @@ class RecruitmentController extends Controller
         $holding = request()->segment(count(request()->segments()));
         // $get_user = RecruitmentUser::where('recruitment_admin_id', $id)->first();
         // $get_cv = RecruitmentCV::where('users_career_id', $get_user->users_career_id)->first();
-        // $get
+        // $get // Hapus pelamar kadaluarsa
+        RecruitmentUser::where('recruitment_admin_id', $id)->whereDate('tanggal_konfirmasi', '<', date('Y-m-d H:i:s'))->where('tanggal_konfirmasi', '!=', null)->update([
+            'status'        => '3',
+            'status_user'   => '3'
+        ]);
+        // end Hapus pelamar kadaluarsa
         $user_meta =  RecruitmentUser::with([
             'AuthLogin' => function ($query) {
                 $query->with([
@@ -365,6 +374,7 @@ class RecruitmentController extends Controller
             ->where('status', '3')
             ->where('recruitment_admin_id', $id)
             ->get();
+
         return view('admin.recruitment-users.recruitment.list_pelamar', [
             'title' => 'Data Recruitment',
             'holding'   => $holding,
@@ -430,6 +440,10 @@ class RecruitmentController extends Controller
         ])
             ->where('id', $id)
             ->first();
+        $kesehatan = RecruitmentKesehatan::where('id_user', $data_cv->AuthLogin->id)->first();
+        $kesehatan_pengobatan = RecruitmentKesehatanPengobatan::where('id_user', $data_cv->AuthLogin->id)->get();
+        $kesehatan_rs = RecruitmentKesehatanRS::where('id_user', $data_cv->AuthLogin->id)->get();
+        $kesehatan_kecelakaan = RecruitmentKesehatanKecelakaan::where('id_user', $data_cv->AuthLogin->id)->get();
         $pendidikan = RecruitmentPendidikan::where('id_user', $data_cv->AuthLogin->id)->orderBy('tanggal_keluar', 'DESC')->get();
         $pekerjaan = RecruitmentRiwayat::where('id_user', $data_cv->AuthLogin->id)->orderBy('tanggal_keluar', 'DESC')->get();
         $pekerjaan_count = RecruitmentRiwayat::where('id_user', $data_cv->AuthLogin->id)->orderBy('tanggal_keluar', 'DESC')->count();
@@ -440,7 +454,18 @@ class RecruitmentController extends Controller
         return view('admin.recruitment-users.recruitment.user_detail', [
             'ti$pekerjaan_counttle' => 'Data Recruitment',
             'holding'   => $holding,
-        ], compact('data_cv', 'pendidikan', 'pekerjaan', 'pekerjaan_count', 'keahlian_count', 'keahlian'));
+        ], compact(
+            'data_cv',
+            'pendidikan',
+            'pekerjaan',
+            'pekerjaan_count',
+            'keahlian_count',
+            'keahlian',
+            'kesehatan',
+            'kesehatan_pengobatan',
+            'kesehatan_rs',
+            'kesehatan_kecelakaan'
+        ));
     }
     public function pelamar_detail_ubah(Request $request)
     {
@@ -547,6 +572,7 @@ asoy.com
         RecruitmentUser::where('id', $request->recruitment_user_id)->update(
             [
                 'status'             => $request->status,
+                'status_user'        => $request->status,
                 'tanggal_wawancara'  => $request->tanggal_wawancara,
                 'tanggal_konfirmasi' => date('Y-m-d H:i:s', strtotime('+1 days')),
                 'tempat_wawancara'   => $request->tempat_wawancara,
@@ -560,6 +586,7 @@ asoy.com
                 'id'                    => Uuid::uuid4(),
                 'recruitment_user_id'   => $request->recruitment_user_id,
                 'status'                => $request->status,
+                'status_user'           => $request->status,
                 'created_at'            => date('Y-m-d H:i:s'),
             ]
         );

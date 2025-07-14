@@ -159,7 +159,7 @@
         .timeline-centered .timeline-entry {
             position: relative;
             /*width: 50%;
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    float: right;*/
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        float: right;*/
             margin-top: 5px;
             margin-left: 30px;
             margin-bottom: 10px;
@@ -477,6 +477,7 @@
                                                     <th>Tanggal Wawancara</th>
                                                     <th>Tempat Wawancara</th>
                                                     <th>Waktu Wawancara</th>
+                                                    <th>Konfirmasi Wawancara</th>
                                                     <th>Status</th>
                                                     <th>Lihat CV</th>
                                                 </tr>
@@ -493,6 +494,14 @@
                                                         <td>{{ $user->tanggal_wawancara }}</td>
                                                         <td>{{ $user->tempat_wawancara }}</td>
                                                         <td>{{ $user->waktu_wawancara }}</td>
+                                                        <td>
+                                                            @if ($user->feedback != '1')
+                                                                <div class="bg-warning text-white p-1">Menunggu Konfirmasi
+                                                                </div>
+                                                            @elseif ($user->feedback == '1')
+                                                                <div class="bg-info text-white p-1">Bersedia Wawancara</div>
+                                                            @endif
+                                                        </td>
                                                         <td class="bg-success text-white">
                                                             @if ($user->status == '1')
                                                                 Kandidat
@@ -520,7 +529,7 @@
                                                     <th>Pelamar</th>
                                                     <th>Nomor Whatsapp</th>
                                                     <th>Status</th>
-                                                    <th>Lihat CV</th>
+                                                    <th>Rubah Status</th>
                                                 </tr>
                                             </thead>
                                             <tbody class="table-border-bottom-0">
@@ -558,8 +567,9 @@
                                                     <th>No.</th>
                                                     <th>Pelamar</th>
                                                     <th>Nomor Whatsapp</th>
+                                                    <th>Alasan</th>
                                                     <th>Status</th>
-                                                    <th>Lihat CV</th>
+                                                    <th>Ubah Status</th>
                                                 </tr>
                                             </thead>
                                             <tbody class="table-border-bottom-0">
@@ -571,6 +581,7 @@
                                                         <td>{{ $i++ }}</td>
                                                         <td>{{ $user->AuthLogin->recruitmentCV->nama_lengkap }}</td>
                                                         <td>{{ $user->AuthLogin->nomor_whatsapp }}</td>
+                                                        <td>{{ $user->alasan }}</td>
                                                         <td class="bg-danger text-white">
                                                             @if ($user->status == '3')
                                                                 Ditolak
@@ -579,7 +590,7 @@
                                                         <td><a href="{{ url('/pg/pelamar-detail/' . $user->id . '/' . $holding . '') }}"
                                                                 type="button" class="btn btn-sm btn-info">
                                                                 <i class="tf-icons mdi mdi-eye-circle-outline me-1"></i>
-                                                                Detail&nbsp;CV
+                                                                Ubah&nbsp;Status
                                                             </a></td>
                                                     </tr>
                                                 @endforeach

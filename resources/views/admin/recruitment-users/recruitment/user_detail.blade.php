@@ -160,7 +160,7 @@
         .timeline-centered .timeline-entry {
             position: relative;
             /*width: 50%;
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                float: right;*/
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                float: right;*/
             margin-top: 5px;
             margin-left: 30px;
             margin-bottom: 10px;
@@ -395,7 +395,7 @@
                     <div class="widget-content widget-content-area bg-white p-5">
                         <h3>Detail CV</h3>
                         <div class="row ">
-                            <div class="col-4 py-3">
+                            <div class="col-4 p-3">
                                 <div></div>
                                 <img src="{{ url_karir() . '/storage/file_pp/' . $data_cv->AuthLogin->recruitmentCV->file_pp }}"
                                     style="max-height: 400px; max-width: 340px;">
@@ -413,30 +413,36 @@
                                     <li class="nav-item" role="presentation">
                                         <a class="nav-link" id="icon-tab-1" data-bs-toggle="tab" href="#icon-tabpanel-1"
                                             role="tab" aria-controls="icon-tabpanel-0" aria-selected="true">
-
-                                            Pendidikan
+                                            Kesehatan
                                         </a>
                                     </li>
                                     <li class="nav-item" role="presentation">
                                         <a class="nav-link" id="icon-tab-2" data-bs-toggle="tab" href="#icon-tabpanel-2"
+                                            role="tab" aria-controls="icon-tabpanel-0" aria-selected="true">
+                                            Pendidikan
+                                        </a>
+                                    </li>
+                                    <li class="nav-item" role="presentation">
+                                        <a class="nav-link" id="icon-tab-3" data-bs-toggle="tab" href="#icon-tabpanel-3"
                                             role="tab" aria-controls="icon-tabpanel-1" aria-selected="false">
 
                                             Riwayat Kerja
                                         </a>
                                     </li>
                                     <li class="nav-item" role="presentation">
-                                        <a class="nav-link" id="icon-tab-3" data-bs-toggle="tab" href="#icon-tabpanel-3"
+                                        <a class="nav-link" id="icon-tab-4" data-bs-toggle="tab" href="#icon-tabpanel-4"
                                             role="tab" aria-controls="icon-tabpanel-2" aria-selected="false">
                                             Keahlian
                                         </a>
                                     </li>
-                                    <li class="nav-item" role="presentation">
-                                        <a class="nav-link" id="icon-tab-4" data-bs-toggle="tab" href="#icon-tabpanel-4"
-                                            role="tab" aria-controls="icon-tabpanel-3" aria-selected="false">
-                                            Keputusan HRD
-                                        </a>
+                                    @if ($data_cv->status != '1')
+                                        <li class="nav-item" role="presentation">
+                                            <a class="nav-link" id="icon-tab-5" data-bs-toggle="tab" href="#icon-tabpanel-5"
+                                                role="tab" aria-controls="icon-tabpanel-3" aria-selected="false">
+                                                Keputusan HRD
+                                            </a>
+                                    @endif
                                     </li>
-
                                 </ul>
                                 <div class="tab-content" id="tab-content">
                                     <div class="tab-pane active show" id="icon-tabpanel-0" role="tabpanel"
@@ -622,6 +628,482 @@
                                         <table class="table" id="table_pelamar3" style="width: 100%;">
                                             <thead class="table-primary">
                                                 <tr>
+                                                    <th class="fw-bold">PERSETUJUAN</th>
+                                                    <th></th>
+                                                    <th></th>
+                                                    <th></th>
+                                                    <th></th>
+                                                    <th></th>
+                                                    <th></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td class="fw-bold"><small>PERSETUJUAN MENGISI DATA DENGAN
+                                                            JUJUR</small>
+                                                    </td>
+                                                    <td>:</td>
+                                                    <td>
+                                                        @if ($kesehatan->persetujuan_kesehatan == 'on')
+                                                            SETUJU
+                                                        @elseif ($kesehatan->persetujuan_kesehatan == null)
+                                                            TIDAK SETUJU
+                                                        @endif
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                            <thead class="table-primary">
+                                                <tr>
+                                                    <th class="fw-bold">RIWAYAT KESEHATAN</th>
+                                                    <th></th>
+                                                    <th></th>
+                                                    <th></th>
+                                                    <th></th>
+                                                    <th></th>
+                                                    <th></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody class="table-border-bottom-0">
+                                                <tr>
+                                                    <td class="fw-bold"><small>PEROKOK</small></td>
+                                                    <td>:</td>
+                                                    <td>
+                                                        @if ($kesehatan->perokok == '1')
+                                                            YA
+                                                        @elseif ($kesehatan->perokok == '2')
+                                                            TIDAK
+                                                        @endif
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="fw-bold"><small>PENGKONSUMSI ALKOHOL</small></td>
+                                                    <td>:</td>
+                                                    <td>
+                                                        @if ($kesehatan->alkohol == '1')
+                                                            YA
+                                                        @elseif ($kesehatan->alkohol == '2')
+                                                            TIDAK
+                                                        @endif
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="fw-bold"><small>PUNYA PHOBIA</small></td>
+                                                    <td>:</td>
+                                                    <td>
+                                                        @if ($kesehatan->phobia == '1')
+                                                            YA
+                                                        @elseif ($kesehatan->phobia == '2')
+                                                            TIDAK
+                                                        @endif
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="fw-bold"><small>JENIS PHOBIA</small></td>
+                                                    <td>:</td>
+                                                    <td>
+                                                        {{ $kesehatan->sebutkan_phobia }}
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="fw-bold"><small>PUNYA KETERBATASAN FISIK</small></td>
+                                                    <td>:</td>
+                                                    <td>
+                                                        @if ($kesehatan->keterbatasan_fisik == '1')
+                                                            YA
+                                                        @elseif ($kesehatan->keterbatasan_fisik == '2')
+                                                            TIDAK
+                                                        @endif
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="fw-bold"><small>KATEGORI KETERBATASAN FISIK</small></td>
+                                                    <td>:</td>
+                                                    <td>
+                                                        {{ $kesehatan->sebutkan_keterbatasan_fisik }}
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="fw-bold"><small>SEDANG DALAM PENGOBATAN RUTIN</small></td>
+                                                    <td>:</td>
+                                                    <td>
+                                                        @if ($kesehatan->pengobatan_rutin == '1')
+                                                            YA
+                                                        @elseif ($kesehatan->pengobatan_rutin == '2')
+                                                            TIDAK
+                                                        @endif
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                            @if ($kesehatan->pengobatan_rutin == '1')
+                                                <thead class="table-primary">
+                                                    <tr>
+                                                        <th class="fw-bold">RIWAYAT PENGOBATAN RUTIN</th>
+                                                        <th></th>
+                                                        <th></th>
+                                                        <th></th>
+                                                        <th></th>
+                                                        <th></th>
+                                                        <th></th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    @php
+                                                        $n = 1;
+                                                    @endphp
+                                                    @foreach ($kesehatan_pengobatan as $rr)
+                                                        <tr>
+                                                            <td class="fw-bold"><small>{{ $n++ }}. JENIS
+                                                                    OBAT</small>
+                                                            </td>
+                                                            <td>:</td>
+                                                            <td>{{ $rr->jenis_obat }}</td>
+                                                            <td class="fw-bold"><small>ALASAN</small></td>
+                                                            <td>:</td>
+                                                            <td>{{ $rr->alasan_obat }}</td>
+                                                        </tr>
+                                                    @endforeach
+                                                </tbody>
+                                            @endif
+
+                                            <thead class="table-primary">
+                                                <tr>
+                                                    <th class="fw-bold">PERNAH ATAU SEDANG MENDERITA PENYAKIT KRONIS</th>
+                                                    <th></th>
+                                                    <th></th>
+                                                    <th></th>
+                                                    <th></th>
+                                                    <th></th>
+                                                    <th></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td class="fw-bold"><small>ASMA</small></td>
+                                                    <td>:</td>
+                                                    <td>
+                                                        @if ($kesehatan->asma == 'on')
+                                                            YA
+                                                        @elseif ($kesehatan->asma == null)
+                                                            TIDAK
+                                                        @endif
+                                                    </td>
+                                                    <td class="fw-bold"><small>DIABETES</small></td>
+                                                    <td>:</td>
+                                                    <td>
+                                                        @if ($kesehatan->diabetes == 'on')
+                                                            YA
+                                                        @elseif ($kesehatan->diabetes == null)
+                                                            TIDAK
+                                                        @endif
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="fw-bold"><small>HIPERTENSI</small></td>
+                                                    <td>:</td>
+                                                    <td>
+                                                        @if ($kesehatan->hipertensi == 'on')
+                                                            YA
+                                                        @elseif ($kesehatan->hipertensi == null)
+                                                            TIDAK
+                                                        @endif
+                                                    </td>
+                                                    <td class="fw-bold"><small>JANTUNG</small></td>
+                                                    <td>:</td>
+                                                    <td>
+                                                        @if ($kesehatan->jantung == 'on')
+                                                            YA
+                                                        @elseif ($kesehatan->jantung == null)
+                                                            TIDAK
+                                                        @endif
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="fw-bold"><small>TBC</small></td>
+                                                    <td>:</td>
+                                                    <td>
+                                                        @if ($kesehatan->jantung == 'on')
+                                                            YA
+                                                        @elseif ($kesehatan->jantung == null)
+                                                            TIDAK
+                                                        @endif
+                                                    </td>
+                                                    <td class="fw-bold"><small>HEPATITIS</small></td>
+                                                    <td>:</td>
+                                                    <td>
+                                                        @if ($kesehatan->hepatitis == 'on')
+                                                            YA
+                                                        @elseif ($kesehatan->hepatitis == null)
+                                                            TIDAK
+                                                        @endif
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="fw-bold"><small>EPILEPSI</small></td>
+                                                    <td>:</td>
+                                                    <td>
+                                                        @if ($kesehatan->gangguan_mental == 'on')
+                                                            YA
+                                                        @elseif ($kesehatan->gangguan_mental == null)
+                                                            TIDAK
+                                                        @endif
+                                                    </td>
+                                                    <td class="fw-bold"><small>GANGGUAN MENTAL</small></td>
+                                                    <td>:</td>
+                                                    <td>
+                                                        @if ($kesehatan->gangguan_mental == 'on')
+                                                            YA
+                                                        @elseif ($kesehatan->gangguan_mental == null)
+                                                            TIDAK
+                                                        @endif
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="fw-bold"><small>GANGGUAN PENGELIHATAN</small></td>
+                                                    <td>:</td>
+                                                    <td>
+                                                        @if ($kesehatan->gangguan_pengelihatan == 'on')
+                                                            YA
+                                                        @elseif ($kesehatan->gangguan_pengelihatan == null)
+                                                            TIDAK
+                                                        @endif
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="fw-bold"><small>GANGGUAN LAINNYA</small></td>
+                                                    <td>:</td>
+                                                    <td>
+                                                        @if ($kesehatan->gangguan_lainnya == 'on')
+                                                            YA
+                                                        @elseif ($kesehatan->gangguan_lainnya == null)
+                                                            TIDAK
+                                                        @endif
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="fw-bold"><small>SEBUTKAN GANGGUAN</small></td>
+                                                    <td>:</td>
+                                                    <td>
+                                                        {{ $kesehatan->sebutkan_gangguan }}
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                            <thead class="table-primary">
+                                                <tr>
+                                                    <th class="fw-bold">RIWAYAT PERAWATAN</th>
+                                                    <th></th>
+                                                    <th></th>
+                                                    <th></th>
+                                                    <th></th>
+                                                    <th></th>
+                                                    <th></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td class="fw-bold"><small>PERNAH DIRAWAT DI RS</small></td>
+                                                    <td>:</td>
+                                                    <td>
+                                                        @if ($kesehatan->pernah_dirawat_rs == '1')
+                                                            YA
+                                                        @elseif ($kesehatan->pernah_dirawat_rs == '2')
+                                                            TIDAK
+                                                        @endif
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                            @if ($kesehatan->pernah_dirawat_rs == '1')
+                                                <thead class="table-primary">
+                                                    <tr>
+                                                        <th class="fw-bold">RIWAYAT DIRAWAT DI RS</th>
+                                                        <th></th>
+                                                        <th></th>
+                                                        <th></th>
+                                                        <th></th>
+                                                        <th></th>
+                                                        <th></th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    @php
+                                                        $k = 1;
+                                                    @endphp
+                                                    @foreach ($kesehatan_rs as $rr)
+                                                        <tr>
+                                                            <td class="fw-bold"><small>{{ $k++ }}. TAHUN</small>
+                                                            </td>
+                                                            <td>:</td>
+                                                            <td>{{ $rr->tahun_rs }}</td>
+                                                            <td class="fw-bold"><small>PENYEBAB</small></td>
+                                                            <td>:</td>
+                                                            <td>{{ $rr->penyebab_rs }}</td>
+                                                        </tr>
+                                                    @endforeach
+                                                </tbody>
+                                            @endif
+
+                                            <thead class="table-primary">
+                                                <tr>
+                                                    <th class="fw-bold">KECELAKAAN SERIUS</th>
+                                                    <th></th>
+                                                    <th></th>
+                                                    <th></th>
+                                                    <th></th>
+                                                    <th></th>
+                                                    <th></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td class="fw-bold"><small>PERNAH KECELAKAAN SERIUS</small></td>
+                                                    <td>:</td>
+                                                    <td>
+                                                        @if ($kesehatan->kecelakaan_serius == '1')
+                                                            YA
+                                                        @elseif ($kesehatan->kecelakaan_serius == '2')
+                                                            TIDAK
+                                                        @endif
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                            @if ($kesehatan->kecelakaan_serius == '1')
+                                                <thead class="table-primary">
+                                                    <tr>
+                                                        <th class="fw-bold">RIWAYAT KECELAKAAN SERIUS</th>
+                                                        <th></th>
+                                                        <th></th>
+                                                        <th></th>
+                                                        <th></th>
+                                                        <th></th>
+                                                        <th></th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    @php
+                                                        $l = 1;
+                                                    @endphp
+                                                    @foreach ($kesehatan_kecelakaan as $rr)
+                                                        <tr>
+                                                            <td class="fw-bold"><small>{{ $l++ }}. TAHUN</small>
+                                                            </td>
+                                                            <td>:</td>
+                                                            <td>{{ $rr->tahun_kecelakaan }}</td>
+                                                            <td class="fw-bold"><small>PENYEBAB</small></td>
+                                                            <td>:</td>
+                                                            <td>{{ $rr->penyebab_kecelakaan }}</td>
+                                                        </tr>
+                                                    @endforeach
+                                                </tbody>
+                                            @endif
+
+                                            <thead class="table-primary">
+                                                <tr>
+                                                    <th class="fw-bold">RIWAYAT VAKSINASI</th>
+                                                    <th></th>
+                                                    <th></th>
+                                                    <th></th>
+                                                    <th></th>
+                                                    <th></th>
+                                                    <th></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td class="fw-bold"><small>COVID</small></td>
+                                                    <td>:</td>
+                                                    <td>
+                                                        @if ($kesehatan->covid == 'on')
+                                                            YA
+                                                        @elseif ($kesehatan->covid == null)
+                                                            TIDAK
+                                                        @endif
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="fw-bold"><small>TETANUS</small></td>
+                                                    <td>:</td>
+                                                    <td>
+                                                        @if ($kesehatan->tetanus == 'on')
+                                                            YA
+                                                        @elseif ($kesehatan->tetanus == null)
+                                                            TIDAK
+                                                        @endif
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="fw-bold"><small>VAKSIN LAINNYA</small></td>
+                                                    <td>:</td>
+                                                    <td>
+                                                        @if ($kesehatan->vaksin_lainnya == 'on')
+                                                            YA
+                                                        @elseif ($kesehatan->vaksin_lainnya == null)
+                                                            TIDAK
+                                                        @endif
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="fw-bold"><small>SEBUTKAN</small></td>
+                                                    <td>:</td>
+                                                    <td>
+                                                        {{ $kesehatan->sebutkan_vaksin_lainnya }}
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                            <thead class="table-primary">
+                                                <tr>
+                                                    <th class="fw-bold">hehehe</th>
+                                                    <th></th>
+                                                    <th></th>
+                                                    <th></th>
+                                                    <th></th>
+                                                    <th></th>
+                                                    <th></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td class="fw-bold"><small>MAMPU BEKERJA DALAM SHIFT</small></td>
+                                                    <td>:</td>
+                                                    <td>
+                                                        @if ($kesehatan->mampu_shift == '1')
+                                                            YA
+                                                        @elseif ($kesehatan->mampu_shift == '2')
+                                                            TIDAK
+                                                        @endif
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="fw-bold"><small>PERNAH MENJALANI PEMERIKSAAN KERJA
+                                                            SEBELUMNYA</small></td>
+                                                    <td>:</td>
+                                                    <td>
+                                                        @if ($kesehatan->pemeriksaan_kerja_sebelumnya == '1')
+                                                            YA
+                                                        @elseif ($kesehatan->pemeriksaan_kerja_sebelumnya == '2')
+                                                            TIDAK
+                                                        @endif
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="fw-bold"><small>DINYATAKAN LAYAK BEKERJA</small></td>
+                                                    <td>:</td>
+                                                    <td>
+                                                        @if ($kesehatan->pemeriksaan_sebelumnya_hasil == '1')
+                                                            YA
+                                                        @elseif ($kesehatan->pemeriksaan_sebelumnya_hasil == '2')
+                                                            TIDAK
+                                                        @endif
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+
+                                        </table>
+
+                                    </div>
+                                    <div class="tab-pane" id="icon-tabpanel-2" role="tabpanel"
+                                        aria-labelledby="icon-tab-2">
+                                        <table class="table" id="table_pelamar3" style="width: 100%;">
+                                            <thead class="table-primary">
+                                                <tr>
                                                     <th class="fw-bold">dokumen pendidikan</th>
                                                     <th></th>
                                                     <th></th>
@@ -636,6 +1118,12 @@
                                                             <i class="tf-icons mdi mdi-eye-circle-outline me-1"></i>
                                                             LIHAT IJAZAH
                                                         </a>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="fw-bold"><small>IPK</small></td>
+                                                    <td>:</td>
+                                                    <td>{{ $data_cv->AuthLogin->recruitmentCV->ipk }}
                                                     </td>
                                                 </tr>
                                                 <tr>
@@ -688,8 +1176,8 @@
                                         </table>
 
                                     </div>
-                                    <div class="tab-pane" id="icon-tabpanel-2" role="tabpanel"
-                                        aria-labelledby="icon-tab-2">
+                                    <div class="tab-pane" id="icon-tabpanel-3" role="tabpanel"
+                                        aria-labelledby="icon-tab-3">
                                         <table class="table" id="table_pelamar3" style="width: 100%;">
                                             <thead class="table-primary">
                                                 <tr>
@@ -798,6 +1286,11 @@
                                                             </td>
                                                         </tr>
                                                         <tr>
+                                                            <td class="fw-bold"><small>ALASAN KELUAR</small></td>
+                                                            <td>:</td>
+                                                            <td>{{ $rr->alasan_keluar }}</td>
+                                                        </tr>
+                                                        <tr>
                                                             <td class="fw-bold"><small>KONTAK REFERENSI</small></td>
                                                             <td>:</td>
                                                             <td>{{ $rr->nomor_referensi }}</td>
@@ -814,8 +1307,8 @@
                                         </table>
 
                                     </div>
-                                    <div class="tab-pane" id="icon-tabpanel-3" role="tabpanel"
-                                        aria-labelledby="icon-tab-3">
+                                    <div class="tab-pane" id="icon-tabpanel-4" role="tabpanel"
+                                        aria-labelledby="icon-tab-4">
                                         <table class="table" id="table_pelamar3" style="width: 100%;">
                                             <thead class="table-primary">
                                                 <tr>
@@ -843,13 +1336,15 @@
                                                             <td class="fw-bold"><small>{{ $k++ }}</small></td>
                                                             <td class="fw-bold"><small>{{ $kk->keahlian }}</small></td>
                                                             <td class="fw-bold">
-                                                                <a href="{{ url_karir() . '/storage/file_keahlian/' . $kk->file_keahlian }}"
-                                                                    type="button" class="btn btn-sm btn-info"
-                                                                    target="_blank">
-                                                                    <i
-                                                                        class="tf-icons mdi mdi-eye-circle-outline me-1"></i>
-                                                                    LIHAT DOKUMEN KEAHLIAN
-                                                                </a>
+                                                                @if ($kk->file_keahlian != null)
+                                                                    <a href="{{ url_karir() . '/storage/file_keahlian/' . $kk->file_keahlian }}"
+                                                                        type="button" class="btn btn-sm btn-info"
+                                                                        target="_blank">
+                                                                        <i
+                                                                            class="tf-icons mdi mdi-eye-circle-outline me-1"></i>
+                                                                        LIHAT DOKUMEN KEAHLIAN
+                                                                    </a>
+                                                                @endif
                                                             </td>
 
                                                         </tr>
@@ -858,82 +1353,124 @@
                                             </tbody>
                                         </table>
                                     </div>
-                                    <div class="tab-pane" id="icon-tabpanel-4" role="tabpanel"
-                                        aria-labelledby="icon-tab-4">
-                                        <form method="post" action="{{ url('/pg/pelamar-detail-ubah/' . $holding) }}"
-                                            enctype="multipart/form-data">
-                                            @csrf
-                                            <div class="form-floating form-floating-outline py-3">
-                                                <select class="form-select @error('status') is-invalid @enderror"
-                                                    id="status" name="status" autofocus value="{{ old('status') }}">
-                                                    <option value="" selected>PILIH STATUS</option>
-                                                    <option value="1">KANDIDAT</option>
-                                                    <option value="2">DAFTAR TUNGGU</option>
-                                                    <option value="3">DITOLAK</option>
-                                                </select>
-                                                <label for="penempatan">KEPUTUSAN HRD</label>
-                                                @error('status')
-                                                    <div class="invalid-feedback">
-                                                        {{ $message }}
-                                                    </div>
-                                                @enderror
-                                            </div>
-                                            <div id="kandidat_form">
-
+                                    <div class="tab-pane" id="icon-tabpanel-5" role="tabpanel"
+                                        aria-labelledby="icon-tab-5">
+                                        @if ($data_cv->status != '1')
+                                            <form method="post"
+                                                action="{{ url('/pg/pelamar-detail-ubah/' . $holding) }}"
+                                                enctype="multipart/form-data">
+                                                @csrf
                                                 <div class="form-floating form-floating-outline py-3">
-                                                    <input type="date" id="tanggal_wawancara" name="tanggal_wawancara"
-                                                        class="form-control @error('tanggal_wawancara') is-invalid @enderror"
-                                                        placeholder="Tanggal" value="{{ old('tanggal_wawancara') }}" />
-                                                    <label for="bagian_recruitment">TANGGAL WAWANCARA</label>
+                                                    <select class="form-select @error('status') is-invalid @enderror"
+                                                        id="status" name="status" autofocus
+                                                        value="{{ old('status') }}">
+                                                        <option value="" selected>PILIH STATUS</option>
+                                                        <option value="1">KANDIDAT</option>
+                                                        @if ($data_cv->status != '2')
+                                                            <option value="2">DAFTAR TUNGGU</option>
+                                                        @endif
+                                                        @if ($data_cv->status != '3')
+                                                            <option value="3">DITOLAK</option>
+                                                        @endif
+                                                    </select>
+                                                    <label for="penempatan">KEPUTUSAN HRD</label>
+                                                    @error('status')
+                                                        <div class="invalid-feedback">
+                                                            {{ $message }}
+                                                        </div>
+                                                    @enderror
                                                 </div>
-                                                @error('tanggal_wawancara')
-                                                    <span class="invalid-feedback" role="alert">
-                                                        <strong>{{ $message }}</strong>
-                                                    </span>
-                                                @enderror
-                                                <label for="bagian_recruitment px-2"><small>TEMPAT
-                                                        WAWANCARA</small></label>
-                                                <div class="form-floating form-floating-outline mb-2">
+                                                <div id="kandidat_form">
 
-                                                    <input type="text" id="tempat_wawancara" name="tempat_wawancara"
-                                                        class="form-control @error('tempat_wawancara') is-invalid @enderror"
-                                                        {{-- placeholder="TEMPAT WAWANCARA" --}} value="{{ old('tempat_wawancara') }}" />
+                                                    <div class="form-floating form-floating-outline py-3">
+                                                        <input type="date" id="tanggal_wawancara"
+                                                            name="tanggal_wawancara"
+                                                            class="form-control @error('tanggal_wawancara') is-invalid @enderror"
+                                                            placeholder="Tanggal"
+                                                            value="{{ old('tanggal_wawancara') }}" />
+                                                        <label for="bagian_recruitment">TANGGAL WAWANCARA</label>
+                                                    </div>
+                                                    <div class="form-floating form-floating-outline py-3">
+                                                        <select class="form-select @error('online') is-invalid @enderror"
+                                                            id="online_add" name="online" autofocus
+                                                            value="{{ old('online') }}">
+                                                            <option value="1" selected>OFFLINE</option>
+                                                            <option value="2">ONLINE</option>
+                                                        </select>
+                                                        <label for="penempatan">KEPUTUSAN HRD</label>
+                                                        @error('online')
+                                                            <div class="invalid-feedback">
+                                                                {{ $message }}
+                                                            </div>
+                                                        @enderror
+                                                    </div>
+                                                    @error('tanggal_wawancara')
+                                                        <span class="invalid-feedback" role="alert">
+                                                            <strong>{{ $message }}</strong>
+                                                        </span>
+                                                    @enderror
+                                                    <div id="tempat_wawancara_form">
+                                                        <label for="bagian_recruitment px-2"><small>TEMPAT
+                                                                WAWANCARA</small></label>
+                                                        <div class="form-floating form-floating-outline mb-2">
+
+                                                            <input type="text" id="tempat_wawancara"
+                                                                name="tempat_wawancara"
+                                                                class="form-control @error('tempat_wawancara') is-invalid @enderror"
+                                                                {{-- placeholder="TEMPAT WAWANCARA" --}}
+                                                                value="{{ old('tempat_wawancara') }}" />
+                                                        </div>
+                                                    </div>
+                                                    <div id="link_wawancara_form">
+                                                        <label for="bagian_recruitment px-2"><small>LINK
+                                                                WAWANCARA ONLINE</small></label>
+                                                        <div class="form-floating form-floating-outline mb-2">
+
+                                                            <input type="text" id="tempat_wawancara"
+                                                                name="tempat_wawancara"
+                                                                class="form-control @error('tempat_wawancara') is-invalid @enderror"
+                                                                {{-- placeholder="TEMPAT WAWANCARA" --}}
+                                                                value="{{ old('tempat_wawancara') }}" />
+                                                        </div>
+                                                    </div>
+
+                                                    @error('tempat_wawancara')
+                                                        <span class="invalid-feedback" role="alert">
+                                                            <strong>{{ $message }}</strong>
+                                                        </span>
+                                                    @enderror
+                                                    <label for="bagian_recruitment"><small>WAKTU (JAM)
+                                                            WAWANCARA</small></label>
+                                                    <div class="form-floating form-floating-outline ">
+
+                                                        <input type="time" id="waktu_wawancara" name="waktu_wawancara"
+                                                            class="form-control @error('waktu_wawancara') is-invalid @enderror"
+                                                            {{-- placeholder="TEMPAT WAWANCARA" --}} value="{{ old('waktu_wawancara') }}" />
+                                                    </div>
+                                                    @error('waktu_wawancara')
+                                                        <span class="invalid-feedback" role="alert">
+                                                            <strong>{{ $message }}</strong>
+                                                        </span>
+                                                    @enderror
                                                 </div>
-                                                @error('tempat_wawancara')
-                                                    <span class="invalid-feedback" role="alert">
-                                                        <strong>{{ $message }}</strong>
-                                                    </span>
-                                                @enderror
-                                                <label for="bagian_recruitment"><small>WAKTU (JAM)
-                                                        WAWANCARA</small></label>
-                                                <div class="form-floating form-floating-outline ">
-
-                                                    <input type="time" id="waktu_wawancara" name="waktu_wawancara"
-                                                        class="form-control @error('waktu_wawancara') is-invalid @enderror"
-                                                        {{-- placeholder="TEMPAT WAWANCARA" --}} value="{{ old('waktu_wawancara') }}" />
+                                                <input type="hidden" name="recruitment_user_id"
+                                                    value="{{ $data_cv->id }}">
+                                                <input type="hidden" name="nomor_whatsapp"
+                                                    value="{{ $data_cv->AuthLogin->nomor_whatsapp }}">
+                                                <input type="hidden" name="nama"
+                                                    value="{{ $data_cv->AuthLogin->recruitmentCV->nama_lengkap }}">
+                                                <input type="hidden" name="nama_holding"
+                                                    value="{{ $data_cv->holding }}">
+                                                <input type="hidden" name="nama_bagian"
+                                                    value="{{ $data_cv->Bagian->nama_bagian }}">
+                                                <div class="py-4">
+                                                    <button type="submit" class="btn btn-sm btn-info">
+                                                        Ubah&nbsp;Status
+                                                    </button>
                                                 </div>
-                                                @error('waktu_wawancara')
-                                                    <span class="invalid-feedback" role="alert">
-                                                        <strong>{{ $message }}</strong>
-                                                    </span>
-                                                @enderror
-                                            </div>
-                                            <input type="hidden" name="recruitment_user_id"
-                                                value="{{ $data_cv->id }}">
-                                            <input type="hidden" name="nomor_whatsapp"
-                                                value="{{ $data_cv->AuthLogin->nomor_whatsapp }}">
-                                            <input type="hidden" name="nama"
-                                                value="{{ $data_cv->AuthLogin->recruitmentCV->nama_lengkap }}">
-                                            <input type="hidden" name="nama_holding" value="{{ $data_cv->holding }}">
-                                            <input type="hidden" name="nama_bagian"
-                                                value="{{ $data_cv->Bagian->nama_bagian }}">
-                                            <div class="py-4">
-                                                <button type="submit" class="btn btn-sm btn-info">
-                                                    Ubah&nbsp;Status
-                                                </button>
-                                            </div>
 
-                                        </form>
+                                            </form>
+                                        @endif
                                     </div>
                                 </div>
                             </div>
@@ -974,6 +1511,18 @@
                 $('#tanggal_wawancara').val('');
                 $('#tempat_wawancara').val('');
                 $('#waktu_wawancara').val('');
+            }
+        });
+        $('#link_wawancara_form').hide();
+        $('#online_add').on('change', function() {
+            let value = $(this).val();
+            console.log('asooy');
+            if (value == '2') {
+                $('#link_wawancara_form').show();
+                $('#tempat_wawancara_form').hide();
+            } else {
+                $('#link_wawancara_form').hide();
+                $('#tempat_wawancara_form').show();
             }
         });
     </script>
