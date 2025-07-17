@@ -1421,6 +1421,15 @@ Route::get('/dt-data-list-ujian/sp', [RecruitmentController::class, 'dt_ujian'])
 Route::get('/dt-data-list-ujian/sps', [RecruitmentController::class, 'dt_ujian'])->middleware('admin');
 Route::get('/dt-data-list-ujian/sip', [RecruitmentController::class, 'dt_ujian'])->middleware('admin');
 
+Route::get('/dt-data-list-ujian_kategori/sp', [RecruitmentController::class, 'dt_ujian_kategori'])->middleware('admin');
+Route::get('/dt-data-list-ujian_kategori/sps', [RecruitmentController::class, 'dt_ujian_kategori'])->middleware('admin');
+Route::get('/dt-data-list-ujian_kategori/sip', [RecruitmentController::class, 'dt_ujian_kategori'])->middleware('admin');
+
+Route::post('ujian_kategori_post', [RecruitmentController::class, 'ujian_kategori_post'])->middleware('admin');
+Route::post('delete_ujian_kategori', [RecruitmentController::class, 'delete_ujian_kategori'])->middleware('admin');
+Route::post('ujian_kategori_update', [RecruitmentController::class, 'ujian_kategori_update'])->middleware('admin');
+
+
 Route::get('/show-ujian/{ujian?}/sp', [RecruitmentController::class, 'show_ujian'])->middleware('admin');
 Route::get('/show-ujian/{ujian?}/sps', [RecruitmentController::class, 'show_ujian'])->middleware('admin');
 Route::get('/show-ujian/{ujian?}/sip', [RecruitmentController::class, 'show_ujian'])->middleware('admin');

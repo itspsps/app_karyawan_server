@@ -17,11 +17,11 @@ class Ujian extends Model
     {
         return $this->belongsTo(User::class);
     }
-    // Relasi Ke Mapel
-    public function mapel()
+    public function ujianKategori()
     {
-        return $this->belongsTo(Mapel::class);
+        return $this->belongsTo(UjianKategori::class, 'kategori_id', 'id');
     }
+
     // relasi Ke kelas
     public function kelas()
     {

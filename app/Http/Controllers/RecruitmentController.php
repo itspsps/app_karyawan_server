@@ -29,6 +29,7 @@ use App\Models\RecruitmentKesehatanRS;
 use App\Models\RecruitmentPendidikan;
 use App\Models\RecruitmentRiwayat;
 use App\Models\RecruitmentUserRecord;
+use App\Models\UjianKategori;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Ramsey\Uuid\Uuid;
@@ -1301,25 +1302,27 @@ asoy.com
                 'menu' => 'ujian',
                 'expanded' => 'ujian'
             ],
-            'guru' => User::firstWhere('id', Auth::user()->id),
-            'ujian' => Ujian::where('guru_id', Auth::user()->id)->get()
         ]);
     }
 
     function dt_ujian()
     {
-        $data = Ujian::where('guru_id', Auth::user()->id)->get();
+        $data = Ujian::with([
+            'ujianKategori' => function ($query) {
+                $query;
+            }
+        ])
+            ->get();
+        // dd($data);
         if (request()->ajax()) {
             return DataTables::of($data)
                 ->addColumn('nama', function ($row) {
                     return $row->nama;
                 })
-                ->addColumn('nama_mapel', function ($row) {
-                    return $row->mapel->nama_mapel;
+                ->addColumn('kategori', function ($row) {
+                    return $row->ujianKategori->nama_kategori;
                 })
-                ->addColumn('nama_kelas', function ($row) {
-                    return $row->kelas->nama_kelas;
-                })
+
                 ->addColumn('option', function ($row) {
                     if ($row->jenis == 0) {
                         $holding = request()->segment(count(request()->segments()));
@@ -1332,8 +1335,132 @@ asoy.com
                                 </a>';
                     }
                 })
-                ->rawColumns(['created_at', 'nama_mapel', 'nama_kelas', 'option'])
+                ->rawColumns(['created_at', 'kategori', 'option'])
                 ->make(true);
+        }
+    }
+    function dt_ujian_kategori()
+    {
+        $data = UjianKategori::get();
+        if (request()->ajax()) {
+            return DataTables::of($data)
+                ->addColumn('nama_kategori', function ($row) {
+                    return $row->nama_kategori;
+                })
+                ->addColumn('option', function ($row) {
+                    $btn =
+                        '<button type="button" id="btn_edit_ujian_kategori"
+                            data-id="' . $row->id . '"
+                            data-nama_kategori="' . $row->nama_kategori . '"
+                            class="btn btn-icon btn-info waves-effect waves-light">
+                           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
+                            <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
+                            <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"/>
+                            </svg>
+                        </button>
+                        <button type="button" id="btn_delete_ujian_kategori"
+                            data-id="' . $row->id . '"
+                            class="btn btn-icon btn-danger waves-effect waves-light">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash3-fill" viewBox="0 0 16 16">
+                            <path d="M11 1.5v1h3.5a.5.5 0 0 1 0 1h-.538l-.853 10.66A2 2 0 0 1 11.115 16h-6.23a2 2 0 0 1-1.994-1.84L2.038 3.5H1.5a.5.5 0 0 1 0-1H5v-1A1.5 1.5 0 0 1 6.5 0h3A1.5 1.5 0 0 1 11 1.5m-5 0v1h4v-1a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5M4.5 5.029l.5 8.5a.5.5 0 1 0 .998-.06l-.5-8.5a.5.5 0 1 0-.998.06m6.53-.528a.5.5 0 0 0-.528.47l-.5 8.5a.5.5 0 0 0 .998.058l.5-8.5a.5.5 0 0 0-.47-.528M8 4.5a.5.5 0 0 0-.5.5v8.5a.5.5 0 0 0 1 0V5a.5.5 0 0 0-.5-.5"/>
+                            </svg>
+                        </button>
+                        ';
+                    return $btn;
+                })
+                ->rawColumns(['created_at', 'nama_kategori', 'option'])
+                ->make(true);
+        }
+    }
+    public function delete_ujian_kategori(Request $request)
+    {
+        try {
+            UjianKategori::where('id', $request->id)->delete();
+            return response()->json([
+                'code' => 200,
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'code' => 500,
+                'error' => $e->getMessage(),
+            ]);
+        }
+    }
+    public function ujian_kategori_post(Request $request)
+    {
+        // dd($request->all());
+        $validator = Validator::make(
+            $request->all(),
+            [
+                'nama_kategori' => 'required',
+            ],
+            [
+                'required' => ':attribute tidak boleh kosong'
+            ]
+        );
+        if ($validator->fails()) {
+            return response()->json([
+                'code' => 400,
+                'message' => 'Validasi gagal',
+                'errors' => $validator->errors()
+            ]);
+        }
+        try {
+            UjianKategori::insert([
+                'id' => Uuid::uuid4(),
+                'nama_kategori' => $request->nama_kategori,
+                'created_at'    => date('Y-m-d H:i:s'),
+
+            ]);
+            return response()->json([
+                'code' => 200,
+                // 'data' => $get_data,
+                // 'data_keahlian' => $data_keahlian,
+                // 'message' => 'Data Berhasil Diupdate'
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'code' => 500,
+                'error' => $e->getMessage(),
+            ]);
+        }
+    }
+    public function ujian_kategori_update(Request $request)
+    {
+        // dd($request->all());
+        $validator = Validator::make(
+            $request->all(),
+            [
+                'nama_kategori' => 'required',
+            ],
+            [
+                'required' => ':attribute tidak boleh kosong'
+            ]
+        );
+        if ($validator->fails()) {
+            return response()->json([
+                'code' => 400,
+                'message' => 'Validasi gagal',
+                'errors' => $validator->errors()
+            ]);
+        }
+        try {
+            UjianKategori::where('id', $request->id)->update([
+                'nama_kategori' => $request->nama_kategori,
+                'created_at'    => date('Y-m-d H:i:s'),
+
+            ]);
+            return response()->json([
+                'code' => 200,
+                // 'data' => $get_data,
+                // 'data_keahlian' => $data_keahlian,
+                // 'message' => 'Data Berhasil Diupdate'
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'code' => 500,
+                'error' => $e->getMessage(),
+            ]);
         }
     }
 
@@ -1352,7 +1479,6 @@ asoy.com
                 'menu' => 'ujian',
                 'expanded' => 'ujian'
             ],
-            'guru' => User::firstWhere('id', Auth::user()->id),
             'ujian' => $ujian,
             'holding' => $holding
         ]);
@@ -1374,27 +1500,25 @@ asoy.com
                 'menu' => 'ujian',
                 'expanded' => 'ujian'
             ],
-            // 'guru' => User::firstWhere('id', '008ceb79-9d9b-49c5-98a0-bc39c640e34b')->get(),
-            'guru_kelas' => Gurukelas::where('guru_id', '008ceb79-9d9b-49c5-98a0-bc39c640e34b')->get(),
-            'guru_mapel' => Gurumapel::where('guru_id', '008ceb79-9d9b-49c5-98a0-bc39c640e34b')->get(),
+            'kategori' =>  UjianKategori::get()
         ]);
     }
 
     function ujian_pg_store(Request $request)
     {
-        $siswa = UserCareer::where('kelas_id', $request->kelas)->get();
-        if ($siswa->count() == 0) {
-            return redirect('pg-data-ujian/sp')->with('success', 'Belum ada user di kelas tersebut');
-        }
+        // dd($request->all());
+        // $siswa = UserCareer::where('kelas_id', $request->kelas)->get();
+        // if ($siswa->count() == 0) {
+        //     return redirect('pg-data-ujian/sp')->with('success', 'Belum ada user di kelas tersebut');
+        // }
 
         $kode = Str::random(30);
         $ujian = [
             'kode' => $kode,
             'nama' => $request->nama_ujian,
             'jenis' => 0,
-            'guru_id' => Auth::user()->id,
-            'kelas_id' => $request->kelas,
-            'mapel_id' => $request->mapel,
+            // 'kelas_id' => $request->kelas,
+            'kategori_id' => $request->kategori_id,
             'jam' => $request->jam,
             'menit' => $request->menit,
             'acak' => $request->acak,
@@ -1415,21 +1539,21 @@ asoy.com
             ]);
             $index++;
         }
-        $email_siswa = '';
-        $waktu_ujian = [];
-        foreach ($siswa as $s) {
-            $email_siswa .= $s->email . ',';
-            array_push($waktu_ujian, [
-                'kode' => $kode,
-                'auth_id' => $s->id
-            ]);
-        }
+        // $email_siswa = '';
+        // $waktu_ujian = [];
+        // foreach ($siswa as $s) {
+        //     $email_siswa .= $s->email . ',';
+        //     array_push($waktu_ujian, [
+        //         'kode' => $kode,
+        //         'auth_id' => $s->id
+        //     ]);
+        // }
 
-        $email_siswa = Str::replaceLast(',', '', $email_siswa);
-        $email_siswa = explode(',', $email_siswa);
+        // $email_siswa = Str::replaceLast(',', '', $email_siswa);
+        // $email_siswa = explode(',', $email_siswa);
         Ujian::insert($ujian);
         DetailUjian::insert($detail_ujian);
-        WaktuUjian::insert($waktu_ujian);
+        // WaktuUjian::insert($waktu_ujian);
         return redirect('pg-data-ujian/sp')->with('success', 'Ujian berhasil dibuat');
     }
 
