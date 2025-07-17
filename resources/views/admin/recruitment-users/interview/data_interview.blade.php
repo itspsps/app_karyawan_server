@@ -1,324 +1,326 @@
 @extends('admin.layouts.dashboard')
 @section('css')
-<link rel="stylesheet" href="https://cdn.datatables.net/2.0.5/css/dataTables.bootstrap5.css">
-<style type="text/css">
-    .my-swal {
-        z-index: X;
-    }
+    <link rel="stylesheet" href="https://cdn.datatables.net/2.0.5/css/dataTables.bootstrap5.css">
+    <style type="text/css">
+        .my-swal {
+            z-index: X;
+        }
 
-    .nowrap {
-        white-space: nowrap;
-    }
-</style>
+        .nowrap {
+            white-space: nowrap;
+        }
+    </style>
 @endsection
 @section('isi')
-@include('sweetalert::alert')
-<div class="container-xxl flex-grow-1 container-p-y">
-    <div class="row gy-4">
-        <!-- Transactions -->
-        <div class="col-lg-12">
-            <div class="container card">
-                <div class="card-header">
-                    <div class="d-flex align-items-center justify-content-between">
-                        <h5 class="card-title m-0 me-2">DATA INTERVIEW</h5>
+    @include('sweetalert::alert')
+    <div class="container-xxl flex-grow-1 container-p-y">
+        <div class="row gy-4">
+            <!-- Transactions -->
+            <div class="col-lg-12">
+                <div class="container card">
+                    <div class="card-header">
+                        <div class="d-flex align-items-center justify-content-between">
+                            <h5 class="card-title m-0 me-2">DATA INTERVIEW</h5>
+                        </div>
+                    </div>
+                    <ul class="nav nav-tabs" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <a class="nav-link active" id="icon-tab-0" data-bs-toggle="tab" href="#icon-tabpanel-0"
+                                role="tab" aria-controls="icon-tabpanel-0" aria-selected="true">
+                                interview hari ini
+                            </a>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <a class="nav-link" id="icon-tab-1" data-bs-toggle="tab" href="#icon-tabpanel-1" role="tab"
+                                aria-controls="icon-tabpanel-0" aria-selected="true">
+                                hadir interview keseluruhan
+                            </a>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <a class="nav-link" id="icon-tab-2" data-bs-toggle="tab" href="#icon-tabpanel-2" role="tab"
+                                aria-controls="icon-tabpanel-0" aria-selected="true">
+                                tidak hadir interview keseluruhan
+                            </a>
+                        </li>
+                    </ul>
+                    <div class="tab-content" id="tab-content">
+                        <div class="tab-pane active show" id="icon-tabpanel-0" role="tabpanel" aria-labelledby="icon-tab-0">
+                            <table class="table" id="table_recruitment_interview" style="width: 100%;">
+                                <thead class="table-primary">
+                                    <tr>
+                                        <th>Tanggal&nbsp;Wawancara</th>
+                                        <th>Presensi&nbsp;Kehadiran</th>
+                                        <th>Nama&nbsp;Lengkap</th>
+                                        <th>Nama&nbsp;Bagian</th>
+                                        <th>Nama&nbsp;Divisi</th>
+                                        <th>Nama&nbsp;Departemen</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="table-border-bottom-0">
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="tab-pane" id="icon-tabpanel-1" role="tabpanel" aria-labelledby="icon-tab-1">
+                            <div class="table-responsive">
+                                <table class="table" id="table_recruitment_interview1" style="width: 100%;">
+                                    <thead class="table-primary">
+                                        <tr>
+                                            <th>Tanggal&nbsp;Wawancara</th>
+                                            <th>Presensi&nbsp;Kehadiran</th>
+                                            <th>Nama&nbsp;Lengkap</th>
+                                            <th>Nama&nbsp;Bagian</th>
+                                            <th>Nama&nbsp;Divisi</th>
+                                            <th>Nama&nbsp;Departemen</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="table-border-bottom-0">
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="tab-pane" id="icon-tabpanel-2" role="tabpanel" aria-labelledby="icon-tab-2">
+                            <div class="table-responsive">
+                                <table class="table" id="table_recruitment_interview2" style="width: 100%;">
+                                    <thead class="table-primary">
+                                        <tr>
+                                            <th>Tanggal&nbsp;Wawancara</th>
+                                            <th>Presensi&nbsp;Kehadiran</th>
+                                            <th>Nama&nbsp;Lengkap</th>
+                                            <th>Nama&nbsp;Bagian</th>
+                                            <th>Nama&nbsp;Divisi</th>
+                                            <th>Nama&nbsp;Departemen</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="table-border-bottom-0">
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <table class="table" id="table_recruitment_interview" style="width: 100%;">
-                    <thead class="table-primary">
-                        <tr>
-                            <th>Tanggal</th>
-                            <th>Departemen</th>
-                            <th>Divisi</th>
-                            <th>Bagian</th>
-                            <th>Pelamar</th>
-                            <th>Status</th>
-                        </tr>
-                    </thead>
-                    <tbody class="table-border-bottom-0">
-                    </tbody>
-                </table>
             </div>
         </div>
         <!--/ Transactions -->
         <!--/ Data Tables -->
     </div>
-</div>
-
+    <div class="modal fade" id="modal_presensi" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">PRESENSI</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" id="id_add" name="id">
+                    <select class="form-select" id="status_add" name="status">
+                        <option value="1a" selected>HADIR</option>
+                        <option value="2a">TIDAK HADIR</option>
+                    </select>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                    <button type="button" class="btn btn-primary" id="btn_save_presensi">submit</button>
+                </div>
+            </div>
+        </div>
+    </div>
 @endsection
 @section('js')
-<script src="https://cdn.datatables.net/2.0.5/js/dataTables.js"></script>
-<script src="https://cdn.datatables.net/2.0.5/js/dataTables.bootstrap5.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
-<script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.min.js"></script>
-<script>
-    $(document).ready(function() {
-        $("#desc_recruitment").summernote();
-        // $("#show_desc_recruitment").summernote();
-        $("#desc_recruitment_update").summernote();
-        $('.dropdown-toggle').dropdown();
-    });
-</script>
-{{-- start datatable  --}}
-
-<script>
-    let holding = window.location.pathname.split("/").pop();
-    var table = $('#table_recruitment_interview').DataTable({
-        "scrollY": true,
-        "scrollX": true,
-        processing: true,
-        serverSide: true,
-        ajax: {
-            url: "{{ url('/dt/data-interview') }}" + '/' + holding,
-        },
-        columns: [{
-                data: 'created_at',
-                name: 'created_at',
-                className: 'nowrap'
-            },
-            {
-                data: 'nama_departemen',
-                name: 'nama_departemen'
-            },
-            {
-                data: 'nama_divisi',
-                name: 'nama_divisi'
-            },
-            {
-                data: 'nama_bagian',
-                name: 'nama_bagian'
-            },
-            {
-                data: 'pelamar',
-                name: 'pelamar'
-            },
-            {
-                data: 'status_recruitment',
-                name: 'status_recruitment'
-            },
-        ]
-    });
-</script>
-{{-- end datatable  --}}
-<script>
-    // start add departemen
-    $('#nama_dept').on('change', function() {
-        let id_dept = $(this).val();
-        let url = "{{url('/bagian/get_divisi')}}" + "/" + id_dept;
-        console.log(id_dept);
-        console.log(url);
-        $.ajax({
-            url: url,
-            method: 'GET',
-            contentType: false,
-            cache: false,
-            processData: false,
-            // data: {
-            //     id_dept: id_dept
-            // },
-            success: function(response) {
-                // console.log(response);
-                $('#nama_divisi').html(response);
-            },
-            error: function(data) {
-                console.log('error:', data)
-            },
-
-        })
-    })
-    // end add departemen
-
-    // start add divisi
-    $('#nama_divisi').on('change', function() {
-        let id_divisi = $(this).val();
-        let url = "{{url('/bagian/get_bagian')}}" + "/" + id_divisi;
-        console.log(id_divisi);
-        console.log(url);
-        $.ajax({
-            url: url,
-            method: 'GET',
-            contentType: false,
-            cache: false,
-            processData: false,
-            // data: {
-            //     id_dept: id_dept
-            // },
-            success: function(response) {
-                // console.log(response);
-                $('#nama_bagian').html(response);
-            },
-            error: function(data) {
-                console.log('error:', data)
-            },
-
-        })
-    })
-    // show modal syarat
-    $(document).on('click', '#btn_lihat_syarat', function() {
-        let id = $(this).data('id');
-        let desc = $(this).data('desc'); // Mendapatkan data dengan HTML
-        // desc = $('<div>').html(desc).text();
-        let holding = $(this).data("holding");
-        $('#show_desc_recruitment').summernote('code', desc);
-        $('#show_desc_recruitment').summernote('disable');
-        // let url = "{{ url('recruitment/show/') }}" + '/' + id + '/' + holding;
-        $('#modal_lihat_syarat').modal('show');
-    });
-    // update status aktif to non aktif
-    $(document).on('click', '#btn_status_aktif', function() {
-        var id = $(this).data('id');
-        let holding = $(this).data("holding");
-        console.log(id);
-        console.log(holding);
-        Swal.fire({
-            title: 'Apakah kamu yakin?',
-            text: "Menonaktifkan Recruitment",
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Yes!'
-        }).then((result) => {
-            if (result.value) {
-                $.ajax({
-                    url: "{{ url('/recruitment/update/status-recruitment/') }}" + '/' + id + '/' + holding,
-                    type: "GET",
-                    error: function() {
-                        alert('Something is wrong');
-                    },
-                    success: function(data) {
-                        Swal.fire({
-                            title: 'Terupdate!',
-                            text: 'Data anda berhasil di update.',
-                            icon: 'success',
-                            timer: 1500
-                        })
-                        $('#table_interview').DataTable().ajax.reload();
-                    }
-                });
-            } else {
-                Swal.fire({
-                    title: 'Cancelled!',
-                    text: 'Your data is safe :',
-                    icon: 'error',
-                    timer: 1500
-                })
-            }
+    <script src="https://cdn.datatables.net/2.0.5/js/dataTables.js"></script>
+    <script src="https://cdn.datatables.net/2.0.5/js/dataTables.bootstrap5.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+    <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $("#desc_recruitment").summernote();
+            // $("#show_desc_recruitment").summernote();
+            $("#desc_recruitment_update").summernote();
+            $('.dropdown-toggle').dropdown();
         });
+    </script>
+    {{-- start datatable  --}}
 
-    });
-    // update status non aktif to aktif
-    $(document).on('click', '#btn_status_naktif', function() {
-        var id = $(this).data('id');
-        let holding = $(this).data("holding");
-        console.log(id);
-        console.log(holding);
-        Swal.fire({
-            title: 'Apakah kamu yakin?',
-            text: "Mengaktifkan Recruitment",
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Yes!'
-        }).then((result) => {
-            if (result.value) {
-                $.ajax({
-                    url: "{{ url('/recruitment/update/status-recruitment/') }}" + '/' + id + '/' + holding,
-                    type: "GET",
-                    error: function() {
-                        alert('Something is wrong');
-                    },
-                    success: function(data) {
-                        Swal.fire({
-                            title: 'Terupdate!',
-                            text: 'Data anda berhasil di update.',
-                            icon: 'success',
-                            timer: 1500
-                        })
-                        $('#table_interview').DataTable().ajax.reload();
-                    }
-                });
-            } else {
-                Swal.fire({
-                    title: 'Cancelled!',
-                    text: 'Your data is safe :',
-                    icon: 'error',
-                    timer: 1500
-                })
-            }
+    <script>
+        let holding = window.location.pathname.split("/").pop();
+        var table = $('#table_recruitment_interview').DataTable({
+            "scrollY": true,
+            "scrollX": true,
+            processing: true,
+            serverSide: true,
+            ajax: {
+                url: "{{ url('/dt/data-interview') }}" + '/' + holding,
+            },
+            columns: [{
+                    data: 'tanggal_wawancara',
+                    name: 'tanggal_wawancara',
+                }, {
+                    data: 'presensi',
+                    name: 'presensi',
+                },
+                {
+                    data: 'nama_lengkap',
+                    name: 'nama_lengkap'
+                },
+                {
+                    data: 'nama_bagian',
+                    name: 'nama_bagian'
+                },
+                {
+                    data: 'nama_divisi',
+                    name: 'nama_divisi'
+                },
+                {
+                    data: 'nama_departemen',
+                    name: 'nama_departemen'
+                },
+            ]
         });
-
-    });
-    // edit data
-    $(document).on("click", "#btn_edit_recruitment", function() {
-        let id = $(this).data('id');
-        let dept = $(this).data("dept");
-        let divisi = $(this).data("divisi");
-        let bagian = $(this).data("bagian");
-        let tanggal = $(this).data("tanggal");
-        let holding = $(this).data("holding");
-        console.log(dept);
-        console.log(divisi);
-        console.log(bagian);
-        console.log(tanggal);
-        // console.log(desc);
-        console.log(holding);
-        $('#id_recruitment').val(id);
-        $('#nama_departemen_update option').filter(function() {
-            // console.log($(this).val().trim());
-            return $(this).val().trim() == dept
-        }).prop('selected', true)
-        $('#nama_divisi_update option').filter(function() {
-            // console.log($(this).val().trim());
-            return $(this).val().trim() == divisi
-        }).prop('selected', true)
-        $('#nama_bagian_update').val(bagian);
-        $('#created_recruitment_update').val(tanggal);
-        $('#modal_edit_recruitment').modal('show');
-
-    });
-
-    // delete data
-    $(document).on('click', '#btn_delete_recruitment', function() {
-        var id = $(this).data('id');
-        let holding = $(this).data("holding");
-        console.log(id);
-        Swal.fire({
-            title: 'Apakah kamu yakin?',
-            text: "Kamu tidak dapat mengembalikan data ini",
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Yes!'
-        }).then((result) => {
-            if (result.value) {
-                $.ajax({
-                    url: "{{ url('/recruitment/delete/') }}" + '/' + id + '/' + holding,
-                    type: "GET",
-                    error: function() {
-                        alert('Something is wrong');
-                    },
-                    success: function(data) {
-                        Swal.fire({
-                            title: 'Terhapus!',
-                            text: 'Data anda berhasil di hapus.',
-                            icon: 'success',
-                            timer: 1500
-                        })
-                        $('#table_interview').DataTable().ajax.reload();
-                    }
-                });
-            } else {
-                Swal.fire({
-                    title: 'Cancelled!',
-                    text: 'Your data is safe :',
-                    icon: 'error',
-                    timer: 1500
-                })
-            }
+        $('#icon-tab-0').on('shown.bs.tab', function(e) {
+            table.columns.adjust().draw().responsive.recalc();
+            // table.draw();
         });
+        var table1 = $('#table_recruitment_interview1').DataTable({
+            "scrollY": true,
+            "scrollX": true,
+            processing: true,
+            serverSide: true,
+            responsive: true,
+            ajax: {
+                url: "{{ url('/dt/data-interview1') }}" + '/' + holding,
+            },
+            columns: [{
+                    data: 'tanggal_wawancara',
+                    name: 'tanggal_wawancara',
+                }, {
+                    data: 'presensi',
+                    name: 'presensi',
+                },
+                {
+                    data: 'nama_lengkap',
+                    name: 'nama_lengkap'
+                },
+                {
+                    data: 'nama_bagian',
+                    name: 'nama_bagian'
+                },
+                {
+                    data: 'nama_divisi',
+                    name: 'nama_divisi'
+                },
+                {
+                    data: 'nama_departemen',
+                    name: 'nama_departemen'
+                },
+            ]
+        });
+        $('#icon-tab-1').on('shown.bs.tab', function(e) {
+            table1.columns.adjust().draw().responsive.recalc();
+            // table.draw();
+        });
+        var table2 = $('#table_recruitment_interview2').DataTable({
+            "scrollY": true,
+            "scrollX": true,
+            processing: true,
+            serverSide: true,
+            responsive: true,
+            ajax: {
+                url: "{{ url('/dt/data-interview2') }}" + '/' + holding,
+            },
+            columns: [{
+                    data: 'tanggal_wawancara',
+                    name: 'tanggal_wawancara',
+                }, {
+                    data: 'presensi',
+                    name: 'presensi',
+                },
+                {
+                    data: 'nama_lengkap',
+                    name: 'nama_lengkap'
+                },
+                {
+                    data: 'nama_bagian',
+                    name: 'nama_bagian'
+                },
+                {
+                    data: 'nama_divisi',
+                    name: 'nama_divisi'
+                },
+                {
+                    data: 'nama_departemen',
+                    name: 'nama_departemen'
+                },
+            ]
+        });
+        $('#icon-tab-2').on('shown.bs.tab', function(e) {
+            table2.columns.adjust().draw().responsive.recalc();
+            // table.draw();
+        });
+        $(document).on('click', '#btn_presensi', function() {
+            // console.log('asooy');
+            var id = $(this).data('id');
+            $('#id_add').val(id);
+            $('#modal_presensi').modal('show');
 
-    });
-</script>
+        });
+        $('#btn_save_presensi').on('click', function(e) {
+            e.preventDefault();
+            var formData = new FormData();
+
+            formData.append('_token', '{{ csrf_token() }}');
+            formData.append('id', $('#id_add').val());
+            formData.append('status', $('#status_add').val());
+            $.ajax({
+                type: "POST",
+
+                url: "{{ url('/dt/data-interview/presensi_recruitment_update') }}",
+                data: formData,
+                contentType: false,
+                processData: false,
+                error: function() {
+                    alert('Something is wrong');
+                    // console.log(formData);
+                },
+                success: function(data) {
+                    if (data.code == 200) {
+                        Swal.fire({
+                            title: 'Berhasil',
+                            text: data.message,
+                            icon: 'success',
+                            timer: 5000
+                        })
+                        //mengosongkan modal dan menyembunyikannya
+                        $('#modal_presensi').modal('hide');
+                        $('#table_recruitment_interview').DataTable().ajax.reload();
+                    } else if (data.code == 400) {
+                        let errors = data.errors;
+                        // console.log(errors);
+                        let errorMessages = '';
+
+                        Object.keys(errors).forEach(function(key) {
+                            errors[key].forEach(function(message) {
+                                errorMessages += `• ${message}\n`;
+                            });
+                        });
+                        Swal.fire({
+                            // title: data.message,
+                            text: errorMessages,
+                            icon: 'warning',
+                            timer: 4500
+                        })
+
+                    } else {
+                        Swal.fire({
+                            title: 'Gagal',
+                            text: data.error,
+                            icon: 'error',
+                            timer: 10000
+                        })
+
+                    }
+                }
+
+            });
+        });
+    </script>
+    {{-- end datatable  --}}
 @endsection

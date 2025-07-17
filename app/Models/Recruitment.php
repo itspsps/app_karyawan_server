@@ -26,10 +26,10 @@ class Recruitment extends Model
         'deadline_recruitment',
     ];
 
-    // public function Bagian(): BelongsTo
-    // {
-    //     return $this->belongsTo(Bagian::class, 'nama_bagian', 'id');
-    // }
+    public function Bagian(): BelongsTo
+    {
+        return $this->belongsTo(Bagian::class, 'nama_bagian', 'id');
+    }
     public function Jabatan(): BelongsTo
     {
         return $this->belongsTo(Jabatan::class, 'nama_jabatan', 'id');

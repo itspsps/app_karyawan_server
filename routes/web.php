@@ -1391,6 +1391,16 @@ Route::get('/dt/data-interview/sp', [RecruitmentController::class, 'dt_data_inte
 Route::get('/dt/data-interview/sps', [RecruitmentController::class, 'dt_data_interview'])->middleware('admin');
 Route::get('/dt/data-interview/sip', [RecruitmentController::class, 'dt_data_interview'])->middleware('admin');
 
+Route::get('/dt/data-interview1/sp', [RecruitmentController::class, 'dt_data_interview1'])->middleware('admin');
+Route::get('/dt/data-interview1/sps', [RecruitmentController::class, 'dt_data_interview1'])->middleware('admin');
+Route::get('/dt/data-interview1/sip', [RecruitmentController::class, 'dt_data_interview1'])->middleware('admin');
+
+Route::get('/dt/data-interview2/sp', [RecruitmentController::class, 'dt_data_interview2'])->middleware('admin');
+Route::get('/dt/data-interview2/sps', [RecruitmentController::class, 'dt_data_interview2'])->middleware('admin');
+Route::get('/dt/data-interview2/sip', [RecruitmentController::class, 'dt_data_interview2'])->middleware('admin');
+
+Route::post('/dt/data-interview/presensi_recruitment_update', [RecruitmentController::class, 'presensi_recruitment_update'])->middleware('admin');
+
 Route::get('/pg/data-list-interview/{id?}/sp', [RecruitmentController::class, 'pg_list_interview'])->middleware('admin');
 Route::get('/pg/data-list-interview/{id?}/sps', [RecruitmentController::class, 'pg_list_interview'])->middleware('admin');
 Route::get('/pg/data-list-interview/{id?}/sip', [RecruitmentController::class, 'pg_list_interview'])->middleware('admin');

@@ -22,6 +22,7 @@ class RecruitmentUser extends Model
         'nama_depan',
         'nama_tengah',
         'nama_belakang',
+        'tanggal_wawancara',
         'nik',
         'file_kk',
         'file_ktp',

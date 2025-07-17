@@ -25,9 +25,9 @@ class RecruitmentInterview extends Model
         'created_at',
     ];
 
-    public function DataRecruitment(): BelongsTo
+    public function recruitmentUser(): BelongsTo
     {
-        return $this->belongsTo(RecruitmentUser::class, 'recruitment_userid', 'id');
+        return $this->belongsTo(RecruitmentUser::class, 'recruitment_user_id', 'id');
     }
     public function Departemen(): BelongsTo
     {
