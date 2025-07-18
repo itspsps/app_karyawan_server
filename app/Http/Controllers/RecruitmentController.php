@@ -1322,7 +1322,70 @@ asoy.com
                 ->addColumn('kategori', function ($row) {
                     return $row->ujianKategori->nama_kategori;
                 })
-
+                ->addColumn('nol', function ($row) {
+                    if ($row->nol == '1') {
+                        $jabatan = '<p class = "bg-success p-2 text-white">YA</p>';
+                    } else {
+                        $jabatan = '<p class = "bg-danger p-2 text-white">TIDAK</p>';
+                    };
+                    return $jabatan;
+                })
+                ->addColumn('satu', function ($row) {
+                    if ($row->satu == '1') {
+                        $jabatan = '<p class = "bg-success p-2 text-white">YA</p>';
+                    } else {
+                        $jabatan = '<p class = "bg-danger p-2 text-white">TIDAK</p>';
+                    };
+                    return $jabatan;
+                })
+                ->addColumn('dua', function ($row) {
+                    if ($row->dua == '1') {
+                        $jabatan = '<p class = "bg-success p-2 text-white">YA</p>';
+                    } else {
+                        $jabatan = '<p class = "bg-danger p-2 text-white">TIDAK</p>';
+                    };
+                    return $jabatan;
+                })
+                ->addColumn('tiga', function ($row) {
+                    if ($row->tiga == '1') {
+                        $jabatan = '<p class = "bg-success p-2 text-white">YA</p>';
+                    } else {
+                        $jabatan = '<p class = "bg-danger p-2 text-white">TIDAK</p>';
+                    };
+                    return $jabatan;
+                })
+                ->addColumn('empat', function ($row) {
+                    if ($row->empat == '1') {
+                        $jabatan = '<p class = "bg-success p-2 text-white">YA</p>';
+                    } else {
+                        $jabatan = '<p class = "bg-danger p-2 text-white">TIDAK</p>';
+                    };
+                    return $jabatan;
+                })
+                ->addColumn('lima', function ($row) {
+                    if ($row->lima == '1') {
+                        $jabatan = '<p class = "bg-success p-2 text-white">YA</p>';
+                    } else {
+                        $jabatan = '<p class = "bg-danger p-2 text-white">TIDAK</p>';
+                    };
+                    return $jabatan;
+                })
+                ->addColumn('lima', function ($row) {
+                    if ($row->lima == '1') {
+                        $jabatan = '<p class = "bg-success p-2 text-white">YA</p>';
+                    } else {
+                        $jabatan = '<p class = "bg-danger p-2 text-white">TIDAK</p>';
+                    };
+                    return $jabatan;
+                })
+                ->addColumn('enam', function ($row) {
+                    if ($row->enam == '1') {
+                        $jabatan = '<p class = "bg-success p-2 text-white">YA</p>';
+                    } else {
+                        $jabatan = '<p class = "bg-danger p-2 text-white">TIDAK</p>';
+                    };
+                    return $jabatan;
+                })
                 ->addColumn('option', function ($row) {
                     if ($row->jenis == 0) {
                         $holding = request()->segment(count(request()->segments()));
@@ -1335,7 +1398,7 @@ asoy.com
                                 </a>';
                     }
                 })
-                ->rawColumns(['created_at', 'kategori', 'option'])
+                ->rawColumns(['created_at', 'kategori', 'nol', 'satu', 'dua', 'tiga', 'empat', 'lima', 'enam', 'option'])
                 ->make(true);
         }
     }
@@ -1522,6 +1585,13 @@ asoy.com
             'jam' => $request->jam,
             'menit' => $request->menit,
             'acak' => $request->acak,
+            'nol' => $request->nol,
+            'satu' => $request->satu,
+            'dua' => $request->dua,
+            'tiga' => $request->tiga,
+            'empat' => $request->empat,
+            'lima' => $request->lima,
+            'enam' => $request->enam,
         ];
         $detail_ujian = [];
         $index = 0;

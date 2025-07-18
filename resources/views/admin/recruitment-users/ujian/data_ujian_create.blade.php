@@ -84,9 +84,48 @@
                             </div>
                             <div class="row mt-3">
                                 <div class="col-lg-12">
-                                    <div class="custom-control custom-checkbox">
-                                        <input type="checkbox" class="custom-control-input" id="customCheck1" name="acak"
+
+                                    <div class="custom-control custom-checkbox py-2">
+                                        <input type="checkbox" class="custom-control-input" id="customCheck1" name="nol"
                                             value="1">
+                                        <label class="custom-control-label" for="customCheck1">Direktur</label>
+                                    </div>
+                                    <div class="custom-control custom-checkbox py-2">
+                                        <input type="checkbox" class="custom-control-input" id="customCheck1" name="satu"
+                                            value="1">
+                                        <label class="custom-control-label" for="customCheck1">Head</label>
+                                    </div>
+                                    <div class="custom-control custom-checkbox py-2">
+                                        <input type="checkbox" class="custom-control-input" id="customCheck1" name="dua"
+                                            value="1">
+                                        <label class="custom-control-label" for="customCheck1">Manager / Regional Sales
+                                            Manager</label>
+                                    </div>
+                                    <div class="custom-control custom-checkbox py-2">
+                                        <input type="checkbox" class="custom-control-input" id="customCheck1" name="tiga"
+                                            value="1">
+                                        <label class="custom-control-label" for="customCheck1">Junior Sales Manager / Area
+                                            Sales Manager</label>
+                                    </div>
+                                    <div class="custom-control custom-checkbox py-2">
+                                        <input type="checkbox" class="custom-control-input" id="customCheck1" name="empat"
+                                            value="1">
+                                        <label class="custom-control-label" for="customCheck1">Supervisor</label>
+                                    </div>
+                                    <div class="custom-control custom-checkbox py-2">
+                                        <input type="checkbox" class="custom-control-input" id="customCheck1" name="lima"
+                                            value="1">
+                                        <label class="custom-control-label" for="customCheck1">Koordinator</label>
+                                    </div>
+                                    <div class="custom-control custom-checkbox py-2">
+                                        <input type="checkbox" class="custom-control-input" id="customCheck1"
+                                            name="enam" value="1">
+                                        <label class="custom-control-label" for="customCheck1">Admin, Operator, Drafter,
+                                            Staff, Sales, Sopir</label>
+                                    </div>
+                                    <div class="custom-control custom-checkbox py-2">
+                                        <input type="checkbox" class="custom-control-input" id="customCheck1"
+                                            name="acak" value="1">
                                         <label class="custom-control-label" for="customCheck1">Acak Soal Siswa</label>
                                     </div>
                                 </div>

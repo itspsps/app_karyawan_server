@@ -48,12 +48,29 @@
                                     <tr>
                                         <th>Nama</th>
                                         <th>Kategori</th>
+                                        <th>Level 0</th>
+                                        <th>Level 1</th>
+                                        <th>Level 2</th>
+                                        <th>Level 3</th>
+                                        <th>Level 4</th>
+                                        <th>Level 5</th>
+                                        <th>Level 6</th>
                                         <th>Opsi</th>
                                     </tr>
                                 </thead>
                                 <tbody class="table-border-bottom-0">
                                 </tbody>
                             </table>
+                            <div class="py-5">
+                                <h5 class="fw-bold">Penjelasan</h5>
+                                <p>Level 0 = Direktur</p>
+                                <p>Level 1 = Head</p>
+                                <p>Level 2 = Manager / Regional Sales Manager</p>
+                                <p>Level 3 = Junior Sales Manager / Area Sales Manager</p>
+                                <p>Level 4 = Supervisor</p>
+                                <p>Level 5 = Koordinator</p>
+                                <p>Level 6 = Admin, Operator, Drafter, Staff, Sales, Sopir</p>
+                            </div>
                         </div>
                         <div class="tab-pane" id="icon-tabpanel-1" role="tabpanel" aria-labelledby="icon-tab-1">
                             <div class="d-">
@@ -188,6 +205,34 @@
                 {
                     data: 'kategori',
                     name: 'kategori'
+                },
+                {
+                    data: 'nol',
+                    name: 'nol'
+                },
+                {
+                    data: 'satu',
+                    name: 'satu'
+                },
+                {
+                    data: 'dua',
+                    name: 'dua'
+                },
+                {
+                    data: 'tiga',
+                    name: 'tiga'
+                },
+                {
+                    data: 'empat',
+                    name: 'empat'
+                },
+                {
+                    data: 'lima',
+                    name: 'lima'
+                },
+                {
+                    data: 'enam',
+                    name: 'enam'
                 },
                 {
                     data: 'option',
