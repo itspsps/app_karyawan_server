@@ -31,6 +31,7 @@
                                     <div class="form-group">
                                         <label for="">Nama Ujian / Quiz</label>
                                         <input type="text" name="nama_ujian" class="form-control" required>
+                                        <input type="hidden" name="esai" value="0" class="form-control" required>
                                     </div>
                                 </div>
                                 <div class="col-lg-6">
@@ -63,7 +64,7 @@
                                     <div class="form-group">
                                         <label for="">Waktu Jam</label>
                                         <select class="form-select" name="jam" id="jam" required>
-                                            @for ($h = 1; $h < 25; $h++)
+                                            @for ($h = 0; $h < 25; $h++)
                                                 <option value="{{ $h }}">{{ $h }}
                                                 </option>
                                             @endfor
@@ -74,7 +75,7 @@
                                     <div class="form-group">
                                         <label for="">Waktu Menit</label>
                                         <select class="form-select" name="menit" id="menit" required>
-                                            @for ($i = 1; $i < 60; $i++)
+                                            @for ($i = 0; $i < 60; $i++)
                                                 <option value="{{ $i }}">{{ $i }}
                                                 </option>
                                             @endfor
@@ -84,7 +85,6 @@
                             </div>
                             <div class="row mt-3">
                                 <div class="col-lg-12">
-
                                     <div class="custom-control custom-checkbox py-2">
                                         <input type="checkbox" class="custom-control-input" id="customCheck1" name="nol"
                                             value="1">
@@ -113,8 +113,8 @@
                                         <label class="custom-control-label" for="customCheck1">Supervisor</label>
                                     </div>
                                     <div class="custom-control custom-checkbox py-2">
-                                        <input type="checkbox" class="custom-control-input" id="customCheck1" name="lima"
-                                            value="1">
+                                        <input type="checkbox" class="custom-control-input" id="customCheck1"
+                                            name="lima" value="1">
                                         <label class="custom-control-label" for="customCheck1">Koordinator</label>
                                     </div>
                                     <div class="custom-control custom-checkbox py-2">

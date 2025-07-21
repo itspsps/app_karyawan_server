@@ -24,11 +24,17 @@
                         <li class="nav-item" role="presentation">
                             <a class="nav-link active" id="icon-tab-0" data-bs-toggle="tab" href="#icon-tabpanel-0"
                                 role="tab" aria-controls="icon-tabpanel-0" aria-selected="true">
-                                Soal Ujian
+                                Pilihan Ganda
                             </a>
                         </li>
                         <li class="nav-item" role="presentation">
                             <a class="nav-link" id="icon-tab-1" data-bs-toggle="tab" href="#icon-tabpanel-1" role="tab"
+                                aria-controls="icon-tabpanel-0" aria-selected="true">
+                                Esai
+                            </a>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <a class="nav-link" id="icon-tab-2" data-bs-toggle="tab" href="#icon-tabpanel-2" role="tab"
                                 aria-controls="icon-tabpanel-0" aria-selected="true">
                                 Kategori Ujian
                             </a>
@@ -36,43 +42,58 @@
                     </ul>
                     <div class="tab-content" id="tab-content">
                         <div class="tab-pane active show" id="icon-tabpanel-0" role="tabpanel" aria-labelledby="icon-tab-0">
-
                             <div class="d-">
-                                <h5 class="card-title m-0 me-2">DATA SOAL UJIAN</h5>
+                                <h5 class="card-title m-0 me-2">SOAL UJIAN PILIHAN GANDA</h5>
                             </div>
-                            <button type="button" class="btn btn-sm btn-primary waves-effect waves-light my-3"
-                                data-bs-toggle="modal" data-bs-target="#modal_tambah_recruitment"><i
-                                    class="menu-icon tf-icons mdi mdi-plus"></i>Tambah</button>
+                            <a href="{{ url('/pg-data-ujian/ujian_pg/' . $holding) }}" type="button"
+                                class="btn btn-sm btn-primary waves-effect waves-light my-3"><i
+                                    class="menu-icon tf-icons mdi mdi-plus"></i>Tambah</a>
                             <table class="table" id="table_ujian" style="width: 100%;">
                                 <thead class="table-primary">
                                     <tr>
                                         <th>Nama</th>
                                         <th>Kategori</th>
-                                        <th>Level 0</th>
-                                        <th>Level 1</th>
-                                        <th>Level 2</th>
-                                        <th>Level 3</th>
-                                        <th>Level 4</th>
-                                        <th>Level 5</th>
-                                        <th>Level 6</th>
+                                        <th>Direktur</th>
+                                        <th>Head</th>
+                                        <th>Manager / Regional Sales Manager</th>
+                                        <th>Junior Sales Manager / Area Sales Manager</th>
+                                        <th>Supervisor</th>
+                                        <th>Koordinator</th>
+                                        <th>Admin, Operator, Drafter, Staff, Sales, Sopir</th>
                                         <th>Opsi</th>
                                     </tr>
                                 </thead>
                                 <tbody class="table-border-bottom-0">
                                 </tbody>
                             </table>
-                            <div class="py-5">
-                                <h5 class="fw-bold">Penjelasan</h5>
-                                <p>Level 0 = Direktur</p>
-                                <p>Level 1 = Head</p>
-                                <p>Level 2 = Manager / Regional Sales Manager</p>
-                                <p>Level 3 = Junior Sales Manager / Area Sales Manager</p>
-                                <p>Level 4 = Supervisor</p>
-                                <p>Level 5 = Koordinator</p>
-                                <p>Level 6 = Admin, Operator, Drafter, Staff, Sales, Sopir</p>
-                            </div>
                         </div>
                         <div class="tab-pane" id="icon-tabpanel-1" role="tabpanel" aria-labelledby="icon-tab-1">
+                            <div class="d-">
+                                <h5 class="card-title m-0 me-2">SOAL UJIAN ESAI</h5>
+                            </div>
+                            <a href="{{ url('/pg-data-ujian/ujian_pg_esai/' . $holding) }}" type="button"
+                                class="btn btn-sm btn-primary waves-effect waves-light my-3"><i
+                                    class="menu-icon tf-icons mdi mdi-plus"></i>Tambah</a>
+                            <table class="table" id="table_esai" style="width: 100%;">
+                                <thead class="table-primary">
+                                    <tr>
+                                        <th>Nama</th>
+                                        <th>Kategori</th>
+                                        <th>Direktur</th>
+                                        <th>Head</th>
+                                        <th>Manager / Regional Sales Manager</th>
+                                        <th>Junior Sales Manager / Area Sales Manager</th>
+                                        <th>Supervisor</th>
+                                        <th>Koordinator</th>
+                                        <th>Admin, Operator, Drafter, Staff, Sales, Sopir</th>
+                                        <th>Opsi</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="table-border-bottom-0">
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="tab-pane" id="icon-tabpanel-2" role="tabpanel" aria-labelledby="icon-tab-2">
                             <div class="d-">
                                 <h5 class="card-title m-0 me-2">KATEGORI UJIAN</h5>
                             </div>
@@ -115,7 +136,8 @@
                             </div>
                         </div>
                     </div>
-                    <button type="button" style="float: right" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+                    <button type="button" style="float: right" class="btn btn-outline-secondary"
+                        data-bs-dismiss="modal">
                         Close
                     </button>
                 </div>
@@ -190,6 +212,60 @@
             $(this).val($(this).val().toUpperCase());
         });
         let holding = window.location.pathname.split("/").pop();
+        var table1 = $('#table_esai').DataTable({
+            "scrollY": true,
+            "scrollX": true,
+            processing: true,
+            serverSide: true,
+            ajax: {
+                url: "{{ url('/dt-data-list-esai') }}" + '/' + holding,
+            },
+            columns: [{
+                    data: 'nama',
+                    name: 'nama',
+                },
+                {
+                    data: 'kategori',
+                    name: 'kategori'
+                },
+                {
+                    data: 'nol',
+                    name: 'nol'
+                },
+                {
+                    data: 'satu',
+                    name: 'satu'
+                },
+                {
+                    data: 'dua',
+                    name: 'dua'
+                },
+                {
+                    data: 'tiga',
+                    name: 'tiga'
+                },
+                {
+                    data: 'empat',
+                    name: 'empat'
+                },
+                {
+                    data: 'lima',
+                    name: 'lima'
+                },
+                {
+                    data: 'enam',
+                    name: 'enam'
+                },
+                {
+                    data: 'option',
+                    name: 'option'
+                },
+            ]
+        });
+        $('#icon-tab-1').on('shown.bs.tab', function(e) {
+            table1.columns.adjust().draw().responsive.recalc();
+            // table.draw();
+        });
         var table = $('#table_ujian').DataTable({
             "scrollY": true,
             "scrollX": true,
@@ -244,7 +320,7 @@
             table.columns.adjust().draw().responsive.recalc();
             // table.draw();
         });
-        var table1 = $('#tabel_ujian_kategori').DataTable({
+        var table2 = $('#tabel_ujian_kategori').DataTable({
             "scrollY": true,
             "scrollX": true,
             processing: true,
@@ -262,8 +338,8 @@
                 },
             ]
         });
-        $('#icon-tab-1').on('shown.bs.tab', function(e) {
-            table1.columns.adjust().draw().responsive.recalc();
+        $('#icon-tab-2').on('shown.bs.tab', function(e) {
+            table2.columns.adjust().draw().responsive.recalc();
             // table.draw();
         });
         $('#btn_modal_kategori').click(function() {

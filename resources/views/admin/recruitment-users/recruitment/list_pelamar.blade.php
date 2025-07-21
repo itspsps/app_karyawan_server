@@ -159,7 +159,7 @@
         .timeline-centered .timeline-entry {
             position: relative;
             /*width: 50%;
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        float: right;*/
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    float: right;*/
             margin-top: 5px;
             margin-left: 30px;
             margin-bottom: 10px;
@@ -505,6 +505,10 @@
                                                         <td class="bg-success text-white">
                                                             @if ($user->status == '1')
                                                                 Kandidat
+                                                            @elseif ($user->status == '1a')
+                                                                Panggilan Wawancara
+                                                            @elseif ($user->status == '2a')
+                                                                TIdak Hadir Wawancara
                                                             @endif
                                                         </td>
                                                         <td><a href="{{ url('/pg/pelamar-detail/' . $user->id . '/' . $holding . '') }}"

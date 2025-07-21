@@ -6,6 +6,7 @@ use App\Models\ActivityLog;
 use App\Models\Departemen;
 use App\Models\Jabatan;
 use App\Models\Bagian;
+use App\Models\DetailEsai;
 use App\Models\Divisi;
 use App\Models\User;
 use App\Models\Recruitment;
@@ -495,10 +496,14 @@ class RecruitmentController extends Controller
         if ($request->status == '1') {
             // Rule Untuk form wawancara
             $tanggal_wawancara = 'required';
+            $tempat_wawancara = 'required';
             $waktu_wawancara = 'required';
+            $link_wawancara = 'required';
         } else {
             $tanggal_wawancara = 'nullable';
             $waktu_wawancara = 'nullable';
+            $tempat_wawancara = 'nullable';
+            $link_wawancara = 'nullable';
         }
         if ($request->status == '1' && $request->online == '1') {
             $tempat_wawancara = 'required';
@@ -1312,6 +1317,107 @@ asoy.com
                 $query;
             }
         ])
+            ->where('esai', '0')
+            ->orderBy('created_at', 'ASC')
+            ->get();
+        // dd($data);
+        if (request()->ajax()) {
+            return DataTables::of($data)
+                ->addColumn('nama', function ($row) {
+                    return $row->nama;
+                })
+                ->addColumn('kategori', function ($row) {
+                    return $row->ujianKategori->nama_kategori;
+                })
+                ->addColumn('nol', function ($row) {
+                    if ($row->nol == '1') {
+                        $jabatan = '<p class = "bg-success p-2 text-white">YA</p>';
+                    } else {
+                        $jabatan = '<p class = "bg-danger p-2 text-white">TIDAK</p>';
+                    };
+                    return $jabatan;
+                })
+                ->addColumn('satu', function ($row) {
+                    if ($row->satu == '1') {
+                        $jabatan = '<p class = "bg-success p-2 text-white">YA</p>';
+                    } else {
+                        $jabatan = '<p class = "bg-danger p-2 text-white">TIDAK</p>';
+                    };
+                    return $jabatan;
+                })
+                ->addColumn('dua', function ($row) {
+                    if ($row->dua == '1') {
+                        $jabatan = '<p class = "bg-success p-2 text-white">YA</p>';
+                    } else {
+                        $jabatan = '<p class = "bg-danger p-2 text-white">TIDAK</p>';
+                    };
+                    return $jabatan;
+                })
+                ->addColumn('tiga', function ($row) {
+                    if ($row->tiga == '1') {
+                        $jabatan = '<p class = "bg-success p-2 text-white">YA</p>';
+                    } else {
+                        $jabatan = '<p class = "bg-danger p-2 text-white">TIDAK</p>';
+                    };
+                    return $jabatan;
+                })
+                ->addColumn('empat', function ($row) {
+                    if ($row->empat == '1') {
+                        $jabatan = '<p class = "bg-success p-2 text-white">YA</p>';
+                    } else {
+                        $jabatan = '<p class = "bg-danger p-2 text-white">TIDAK</p>';
+                    };
+                    return $jabatan;
+                })
+                ->addColumn('lima', function ($row) {
+                    if ($row->lima == '1') {
+                        $jabatan = '<p class = "bg-success p-2 text-white">YA</p>';
+                    } else {
+                        $jabatan = '<p class = "bg-danger p-2 text-white">TIDAK</p>';
+                    };
+                    return $jabatan;
+                })
+                ->addColumn('lima', function ($row) {
+                    if ($row->lima == '1') {
+                        $jabatan = '<p class = "bg-success p-2 text-white">YA</p>';
+                    } else {
+                        $jabatan = '<p class = "bg-danger p-2 text-white">TIDAK</p>';
+                    };
+                    return $jabatan;
+                })
+                ->addColumn('enam', function ($row) {
+                    if ($row->enam == '1') {
+                        $jabatan = '<p class = "bg-success p-2 text-white">YA</p>';
+                    } else {
+                        $jabatan = '<p class = "bg-danger p-2 text-white">TIDAK</p>';
+                    };
+                    return $jabatan;
+                })
+                ->addColumn('option', function ($row) {
+                    if ($row->jenis == 0) {
+                        $holding = request()->segment(count(request()->segments()));
+                        return '<a href="/show-ujian/' . $row->kode . '/' . $holding . '" class="btn btn-primary btn-sm">
+                                    <span class="mdi mdi-eye-outline"></span>
+                                </a>';
+                    } elseif ($row->jenis == 1) {
+                        return '<a href="/show-ujian_essay/ ' . $row->kode . '" class="btn btn-primary btn-sm">
+                                    <span class="mdi mdi-eye-outline"></span>
+                                </a>';
+                    }
+                })
+                ->rawColumns(['created_at', 'kategori', 'nol', 'satu', 'dua', 'tiga', 'empat', 'lima', 'enam', 'option'])
+                ->make(true);
+        }
+    }
+    function dt_esai()
+    {
+        $data = Ujian::with([
+            'ujianKategori' => function ($query) {
+                $query;
+            }
+        ])
+            ->where('esai', '1')
+            ->orderBy('created_at', 'ASC')
             ->get();
         // dd($data);
         if (request()->ajax()) {
@@ -1566,6 +1672,25 @@ asoy.com
             'kategori' =>  UjianKategori::get()
         ]);
     }
+    function pg_esai_pg()
+    {
+        $holding = request()->segment(count(request()->segments()));
+        return view('admin.recruitment-users.ujian.data_esai_create', [
+            'holding'   => $holding,
+            'title' => 'Tambah Ujian Pilihan Ganda',
+            'plugin' => '
+                <link href="' . asset("/assets/cbt-malela/plugins/file-upload/file-upload-with-preview.min.css") . '" rel="stylesheet" type="text/css" />
+                <script src="' . asset("/assets/cbt-malela/plugins/file-upload/file-upload-with-preview.min.js") . '"></script>
+                <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.min.css" rel="stylesheet">
+                <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.min.js"></script>
+            ',
+            'menu' => [
+                'menu' => 'ujian',
+                'expanded' => 'ujian'
+            ],
+            'kategori' =>  UjianKategori::get()
+        ]);
+    }
 
     function ujian_pg_store(Request $request)
     {
@@ -1578,9 +1703,9 @@ asoy.com
         $kode = Str::random(30);
         $ujian = [
             'kode' => $kode,
+            'esai' => $request->esai,
             'nama' => $request->nama_ujian,
             'jenis' => 0,
-            // 'kelas_id' => $request->kelas,
             'kategori_id' => $request->kategori_id,
             'jam' => $request->jam,
             'menit' => $request->menit,
@@ -1592,6 +1717,7 @@ asoy.com
             'empat' => $request->empat,
             'lima' => $request->lima,
             'enam' => $request->enam,
+            'created_at' => date('Y-m-d H:i:s')
         ];
         $detail_ujian = [];
         $index = 0;
@@ -1623,6 +1749,60 @@ asoy.com
         // $email_siswa = explode(',', $email_siswa);
         Ujian::insert($ujian);
         DetailUjian::insert($detail_ujian);
+        // WaktuUjian::insert($waktu_ujian);
+        return redirect('pg-data-ujian/sp')->with('success', 'Ujian berhasil dibuat');
+    }
+    function esai_pg_store(Request $request)
+    {
+        // dd($request->all());
+        // $siswa = UserCareer::where('kelas_id', $request->kelas)->get();
+        // if ($siswa->count() == 0) {
+        //     return redirect('pg-data-ujian/sp')->with('success', 'Belum ada user di kelas tersebut');
+        // }
+
+        $kode = Str::random(30);
+        $ujian = [
+            'kode' => $kode,
+            'esai' => $request->esai,
+            'nama' => $request->nama_ujian,
+            'jenis' => 0,
+            'kategori_id' => $request->kategori_id,
+            'jam' => $request->jam,
+            'menit' => $request->menit,
+            'acak' => $request->acak,
+            'nol' => $request->nol,
+            'satu' => $request->satu,
+            'dua' => $request->dua,
+            'tiga' => $request->tiga,
+            'empat' => $request->empat,
+            'lima' => $request->lima,
+            'enam' => $request->enam,
+            'created_at' => date('Y-m-d H:i:s')
+        ];
+        $detail_ujian = [];
+        $index = 0;
+        $nama_soal =  $request->soal;
+        foreach ($nama_soal as $soal) {
+            array_push($detail_ujian, [
+                'kode' => $kode,
+                'soal' => $soal,
+            ]);
+            $index++;
+        }
+        // $email_siswa = '';
+        // $waktu_ujian = [];
+        // foreach ($siswa as $s) {
+        //     $email_siswa .= $s->email . ',';
+        //     array_push($waktu_ujian, [
+        //         'kode' => $kode,
+        //         'auth_id' => $s->id
+        //     ]);
+        // }
+
+        // $email_siswa = Str::replaceLast(',', '', $email_siswa);
+        // $email_siswa = explode(',', $email_siswa);
+        Ujian::insert($ujian);
+        DetailEsai::insert($detail_ujian);
         // WaktuUjian::insert($waktu_ujian);
         return redirect('pg-data-ujian/sp')->with('success', 'Ujian berhasil dibuat');
     }
