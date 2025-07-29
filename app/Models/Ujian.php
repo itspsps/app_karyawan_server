@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Ujian extends Model
 {
@@ -41,14 +43,18 @@ class Ujian extends Model
     }
 
     // relasi Ke DetailEssay
-    public function detailessay()
+    public function detailesai()
     {
-        return $this->hasMany(DetailEssay::class, 'kode', 'kode');
+        return $this->hasMany(DetailEsai::class, 'kode', 'kode');
     }
 
     // DEFAULT KEY DI UBAH JADI KODE BUKAN ID LAGI
     public function getRouteKeyName()
     {
         return 'kode';
+    }
+    public function esaiJawab(): BelongsTo
+    {
+        return $this->belongsTo(UjianEsaiJawab::class, 'kode', 'kode');
     }
 }

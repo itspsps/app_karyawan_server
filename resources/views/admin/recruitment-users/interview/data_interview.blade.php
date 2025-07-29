@@ -20,7 +20,7 @@
                 <div class="container card">
                     <div class="card-header">
                         <div class="d-flex align-items-center justify-content-between">
-                            <h5 class="card-title m-0 me-2">DATA INTERVIEW</h5>
+                            <h5 class="card-title m-0 me-2">DATA Ujian pelamar</h5>
                         </div>
                     </div>
                     <ul class="nav nav-tabs" role="tablist">
@@ -66,8 +66,9 @@
                                     <thead class="table-primary">
                                         <tr>
                                             <th>Tanggal&nbsp;Wawancara</th>
-                                            <th>Presensi&nbsp;Kehadiran</th>
                                             <th>Nama&nbsp;Lengkap</th>
+                                            <th>Presensi&nbsp;Kehadiran</th>
+                                            <th>Ujian</th>
                                             <th>Nama&nbsp;Bagian</th>
                                             <th>Nama&nbsp;Divisi</th>
                                             <th>Nama&nbsp;Departemen</th>
@@ -153,14 +154,16 @@
             columns: [{
                     data: 'tanggal_wawancara',
                     name: 'tanggal_wawancara',
-                }, {
-                    data: 'presensi',
-                    name: 'presensi',
                 },
                 {
                     data: 'nama_lengkap',
                     name: 'nama_lengkap'
                 },
+                {
+                    data: 'presensi',
+                    name: 'presensi',
+                },
+
                 {
                     data: 'nama_bagian',
                     name: 'nama_bagian'
@@ -191,13 +194,18 @@
             columns: [{
                     data: 'tanggal_wawancara',
                     name: 'tanggal_wawancara',
-                }, {
-                    data: 'presensi',
-                    name: 'presensi',
                 },
                 {
                     data: 'nama_lengkap',
                     name: 'nama_lengkap'
+                },
+                {
+                    data: 'presensi',
+                    name: 'presensi',
+                },
+                {
+                    data: 'ujian',
+                    name: 'ujian',
                 },
                 {
                     data: 'nama_bagian',

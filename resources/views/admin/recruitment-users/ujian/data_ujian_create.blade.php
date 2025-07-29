@@ -46,18 +46,6 @@
                                         </select>
                                     </div>
                                 </div>
-                                {{-- <div class="col-lg-4">
-                                    <div class="form-group">
-                                        <label for="">Kelas</label>
-                                        <select class="form-control" name="kelas" id="kelas" required>
-                                            <option value="">Pilih</option>
-                                            @foreach ($guru_kelas as $gk)
-                                                <option value="{{ $gk->kelas->id }}">{{ $gk->kelas->nama_kelas }}
-                                                </option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                </div> --}}
                             </div>
                             <div class="row mt-3">
                                 <div class="col-lg-6">

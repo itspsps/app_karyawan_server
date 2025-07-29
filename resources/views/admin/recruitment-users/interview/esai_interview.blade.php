@@ -22,7 +22,7 @@
                                     <table class="mt-2">
                                         <tr>
                                             <th>Jumlah Soal</th>
-                                            <th>: {{ $ujian->detailujian->count() }} Soal</th>
+                                            <th>: {{ $ujian->detailEsai->count() }} Soal</th>
                                         </tr>
                                         <tr>
                                             <th>Waktu Ujian</th>
@@ -41,23 +41,52 @@
                         <div class="col-lg-12 layout-spacing">
                             <div class="widget shadow p-3">
                                 <div class="widget-heading">
-                                    <h5 class="">Soal</h5>
+                                    <h4 class="">Soal</h4>
                                 </div>
-                                <div class="widget-heading">
+                                <div class="widget-heading p-3">
                                     @php
                                         $no = 1;
                                     @endphp
-                                    @foreach ($ujian->detailesai as $uu)
-                                        <div class="mb-3">
-                                            <label for="exampleFormControlInput1" class="form-label">
+                                    @foreach ($ujian->detailEsai as $uu)
+                                        <div class="">
+                                            <label>
                                                 <div class="d-flex">
-                                                    <h6 class="pe-1">{{ $no++ }}. </h6>
-                                                    <h6>{!! $uu->soal !!}</h6>
+                                                    <h5 class="pe-1">{{ $no++ }}. </h5>
+                                                    <h5>{!! $uu->soal !!}</h5>
                                                 </div>
                                             </label>
-                                            <input type="" class="form-control" placeholder="Jawaban" disabled>
+                                        </div>
+                                        <div class="px-3 mb-3">
+                                            @if ($uu->ujianEsaiJawabDetail != null)
+                                                <p>{{ $uu->ujianEsaiJawabDetail->jawaban }}</p>
+                                            @else
+                                                <p>Tidak Terjawab</p>
+                                            @endif
                                         </div>
                                     @endforeach
+                                    <label>
+                                        Total Nilai
+                                    </label>
+                                    <div class="row">
+                                        <div class="col-lg">
+                                            <form action={{ route('penilaian_esai') }} method="POST">
+                                                @csrf
+                                                <input class="form-control" type="number" name="nilai" id=""
+                                                    value="{{ $ujian->esaiJawab == null ? '' : $ujian->esaiJawab->nilai }}">
+                                                <input class="form-control" type="hidden" name="recruitment_user_id"
+                                                    id="" value="{{ $recruitment_user_id }}">
+                                                <input class="form-control" type="hidden" name="holding" id=""
+                                                    value="{{ $holding }}">
+                                                <input class="form-control" type="hidden" name="kode" id=""
+                                                    value="{{ $ujian->kode }}">
+                                                <div class="py-2">
+                                                    <button type="submit" class="btn btn-info">Masukkan Nilai</button>
+                                                </div>
+                                            </form>
+                                        </div>
+                                        <div class="col-lg"></div>
+                                        <div class="col-lg"></div>
+                                    </div>
                                 </div>
                             </div>
                         </div>

@@ -733,8 +733,6 @@ asoy.com
             'holding'   => $holding,
         ]);
     }
-
-
     function dt_data_interview()
     {
         $holding = request()->segment(count(request()->segments()));
@@ -842,6 +840,7 @@ asoy.com
             ->get();
         // dd($table);
         if (request()->ajax()) {
+
             return DataTables::of($table)
                 ->addColumn('tanggal_wawancara', function ($row) {
                     return Carbon::parse($row->recruitmentUser->tanggal_wawancara)->format('d-m-Y');
@@ -864,6 +863,10 @@ asoy.com
                 ->addColumn('nama_lengkap', function ($row) {
                     return $row->recruitmentUser->Cv->nama_lengkap;
                 })
+                ->addColumn('ujian', function ($row) {
+                    $holding = request()->segment(count(request()->segments()));
+                    return '<a href="' . url("/dt/data-data_ujian_user/$row->recruitment_user_id/$holding") . '" type="button" class="btn btn-info"><small>Lihat</small></a>';
+                })
                 ->addColumn('nama_bagian', function ($row) {
                     return $row->recruitmentUser->Bagian->nama_bagian;
                 })
@@ -873,7 +876,7 @@ asoy.com
                 ->addColumn('nama_departemen', function ($row) {
                     return $row->recruitmentUser->Bagian->Divisi->Departemen->nama_departemen;
                 })
-                ->rawColumns(['tanggal_wawancara', 'presensi', 'nama_lengkap', 'nama_bagian', 'nama_departemen', 'nama_divisi', 'nama_departemen'])
+                ->rawColumns(['tanggal_wawancara', 'presensi', 'nama_lengkap', 'ujian', 'nama_bagian', 'nama_departemen', 'nama_divisi', 'nama_departemen'])
                 ->make(true);
         }
     }
@@ -947,6 +950,16 @@ asoy.com
                 ->rawColumns(['tanggal_wawancara', 'presensi', 'nama_lengkap', 'nama_bagian', 'nama_departemen', 'nama_divisi', 'nama_departemen'])
                 ->make(true);
         }
+    }
+    public function data_ujian_user($id)
+    {
+        $holding = request()->segment(count(request()->segments()));
+        $user_recruitment = RecruitmentUser::where('id', $id)->first();
+        return view('admin.recruitment-users.interview.data_ujian_user', [
+            // return view('karyawan.index', [
+            'holding'   => $holding,
+            'user_recruitment'   => $user_recruitment,
+        ]);
     }
     public function presensi_recruitment_update(Request $request)
     {
@@ -1495,7 +1508,7 @@ asoy.com
                 ->addColumn('option', function ($row) {
                     if ($row->jenis == 0) {
                         $holding = request()->segment(count(request()->segments()));
-                        return '<a href="/show-ujian/' . $row->kode . '/' . $holding . '" class="btn btn-primary btn-sm">
+                        return '<a href="/show-esai/' . $row->kode . '/' . $holding . '" class="btn btn-primary btn-sm">
                                     <span class="mdi mdi-eye-outline"></span>
                                 </a>';
                     } elseif ($row->jenis == 1) {
@@ -1652,6 +1665,25 @@ asoy.com
             'holding' => $holding
         ]);
     }
+    function show_esai(Ujian $ujian)
+    {
+        // dd($ujian);
+        $holding = request()->segment(count(request()->segments()));
+
+        return view('admin.recruitment-users.ujian.data_show_esai', [
+            'title' => 'Detail Ujian Pilihan Ganda',
+            'plugin' => '
+                <link href="' . url("/public/assets/ew/css/style.css") . '" rel="stylesheet" type="text/css" />
+                <script src="' . url("/public/assets/ew/js/examwizard.js") . '"></script>
+            ',
+            'menu' => [
+                'menu' => 'ujian',
+                'expanded' => 'ujian'
+            ],
+            'ujian' => $ujian,
+            'holding' => $holding
+        ]);
+    }
 
     function pg_ujian_pg()
     {
@@ -1754,12 +1786,6 @@ asoy.com
     }
     function esai_pg_store(Request $request)
     {
-        // dd($request->all());
-        // $siswa = UserCareer::where('kelas_id', $request->kelas)->get();
-        // if ($siswa->count() == 0) {
-        //     return redirect('pg-data-ujian/sp')->with('success', 'Belum ada user di kelas tersebut');
-        // }
-
         $kode = Str::random(30);
         $ujian = [
             'kode' => $kode,
@@ -1789,18 +1815,6 @@ asoy.com
             ]);
             $index++;
         }
-        // $email_siswa = '';
-        // $waktu_ujian = [];
-        // foreach ($siswa as $s) {
-        //     $email_siswa .= $s->email . ',';
-        //     array_push($waktu_ujian, [
-        //         'kode' => $kode,
-        //         'auth_id' => $s->id
-        //     ]);
-        // }
-
-        // $email_siswa = Str::replaceLast(',', '', $email_siswa);
-        // $email_siswa = explode(',', $email_siswa);
         Ujian::insert($ujian);
         DetailEsai::insert($detail_ujian);
         // WaktuUjian::insert($waktu_ujian);
