@@ -56,11 +56,11 @@
                                                 </div>
                                             </label>
                                         </div>
-                                        <div class="px-3 mb-3">
+                                        <div class="mb-3">
                                             @if ($uu->ujianEsaiJawabDetail != null)
-                                                <p>{{ $uu->ujianEsaiJawabDetail->jawaban }}</p>
+                                                <textarea class="form-control" name="" id="" readonly>{{ $uu->ujianEsaiJawabDetail->jawaban }}</textarea>
                                             @else
-                                                <p>Tidak Terjawab</p>
+                                                <textarea class="form-control" name="" id="" readonly>-</textarea>
                                             @endif
                                         </div>
                                     @endforeach

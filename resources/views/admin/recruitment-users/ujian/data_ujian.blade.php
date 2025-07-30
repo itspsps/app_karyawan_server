@@ -39,6 +39,12 @@
                                 Kategori Ujian
                             </a>
                         </li>
+                        <li class="nav-item" role="presentation">
+                            <a class="nav-link" id="icon-tab-3" data-bs-toggle="tab" href="#icon-tabpanel-3" role="tab"
+                                aria-controls="icon-tabpanel-0" aria-selected="true">
+                                Pembobotan
+                            </a>
+                        </li>
                     </ul>
                     <div class="tab-content" id="tab-content">
                         <div class="tab-pane active show" id="icon-tabpanel-0" role="tabpanel" aria-labelledby="icon-tab-0">
@@ -104,6 +110,24 @@
                                     <tr>
                                         <th>Kategori</th>
                                         <th>Opsi</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="table-border-bottom-0">
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="tab-pane" id="icon-tabpanel-3" role="tabpanel" aria-labelledby="icon-tab-3">
+                            <div class="d-">
+                                <h5 class="card-title m-0 me-2">PEMBOBOTAN</h5>
+                            </div>
+                            <table class="table" id="tabel_pembobotan" style="width: 100%;">
+                                <thead class="table-primary">
+                                    <tr>
+                                        <th class="text-start">esai</th>
+                                        <th class="text-start">pilihan ganda</th>
+                                        <th class="text-start">interview</th>
+                                        <th class="text-start">interview user</th>
+                                        <th class="text-start">option</th>
                                     </tr>
                                 </thead>
                                 <tbody class="table-border-bottom-0">
@@ -194,6 +218,57 @@
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
                     <button type="button" class="btn btn-primary" id="btn_update_kategori">Masukkan
                         Kategori</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    {{-- end modal update kategori --}}
+    {{-- modal update kategori --}}
+    <div class="modal fade" id="modal_update_pembobotan" tabindex="-1" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">UPDATE PEMBOBOTAN</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p class="text-danger">Penilaian total harus Pas 100</p>
+                    <form method="post" enctype="multipart/form-data">
+                        <div id="pembobotan_perhitungan">
+                            <div class="mb-3">
+                                <label>PILIHAN GANDA</label>
+                                <input type="number" class="form-control" id="esai_update" name="esai" required>
+                                <input type="hidden" class="form-control" id="pembobotan_id_update"
+                                    name="pembobotan_id">
+                            </div>
+                            <div class="mb-3">
+                                <label>ESAI</label>
+                                <input type="number" class="form-control" id="pilihan_ganda_update"
+                                    name="pilihan_ganda" required>
+                            </div>
+                            <div class="mb-3">
+                                <label>INTERVIEW</label>
+                                <input type="number" class="form-control" id="interview_update" name="interview"
+                                    required>
+                            </div>
+                            <div class="mb-3">
+                                <label>INTERVIEW USER</label>
+                                <input type="number" class="form-control" id="interview_user_update"
+                                    name="interview_user" required>
+                            </div>
+                            <div class="mb-3">
+                                <label>TOTAL</label>
+                                <input type="number" class="form-control" id="total_update" name="total" readonly>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                    <button type="button" class="btn btn-primary" id="btn_update_pembobotan">Masukkan
+                        pembobotan</button>
+                    <p class="text-danger" id="alert-samadengan">*Penilaian kurang atau lebih dari 100</p>
                 </div>
             </div>
         </div>
@@ -342,7 +417,43 @@
             table2.columns.adjust().draw().responsive.recalc();
             // table.draw();
         });
+        var table3 = $('#tabel_pembobotan').DataTable({
+            "scrollY": true,
+            "scrollX": true,
+            processing: true,
+            serverSide: true,
+            ajax: {
+                url: "{{ url('/pg-data-dt_pembobotan') }}"
+            },
+            columns: [{
+                    data: 'esai',
+                    name: 'esai',
+                },
+                {
+                    data: 'pilihan_ganda',
+                    name: 'pilihan_ganda',
+                },
+                {
+                    data: 'interview',
+                    name: 'interview',
+                },
+                {
+                    data: 'interview_user',
+                    name: 'interview_user'
+                },
+                {
+                    data: 'option',
+                    name: 'option'
+                },
+            ]
+        });
+
+        $('#icon-tab-3').on('shown.bs.tab', function(e) {
+            table3.columns.adjust().draw().responsive.recalc();
+            // table.draw();
+        });
         $('#btn_modal_kategori').click(function() {
+            console.log('asoy');
             $('#modal_tambah_kategori').modal('show');
         });
         $(document).on('click', '#btn_edit_ujian_kategori', function() {
@@ -557,5 +668,110 @@
 
             });
         });
+        // pembobotan
+        // console.log(esai);
+        $('#alert-samadengan').hide();
+        $('#btn_update_pembobotan').prop('disabled', true);
+        $('#pembobotan_perhitungan').on('keyup', function() {
+            var esai = $('#esai_update').val();
+            var pilihan_ganda = $('#pilihan_ganda_update').val();
+            var interview = $('#interview_update').val();
+            var interview_user = $('#interview_user_update').val();
+
+            var total = parseInt(esai) + parseInt(pilihan_ganda) + parseInt(interview) + parseInt(interview_user);
+            $('#total_update').val(total);
+            if (total == '100') {
+                $('#btn_update_pembobotan').prop('disabled', false);
+            } else {
+                $('#alert-samadengan').show();
+                $('#btn_update_pembobotan').prop('disabled', true);
+
+            }
+
+        });
+        $(document).on('click', '#btn_modal_pembobotan', function() {
+            var pembobotan_id = $(this).data('pembobotan_id');
+            var esai = $(this).data('esai');
+            var pilihan_ganda = $(this).data('pilihan_ganda');
+            var interview = $(this).data('interview');
+            var interview_user = $(this).data('interview_user');
+            // console.log(pembobotan_id);
+            $('#pembobotan_id_update').val(pembobotan_id);
+            $('#esai_update').val(esai);
+            $('#pilihan_ganda_update').val(pilihan_ganda);
+            $('#interview_user_update').val(interview_user);
+            $('#interview_update').val(interview);
+            $('#modal_update_pembobotan').modal('show');
+
+        });
+        $('#btn_update_pembobotan').on('click', function(e) {
+            e.preventDefault();
+            var formData = new FormData();
+
+            formData.append('_token', '{{ csrf_token() }}');
+            formData.append('pembobotan_id', $('#pembobotan_id_update').val());
+            formData.append('esai', $('#esai_update').val());
+            formData.append('pilihan_ganda', $('#pilihan_ganda_update').val());
+            formData.append('interview', $('#interview_update').val());
+            formData.append('interview_user', $('#interview_user_update').val());
+            formData.append('id', $('#id_update').val());
+            $.ajax({
+                type: "POST",
+
+                url: "{{ url('/pg-data-pembobotan_post') }}",
+                data: formData,
+                contentType: false,
+                processData: false,
+                error: function() {
+                    alert('Something is wrong');
+                    // console.log(formData);
+                },
+                success: function(data) {
+                    if (data.code == 200) {
+                        Swal.fire({
+                            title: 'Berhasil',
+                            text: data.message,
+                            icon: 'success',
+                            timer: 5000
+                        })
+                        //mengosongkan modal dan menyembunyikannya
+                        $('#esai_update').val('');
+                        $('#pilihan_ganda_update').val('');
+                        $('#interview_update').val('');
+                        $('#interview_user_update').val('');
+                        $('#modal_update_pembobotan').modal('hide');
+                        $('#tabel_pembobotan').DataTable().ajax.reload();
+                    } else if (data.code == 400) {
+                        let errors = data.errors;
+                        // console.log(errors);
+                        let errorMessages = '';
+
+                        Object.keys(errors).forEach(function(key) {
+                            errors[key].forEach(function(message) {
+                                errorMessages += `• ${message}\n`;
+                            });
+                        });
+                        Swal.fire({
+                            // title: data.message,
+                            text: errorMessages,
+                            icon: 'warning',
+                            timer: 4500
+                        })
+                        $('#modal_update_pembobotan').modal('hide');
+
+                    } else {
+                        Swal.fire({
+                            title: 'Gagal',
+                            text: data.error,
+                            icon: 'error',
+                            timer: 10000
+                        })
+
+                    }
+                }
+
+            });
+        });
+        // pembobotan end
     </script>
 @endsection

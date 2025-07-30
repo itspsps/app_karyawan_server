@@ -72,6 +72,17 @@
                                 </div>
                             </div>
                             <div class="row mt-3">
+                                <div class="col-lg-6">
+                                    <div class="form-group">
+                                        <label for="">Bobot Nilai</label>
+                                        <input type="text" name="pembobotan_pilihan_ganda"
+                                            value="{{ $pembobotan->pilihan_ganda }}%" class="form-control" disabled>
+                                        <input type="hidden" name="pembobotan_id" value="{{ $pembobotan->pembobotan_id }}"
+                                            class="form-control">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mt-3">
                                 <div class="col-lg-12">
                                     <div class="custom-control custom-checkbox py-2">
                                         <input type="checkbox" class="custom-control-input" id="customCheck1" name="nol"
@@ -96,8 +107,8 @@
                                             Sales Manager</label>
                                     </div>
                                     <div class="custom-control custom-checkbox py-2">
-                                        <input type="checkbox" class="custom-control-input" id="customCheck1" name="empat"
-                                            value="1">
+                                        <input type="checkbox" class="custom-control-input" id="customCheck1"
+                                            name="empat" value="1">
                                         <label class="custom-control-label" for="customCheck1">Supervisor</label>
                                     </div>
                                     <div class="custom-control custom-checkbox py-2">

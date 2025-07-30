@@ -21,6 +21,7 @@ use App\Models\WaktuUjian;
 use App\Models\PgSiswa;
 use App\Models\EssaySiswa;
 use App\Models\DetailEssay;
+use App\Models\Pembobotan;
 use App\Models\RecruitmentCV;
 use App\Models\RecruitmentKeahlian;
 use App\Models\RecruitmentKesehatan;
@@ -954,7 +955,11 @@ asoy.com
     public function data_ujian_user($id)
     {
         $holding = request()->segment(count(request()->segments()));
-        $user_recruitment = RecruitmentUser::where('id', $id)->first();
+        $user_recruitment = RecruitmentUser::where('id', $id)->with([
+            'Cv' => function ($query) {
+                $query;
+            }
+        ])->first();
         return view('admin.recruitment-users.interview.data_ujian_user', [
             // return view('karyawan.index', [
             'holding'   => $holding,
@@ -1307,6 +1312,7 @@ asoy.com
     function pg_ujian()
     {
         $holding = request()->segment(count(request()->segments()));
+        $pembobotan = Pembobotan::first();
         return view('admin.recruitment-users.ujian.data_ujian', [
             'holding' => $holding,
             'title' => 'Data Ujian',
@@ -1320,8 +1326,88 @@ asoy.com
                 'menu' => 'ujian',
                 'expanded' => 'ujian'
             ],
+            'pembobotan' => $pembobotan
         ]);
     }
+    function pembobotan_post(Request $request)
+    {
+        $validator = Validator::make(
+            $request->all(),
+            [
+                'esai' => 'required|numeric',
+                'pilihan_ganda' => 'required|numeric',
+                'interview' => 'required|numeric',
+                'interview_user' => 'required|numeric',
+            ],
+            [
+                'required' => ':attribute tidak boleh kosong'
+            ]
+        );
+        if ($validator->fails()) {
+            return response()->json([
+                'code' => 400,
+                'message' => 'Validasi gagal',
+                'errors' => $validator->errors()
+            ]);
+        }
+        try {
+            Pembobotan::where('pembobotan_id', $request->pembobotan_id)->update([
+                'esai' => $request->esai,
+                'pilihan_ganda' => $request->pilihan_ganda,
+                'interview' => $request->interview,
+                'interview_user' => $request->interview_user,
+                'updated_at'    => date('Y-m-d H:i:s')
+            ]);
+            return response()->json([
+                'code' => 200,
+                // 'data' => $get_data,
+                // 'data_keahlian' => $data_keahlian,
+                // 'message' => 'Data Berhasil Diupdate'
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'code' => 500,
+                'error' => $e->getMessage(),
+            ]);
+        }
+    }
+    function dt_pembobotan()
+    {
+        $data = Pembobotan::get();
+        if (request()->ajax()) {
+            return DataTables::of($data)
+                ->addColumn('esai', function ($row) {
+                    return $row->esai;
+                })
+                ->addColumn('pilihan_ganda', function ($row) {
+                    return $row->pilihan_ganda;
+                })
+                ->addColumn('interview', function ($row) {
+                    return $row->interview;
+                })
+                ->addColumn('interview_user', function ($row) {
+                    return $row->interview_user;
+                })
+                ->addColumn('option', function ($row) {
+                    return '
+                        <button type="button" id="btn_modal_pembobotan"
+                            data-pembobotan_id="' . $row->pembobotan_id . '"
+                            data-esai="' . $row->esai . '"
+                            data-pilihan_ganda="' . $row->pilihan_ganda . '"
+                            data-interview="' . $row->interview . '"
+                            data-interview_user="' . $row->interview_user . '"
+                            class="btn btn-icon btn-info waves-effect waves-light">
+                           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
+                            <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
+                            <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"/>
+                            </svg>
+                        </button>';
+                })
+                ->rawColumns(['esai', 'pilihan_ganda', 'interview', 'option'])
+                ->make(true);
+        }
+    }
+
 
     function dt_ujian()
     {
@@ -1701,7 +1787,8 @@ asoy.com
                 'menu' => 'ujian',
                 'expanded' => 'ujian'
             ],
-            'kategori' =>  UjianKategori::get()
+            'kategori' =>  UjianKategori::get(),
+            'pembobotan' =>  Pembobotan::first()
         ]);
     }
     function pg_esai_pg()
@@ -1720,7 +1807,8 @@ asoy.com
                 'menu' => 'ujian',
                 'expanded' => 'ujian'
             ],
-            'kategori' =>  UjianKategori::get()
+            'kategori' =>  UjianKategori::get(),
+            'pembobotan' =>  Pembobotan::first()
         ]);
     }
 
@@ -1741,6 +1829,7 @@ asoy.com
             'kategori_id' => $request->kategori_id,
             'jam' => $request->jam,
             'menit' => $request->menit,
+            'pembobotan_id' => $request->pembobotan_id,
             'acak' => $request->acak,
             'nol' => $request->nol,
             'satu' => $request->satu,
@@ -1792,6 +1881,7 @@ asoy.com
             'esai' => $request->esai,
             'nama' => $request->nama_ujian,
             'jenis' => 0,
+            'pembobotan_id' => $request->pembobotan_id,
             'kategori_id' => $request->kategori_id,
             'jam' => $request->jam,
             'menit' => $request->menit,

@@ -20,7 +20,7 @@
                 <div class="container card">
                     <div class="card-header">
                         <div class="d-flex align-items-center justify-content-between">
-                            <h5 class="card-title m-0 me-2">DATA INTERVIEW</h5>
+                            <h5 class="card-title m-0 me-2">DATA INTERVIEW ({{ $user_recruitment->Cv->nama_lengkap }})</h5>
                         </div>
                         <input type="hidden" value="{{ $user_recruitment->id }}" name="recruitment_user_id"
                             id="recruitment_user_id_add">
@@ -61,7 +61,6 @@
                                 </table>
                             </div>
                         </div>
-
                     </div>
                 </div>
             </div>

@@ -25,9 +25,12 @@ class RecruitmentUserController extends Controller
     {
         $url = request()->segment(count(request()->segments()));
         $data = DB::table('recruitment_user')->join(
-                'recruitment_interview', 'recruitment_user.id', '=',
-                'recruitment_interview.recruitment_userid')->first();
-        if($data->status_interview == 0){
+            'recruitment_interview',
+            'recruitment_user.id',
+            '=',
+            'recruitment_interview.recruitment_userid'
+        )->first();
+        if ($data->status_interview == 0) {
             RecruitmentInterview::where('id', $data->id)->where('status_interview', 0)->update([
                 'status_interview' => 1,
             ]);
@@ -41,5 +44,4 @@ class RecruitmentUserController extends Controller
         $url = request()->segment(count(request()->segments()));
         dd($url);
     }
-
 }

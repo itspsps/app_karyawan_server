@@ -1431,6 +1431,9 @@ Route::get('/pg-data-ujian/sp', [RecruitmentController::class, 'pg_ujian'])->mid
 Route::get('/pg-data-ujian/sps', [RecruitmentController::class, 'pg_ujian'])->middleware('admin');
 Route::get('/pg-data-ujian/sip', [RecruitmentController::class, 'pg_ujian'])->middleware('admin');
 
+Route::post('/pg-data-pembobotan_post', [RecruitmentController::class, 'pembobotan_post'])->middleware('admin');
+Route::get('/pg-data-dt_pembobotan', [RecruitmentController::class, 'dt_pembobotan'])->name('dt_pembobotan')->middleware('admin');
+
 Route::get('/dt-data-list-ujian/sp', [RecruitmentController::class, 'dt_ujian'])->middleware('admin');
 Route::get('/dt-data-list-ujian/sps', [RecruitmentController::class, 'dt_ujian'])->middleware('admin');
 Route::get('/dt-data-list-ujian/sip', [RecruitmentController::class, 'dt_ujian'])->middleware('admin');
