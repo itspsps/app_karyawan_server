@@ -6,6 +6,7 @@ use App\Traits\UuidTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class RecruitmentUser extends Model
 {
@@ -78,6 +79,14 @@ class RecruitmentUser extends Model
     public function desaKTP(): BelongsTo
     {
         return $this->belongsTo(Village::class, 'desa_ktp', 'code');
+    }
+    public function recruitmentAdmin(): BelongsTo
+    {
+        return $this->belongsTo(Recruitment::class, 'recruitment_admin_id', 'id');
+    }
+    public function ujianEsaiJawab(): HasMany
+    {
+        return $this->hasMany(UjianEsaiJawab::class, 'recruitment_user_id', 'id');
     }
     // End Alamat User
 }

@@ -57,4 +57,8 @@ class Ujian extends Model
     {
         return $this->belongsTo(UjianEsaiJawab::class, 'kode', 'kode');
     }
+    public function pembobotan(): BelongsTo
+    {
+        return $this->belongsTo(Pembobotan::class, 'pembobotan_id', 'pembobotan_id');
+    }
 }

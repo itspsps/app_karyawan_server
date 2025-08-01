@@ -24,6 +24,10 @@ class UjianEsaiJawab extends Model
     // relasi Ke DetailUjian
     public function detailujian()
     {
-        return $this->hasMany(UjianEsaiJawab::class, 'kode', 'kode');
+        return $this->hasMany(UjianEsaiJawabDetail::class, 'kode', 'kode');
+    }
+    public function ujian()
+    {
+        return $this->belongsTo(Ujian::class, 'kode', 'kode');
     }
 }

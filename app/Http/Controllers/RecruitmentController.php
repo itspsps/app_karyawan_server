@@ -45,7 +45,7 @@ use Illuminate\Support\Facades\Validator;
 
 use RealRashid\SweetAlert\Facades\Alert;
 use DB;
-
+use Illuminate\Support\Facades\DB as FacadesDB;
 use PhpParser\Builder\Function_;
 
 class RecruitmentController extends Controller
@@ -2071,431 +2071,547 @@ asoy.com
             'data_divisi' => Divisi::orderBy('nama_divisi', 'asc')->where('holding', $holding)->get()
         ]);
     }
-
     function dt_list_ranking($id)
     {
-        $holding = request()->segment(count(request()->segments()));
-        $table =  RecruitmentUser::with([
-            'Bagian' =>  function ($query) {
-                $query->with([
-                    'Divisi' => function ($query) {
+        $table = RecruitmentUser::with([
+            'Cv' => function ($query) {
+                $query;
+            }
+        ])->with([
+            'ujianEsaiJawab' => function ($query) {
+                $query->orderBy('recruitment_user_id')->with([
+                    'ujian' => function ($query) {
                         $query->with([
-                            'Departemen' => function ($query) {
-                                $query->orderBy('nama_departemen', 'ASC');
+                            'pembobotan' => function ($query) {
+                                $query;
                             }
                         ]);
-                        $query->orderBy('nama_divisi', 'ASC');
                     }
                 ]);
-                $query->orderBy('nama_bagian', 'ASC');
-            },
-            'AuthLogin' => function ($query) {
-                $query->orderBy('id', 'ASC');
-            },
-            'WaktuUjian' => function ($query) {
-                $query->orderBy('id', 'ASC');
-            },
-            'Cv' => function ($query) {
-                $query->whereNotNull('users_career_id')->orderBy('id', 'ASC');
-            },
-            'DataInterview' => function ($query) {
-                $query->orderBy('id', 'ASC');
-            },
+            }
         ])
-            ->where('holding', $holding)
-            ->where('recruitment_admin_id', $id)
-            ->where('status_recruitmentuser', '!=', 0)
-            ->where('status_recruitmentuser', '!=', 5)
-            ->orderBy('nama_bagian', 'ASC')->get();
-        // dd($table);
-        // if (request()->ajax()) {
-        return DataTables::of($table)
-            ->addColumn('nama_pelamar', function ($row) {
-                if (($row->Cv->nama_depan != '' && $row->Cv->nama_tengah != '' && $row->Cv->nama_belakang != '')) {
-                    $nama_pelamar = $row->Cv->nama_depan . ' ' . $row->Cv->nama_tengah . ' ' . $row->Cv->nama_belakang;
-                } elseif ($row->Cv->nama_depan != '' && $row->Cv->nama_tengah != '' && $row->Cv->nama_belakang == '') {
-                    $nama_pelamar = $row->Cv->nama_depan . ' ' . $row->Cv->nama_tengah;
-                } else {
-                    $nama_pelamar = $row->Cv->nama_depan;
+            ->with([
+                'recruitmentAdmin' => function ($query) {
+                    $query;
                 }
-                return $nama_pelamar;
-            })
-            ->addColumn('status_nilai', function ($row) use ($holding) {
-                $data1 = (($row->DataInterview->nilai_analogi_antonim +
-                    $row->DataInterview->nilai_analogi_sinonim +
-                    $row->DataInterview->nilai_penalaran +
-                    $row->DataInterview->nilai_aritmatika) * 70) / 100;
-                $data2 = (($row->DataInterview->nilai_kehadiran +
-                    $row->DataInterview->nilai_leadership +
-                    $row->DataInterview->nilai_planning +
-                    $row->DataInterview->nilai_problemsolving +
-                    $row->DataInterview->nilai_quallity +
-                    $row->DataInterview->nilai_creativity +
-                    $row->DataInterview->nilai_teamwork) * 30) / 100;
-                $return = $data1 + $data2;
-                if ($return > 90) {
-                    return '<span class="badge bg-label-success rounded-pill">Rekomendasi A+ </span>';
-                } elseif ($return < 90 && $return > 75) {
-                    return '<span class="badge bg-label-success rounded-pill">Rekomendasi A</span>';
-                } elseif ($return < 75 && $return > 61) {
-                    return '<span class="badge bg-label-info rounded-pill">Dipertimbangkan</span>';
-                } else {
-                    return '<span class="badge bg-label-danger rounded-pill">Ditolak</span>';
-                }
-            })
-            ->addColumn('nilai_akhir', function ($row) use ($holding) {
-                if (isset($row->DataInterview) && $row->DataInterview !== null) {
-                    if ($row->DataInterview->status_interview == 3) {
-                        $data1 = (($row->DataInterview->nilai_analogi_antonim +
-                            $row->DataInterview->nilai_analogi_sinonim +
-                            $row->DataInterview->nilai_penalaran +
-                            $row->DataInterview->nilai_aritmatika) * 70) / 100;
-                        $data2 = (($row->DataInterview->nilai_kehadiran +
-                            $row->DataInterview->nilai_leadership +
-                            $row->DataInterview->nilai_planning +
-                            $row->DataInterview->nilai_problemsolving +
-                            $row->DataInterview->nilai_quallity +
-                            $row->DataInterview->nilai_creativity +
-                            $row->DataInterview->nilai_teamwork) * 30) / 100;
-                        $return = '<span class="badge badge-center rounded-pill bg-success" style="width:35%">&nbsp;' . $data1 + $data2 . '&nbsp;</span>';
-                        return $return;
-                    } else {
-                        $return = '<span class="badge badge-center rounded-pill bg-primary" style="width:35%">&nbsp;0&nbsp;</span>';
-                        return $return;
-                    }
-                } else {
-                    $return = '<span class="badge badge-center rounded-pill bg-primary" style="width:35%">&nbsp;0&nbsp;</span>';
-                    return $return;
-                }
-            })
-            ->addColumn('detail_cv', function ($row) use ($holding) {
-                $btn = '<button id="btn_lihat_cv"
-                                data-id="' . $row->id . '"
-                                data-nama_pelamar="' . $row->Cv->nama_depan . ' ' . $row->Cv->nama_tengah . ' ' . $row->Cv->nama_belakang . '"
-                                data-tempat_lahir="' . $row->Cv->tempat_lahir . '"
-                                data-tanggal_lahir="' . $row->Cv->tanggal_lahir . '"
-                                data-gender="' . $row->Cv->gender . '"
-                                data-status_nikah="' . $row->Cv->status_nikah . '"
-                                data-nik="' . $row->Cv->nik . '"
-                                data-departemen="' . $row->Bagian->Divisi->Departemen->nama_departemen . '"
-                                data-divisi="' . $row->Bagian->Divisi->nama_divisi . '"
-                                data-bagian="' . $row->Bagian->nama_bagian . '"
-                                data-jabatan="' . $row->Bagian->nama_jabatan . '"
-                                data-email="' . $row->Cv->email . '"
-                                data-no_hp="' . $row->Cv->no_hp . '"
-                                data-alamatktp="' . $row->Cv->detail_alamat . '"
-                                data-nama_sdmi="' . $row->Cv->nama_sdmi . '"
-                                data-tahun_sdmi="' . $row->Cv->tahun_sdmi . '"
-                                data-nama_smpmts="' . $row->Cv->nama_smpmts . '"
-                                data-tahun_smpmts="' . $row->Cv->tahun_smpmts . '"
-                                data-nama_smamasmk="' . $row->Cv->nama_smamasmk . '"
-                                data-tahun_smamasmk="' . $row->Cv->tahun_smamasmk . '"
-                                data-nama_universitas="' . $row->Cv->nama_universitas . '"
-                                data-tahun_universitas="' . $row->Cv->tahun_universitas . '"
-                                data-judul_keterampilan1="' . $row->Cv->judul_keterampilan1 . '"
-                                data-ket_keterampilan1="' . $row->Cv->ket_keterampilan1 . '"
-                                data-judul_keterampilan2="' . $row->Cv->judul_keterampilan2 . '"
-                                data-ket_keterampilan2="' . $row->Cv->ket_keterampilan2 . '"
-                                data-judul_keterampilan3="' . $row->Cv->judul_keterampilan3 . '"
-                                data-ket_keterampilan3="' . $row->Cv->ket_keterampilan3 . '"
-                                data-judul_pengalaman1="' . $row->Cv->judul_pengalaman1 . '"
-                                data-lokasi_pengalaman1="' . $row->Cv->lokasi_pengalaman1 . '"
-                                data-tahun_pengalaman1="' . $row->Cv->tahun_pengalaman1 . '"
-                                data-judul_pengalaman2="' . $row->Cv->judul_pengalaman2 . '"
-                                data-lokasi_pengalaman2="' . $row->Cv->lokasi_pengalaman2 . '"
-                                data-tahun_pengalaman2="' . $row->Cv->tahun_pengalaman2 . '"
-                                data-judul_pengalaman3="' . $row->Cv->judul_pengalaman3 . '"
-                                data-lokasi_pengalaman3="' . $row->Cv->lokasi_pengalaman3 . '"
-                                data-tahun_pengalaman3="' . $row->Cv->tahun_pengalaman3 . '"
-                                data-prestasi1="' . $row->Cv->prestasi1 . '"
-                                data-prestasi2="' . $row->Cv->prestasi2 . '"
-                                data-prestasi3="' . $row->Cv->prestasi3 . '"
-                                data-img_ktp="' . $row->Cv->file_ktp . '"
-                                data-img_kk="' . $row->Cv->file_kk . '"
-                                data-img_ijazah="' . $row->Cv->file_ijazah . '"
-                                data-img_pp="' . $row->Cv->file_pp . '"
-                                type="button" class="btn btn-sm" style="background-color:#e9ddff">
-                                <i class="tf-icons mdi mdi-eye-circle-outline me-1"></i>
-                                Detail&nbsp;CV
-                            </button>';
-                return $btn;
-            })
-            ->addColumn('nilai_analogi_antonim', function ($row) {
-                if (isset($row->DataInterview) && $row->DataInterview !== null) {
-                    if ($row->DataInterview->nilai_analogi_antonim != 0 && $row->DataInterview->status_interview == 3) {
-                        if ($row->DataInterview->nilai_analogi_antonim == 0) {
-                            $return = '<span class="badge badge-center rounded-pill bg-primary" style="width:35%">&nbsp;0&nbsp;</span>';
-                            return $return;
-                        } else {
-                            $return = '<span class="badge badge-center rounded-pill bg-primary" style="width:35%">&nbsp;' . $row->DataInterview->nilai_analogi_antonim . '&nbsp;</span>';
-                            return $return;
-                        }
-                    } else {
-                        $return = '<span class="badge badge-center rounded-pill bg-primary" style="width:35%">&nbsp;0&nbsp;</span>';
-                        return $return;
-                    }
-                } else {
-                    $return = '<span class="badge badge-center rounded-pill bg-primary" style="width:35%">&nbsp;0&nbsp;</span>';
-                    return $return;
-                }
-            })
-            ->addColumn('nilai_analogi_sinonim', function ($row) {
-                if (isset($row->DataInterview) && $row->DataInterview !== null) {
-                    if ($row->DataInterview->nilai_analogi_sinonim != 0 && $row->DataInterview->status_interview == 3) {
-                        if ($row->DataInterview->nilai_analogi_sinonim == 0) {
-                            $return = '<span class="badge badge-center rounded-pill bg-primary" style="width:35%">&nbsp;0&nbsp;</span>';
-                            return $return;
-                        } else {
-                            $return = '<span class="badge badge-center rounded-pill bg-primary" style="width:35%">&nbsp;' . $row->DataInterview->nilai_analogi_sinonim . '&nbsp;</span>';
-                            return $return;
-                        }
-                    } else {
-                        $return = '<span class="badge badge-center rounded-pill bg-primary" style="width:35%">&nbsp;0&nbsp;</span>';
-                        return $return;
-                    }
-                } else {
-                    $return = '<span class="badge badge-center rounded-pill bg-primary" style="width:35%">&nbsp;0&nbsp;</span>';
-                    return $return;
-                }
-            })
-            ->addColumn('nilai_penalaran', function ($row) {
-                if (isset($row->DataInterview) && $row->DataInterview !== null) {
-                    if ($row->DataInterview->nilai_penalaran != null && $row->DataInterview->status_interview == 3) {
-                        if ($row->DataInterview->nilai_penalaran == 0) {
-                            $return = '<span class="badge badge-center rounded-pill bg-primary" style="width:35%">&nbsp;0&nbsp;</span>';
-                            return $return;
-                        } else {
-                            $return = '<span class="badge badge-center rounded-pill bg-primary" style="width:35%">&nbsp;' . $row->DataInterview->nilai_penalaran . '&nbsp;</span>';
-                            return $return;
-                        }
-                    } else {
-                        $return = '<span class="badge badge-center rounded-pill bg-primary" style="width:35%">&nbsp;0&nbsp;</span>';
-                        return $return;
-                    }
-                } else {
-                    $return = '<span class="badge badge-center rounded-pill bg-primary" style="width:35%">&nbsp;0&nbsp;</span>';
-                    return $return;
-                }
-            })
-            ->addColumn('nilai_aritmatika', function ($row) {
-                if (isset($row->DataInterview) && $row->DataInterview !== null) {
-                    if ($row->DataInterview->nilai_aritmatika != null && $row->DataInterview->status_interview == 3) {
-                        if ($row->DataInterview->nilai_aritmatika == 0) {
-                            $return = '<span class="badge badge-center rounded-pill bg-primary" style="width:35%">&nbsp;0&nbsp;</span>';
-                            return $return;
-                        } else {
-                            $return = '<span class="badge badge-center rounded-pill bg-primary" style="width:35%">&nbsp;' . $row->DataInterview->nilai_aritmatika . '&nbsp;</span>';
-                            return $return;
-                        }
-                    } else {
-                        $return = '<span class="badge badge-center rounded-pill bg-primary" style="width:35%">&nbsp;0&nbsp;</span>';
-                        return $return;
-                    }
-                } else {
-                    $return = '<span class="badge badge-center rounded-pill bg-primary" style="width:35%">&nbsp;0&nbsp;</span>';
-                    return $return;
-                }
-            })
-            ->addColumn('total_nilai_psikotes', function ($row) {
-                if (isset($row->DataInterview) && $row->DataInterview !== null) {
-                    if ($row->DataInterview->nilai_aritmatika != null && $row->DataInterview->status_interview == 3) {
-                        $return = '<span class="badge badge-center rounded-pill bg-success" style="width:35%">&nbsp;' .
-                            $row->DataInterview->nilai_aritmatika +
-                            $row->DataInterview->nilai_penalaran +
-                            $row->DataInterview->nilai_analogi_antonim +
-                            $row->DataInterview->nilai_analogi_sinonim
-                            . '&nbsp;</span>';
-                        return $return;
-                    } else {
-                        $return = '<span class="badge badge-center rounded-pill bg-success" style="width:35%">&nbsp;0&nbsp;</span>';
-                        return $return;
-                    }
-                } else {
-                    $return = '<span class="badge badge-center rounded-pill bg-success" style="width:35%">&nbsp;0&nbsp;</span>';
-                    return $return;
-                }
-            })
-            ->addColumn('nilai_kehadiran', function ($row) {
-                if (isset($row->DataInterview) && $row->DataInterview !== null) {
-                    if ($row->DataInterview->nilai_kehadiran != null && $row->DataInterview->status_interview == 3) {
-                        if ($row->DataInterview->nilai_kehadiran == 0) {
-                            $return = '<span class="badge badge-center rounded-pill bg-primary" style="width:35%">&nbsp;0&nbsp;</span>';
-                            return $return;
-                        } else {
-                            $return = '<span class="badge badge-center rounded-pill bg-primary" style="width:35%">&nbsp;' . $row->DataInterview->nilai_kehadiran . '&nbsp;</span>';
-                            return $return;
-                        }
-                    } else {
-                        $return = '<span class="badge badge-center rounded-pill bg-primary" style="width:35%">&nbsp;0&nbsp;</span>';
-                        return $return;
-                    }
-                } else {
-                    $return = '<span class="badge badge-center rounded-pill bg-primary" style="width:35%">&nbsp;0&nbsp;</span>';
-                    return $return;
-                }
-            })
-            ->addColumn('nilai_leadership', function ($row) {
-                if (isset($row->DataInterview) && $row->DataInterview !== null) {
-                    if ($row->DataInterview->nilai_leadership != null && $row->DataInterview->status_interview == 3) {
-                        if ($row->DataInterview->nilai_leadership == 0) {
-                            $return = '<span class="badge badge-center rounded-pill bg-primary" style="width:35%">&nbsp;0&nbsp;</span>';
-                            return $return;
-                        } else {
-                            $return = '<span class="badge badge-center rounded-pill bg-primary" style="width:35%">&nbsp;' . $row->DataInterview->nilai_leadership . '&nbsp;</span>';
-                            return $return;
-                        }
-                    } else {
-                        $return = '<span class="badge badge-center rounded-pill bg-primary" style="width:35%">&nbsp;0&nbsp;</span>';
-                        return $return;
-                    }
-                } else {
-                    $return = '<span class="badge badge-center rounded-pill bg-primary" style="width:35%">&nbsp;0&nbsp;</span>';
-                    return $return;
-                }
-            })
-            ->addColumn('nilai_planning', function ($row) {
-                if (isset($row->DataInterview) && $row->DataInterview !== null) {
-                    if ($row->DataInterview->nilai_planning != null && $row->DataInterview->status_interview == 3) {
-                        if ($row->DataInterview->nilai_planning == 0) {
-                            $return = '<span class="badge badge-center rounded-pill bg-primary" style="width:35%">&nbsp;0&nbsp;</span>';
-                            return $return;
-                        } else {
-                            $return = '<span class="badge badge-center rounded-pill bg-primary" style="width:35%">&nbsp;' . $row->DataInterview->nilai_planning . '&nbsp;</span>';
-                            return $return;
-                        }
-                    } else {
-                        $return = '<span class="badge badge-center rounded-pill bg-primary" style="width:35%">&nbsp;0&nbsp;</span>';
-                        return $return;
-                    }
-                } else {
-                    $return = '<span class="badge badge-center rounded-pill bg-primary" style="width:35%">&nbsp;0&nbsp;</span>';
-                    return $return;
-                }
-            })
-            ->addColumn('nilai_problemsolving', function ($row) {
-                if (isset($row->DataInterview) && $row->DataInterview !== null) {
-                    if ($row->DataInterview->nilai_problemsolving != null && $row->DataInterview->status_interview == 3) {
-                        if ($row->DataInterview->nilai_problemsolving == 0) {
-                            $return = '<span class="badge badge-center rounded-pill bg-primary" style="width:35%">&nbsp;0&nbsp;</span>';
-                            return $return;
-                        } else {
-                            $return = '<span class="badge badge-center rounded-pill bg-primary" style="width:35%">&nbsp;' . $row->DataInterview->nilai_problemsolving . '&nbsp;</span>';
-                            return $return;
-                        }
-                    } else {
-                        $return = '<span class="badge badge-center rounded-pill bg-primary" style="width:35%">&nbsp;0&nbsp;</span>';
-                        return $return;
-                    }
-                } else {
-                    $return = '<span class="badge badge-center rounded-pill bg-primary" style="width:35%">&nbsp;0&nbsp;</span>';
-                    return $return;
-                }
-            })
-            ->addColumn('nilai_quallity', function ($row) {
-                if (isset($row->DataInterview) && $row->DataInterview !== null) {
-                    if ($row->DataInterview->nilai_quallity != null && $row->DataInterview->status_interview == 3) {
-                        if ($row->DataInterview->nilai_quallity == 0) {
-                            $return = '<span class="badge badge-center rounded-pill bg-primary" style="width:35%">&nbsp;0&nbsp;</span>';
-                            return $return;
-                        } else {
-                            $return = '<span class="badge badge-center rounded-pill bg-primary" style="width:35%">&nbsp;' . $row->DataInterview->nilai_quallity . '&nbsp;</span>';
-                            return $return;
-                        }
-                    } else {
-                        $return = '<span class="badge badge-center rounded-pill bg-primary" style="width:35%">&nbsp;0&nbsp;</span>';
-                        return $return;
-                    }
-                } else {
-                    $return = '<span class="badge badge-center rounded-pill bg-primary" style="width:35%">&nbsp;0&nbsp;</span>';
-                    return $return;
-                }
-            })
-            ->addColumn('nilai_creativity', function ($row) {
-                if (isset($row->DataInterview) && $row->DataInterview !== null) {
-                    if ($row->DataInterview->nilai_creativity != null && $row->DataInterview->status_interview == 3) {
-                        if ($row->DataInterview->nilai_creativity == 0) {
-                            $return = '<span class="badge badge-center rounded-pill bg-primary" style="width:35%">&nbsp;0&nbsp;</span>';
-                            return $return;
-                        } else {
-                            $return = '<span class="badge badge-center rounded-pill bg-primary" style="width:35%">&nbsp;' . $row->DataInterview->nilai_creativity . '&nbsp;</span>';
-                            return $return;
-                        }
-                    } else {
-                        $return = '<span class="badge badge-center rounded-pill bg-primary" style="width:35%">&nbsp;0&nbsp;</span>';
-                        return $return;
-                    }
-                } else {
-                    $return = '<span class="badge badge-center rounded-pill bg-primary" style="width:35%">&nbsp;0&nbsp;</span>';
-                    return $return;
-                }
-            })
-            ->addColumn('nilai_teamwork', function ($row) {
-                if (isset($row->DataInterview) && $row->DataInterview !== null) {
-                    if ($row->DataInterview->nilai_teamwork != null && $row->DataInterview->status_interview == 3) {
-                        if ($row->DataInterview->nilai_teamwork == 0) {
-                            $return = '<span class="badge badge-center rounded-pill bg-primary" style="width:35%">&nbsp;0&nbsp;</span>';
-                            return $return;
-                        } else {
-                            $return = '<span class="badge badge-center rounded-pill bg-primary" style="width:35%">&nbsp;' . $row->DataInterview->nilai_teamwork . '&nbsp;</span>';
-                            return $return;
-                        }
-                    } else {
-                        $return = '<span class="badge badge-center rounded-pill bg-primary" style="width:35%">&nbsp;0&nbsp;</span>';
-                        return $return;
-                    }
-                } else {
-                    $return = '<span class="badge badge-center rounded-pill bg-primary" style="width:35%">&nbsp;0&nbsp;</span>';
-                    return $return;
-                }
-            })
-            ->addColumn('total_nilai_interview', function ($row) {
-                if (isset($row->DataInterview) && $row->DataInterview !== null) {
-                    if ($row->DataInterview->nilai_teamwork != null && $row->DataInterview->status_interview == 3) {
-                        if ($row->DataInterview->nilai_teamwork == 0) {
-                            $return = '<span class="badge badge-center rounded-pill bg-success" style="width:35%">&nbsp;0&nbsp;</span>';
-                            return $return;
-                        } else {
-                            $return = '<span class="badge badge-center rounded-pill bg-success" style="width:35%">&nbsp;' .
-                                $row->DataInterview->nilai_kehadiran +
-                                $row->DataInterview->nilai_leadership +
-                                $row->DataInterview->nilai_planning +
-                                $row->DataInterview->nilai_problemsolving +
-                                $row->DataInterview->nilai_quallity +
-                                $row->DataInterview->nilai_creativity +
-                                $row->DataInterview->nilai_teamwork
-                                . '&nbsp;</span>';
-                            return $return;
-                        }
-                    } else {
-                        $return = '<span class="badge badge-center rounded-pill bg-success" style="width:35%">&nbsp;0&nbsp;</span>';
-                        return $return;
-                    }
-                } else {
-                    $return = '<span class="badge badge-center rounded-pill bg-success" style="width:35%">&nbsp;0&nbsp;</span>';
-                    return $return;
-                }
-            })
-            ->rawColumns([
-                'nama_pelamar',
-                'status_nilai',
-                'nilai_akhir',
-                'detail_cv',
-                'nilai_analogi_antonim',
-                'nilai_analogi_sinonim',
-                'nilai_penalaran',
-                'nilai_aritmatika',
-                'total_nilai_psikotes',
-                'nilai_kehadiran',
-                'nilai_leadership',
-                'nilai_planning',
-                'nilai_problemsolving',
-                'nilai_quallity',
-                'nilai_creativity',
-                'nilai_teamwork',
-                'total_nilai_interview',
+            ])
+            ->with([
+                'Jabatan' => function ($query) {
+                    $query->with([
+                        'Bagian' =>  function ($query) {
+                            $query->with([
+                                'Divisi' => function ($query) {
+                                    $query->with([
+                                        'Departemen' => function ($query) {
+                                            $query->orderBy('nama_departemen', 'ASC');
+                                        }
+                                    ]);
+                                    $query->orderBy('nama_divisi', 'ASC');
+                                },
+                            ]);
+                        },
+                    ])->with([
+                        'LevelJabatan' => function ($query) {
+                            $query;
+                        },
+                    ]);
+                },
 
             ])
-            ->make(true);
-        // }
+            ->where('recruitment_admin_id', $id)
+            ->get();
+
+        if (request()->ajax()) {
+            return DataTables::of($table)
+                ->addColumn('nama_lengkap', function ($row) {
+                    return $row->Cv->nama_lengkap;
+                })
+                ->addColumn('esai_average', function ($row) {
+
+                    $esai_total = $row->ujianEsaiJawab->sum('nilai') ?? 0;
+                    $get_jabatan = $row->Jabatan->LevelJabatan->level_jabatan;
+                    if ($get_jabatan == 0) {
+                        $esai_count = Ujian::where('esai', 1)->where('nol', '1')->count();
+                    } elseif ($get_jabatan == 1) {
+                        $esai_count = Ujian::where('esai', 1)->where('satu', '1')->count();
+                    } elseif ($get_jabatan == 2) {
+                        $esai_count = Ujian::where('esai', 1)->where('dua', '1')->count();
+                    } elseif ($get_jabatan == 3) {
+                        $esai_count = Ujian::where('esai', 1)->where('tiga', '1')->count();
+                    } elseif ($get_jabatan == 4) {
+                        $esai_count = Ujian::where('esai', 1)->where('empat', '1')->count();
+                    } elseif ($get_jabatan == 5) {
+                        $esai_count = Ujian::where('esai', 1)->where('lima', '1')->count();
+                    } elseif ($get_jabatan == 6) {
+                        $esai_count = Ujian::where('esai', 1)->where('enam', '1')->count();
+                    }
+                    return $esai_total / $esai_count;
+                })
+                ->addColumn('total_koefisien', function ($row) {
+                    $esai_total = $row->ujianEsaiJawab->sum('nilai') ?? 0;
+                    $get_jabatan = $row->Jabatan->LevelJabatan->level_jabatan;
+                    if ($get_jabatan == 0) {
+                        $esai_count = Ujian::where('esai', 1)->where('nol', '1')->count();
+                    } elseif ($get_jabatan == 1) {
+                        $esai_count = Ujian::where('esai', 1)->where('satu', '1')->count();
+                    } elseif ($get_jabatan == 2) {
+                        $esai_count = Ujian::where('esai', 1)->where('dua', '1')->count();
+                    } elseif ($get_jabatan == 3) {
+                        $esai_count = Ujian::where('esai', 1)->where('tiga', '1')->count();
+                    } elseif ($get_jabatan == 4) {
+                        $esai_count = Ujian::where('esai', 1)->where('empat', '1')->count();
+                    } elseif ($get_jabatan == 5) {
+                        $esai_count = Ujian::where('esai', 1)->where('lima', '1')->count();
+                    } elseif ($get_jabatan == 6) {
+                        $esai_count = Ujian::where('esai', 1)->where('enam', '1')->count();
+                    }
+                    $get_bobot = Pembobotan::first();
+
+                    $koefisien_esai = ($esai_total / $esai_count) * ($get_bobot->esai / 100);
+                    return round($koefisien_esai, 2);
+                })
+                ->addColumn('bobot_esai', function ($row) {
+                    $get_bobot = Pembobotan::first();
+                    $bobot = $get_bobot->esai;
+                    return $bobot . '%';
+                })
+                ->addColumn('koefisien_esai', function ($row) {
+                    $nilai_esai = $row->ujianEsaiJawab->sum('nilai') ?? 0;
+                    $get_bobot = Pembobotan::first();
+                    $bobot = $get_bobot->esai;
+                    $koefisien_esai = $nilai_esai * $bobot / 100;
+                    return $koefisien_esai;
+                })
+
+                ->rawColumns(['nama_lengkap', 'total_koefisien', 'esai_average', 'bobot_esai', 'koefisien_esai'])
+                ->make(true);
+        }
     }
+
+    // function dt_list_ranking($id)
+    // {
+    //     $holding = request()->segment(count(request()->segments()));
+    //     $table =  RecruitmentUser::with([
+    //         'Bagian' =>  function ($query) {
+    //             $query->with([
+    //                 'Divisi' => function ($query) {
+    //                     $query->with([
+    //                         'Departemen' => function ($query) {
+    //                             $query->orderBy('nama_departemen', 'ASC');
+    //                         }
+    //                     ]);
+    //                     $query->orderBy('nama_divisi', 'ASC');
+    //                 }
+    //             ]);
+    //             $query->orderBy('nama_bagian', 'ASC');
+    //         },
+    //         'AuthLogin' => function ($query) {
+    //             $query->orderBy('id', 'ASC');
+    //         },
+    //         'WaktuUjian' => function ($query) {
+    //             $query->orderBy('id', 'ASC');
+    //         },
+    //         'Cv' => function ($query) {
+    //             $query->whereNotNull('users_career_id')->orderBy('id', 'ASC');
+    //         },
+    //         'DataInterview' => function ($query) {
+    //             $query->orderBy('id', 'ASC');
+    //         },
+    //     ])
+    //         ->where('holding', $holding)
+    //         ->where('recruitment_admin_id', $id)
+    //         ->where('status_recruitmentuser', '!=', 0)
+    //         ->where('status_recruitmentuser', '!=', 5)
+    //         ->orderBy('nama_bagian', 'ASC')->get();
+    //     // dd($table);
+    //     // if (request()->ajax()) {
+    //     return DataTables::of($table)
+    //         ->addColumn('nama_pelamar', function ($row) {
+    //             if (($row->Cv->nama_depan != '' && $row->Cv->nama_tengah != '' && $row->Cv->nama_belakang != '')) {
+    //                 $nama_pelamar = $row->Cv->nama_depan . ' ' . $row->Cv->nama_tengah . ' ' . $row->Cv->nama_belakang;
+    //             } elseif ($row->Cv->nama_depan != '' && $row->Cv->nama_tengah != '' && $row->Cv->nama_belakang == '') {
+    //                 $nama_pelamar = $row->Cv->nama_depan . ' ' . $row->Cv->nama_tengah;
+    //             } else {
+    //                 $nama_pelamar = $row->Cv->nama_depan;
+    //             }
+    //             return $nama_pelamar;
+    //         })
+    //         ->addColumn('status_nilai', function ($row) use ($holding) {
+    //             $data1 = (($row->DataInterview->nilai_analogi_antonim +
+    //                 $row->DataInterview->nilai_analogi_sinonim +
+    //                 $row->DataInterview->nilai_penalaran +
+    //                 $row->DataInterview->nilai_aritmatika) * 70) / 100;
+    //             $data2 = (($row->DataInterview->nilai_kehadiran +
+    //                 $row->DataInterview->nilai_leadership +
+    //                 $row->DataInterview->nilai_planning +
+    //                 $row->DataInterview->nilai_problemsolving +
+    //                 $row->DataInterview->nilai_quallity +
+    //                 $row->DataInterview->nilai_creativity +
+    //                 $row->DataInterview->nilai_teamwork) * 30) / 100;
+    //             $return = $data1 + $data2;
+    //             if ($return > 90) {
+    //                 return '<span class="badge bg-label-success rounded-pill">Rekomendasi A+ </span>';
+    //             } elseif ($return < 90 && $return > 75) {
+    //                 return '<span class="badge bg-label-success rounded-pill">Rekomendasi A</span>';
+    //             } elseif ($return < 75 && $return > 61) {
+    //                 return '<span class="badge bg-label-info rounded-pill">Dipertimbangkan</span>';
+    //             } else {
+    //                 return '<span class="badge bg-label-danger rounded-pill">Ditolak</span>';
+    //             }
+    //         })
+    //         ->addColumn('nilai_akhir', function ($row) use ($holding) {
+    //             if (isset($row->DataInterview) && $row->DataInterview !== null) {
+    //                 if ($row->DataInterview->status_interview == 3) {
+    //                     $data1 = (($row->DataInterview->nilai_analogi_antonim +
+    //                         $row->DataInterview->nilai_analogi_sinonim +
+    //                         $row->DataInterview->nilai_penalaran +
+    //                         $row->DataInterview->nilai_aritmatika) * 70) / 100;
+    //                     $data2 = (($row->DataInterview->nilai_kehadiran +
+    //                         $row->DataInterview->nilai_leadership +
+    //                         $row->DataInterview->nilai_planning +
+    //                         $row->DataInterview->nilai_problemsolving +
+    //                         $row->DataInterview->nilai_quallity +
+    //                         $row->DataInterview->nilai_creativity +
+    //                         $row->DataInterview->nilai_teamwork) * 30) / 100;
+    //                     $return = '<span class="badge badge-center rounded-pill bg-success" style="width:35%">&nbsp;' . $data1 + $data2 . '&nbsp;</span>';
+    //                     return $return;
+    //                 } else {
+    //                     $return = '<span class="badge badge-center rounded-pill bg-primary" style="width:35%">&nbsp;0&nbsp;</span>';
+    //                     return $return;
+    //                 }
+    //             } else {
+    //                 $return = '<span class="badge badge-center rounded-pill bg-primary" style="width:35%">&nbsp;0&nbsp;</span>';
+    //                 return $return;
+    //             }
+    //         })
+    //         ->addColumn('detail_cv', function ($row) use ($holding) {
+    //             $btn = '<button id="btn_lihat_cv"
+    //                             data-id="' . $row->id . '"
+    //                             data-nama_pelamar="' . $row->Cv->nama_depan . ' ' . $row->Cv->nama_tengah . ' ' . $row->Cv->nama_belakang . '"
+    //                             data-tempat_lahir="' . $row->Cv->tempat_lahir . '"
+    //                             data-tanggal_lahir="' . $row->Cv->tanggal_lahir . '"
+    //                             data-gender="' . $row->Cv->gender . '"
+    //                             data-status_nikah="' . $row->Cv->status_nikah . '"
+    //                             data-nik="' . $row->Cv->nik . '"
+    //                             data-departemen="' . $row->Bagian->Divisi->Departemen->nama_departemen . '"
+    //                             data-divisi="' . $row->Bagian->Divisi->nama_divisi . '"
+    //                             data-bagian="' . $row->Bagian->nama_bagian . '"
+    //                             data-jabatan="' . $row->Bagian->nama_jabatan . '"
+    //                             data-email="' . $row->Cv->email . '"
+    //                             data-no_hp="' . $row->Cv->no_hp . '"
+    //                             data-alamatktp="' . $row->Cv->detail_alamat . '"
+    //                             data-nama_sdmi="' . $row->Cv->nama_sdmi . '"
+    //                             data-tahun_sdmi="' . $row->Cv->tahun_sdmi . '"
+    //                             data-nama_smpmts="' . $row->Cv->nama_smpmts . '"
+    //                             data-tahun_smpmts="' . $row->Cv->tahun_smpmts . '"
+    //                             data-nama_smamasmk="' . $row->Cv->nama_smamasmk . '"
+    //                             data-tahun_smamasmk="' . $row->Cv->tahun_smamasmk . '"
+    //                             data-nama_universitas="' . $row->Cv->nama_universitas . '"
+    //                             data-tahun_universitas="' . $row->Cv->tahun_universitas . '"
+    //                             data-judul_keterampilan1="' . $row->Cv->judul_keterampilan1 . '"
+    //                             data-ket_keterampilan1="' . $row->Cv->ket_keterampilan1 . '"
+    //                             data-judul_keterampilan2="' . $row->Cv->judul_keterampilan2 . '"
+    //                             data-ket_keterampilan2="' . $row->Cv->ket_keterampilan2 . '"
+    //                             data-judul_keterampilan3="' . $row->Cv->judul_keterampilan3 . '"
+    //                             data-ket_keterampilan3="' . $row->Cv->ket_keterampilan3 . '"
+    //                             data-judul_pengalaman1="' . $row->Cv->judul_pengalaman1 . '"
+    //                             data-lokasi_pengalaman1="' . $row->Cv->lokasi_pengalaman1 . '"
+    //                             data-tahun_pengalaman1="' . $row->Cv->tahun_pengalaman1 . '"
+    //                             data-judul_pengalaman2="' . $row->Cv->judul_pengalaman2 . '"
+    //                             data-lokasi_pengalaman2="' . $row->Cv->lokasi_pengalaman2 . '"
+    //                             data-tahun_pengalaman2="' . $row->Cv->tahun_pengalaman2 . '"
+    //                             data-judul_pengalaman3="' . $row->Cv->judul_pengalaman3 . '"
+    //                             data-lokasi_pengalaman3="' . $row->Cv->lokasi_pengalaman3 . '"
+    //                             data-tahun_pengalaman3="' . $row->Cv->tahun_pengalaman3 . '"
+    //                             data-prestasi1="' . $row->Cv->prestasi1 . '"
+    //                             data-prestasi2="' . $row->Cv->prestasi2 . '"
+    //                             data-prestasi3="' . $row->Cv->prestasi3 . '"
+    //                             data-img_ktp="' . $row->Cv->file_ktp . '"
+    //                             data-img_kk="' . $row->Cv->file_kk . '"
+    //                             data-img_ijazah="' . $row->Cv->file_ijazah . '"
+    //                             data-img_pp="' . $row->Cv->file_pp . '"
+    //                             type="button" class="btn btn-sm" style="background-color:#e9ddff">
+    //                             <i class="tf-icons mdi mdi-eye-circle-outline me-1"></i>
+    //                             Detail&nbsp;CV
+    //                         </button>';
+    //             return $btn;
+    //         })
+    //         ->addColumn('nilai_analogi_antonim', function ($row) {
+    //             if (isset($row->DataInterview) && $row->DataInterview !== null) {
+    //                 if ($row->DataInterview->nilai_analogi_antonim != 0 && $row->DataInterview->status_interview == 3) {
+    //                     if ($row->DataInterview->nilai_analogi_antonim == 0) {
+    //                         $return = '<span class="badge badge-center rounded-pill bg-primary" style="width:35%">&nbsp;0&nbsp;</span>';
+    //                         return $return;
+    //                     } else {
+    //                         $return = '<span class="badge badge-center rounded-pill bg-primary" style="width:35%">&nbsp;' . $row->DataInterview->nilai_analogi_antonim . '&nbsp;</span>';
+    //                         return $return;
+    //                     }
+    //                 } else {
+    //                     $return = '<span class="badge badge-center rounded-pill bg-primary" style="width:35%">&nbsp;0&nbsp;</span>';
+    //                     return $return;
+    //                 }
+    //             } else {
+    //                 $return = '<span class="badge badge-center rounded-pill bg-primary" style="width:35%">&nbsp;0&nbsp;</span>';
+    //                 return $return;
+    //             }
+    //         })
+    //         ->addColumn('nilai_analogi_sinonim', function ($row) {
+    //             if (isset($row->DataInterview) && $row->DataInterview !== null) {
+    //                 if ($row->DataInterview->nilai_analogi_sinonim != 0 && $row->DataInterview->status_interview == 3) {
+    //                     if ($row->DataInterview->nilai_analogi_sinonim == 0) {
+    //                         $return = '<span class="badge badge-center rounded-pill bg-primary" style="width:35%">&nbsp;0&nbsp;</span>';
+    //                         return $return;
+    //                     } else {
+    //                         $return = '<span class="badge badge-center rounded-pill bg-primary" style="width:35%">&nbsp;' . $row->DataInterview->nilai_analogi_sinonim . '&nbsp;</span>';
+    //                         return $return;
+    //                     }
+    //                 } else {
+    //                     $return = '<span class="badge badge-center rounded-pill bg-primary" style="width:35%">&nbsp;0&nbsp;</span>';
+    //                     return $return;
+    //                 }
+    //             } else {
+    //                 $return = '<span class="badge badge-center rounded-pill bg-primary" style="width:35%">&nbsp;0&nbsp;</span>';
+    //                 return $return;
+    //             }
+    //         })
+    //         ->addColumn('nilai_penalaran', function ($row) {
+    //             if (isset($row->DataInterview) && $row->DataInterview !== null) {
+    //                 if ($row->DataInterview->nilai_penalaran != null && $row->DataInterview->status_interview == 3) {
+    //                     if ($row->DataInterview->nilai_penalaran == 0) {
+    //                         $return = '<span class="badge badge-center rounded-pill bg-primary" style="width:35%">&nbsp;0&nbsp;</span>';
+    //                         return $return;
+    //                     } else {
+    //                         $return = '<span class="badge badge-center rounded-pill bg-primary" style="width:35%">&nbsp;' . $row->DataInterview->nilai_penalaran . '&nbsp;</span>';
+    //                         return $return;
+    //                     }
+    //                 } else {
+    //                     $return = '<span class="badge badge-center rounded-pill bg-primary" style="width:35%">&nbsp;0&nbsp;</span>';
+    //                     return $return;
+    //                 }
+    //             } else {
+    //                 $return = '<span class="badge badge-center rounded-pill bg-primary" style="width:35%">&nbsp;0&nbsp;</span>';
+    //                 return $return;
+    //             }
+    //         })
+    //         ->addColumn('nilai_aritmatika', function ($row) {
+    //             if (isset($row->DataInterview) && $row->DataInterview !== null) {
+    //                 if ($row->DataInterview->nilai_aritmatika != null && $row->DataInterview->status_interview == 3) {
+    //                     if ($row->DataInterview->nilai_aritmatika == 0) {
+    //                         $return = '<span class="badge badge-center rounded-pill bg-primary" style="width:35%">&nbsp;0&nbsp;</span>';
+    //                         return $return;
+    //                     } else {
+    //                         $return = '<span class="badge badge-center rounded-pill bg-primary" style="width:35%">&nbsp;' . $row->DataInterview->nilai_aritmatika . '&nbsp;</span>';
+    //                         return $return;
+    //                     }
+    //                 } else {
+    //                     $return = '<span class="badge badge-center rounded-pill bg-primary" style="width:35%">&nbsp;0&nbsp;</span>';
+    //                     return $return;
+    //                 }
+    //             } else {
+    //                 $return = '<span class="badge badge-center rounded-pill bg-primary" style="width:35%">&nbsp;0&nbsp;</span>';
+    //                 return $return;
+    //             }
+    //         })
+    //         ->addColumn('total_nilai_psikotes', function ($row) {
+    //             if (isset($row->DataInterview) && $row->DataInterview !== null) {
+    //                 if ($row->DataInterview->nilai_aritmatika != null && $row->DataInterview->status_interview == 3) {
+    //                     $return = '<span class="badge badge-center rounded-pill bg-success" style="width:35%">&nbsp;' .
+    //                         $row->DataInterview->nilai_aritmatika +
+    //                         $row->DataInterview->nilai_penalaran +
+    //                         $row->DataInterview->nilai_analogi_antonim +
+    //                         $row->DataInterview->nilai_analogi_sinonim
+    //                         . '&nbsp;</span>';
+    //                     return $return;
+    //                 } else {
+    //                     $return = '<span class="badge badge-center rounded-pill bg-success" style="width:35%">&nbsp;0&nbsp;</span>';
+    //                     return $return;
+    //                 }
+    //             } else {
+    //                 $return = '<span class="badge badge-center rounded-pill bg-success" style="width:35%">&nbsp;0&nbsp;</span>';
+    //                 return $return;
+    //             }
+    //         })
+    //         ->addColumn('nilai_kehadiran', function ($row) {
+    //             if (isset($row->DataInterview) && $row->DataInterview !== null) {
+    //                 if ($row->DataInterview->nilai_kehadiran != null && $row->DataInterview->status_interview == 3) {
+    //                     if ($row->DataInterview->nilai_kehadiran == 0) {
+    //                         $return = '<span class="badge badge-center rounded-pill bg-primary" style="width:35%">&nbsp;0&nbsp;</span>';
+    //                         return $return;
+    //                     } else {
+    //                         $return = '<span class="badge badge-center rounded-pill bg-primary" style="width:35%">&nbsp;' . $row->DataInterview->nilai_kehadiran . '&nbsp;</span>';
+    //                         return $return;
+    //                     }
+    //                 } else {
+    //                     $return = '<span class="badge badge-center rounded-pill bg-primary" style="width:35%">&nbsp;0&nbsp;</span>';
+    //                     return $return;
+    //                 }
+    //             } else {
+    //                 $return = '<span class="badge badge-center rounded-pill bg-primary" style="width:35%">&nbsp;0&nbsp;</span>';
+    //                 return $return;
+    //             }
+    //         })
+    //         ->addColumn('nilai_leadership', function ($row) {
+    //             if (isset($row->DataInterview) && $row->DataInterview !== null) {
+    //                 if ($row->DataInterview->nilai_leadership != null && $row->DataInterview->status_interview == 3) {
+    //                     if ($row->DataInterview->nilai_leadership == 0) {
+    //                         $return = '<span class="badge badge-center rounded-pill bg-primary" style="width:35%">&nbsp;0&nbsp;</span>';
+    //                         return $return;
+    //                     } else {
+    //                         $return = '<span class="badge badge-center rounded-pill bg-primary" style="width:35%">&nbsp;' . $row->DataInterview->nilai_leadership . '&nbsp;</span>';
+    //                         return $return;
+    //                     }
+    //                 } else {
+    //                     $return = '<span class="badge badge-center rounded-pill bg-primary" style="width:35%">&nbsp;0&nbsp;</span>';
+    //                     return $return;
+    //                 }
+    //             } else {
+    //                 $return = '<span class="badge badge-center rounded-pill bg-primary" style="width:35%">&nbsp;0&nbsp;</span>';
+    //                 return $return;
+    //             }
+    //         })
+    //         ->addColumn('nilai_planning', function ($row) {
+    //             if (isset($row->DataInterview) && $row->DataInterview !== null) {
+    //                 if ($row->DataInterview->nilai_planning != null && $row->DataInterview->status_interview == 3) {
+    //                     if ($row->DataInterview->nilai_planning == 0) {
+    //                         $return = '<span class="badge badge-center rounded-pill bg-primary" style="width:35%">&nbsp;0&nbsp;</span>';
+    //                         return $return;
+    //                     } else {
+    //                         $return = '<span class="badge badge-center rounded-pill bg-primary" style="width:35%">&nbsp;' . $row->DataInterview->nilai_planning . '&nbsp;</span>';
+    //                         return $return;
+    //                     }
+    //                 } else {
+    //                     $return = '<span class="badge badge-center rounded-pill bg-primary" style="width:35%">&nbsp;0&nbsp;</span>';
+    //                     return $return;
+    //                 }
+    //             } else {
+    //                 $return = '<span class="badge badge-center rounded-pill bg-primary" style="width:35%">&nbsp;0&nbsp;</span>';
+    //                 return $return;
+    //             }
+    //         })
+    //         ->addColumn('nilai_problemsolving', function ($row) {
+    //             if (isset($row->DataInterview) && $row->DataInterview !== null) {
+    //                 if ($row->DataInterview->nilai_problemsolving != null && $row->DataInterview->status_interview == 3) {
+    //                     if ($row->DataInterview->nilai_problemsolving == 0) {
+    //                         $return = '<span class="badge badge-center rounded-pill bg-primary" style="width:35%">&nbsp;0&nbsp;</span>';
+    //                         return $return;
+    //                     } else {
+    //                         $return = '<span class="badge badge-center rounded-pill bg-primary" style="width:35%">&nbsp;' . $row->DataInterview->nilai_problemsolving . '&nbsp;</span>';
+    //                         return $return;
+    //                     }
+    //                 } else {
+    //                     $return = '<span class="badge badge-center rounded-pill bg-primary" style="width:35%">&nbsp;0&nbsp;</span>';
+    //                     return $return;
+    //                 }
+    //             } else {
+    //                 $return = '<span class="badge badge-center rounded-pill bg-primary" style="width:35%">&nbsp;0&nbsp;</span>';
+    //                 return $return;
+    //             }
+    //         })
+    //         ->addColumn('nilai_quallity', function ($row) {
+    //             if (isset($row->DataInterview) && $row->DataInterview !== null) {
+    //                 if ($row->DataInterview->nilai_quallity != null && $row->DataInterview->status_interview == 3) {
+    //                     if ($row->DataInterview->nilai_quallity == 0) {
+    //                         $return = '<span class="badge badge-center rounded-pill bg-primary" style="width:35%">&nbsp;0&nbsp;</span>';
+    //                         return $return;
+    //                     } else {
+    //                         $return = '<span class="badge badge-center rounded-pill bg-primary" style="width:35%">&nbsp;' . $row->DataInterview->nilai_quallity . '&nbsp;</span>';
+    //                         return $return;
+    //                     }
+    //                 } else {
+    //                     $return = '<span class="badge badge-center rounded-pill bg-primary" style="width:35%">&nbsp;0&nbsp;</span>';
+    //                     return $return;
+    //                 }
+    //             } else {
+    //                 $return = '<span class="badge badge-center rounded-pill bg-primary" style="width:35%">&nbsp;0&nbsp;</span>';
+    //                 return $return;
+    //             }
+    //         })
+    //         ->addColumn('nilai_creativity', function ($row) {
+    //             if (isset($row->DataInterview) && $row->DataInterview !== null) {
+    //                 if ($row->DataInterview->nilai_creativity != null && $row->DataInterview->status_interview == 3) {
+    //                     if ($row->DataInterview->nilai_creativity == 0) {
+    //                         $return = '<span class="badge badge-center rounded-pill bg-primary" style="width:35%">&nbsp;0&nbsp;</span>';
+    //                         return $return;
+    //                     } else {
+    //                         $return = '<span class="badge badge-center rounded-pill bg-primary" style="width:35%">&nbsp;' . $row->DataInterview->nilai_creativity . '&nbsp;</span>';
+    //                         return $return;
+    //                     }
+    //                 } else {
+    //                     $return = '<span class="badge badge-center rounded-pill bg-primary" style="width:35%">&nbsp;0&nbsp;</span>';
+    //                     return $return;
+    //                 }
+    //             } else {
+    //                 $return = '<span class="badge badge-center rounded-pill bg-primary" style="width:35%">&nbsp;0&nbsp;</span>';
+    //                 return $return;
+    //             }
+    //         })
+    //         ->addColumn('nilai_teamwork', function ($row) {
+    //             if (isset($row->DataInterview) && $row->DataInterview !== null) {
+    //                 if ($row->DataInterview->nilai_teamwork != null && $row->DataInterview->status_interview == 3) {
+    //                     if ($row->DataInterview->nilai_teamwork == 0) {
+    //                         $return = '<span class="badge badge-center rounded-pill bg-primary" style="width:35%">&nbsp;0&nbsp;</span>';
+    //                         return $return;
+    //                     } else {
+    //                         $return = '<span class="badge badge-center rounded-pill bg-primary" style="width:35%">&nbsp;' . $row->DataInterview->nilai_teamwork . '&nbsp;</span>';
+    //                         return $return;
+    //                     }
+    //                 } else {
+    //                     $return = '<span class="badge badge-center rounded-pill bg-primary" style="width:35%">&nbsp;0&nbsp;</span>';
+    //                     return $return;
+    //                 }
+    //             } else {
+    //                 $return = '<span class="badge badge-center rounded-pill bg-primary" style="width:35%">&nbsp;0&nbsp;</span>';
+    //                 return $return;
+    //             }
+    //         })
+    //         ->addColumn('total_nilai_interview', function ($row) {
+    //             if (isset($row->DataInterview) && $row->DataInterview !== null) {
+    //                 if ($row->DataInterview->nilai_teamwork != null && $row->DataInterview->status_interview == 3) {
+    //                     if ($row->DataInterview->nilai_teamwork == 0) {
+    //                         $return = '<span class="badge badge-center rounded-pill bg-success" style="width:35%">&nbsp;0&nbsp;</span>';
+    //                         return $return;
+    //                     } else {
+    //                         $return = '<span class="badge badge-center rounded-pill bg-success" style="width:35%">&nbsp;' .
+    //                             $row->DataInterview->nilai_kehadiran +
+    //                             $row->DataInterview->nilai_leadership +
+    //                             $row->DataInterview->nilai_planning +
+    //                             $row->DataInterview->nilai_problemsolving +
+    //                             $row->DataInterview->nilai_quallity +
+    //                             $row->DataInterview->nilai_creativity +
+    //                             $row->DataInterview->nilai_teamwork
+    //                             . '&nbsp;</span>';
+    //                         return $return;
+    //                     }
+    //                 } else {
+    //                     $return = '<span class="badge badge-center rounded-pill bg-success" style="width:35%">&nbsp;0&nbsp;</span>';
+    //                     return $return;
+    //                 }
+    //             } else {
+    //                 $return = '<span class="badge badge-center rounded-pill bg-success" style="width:35%">&nbsp;0&nbsp;</span>';
+    //                 return $return;
+    //             }
+    //         })
+    //         ->rawColumns([
+    //             'nama_pelamar',
+    //             'status_nilai',
+    //             'nilai_akhir',
+    //             'detail_cv',
+    //             'nilai_analogi_antonim',
+    //             'nilai_analogi_sinonim',
+    //             'nilai_penalaran',
+    //             'nilai_aritmatika',
+    //             'total_nilai_psikotes',
+    //             'nilai_kehadiran',
+    //             'nilai_leadership',
+    //             'nilai_planning',
+    //             'nilai_problemsolving',
+    //             'nilai_quallity',
+    //             'nilai_creativity',
+    //             'nilai_teamwork',
+    //             'total_nilai_interview',
+
+    //         ])
+    //         ->make(true);
+    //     // }
+    // }
 }
