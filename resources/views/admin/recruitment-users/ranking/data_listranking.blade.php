@@ -161,7 +161,7 @@
         .timeline-centered .timeline-entry {
             position: relative;
             /*width: 50%;
-                                                                                                                                                                                        float: right;*/
+                                                                                                                                                                                                float: right;*/
             margin-top: 5px;
             margin-left: 30px;
             margin-bottom: 10px;
@@ -405,7 +405,6 @@
                                 <th>Total Koefisien</th>
                                 <th>Esai Average</th>
                                 <th>Bobot Esai</th>
-                                <th>Koefisien Esai</th>
                             </tr>
                         </thead>
                         <tbody class="table-border-bottom-0">
@@ -451,10 +450,6 @@
                 {
                     data: 'bobot_esai',
                     name: 'bobot_esai'
-                },
-                {
-                    data: 'koefisien_esai',
-                    name: 'koefisien_esai'
                 },
 
             ],

@@ -2175,15 +2175,8 @@ asoy.com
                     $bobot = $get_bobot->esai;
                     return $bobot . '%';
                 })
-                ->addColumn('koefisien_esai', function ($row) {
-                    $nilai_esai = $row->ujianEsaiJawab->sum('nilai') ?? 0;
-                    $get_bobot = Pembobotan::first();
-                    $bobot = $get_bobot->esai;
-                    $koefisien_esai = $nilai_esai * $bobot / 100;
-                    return $koefisien_esai;
-                })
 
-                ->rawColumns(['nama_lengkap', 'total_koefisien', 'esai_average', 'bobot_esai', 'koefisien_esai'])
+                ->rawColumns(['nama_lengkap', 'total_koefisien', 'esai_average', 'bobot_esai'])
                 ->make(true);
         }
     }
