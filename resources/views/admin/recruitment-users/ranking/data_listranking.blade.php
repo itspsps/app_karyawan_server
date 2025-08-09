@@ -161,7 +161,7 @@
         .timeline-centered .timeline-entry {
             position: relative;
             /*width: 50%;
-                                                                                                                                                                                                float: right;*/
+                                                                                                                                                                                                                                                                                                    float: right;*/
             margin-top: 5px;
             margin-left: 30px;
             margin-bottom: 10px;
@@ -398,13 +398,16 @@
                             <h5 class="card-title m-0 me-2">DATA RANKING RECRUITMENT</h5>
                         </div>
                     </div>
-                    <table class="table" id="table_recruitment_interview" style="width: 100%;">
+                    <table class="table" id="tabel_esai" style="width: 100%;">
                         <thead class="table-primary">
                             <tr>
+                                <th>No.</th>
                                 <th>Pelamar</th>
                                 <th>Total Koefisien</th>
                                 <th>Esai Average</th>
                                 <th>Bobot Esai</th>
+                                <th>pilihan ganda Average</th>
+                                <th>Bobot Pilihan Ganda</th>
                             </tr>
                         </thead>
                         <tbody class="table-border-bottom-0">
@@ -427,7 +430,7 @@
         let holding = window.location.pathname.split("/").pop();
         let id = @json($id_recruitment);
         console.log(id);
-        var table = $('#table_recruitment_interview').DataTable({
+        var table = $('#tabel_esai').DataTable({
             "scrollY": true,
             "scrollX": true,
             processing: true,
@@ -436,6 +439,13 @@
                 url: "{{ url('dt/data-list-ranking') }}" + '/' + id + '/' + holding,
             },
             columns: [{
+                    data: null,
+                    render: function(data, type, row, meta) {
+                        return meta.row + 1;
+                    },
+                    orderable: false,
+                    searchable: false
+                }, {
                     data: 'nama_lengkap',
                     name: 'nama_lengkap'
                 },
@@ -451,10 +461,18 @@
                     data: 'bobot_esai',
                     name: 'bobot_esai'
                 },
+                {
+                    data: 'pg_average',
+                    name: 'pg_average'
+                },
+                {
+                    data: 'bobot_pg',
+                    name: 'bobot_pg'
+                },
 
             ],
             order: [
-                [1, 'desc']
+                [2, 'desc']
             ]
         });
     </script>

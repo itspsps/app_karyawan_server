@@ -11,10 +11,10 @@
 @endsection
 @section('isi')
     @include('sweetalert::alert')
-    <a href="javascript:void(0);" class="btn btn-primary tambah-pg"
-        style="position: fixed; right: -10px; top: 50%; z-index: 9999;">Tambah Soal</a>
+    {{-- <a href="javascript:void(0);" class="btn btn-primary tambah-pg"
+        style="position: fixed; right: -10px; top: 50%; z-index: 9999;">Tambah Soal</a> --}}
 
-    <form method="post" action="{{ url('/ujian/esai-pg-store') }}" enctype="multipart/form-data">
+    <form method="post" action="{{ url('/ujian/esai-pg-update') }}" enctype="multipart/form-data">
         @csrf
         <div class="container-xxl flex-grow-1 container-p-y">
             <div class="row gy-4">
@@ -30,17 +30,22 @@
                                 <div class="col-lg-6">
                                     <div class="form-group">
                                         <label for="">Nama Ujian / Quiz</label>
-                                        <input type="text" name="nama_ujian" class="form-control" required>
+                                        <input type="text" name="nama_ujian" value="{{ $ujian->nama }}"
+                                            class="form-control" required>
                                         <input type="hidden" name="esai" value="1" class="form-control" required>
+                                        <input type="hidden" name="id_soal" value="{{ $ujian->id }}">
+                                        <input type="hidden" name="kode" value="{{ $ujian->kode }}">
                                         <input type="hidden" name="holding" value="{{ $holding }}">
-
                                     </div>
                                 </div>
                                 <div class="col-lg-6">
                                     <div class="form-group">
                                         <label for="">Kategori</label>
                                         <select class="form-select" name="kategori_id" id="kategori_id" required>
-                                            <option value="">Pilih</option>
+                                            <option
+                                                value="{{ $ujian->kategori_id }}"{{ $ujian->kategori_id == old('kategori_id', $ujian) ? 'selected' : '' }}>
+                                                {{ $ujian->ujianKategori->nama_kategori }}
+                                            </option>
                                             @foreach ($kategori as $k)
                                                 <option value="{{ $k->id }}">{{ $k->nama_kategori }}
                                                 </option>
@@ -54,6 +59,9 @@
                                     <div class="form-group">
                                         <label for="">Waktu Jam</label>
                                         <select class="form-select" name="jam" id="jam" required>
+                                            <option value="{{ $ujian->jam }}"{{ old('jam', $ujian) ? 'selected' : '' }}>
+                                                {{ $ujian->jam }}
+                                            </option>
                                             @for ($h = 0; $h < 25; $h++)
                                                 <option value="{{ $h }}">{{ $h }}
                                                 </option>
@@ -65,6 +73,10 @@
                                     <div class="form-group">
                                         <label for="">Waktu Menit</label>
                                         <select class="form-select" name="menit" id="menit" required>
+                                            <option
+                                                value="{{ $ujian->menit }}"{{ old('menit', $ujian) ? 'selected' : '' }}>
+                                                {{ $ujian->menit }}
+                                            </option>
                                             @for ($i = 0; $i < 60; $i++)
                                                 <option value="{{ $i }}">{{ $i }}
                                                 </option>
@@ -74,6 +86,16 @@
                                 </div>
                             </div>
                             <div class="row mt-3">
+                                <div class="form-group">
+                                    <label for="">Kategori</label>
+                                    <select class="form-select" name="kategori_id" id="kategori_id" required>
+                                        <option value="">Pilih</option>
+                                        @foreach ($kategori as $k)
+                                            <option value="{{ $k->id }}">{{ $k->nama_kategori }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </div>
                                 <div class="col-lg-6">
                                     <div class="form-group">
                                         <label for="">Bobot Nilai</label>
@@ -89,39 +111,44 @@
 
                                     <div class="custom-control custom-checkbox py-2">
                                         <input type="checkbox" class="custom-control-input" id="customCheck1" name="nol"
-                                            value="1">
+                                            value="1" {{ old('nol', $ujian->nol) == '1' ? 'checked' : '' }}>
                                         <label class="custom-control-label" for="customCheck1">Direktur</label>
                                     </div>
                                     <div class="custom-control custom-checkbox py-2">
                                         <input type="checkbox" class="custom-control-input" id="customCheck1" name="satu"
-                                            value="1">
+                                            value="1" {{ old('satu', $ujian->satu) == '1' ? 'checked' : '' }}>
                                         <label class="custom-control-label" for="customCheck1">Head</label>
                                     </div>
                                     <div class="custom-control custom-checkbox py-2">
-                                        <input type="checkbox" class="custom-control-input" id="customCheck1" name="dua"
-                                            value="1">
+                                        <input type="checkbox" class="custom-control-input" id="customCheck1"
+                                            name="dua" value="1"
+                                            {{ old('dua', $ujian->dua) == '1' ? 'checked' : '' }}>
                                         <label class="custom-control-label" for="customCheck1">Manager / Regional Sales
                                             Manager</label>
                                     </div>
                                     <div class="custom-control custom-checkbox py-2">
                                         <input type="checkbox" class="custom-control-input" id="customCheck1"
-                                            name="tiga" value="1">
+                                            name="tiga" value="1"
+                                            {{ old('tiga', $ujian->tiga) == '1' ? 'checked' : '' }}>
                                         <label class="custom-control-label" for="customCheck1">Junior Sales Manager / Area
                                             Sales Manager</label>
                                     </div>
                                     <div class="custom-control custom-checkbox py-2">
                                         <input type="checkbox" class="custom-control-input" id="customCheck1"
-                                            name="empat" value="1">
+                                            name="empat" value="1"
+                                            {{ old('empat', $ujian->empat) == '1' ? 'checked' : '' }}>
                                         <label class="custom-control-label" for="customCheck1">Supervisor</label>
                                     </div>
                                     <div class="custom-control custom-checkbox py-2">
                                         <input type="checkbox" class="custom-control-input" id="customCheck1"
-                                            name="lima" value="1">
+                                            name="lima" value="1"
+                                            {{ old('lima', $ujian->lima) == '1' ? 'checked' : '' }}>
                                         <label class="custom-control-label" for="customCheck1">Koordinator</label>
                                     </div>
                                     <div class="custom-control custom-checkbox py-2">
                                         <input type="checkbox" class="custom-control-input" id="customCheck1"
-                                            name="enam" value="1">
+                                            name="enam" value="1"
+                                            {{ old('enam', $ujian->enam) == '1' ? 'checked' : '' }}>
                                         <label class="custom-control-label" for="customCheck1">Admin, Operator, Drafter,
                                             Staff, Sales, Sopir</label>
                                     </div>
@@ -146,15 +173,21 @@
                                 <h5 class="card-title m-0 me-2">Soal Ujian</h5>
                             </div>
                         </div>
-                        <div class="card-body">
-                            <div id="soal_pg">
+                        @foreach ($detail_esai as $esai)
+                            <div class="card-body">
                                 <div class="isi_soal">
                                     <div class="form-group">
-                                        <label for="">Soal No. 1</label>
-                                        <textarea name="soal[]" cols="30" rows="2" class="summernote" wrap="hard" required></textarea>
+                                        <label for="">Soal</label>
+                                        <textarea name="soal_update[{{ $esai->id }}]" cols="30" rows="2" class="summernote" wrap="hard"
+                                            required>{{ $esai->soal }}</textarea>
+                                        <input type="hidden" name="id_detail_soal" value="{{ $esai->id }}">
                                     </div>
-
                                 </div>
+                            </div>
+                        @endforeach
+                        <div class="card-body">
+
+                            <div id="soal_pg">
                             </div>
                         </div>
                         <div class="p-3">
@@ -255,6 +288,7 @@
                     <div class="form-group">
                         <label for="">Soal No . ` + no_soal + `</label>
                         <textarea name="soal[]" cols="30" rows="2" class="summernote" wrap="hard" required></textarea>
+                        <input type="hidden" name="id_detail_soal[]">
                     </div>
 
                     <br>
@@ -266,7 +300,6 @@
             `;
 
                 $('#soal_pg').append(pg);
-                no_soal++;
             });
             $("#soal_pg").on("click", ".isi_soal a", function() {
                 $(this).parents(".isi_soal").remove(), --no_soal

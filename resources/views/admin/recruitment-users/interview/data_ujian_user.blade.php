@@ -43,7 +43,20 @@
                     </ul>
                     <div class="tab-content" id="tab-content">
                         <div class="tab-pane active show" id="icon-tabpanel-0" role="tabpanel" aria-labelledby="icon-tab-0">
-
+                            <div class="table-responsive">
+                                <table class="table" id="tabel_pg" style="width: 100%;">
+                                    <thead class="table-primary">
+                                        <tr>
+                                            <th>nama&nbsp;pelamar</th>
+                                            <th>nama&nbsp;kategori</th>
+                                            <th>jawaban</th>
+                                            <th>nilai</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="table-border-bottom-0">
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                         <div class="tab-pane" id="icon-tabpanel-1" role="tabpanel" aria-labelledby="icon-tab-1">
                             <div class="table-responsive">
@@ -88,6 +101,37 @@
         let holding = $('#holding_add').val();
         let id = $('#recruitment_user_id_add').val();
         console.log(id);
+
+        var table = $('#tabel_pg').DataTable({
+            "scrollY": true,
+            "scrollX": true,
+            processing: true,
+            serverSide: true,
+            ajax: {
+                url: "{{ url('/dt/data-get_data_pg') }}" + '/' + id + '/' + holding,
+            },
+            columns: [{
+                    data: 'nama',
+                    name: 'nama'
+                },
+                {
+                    data: 'kategori',
+                    name: 'kategori'
+                },
+                {
+                    data: 'jawaban',
+                    name: 'jawaban'
+                },
+                {
+                    data: 'nilai',
+                    name: 'nilai'
+                },
+            ]
+        });
+        $('#icon-tab-0').on('shown.bs.tab', function(e) {
+            table.columns.adjust().draw().responsive.recalc();
+            // table.draw();
+        });
 
         var table = $('#tabel_esai').DataTable({
             "scrollY": true,

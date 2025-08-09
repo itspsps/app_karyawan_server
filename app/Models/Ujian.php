@@ -33,7 +33,7 @@ class Ujian extends Model
     // relasi Ke WaktuUjian
     public function waktuujian()
     {
-        return $this->hasMany(WaktuUjian::class, 'kode', 'kode');
+        return $this->belongsTo(WaktuUjian::class, 'kode', 'kode');
     }
 
     // relasi Ke DetailUjian
@@ -57,8 +57,16 @@ class Ujian extends Model
     {
         return $this->belongsTo(UjianEsaiJawab::class, 'kode', 'kode');
     }
+    public function pgSiswa(): BelongsTo
+    {
+        return $this->belongsTo(PgSiswa::class, 'kode', 'kode');
+    }
     public function pembobotan(): BelongsTo
     {
         return $this->belongsTo(Pembobotan::class, 'pembobotan_id', 'pembobotan_id');
+    }
+    public function ujianEsaiJawabDetail(): BelongsTo
+    {
+        return $this->belongsTo(Pembobotan::class, 'kode', 'kode');
     }
 }

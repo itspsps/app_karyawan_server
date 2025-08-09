@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class DetailUjian extends Model
 {
-    public $table = 'detail_ujian';
+    public $table = 'ujian_detail';
     use HasFactory;
     protected $guarded = ['id'];
 
@@ -17,8 +17,8 @@ class DetailUjian extends Model
     }
 
     // // Relasi ke Pg Siswa
-    // public function pgsiswa()
-    // {
-    //     return $this->hasMany(DetailUjian::class);
-    // }
+    public function pgSiswa()
+    {
+        return $this->hasMany(PgSiswa::class, 'kode', 'kode');
+    }
 }

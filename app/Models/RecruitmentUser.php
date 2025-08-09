@@ -59,10 +59,6 @@ class RecruitmentUser extends Model
     {
         return $this->belongsTo(UserCareer::class, 'users_career_id', 'id');
     }
-    public function WaktuUjian(): BelongsTo
-    {
-        return $this->belongsTo(WaktuUjian::class, 'users_career_id', 'auth_id');
-    }
     // Alamat User
     public function provinsiKTP(): BelongsTo
     {
@@ -87,6 +83,10 @@ class RecruitmentUser extends Model
     public function ujianEsaiJawab(): HasMany
     {
         return $this->hasMany(UjianEsaiJawab::class, 'recruitment_user_id', 'id');
+    }
+    public function waktuujian(): HasMany
+    {
+        return $this->hasMany(WaktuUjian::class, 'recruitment_user_id', 'id');
     }
     // End Alamat User
 }

@@ -11,10 +11,10 @@
 @endsection
 @section('isi')
     @include('sweetalert::alert')
-    <a href="javascript:void(0);" class="btn btn-primary tambah-pg"
-        style="position: fixed; right: -10px; top: 50%; z-index: 9999;">Tambah Soal</a>
+    {{-- <a href="javascript:void(0);" class="btn btn-primary tambah-pg"
+        style="position: fixed; right: -10px; top: 50%; z-index: 9999;">Tambah Soal</a> --}}
 
-    <form method="post" action="{{ url('/ujian/ujian-pg-store') }}" enctype="multipart/form-data">
+    <form method="post" action="{{ url('/ujian/ujian-pg-update') }}" enctype="multipart/form-data">
         @csrf
         <div class="container-xxl flex-grow-1 container-p-y">
             <div class="row gy-4">
@@ -30,16 +30,22 @@
                                 <div class="col-lg-6">
                                     <div class="form-group">
                                         <label for="">Nama Ujian / Quiz</label>
-                                        <input type="text" name="nama_ujian" class="form-control" required>
-                                        <input type="hidden" name="esai" value="0" class="form-control" required>
+                                        <input type="text" name="nama_ujian" value="{{ $ujian->nama }}"
+                                            class="form-control" required>
+                                        <input type="hidden" name="id_soal" value="{{ $ujian->id }}">
+                                        <input type="hidden" name="kode" value="{{ $ujian->kode }}">
                                         <input type="hidden" name="holding" value="{{ $holding }}">
+
                                     </div>
                                 </div>
                                 <div class="col-lg-6">
                                     <div class="form-group">
                                         <label for="">Kategori</label>
                                         <select class="form-select" name="kategori_id" id="kategori_id" required>
-                                            <option value="">Pilih</option>
+                                            <option
+                                                value="{{ $ujian->kategori_id }}"{{ $ujian->kategori_id == old('kategori_id', $ujian) ? 'selected' : '' }}>
+                                                {{ $ujian->ujianKategori->nama_kategori }}
+                                            </option>
                                             @foreach ($kategori as $k)
                                                 <option value="{{ $k->id }}">{{ $k->nama_kategori }}
                                                 </option>
@@ -53,6 +59,9 @@
                                     <div class="form-group">
                                         <label for="">Waktu Jam</label>
                                         <select class="form-select" name="jam" id="jam" required>
+                                            <option value="{{ $ujian->jam }}"{{ old('jam', $ujian) ? 'selected' : '' }}>
+                                                {{ $ujian->jam }}
+                                            </option>
                                             @for ($h = 0; $h < 25; $h++)
                                                 <option value="{{ $h }}">{{ $h }}
                                                 </option>
@@ -64,6 +73,10 @@
                                     <div class="form-group">
                                         <label for="">Waktu Menit</label>
                                         <select class="form-select" name="menit" id="menit" required>
+                                            <option
+                                                value="{{ $ujian->menit }}"{{ old('menit', $ujian) ? 'selected' : '' }}>
+                                                {{ $ujian->menit }}
+                                            </option>
                                             @for ($i = 0; $i < 60; $i++)
                                                 <option value="{{ $i }}">{{ $i }}
                                                 </option>
@@ -77,6 +90,10 @@
                                     <div class="form-group">
                                         <label for="">Soal yang Ditampilkan</label>
                                         <select class="form-select" name="soal_tampil" id="soal_tampil" required>
+                                            <option
+                                                value="{{ $ujian->soal_tampil }}"{{ old('soal_tampil', $ujian) ? 'selected' : '' }}>
+                                                {{ $ujian->soal_tampil }}
+                                            </option>
                                             @for ($j = 0; $j < 100; $j++)
                                                 <option value="{{ $j }}">{{ $j }}
                                                 </option>
@@ -96,47 +113,54 @@
                             </div>
                             <div class="row mt-3">
                                 <div class="col-lg-12">
+
                                     <div class="custom-control custom-checkbox py-2">
                                         <input type="checkbox" class="custom-control-input" id="customCheck1" name="nol"
-                                            value="1">
+                                            value="1" {{ old('nol', $ujian->nol) == '1' ? 'checked' : '' }}>
                                         <label class="custom-control-label" for="customCheck1">Direktur</label>
                                     </div>
                                     <div class="custom-control custom-checkbox py-2">
                                         <input type="checkbox" class="custom-control-input" id="customCheck1" name="satu"
-                                            value="1">
+                                            value="1" {{ old('satu', $ujian->satu) == '1' ? 'checked' : '' }}>
                                         <label class="custom-control-label" for="customCheck1">Head</label>
                                     </div>
                                     <div class="custom-control custom-checkbox py-2">
-                                        <input type="checkbox" class="custom-control-input" id="customCheck1" name="dua"
-                                            value="1">
+                                        <input type="checkbox" class="custom-control-input" id="customCheck1"
+                                            name="dua" value="1"
+                                            {{ old('dua', $ujian->dua) == '1' ? 'checked' : '' }}>
                                         <label class="custom-control-label" for="customCheck1">Manager / Regional Sales
                                             Manager</label>
                                     </div>
                                     <div class="custom-control custom-checkbox py-2">
                                         <input type="checkbox" class="custom-control-input" id="customCheck1"
-                                            name="tiga" value="1">
+                                            name="tiga" value="1"
+                                            {{ old('tiga', $ujian->tiga) == '1' ? 'checked' : '' }}>
                                         <label class="custom-control-label" for="customCheck1">Junior Sales Manager / Area
                                             Sales Manager</label>
                                     </div>
                                     <div class="custom-control custom-checkbox py-2">
                                         <input type="checkbox" class="custom-control-input" id="customCheck1"
-                                            name="empat" value="1">
+                                            name="empat" value="1"
+                                            {{ old('empat', $ujian->empat) == '1' ? 'checked' : '' }}>
                                         <label class="custom-control-label" for="customCheck1">Supervisor</label>
                                     </div>
                                     <div class="custom-control custom-checkbox py-2">
                                         <input type="checkbox" class="custom-control-input" id="customCheck1"
-                                            name="lima" value="1">
+                                            name="lima" value="1"
+                                            {{ old('lima', $ujian->lima) == '1' ? 'checked' : '' }}>
                                         <label class="custom-control-label" for="customCheck1">Koordinator</label>
                                     </div>
                                     <div class="custom-control custom-checkbox py-2">
                                         <input type="checkbox" class="custom-control-input" id="customCheck1"
-                                            name="enam" value="1">
+                                            name="enam" value="1"
+                                            {{ old('enam', $ujian->enam) == '1' ? 'checked' : '' }}>
                                         <label class="custom-control-label" for="customCheck1">Admin, Operator, Drafter,
                                             Staff, Sales, Sopir</label>
                                     </div>
                                     <div class="custom-control custom-checkbox py-2">
                                         <input type="checkbox" class="custom-control-input" id="customCheck1"
-                                            name="acak" value="1">
+                                            name="acak" value="1"
+                                            {{ old('enam', $ujian->acak) == '1' ? 'checked' : '' }}>
                                         <label class="custom-control-label" for="customCheck1">Acak Soal Siswa</label>
                                     </div>
                                 </div>
@@ -155,108 +179,114 @@
                                 <h5 class="card-title m-0 me-2">Soal Ujian</h5>
                             </div>
                         </div>
-                        <div class="card-body">
-                            <div id="soal_pg">
-                                <div class="isi_soal">
-                                    <div class="form-group">
-                                        <label for="">Soal No. 1</label>
-                                        <textarea name="soal[]" cols="30" rows="2" class="summernote" wrap="hard" required></textarea>
-                                    </div>
-                                    <div class="row mt-2">
-                                        <div class="col-lg-4">
-                                            <div class="form-group">
-                                                <label for="">Pilihan A</label>
-                                                <div class="input-group">
-                                                    <div class="input-group-prepend">
-                                                        <span class="input-group-text" id="basic-addon5">A</span>
+                        @php
+                            $i = 1;
+                        @endphp
+                        @foreach ($detail_ujian as $ujian)
+                            <div class="card-body">
+                                <div id="soal_pg">
+                                    <div class="isi_soal">
+                                        <div class="form-group">
+                                            <label for="">Soal No. {{ $i++ }}</label>
+                                            <textarea name="soal[{{ $ujian->id }}]" cols="30" rows="2" class="summernote" wrap="hard"
+                                                required>{{ $ujian->soal }}</textarea>
+                                        </div>
+                                        <div class="row mt-2">
+                                            <div class="col-lg-4">
+                                                <div class="form-group">
+                                                    <label for="">Pilihan A</label>
+                                                    <div class="input-group">
+                                                        <div class="input-group-prepend">
+                                                            <span class="input-group-text" id="basic-addon5">A</span>
+                                                        </div>
+                                                        <input type="text" name="pg_1[{{ $ujian->id }}]"
+                                                            class="form-control" placeholder="Opsi A" autocomplete="off"
+                                                            value="{{ $ujian->pg_1 }}" required>
                                                     </div>
-                                                    <input type="text" name="pg_1[]" class="form-control"
-                                                        placeholder="Opsi A" autocomplete="off" required>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-4">
+                                                <div class="form-group">
+                                                    <label for="">Pilihan B</label>
+                                                    <div class="input-group">
+                                                        <div class="input-group-prepend">
+                                                            <span class="input-group-text" id="basic-addon5">B</span>
+                                                        </div>
+                                                        <input type="text" name="pg_2[{{ $ujian->id }}]"
+                                                            class="form-control" placeholder="Opsi B" autocomplete="off"
+                                                            value="{{ $ujian->pg_2 }}" required>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-4">
+                                                <div class="form-group">
+                                                    <label for="">Pilihan C</label>
+                                                    <div class="input-group">
+                                                        <div class="input-group-prepend">
+                                                            <span class="input-group-text" id="basic-addon5">C</span>
+                                                        </div>
+                                                        <input type="text" name="pg_3[{{ $ujian->id }}]"
+                                                            class="form-control" placeholder="Opsi C" autocomplete="off"
+                                                            value="{{ $ujian->pg_3 }}" required>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="col-lg-4">
-                                            <div class="form-group">
-                                                <label for="">Pilihan B</label>
-                                                <div class="input-group">
-                                                    <div class="input-group-prepend">
-                                                        <span class="input-group-text" id="basic-addon5">B</span>
+                                        <div class="row mt-2">
+                                            <div class="col-lg-4">
+                                                <div class="form-group">
+                                                    <label for="">Pilihan D</label>
+                                                    <div class="input-group">
+                                                        <div class="input-group-prepend">
+                                                            <span class="input-group-text" id="basic-addon5">D</span>
+                                                        </div>
+                                                        <input type="text" name="pg_4[{{ $ujian->id }}]"
+                                                            class="form-control" placeholder="Opsi D" autocomplete="off"
+                                                            value="{{ $ujian->pg_4 }}" required>
                                                     </div>
-                                                    <input type="text" name="pg_2[]" class="form-control"
-                                                        placeholder="Opsi B" autocomplete="off" required>
                                                 </div>
                                             </div>
-                                        </div>
-                                        <div class="col-lg-4">
-                                            <div class="form-group">
-                                                <label for="">Pilihan C</label>
-                                                <div class="input-group">
-                                                    <div class="input-group-prepend">
-                                                        <span class="input-group-text" id="basic-addon5">C</span>
+                                            <div class="col-lg-4">
+                                                <div class="form-group">
+                                                    <label for="">Pilihan E</label>
+                                                    <div class="input-group">
+                                                        <div class="input-group-prepend">
+                                                            <span class="input-group-text" id="basic-addon5">E</span>
+                                                        </div>
+                                                        <input type="text" name="pg_5[{{ $ujian->id }}]"
+                                                            class="form-control" placeholder="Opsi E" autocomplete="off"
+                                                            value="{{ $ujian->pg_5 }}" required>
                                                     </div>
-                                                    <input type="text" name="pg_3[]" class="form-control"
-                                                        placeholder="Opsi C" autocomplete="off" required>
                                                 </div>
                                             </div>
-                                        </div>
-                                    </div>
-                                    <div class="row mt-2">
-                                        <div class="col-lg-4">
-                                            <div class="form-group">
-                                                <label for="">Pilihan D</label>
-                                                <div class="input-group">
-                                                    <div class="input-group-prepend">
-                                                        <span class="input-group-text" id="basic-addon5">D</span>
+                                            <div class="col-lg-4">
+                                                <div class="form-group">
+                                                    <label for="">Jawaban</label>
+                                                    <div class="input-group">
+                                                        <div class="input-group-prepend">
+                                                            <span class="input-group-text" id="basic-addon5">
+                                                                <svg viewBox="0 0 24 24" width="24" height="24"
+                                                                    stroke="currentColor" stroke-width="2" fill="none"
+                                                                    stroke-linecap="round" stroke-linejoin="round"
+                                                                    class="css-i6dzq1">
+                                                                    <polyline points="20 6 9 17 4 12"></polyline>
+                                                                </svg>
+                                                            </span>
+                                                        </div>
+                                                        <input type="text" class="form-control" placeholder="Opsi E"
+                                                            autocomplete="off" value="{{ $ujian->jawaban }}" disabled>
                                                     </div>
-                                                    <input type="text" name="pg_4[]" class="form-control"
-                                                        placeholder="Opsi D" autocomplete="off" required>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-lg-4">
-                                            <div class="form-group">
-                                                <label for="">Pilihan E</label>
-                                                <div class="input-group">
-                                                    <div class="input-group-prepend">
-                                                        <span class="input-group-text" id="basic-addon5">E</span>
-                                                    </div>
-                                                    <input type="text" name="pg_5[]" class="form-control"
-                                                        placeholder="Opsi E" autocomplete="off" required>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-lg-4">
-                                            <div class="form-group">
-                                                <label for="">Jawaban</label>
-                                                <div class="input-group">
-                                                    <div class="input-group-prepend">
-                                                        <span class="input-group-text" id="basic-addon5">
-                                                            <svg viewBox="0 0 24 24" width="24" height="24"
-                                                                stroke="currentColor" stroke-width="2" fill="none"
-                                                                stroke-linecap="round" stroke-linejoin="round"
-                                                                class="css-i6dzq1">
-                                                                <polyline points="20 6 9 17 4 12"></polyline>
-                                                            </svg>
-                                                        </span>
-                                                    </div>
-                                                    <select class="form-select" name="jawaban[]" id="jawaban[]" required>
-                                                        <option value="">PILIH JAWABAN</option>
-                                                        <option value="A">A</option>
-                                                        <option value="B">B</option>
-                                                        <option value="C">C</option>
-                                                        <option value="D">D</option>
-                                                        <option value="E">E</option>
-                                                    </select>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            <div class="mt-4">
-                                <button class="btn btn-primary">Submit</button>
-                            </div>
+                        @endforeach
+                        <div class="m-4">
+                            <button class="btn btn-primary">Submit</button>
                         </div>
+
                     </div>
                 </div>
             </div>

@@ -1404,14 +1404,23 @@ Route::get('/dt/data-data_ujian_user/{id}/sp', [RecruitmentController::class, 'd
 Route::get('/dt/data-data_ujian_user/{id}/sps', [RecruitmentController::class, 'data_ujian_user'])->middleware('admin');
 Route::get('/dt/data-data_ujian_user/{id}/sip', [RecruitmentController::class, 'data_ujian_user'])->middleware('admin');
 
-Route::get('/dt/data-get_data_esai/{id}/sp', [UjianUserController::class, 'dt_ujian_pg'])->middleware('admin');
-Route::get('/dt/data-get_data_esai/{id}/sps', [UjianUserController::class, 'dt_ujian_pg'])->middleware('admin');
-Route::get('/dt/data-get_data_esai/{id}/sip', [UjianUserController::class, 'dt_ujian_pg'])->middleware('admin');
+Route::get('/dt/data-get_data_esai/{id}/sp', [UjianUserController::class, 'dt_ujian_esai'])->middleware('admin');
+Route::get('/dt/data-get_data_esai/{id}/sps', [UjianUserController::class, 'dt_ujian_esai'])->middleware('admin');
+Route::get('/dt/data-get_data_esai/{id}/sip', [UjianUserController::class, 'dt_ujian_esai'])->middleware('admin');
+
+Route::get('/dt/data-get_data_pg/{id}/sp', [UjianUserController::class, 'dt_ujian_pg'])->middleware('admin');
+Route::get('/dt/data-get_data_pg/{id}/sps', [UjianUserController::class, 'dt_ujian_pg'])->middleware('admin');
+Route::get('/dt/data-get_data_pg/{id}/sip', [UjianUserController::class, 'dt_ujian_pg'])->middleware('admin');
+
 Route::post('/dt/data-interview/penilaian_esai', [UjianUserController::class, 'penilaian_esai'])->name('penilaian_esai')->middleware('admin');
 
 Route::get('/dt/data-get_esai_interview/{id}/{id_user}/sp', [UjianUserController::class, 'show_esai'])->middleware('admin');
 Route::get('/dt/data-get_esai_interview/{id}/{id_user}/sps', [UjianUserController::class, 'show_esai'])->middleware('admin');
 Route::get('/dt/data-get_esai_interview/{id}/{id_user}/sip', [UjianUserController::class, 'show_esai'])->middleware('admin');
+
+Route::get('/dt/data-get_pg_interview/{id}/{id_user}/sp', [UjianUserController::class, 'show_pg'])->middleware('admin');
+Route::get('/dt/data-get_pg_interview/{id}/{id_user}/sps', [UjianUserController::class, 'show_pg'])->middleware('admin');
+Route::get('/dt/data-get_pg_interview/{id}/{id_user}/sip', [UjianUserController::class, 'show_pg'])->middleware('admin');
 
 Route::post('/dt/data-interview/presensi_recruitment_update', [RecruitmentController::class, 'presensi_recruitment_update'])->middleware('admin');
 
@@ -1455,9 +1464,17 @@ Route::get('/show-ujian/{ujian?}/sp', [RecruitmentController::class, 'show_ujian
 Route::get('/show-ujian/{ujian?}/sps', [RecruitmentController::class, 'show_ujian'])->middleware('admin');
 Route::get('/show-ujian/{ujian?}/sip', [RecruitmentController::class, 'show_ujian'])->middleware('admin');
 
+Route::get('/edit-ujian/{kode?}/sp', [RecruitmentController::class, 'edit_ujian'])->middleware('admin');
+Route::get('/edit-ujian/{kode?}/sps', [RecruitmentController::class, 'edit_ujian'])->middleware('admin');
+Route::get('/edit-ujian/{kode?}/sip', [RecruitmentController::class, 'edit_ujian'])->middleware('admin');
+
 Route::get('/show-esai/{kode?}/sp', [RecruitmentController::class, 'show_esai'])->middleware('admin');
 Route::get('/show-esai/{kode?}/sps', [RecruitmentController::class, 'show_esai'])->middleware('admin');
 Route::get('/show-esai/{kode?}/sip', [RecruitmentController::class, 'show_esai'])->middleware('admin');
+
+Route::get('/edit-esai/{kode?}/sp', [RecruitmentController::class, 'edit_esai'])->middleware('admin');
+Route::get('/edit-esai/{kode?}/sps', [RecruitmentController::class, 'edit_esai'])->middleware('admin');
+Route::get('/edit-esai/{kode?}/sip', [RecruitmentController::class, 'edit_esai'])->middleware('admin');
 
 Route::get('/pg-data-ujian/ujian_pg/sp', [RecruitmentController::class, 'pg_ujian_pg'])->middleware('admin');
 Route::get('/pg-data-ujian/ujian_pg/sps', [RecruitmentController::class, 'pg_ujian_pg'])->middleware('admin');
@@ -1472,7 +1489,10 @@ Route::get('/pg-data-ujian/ujian_essay/sps', [RecruitmentController::class, 'pg_
 Route::get('/pg-data-ujian/ujian_essay/sip', [RecruitmentController::class, 'pg_ujian_essay'])->middleware('admin');
 
 Route::post('/ujian/ujian-pg-store', [RecruitmentController::class, 'ujian_pg_store'])->middleware('admin');
+Route::post('/ujian/ujian-pg-update', [RecruitmentController::class, 'ujian_pg_update'])->middleware('admin');
 Route::post('/ujian/esai-pg-store', [RecruitmentController::class, 'esai_pg_store'])->middleware('admin');
+Route::post('/ujian/esai-pg-update', [RecruitmentController::class, 'esai_pg_update'])->middleware('admin');
+
 Route::get('/ujian/ujian-pg-show/{ujian:kode}/sp', [RecruitmentController::class, 'ujian_pg_show'])->middleware('admin');
 Route::get('/ujian/ujian-pg-show/{ujian:kode}/sps', [RecruitmentController::class, 'ujian_pg_show'])->middleware('admin');
 Route::get('/ujian/ujian-pg-show/{ujian:kode}/sip', [RecruitmentController::class, 'ujian_pg_show'])->middleware('admin');

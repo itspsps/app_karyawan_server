@@ -31,6 +31,7 @@ use App\Models\RecruitmentKesehatanRS;
 use App\Models\RecruitmentPendidikan;
 use App\Models\RecruitmentRiwayat;
 use App\Models\RecruitmentUserRecord;
+use App\Models\UjianEsaiJawabDetail;
 use App\Models\UjianKategori;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -46,6 +47,7 @@ use Illuminate\Support\Facades\Validator;
 use RealRashid\SweetAlert\Facades\Alert;
 use DB;
 use Illuminate\Support\Facades\DB as FacadesDB;
+use Illuminate\Validation\Rules\Exists;
 use PhpParser\Builder\Function_;
 
 class RecruitmentController extends Controller
@@ -1377,16 +1379,16 @@ asoy.com
         if (request()->ajax()) {
             return DataTables::of($data)
                 ->addColumn('esai', function ($row) {
-                    return $row->esai;
+                    return $row->esai . '%';
                 })
                 ->addColumn('pilihan_ganda', function ($row) {
-                    return $row->pilihan_ganda;
+                    return $row->pilihan_ganda . '%';
                 })
                 ->addColumn('interview', function ($row) {
-                    return $row->interview;
+                    return $row->interview . '%';
                 })
                 ->addColumn('interview_user', function ($row) {
-                    return $row->interview_user;
+                    return $row->interview_user . '%';
                 })
                 ->addColumn('option', function ($row) {
                     return '
@@ -1495,11 +1497,18 @@ asoy.com
                 ->addColumn('option', function ($row) {
                     if ($row->jenis == 0) {
                         $holding = request()->segment(count(request()->segments()));
-                        return '<a href="/show-ujian/' . $row->kode . '/' . $holding . '" class="btn btn-primary btn-sm">
+                        return '<a href="/show-ujian/' . $row->kode . '/' . $holding . '" class="btn btn-primary btn-sm m-1">
                                     <span class="mdi mdi-eye-outline"></span>
+                                </a>
+
+                                  <a href="/edit-ujian/' . $row->kode . '/' . $holding . '" class="btn btn-info btn-sm m-1">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
+                                    <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
+                                    <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"/>
+                                    </svg>
                                 </a>';
                     } elseif ($row->jenis == 1) {
-                        return '<a href="/show-ujian_essay/ ' . $row->kode . '" class="btn btn-primary btn-sm">
+                        return '<a href="/show-ujian_essay/' . $row->kode . '" class="btn btn-primary btn-sm">
                                     <span class="mdi mdi-eye-outline"></span>
                                 </a>';
                     }
@@ -1594,12 +1603,25 @@ asoy.com
                 ->addColumn('option', function ($row) {
                     if ($row->jenis == 0) {
                         $holding = request()->segment(count(request()->segments()));
-                        return '<a href="/show-esai/' . $row->kode . '/' . $holding . '" class="btn btn-primary btn-sm">
+                        return '<a href="/show-esai/' . $row->kode . '/' . $holding . '" class="btn btn-primary btn-sm m-1">
                                     <span class="mdi mdi-eye-outline"></span>
+                                </a>
+                                 <a href="/edit-esai/' . $row->kode . '/' . $holding . '" class="btn btn-info btn-sm m-1">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
+                                    <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
+                                    <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"/>
+                                    </svg>
                                 </a>';
                     } elseif ($row->jenis == 1) {
-                        return '<a href="/show-ujian_essay/ ' . $row->kode . '" class="btn btn-primary btn-sm">
+                        return '
+                        <a href="/show-ujian_essay/ ' . $row->kode . '" class="btn btn-primary btn-sm">
                                     <span class="mdi mdi-eye-outline"></span>
+                                </a>
+                                <a href="/show-ujian_essay/ ' . $row->kode . '" class="btn btn-primary btn-sm">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
+                                    <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
+                                    <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"/>
+                                    </svg>
                                 </a>';
                     }
                 })
@@ -1751,6 +1773,34 @@ asoy.com
             'holding' => $holding
         ]);
     }
+    function edit_ujian($kode)
+    {
+        // dd($ujian);
+        $holding = request()->segment(count(request()->segments()));
+        $ujian = Ujian::where('kode', $kode)->with([
+            'ujianKategori' => function ($query) {
+                $query;
+            }
+        ])->first();
+        $detail_ujian = DetailUjian::where('kode', $kode)->get();
+
+        return view('admin.recruitment-users.ujian.data_ujian_edit', [
+            'title' => 'Detail Ujian Pilihan Ganda',
+            'plugin' => '
+                <link href="' . url("/public/assets/ew/css/style.css") . '" rel="stylesheet" type="text/css" />
+                <script src="' . url("/public/assets/ew/js/examwizard.js") . '"></script>
+            ',
+            'menu' => [
+                'menu' => 'ujian',
+                'expanded' => 'ujian'
+            ],
+            'ujian' => $ujian,
+            'detail_ujian' => $detail_ujian,
+            'holding' => $holding,
+            'kategori' =>  UjianKategori::get(),
+            'pembobotan' =>  Pembobotan::first()
+        ]);
+    }
     function show_esai(Ujian $ujian)
     {
         // dd($ujian);
@@ -1768,6 +1818,36 @@ asoy.com
             ],
             'ujian' => $ujian,
             'holding' => $holding
+        ]);
+    }
+
+    function edit_esai($kode)
+    {
+        // dd($ujian);
+        $holding = request()->segment(count(request()->segments()));
+        $ujian = Ujian::where('kode', $kode)->with([
+            'ujianKategori' => function ($query) {
+                $query;
+            }
+        ])->first();
+        $detail_esai = DetailEsai::where('kode', $kode)->get();
+        // dd($detail_esai);
+
+        return view('admin.recruitment-users.ujian.data_esai_edit', [
+            'title' => 'Detail Ujian Pilihan Ganda',
+            'plugin' => '
+                <link href="' . url("/public/assets/ew/css/style.css") . '" rel="stylesheet" type="text/css" />
+                <script src="' . url("/public/assets/ew/js/examwizard.js") . '"></script>
+            ',
+            'menu' => [
+                'menu' => 'ujian',
+                'expanded' => 'ujian'
+            ],
+            'ujian' => $ujian,
+            'detail_esai' => $detail_esai,
+            'holding' => $holding,
+            'kategori' =>  UjianKategori::get(),
+            'pembobotan' =>  Pembobotan::first()
         ]);
     }
 
@@ -1838,6 +1918,7 @@ asoy.com
             'empat' => $request->empat,
             'lima' => $request->lima,
             'enam' => $request->enam,
+            'soal_tampil' => $request->soal_tampil,
             'created_at' => date('Y-m-d H:i:s')
         ];
         $detail_ujian = [];
@@ -1847,11 +1928,11 @@ asoy.com
             array_push($detail_ujian, [
                 'kode' => $kode,
                 'soal' => $soal,
-                'pg_1' => 'A. ' . $request->pg_1[$index],
-                'pg_2' => 'B. ' . $request->pg_2[$index],
-                'pg_3' => 'C. ' . $request->pg_3[$index],
-                'pg_4' => 'D. ' . $request->pg_4[$index],
-                'pg_5' => 'E. ' . $request->pg_5[$index],
+                'pg_1' => $request->pg_1[$index],
+                'pg_2' => $request->pg_2[$index],
+                'pg_3' => $request->pg_3[$index],
+                'pg_4' => $request->pg_4[$index],
+                'pg_5' => $request->pg_5[$index],
                 'jawaban' => $request->jawaban[$index]
             ]);
             $index++;
@@ -1871,7 +1952,45 @@ asoy.com
         Ujian::insert($ujian);
         DetailUjian::insert($detail_ujian);
         // WaktuUjian::insert($waktu_ujian);
-        return redirect('pg-data-ujian/sp')->with('success', 'Ujian berhasil dibuat');
+        return redirect('pg-data-ujian/' . $request->holding)->with('success', 'Ujian berhasil dibuat');
+    }
+    function ujian_pg_update(Request $request)
+    {
+        // dd($request->all());
+        $ujian = [
+            'nama' => $request->nama_ujian,
+            'jenis' => 0,
+            'pembobotan_id' => $request->pembobotan_id,
+            'kategori_id' => $request->kategori_id,
+            'jam' => $request->jam,
+            'menit' => $request->menit,
+            'acak' => $request->acak,
+            'nol' => $request->nol,
+            'satu' => $request->satu,
+            'dua' => $request->dua,
+            'tiga' => $request->tiga,
+            'empat' => $request->empat,
+            'lima' => $request->lima,
+            'enam' => $request->enam,
+            'soal_tampil' => $request->soal_tampil,
+            'created_at' => date('Y-m-d H:i:s')
+        ];
+        $get_detail = DetailUjian::where('kode', $request->kode)->get();
+        foreach ($get_detail as $detail) {
+            DetailUjian::where('id', $detail->id)->update([
+                // $t = $request->soal[$request->id_detail_soal],
+                'soal' =>  $request->soal[$detail->id],
+                'pg_1' =>  $request->pg_1[$detail->id],
+                'pg_2' =>  $request->pg_2[$detail->id],
+                'pg_3' =>  $request->pg_3[$detail->id],
+                'pg_4' =>  $request->pg_4[$detail->id],
+                'pg_5' =>  $request->pg_5[$detail->id],
+            ]);
+            // dd($t);
+        }
+        // WaktuUjian::insert($waktu_ujian);
+        Ujian::where('id', $request->id_soal)->update($ujian);
+        return redirect('pg-data-ujian/' . $request->holding)->with('success', 'Ujian berhasil dibuat');
     }
     function esai_pg_store(Request $request)
     {
@@ -1908,7 +2027,53 @@ asoy.com
         Ujian::insert($ujian);
         DetailEsai::insert($detail_ujian);
         // WaktuUjian::insert($waktu_ujian);
-        return redirect('pg-data-ujian/sp')->with('success', 'Ujian berhasil dibuat');
+        return redirect('pg-data-ujian/' . $request->holding)->with('success', 'Ujian berhasil dibuat');
+    }
+    function esai_pg_update(Request $request)
+    {
+        // dd($request->all());
+        $ujian = [
+            'esai' => $request->esai,
+            'nama' => $request->nama_ujian,
+            'jenis' => 0,
+            'pembobotan_id' => $request->pembobotan_id,
+            'kategori_id' => $request->kategori_id,
+            'jam' => $request->jam,
+            'menit' => $request->menit,
+            'nol' => $request->nol,
+            'satu' => $request->satu,
+            'dua' => $request->dua,
+            'tiga' => $request->tiga,
+            'empat' => $request->empat,
+            'lima' => $request->lima,
+            'enam' => $request->enam,
+            'created_at' => date('Y-m-d H:i:s')
+        ];
+        $get_detail = DetailEsai::where('kode', $request->kode)->get();
+        foreach ($get_detail as $detail) {
+            DetailEsai::where('id', $detail->id)->update([
+                // $t = $request->soal[$request->id_detail_soal];
+                'soal' =>  $request->soal_update[$detail->id]
+            ]);
+            // dd($t);
+        }
+        // if ($request->has('soal')) {
+        //     $detail_ujian = [];
+        //     $index = 0;
+        //     $nama_soal =  $request->soal;
+        //     foreach ($nama_soal as $soal) {
+        //         array_push($detail_ujian, [
+        //             'kode' => $request->kode,
+        //             'soal' => $soal,
+        //         ]);
+        //         $index++;
+        //     }
+        //     // dd($nama_soal);
+        //     DetailEsai::insert($detail_ujian);
+        // }
+        // WaktuUjian::insert($waktu_ujian);
+        Ujian::where('id', $request->id_soal)->update($ujian);
+        return redirect('pg-data-ujian/' . $request->holding)->with('success', 'Ujian berhasil dibuat');
     }
 
     function ujian_pg_show(Ujian $ujian)
@@ -2089,6 +2254,18 @@ asoy.com
                     }
                 ]);
             }
+        ])->with([
+            'waktuujian' => function ($query) {
+                $query->orderBy('recruitment_user_id')->with([
+                    'ujian' => function ($query) {
+                        $query->with([
+                            'pembobotan' => function ($query) {
+                                $query;
+                            }
+                        ]);
+                    }
+                ]);
+            }
         ])
             ->with([
                 'recruitmentAdmin' => function ($query) {
@@ -2126,6 +2303,38 @@ asoy.com
                 ->addColumn('nama_lengkap', function ($row) {
                     return $row->Cv->nama_lengkap;
                 })
+                ->addColumn('total_koefisien', function ($row) {
+                    $esai_total = $row->ujianEsaiJawab->sum('nilai') ?? 0;
+                    $pg_total = $row->waktuujian->sum('nilai') ?? 0;
+                    $get_jabatan = $row->Jabatan->LevelJabatan->level_jabatan;
+                    if ($get_jabatan == 0) {
+                        $esai_count = Ujian::where('esai', 1)->where('nol', '1')->count();
+                        $pg_count = Ujian::where('esai', 0)->where('nol', '1')->count();
+                    } elseif ($get_jabatan == 1) {
+                        $esai_count = Ujian::where('esai', 1)->where('satu', '1')->count();
+                        $pg_count = Ujian::where('esai', 0)->where('satu', '1')->count();
+                    } elseif ($get_jabatan == 2) {
+                        $esai_count = Ujian::where('esai', 1)->where('dua', '1')->count();
+                        $pg_count = Ujian::where('esai', 0)->where('dua', '1')->count();
+                    } elseif ($get_jabatan == 3) {
+                        $esai_count = Ujian::where('esai', 1)->where('tiga', '1')->count();
+                        $pg_count = Ujian::where('esai', 0)->where('tiga', '1')->count();
+                    } elseif ($get_jabatan == 4) {
+                        $esai_count = Ujian::where('esai', 1)->where('empat', '1')->count();
+                        $pg_count = Ujian::where('esai', 0)->where('empat', '1')->count();
+                    } elseif ($get_jabatan == 5) {
+                        $esai_count = Ujian::where('esai', 1)->where('lima', '1')->count();
+                        $pg_count = Ujian::where('esai', 0)->where('lima', '1')->count();
+                    } elseif ($get_jabatan == 6) {
+                        $esai_count = Ujian::where('esai', 1)->where('enam', '1')->count();
+                        $pg_count = Ujian::where('esai', 0)->where('enam', '1')->count();
+                    }
+                    $get_bobot = Pembobotan::first();
+
+                    $koefisien_esai = ($esai_total / $esai_count) * ($get_bobot->esai / 100);
+                    $koefisien_pg = ($pg_total / $pg_count) * ($get_bobot->pilihan_ganda / 100);
+                    return round($koefisien_esai + $koefisien_pg, 2);
+                })
                 ->addColumn('esai_average', function ($row) {
 
                     $esai_total = $row->ujianEsaiJawab->sum('nilai') ?? 0;
@@ -2145,38 +2354,42 @@ asoy.com
                     } elseif ($get_jabatan == 6) {
                         $esai_count = Ujian::where('esai', 1)->where('enam', '1')->count();
                     }
-                    return $esai_total / $esai_count;
+                    return round($esai_total / $esai_count, 2);
                 })
-                ->addColumn('total_koefisien', function ($row) {
-                    $esai_total = $row->ujianEsaiJawab->sum('nilai') ?? 0;
-                    $get_jabatan = $row->Jabatan->LevelJabatan->level_jabatan;
-                    if ($get_jabatan == 0) {
-                        $esai_count = Ujian::where('esai', 1)->where('nol', '1')->count();
-                    } elseif ($get_jabatan == 1) {
-                        $esai_count = Ujian::where('esai', 1)->where('satu', '1')->count();
-                    } elseif ($get_jabatan == 2) {
-                        $esai_count = Ujian::where('esai', 1)->where('dua', '1')->count();
-                    } elseif ($get_jabatan == 3) {
-                        $esai_count = Ujian::where('esai', 1)->where('tiga', '1')->count();
-                    } elseif ($get_jabatan == 4) {
-                        $esai_count = Ujian::where('esai', 1)->where('empat', '1')->count();
-                    } elseif ($get_jabatan == 5) {
-                        $esai_count = Ujian::where('esai', 1)->where('lima', '1')->count();
-                    } elseif ($get_jabatan == 6) {
-                        $esai_count = Ujian::where('esai', 1)->where('enam', '1')->count();
-                    }
-                    $get_bobot = Pembobotan::first();
 
-                    $koefisien_esai = ($esai_total / $esai_count) * ($get_bobot->esai / 100);
-                    return round($koefisien_esai, 2);
-                })
                 ->addColumn('bobot_esai', function ($row) {
                     $get_bobot = Pembobotan::first();
                     $bobot = $get_bobot->esai;
                     return $bobot . '%';
                 })
+                ->addColumn('pg_average', function ($row) {
 
-                ->rawColumns(['nama_lengkap', 'total_koefisien', 'esai_average', 'bobot_esai'])
+                    $pg_total = $row->waktuujian->sum('nilai') ?? 0;
+                    $get_jabatan = $row->Jabatan->LevelJabatan->level_jabatan;
+                    if ($get_jabatan == 0) {
+                        $pg_count = Ujian::where('esai', 0)->where('nol', '1')->count();
+                    } elseif ($get_jabatan == 1) {
+                        $pg_count = Ujian::where('esai', 0)->where('satu', '1')->count();
+                    } elseif ($get_jabatan == 2) {
+                        $pg_count = Ujian::where('esai', 0)->where('dua', '1')->count();
+                    } elseif ($get_jabatan == 3) {
+                        $pg_count = Ujian::where('esai', 0)->where('tiga', '1')->count();
+                    } elseif ($get_jabatan == 4) {
+                        $pg_count = Ujian::where('esai', 0)->where('empat', '1')->count();
+                    } elseif ($get_jabatan == 5) {
+                        $pg_count = Ujian::where('esai', 0)->where('lima', '1')->count();
+                    } elseif ($get_jabatan == 6) {
+                        $pg_count = Ujian::where('esai', 0)->where('enam', '1')->count();
+                    }
+                    return round($pg_total / $pg_count, 2);
+                })
+                ->addColumn('bobot_pg', function ($row) {
+                    $get_bobot = Pembobotan::first();
+                    $bobot = $get_bobot->pilihan_ganda;
+                    return $bobot . '%';
+                })
+
+                ->rawColumns(['nama_lengkap', 'total_koefisien', 'esai_average', 'bobot_esai', 'pg_average', 'bobot_pg'])
                 ->make(true);
         }
     }

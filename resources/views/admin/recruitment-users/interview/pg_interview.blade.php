@@ -22,7 +22,7 @@
                                     <table class="mt-2">
                                         <tr>
                                             <th>Jumlah Soal</th>
-                                            <th>: {{ $ujian->detailEsai->count() }} Soal</th>
+                                            <th>: {{ $ujian->waktuujian->count() }} Soal</th>
                                         </tr>
                                         <tr>
                                             <th>Waktu Ujian</th>
@@ -31,6 +31,38 @@
                                     </table>
                                 </div>
                             </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="row layout-top-spacing">
+                        <div class="col-lg-12 layout-spacing">
+                            <div class="widget shadow p-3">
+                                <div class="widget-heading">
+                                    <h5 class="">{{ $ujian->nama }}</h5>
+                                    <table class="mt-2">
+                                        <tr>
+                                            <th>Benar</th>
+                                            <th>:</th>
+                                            <th>{{ $benar }} Soal</th>
+                                        </tr>
+                                        <tr>
+                                            <th>Salah </th>
+                                            <th>:</th>
+                                            <th>{{ $salah }} Soal</th>
+                                        </tr>
+                                        <tr>
+                                            <th>Total Nilai</th>
+                                            <th>:</th>
+                                            <th>{{ $total_nilai }}</th>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+
                         </div>
                     </div>
                 </div>
@@ -47,32 +79,41 @@
                                     @php
                                         $no = 1;
                                     @endphp
-                                    @foreach ($esaiDetailjawab as $uu)
+                                    @foreach ($PgSiswa as $uu)
                                         <div class="">
                                             <label>
-                                                <div class="d-flex">
-                                                    <h5 class="pe-1">{{ $no++ }}. </h5>
-                                                    <h5>{!! $uu->soal !!}</h5>
+                                                <h6>{!! $uu->soal !!}</h6>
+                                                <div class="px-2">
+                                                    <p>A. {{ $uu->pg_1 }}</p>
+                                                    <p>B. {{ $uu->pg_2 }}</p>
+                                                    <p>C. {{ $uu->pg_3 }}</p>
+                                                    <p>D. {{ $uu->pg_4 }}</p>
+                                                    <p>E. {{ $uu->pg_5 }}</p>
                                                 </div>
+                                                <p>Jawaban Yang Benar : {{ $uu->kunci }}</p>
+                                                <p>Jawaban Pelamar : {{ $uu->jawaban }}
+                                                    @if ($uu->benar == 1)
+                                                        (Benar)
+                                                    @else
+                                                        (Salah)
+                                                    @endif
+                                                </p>
                                             </label>
                                         </div>
-                                        <div class="mb-3">
-                                            @if ($uu->ujianEsaiJawabDetail != null)
-                                                <textarea class="form-control" name="" id="" readonly>{{ $uu->jawaban }}</textarea>
+                                        {{-- <div class="mb-3">
+                                            @if ($uu->pgSiswa != null)
+                                                <textarea class="form-control" name="" id="" readonly>{{ $uu->pgSiswa->jawaban }}</textarea>
                                             @else
                                                 <textarea class="form-control" name="" id="" readonly>-</textarea>
                                             @endif
-                                        </div>
+                                        </div> --}}
                                     @endforeach
-                                    <label>
-                                        Total Nilai
-                                    </label>
-                                    <div class="row">
+                                    {{-- <div class="row">
                                         <div class="col-lg">
                                             <form action={{ route('penilaian_esai') }} method="POST">
                                                 @csrf
                                                 <input class="form-control" type="number" name="nilai" id=""
-                                                    value="{{ $ujianEsaiJawab->nilai }}">
+                                                    value="{{ $ujian->esaiJawab == null ? '' : $ujian->esaiJawab->nilai }}">
                                                 <input class="form-control" type="hidden" name="recruitment_user_id"
                                                     id="" value="{{ $recruitment_user_id }}">
                                                 <input class="form-control" type="hidden" name="holding" id=""
@@ -86,7 +127,7 @@
                                         </div>
                                         <div class="col-lg"></div>
                                         <div class="col-lg"></div>
-                                    </div>
+                                    </div> --}}
                                 </div>
                             </div>
                         </div>
