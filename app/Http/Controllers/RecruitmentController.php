@@ -43,6 +43,7 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Log;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Validator;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 use RealRashid\SweetAlert\Facades\Alert;
 use DB;
@@ -365,10 +366,8 @@ class RecruitmentController extends Controller
             }
         ])
             ->where('holding', $holding)
-            ->where('status', '1')
-            ->orWhere('status', '1a')
-            ->orWhere('status', '2a')
             ->where('recruitment_admin_id', $id)
+            ->whereIn('status', array('1', '1a', '2a'))
             ->get();
         $user_wait =  RecruitmentUser::with([
             'AuthLogin' => function ($query) {
@@ -488,6 +487,109 @@ class RecruitmentController extends Controller
             'kesehatan_rs',
             'kesehatan_kecelakaan'
         ));
+    }
+    function pelamar_detail_pdf($id)
+    {
+        $holding = request()->segment(count(request()->segments()));
+        $data_cv =  RecruitmentUser::with([
+            'AuthLogin' => function ($query) use ($id) {
+                $query->with([
+                    'recruitmentCV' => function ($query) {
+                        $query->orderBy('nama_lengkap')->with([
+                            'provinsiKTP' => function ($query) {
+                                $query->orderBy('id', 'ASC');
+                            }
+                        ])->with([
+                            'kabupatenKTP' => function ($query) {
+                                $query->orderBy('id', 'ASC');
+                            }
+                        ])->with([
+                            'kecamatanKTP' => function ($query) {
+                                $query->orderBy('id', 'ASC');
+                            }
+                        ])->with([
+                            'desaKTP' => function ($query) {
+                                $query->orderBy('id', 'ASC');
+                            }
+                        ])->with([
+                            'provinsiNOW' => function ($query) {
+                                $query->orderBy('id', 'ASC');
+                            }
+                        ])->with([
+                            'kabupatenNOW' => function ($query) {
+                                $query->orderBy('id', 'ASC');
+                            }
+                        ])->with([
+                            'kecamatanNOW' => function ($query) {
+                                $query->orderBy('id', 'ASC');
+                            }
+                        ])->with([
+                            'desaNOW' => function ($query) {
+                                $query->orderBy('id', 'ASC');
+                            }
+                        ]);
+                    }
+                ]);
+            }
+        ])->with([
+            'Bagian' =>  function ($query) {
+                $query->with([
+                    'Divisi' => function ($query) {
+                        $query->with([
+                            'Departemen' => function ($query) {
+                                $query->orderBy('nama_departemen', 'ASC');
+                            }
+                        ]);
+                        $query->orderBy('nama_divisi', 'ASC');
+                    }
+                ]);
+                $query->orderBy('nama_bagian', 'ASC');
+            },
+        ])
+            ->where('id', $id)
+            ->first();
+        $kesehatan = RecruitmentKesehatan::where('id_user', $data_cv->AuthLogin->id)->first();
+        $kesehatan_pengobatan = RecruitmentKesehatanPengobatan::where('id_user', $data_cv->AuthLogin->id)->get();
+        $kesehatan_rs = RecruitmentKesehatanRS::where('id_user', $data_cv->AuthLogin->id)->get();
+        $kesehatan_kecelakaan = RecruitmentKesehatanKecelakaan::where('id_user', $data_cv->AuthLogin->id)->get();
+        $pendidikan = RecruitmentPendidikan::where('id_user', $data_cv->AuthLogin->id)->orderBy('tanggal_keluar', 'DESC')->get();
+        $pekerjaan = RecruitmentRiwayat::where('id_user', $data_cv->AuthLogin->id)->orderBy('tanggal_keluar', 'DESC')->get();
+        $pekerjaan_count = RecruitmentRiwayat::where('id_user', $data_cv->AuthLogin->id)->orderBy('tanggal_keluar', 'DESC')->count();
+        $keahlian_count = RecruitmentKeahlian::where('id_user', $data_cv->AuthLogin->id)->count();
+        $keahlian = RecruitmentKeahlian::where('id_user', $data_cv->AuthLogin->id)->get();
+        // dd($pekerjaan);
+        // dd($pendidikan);
+        $pdf = Pdf::loadView('admin.recruitment-users.recruitment.user_detail_pdf', [
+            'ti$pekerjaan_counttle' => 'Data Recruitment',
+            'holding'   => $holding,
+        ], compact(
+            'data_cv',
+            'pendidikan',
+            'pekerjaan',
+            'pekerjaan_count',
+            'keahlian_count',
+            'keahlian',
+            'kesehatan',
+            'kesehatan_pengobatan',
+            'kesehatan_rs',
+            'kesehatan_kecelakaan'
+        ));
+        return $pdf->stream('admin.recruitment-users.recruitment.user_detail_pdf');
+        // return view('admin.recruitment-users.recruitment.user_detail_pdf', [
+        //     'ti$pekerjaan_counttle' => 'Data Recruitment',
+        //     'holding'   => $holding,
+        // ], compact(
+        //     'data_cv',
+        //     'pendidikan',
+        //     'pekerjaan',
+        //     'pekerjaan_count',
+        //     'keahlian_count',
+        //     'keahlian',
+        //     'kesehatan',
+        //     'kesehatan_pengobatan',
+        //     'kesehatan_rs',
+        //     'kesehatan_kecelakaan'
+        // ));
     }
     public function pelamar_detail_ubah(Request $request)
     {

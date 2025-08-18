@@ -1371,6 +1371,10 @@ Route::get('/pg/pelamar-detail/{id?}/sip', [RecruitmentController::class, 'pelam
 Route::get('/pg/pelamar-detail/{id?}/sp', [RecruitmentController::class, 'pelamar_detail'])->middleware('admin');
 Route::get('/pg/pelamar-detail/{id?}/sps', [RecruitmentController::class, 'pelamar_detail'])->middleware('admin');
 
+Route::get('/pg/pelamar-detail_pdf/{id?}/sip', [RecruitmentController::class, 'pelamar_detail_pdf'])->middleware('admin');
+Route::get('/pg/pelamar-detail_pdf/{id?}/sp', [RecruitmentController::class, 'pelamar_detail_pdf'])->middleware('admin');
+Route::get('/pg/pelamar-detail_pdf/{id?}/sps', [RecruitmentController::class, 'pelamar_detail_pdf'])->middleware('admin');
+
 Route::post('/pg/pelamar-detail-ubah/sip', [RecruitmentController::class, 'pelamar_detail_ubah'])->middleware('admin');
 Route::post('/pg/pelamar-detail-ubah/sp', [RecruitmentController::class, 'pelamar_detail_ubah'])->middleware('admin');
 Route::post('/pg/pelamar-detail-ubah/sps', [RecruitmentController::class, 'pelamar_detail_ubah'])->middleware('admin');

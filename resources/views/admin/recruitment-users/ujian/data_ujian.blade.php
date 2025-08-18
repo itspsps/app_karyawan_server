@@ -36,11 +36,17 @@
                         <li class="nav-item" role="presentation">
                             <a class="nav-link" id="icon-tab-2" data-bs-toggle="tab" href="#icon-tabpanel-2" role="tab"
                                 aria-controls="icon-tabpanel-0" aria-selected="true">
-                                Kategori Ujian
+                                interview
                             </a>
                         </li>
                         <li class="nav-item" role="presentation">
                             <a class="nav-link" id="icon-tab-3" data-bs-toggle="tab" href="#icon-tabpanel-3" role="tab"
+                                aria-controls="icon-tabpanel-0" aria-selected="true">
+                                Kategori Ujian
+                            </a>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <a class="nav-link" id="icon-tab-4" data-bs-toggle="tab" href="#icon-tabpanel-4" role="tab"
                                 aria-controls="icon-tabpanel-0" aria-selected="true">
                                 Pembobotan
                             </a>
@@ -75,7 +81,7 @@
                         </div>
                         <div class="tab-pane" id="icon-tabpanel-1" role="tabpanel" aria-labelledby="icon-tab-1">
                             <div class="d-">
-                                <h5 class="card-title m-0 me-2">SOAL UJIAN ESAI</h5>
+                                <h5 class="card-title m-0 me-2">PENILAIAN INTERVIEW</h5>
                             </div>
                             <a href="{{ url('/pg-data-ujian/ujian_pg_esai/' . $holding) }}" type="button"
                                 class="btn btn-sm btn-primary waves-effect waves-light my-3"><i
@@ -101,6 +107,32 @@
                         </div>
                         <div class="tab-pane" id="icon-tabpanel-2" role="tabpanel" aria-labelledby="icon-tab-2">
                             <div class="d-">
+                                <h5 class="card-title m-0 me-2">SOAL UJIAN ESAI</h5>
+                            </div>
+                            <a href="{{ url('/pg-data-ujian/ujian_pg_esai/' . $holding) }}" type="button"
+                                class="btn btn-sm btn-primary waves-effect waves-light my-3"><i
+                                    class="menu-icon tf-icons mdi mdi-plus"></i>Tambah</a>
+                            <table class="table" id="table_esai" style="width: 100%;">
+                                <thead class="table-primary">
+                                    <tr>
+                                        <th>Nama</th>
+                                        <th>Kategori</th>
+                                        <th>Direktur</th>
+                                        <th>Head</th>
+                                        <th>Manager / Regional Sales Manager</th>
+                                        <th>Junior Sales Manager / Area Sales Manager</th>
+                                        <th>Supervisor</th>
+                                        <th>Koordinator</th>
+                                        <th>Admin, Operator, Drafter, Staff, Sales, Sopir</th>
+                                        <th>Opsi</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="table-border-bottom-0">
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="tab-pane" id="icon-tabpanel-3" role="tabpanel" aria-labelledby="icon-tab-3">
+                            <div class="d-">
                                 <h5 class="card-title m-0 me-2">KATEGORI UJIAN</h5>
                             </div>
                             <button type="button" class="btn btn-sm btn-primary waves-effect waves-light my-3"
@@ -116,7 +148,7 @@
                                 </tbody>
                             </table>
                         </div>
-                        <div class="tab-pane" id="icon-tabpanel-3" role="tabpanel" aria-labelledby="icon-tab-3">
+                        <div class="tab-pane" id="icon-tabpanel-4" role="tabpanel" aria-labelledby="icon-tab-4">
                             <div class="d-">
                                 <h5 class="card-title m-0 me-2">PEMBOBOTAN</h5>
                             </div>
@@ -413,7 +445,7 @@
                 },
             ]
         });
-        $('#icon-tab-2').on('shown.bs.tab', function(e) {
+        $('#icon-tab-3').on('shown.bs.tab', function(e) {
             table2.columns.adjust().draw().responsive.recalc();
             // table.draw();
         });
@@ -448,7 +480,7 @@
             ]
         });
 
-        $('#icon-tab-3').on('shown.bs.tab', function(e) {
+        $('#icon-tab-4').on('shown.bs.tab', function(e) {
             table3.columns.adjust().draw().responsive.recalc();
             // table.draw();
         });

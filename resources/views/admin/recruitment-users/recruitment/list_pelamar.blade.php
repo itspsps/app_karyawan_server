@@ -159,7 +159,7 @@
         .timeline-centered .timeline-entry {
             position: relative;
             /*width: 50%;
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    float: right;*/
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        float: right;*/
             margin-top: 5px;
             margin-left: 30px;
             margin-bottom: 10px;
@@ -383,227 +383,234 @@
     </style>
 
     <link href="https://cdn.jsdelivr.net/npm/@icon/entypo@1.0.3/entypo.css" rel="stylesheet">
+    {{-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous"> --}}
 @endsection
 @section('isi')
     @include('sweetalert::alert')
     <div class="container-xxl flex-grow-1 container-p-y">
         <div class="row gy-4">
             <!-- Transactions -->
-            <div class="col-lg-12">
+            <div class="card-body">
+                <div class="col-lg-12">
 
-                <div class="skills layout-spacing ">
-                    <div class="widget-content widget-content-area bg-white p-3">
-                        <h3 class="">Data Pelamar</h3>
-                        <br>
-                        <ul class="nav nav-tabs" role="tablist">
-                            <li class="nav-item" role="presentation">
-                                <a class="nav-link active" id="icon-tab-0" data-bs-toggle="tab" href="#icon-tabpanel-0"
-                                    role="tab" aria-controls="icon-tabpanel-0" aria-selected="true">
-                                    Belum Dilihat
-                                </a>
-                            </li>
-                            <li class="nav-item" role="presentation">
-                                <a class="nav-link" id="icon-tab-1" data-bs-toggle="tab" href="#icon-tabpanel-1"
-                                    role="tab" aria-controls="icon-tabpanel-0" aria-selected="true">
+                    <div class="skills layout-spacing ">
+                        <div class="widget-content widget-content-area bg-white p-3">
+                            <h3 class="">Data Pelamar</h3>
+                            <br>
+                            <ul class="nav nav-tabs" role="tablist">
+                                <li class="nav-item" role="presentation">
+                                    <a class="nav-link active" id="icon-tab-0" data-bs-toggle="tab" href="#icon-tabpanel-0"
+                                        role="tab" aria-controls="icon-tabpanel-0" aria-selected="true">
+                                        Belum Dilihat
+                                    </a>
+                                </li>
+                                <li class="nav-item" role="presentation">
+                                    <a class="nav-link" id="icon-tab-1" data-bs-toggle="tab" href="#icon-tabpanel-1"
+                                        role="tab" aria-controls="icon-tabpanel-0" aria-selected="true">
+                                        Kandidat
+                                    </a>
+                                </li>
+                                <li class="nav-item" role="presentation">
+                                    <a class="nav-link" id="icon-tab-3" data-bs-toggle="tab" href="#icon-tabpanel-3"
+                                        role="tab" aria-controls="icon-tabpanel-2" aria-selected="false">
 
-                                    Kandidat
-                                </a>
-                            </li>
-                            <li class="nav-item" role="presentation">
-                                <a class="nav-link" id="icon-tab-3" data-bs-toggle="tab" href="#icon-tabpanel-3"
-                                    role="tab" aria-controls="icon-tabpanel-2" aria-selected="false">
+                                        Daftar Tunggu
+                                    </a>
+                                </li>
+                                <li class="nav-item" role="presentation">
+                                    <a class="nav-link" id="icon-tab-2" data-bs-toggle="tab" href="#icon-tabpanel-2"
+                                        role="tab" aria-controls="icon-tabpanel-1" aria-selected="false">
+                                        Ditolak
+                                    </a>
+                                </li>
 
-                                    Daftar Tunggu
-                                </a>
-                            </li>
-                            <li class="nav-item" role="presentation">
-                                <a class="nav-link" id="icon-tab-2" data-bs-toggle="tab" href="#icon-tabpanel-2"
-                                    role="tab" aria-controls="icon-tabpanel-1" aria-selected="false">
-                                    Ditolak
-                                </a>
-                            </li>
-
-                        </ul>
-                        <div class="tab-content pt-5" id="tab-content">
-                            <div class="tab-pane active show" id="icon-tabpanel-0" role="tabpanel"
-                                aria-labelledby="icon-tab-0">
-                                <div>
-                                    <div class="table table-striped py-3">
-                                        <table class="table" id="table_pelamar0" style="width: 100%;">
-                                            <thead class="table-primary">
-                                                <tr>
-                                                    <th>No.</th>
-                                                    <th>Pelamar</th>
-                                                    <th>Nomor Whatsapp</th>
-                                                    <th>Status</th>
-                                                    <th>Lihat CV</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody class="table-border-bottom-0">
-                                                @php
-                                                    $i = 1;
-                                                @endphp
-                                                @foreach ($user_meta as $user)
+                            </ul>
+                            <div class="tab-content pt-5" id="tab-content">
+                                <div class="tab-pane active show" id="icon-tabpanel-0" role="tabpanel"
+                                    aria-labelledby="icon-tab-0">
+                                    <div>
+                                        <div class="table-responsive py-3" style="width: 100%;">
+                                            <table class="table table-striped" id="table_pelamar0" style="width: 100%;">
+                                                <thead class="table-primary">
                                                     <tr>
-                                                        <td>{{ $i++ }}</td>
-                                                        <td>{{ $user->AuthLogin->recruitmentCV->nama_lengkap }}</td>
-                                                        <td>{{ $user->AuthLogin->nomor_whatsapp }}</td>
-                                                        <td class="bg-info text-white">
-                                                            @if ($user->status == '0')
-                                                                Belum Dilihat
-                                                            @endif
-                                                        </td>
-                                                        <td><a href="{{ url('/pg/pelamar-detail/' . $user->id . '/' . $holding . '') }}"
-                                                                type="button" class="btn btn-sm btn-info">
-                                                                <i class="tf-icons mdi mdi-eye-circle-outline me-1"></i>
-                                                                Detail&nbsp;CV
-                                                            </a></td>
+                                                        <th>No.</th>
+                                                        <th>Pelamar</th>
+                                                        <th>Nomor Whatsapp</th>
+                                                        <th>Status</th>
+                                                        <th>Lihat CV</th>
                                                     </tr>
-                                                @endforeach
-                                            </tbody>
-                                        </table>
+                                                </thead>
+                                                <tbody class="table-border-bottom-0">
+                                                    @php
+                                                        $i = 1;
+                                                    @endphp
+                                                    @foreach ($user_meta as $user)
+                                                        <tr>
+                                                            <td>{{ $i++ }}</td>
+                                                            <td>{{ $user->AuthLogin->recruitmentCV->nama_lengkap }}</td>
+                                                            <td>{{ $user->AuthLogin->nomor_whatsapp }}</td>
+                                                            <td class="bg-info text-white">
+                                                                @if ($user->status == '0')
+                                                                    Belum Dilihat
+                                                                @endif
+                                                            </td>
+                                                            <td><a href="{{ url('/pg/pelamar-detail/' . $user->id . '/' . $holding . '') }}"
+                                                                    type="button" class="btn btn-sm btn-info">
+                                                                    <i class="tf-icons mdi mdi-eye-circle-outline me-1"></i>
+                                                                    Detail&nbsp;CV
+                                                                </a></td>
+                                                        </tr>
+                                                    @endforeach
+                                                </tbody>
+                                            </table>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="tab-pane" id="icon-tabpanel-1" role="tabpanel" aria-labelledby="icon-tab-1">
-                                <div>
-                                    <div class="table table-striped py-3">
-                                        <table class="table" id="table_pelamar2" style="width: 100%;">
-                                            <thead class="table-primary">
-                                                <tr>
-                                                    <th>No.</th>
-                                                    <th>Pelamar</th>
-                                                    <th>Nomor Whatsapp</th>
-                                                    <th>Tanggal Wawancara</th>
-                                                    <th>Tempat Wawancara</th>
-                                                    <th>Waktu Wawancara</th>
-                                                    <th>Konfirmasi Wawancara</th>
-                                                    <th>Status</th>
-                                                    <th>Lihat CV</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody class="table-border-bottom-0">
-                                                @php
-                                                    $i = 1;
-                                                @endphp
-                                                @foreach ($user_kandidat as $user)
+                                <div class="tab-pane" id="icon-tabpanel-1" role="tabpanel" aria-labelledby="icon-tab-1">
+                                    <div>
+                                        <div class="table table-striped py-3">
+                                            <table class="table" id="table_pelamar2" style="width: 100%;">
+                                                <thead class="table-primary">
                                                     <tr>
-                                                        <td>{{ $i++ }}</td>
-                                                        <td>{{ $user->AuthLogin->recruitmentCV->nama_lengkap }}</td>
-                                                        <td>{{ $user->AuthLogin->nomor_whatsapp }}</td>
-                                                        <td>{{ $user->tanggal_wawancara }}</td>
-                                                        <td>{{ $user->tempat_wawancara }}</td>
-                                                        <td>{{ $user->waktu_wawancara }}</td>
-                                                        <td>
-                                                            @if ($user->feedback != '1')
-                                                                <div class="bg-warning text-white p-1">Menunggu Konfirmasi
-                                                                </div>
-                                                            @elseif ($user->feedback == '1')
-                                                                <div class="bg-info text-white p-1">Bersedia Wawancara</div>
-                                                            @endif
-                                                        </td>
-                                                        <td class="bg-success text-white">
-                                                            @if ($user->status == '1')
-                                                                Kandidat
-                                                            @elseif ($user->status == '1a')
-                                                                Panggilan Wawancara
-                                                            @elseif ($user->status == '2a')
-                                                                TIdak Hadir Wawancara
-                                                            @endif
-                                                        </td>
-                                                        <td><a href="{{ url('/pg/pelamar-detail/' . $user->id . '/' . $holding . '') }}"
-                                                                type="button" class="btn btn-sm btn-info">
-                                                                <i class="tf-icons mdi mdi-eye-circle-outline me-1"></i>
-                                                                Detail&nbsp;CV
-                                                            </a></td>
+                                                        <th>No.</th>
+                                                        <th>Pelamar</th>
+                                                        <th>Nomor Whatsapp</th>
+                                                        <th>Tanggal Wawancara</th>
+                                                        <th>Tempat Wawancara</th>
+                                                        <th>Waktu Wawancara</th>
+                                                        <th>Konfirmasi Wawancara</th>
+                                                        <th>Status</th>
+                                                        <th>Lihat CV</th>
                                                     </tr>
-                                                @endforeach
-                                            </tbody>
-                                        </table>
+                                                </thead>
+                                                <tbody class="table-border-bottom-0">
+                                                    @php
+                                                        $i = 1;
+                                                    @endphp
+                                                    @foreach ($user_kandidat as $user)
+                                                        <tr>
+                                                            <td>{{ $i++ }}</td>
+                                                            <td>{{ $user->AuthLogin->recruitmentCV->nama_lengkap }}</td>
+                                                            <td>{{ $user->AuthLogin->nomor_whatsapp }}</td>
+                                                            <td>{{ $user->tanggal_wawancara }}</td>
+                                                            <td>{{ $user->tempat_wawancara }}</td>
+                                                            <td>{{ $user->waktu_wawancara }}</td>
+                                                            <td>
+                                                                @if ($user->feedback != '1')
+                                                                    <div class="bg-warning text-white p-1">Menunggu
+                                                                        Konfirmasi
+                                                                    </div>
+                                                                @elseif ($user->feedback == '1')
+                                                                    <div class="bg-info text-white p-1">Bersedia Wawancara
+                                                                    </div>
+                                                                @endif
+                                                            </td>
+                                                            <td class="bg-success text-white">
+                                                                @if ($user->status == '1')
+                                                                    Kandidat
+                                                                @elseif ($user->status == '1a')
+                                                                    Panggilan Wawancara
+                                                                @elseif ($user->status == '2a')
+                                                                    TIdak Hadir Wawancara
+                                                                @endif
+                                                            </td>
+                                                            <td><a href="{{ url('/pg/pelamar-detail/' . $user->id . '/' . $holding . '') }}"
+                                                                    type="button" class="btn btn-sm btn-info">
+                                                                    <i class="tf-icons mdi mdi-eye-circle-outline me-1"></i>
+                                                                    Detail&nbsp;CV
+                                                                </a></td>
+                                                        </tr>
+                                                    @endforeach
+                                                </tbody>
+                                            </table>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="tab-pane" id="icon-tabpanel-3" role="tabpanel" aria-labelledby="icon-tab-3">
-                                <div>
-                                    <div class="table table-striped py-3">
-                                        <table class="table" id="table_pelamar3" style="width: 100%;">
-                                            <thead class="table-primary">
-                                                <tr>
-                                                    <th>No.</th>
-                                                    <th>Pelamar</th>
-                                                    <th>Nomor Whatsapp</th>
-                                                    <th>Status</th>
-                                                    <th>Rubah Status</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody class="table-border-bottom-0">
-                                                @php
-                                                    $i = 1;
-                                                @endphp
-                                                @foreach ($user_wait as $user)
+                                <div class="tab-pane" id="icon-tabpanel-3" role="tabpanel" aria-labelledby="icon-tab-3">
+                                    <div>
+                                        <div class="table table-striped py-3">
+                                            <table class="table" id="table_pelamar3" style="width: 100%;">
+                                                <thead class="table-primary">
                                                     <tr>
-                                                        <td>{{ $i++ }}</td>
-                                                        <td>{{ $user->AuthLogin->recruitmentCV->nama_lengkap }}</td>
-                                                        <td>{{ $user->AuthLogin->nomor_whatsapp }}</td>
-                                                        <td class="bg-secondary text-white">
-                                                            @if ($user->status == '2')
-                                                                Daftar Tunggu
-                                                            @endif
-                                                        </td>
-                                                        <td><a href="{{ url('/pg/pelamar-detail/' . $user->id . '/' . $holding . '') }}"
-                                                                type="button" class="btn btn-sm btn-info">
-                                                                <i class="tf-icons mdi mdi-eye-circle-outline me-1"></i>
-                                                                Detail&nbsp;CV
-                                                            </a></td>
+                                                        <th>No.</th>
+                                                        <th>Pelamar</th>
+                                                        <th>Nomor Whatsapp</th>
+                                                        <th>Status</th>
+                                                        <th>Rubah Status</th>
                                                     </tr>
-                                                @endforeach
-                                            </tbody>
-                                        </table>
+                                                </thead>
+                                                <tbody class="table-border-bottom-0">
+                                                    @php
+                                                        $i = 1;
+                                                    @endphp
+                                                    @foreach ($user_wait as $user)
+                                                        <tr>
+                                                            <td>{{ $i++ }}</td>
+                                                            <td>{{ $user->AuthLogin->recruitmentCV->nama_lengkap }}</td>
+                                                            <td>{{ $user->AuthLogin->nomor_whatsapp }}</td>
+                                                            <td class="bg-secondary text-white">
+                                                                @if ($user->status == '2')
+                                                                    Daftar Tunggu
+                                                                @endif
+                                                            </td>
+                                                            <td><a href="{{ url('/pg/pelamar-detail/' . $user->id . '/' . $holding . '') }}"
+                                                                    type="button" class="btn btn-sm btn-info">
+                                                                    <i
+                                                                        class="tf-icons mdi mdi-eye-circle-outline me-1"></i>
+                                                                    Detail&nbsp;CV
+                                                                </a></td>
+                                                        </tr>
+                                                    @endforeach
+                                                </tbody>
+                                            </table>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="tab-pane" id="icon-tabpanel-2" role="tabpanel" aria-labelledby="icon-tab-2">
-                                <div>
-                                    <div class="table table-striped py-3">
-                                        <table class="table" id="table_pelamar1" style="width: 100%;">
-                                            <thead class="table-primary">
-                                                <tr>
-                                                    <th>No.</th>
-                                                    <th>Pelamar</th>
-                                                    <th>Nomor Whatsapp</th>
-                                                    <th>Alasan</th>
-                                                    <th>Status</th>
-                                                    <th>Ubah Status</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody class="table-border-bottom-0">
-                                                @php
-                                                    $i = 1;
-                                                @endphp
-                                                @foreach ($user_reject as $user)
+                                <div class="tab-pane" id="icon-tabpanel-2" role="tabpanel" aria-labelledby="icon-tab-2">
+                                    <div>
+                                        <div class="table table-striped py-3">
+                                            <table class="table" id="table_pelamar1" style="width: 100%;">
+                                                <thead class="table-primary">
                                                     <tr>
-                                                        <td>{{ $i++ }}</td>
-                                                        <td>{{ $user->AuthLogin->recruitmentCV->nama_lengkap }}</td>
-                                                        <td>{{ $user->AuthLogin->nomor_whatsapp }}</td>
-                                                        <td>{{ $user->alasan }}</td>
-                                                        <td class="bg-danger text-white">
-                                                            @if ($user->status == '3')
-                                                                Ditolak
-                                                            @endif
-                                                        </td>
-                                                        <td><a href="{{ url('/pg/pelamar-detail/' . $user->id . '/' . $holding . '') }}"
-                                                                type="button" class="btn btn-sm btn-info">
-                                                                <i class="tf-icons mdi mdi-eye-circle-outline me-1"></i>
-                                                                Ubah&nbsp;Status
-                                                            </a></td>
+                                                        <th>No.</th>
+                                                        <th>Pelamar</th>
+                                                        <th>Nomor Whatsapp</th>
+                                                        <th>Alasan</th>
+                                                        <th>Status</th>
+                                                        <th>Ubah Status</th>
                                                     </tr>
-                                                @endforeach
-                                            </tbody>
-                                        </table>
+                                                </thead>
+                                                <tbody class="table-border-bottom-0">
+                                                    @php
+                                                        $i = 1;
+                                                    @endphp
+                                                    @foreach ($user_reject as $user)
+                                                        <tr>
+                                                            <td>{{ $i++ }}</td>
+                                                            <td>{{ $user->AuthLogin->recruitmentCV->nama_lengkap }}</td>
+                                                            <td>{{ $user->AuthLogin->nomor_whatsapp }}</td>
+                                                            <td>{{ $user->alasan }}</td>
+                                                            <td class="bg-danger text-white">
+                                                                @if ($user->status == '3')
+                                                                    Ditolak
+                                                                @endif
+                                                            </td>
+                                                            <td><a href="{{ url('/pg/pelamar-detail/' . $user->id . '/' . $holding . '') }}"
+                                                                    type="button" class="btn btn-sm btn-info">
+                                                                    <i
+                                                                        class="tf-icons mdi mdi-eye-circle-outline me-1"></i>
+                                                                    Ubah&nbsp;Status
+                                                                </a></td>
+                                                        </tr>
+                                                    @endforeach
+                                                </tbody>
+                                            </table>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
 
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -621,6 +628,9 @@
     <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.min.js"></script>
     <script>
         $('#table_pelamar0').DataTable();
+        $('a[data-bs-toggle="tab"]').on('shown.bs.tab', function(e) {
+            window.dispatchEvent(new Event('resize'));
+        });
         $('#table_pelamar1').DataTable();
         $('#table_pelamar2').DataTable();
         $('#table_pelamar3').DataTable();

@@ -23,214 +23,12 @@
                     </div>
                     <div class="card-body">
                         <!-- <hr class="my-5">
-                                                                                                                                                                                                                                                                                                                                                                                                                                                    <hr class="my-5"> -->
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                    <hr class="my-5"> -->
                         <button type="button" class="btn btn-sm btn-primary waves-effect waves-light mb-3"
                             data-bs-toggle="modal" data-bs-target="#modal_tambah_recruitment"><i
                                 class="menu-icon tf-icons mdi mdi-plus"></i>Tambah</button>
                         <!-- <button type="button" class="btn btn-sm btn-success waves-effect waves-light mb-3" data-bs-toggle="modal" data-bs-target="#modal_import_inventaris"><i class="menu-icon tf-icons mdi mdi-file-excel"></i>Import</button> -->
-                        <div class="modal fade" id="modal_tambah_recruitment" data-bs-backdrop="static" tabindex="-1">
-                            <div class="modal-dialog modal-dialog-scrollable modal-lg">
-                                <form method="post" action="{{ url('/recruitment/create/' . $holding) }}"
-                                    class="modal-content" enctype="multipart/form-data">
-                                    @csrf
-                                    <div class="modal-header">
-                                        <h4 class="modal-title" id="backDropModalTitle">Tambah Recruitment</h4>
-                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                            aria-label="Close"></button>
-                                    </div>
-                                    <div class="modal-body">
-                                        <div class="row g-2">
-                                            <div class="col mb-2">
-                                                <div class="form-floating form-floating-outline">
-                                                    <input type="text" id="holding_recruitment" readonly
-                                                        name="holding_recruitment" class="form-control"
-                                                        placeholder="Masukkan Holding Inventaris"
-                                                        value="@if ($holding == 'sp') CV. SUMBER PANGAN @elseif($holding == 'sps') PT. SURYA PANGAN SEMESTA @else CV. SURYA INTI PANGAN @endif" />
-                                                    <label for="holding_recruitment">Holding Recruitment</label>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <br>
-                                        <div class="row g-2">
-                                            <div class="col mb-2">
-                                                <div class="form-floating form-floating-outline">
-                                                    <select class="form-control @error('penempatan') is-invalid @enderror"
-                                                        id="penempatan" name="penempatan" autofocus
-                                                        value="{{ old('penempatan') }}">
-                                                        <option value="">Pilih Penempatan</option>
-                                                        <option value="CV. SUMBER PANGAN (KEDIRI)">SP (KEDIRI)</option>
-                                                        <option value="CV. SUMBER PANGAN (KEDIRI)">SP (TUBAN)</option>
-                                                        <option value="CV. SURYA INTI PANGAN (MAKASAR)">SIP (MAKASAR)
-                                                        </option>
-                                                        <option value="PT. SURYA PANGAN SEMESTA (KEDIRI)">SPS (KEDIRI)
-                                                        </option>
-                                                        <option value="PT. SURYA PANGAN SEMESTA (NGAWI)">SPS (NGAWI)
-                                                        </option>
-                                                        <option value="PT. SURYA PANGAN SEMESTA (SUBANG)">SPS (SUBANG)
-                                                        </option>
-                                                    </select>
-                                                    <label for="penempatan">Penempatan</label>
-                                                </div>
-                                                @error('penempatan')
-                                                    <div class="invalid-feedback">
-                                                        {{ $message }}
-                                                    </div>
-                                                @enderror
-                                            </div>
-                                        </div>
-                                        <br>
-                                        <div class="row g-2">
-                                            <div class="col mb-2">
-                                                <div class="form-floating form-floating-outline">
-                                                    <select class="form-control @error('nama_dept') is-invalid @enderror"
-                                                        id="nama_dept" name="nama_dept" autofocus
-                                                        value="{{ old('nama_dept') }}">
-                                                        <option value=""> Pilih Departemen</option>
-                                                        @foreach ($data_dept as $data)
-                                                            <option value="{{ $data->id }}">{{ $data->nama_departemen }}
-                                                            </option>
-                                                        @endforeach
-                                                    </select>
-                                                    <label for="nama_dept">Nama Departemen</label>
-                                                </div>
-                                                @error('nama_dept')
-                                                    <div class="invalid-feedback">
-                                                        {{ $message }}
-                                                    </div>
-                                                @enderror
-                                            </div>
-                                        </div>
-                                        <br>
-                                        <div class="row g-2">
-                                            <div class="col mb-2">
-                                                <div class="form-floating form-floating-outline">
-                                                    <select class="form-control @error('nama_divisi') is-invalid @enderror"
-                                                        id="nama_divisi" name="nama_divisi">
-                                                        <option value=""> Pilih Divisi</option>
-                                                    </select>
-                                                    <label for="form_nama_divisi">Nama Divisi</label>
-                                                </div>
-                                                @error('nama_divisi')
-                                                    <div class="invalid-feedback">
-                                                        {{ $message }}
-                                                    </div>
-                                                @enderror
-                                            </div>
-                                        </div>
-                                        <br>
-                                        <div class="row g-2">
-                                            <div class="col mb-2">
-                                                <div class="form-floating form-floating-outline">
-                                                    <select class="form-control @error('nama_bagian') is-invalid @enderror"
-                                                        id="nama_bagian" name="nama_bagian">
-                                                        <option value=""> Pilih Bagian</option>
-                                                    </select>
-                                                    <label for="form_nama_bagian">Nama Bagian</label>
-                                                </div>
-                                                @error('nama_bagian')
-                                                    <div class="invalid-feedback">
-                                                        {{ $message }}
-                                                    </div>
-                                                @enderror
-                                            </div>
-                                        </div>
-                                        <br>
-                                        <div class="row g-2">
-                                            <div class="col mb-2">
-                                                <div class="form-floating form-floating-outline">
-                                                    <select
-                                                        class="form-control @error('nama_jabatan') is-invalid @enderror"
-                                                        id="nama_jabatan" name="nama_jabatan">
-                                                        <option value=""> Pilih Jabatan</option>
-                                                    </select>
-                                                    <label for="form_nama_jabatan">Nama Jabatan</label>
-                                                </div>
-                                                @error('nama_jabatan')
-                                                    <div class="invalid-feedback">
-                                                        {{ $message }}
-                                                    </div>
-                                                @enderror
-                                            </div>
-                                        </div>
-                                        <br>
-                                        <div class="row g-2">
-                                            <div class="col mb-2">
-                                                <div class="form-floating form-floating-outline">
-                                                    <input type="date" id="created_recruitment"
-                                                        name="created_recruitment"
-                                                        class="form-control @error('created_recruitment') is-invalid @enderror"
-                                                        placeholder="Masukkan Bagian"
-                                                        value="{{ old('created_recruitment') }}" />
-                                                    <label for="bagian_recruitment">Tanggal Mulai</label>
-                                                </div>
-                                                @error('created_recruitment')
-                                                    <span class="invalid-feedback" role="alert">
-                                                        <strong>{{ $message }}</strong>
-                                                    </span>
-                                                @enderror
-                                            </div>
-                                        </div>
-                                        <br>
-                                        <div class="row g-2">
-                                            <div class="col mb-2">
-                                                <div class="form-floating form-floating-outline">
-                                                    <input type="date" id="deadline_recruitment"
-                                                        name="deadline_recruitment"
-                                                        class="form-control @error('deadline_recruitment') is-invalid @enderror"
-                                                        placeholder="Masukkan Bagian"
-                                                        value="{{ old('deadline_recruitment') }}" />
-                                                    <label for="bagian_recruitment">Tanggal Akhir</label>
-                                                </div>
-                                                @error('deadline_recruitment')
-                                                    <span class="invalid-feedback" role="alert">
-                                                        <strong>{{ $message }}</strong>
-                                                    </span>
-                                                @enderror
-                                            </div>
-                                        </div>
-                                        <br>
-                                        <div class="row g-2">
-                                            <div class="col mb-2">
-                                                <div class="form-floating form-floating-outline">
-                                                    <textarea class="form-control @error('desc_recruitment') is-invalid @enderror" id="desc_recruitment"
-                                                        name="desc_recruitment" autofocus value="{{ old('desc_recruitment') }}" id="" cols="30"
-                                                        rows="10" style="height: 70%"></textarea>
-                                                    <label for="desc_recruitment">Syarat Ketentuan</label>
-                                                </div>
-                                                @error('desc_recruitment')
-                                                    <span class="invalid-feedback" role="alert">
-                                                        <strong>{{ $message }}</strong>
-                                                    </span>
-                                                @enderror
-                                            </div>
-                                        </div>
-                                        <br>
-                                        {{-- <div class="d-flex align-items-start align-items-sm-center gap-4">
-                                        <img src="{{asset('admin/assets/img/avatars/poster_cv.png')}}" alt="user-avatar" class="d-block w-px-120 h-px-120 rounded" id="template_foto_inventaris" />
 
-                                    <div class="button-wrapper">
-                                        <label for="foto_inventaris" class="btn btn-primary me-2 mb-3" tabindex="0">
-                                            <span class="d-none d-sm-block">Upload Foto</span>
-                                            <i class="mdi mdi-tray-arrow-up d-block d-sm-none"></i>
-                                            <input type="file" name="foto_inventaris" id="foto_inventaris" class="account-file-input" hidden accept="image/png, image/jpeg" />
-                                        </label>
-
-                                        <div class="text-muted small">Allowed JPG, GIF or PNG. Max size of 800K</div>
-                                    </div>
-                                </div> --}}
-                                        <br>
-                                        <div class="d-flex justify-content-center">
-                                            <button type="button" class="btn btn-outline-secondary m-1"
-                                                data-bs-dismiss="modal">
-                                                Close
-                                            </button>
-                                            <button type="submit" class="btn btn-primary m-1">Save</button>
-                                        </div>
-                                    </div>
-
-                                </form>
-                            </div>
-                        </div>
                         <div class="modal fade" id="modal_lihat_syarat" data-bs-backdrop="static" tabindex="-1">
                             <div class="modal-dialog modal-lg modal-dialog-scrollable">
                                 <div class=" modal-content">
@@ -265,171 +63,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="modal fade" id="modal_edit_recruitment" data-bs-backdrop="static" tabindex="-1">
-                            <div class="modal-dialog modal-dialog-scrollable">
-                                <form method="post" action="{{ url('/recruitment/update/' . $holding) }}"
-                                    class="modal-content" enctype="multipart/form-data">
-                                    @csrf
-                                    <div class="modal-header">
-                                        <h4 class="modal-title" id="backDropModalTitle">Edit Recruitment</h4>
-                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                            aria-label="Close"></button>
-                                    </div>
-                                    <input type="hidden" name="id_recruitment" id="id_recruitment" value="">
-                                    <div class="modal-body">
-                                        <div class="row g-2">
-                                            <div class="col mb-2">
-                                                <div class="form-floating form-floating-outline">
-                                                    <select disabled
-                                                        class="form-control @error('nama_departemen_update') is-invalid @enderror"
-                                                        id="nama_departemen_update" name="nama_departemen_update"
-                                                        autofocus value="{{ old('nama_departemen_update') }}">
-                                                        <option value=""> Pilih Departemen</option>
-                                                        @foreach ($data_dept as $data)
-                                                            <option value="{{ $data->id }}">
-                                                                {{ $data->nama_departemen }}</option>
-                                                        @endforeach
-                                                    </select>
-                                                    <label for="nama_departemen_update">Nama Departemen</label>
-                                                </div>
-                                                @error('nama_departemen_update')
-                                                    <div class="invalid-feedback">
-                                                        {{ $message }}
-                                                    </div>
-                                                @enderror
-                                            </div>
-                                        </div>
-                                        <br>
-                                        <div class="row g-2">
-                                            <div class="col mb-2">
-                                                <div class="form-floating form-floating-outline">
-                                                    <select disabled
-                                                        class="form-control @error('nama_divisi_update') is-invalid @enderror"
-                                                        id="nama_divisi_update" name="nama_divisi_update" autofocus
-                                                        value="{{ old('nama_divisi_update') }}">
-                                                        <option value=""> Pilih Divisi</option>
-                                                        @foreach ($data_divisi as $data)
-                                                            <option value="{{ $data->id }}">{{ $data->nama_divisi }}
-                                                            </option>
-                                                        @endforeach
-                                                    </select>
-                                                    <label for="nama_divisi_update">Nama Divisi</label>
-                                                </div>
-                                                @error('nama_divisi_update')
-                                                    <div class="invalid-feedback">
-                                                        {{ $message }}
-                                                    </div>
-                                                @enderror
-                                            </div>
-                                        </div>
-                                        <br>
-                                        <div class="row g-2">
-                                            <div class="col mb-2">
-                                                <div class="form-floating form-floating-outline">
-                                                    <select disabled
-                                                        class="form-control @error('nama_bagian_update') is-invalid @enderror"
-                                                        id="nama_bagian_update" name="nama_bagian_update" autofocus
-                                                        value="{{ old('nama_bagian_update') }}">
-                                                        <option value=""> Pilih Bagian</option>
-                                                        @foreach ($data_bagian as $data)
-                                                            <option value="{{ $data->id }}">{{ $data->nama_bagian }}
-                                                            </option>
-                                                        @endforeach
-                                                    </select>
-                                                    <label for="nama_bagian_update">Nama Bagian</label>
-                                                </div>
-                                                @error('nama_bagian_update')
-                                                    <div class="invalid-feedback">
-                                                        {{ $message }}
-                                                    </div>
-                                                @enderror
-                                            </div>
-                                        </div>
-                                        <br>
-                                        <div class="row g-2">
-                                            <div class="col mb-2">
-                                                <div class="form-floating form-floating-outline">
-                                                    <select disabled
-                                                        class="form-control @error('nama_jabatan_update') is-invalid @enderror"
-                                                        id="nama_jabatan_update" name="nama_jabatan_update" autofocus
-                                                        value="{{ old('nama_jabatan_update') }}">
-                                                        <option value=""> Pilih Jabatan</option>
-                                                        @foreach ($data_jabatan as $data)
-                                                            <option value="{{ $data->id }}">{{ $data->nama_jabatan }}
-                                                            </option>
-                                                        @endforeach
-                                                    </select>
-                                                    <label for="nama_jabatan_update">Nama Jabatan</label>
-                                                </div>
-                                                @error('nama_jabatan_update')
-                                                    <div class="invalid-feedback">
-                                                        {{ $message }}
-                                                    </div>
-                                                @enderror
-                                            </div>
-                                        </div>
-                                        <br>
-                                        <div class="row g-2">
-                                            <div class="col mb-2">
-                                                <div class="form-floating form-floating-outline">
-                                                    <input type="date" id="created_recruitment_update"
-                                                        name="created_recruitment_update"
-                                                        class="form-control @error('created_recruitment_update') is-invalid @enderror"
-                                                        placeholder="Tanggal"
-                                                        value="{{ old('created_recruitment_update') }}" />
-                                                    <label for="bagian_recruitment">Tanggal Awal</label>
-                                                </div>
-                                                @error('created_recruitment_update')
-                                                    <span class="invalid-feedback" role="alert">
-                                                        <strong>{{ $message }}</strong>
-                                                    </span>
-                                                @enderror
-                                            </div>
-                                        </div>
-                                        <br>
-                                        <div class="row g-2">
-                                            <div class="col mb-2">
-                                                <div class="form-floating form-floating-outline">
-                                                    <input type="date" id="deadline_recruitment_update"
-                                                        name="deadline_recruitment_update"
-                                                        class="form-control @error('deadline_recruitment_update') is-invalid @enderror"
-                                                        placeholder="Tanggal"
-                                                        value="{{ old('deadline_recruitment_update') }}" />
-                                                    <label for="bagian_recruitment">Tanggal Akhir</label>
-                                                </div>
-                                                @error('deadline_recruitment_update')
-                                                    <span class="invalid-feedback" role="alert">
-                                                        <strong>{{ $message }}</strong>
-                                                    </span>
-                                                @enderror
-                                            </div>
-                                        </div>
-                                        <br>
-                                        <div class="row g-2">
-                                            <div class="col mb-2">
-                                                <div class="form-floating form-floating-outline">
-                                                    <textarea class="form-control @error('desc_recruitment_update') is-invalid @enderror" id="desc_recruitment_update"
-                                                        name="desc_recruitment_update" autofocus value="{{ old('desc_recruitment_update') }}" id=""
-                                                        cols="30" rows="10" style="height: 50%"></textarea>
-                                                    <label for="desc_recruitment_update">Syarat Ketentuan</label>
-                                                </div>
-                                                @error('desc_recruitment_update')
-                                                    <span class="invalid-feedback" role="alert">
-                                                        <strong>{{ $message }}</strong>
-                                                    </span>
-                                                @enderror
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
-                                            Close
-                                        </button>
-                                        <button type="submit" class="btn btn-primary">Save</button>
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
+
                         <table class="table" id="table_recruitment" style="width: 100%;">
                             <thead class="table-primary">
                                 <tr>
@@ -454,6 +88,357 @@
             </div>
             <!--/ Transactions -->
             <!--/ Data Tables -->
+
+        </div>
+    </div>
+    <div class="modal fade" id="modal_tambah_recruitment" data-bs-backdrop="static" tabindex="-1">
+        <div class="modal-dialog modal-dialog-scrollable modal-lg">
+            <form method="post" action="{{ url('/recruitment/create/' . $holding) }}" class="modal-content"
+                enctype="multipart/form-data">
+                @csrf
+                <div class="modal-header">
+                    <h4 class="modal-title" id="backDropModalTitle">Tambah Recruitment</h4>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row g-2">
+                        <div class="col mb-2">
+                            <div class="form-floating form-floating-outline">
+                                <input type="text" id="holding_recruitment" readonly name="holding_recruitment"
+                                    class="form-control" placeholder="Masukkan Holding Inventaris"
+                                    value="@if ($holding == 'sp') CV. SUMBER PANGAN @elseif($holding == 'sps') PT. SURYA PANGAN SEMESTA @else CV. SURYA INTI PANGAN @endif" />
+                                <label for="holding_recruitment">Holding Recruitment</label>
+                            </div>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="row g-2">
+                        <div class="col mb-2">
+                            <div class="form-floating form-floating-outline">
+                                <select class="form-control @error('penempatan') is-invalid @enderror" id="penempatan"
+                                    name="penempatan" autofocus value="{{ old('penempatan') }}">
+                                    <option value="">Pilih Penempatan</option>
+                                    <option value="CV. SUMBER PANGAN (KEDIRI)">SP (KEDIRI)</option>
+                                    <option value="CV. SUMBER PANGAN (KEDIRI)">SP (TUBAN)</option>
+                                    <option value="CV. SURYA INTI PANGAN (MAKASAR)">SIP (MAKASAR)
+                                    </option>
+                                    <option value="PT. SURYA PANGAN SEMESTA (KEDIRI)">SPS (KEDIRI)
+                                    </option>
+                                    <option value="PT. SURYA PANGAN SEMESTA (NGAWI)">SPS (NGAWI)
+                                    </option>
+                                    <option value="PT. SURYA PANGAN SEMESTA (SUBANG)">SPS (SUBANG)
+                                    </option>
+                                </select>
+                                <label for="penempatan">Penempatan</label>
+                            </div>
+                            @error('penempatan')
+                                <div class="invalid-feedback">
+                                    {{ $message }}
+                                </div>
+                            @enderror
+                        </div>
+                    </div>
+                    <br>
+                    <div class="row g-2">
+                        <div class="col mb-2">
+                            <div class="form-floating form-floating-outline">
+                                <select class="form-control @error('nama_dept') is-invalid @enderror" id="nama_dept"
+                                    name="nama_dept" autofocus value="{{ old('nama_dept') }}">
+                                    <option value=""> Pilih Departemen</option>
+                                    @foreach ($data_dept as $data)
+                                        <option value="{{ $data->id }}">{{ $data->nama_departemen }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                                <label for="nama_dept">Nama Departemen</label>
+                            </div>
+                            @error('nama_dept')
+                                <div class="invalid-feedback">
+                                    {{ $message }}
+                                </div>
+                            @enderror
+                        </div>
+                    </div>
+                    <br>
+                    <div class="row g-2">
+                        <div class="col mb-2">
+                            <div class="form-floating form-floating-outline">
+                                <select class="form-control @error('nama_divisi') is-invalid @enderror" id="nama_divisi"
+                                    name="nama_divisi">
+                                    <option value=""> Pilih Divisi</option>
+                                </select>
+                                <label for="form_nama_divisi">Nama Divisi</label>
+                            </div>
+                            @error('nama_divisi')
+                                <div class="invalid-feedback">
+                                    {{ $message }}
+                                </div>
+                            @enderror
+                        </div>
+                    </div>
+                    <br>
+                    <div class="row g-2">
+                        <div class="col mb-2">
+                            <div class="form-floating form-floating-outline">
+                                <select class="form-control @error('nama_bagian') is-invalid @enderror" id="nama_bagian"
+                                    name="nama_bagian">
+                                    <option value=""> Pilih Bagian</option>
+                                </select>
+                                <label for="form_nama_bagian">Nama Bagian</label>
+                            </div>
+                            @error('nama_bagian')
+                                <div class="invalid-feedback">
+                                    {{ $message }}
+                                </div>
+                            @enderror
+                        </div>
+                    </div>
+                    <br>
+                    <div class="row g-2">
+                        <div class="col mb-2">
+                            <div class="form-floating form-floating-outline">
+                                <select class="form-control @error('nama_jabatan') is-invalid @enderror" id="nama_jabatan"
+                                    name="nama_jabatan">
+                                    <option value=""> Pilih Jabatan</option>
+                                </select>
+                                <label for="form_nama_jabatan">Nama Jabatan</label>
+                            </div>
+                            @error('nama_jabatan')
+                                <div class="invalid-feedback">
+                                    {{ $message }}
+                                </div>
+                            @enderror
+                        </div>
+                    </div>
+                    <br>
+                    <div class="row g-2">
+                        <div class="col mb-2">
+                            <div class="form-floating form-floating-outline">
+                                <input type="date" id="created_recruitment" name="created_recruitment"
+                                    class="form-control @error('created_recruitment') is-invalid @enderror"
+                                    placeholder="Masukkan Bagian" value="{{ old('created_recruitment') }}" />
+                                <label for="bagian_recruitment">Tanggal Mulai</label>
+                            </div>
+                            @error('created_recruitment')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                            @enderror
+                        </div>
+                    </div>
+                    <br>
+                    <div class="row g-2">
+                        <div class="col mb-2">
+                            <div class="form-floating form-floating-outline">
+                                <input type="date" id="deadline_recruitment" name="deadline_recruitment"
+                                    class="form-control @error('deadline_recruitment') is-invalid @enderror"
+                                    placeholder="Masukkan Bagian" value="{{ old('deadline_recruitment') }}" />
+                                <label for="bagian_recruitment">Tanggal Akhir</label>
+                            </div>
+                            @error('deadline_recruitment')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                            @enderror
+                        </div>
+                    </div>
+                    <br>
+                    <div class="row g-2">
+                        <div class="col mb-2">
+                            <div class="form-floating form-floating-outline">
+                                <textarea class="form-control @error('desc_recruitment') is-invalid @enderror" id="desc_recruitment"
+                                    name="desc_recruitment" autofocus value="{{ old('desc_recruitment') }}" id="" cols="30"
+                                    rows="10" style="height: 70%"></textarea>
+                                <label for="desc_recruitment">Syarat Ketentuan</label>
+                            </div>
+                            @error('desc_recruitment')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                            @enderror
+                        </div>
+                    </div>
+                    <br>
+                    {{-- <div class="d-flex align-items-start align-items-sm-center gap-4">
+                                        <img src="{{asset('admin/assets/img/avatars/poster_cv.png')}}" alt="user-avatar" class="d-block w-px-120 h-px-120 rounded" id="template_foto_inventaris" />
+
+                                    <div class="button-wrapper">
+                                        <label for="foto_inventaris" class="btn btn-primary me-2 mb-3" tabindex="0">
+                                            <span class="d-none d-sm-block">Upload Foto</span>
+                                            <i class="mdi mdi-tray-arrow-up d-block d-sm-none"></i>
+                                            <input type="file" name="foto_inventaris" id="foto_inventaris" class="account-file-input" hidden accept="image/png, image/jpeg" />
+                                        </label>
+
+                                        <div class="text-muted small">Allowed JPG, GIF or PNG. Max size of 800K</div>
+                                    </div>
+                                </div> --}}
+                    <br>
+                    <div class="d-flex justify-content-center">
+                        <button type="button" class="btn btn-outline-secondary m-1" data-bs-dismiss="modal">
+                            Close
+                        </button>
+                        <button type="submit" class="btn btn-primary m-1">Save</button>
+                    </div>
+                </div>
+
+            </form>
+        </div>
+    </div>
+    <div class="modal fade" id="modal_edit_recruitment" data-bs-backdrop="static" tabindex="-1">
+        <div class="modal-dialog modal-dialog-scrollable">
+            <form method="post" action="{{ url('/recruitment/update/' . $holding) }}" class="modal-content"
+                enctype="multipart/form-data">
+                @csrf
+                <div class="modal-header">
+                    <h4 class="modal-title" id="backDropModalTitle">Edit Recruitment</h4>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <input type="hidden" name="id_recruitment" id="id_recruitment" value="">
+                <div class="modal-body">
+                    <div class="row g-2">
+                        <div class="col mb-2">
+                            <div class="form-floating form-floating-outline">
+                                <select disabled
+                                    class="form-control @error('nama_departemen_update') is-invalid @enderror"
+                                    id="nama_departemen_update" name="nama_departemen_update" autofocus
+                                    value="{{ old('nama_departemen_update') }}">
+                                    <option value=""> Pilih Departemen</option>
+                                    @foreach ($data_dept as $data)
+                                        <option value="{{ $data->id }}">
+                                            {{ $data->nama_departemen }}</option>
+                                    @endforeach
+                                </select>
+                                <label for="nama_departemen_update">Nama Departemen</label>
+                            </div>
+                            @error('nama_departemen_update')
+                                <div class="invalid-feedback">
+                                    {{ $message }}
+                                </div>
+                            @enderror
+                        </div>
+                    </div>
+                    <br>
+                    <div class="row g-2">
+                        <div class="col mb-2">
+                            <div class="form-floating form-floating-outline">
+                                <select disabled class="form-control @error('nama_divisi_update') is-invalid @enderror"
+                                    id="nama_divisi_update" name="nama_divisi_update" autofocus
+                                    value="{{ old('nama_divisi_update') }}">
+                                    <option value=""> Pilih Divisi</option>
+                                    @foreach ($data_divisi as $data)
+                                        <option value="{{ $data->id }}">{{ $data->nama_divisi }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                                <label for="nama_divisi_update">Nama Divisi</label>
+                            </div>
+                            @error('nama_divisi_update')
+                                <div class="invalid-feedback">
+                                    {{ $message }}
+                                </div>
+                            @enderror
+                        </div>
+                    </div>
+                    <br>
+                    <div class="row g-2">
+                        <div class="col mb-2">
+                            <div class="form-floating form-floating-outline">
+                                <select disabled class="form-control @error('nama_bagian_update') is-invalid @enderror"
+                                    id="nama_bagian_update" name="nama_bagian_update" autofocus
+                                    value="{{ old('nama_bagian_update') }}">
+                                    <option value=""> Pilih Bagian</option>
+                                    @foreach ($data_bagian as $data)
+                                        <option value="{{ $data->id }}">{{ $data->nama_bagian }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                                <label for="nama_bagian_update">Nama Bagian</label>
+                            </div>
+                            @error('nama_bagian_update')
+                                <div class="invalid-feedback">
+                                    {{ $message }}
+                                </div>
+                            @enderror
+                        </div>
+                    </div>
+                    <br>
+                    <div class="row g-2">
+                        <div class="col mb-2">
+                            <div class="form-floating form-floating-outline">
+                                <select disabled class="form-control @error('nama_jabatan_update') is-invalid @enderror"
+                                    id="nama_jabatan_update" name="nama_jabatan_update" autofocus
+                                    value="{{ old('nama_jabatan_update') }}">
+                                    <option value=""> Pilih Jabatan</option>
+                                    @foreach ($data_jabatan as $data)
+                                        <option value="{{ $data->id }}">{{ $data->nama_jabatan }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                                <label for="nama_jabatan_update">Nama Jabatan</label>
+                            </div>
+                            @error('nama_jabatan_update')
+                                <div class="invalid-feedback">
+                                    {{ $message }}
+                                </div>
+                            @enderror
+                        </div>
+                    </div>
+                    <br>
+                    <div class="row g-2">
+                        <div class="col mb-2">
+                            <div class="form-floating form-floating-outline">
+                                <input type="date" id="created_recruitment_update" name="created_recruitment_update"
+                                    class="form-control @error('created_recruitment_update') is-invalid @enderror"
+                                    placeholder="Tanggal" value="{{ old('created_recruitment_update') }}" />
+                                <label for="bagian_recruitment">Tanggal Awal</label>
+                            </div>
+                            @error('created_recruitment_update')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                            @enderror
+                        </div>
+                    </div>
+                    <br>
+                    <div class="row g-2">
+                        <div class="col mb-2">
+                            <div class="form-floating form-floating-outline">
+                                <input type="date" id="deadline_recruitment_update" name="deadline_recruitment_update"
+                                    class="form-control @error('deadline_recruitment_update') is-invalid @enderror"
+                                    placeholder="Tanggal" value="{{ old('deadline_recruitment_update') }}" />
+                                <label for="bagian_recruitment">Tanggal Akhir</label>
+                            </div>
+                            @error('deadline_recruitment_update')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                            @enderror
+                        </div>
+                    </div>
+                    <br>
+                    <div class="row g-2">
+                        <div class="col mb-2">
+                            <div class="form-floating form-floating-outline">
+                                <textarea class="form-control @error('desc_recruitment_update') is-invalid @enderror" id="desc_recruitment_update"
+                                    name="desc_recruitment_update" autofocus value="{{ old('desc_recruitment_update') }}" id=""
+                                    cols="30" rows="10" style="height: 50%"></textarea>
+                                <label for="desc_recruitment_update">Syarat Ketentuan</label>
+                            </div>
+                            @error('desc_recruitment_update')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                            @enderror
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+                        Close
+                    </button>
+                    <button type="submit" class="btn btn-primary">Save</button>
+                </div>
+            </form>
         </div>
     </div>
 @endsection
