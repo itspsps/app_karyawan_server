@@ -81,7 +81,7 @@
                         </div>
                         <div class="tab-pane" id="icon-tabpanel-1" role="tabpanel" aria-labelledby="icon-tab-1">
                             <div class="d-">
-                                <h5 class="card-title m-0 me-2">PENILAIAN INTERVIEW</h5>
+                                <h5 class="card-title m-0 me-2">SOAL UJIAN ESAI</h5>
                             </div>
                             <a href="{{ url('/pg-data-ujian/ujian_pg_esai/' . $holding) }}" type="button"
                                 class="btn btn-sm btn-primary waves-effect waves-light my-3"><i
@@ -107,23 +107,15 @@
                         </div>
                         <div class="tab-pane" id="icon-tabpanel-2" role="tabpanel" aria-labelledby="icon-tab-2">
                             <div class="d-">
-                                <h5 class="card-title m-0 me-2">SOAL UJIAN ESAI</h5>
+                                <h5 class="card-title m-0 me-2">PENILAIAN INTERVIEW</h5>
                             </div>
-                            <a href="{{ url('/pg-data-ujian/ujian_pg_esai/' . $holding) }}" type="button"
-                                class="btn btn-sm btn-primary waves-effect waves-light my-3"><i
-                                    class="menu-icon tf-icons mdi mdi-plus"></i>Tambah</a>
-                            <table class="table" id="table_esai" style="width: 100%;">
+                            <button type="button" class="btn btn-sm btn-primary waves-effect waves-light my-3"
+                                id="btn_modal_interview"><i class="menu-icon tf-icons mdi mdi-plus"></i>Tambah</button>
+                            <table class="table" id="tabel_interview" style="width: 100%;">
                                 <thead class="table-primary">
                                     <tr>
-                                        <th>Nama</th>
-                                        <th>Kategori</th>
-                                        <th>Direktur</th>
-                                        <th>Head</th>
-                                        <th>Manager / Regional Sales Manager</th>
-                                        <th>Junior Sales Manager / Area Sales Manager</th>
-                                        <th>Supervisor</th>
-                                        <th>Koordinator</th>
-                                        <th>Admin, Operator, Drafter, Staff, Sales, Sopir</th>
+                                        <th>Soal</th>
+                                        <th>Deskripsi</th>
                                         <th>Opsi</th>
                                     </tr>
                                 </thead>
@@ -255,7 +247,7 @@
         </div>
     </div>
     {{-- end modal update kategori --}}
-    {{-- modal update kategori --}}
+    {{-- modal update Pembobotan --}}
     <div class="modal fade" id="modal_update_pembobotan" tabindex="-1" aria-labelledby="exampleModalLabel"
         aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
@@ -305,7 +297,69 @@
             </div>
         </div>
     </div>
-    {{-- end modal update kategori --}}
+    {{-- end modal update pembobotan --}}
+    {{-- modal tambah interview --}}
+    <div class="modal fade" id="modal_tambah_interview" tabindex="-1" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">TAMBAH SOAL INTERVIEW</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form method="post" enctype="multipart/form-data">
+                        <div class="mb-3">
+                            <label>PARAMETER</label>
+                            <textarea type="text" class="form-control" id="parameter_add" name="parameter" required></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label>PENJELASAN</label>
+                            <textarea type="text" class="form-control" id="deskripsi_add" name="deskripsi" required></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                    <button type="button" class="btn btn-primary" id="btn_save_interview">Masukkan
+                        Parameter</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    {{-- end modal tambah interview --}}
+    {{-- modal update interview --}}
+    <div class="modal fade" id="modal_update_interview" tabindex="-1" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">TAMBAH SOAL INTERVIEW</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form method="post" enctype="multipart/form-data">
+                        <div class="mb-3">
+                            <label>PARAMETER</label>
+                            <input type="hidden" id="id_update" name="id">
+                            <textarea type="text" class="form-control" id="parameter_update" name="parameter" required></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label>PENJELASAN</label>
+                            <textarea type="text" class="form-control" id="deskripsi_update" name="deskripsi" required></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                    <button type="button" class="btn btn-primary" id="btn_update_interview">Masukkan
+                        Parameter</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    {{-- end modal update interview --}}
+
     {!! session('pesan') !!}
 @endsection
 @section('js')
@@ -319,60 +373,6 @@
             $(this).val($(this).val().toUpperCase());
         });
         let holding = window.location.pathname.split("/").pop();
-        var table1 = $('#table_esai').DataTable({
-            "scrollY": true,
-            "scrollX": true,
-            processing: true,
-            serverSide: true,
-            ajax: {
-                url: "{{ url('/dt-data-list-esai') }}" + '/' + holding,
-            },
-            columns: [{
-                    data: 'nama',
-                    name: 'nama',
-                },
-                {
-                    data: 'kategori',
-                    name: 'kategori'
-                },
-                {
-                    data: 'nol',
-                    name: 'nol'
-                },
-                {
-                    data: 'satu',
-                    name: 'satu'
-                },
-                {
-                    data: 'dua',
-                    name: 'dua'
-                },
-                {
-                    data: 'tiga',
-                    name: 'tiga'
-                },
-                {
-                    data: 'empat',
-                    name: 'empat'
-                },
-                {
-                    data: 'lima',
-                    name: 'lima'
-                },
-                {
-                    data: 'enam',
-                    name: 'enam'
-                },
-                {
-                    data: 'option',
-                    name: 'option'
-                },
-            ]
-        });
-        $('#icon-tab-1').on('shown.bs.tab', function(e) {
-            table1.columns.adjust().draw().responsive.recalc();
-            // table.draw();
-        });
         var table = $('#table_ujian').DataTable({
             "scrollY": true,
             "scrollX": true,
@@ -427,7 +427,88 @@
             table.columns.adjust().draw().responsive.recalc();
             // table.draw();
         });
-        var table2 = $('#tabel_ujian_kategori').DataTable({
+        var table1 = $('#table_esai').DataTable({
+            "scrollY": true,
+            "scrollX": true,
+            processing: true,
+            serverSide: true,
+            ajax: {
+                url: "{{ url('/dt-data-list-esai') }}" + '/' + holding,
+            },
+            columns: [{
+                    data: 'nama',
+                    name: 'nama',
+                },
+                {
+                    data: 'kategori',
+                    name: 'kategori'
+                },
+                {
+                    data: 'nol',
+                    name: 'nol'
+                },
+                {
+                    data: 'satu',
+                    name: 'satu'
+                },
+                {
+                    data: 'dua',
+                    name: 'dua'
+                },
+                {
+                    data: 'tiga',
+                    name: 'tiga'
+                },
+                {
+                    data: 'empat',
+                    name: 'empat'
+                },
+                {
+                    data: 'lima',
+                    name: 'lima'
+                },
+                {
+                    data: 'enam',
+                    name: 'enam'
+                },
+                {
+                    data: 'option',
+                    name: 'option'
+                },
+            ]
+        });
+        $('#icon-tab-1').on('shown.bs.tab', function(e) {
+            table1.columns.adjust().draw().responsive.recalc();
+            // table.draw();
+        });
+        var table2 = $('#tabel_interview').DataTable({
+            "scrollY": true,
+            "scrollX": true,
+            processing: true,
+            serverSide: true,
+            ajax: {
+                url: "{{ url('/dt-data-list-interview_admin') }}" + '/' + holding,
+            },
+            columns: [{
+                    data: 'parameter',
+                    name: 'parameter',
+                },
+                {
+                    data: 'deskripsi',
+                    name: 'deskripsi'
+                },
+                {
+                    data: 'option',
+                    name: 'option'
+                },
+            ]
+        });
+        $('#icon-tab-2').on('shown.bs.tab', function(e) {
+            table2.columns.adjust().draw().responsive.recalc();
+            // table.draw();
+        });
+
+        var table3 = $('#tabel_ujian_kategori').DataTable({
             "scrollY": true,
             "scrollX": true,
             processing: true,
@@ -446,10 +527,10 @@
             ]
         });
         $('#icon-tab-3').on('shown.bs.tab', function(e) {
-            table2.columns.adjust().draw().responsive.recalc();
+            table3.columns.adjust().draw().responsive.recalc();
             // table.draw();
         });
-        var table3 = $('#tabel_pembobotan').DataTable({
+        var table4 = $('#tabel_pembobotan').DataTable({
             "scrollY": true,
             "scrollX": true,
             processing: true,
@@ -481,7 +562,7 @@
         });
 
         $('#icon-tab-4').on('shown.bs.tab', function(e) {
-            table3.columns.adjust().draw().responsive.recalc();
+            table4.columns.adjust().draw().responsive.recalc();
             // table.draw();
         });
         $('#btn_modal_kategori').click(function() {
@@ -805,5 +886,224 @@
             });
         });
         // pembobotan end
+        // interview
+        $('#btn_modal_interview').click(function() {
+            // console.log('asoy');
+            $('#modal_tambah_interview').modal('show');
+        });
+        $('#btn_save_interview').on('click', function(e) {
+            e.preventDefault();
+            var formData = new FormData();
+
+            //ambil data dari form
+            formData.append('_token', '{{ csrf_token() }}');
+            formData.append('parameter', $('#parameter_add').val());
+            formData.append('deskripsi', $('#deskripsi_add').val());
+
+            // post
+            $.ajax({
+                type: "POST",
+
+                url: "{{ url('/interview_admin_post') }}",
+                data: formData,
+                contentType: false,
+                processData: false,
+                error: function() {
+                    alert('Something is wrong!');
+                    // console.log(formData);
+                },
+                success: function(data) {
+                    if (data.code == 200) {
+                        Swal.fire({
+                            title: 'Berhasil',
+                            text: data.message,
+                            icon: 'success',
+                            timer: 5000
+                        })
+                        //mengosongkan modal dan menyembunyikannya
+                        $('#modal_tambah_interview').modal('hide');
+                        $('#parameter_add').val('');
+                        $('#deskripsi_add').val('');
+                        $('#tabel_interview').DataTable().ajax.reload();
+                    } else if (data.code == 400) {
+                        let errors = data.errors;
+                        // console.log(errors);
+                        let errorMessages = '';
+
+                        Object.keys(errors).forEach(function(key) {
+                            errors[key].forEach(function(message) {
+                                errorMessages += `• ${message}\n`;
+                            });
+                        });
+                        $('#modal_tambah_interview').modal('hide');
+
+                        Swal.fire({
+                            // title: data.message,
+                            text: errorMessages,
+                            icon: 'warning',
+                            timer: 4500
+                        })
+                        $('#modal_tambah_interview').modal('hide');
+
+                        $('#tabel_interview').DataTable().ajax.reload();
+
+
+                    } else {
+                        Swal.fire({
+                            title: 'Gagal',
+                            text: data.error,
+                            icon: 'error',
+                            timer: 4500
+                        })
+                    }
+                }
+            });
+        });
+        $(document).on('click', '#btn_delete_interview', function() {
+            // $('#modal_delete_riwayat').modal('show');
+            var id = $(this).data('id');
+            // console.log(id);
+            Swal.fire({
+                title: 'Konfirmasi',
+                icon: 'warning',
+                text: "Apakah benar-benar ingin menghapus data ini?",
+                showCancelButton: true,
+                inputValue: 0,
+                confirmButtonText: 'Yes',
+            }).then(function(result) {
+                if (result.value) {
+                    // console.log(id);
+                    Swal.fire({
+                        title: 'Harap Tuggu Sebentar!',
+                        html: 'Proses Menghapus Data...', // add html attribute if you want or remove
+                        allowOutsideClick: false,
+                        onBeforeOpen: () => {
+                            Swal.showLoading()
+                            $.ajax({
+                                data: {
+                                    "_token": "{{ csrf_token() }}",
+                                    id: id,
+                                },
+                                url: "{{ url('/interview_admin_delete') }}",
+                                type: "POST",
+                                dataType: 'json',
+                                success: function(data) {
+                                    if (data.code == 200) {
+                                        $('#tabel_interview').DataTable().ajax
+                                            .reload();
+                                        Swal.fire({
+                                            title: 'success',
+                                            text: 'Data Berhasil dihapus',
+                                            icon: 'success',
+                                            timer: 1500
+                                        })
+                                    } else {
+                                        $('#tabel_interview').DataTable().ajax
+                                            .reload();
+                                        Swal.fire({
+                                            title: 'error',
+                                            text: 'Data gagal dihapus',
+                                            icon: 'success',
+                                            timer: 1500
+                                        })
+                                    }
+                                },
+                                error: function(data) {
+                                    Swal.fire({
+                                        title: 'Gagal',
+                                        text: 'Data Gagal dihapus',
+                                        icon: 'error',
+                                        timer: 1500
+                                    })
+                                }
+                            });
+                        },
+                    });
+
+                } else {
+                    Swal.fire({
+                        title: 'Gagal !',
+                        text: 'Data gagal dihapus',
+                        icon: 'warning',
+                        timer: 1500
+                    })
+                }
+
+            });
+        });
+        $(document).on('click', '#btn_update_interview', function() {
+            var id = $(this).data('id');
+            var parameter = $(this).data('parameter');
+            var deskripsi = $(this).data('deskripsi');
+            $('#id_update').val(id);
+            $('#parameter_update').val(parameter);
+            $('#deskripsi_update').val(deskripsi);
+            $('#modal_update_interview').modal('show');
+
+        });
+        $('#btn_update_interview').on('click', function(e) {
+            e.preventDefault();
+            var formData = new FormData();
+
+            formData.append('_token', '{{ csrf_token() }}');
+            formData.append('parameter', $('#parameter_update').val());
+            formData.append('deskripsi', $('#deskripsi_update').val());
+            formData.append('id', $('#id_update').val());
+            $.ajax({
+                type: "POST",
+
+                url: "{{ url('/interview_admin_update') }}",
+                data: formData,
+                contentType: false,
+                processData: false,
+                error: function() {
+                    alert('Something is wrong');
+                    // console.log(formData);
+                },
+                success: function(data) {
+                    if (data.code == 200) {
+                        Swal.fire({
+                            title: 'Berhasil',
+                            text: data.message,
+                            icon: 'success',
+                            timer: 5000
+                        })
+                        //mengosongkan modal dan menyembunyikannya
+                        $('#nama_pemanasan_update').val('');
+                        $('#nama_kategori_update').val('');
+                        $('#modal_update_interview').modal('hide');
+                        $('#tabel_interview').DataTable().ajax.reload();
+                    } else if (data.code == 400) {
+                        let errors = data.errors;
+                        // console.log(errors);
+                        let errorMessages = '';
+
+                        Object.keys(errors).forEach(function(key) {
+                            errors[key].forEach(function(message) {
+                                errorMessages += `• ${message}\n`;
+                            });
+                        });
+                        Swal.fire({
+                            // title: data.message,
+                            text: errorMessages,
+                            icon: 'warning',
+                            timer: 4500
+                        })
+                        $('#modal_update_interview').modal('hide');
+
+                    } else {
+                        Swal.fire({
+                            title: 'Gagal',
+                            text: data.error,
+                            icon: 'error',
+                            timer: 10000
+                        })
+
+                    }
+                }
+
+            });
+        });
+        // interview end
     </script>
 @endsection

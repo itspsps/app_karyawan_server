@@ -1459,9 +1459,17 @@ Route::get('/dt-data-list-ujian_kategori/sp', [RecruitmentController::class, 'dt
 Route::get('/dt-data-list-ujian_kategori/sps', [RecruitmentController::class, 'dt_ujian_kategori'])->middleware('admin');
 Route::get('/dt-data-list-ujian_kategori/sip', [RecruitmentController::class, 'dt_ujian_kategori'])->middleware('admin');
 
+Route::get('/dt-data-list-interview_admin/sp', [RecruitmentController::class, 'dt_interview_admin'])->middleware('admin');
+Route::get('/dt-data-list-interview_admin/sps', [RecruitmentController::class, 'dt_interview_admin'])->middleware('admin');
+Route::get('/dt-data-list-interview_admin/sip', [RecruitmentController::class, 'dt_interview_admin'])->middleware('admin');
+
 Route::post('ujian_kategori_post', [RecruitmentController::class, 'ujian_kategori_post'])->middleware('admin');
 Route::post('delete_ujian_kategori', [RecruitmentController::class, 'delete_ujian_kategori'])->middleware('admin');
 Route::post('ujian_kategori_update', [RecruitmentController::class, 'ujian_kategori_update'])->middleware('admin');
+
+Route::post('interview_admin_post', [RecruitmentController::class, 'interview_admin_post'])->middleware('admin');
+Route::post('interview_admin_update', [RecruitmentController::class, 'interview_admin_update'])->middleware('admin');
+Route::post('interview_admin_delete', [RecruitmentController::class, 'interview_admin_delete'])->middleware('admin');
 
 
 Route::get('/show-ujian/{ujian?}/sp', [RecruitmentController::class, 'show_ujian'])->middleware('admin');

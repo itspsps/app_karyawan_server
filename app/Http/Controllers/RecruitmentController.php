@@ -21,6 +21,7 @@ use App\Models\WaktuUjian;
 use App\Models\PgSiswa;
 use App\Models\EssaySiswa;
 use App\Models\DetailEssay;
+use App\Models\InterviewAdmin;
 use App\Models\Pembobotan;
 use App\Models\RecruitmentCV;
 use App\Models\RecruitmentKeahlian;
@@ -1839,6 +1840,136 @@ asoy.com
         try {
             UjianKategori::where('id', $request->id)->update([
                 'nama_kategori' => $request->nama_kategori,
+                'created_at'    => date('Y-m-d H:i:s'),
+
+            ]);
+            return response()->json([
+                'code' => 200,
+                // 'data' => $get_data,
+                // 'data_keahlian' => $data_keahlian,
+                // 'message' => 'Data Berhasil Diupdate'
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'code' => 500,
+                'error' => $e->getMessage(),
+            ]);
+        }
+    }
+    public function interview_admin_post(Request $request)
+    {
+        // dd($request->all());
+        $validator = Validator::make(
+            $request->all(),
+            [
+                'parameter' => 'required',
+            ],
+            [
+                'required' => ':attribute tidak boleh kosong'
+            ]
+        );
+        if ($validator->fails()) {
+            return response()->json([
+                'code' => 400,
+                'message' => 'Validasi gagal',
+                'errors' => $validator->errors()
+            ]);
+        }
+        try {
+            InterviewAdmin::insert([
+                'id'        => Uuid::uuid4(),
+                'parameter' => $request->parameter,
+                'deskripsi' => $request->deskripsi,
+                'created_at' => date('Y-m-d H:i:s'),
+
+            ]);
+            return response()->json([
+                'code' => 200,
+                // 'data' => $get_data,
+                // 'data_keahlian' => $data_keahlian,
+                // 'message' => 'Data Berhasil Diupdate'
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'code' => 500,
+                'error' => $e->getMessage(),
+            ]);
+        }
+    }
+    function dt_interview_admin()
+    {
+        $data = InterviewAdmin::get();
+        if (request()->ajax()) {
+            return DataTables::of($data)
+                ->addColumn('parameter', function ($row) {
+                    return $row->parameter;
+                })
+                ->addColumn('deskripsi', function ($row) {
+                    return $row->deskripsi;
+                })
+                ->addColumn('option', function ($row) {
+                    $btn =
+                        '<button type="button" id="btn_update_interview"
+                            data-id="' . $row->id . '"
+                            data-parameter="' . $row->parameter . '"
+                            data-deskripsi="' . $row->deskripsi . '"
+                            class="btn btn-icon btn-info waves-effect waves-light">
+                           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
+                            <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
+                            <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"/>
+                            </svg>
+                        </button>
+                        <button type="button" id="btn_delete_interview"
+                            data-id="' . $row->id . '"
+                            class="btn btn-icon btn-danger waves-effect waves-light">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash3-fill" viewBox="0 0 16 16">
+                            <path d="M11 1.5v1h3.5a.5.5 0 0 1 0 1h-.538l-.853 10.66A2 2 0 0 1 11.115 16h-6.23a2 2 0 0 1-1.994-1.84L2.038 3.5H1.5a.5.5 0 0 1 0-1H5v-1A1.5 1.5 0 0 1 6.5 0h3A1.5 1.5 0 0 1 11 1.5m-5 0v1h4v-1a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5M4.5 5.029l.5 8.5a.5.5 0 1 0 .998-.06l-.5-8.5a.5.5 0 1 0-.998.06m6.53-.528a.5.5 0 0 0-.528.47l-.5 8.5a.5.5 0 0 0 .998.058l.5-8.5a.5.5 0 0 0-.47-.528M8 4.5a.5.5 0 0 0-.5.5v8.5a.5.5 0 0 0 1 0V5a.5.5 0 0 0-.5-.5"/>
+                            </svg>
+                        </button>
+                        ';
+                    return $btn;
+                })
+                ->rawColumns(['created_at', 'parameter', 'deskripsi', 'option'])
+                ->make(true);
+        }
+    }
+    public function interview_admin_delete(Request $request)
+    {
+        try {
+            InterviewAdmin::where('id', $request->id)->delete();
+            return response()->json([
+                'code' => 200,
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'code' => 500,
+                'error' => $e->getMessage(),
+            ]);
+        }
+    }
+    public function interview_admin_update(Request $request)
+    {
+        // dd($request->all());
+        $validator = Validator::make(
+            $request->all(),
+            [
+                'parameter' => 'required',
+            ],
+            [
+                'required' => ':attribute tidak boleh kosong'
+            ]
+        );
+        if ($validator->fails()) {
+            return response()->json([
+                'code' => 400,
+                'message' => 'Validasi gagal',
+                'errors' => $validator->errors()
+            ]);
+        }
+        try {
+            InterviewAdmin::where('id', $request->id)->update([
+                'parameter' => $request->parameter,
+                'deskripsi' => $request->deskripsi,
                 'created_at'    => date('Y-m-d H:i:s'),
 
             ]);
