@@ -161,7 +161,7 @@
         .timeline-centered .timeline-entry {
             position: relative;
             /*width: 50%;
-                                                                                                                                                                                                                                                                                                    float: right;*/
+                                                                                                                                                                                                                                                                                                                                                float: right;*/
             margin-top: 5px;
             margin-left: 30px;
             margin-bottom: 10px;
@@ -408,6 +408,8 @@
                                 <th>Bobot Esai</th>
                                 <th>pilihan ganda Average</th>
                                 <th>Bobot Pilihan Ganda</th>
+                                <th>Interview Average</th>
+                                <th>Bobot Interview</th>
                             </tr>
                         </thead>
                         <tbody class="table-border-bottom-0">
@@ -468,6 +470,14 @@
                 {
                     data: 'bobot_pg',
                     name: 'bobot_pg'
+                },
+                {
+                    data: 'interview_average',
+                    name: 'interview_average'
+                },
+                {
+                    data: 'bobot_interview',
+                    name: 'bobot_interview'
                 },
 
             ],

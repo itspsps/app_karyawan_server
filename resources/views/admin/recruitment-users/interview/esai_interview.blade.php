@@ -57,7 +57,7 @@
                                             </label>
                                         </div>
                                         <div class="mb-3">
-                                            @if ($uu->ujianEsaiJawabDetail != null)
+                                            @if ($uu->jawaban != null)
                                                 <textarea class="form-control" name="" id="" readonly>{{ $uu->jawaban }}</textarea>
                                             @else
                                                 <textarea class="form-control" name="" id="" readonly>-</textarea>
@@ -72,7 +72,7 @@
                                             <form action={{ route('penilaian_esai') }} method="POST">
                                                 @csrf
                                                 <input class="form-control" type="number" name="nilai" id=""
-                                                    value="{{ $ujianEsaiJawab->nilai }}">
+                                                    value="{{ $ujianEsaiJawab == null ? '0' : $ujianEsaiJawab->nilai }}">
                                                 <input class="form-control" type="hidden" name="recruitment_user_id"
                                                     id="" value="{{ $recruitment_user_id }}">
                                                 <input class="form-control" type="hidden" name="holding" id=""

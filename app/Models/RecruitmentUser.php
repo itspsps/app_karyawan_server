@@ -88,5 +88,9 @@ class RecruitmentUser extends Model
     {
         return $this->hasMany(WaktuUjian::class, 'recruitment_user_id', 'id');
     }
+    public function interviewUser(): HasMany
+    {
+        return $this->hasMany(InterviewUser::class, 'recruitment_user_id', 'id');
+    }
     // End Alamat User
 }

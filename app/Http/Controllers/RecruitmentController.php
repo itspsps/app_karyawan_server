@@ -22,6 +22,7 @@ use App\Models\PgSiswa;
 use App\Models\EssaySiswa;
 use App\Models\DetailEssay;
 use App\Models\InterviewAdmin;
+use App\Models\InterviewUser;
 use App\Models\Pembobotan;
 use App\Models\RecruitmentCV;
 use App\Models\RecruitmentKeahlian;
@@ -1065,18 +1066,22 @@ asoy.com
                 $query;
             }
         ])->first();
+        $user_interview = RecruitmentInterview::where('recruitment_user_id', $id)->first();
         return view('admin.recruitment-users.interview.data_ujian_user', [
             // return view('karyawan.index', [
             'holding'   => $holding,
+            'recruitment_user_id' => $id,
             'user_recruitment'   => $user_recruitment,
+            'user_interview'   => $user_interview,
         ]);
     }
+
     public function presensi_recruitment_update(Request $request)
     {
 
-        // dd($request->all());
         try {
             $konfirmasi = RecruitmentInterview::where('id', $request->id)->first();
+            // dd($konfirmasi);
             $konfirmasi->updated_at = date('Y-m-d H:i:s');
             $konfirmasi->save();
             RecruitmentUser::where('id', $konfirmasi->recruitment_user_id)->update(
@@ -1094,6 +1099,21 @@ asoy.com
                     'created_at'            => date('Y-m-d H:i:s'),
                 ]
             );
+            if ($request->status == '1a') {
+                $get_interview_user = InterviewUser::where('recruitment_user_id', $konfirmasi->recruitment_user_id)->first();
+                if ($get_interview_user == null) {
+                    $interview_admin  = InterviewAdmin::get();
+                    foreach ($interview_admin as $ia) {
+                        InterviewUser::create([
+                            'parameter' => $ia->parameter,
+                            'deskripsi' => $ia->deskripsi,
+                            'recruitment_user_id' => $konfirmasi->recruitment_user_id,
+                            'created_at' => date('Y-m-d H:i:s'),
+                        ]);
+                    }
+                }
+            }
+
 
             return response()->json([
                 'code' => 200,
@@ -2476,30 +2496,35 @@ asoy.com
                 $query;
             }
         ])->with([
-            'ujianEsaiJawab' => function ($query) {
-                $query->orderBy('recruitment_user_id')->with([
-                    'ujian' => function ($query) {
-                        $query->with([
-                            'pembobotan' => function ($query) {
-                                $query;
-                            }
-                        ]);
-                    }
-                ]);
-            }
-        ])->with([
-            'waktuujian' => function ($query) {
-                $query->orderBy('recruitment_user_id')->with([
-                    'ujian' => function ($query) {
-                        $query->with([
-                            'pembobotan' => function ($query) {
-                                $query;
-                            }
-                        ]);
-                    }
-                ]);
+            'interviewUser' => function ($query) {
+                $query;
             }
         ])
+            ->with([
+                'ujianEsaiJawab' => function ($query) {
+                    $query->orderBy('recruitment_user_id')->with([
+                        'ujian' => function ($query) {
+                            $query->with([
+                                'pembobotan' => function ($query) {
+                                    $query;
+                                }
+                            ]);
+                        }
+                    ]);
+                }
+            ])->with([
+                'waktuujian' => function ($query) {
+                    $query->orderBy('recruitment_user_id')->with([
+                        'ujian' => function ($query) {
+                            $query->with([
+                                'pembobotan' => function ($query) {
+                                    $query;
+                                }
+                            ]);
+                        }
+                    ]);
+                }
+            ])
             ->with([
                 'recruitmentAdmin' => function ($query) {
                     $query;
@@ -2530,6 +2555,8 @@ asoy.com
             ])
             ->where('recruitment_admin_id', $id)
             ->get();
+
+        // dd($table);
 
         if (request()->ajax()) {
             return DataTables::of($table)
@@ -2562,11 +2589,15 @@ asoy.com
                         $esai_count = Ujian::where('esai', 1)->where('enam', '1')->count();
                         $pg_count = Ujian::where('esai', 0)->where('enam', '1')->count();
                     }
+
+                    $interview_user = $row->interviewUser->sum('nilai') ?? 0;
+                    $interview_admin = InterviewAdmin::count() ?? 0;
                     $get_bobot = Pembobotan::first();
 
                     $koefisien_esai = ($esai_total / $esai_count) * ($get_bobot->esai / 100);
                     $koefisien_pg = ($pg_total / $pg_count) * ($get_bobot->pilihan_ganda / 100);
-                    return round($koefisien_esai + $koefisien_pg, 2);
+                    $koefisien_interview = ($interview_user / $interview_admin * 10) * ($get_bobot->interview / 100);
+                    return round($koefisien_esai + $koefisien_pg + $koefisien_interview, 2);
                 })
                 ->addColumn('esai_average', function ($row) {
 
@@ -2621,8 +2652,18 @@ asoy.com
                     $bobot = $get_bobot->pilihan_ganda;
                     return $bobot . '%';
                 })
+                ->addColumn('interview_average', function ($row) {
+                    $interview_user = $row->interviewUser->sum('nilai') ?? 0;
+                    $interview_admin = InterviewAdmin::count() ?? 0;
+                    return round($interview_user / $interview_admin * 10, 2);
+                })
+                ->addColumn('bobot_interview', function ($row) {
+                    $get_bobot = Pembobotan::first();
+                    $bobot = $get_bobot->interview;
+                    return $bobot . '%';
+                })
 
-                ->rawColumns(['nama_lengkap', 'total_koefisien', 'esai_average', 'bobot_esai', 'pg_average', 'bobot_pg'])
+                ->rawColumns(['nama_lengkap', 'total_koefisien', 'esai_average', 'bobot_esai', 'pg_average', 'bobot_pg', 'interview_average', 'bobot_interview'])
                 ->make(true);
         }
     }

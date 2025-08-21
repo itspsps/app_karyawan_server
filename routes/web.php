@@ -1412,6 +1412,15 @@ Route::get('/dt/data-get_data_esai/{id}/sp', [UjianUserController::class, 'dt_uj
 Route::get('/dt/data-get_data_esai/{id}/sps', [UjianUserController::class, 'dt_ujian_esai'])->middleware('admin');
 Route::get('/dt/data-get_data_esai/{id}/sip', [UjianUserController::class, 'dt_ujian_esai'])->middleware('admin');
 
+Route::get('/dt/data-dt_interview_user/{id}/sp', [UjianUserController::class, 'dt_interview_user'])->middleware('admin');
+Route::get('/dt/data-dt_interview_user/{id}/sps', [UjianUserController::class, 'dt_interview_user'])->middleware('admin');
+Route::get('/dt/data-dt_interview_user/{id}/sip', [UjianUserController::class, 'dt_interview_user'])->middleware('admin');
+
+Route::post('/dt/interview_user_post', [UjianUserController::class, 'interview_user_post'])->middleware('admin');
+Route::get('/dt/get_catatan_interview/{id}', [UjianUserController::class, 'get_catatan_interview'])->middleware('admin');
+Route::post('/dt/update_catatan', [UjianUserController::class, 'update_catatan'])->middleware('admin');
+Route::get('/dt/dt_catatan/{id}', [UjianUserController::class, 'dt_catatan'])->middleware('admin');
+
 Route::get('/dt/data-get_data_pg/{id}/sp', [UjianUserController::class, 'dt_ujian_pg'])->middleware('admin');
 Route::get('/dt/data-get_data_pg/{id}/sps', [UjianUserController::class, 'dt_ujian_pg'])->middleware('admin');
 Route::get('/dt/data-get_data_pg/{id}/sip', [UjianUserController::class, 'dt_ujian_pg'])->middleware('admin');
@@ -1421,6 +1430,10 @@ Route::post('/dt/data-interview/penilaian_esai', [UjianUserController::class, 'p
 Route::get('/dt/data-get_esai_interview/{id}/{id_user}/sp', [UjianUserController::class, 'show_esai'])->middleware('admin');
 Route::get('/dt/data-get_esai_interview/{id}/{id_user}/sps', [UjianUserController::class, 'show_esai'])->middleware('admin');
 Route::get('/dt/data-get_esai_interview/{id}/{id_user}/sip', [UjianUserController::class, 'show_esai'])->middleware('admin');
+
+Route::get('/dt/data-get_interview_user/{id}/{id_user}/sp', [UjianUserController::class, 'show_interview_user'])->middleware('admin');
+Route::get('/dt/data-get_interview_user/{id}/{id_user}/sps', [UjianUserController::class, 'show_interview_user'])->middleware('admin');
+Route::get('/dt/data-get_interview_user/{id}/{id_user}/sip', [UjianUserController::class, 'show_interview_user'])->middleware('admin');
 
 Route::get('/dt/data-get_pg_interview/{id}/{id_user}/sp', [UjianUserController::class, 'show_pg'])->middleware('admin');
 Route::get('/dt/data-get_pg_interview/{id}/{id_user}/sps', [UjianUserController::class, 'show_pg'])->middleware('admin');

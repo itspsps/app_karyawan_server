@@ -15,6 +15,7 @@ class RecruitmentInterview extends Model
     protected $fillable = [
         'id',
         'holding',
+        'catatan',
         'recruitment_admin_id',
         'recruitment_userid',
         'tanggal_interview',

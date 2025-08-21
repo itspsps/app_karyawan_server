@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\InterviewUser;
 use App\Models\PgSiswa;
+use App\Models\Recruitment;
+use App\Models\RecruitmentInterview;
 use App\Models\RecruitmentUser;
 use App\Models\Ujian;
 use App\Models\UjianEsaiJawab;
@@ -190,7 +193,7 @@ class UjianUserController extends Controller
                 }
             ])->with([
                 'esaiJawab' => function ($query) use ($id) {
-                    $query;
+                    $query->where('recruitment_user_id', $id);
                 }
             ])->get();
         } elseif ($get_jabatan->Jabatan->LevelJabatan->level_jabatan == '1') {
@@ -200,7 +203,7 @@ class UjianUserController extends Controller
                 }
             ])->with([
                 'esaiJawab' => function ($query) use ($id) {
-                    $query;
+                    $query->where('recruitment_user_id', $id);
                 }
             ])->get();
         } elseif ($get_jabatan->Jabatan->LevelJabatan->level_jabatan == '2') {
@@ -210,7 +213,7 @@ class UjianUserController extends Controller
                 }
             ])->with([
                 'esaiJawab' => function ($query) use ($id) {
-                    $query;
+                    $query->where('recruitment_user_id', $id);
                 }
             ])->get();
         } elseif ($get_jabatan->Jabatan->LevelJabatan->level_jabatan == '3') {
@@ -220,7 +223,7 @@ class UjianUserController extends Controller
                 }
             ])->with([
                 'esaiJawab' => function ($query) use ($id) {
-                    $query;
+                    $query->where('recruitment_user_id', $id);
                 }
             ])->get();
         } elseif ($get_jabatan->Jabatan->LevelJabatan->level_jabatan == '4') {
@@ -230,7 +233,7 @@ class UjianUserController extends Controller
                 }
             ])->with([
                 'esaiJawab' => function ($query) use ($id) {
-                    $query;
+                    $query->where('recruitment_user_id', $id);
                 }
             ])->get();
             // dd($ujian, $ujian_esai);
@@ -241,7 +244,7 @@ class UjianUserController extends Controller
                 }
             ])->with([
                 'esaiJawab' => function ($query) use ($id) {
-                    $query;
+                    $query->where('recruitment_user_id', $id);
                 }
             ])->get();
         } elseif ($get_jabatan->Jabatan->LevelJabatan->level_jabatan == '6') {
@@ -251,11 +254,11 @@ class UjianUserController extends Controller
                 }
             ])->with([
                 'esaiJawab' => function ($query) use ($id) {
-                    $query;
+                    $query->where('recruitment_user_id', $id);
                 }
             ])->get();
         }
-        // dd($get_jabatan->Jabatan->LevelJabatan->level_jabatan, $ujian_esai);
+        // dd($ujian_esai);
         if (request()->ajax()) {
             return DataTables::of($ujian_esai)
                 ->addColumn('nama', function ($row) {
@@ -266,6 +269,7 @@ class UjianUserController extends Controller
                 })
                 ->addColumn('jawaban', function ($row) use ($id) {
                     $holding = request()->segment(count(request()->segments()));
+                    // dd($row->esaiJawab);
                     if ($row->esaiJawab == null) {
                         return '<button class="btn btn-info" disabled><small>belum dikerjakan</small></button>';
                     } else {
@@ -287,6 +291,144 @@ class UjianUserController extends Controller
                 ->make(true);
         }
     }
+    public function dt_interview_user($id)
+    {
+        $interview_user = InterviewUser::where('recruitment_user_id', $id)->get();
+        // dd($interview_user);
+        if (request()->ajax()) {
+            return DataTables::of($interview_user)
+                ->addColumn('parameter', function ($row) {
+                    return $row->parameter;
+                })
+                ->addColumn('deskripsi', function ($row) {
+                    return $row->deskripsi;
+                })
+
+                ->addColumn('isi_nilai', function ($row) use ($id) {
+                    $holding = request()->segment(count(request()->segments()));
+                    if ($row == null) {
+                        return '<button class="btn btn-info" disabled><small>belum dikerjakan</small></button>';
+                    } else {
+                        return '<button type="button" data-id="' . $row->id . '" data-nilai="' . $row->nilai . '" class="btn btn-sm btn-info waves-effect waves-light my-3"
+                                 id="btn_isi_nilai">ISI NILAI</button>';
+                    }
+                })
+
+                ->addColumn('nilai', function ($row) {
+                    if ($row->nilai == null) {
+                        return 'Belum Dinilai';
+                    } else {
+                        return $row->nilai;
+                    }
+                })
+                ->rawColumns(['penilaian', 'deskripsi', 'nilai', 'isi_nilai'])
+                ->make(true);
+        }
+    }
+    public function dt_catatan($id)
+    {
+        $catatan = RecruitmentInterview::where('recruitment_user_id', $id)->get();
+        // dd($catatan);
+        if (request()->ajax()) {
+            return DataTables::of($catatan)
+
+                ->addColumn('catatan', function ($row) {
+                    return $row->catatan;
+                })
+                ->rawColumns(['catatan'])
+                ->make(true);
+        }
+    }
+    function interview_user_post(Request $request)
+    {
+        $validator = Validator::make(
+            $request->all(),
+            [
+                'nilai' => 'required|numeric|max:10',
+            ],
+            [
+                'required' => ':attribute tidak boleh kosong',
+                'max' => ':attribute melebihi yang ditentukan'
+            ]
+        );
+        if ($validator->fails()) {
+            return response()->json([
+                'code' => 400,
+                'message' => 'Validasi gagal',
+                'errors' => $validator->errors()
+            ]);
+        }
+        try {
+            InterviewUser::where('id', $request->id)->update([
+                'nilai' => $request->nilai,
+                'updated_at'    => date('Y-m-d H:i:s')
+            ]);
+            return response()->json([
+                'code' => 200,
+                // 'data_keahlian' => $data_keahlian,
+                // 'message' => 'Data Berhasil Diupdate'
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'code' => 500,
+                'error' => $e->getMessage(),
+            ]);
+        }
+    }
+    function update_catatan(Request $request)
+    {
+        $validator = Validator::make(
+            $request->all(),
+            [
+                'catatan' => 'required',
+            ],
+            [
+                'required' => ':attribute tidak boleh kosong',
+            ]
+        );
+        if ($validator->fails()) {
+            return response()->json([
+                'code' => 400,
+                'message' => 'Validasi gagal',
+                'errors' => $validator->errors()
+            ]);
+        }
+        try {
+            RecruitmentInterview::where('recruitment_user_id', $request->recruitment_user_id)->update([
+                'catatan' => $request->catatan,
+                'updated_at'    => date('Y-m-d H:i:s')
+            ]);
+            return response()->json([
+                'code' => 200,
+                // 'data_keahlian' => $data_keahlian,
+                // 'message' => 'Data Berhasil Diupdate'
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'code' => 500,
+                'error' => $e->getMessage(),
+            ]);
+        }
+    }
+    public function get_catatan_interview($id)
+    {
+
+        try {
+            // dd($detail_esai);
+            $get_data = RecruitmentInterview::where('recruitment_user_id', $id)->first();
+            // dd($detail_esai);
+            return response()->json([
+                'code' => 200,
+                'data' => $get_data,
+                'message' => 'Data Berhasil Didapatkan'
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'code' => 500,
+                'error' => $e->getMessage(),
+            ]);
+        }
+    }
     function show_esai($kode, $recruitment_user_id)
     {
         $holding = request()->segment(count(request()->segments()));
@@ -297,6 +439,32 @@ class UjianUserController extends Controller
         // dd($ujianEsaiJawab);
 
         return view('admin.recruitment-users.interview.esai_interview', [
+            'title' => 'Detail Ujian Pilihan Ganda',
+            'plugin' => '
+                <link href="' . url("/public/assets/ew/css/style.css") . '" rel="stylesheet" type="text/css" />
+                <script src="' . url("/public/assets/ew/js/examwizard.js") . '"></script>
+            ',
+            'menu' => [
+                'menu' => 'ujian',
+                'expanded' => 'ujian'
+            ],
+            'ujian' => $ujian,
+            'holding' => $holding,
+            'ujianEsaiJawab' => $ujianEsaiJawab,
+            'esaiDetailjawab' => $esaiDetailjawab,
+            'recruitment_user_id' => $recruitment_user_id
+        ]);
+    }
+    function show_interview_user($kode, $recruitment_user_id)
+    {
+        $holding = request()->segment(count(request()->segments()));
+        $ujian = Ujian::where('kode', $kode)->first();
+        $ujianEsaiJawab = UjianEsaiJawab::where('kode', $kode)->where('recruitment_user_id', $recruitment_user_id)->first();
+        $esaiDetailjawab = UjianEsaiJawabDetail::where('kode', $kode)->where('recruitment_user_id', $recruitment_user_id)->get();
+        // dd($ujian->detailEsai->ujianEsaiJawabDetail->kode, $ujian->detailEsai->ujianEsaiJawabDetail->recruitment_user_id);
+        // dd($ujianEsaiJawab);
+
+        return view('admin.recruitment-users.interview.interview', [
             'title' => 'Detail Ujian Pilihan Ganda',
             'plugin' => '
                 <link href="' . url("/public/assets/ew/css/style.css") . '" rel="stylesheet" type="text/css" />
