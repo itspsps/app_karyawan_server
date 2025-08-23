@@ -1126,6 +1126,76 @@ asoy.com
             ]);
         }
     }
+    public function ranking_update_status(Request $request)
+    {
+        try {
+            RecruitmentInterview::where('recruitment_user_id', $request->id)->update(
+
+                [
+                    'status_interview'      => $request->status,
+                    'updated_at'            => date('Y-m-d H:i:s'),
+                ]
+            );
+            RecruitmentUserRecord::insert(
+                [
+                    'id'                        => Uuid::uuid4(),
+                    'recruitment_user_id'       => $request->id,
+                    'status'                    => $request->status,
+                    'created_at'                => date('Y-m-d H:i:s'),
+                ]
+            );
+            if ($request->status == '3b') {
+                $get_wa = RecruitmentUser::with([
+                    'AuthLogin' => function ($query) {
+                        $query;
+                    }
+                ])->where('id', $request->id)->first();
+                // dd($get_wa);
+                $curl = curl_init();
+                curl_setopt_array($curl, array(
+                    CURLOPT_URL => 'https://api.fonnte.com/send',
+                    CURLOPT_RETURNTRANSFER => true,
+                    CURLOPT_ENCODING => '',
+                    CURLOPT_MAXREDIRS => 10,
+                    CURLOPT_TIMEOUT => 0,
+                    CURLOPT_FOLLOWLOCATION => true,
+                    CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                    CURLOPT_CUSTOMREQUEST => 'POST',
+                    CURLOPT_POSTFIELDS => array(
+                        'target' => $get_wa->Authlogin->nomor_whatsapp,
+                        'message' =>
+                        "Pemberitahuan
+
+Maaf Anda Belum lolos sesi interview dan ujian
+",
+                        'countryCode' => '62', //optional
+                    ),
+                    CURLOPT_HTTPHEADER => array(
+                        'Authorization: Xp5bwZZN22VPhojYcPEB' //change TOKEN to your actual token
+                    ),
+                ));
+
+                $response = curl_exec($curl);
+                if (curl_errno($curl)) {
+                    $error_msg = curl_error($curl);
+                }
+                curl_close($curl);
+
+                if (isset($error_msg)) {
+                    echo $error_msg;
+                }
+            }
+            return response()->json([
+                'code' => 200,
+                'message' => 'Data Berhasil Diupdate'
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'code' => 500,
+                'error' => $e->getMessage(),
+            ]);
+        }
+    }
     function pg_list_interview($id)
     {
         $holding = request()->segment(count(request()->segments()));
@@ -2499,6 +2569,10 @@ asoy.com
             'interviewUser' => function ($query) {
                 $query;
             }
+        ])->with([
+            'DataInterview' => function ($query) {
+                $query;
+            }
         ])
             ->with([
                 'ujianEsaiJawab' => function ($query) {
@@ -2562,6 +2636,21 @@ asoy.com
             return DataTables::of($table)
                 ->addColumn('nama_lengkap', function ($row) {
                     return $row->Cv->nama_lengkap;
+                })
+                ->addColumn('pilih_status', function ($row) {
+                    return '<button
+                                data-id="' . $row->id . '"
+                                type="button" class="btn btn-sm btn-info " id="btn_status_ranking">
+                                <i class="tf-icons mdi mdi-eye-circle-outline me-1"></i>
+                                Pilih&nbsp;
+                            </button>';
+                })
+                ->addColumn('status', function ($row) {
+                    if ($row->DataInterview->status_interview == null) {
+                        return "Belum Ditentukan";
+                    } elseif ($row->DataInterview->status_interview == '3b') {
+                        return "Tidak Lolos";
+                    }
                 })
                 ->addColumn('total_koefisien', function ($row) {
                     $esai_total = $row->ujianEsaiJawab->sum('nilai') ?? 0;
@@ -2663,7 +2752,7 @@ asoy.com
                     return $bobot . '%';
                 })
 
-                ->rawColumns(['nama_lengkap', 'total_koefisien', 'esai_average', 'bobot_esai', 'pg_average', 'bobot_pg', 'interview_average', 'bobot_interview'])
+                ->rawColumns(['nama_lengkap', 'pilih_status', 'status', 'total_koefisien', 'esai_average', 'bobot_esai', 'pg_average', 'bobot_pg', 'interview_average', 'bobot_interview'])
                 ->make(true);
         }
     }

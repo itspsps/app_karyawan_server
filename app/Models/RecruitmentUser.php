@@ -49,7 +49,7 @@ class RecruitmentUser extends Model
     }
     public function DataInterview(): BelongsTo
     {
-        return $this->belongsTo(RecruitmentInterview::class, 'id', 'recruitment_userid');
+        return $this->belongsTo(RecruitmentInterview::class, 'id', 'recruitment_user_id');
     }
     public function Cv(): BelongsTo
     {

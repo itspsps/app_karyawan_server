@@ -161,7 +161,7 @@
         .timeline-centered .timeline-entry {
             position: relative;
             /*width: 50%;
-                                                                                                                                                                                                                                                                                                                                                float: right;*/
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    float: right;*/
             margin-top: 5px;
             margin-left: 30px;
             margin-bottom: 10px;
@@ -398,11 +398,13 @@
                             <h5 class="card-title m-0 me-2">DATA RANKING RECRUITMENT</h5>
                         </div>
                     </div>
-                    <table class="table" id="tabel_esai" style="width: 100%;">
+                    <table class="table" id="tabel_ranking" style="width: 100%;">
                         <thead class="table-primary">
                             <tr>
                                 <th>No.</th>
                                 <th>Pelamar</th>
+                                <th>Pilih Status</th>
+                                <th>Status</th>
                                 <th>Total Koefisien</th>
                                 <th>Esai Average</th>
                                 <th>Bobot Esai</th>
@@ -421,6 +423,116 @@
             <!--/ Data Tables -->
         </div>
     </div>
+    <div class="modal fade" id="modal_status" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">STATUS CALON KARYAWAN</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" id="id_update" name="id">
+                    <div class="form-floating form-floating-outline py-3">
+
+                        <select class="form-select" id="status_update" name="status">
+                            <label for="bagian_recruitment">PILIH STATUS</label>
+                            <option value="1b" selected>LOLOS INTERVIEW MANAGER</option>
+                            <option value="2b">LOLOS LANGSUNG</option>
+                            <option value="3b">TIDAK LOLOS</option>
+                        </select>
+                    </div>
+                    {{-- <div id="lolos_manager">
+
+                        <div class="form-floating form-floating-outline py-3">
+                            <input type="date" id="tanggal_wawancara" name="tanggal_wawancara"
+                                class="form-control @error('tanggal_wawancara') is-invalid @enderror" placeholder="Tanggal"
+                                value="{{ old('tanggal_wawancara') }}" />
+                            <label for="bagian_recruitment">TANGGAL WAWANCARA</label>
+                        </div>
+                        <div class="form-floating form-floating-outline py-3">
+                            <select class="form-select @error('online') is-invalid @enderror" id="online_add" name="online"
+                                autofocus value="{{ old('online') }}">
+                                <option value="1" selected>OFFLINE</option>
+                                <option value="2">ONLINE</option>
+                            </select>
+                            <label for="penempatan">KEPUTUSAN HRD</label>
+                            @error('online')
+                                <div class="invalid-feedback">
+                                    {{ $message }}
+                                </div>
+                            @enderror
+                        </div>
+                        @error('tanggal_wawancara')
+                            <span class="invalid-feedback" role="alert">
+                                <strong>{{ $message }}</strong>
+                            </span>
+                        @enderror
+                        <div id="tempat_wawancara_form">
+                            <label for="bagian_recruitment px-2"><small>TEMPAT
+                                    WAWANCARA</small></label>
+                            <div class="form-floating form-floating-outline mb-2">
+
+                                <input type="text" id="tempat_wawancara" name="tempat_wawancara"
+                                    class="form-control @error('tempat_wawancara') is-invalid @enderror"value="{{ old('tempat_wawancara') }}" />
+                            </div>
+                        </div>
+                        <div id="link_wawancara_form">
+                            <label for="bagian_recruitment px-2"><small>LINK
+                                    WAWANCARA ONLINE</small></label>
+                            <div class="form-floating form-floating-outline mb-2">
+
+                                <input type="text" id="link_wawancara" name="link_wawancara"
+                                    class="form-control @error('link_wawancara') is-invalid @enderror"
+                                    value="{{ old('link_wawancara') }}" />
+                            </div>
+                        </div>
+
+                        @error('link_wawancara')
+                            <span class="invalid-feedback" role="alert">
+                                <strong>{{ $message }}</strong>
+                            </span>
+                        @enderror
+                        <label for="bagian_recruitment"><small>WAKTU (JAM)
+                                WAWANCARA</small></label>
+                        <div class="form-floating form-floating-outline ">
+
+                            <input type="time" id="waktu_wawancara" name="waktu_wawancara"
+                                class="form-control @error('waktu_wawancara') is-invalid @enderror"
+                                value="{{ old('waktu_wawancara') }}" />
+                        </div>
+                        @error('waktu_wawancara')
+                            <span class="invalid-feedback" role="alert">
+                                <strong>{{ $message }}</strong>
+                            </span>
+                        @enderror
+                    </div> --}}
+                    {{-- <div id="lolos_langsung">
+                        <div class="form-floating form-floating-outline py-3">
+                            <input type="date" id="tanggal_masuk_update" name="tanggal_masuk"
+                                class="form-control @error('tanggal_masuk') is-invalid @enderror" placeholder="Tanggal"
+                                value="{{ old('tanggal_masuk') }}" />
+                            <label for="bagian_recruitment">TANGGAL MASUK KERJA</label>
+                        </div>
+                        <label for="bagian_recruitment px-2"><small>GAJI</small></label>
+                        <div class="form-floating form-floating-outline mb-2">
+
+                            <input type="text" id="gaji_update" name="gaji"
+                                class="form-control @error('gaji') is-invalid @enderror" value="{{ old('gaji') }}" />
+                        </div>
+                        <label for="bagian_recruitment px-2"><small>NOTES</small></label>
+                        <div class="form-floating form-floating-outline mb-2">
+                            <textarea type="text" id="notes_langsung_update" name="notes_langsung"
+                                class="form-control @error('notes_langsung') is-invalid @enderror" value="{{ old('notes_langsung') }}"></textarea>
+                        </div>
+                    </div> --}}
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                    <button type="button" class="btn btn-primary" id="btn_save_status">submit</button>
+                </div>
+            </div>
+        </div>
+    </div>
 @endsection
 @section('js')
     <script src="https://cdn.datatables.net/2.0.5/js/dataTables.js"></script>
@@ -432,7 +544,7 @@
         let holding = window.location.pathname.split("/").pop();
         let id = @json($id_recruitment);
         console.log(id);
-        var table = $('#tabel_esai').DataTable({
+        var table = $('#tabel_ranking').DataTable({
             "scrollY": true,
             "scrollX": true,
             processing: true,
@@ -450,6 +562,14 @@
                 }, {
                     data: 'nama_lengkap',
                     name: 'nama_lengkap'
+                },
+                {
+                    data: 'pilih_status',
+                    name: 'pilih_status'
+                },
+                {
+                    data: 'status',
+                    name: 'status'
                 },
                 {
                     data: 'total_koefisien',
@@ -482,13 +602,110 @@
 
             ],
             order: [
-                [2, 'desc']
+                [4, 'desc']
             ]
         });
+        $(document).on('click', '#btn_status_ranking', function() {
+            console.log('asooy');
+            var id = $(this).data('id');
+            $('#id_update').val(id);
+            $('#modal_status').modal('show');
+
+        });
+        $('#btn_save_status').on('click', function(e) {
+            e.preventDefault();
+            var formData = new FormData();
+
+            formData.append('_token', '{{ csrf_token() }}');
+            formData.append('id', $('#id_update').val());
+            formData.append('status', $('#status_update').val());
+            $.ajax({
+                type: "POST",
+
+                url: "{{ url('/dt/data-interview/ranking_update_status') }}",
+                data: formData,
+                contentType: false,
+                processData: false,
+                error: function() {
+                    alert('Something is wrong');
+                    // console.log(formData);
+                },
+                success: function(data) {
+                    if (data.code == 200) {
+                        Swal.fire({
+                            title: 'Berhasil',
+                            text: data.message,
+                            icon: 'success',
+                            timer: 5000
+                        })
+                        //mengosongkan modal dan menyembunyikannya
+                        $('#modal_status').modal('hide');
+                        $('#tabel_ranking').DataTable().ajax.reload();
+                    } else if (data.code == 400) {
+                        let errors = data.errors;
+                        // console.log(errors);
+                        let errorMessages = '';
+
+                        Object.keys(errors).forEach(function(key) {
+                            errors[key].forEach(function(message) {
+                                errorMessages += `• ${message}\n`;
+                            });
+                        });
+                        Swal.fire({
+                            // title: data.message,
+                            text: errorMessages,
+                            icon: 'warning',
+                            timer: 4500
+                        })
+
+                    } else {
+                        Swal.fire({
+                            title: 'Gagal',
+                            text: data.error,
+                            icon: 'error',
+                            timer: 10000
+                        })
+                        $('#modal_status').modal('hide');
+                    }
+                }
+
+            });
+        });
+        // $('#lolos_langsung').hide();
+        // $('#status_update').on('change', function() {
+        //     let value = $(this).val();
+
+        //     if (value == '') {
+        //         $('#lolos_manager').hide();
+        //         $('#tanggal_wawancara').val('');
+        //         $('#tempat_wawancara').val('');
+        //         $('#waktu_wawancara').val('');
+
+        //     } else if (value == '1b') {
+        //         $('#lolos_manager').show();
+
+        //     } else if (value == '2b') {
+        //         $('#lolos_langsung').show();
+        //     } else {
+        //         $('#lolos_manager').hide();
+        //         $('#tanggal_wawancara').val('');
+        //         $('#tempat_wawancara').val('');
+        //         $('#waktu_wawancara').val('');
+        //     }
+        // });
+        // $('#link_wawancara_form').hide();
+        // $('#online_add').on('change', function() {
+        //     let value = $(this).val();
+        //     console.log('asooy');
+        //     if (value == '2') {
+        //         $('#link_wawancara_form').show();
+        //         $('#tempat_wawancara_form').hide();
+        //     } else {
+        //         $('#link_wawancara_form').hide();
+        //         $('#tempat_wawancara_form').show();
+        //     }
+        // });
+    </script>
     </script>
     {{-- end datatable  --}}
-
-    <script>
-        // show modal syarat
-    </script>
 @endsection

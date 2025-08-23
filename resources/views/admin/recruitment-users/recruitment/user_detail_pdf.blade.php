@@ -73,13 +73,27 @@
                 <tr>
                     <td class="fw-bold"><small>AGAMA</small></td>
                     <td>:</td>
-                    <td>{{ $data_cv->AuthLogin->recruitmentCV->agama }}</td>
+                    <td>
+                        @if ($data_cv->AuthLogin->recruitmentCV->agama == '1')
+                            ISLAM
+                        @elseif ($data_cv->AuthLogin->recruitmentCV->agama == '2')
+                            KRISTEN PROTESTAN
+                        @elseif ($data_cv->AuthLogin->recruitmentCV->agama == '3')
+                            KRISTEN KATOLIK
+                        @elseif ($data_cv->AuthLogin->recruitmentCV->agama == '4')
+                            HINDU
+                        @elseif ($data_cv->AuthLogin->recruitmentCV->agama == '5')
+                            BUDHA
+                        @elseif ($data_cv->AuthLogin->recruitmentCV->agama == '6')
+                            KONGHUCHU
+                        @endif
+                    </td>
                 </tr>
                 <tr>
                     <td class="fw-bold"><small>JENIS KELAMIN</small></td>
                     <td>:</td>
                     <td>
-                        @if ($data_cv->AuthLogin->recruitmentCV->jenis_kelamin == 'Laki-laki')
+                        @if ($data_cv->AuthLogin->recruitmentCV->jenis_kelamin == '1')
                             LAKI - LAKI
                         @else
                             PEREMPUAN

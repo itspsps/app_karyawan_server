@@ -42,8 +42,8 @@ class UserKaryawanController extends Controller
             'data_user' => $data_user,
             "data_jabatan" => Jabatan::orderBy('nama_jabatan', 'ASC')->where('holding', $holding)->get(),
             "data_lokasi" => Lokasi::orderBy('lokasi_kantor', 'ASC')->get(),
-            "karyawan_laki" => User::Join('karyawans', 'users.karyawan_id', 'karyawans.id')->where('karyawans.gender', 'Laki-Laki')->where('kontrak_kerja', $holding)->where('user_aktif', 'AKTIF')->count(),
-            "karyawan_perempuan" => User::Join('karyawans', 'users.karyawan_id', 'karyawans.id')->where('karyawans.gender', 'Perempuan')->where('kontrak_kerja', $holding)->where('user_aktif', 'AKTIF')->count(),
+            "karyawan_laki" => User::Join('karyawans', 'users.karyawan_id', 'karyawans.id')->where('karyawans.gender', "1")->where('kontrak_kerja', $holding)->where('user_aktif', 'AKTIF')->count(),
+            "karyawan_perempuan" => User::Join('karyawans', 'users.karyawan_id', 'karyawans.id')->where('karyawans.gender', "2")->where('kontrak_kerja', $holding)->where('user_aktif', 'AKTIF')->count(),
             "karyawan_office" => User::Join('karyawans', 'users.karyawan_id', 'karyawans.id')->where('karyawans.kategori', 'Karyawan Bulanan')->where('kontrak_kerja', $holding)->where('user_aktif', 'AKTIF')->count(),
             "karyawan_shift" => User::Join('karyawans', 'users.karyawan_id', 'karyawans.id')->where('karyawans.kategori', 'Karyawan Harian')->where('kontrak_kerja', $holding)->where('user_aktif', 'AKTIF')->count(),
         ]);

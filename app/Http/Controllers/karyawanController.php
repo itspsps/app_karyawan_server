@@ -59,8 +59,8 @@ class karyawanController extends Controller
         $departemen = Departemen::orderBy('nama_departemen', 'ASC')->where('holding', $holding)->get();
         $user = Karyawan::where('kontrak_kerja', $holding)->where('status_aktif', 'AKTIF')->get();
         $jabatan = Jabatan::orderBy('nama_jabatan', 'ASC')->where('holding', $holding)->get();
-        $karyawan_laki = Karyawan::where('gender', 'Laki-Laki')->where('kontrak_kerja', $holding)->where('status_aktif', 'AKTIF')->count();
-        $karyawan_perempuan = Karyawan::where('gender', 'Perempuan')->where('kontrak_kerja', $holding)->where('status_aktif', 'AKTIF')->count();
+        $karyawan_laki = Karyawan::where('gender', "1")->where('kontrak_kerja', $holding)->where('status_aktif', 'AKTIF')->count();
+        $karyawan_perempuan = Karyawan::where('gender', "2")->where('kontrak_kerja', $holding)->where('status_aktif', 'AKTIF')->count();
         $karyawan_office = Karyawan::where('kategori', 'Karyawan Bulanan')->where('kontrak_kerja', $holding)->where('status_aktif', 'AKTIF')->count();
         $karyawan_shift = Karyawan::where('kategori', 'Karyawan Harian')->where('kontrak_kerja', $holding)->where('status_aktif', 'AKTIF')->count();
         return view('admin.karyawan.index', [
@@ -90,8 +90,8 @@ class karyawanController extends Controller
             'data_user' => Karyawan::where('kontrak_kerja', $holding)->where('status_aktif', 'NON AKTIF')->get(),
             "data_jabatan" => Jabatan::orderBy('nama_jabatan', 'ASC')->where('holding', $holding)->get(),
             "data_lokasi" => Lokasi::orderBy('lokasi_kantor', 'ASC')->get(),
-            "karyawan_laki" => Karyawan::where('gender', 'Laki-Laki')->where('kontrak_kerja', $holding)->where('status_aktif', 'NON AKTIF')->count(),
-            "karyawan_perempuan" => Karyawan::where('gender', 'Perempuan')->where('kontrak_kerja', $holding)->where('status_aktif', 'NON AKTIF')->count(),
+            "karyawan_laki" => Karyawan::where('gender', "1")->where('kontrak_kerja', $holding)->where('status_aktif', 'NON AKTIF')->count(),
+            "karyawan_perempuan" => Karyawan::where('gender', "2")->where('kontrak_kerja', $holding)->where('status_aktif', 'NON AKTIF')->count(),
             "karyawan_office" => Karyawan::where('kategori', 'Karyawan Bulanan')->where('kontrak_kerja', $holding)->where('status_aktif', 'NON AKTIF')->count(),
             "karyawan_shift" => Karyawan::where('kategori', 'Karyawan Harian')->where('kontrak_kerja', $holding)->where('status_aktif', 'NON AKTIF')->count(),
         ]);
@@ -108,8 +108,8 @@ class karyawanController extends Controller
             'data_user' => Karyawan::where('kontrak_kerja', $holding)->where('status_aktif', 'WAITING')->get(),
             "data_jabatan" => Jabatan::orderBy('nama_jabatan', 'ASC')->where('holding', $holding)->get(),
             "data_lokasi" => Lokasi::orderBy('lokasi_kantor', 'ASC')->get(),
-            "karyawan_laki" => Karyawan::where('gender', 'Laki-Laki')->where('kontrak_kerja', $holding)->where('status_aktif', 'WAITING')->count(),
-            "karyawan_perempuan" => Karyawan::where('gender', 'Perempuan')->where('kontrak_kerja', $holding)->where('status_aktif', 'WAITING')->count(),
+            "karyawan_laki" => Karyawan::where('gender', "1")->where('kontrak_kerja', $holding)->where('status_aktif', 'WAITING')->count(),
+            "karyawan_perempuan" => Karyawan::where('gender', "2")->where('kontrak_kerja', $holding)->where('status_aktif', 'WAITING')->count(),
             "karyawan_office" => Karyawan::where('kategori', 'Karyawan Bulanan')->where('kontrak_kerja', $holding)->where('status_aktif', 'WAITING')->count(),
             "karyawan_shift" => Karyawan::where('kategori', 'Karyawan Harian')->where('kontrak_kerja', $holding)->where('status_aktif', 'WAITING')->count(),
         ]);
@@ -321,8 +321,8 @@ class karyawanController extends Controller
             'holding' => $holding,
             'data_user' => Karyawan::where('kontrak_kerja', $holding)->where('status_aktif', 'AKTIF')->get(),
             "data_jabatan" => Jabatan::orderBy('nama_jabatan', 'ASC')->where('holding', $holding)->get(),
-            "karyawan_laki" => Karyawan::where('gender', 'Laki-Laki')->where('kontrak_kerja', $holding)->where('status_aktif', 'AKTIF')->where('kategori', 'Karyawan Bulanan')->whereBetween('tgl_selesai_kontrak', [$date_now, $date_30day])->count(),
-            "karyawan_perempuan" => Karyawan::where('gender', 'Perempuan')->where('kontrak_kerja', $holding)->where('status_aktif', 'AKTIF')->where('kategori', 'Karyawan Bulanan')->whereBetween('tgl_selesai_kontrak', [$date_now, $date_30day])->count(),
+            "karyawan_laki" => Karyawan::where('gender', "1")->where('kontrak_kerja', $holding)->where('status_aktif', 'AKTIF')->where('kategori', 'Karyawan Bulanan')->whereBetween('tgl_selesai_kontrak', [$date_now, $date_30day])->count(),
+            "karyawan_perempuan" => Karyawan::where('gender', "2")->where('kontrak_kerja', $holding)->where('status_aktif', 'AKTIF')->where('kategori', 'Karyawan Bulanan')->whereBetween('tgl_selesai_kontrak', [$date_now, $date_30day])->count(),
             "karyawan_lebih_kontrak" => Karyawan::where('kategori', 'Karyawan Bulanan')->where('kontrak_kerja', $holding)->where('status_aktif', 'AKTIF')->whereBetween('tgl_selesai_kontrak', [$date_now, $date_30day])->where('tgl_selesai_kontrak', '<=', $date_now1)->count(),
             "karyawan_akan_habis_kontrak" => Karyawan::where('kategori', 'Karyawan Bulanan')->where('kontrak_kerja', $holding)->where('status_aktif', 'AKTIF')->whereBetween('tgl_selesai_kontrak', [$date_now, $date_30day])->where('tgl_selesai_kontrak', '>=', $date_now1)->count(),
         ]);
@@ -740,8 +740,8 @@ class karyawanController extends Controller
             "data_jabatan" => Jabatan::orderBy('nama_jabatan', 'ASC')->where('holding', $holding)->get(),
             "data_provinsi" => Provincies::orderBy('name', 'ASC')->get(),
             "data_lokasi" => Lokasi::orderBy('lokasi_kantor', 'ASC')->get(),
-            "karyawan_laki" => Karyawan::where('gender', 'Laki-Laki')->where('kontrak_kerja', $holding)->where('status_aktif', 'AKTIF')->count(),
-            "karyawan_perempuan" => Karyawan::where('gender', 'Perempuan')->where('kontrak_kerja', $holding)->where('status_aktif', 'AKTIF')->count(),
+            "karyawan_laki" => Karyawan::where('gender', "1")->where('kontrak_kerja', $holding)->where('status_aktif', 'AKTIF')->count(),
+            "karyawan_perempuan" => Karyawan::where('gender', "2")->where('kontrak_kerja', $holding)->where('status_aktif', 'AKTIF')->count(),
             "karyawan_office" => Karyawan::where('kategori', 'Karyawan Bulanan')->where('kontrak_kerja', $holding)->where('status_aktif', 'AKTIF')->count(),
             "karyawan_shift" => Karyawan::where('kategori', 'Karyawan Harian')->where('kontrak_kerja', $holding)->where('status_aktif', 'AKTIF')->count(),
         ]);
