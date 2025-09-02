@@ -1561,6 +1561,10 @@ Route::get('/dt/data-list-ranking/{id?}/sp', [RecruitmentController::class, 'dt_
 Route::get('/dt/data-list-ranking/{id?}/sps', [RecruitmentController::class, 'dt_list_ranking'])->middleware('admin');
 Route::get('/dt/data-list-ranking/{id?}/sip', [RecruitmentController::class, 'dt_list_ranking'])->middleware('admin');
 
+Route::get('/dt/data-list-progres/{id?}/sp', [RecruitmentController::class, 'dt_list_progres'])->middleware('admin');
+Route::get('/dt/data-list-progres/{id?}/sps', [RecruitmentController::class, 'dt_list_progres'])->middleware('admin');
+Route::get('/dt/data-list-progres/{id?}/sip', [RecruitmentController::class, 'dt_list_progres'])->middleware('admin');
+
 Route::get('/konfirmasi-interview/{email?}/tidak-konfirmasi', [RecruitmentUserController::class, 'tidak_konfirmasi']);
 Route::get('/konfirmasi-interview/{email?}/konfirmasi', [RecruitmentUserController::class, 'konfirmasi']);
 

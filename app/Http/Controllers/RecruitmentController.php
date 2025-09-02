@@ -49,6 +49,7 @@ use Barryvdh\DomPDF\Facade\Pdf;
 
 use RealRashid\SweetAlert\Facades\Alert;
 use DB;
+use DivisionByZeroError;
 use Illuminate\Support\Facades\DB as FacadesDB;
 use Illuminate\Validation\Rules\Exists;
 use PhpParser\Builder\Function_;
@@ -1129,22 +1130,189 @@ asoy.com
     public function ranking_update_status(Request $request)
     {
         try {
-            RecruitmentInterview::where('recruitment_user_id', $request->id)->update(
+            if ($request->status == '1b') {
+                if ($request->online == 1) {
+                    $link_wawancara = 'nullable';
+                    $tempat_wawancara = 'required';
+                } elseif ($request->online == 2) {
+                    $link_wawancara = 'required';
+                    $tempat_wawancara = 'nullable';
+                }
+                $validator = Validator::make(
+                    $request->all(),
+                    [
+                        'tanggal_wawancara' => 'required',
+                        'link_wawancara' => $link_wawancara,
+                        'tempat_wawancara' => $tempat_wawancara,
+                        'waktu_wawancara' => 'required',
+                    ],
+                    [
+                        'required' => ':attribute tidak boleh kosong'
+                    ]
+                );
+                if ($validator->fails()) {
+                    return response()->json([
+                        'code' => 400,
+                        'message' => 'Validasi gagal',
+                        'errors' => $validator->errors()
+                    ]);
+                }
+                if ($request->online == 1) {
+                    $tempat = $request->tempat_wawancara;
+                } elseif ($request->online == 2) {
+                    $tempat = $request->link_wawancara;
+                }
+                // dd($request->all());
+                RecruitmentUser::where('id', $request->id)->update(
 
-                [
-                    'status_interview'      => $request->status,
-                    'updated_at'            => date('Y-m-d H:i:s'),
-                ]
-            );
-            RecruitmentUserRecord::insert(
-                [
-                    'id'                        => Uuid::uuid4(),
-                    'recruitment_user_id'       => $request->id,
-                    'status'                    => $request->status,
-                    'created_at'                => date('Y-m-d H:i:s'),
-                ]
-            );
-            if ($request->status == '3b') {
+                    [
+                        'tanggal_wawancara_manager'             => $request->tanggal_wawancara,
+                        'tempat_wawancara'              => $tempat,
+                        'waktu_wawancara'       => $request->waktu_wawancara,
+                        'status_lanjutan'               => $request->status,
+                        'tanggal_konfirmasi_manager'    => date('Y-m-d H:i:s', strtotime('+1 days')),
+                        'updated_at'                    => date('Y-m-d H:i:s'),
+                    ]
+                );
+                RecruitmentUserRecord::insert(
+                    [
+                        'id'                        => Uuid::uuid4(),
+                        'recruitment_user_id'       => $request->id,
+                        'status'                    => $request->status,
+                        'created_at'                => date('Y-m-d H:i:s'),
+                    ]
+                );
+                $get_wa = RecruitmentUser::with([
+                    'AuthLogin' => function ($query) {
+                        $query;
+                    }
+                ])->where('id', $request->id)->first();
+                // dd($get_wa);
+                $curl = curl_init();
+                curl_setopt_array($curl, array(
+                    CURLOPT_URL => 'https://api.fonnte.com/send',
+                    CURLOPT_RETURNTRANSFER => true,
+                    CURLOPT_ENCODING => '',
+                    CURLOPT_MAXREDIRS => 10,
+                    CURLOPT_TIMEOUT => 0,
+                    CURLOPT_FOLLOWLOCATION => true,
+                    CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                    CURLOPT_CUSTOMREQUEST => 'POST',
+                    CURLOPT_POSTFIELDS => array(
+                        'target' => $get_wa->Authlogin->nomor_whatsapp,
+                        'message' =>
+                        "Pemberitahuan
+
+selamat Anda lolos wawancara manager
+",
+                        'countryCode' => '62', //optional
+                    ),
+                    CURLOPT_HTTPHEADER => array(
+                        'Authorization: Xp5bwZZN22VPhojYcPEB' //change TOKEN to your actual token
+                    ),
+                ));
+
+                $response = curl_exec($curl);
+                if (curl_errno($curl)) {
+                    $error_msg = curl_error($curl);
+                }
+                curl_close($curl);
+
+                if (isset($error_msg)) {
+                    echo $error_msg;
+                }
+            } elseif ($request->status == '2b') {
+                $validator = Validator::make(
+                    $request->all(),
+                    [
+                        'gaji' => 'required',
+                        'tanggal_diterima' => 'required',
+                    ],
+                    [
+                        'required' => ':attribute tidak boleh kosong'
+                    ]
+                );
+                if ($validator->fails()) {
+                    return response()->json([
+                        'code' => 400,
+                        'message' => 'Validasi gagal',
+                        'errors' => $validator->errors()
+                    ]);
+                }
+                RecruitmentUser::where('id', $request->id)->update(
+
+                    [
+                        'status_lanjutan'       => $request->status,
+                        'gaji'                  => $request->gaji,
+                        'tanggal_diterima'      => $request->tanggal_diterima,
+                        'notes'                 => $request->notes_langsung,
+                        'konfirmasi_diterima'      => date('Y-m-d H:i:s', strtotime('+1 days')),
+                        'updated_at'            => date('Y-m-d H:i:s'),
+                    ]
+                );
+                RecruitmentUserRecord::insert(
+                    [
+                        'id'                        => Uuid::uuid4(),
+                        'recruitment_user_id'       => $request->id,
+                        'status'           => $request->status,
+                        'created_at'                => date('Y-m-d H:i:s'),
+                    ]
+                );
+                $get_wa = RecruitmentUser::with([
+                    'AuthLogin' => function ($query) {
+                        $query;
+                    }
+                ])->where('id', $request->id)->first();
+                // dd($get_wa);
+                $curl = curl_init();
+                curl_setopt_array($curl, array(
+                    CURLOPT_URL => 'https://api.fonnte.com/send',
+                    CURLOPT_RETURNTRANSFER => true,
+                    CURLOPT_ENCODING => '',
+                    CURLOPT_MAXREDIRS => 10,
+                    CURLOPT_TIMEOUT => 0,
+                    CURLOPT_FOLLOWLOCATION => true,
+                    CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                    CURLOPT_CUSTOMREQUEST => 'POST',
+                    CURLOPT_POSTFIELDS => array(
+                        'target' => $get_wa->Authlogin->nomor_whatsapp,
+                        'message' =>
+                        "Pemberitahuan
+
+selamat Anda lolos bekerja
+",
+                        'countryCode' => '62', //optional
+                    ),
+                    CURLOPT_HTTPHEADER => array(
+                        'Authorization: Xp5bwZZN22VPhojYcPEB' //change TOKEN to your actual token
+                    ),
+                ));
+
+                $response = curl_exec($curl);
+                if (curl_errno($curl)) {
+                    $error_msg = curl_error($curl);
+                }
+                curl_close($curl);
+
+                if (isset($error_msg)) {
+                    echo $error_msg;
+                }
+            } elseif ($request->status == '3b') {
+                RecruitmentUser::where('id', $request->id)->update(
+
+                    [
+                        'status_lanjutan'      => $request->status,
+                        'updated_at'            => date('Y-m-d H:i:s'),
+                    ]
+                );
+                RecruitmentUserRecord::insert(
+                    [
+                        'id'                        => Uuid::uuid4(),
+                        'recruitment_user_id'       => $request->id,
+                        'status'                    => $request->status,
+                        'created_at'                => date('Y-m-d H:i:s'),
+                    ]
+                );
                 $get_wa = RecruitmentUser::with([
                     'AuthLogin' => function ($query) {
                         $query;
@@ -1185,6 +1353,7 @@ Maaf Anda Belum lolos sesi interview dan ujian
                     echo $error_msg;
                 }
             }
+
             return response()->json([
                 'code' => 200,
                 'message' => 'Data Berhasil Diupdate'
@@ -2637,21 +2806,6 @@ Maaf Anda Belum lolos sesi interview dan ujian
                 ->addColumn('nama_lengkap', function ($row) {
                     return $row->Cv->nama_lengkap;
                 })
-                ->addColumn('pilih_status', function ($row) {
-                    return '<button
-                                data-id="' . $row->id . '"
-                                type="button" class="btn btn-sm btn-info " id="btn_status_ranking">
-                                <i class="tf-icons mdi mdi-eye-circle-outline me-1"></i>
-                                Pilih&nbsp;
-                            </button>';
-                })
-                ->addColumn('status', function ($row) {
-                    if ($row->DataInterview->status_interview == null) {
-                        return "Belum Ditentukan";
-                    } elseif ($row->DataInterview->status_interview == '3b') {
-                        return "Tidak Lolos";
-                    }
-                })
                 ->addColumn('total_koefisien', function ($row) {
                     $esai_total = $row->ujianEsaiJawab->sum('nilai') ?? 0;
                     $pg_total = $row->waktuujian->sum('nilai') ?? 0;
@@ -2678,14 +2832,20 @@ Maaf Anda Belum lolos sesi interview dan ujian
                         $esai_count = Ujian::where('esai', 1)->where('enam', '1')->count();
                         $pg_count = Ujian::where('esai', 0)->where('enam', '1')->count();
                     }
-
                     $interview_user = $row->interviewUser->sum('nilai') ?? 0;
-                    $interview_admin = InterviewAdmin::count() ?? 0;
+                    $interview_admin = InterviewUser::where('recruitment_user_id', $row->id)->count() ?? 0;
                     $get_bobot = Pembobotan::first();
+                    try {
+                        $koefisien_esai = ($esai_total / $esai_count) * ($get_bobot->esai / 100);
+                        $koefisien_pg = ($pg_total / $pg_count) * ($get_bobot->pilihan_ganda / 100);
+                        $koefisien_interview = ($interview_user / $interview_admin * 10) * ($get_bobot->interview / 100);
+                    } catch (DivisionByZeroError $e) {
+                        $koefisien_esai = 0;
+                        $koefisien_pg = 0;
+                        $koefisien_interview = 0;
+                    }
 
-                    $koefisien_esai = ($esai_total / $esai_count) * ($get_bobot->esai / 100);
-                    $koefisien_pg = ($pg_total / $pg_count) * ($get_bobot->pilihan_ganda / 100);
-                    $koefisien_interview = ($interview_user / $interview_admin * 10) * ($get_bobot->interview / 100);
+
                     return round($koefisien_esai + $koefisien_pg + $koefisien_interview, 2);
                 })
                 ->addColumn('esai_average', function ($row) {
@@ -2742,9 +2902,15 @@ Maaf Anda Belum lolos sesi interview dan ujian
                     return $bobot . '%';
                 })
                 ->addColumn('interview_average', function ($row) {
-                    $interview_user = $row->interviewUser->sum('nilai') ?? 0;
-                    $interview_admin = InterviewAdmin::count() ?? 0;
-                    return round($interview_user / $interview_admin * 10, 2);
+
+                    try {
+                        $interview_user = $row->interviewUser->sum('nilai') ?? 0;
+                        $interview_admin = InterviewUser::where('recruitment_user_id', $row->id)->count() ?? 0;
+                        $hasil = $interview_user / $interview_admin;
+                    } catch (DivisionByZeroError $e) {
+                        $hasil = 0;
+                    }
+                    return round($hasil * 10, 2);
                 })
                 ->addColumn('bobot_interview', function ($row) {
                     $get_bobot = Pembobotan::first();
@@ -2752,10 +2918,165 @@ Maaf Anda Belum lolos sesi interview dan ujian
                     return $bobot . '%';
                 })
 
-                ->rawColumns(['nama_lengkap', 'pilih_status', 'status', 'total_koefisien', 'esai_average', 'bobot_esai', 'pg_average', 'bobot_pg', 'interview_average', 'bobot_interview'])
+                ->rawColumns(['nama_lengkap', 'total_koefisien', 'esai_average', 'bobot_esai', 'pg_average', 'bobot_pg', 'interview_average', 'bobot_interview'])
                 ->make(true);
         }
     }
+    function dt_list_progres($id)
+    {
+        $table = RecruitmentUser::with([
+            'Cv' => function ($query) {
+                $query;
+            }
+        ])->with([
+            'interviewUser' => function ($query) {
+                $query;
+            }
+        ])->with([
+            'DataInterview' => function ($query) {
+                $query;
+            }
+        ])
+            ->with([
+                'ujianEsaiJawab' => function ($query) {
+                    $query->orderBy('recruitment_user_id')->with([
+                        'ujian' => function ($query) {
+                            $query->with([
+                                'pembobotan' => function ($query) {
+                                    $query;
+                                }
+                            ]);
+                        }
+                    ]);
+                }
+            ])->with([
+                'waktuujian' => function ($query) {
+                    $query->orderBy('recruitment_user_id')->with([
+                        'ujian' => function ($query) {
+                            $query->with([
+                                'pembobotan' => function ($query) {
+                                    $query;
+                                }
+                            ]);
+                        }
+                    ]);
+                }
+            ])
+            ->with([
+                'recruitmentAdmin' => function ($query) {
+                    $query;
+                }
+            ])
+            ->with([
+                'Jabatan' => function ($query) {
+                    $query->with([
+                        'Bagian' =>  function ($query) {
+                            $query->with([
+                                'Divisi' => function ($query) {
+                                    $query->with([
+                                        'Departemen' => function ($query) {
+                                            $query->orderBy('nama_departemen', 'ASC');
+                                        }
+                                    ]);
+                                    $query->orderBy('nama_divisi', 'ASC');
+                                },
+                            ]);
+                        },
+                    ])->with([
+                        'LevelJabatan' => function ($query) {
+                            $query;
+                        },
+                    ]);
+                },
+
+            ])
+            ->where('recruitment_admin_id', $id)
+            ->get();
+
+        // dd($table);
+
+        if (request()->ajax()) {
+            return DataTables::of($table)
+                ->addColumn('nama_lengkap', function ($row) {
+                    return $row->Cv->nama_lengkap;
+                })
+                ->addColumn('pilih_status', function ($row) {
+                    return '<button
+                                data-id="' . $row->id . '"
+                                type="button" class="btn btn-sm btn-info " id="btn_status_ranking">
+                                <i class="tf-icons mdi mdi-eye-circle-outline me-1"></i>
+                                Pilih&nbsp;
+                            </button>';
+                })
+                ->addColumn('status', function ($row) {
+                    if ($row->status_lanjutan == null) {
+                        return '<p class="bg-secondary p-2 text-white">Belum Ditentukan</p>';
+                    } elseif ($row->status_lanjutan == '1b') {
+                        return '<p class="bg-warning p-2 text-white">Interview Manager</p>';
+                    } elseif ($row->status_lanjutan == '2b') {
+                        return '<p class="bg-success p-2 text-white">Diterima Bekerja</p>';
+                    } elseif ($row->status_lanjutan == '3b') {
+                        return '<p class="bg-danger p-2 text-white">Tidak Lolos</p>';
+                    } elseif ($row->status_lanjutan == '4b') {
+                        return '<p class="bg-danger p-2 text-white">Menolak</p>';
+                    }
+                })
+                ->addColumn('total_koefisien', function ($row) {
+                    $esai_total = $row->ujianEsaiJawab->sum('nilai') ?? 0;
+                    $pg_total = $row->waktuujian->sum('nilai') ?? 0;
+                    $get_jabatan = $row->Jabatan->LevelJabatan->level_jabatan;
+                    if ($get_jabatan == 0) {
+                        $esai_count = Ujian::where('esai', 1)->where('nol', '1')->count();
+                        $pg_count = Ujian::where('esai', 0)->where('nol', '1')->count();
+                    } elseif ($get_jabatan == 1) {
+                        $esai_count = Ujian::where('esai', 1)->where('satu', '1')->count();
+                        $pg_count = Ujian::where('esai', 0)->where('satu', '1')->count();
+                    } elseif ($get_jabatan == 2) {
+                        $esai_count = Ujian::where('esai', 1)->where('dua', '1')->count();
+                        $pg_count = Ujian::where('esai', 0)->where('dua', '1')->count();
+                    } elseif ($get_jabatan == 3) {
+                        $esai_count = Ujian::where('esai', 1)->where('tiga', '1')->count();
+                        $pg_count = Ujian::where('esai', 0)->where('tiga', '1')->count();
+                    } elseif ($get_jabatan == 4) {
+                        $esai_count = Ujian::where('esai', 1)->where('empat', '1')->count();
+                        $pg_count = Ujian::where('esai', 0)->where('empat', '1')->count();
+                    } elseif ($get_jabatan == 5) {
+                        $esai_count = Ujian::where('esai', 1)->where('lima', '1')->count();
+                        $pg_count = Ujian::where('esai', 0)->where('lima', '1')->count();
+                    } elseif ($get_jabatan == 6) {
+                        $esai_count = Ujian::where('esai', 1)->where('enam', '1')->count();
+                        $pg_count = Ujian::where('esai', 0)->where('enam', '1')->count();
+                    }
+
+                    $interview_user = $row->interviewUser->sum('nilai') ?? 0;
+                    $interview_admin = InterviewAdmin::count() ?? 0;
+                    $get_bobot = Pembobotan::first();
+                    try {
+                        $koefisien_esai = ($esai_total / $esai_count) * ($get_bobot->esai / 100);
+                        $koefisien_pg = ($pg_total / $pg_count) * ($get_bobot->pilihan_ganda / 100);
+                        $koefisien_interview = ($interview_user / $interview_admin * 10) * ($get_bobot->interview / 100);
+                    } catch (DivisionByZeroError $e) {
+                        $koefisien_esai = 0;
+                        $koefisien_pg = 0;
+                        $koefisien_interview = 0;
+                    }
+                    return round($koefisien_esai + $koefisien_pg + $koefisien_interview, 2);
+                })->addColumn('feedback', function ($row) {
+                    if ($row->feedback_lanjutan == '1b') {
+                        return '<p class="bg-warning p-2 text-white">Menyanggupi</p>';
+                    } elseif ($row->feedback_lanjutan == '2b') {
+                        return '<p class="bg-success p-2 text-white">Menyanggupi</p>';
+                    } elseif ($row->feedback_lanjutan == '3b') {
+                        return '<p class="bg-danger p-2 text-white">Menolak</p>';
+                    } elseif ($row->feedback_lanjutan == '4b') {
+                        return '<p class="bg-danger p-2 text-white">Menolak</p>';
+                    }
+                })
+                ->rawColumns(['nama_lengkap', 'pilih_status', 'status', 'total_koefisien', 'feedback'])
+                ->make(true);
+        }
+    }
+
 
     // function dt_list_ranking($id)
     // {

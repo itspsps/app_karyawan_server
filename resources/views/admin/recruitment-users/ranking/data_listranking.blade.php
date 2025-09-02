@@ -2,8 +2,8 @@
 @section('css')
     <link rel="stylesheet" href="https://cdn.datatables.net/2.0.5/css/dataTables.bootstrap5.css">
     <style type="text/css">
-        .my-swal {
-            z-index: X;
+        .swal2-container {
+            z-index: 9999 !important;
         }
 
         .text-center {
@@ -161,7 +161,7 @@
         .timeline-centered .timeline-entry {
             position: relative;
             /*width: 50%;
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    float: right;*/
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                float: right;*/
             margin-top: 5px;
             margin-left: 30px;
             margin-bottom: 10px;
@@ -393,30 +393,67 @@
             <!-- Transactions -->
             <div class="col-lg-12">
                 <div class="container card p-3">
-                    <div class="card-header">
-                        <div class="d-flex align-items-center justify-content-between">
-                            <h5 class="card-title m-0 me-2">DATA RANKING RECRUITMENT</h5>
+                    <ul class="nav nav-tabs" id="myTab" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="ranking-tab" data-bs-toggle="tab"
+                                data-bs-target="#ranking-tab-pane" type="button" role="tab"
+                                aria-controls="ranking-tab-pane" aria-selected="false">Ranking</button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link active" id="progres-tab" data-bs-toggle="tab"
+                                data-bs-target="#progres-tab-pane" type="button" role="tab"
+                                aria-controls="progres-tab-pane" aria-selected="true">Progress</button>
+                        </li>
+                    </ul>
+                    <div class="tab-content" id="myTabContent">
+                        <div class="tab-pane fade show active" id="progres-tab-pane" role="tabpanel"
+                            aria-labelledby="progres-tab" tabindex="0">
+                            <div class="card-header">
+                                <div class="d-flex align-items-center justify-content-between">
+                                    <h5 class="card-title m-0 me-2">DATA PROGRES RECRUITMENT</h5>
+                                </div>
+                            </div>
+                            <table class="table" id="tabel_progres" style="width: 100%;">
+                                <thead class="table-primary">
+                                    <tr>
+                                        <th>Ranking.</th>
+                                        <th>Pelamar</th>
+                                        <th>Total Koefisien</th>
+                                        <th>Aksi</th>
+                                        <th>Status</th>
+                                        <th>Konfirmasi Pelamar</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="table-border-bottom-0">
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="tab-pane fade" id="ranking-tab-pane" role="tabpanel" aria-labelledby="progres-tab"
+                            tabindex="0">
+                            <div class="card-header">
+                                <div class="d-flex align-items-center justify-content-between">
+                                    <h5 class="card-title m-0 me-2">DATA RANKING RECRUITMENT</h5>
+                                </div>
+                            </div>
+                            <table class="table" id="tabel_ranking" style="width: 100%;">
+                                <thead class="table-primary">
+                                    <tr>
+                                        <th>No.</th>
+                                        <th>Pelamar</th>
+                                        <th>Total Koefisien</th>
+                                        <th>Esai Average</th>
+                                        <th>Bobot Esai</th>
+                                        <th>pilihan ganda Average</th>
+                                        <th>Bobot Pilihan Ganda</th>
+                                        <th>Interview Average</th>
+                                        <th>Bobot Interview</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="table-border-bottom-0">
+                                </tbody>
+                            </table>
                         </div>
                     </div>
-                    <table class="table" id="tabel_ranking" style="width: 100%;">
-                        <thead class="table-primary">
-                            <tr>
-                                <th>No.</th>
-                                <th>Pelamar</th>
-                                <th>Pilih Status</th>
-                                <th>Status</th>
-                                <th>Total Koefisien</th>
-                                <th>Esai Average</th>
-                                <th>Bobot Esai</th>
-                                <th>pilihan ganda Average</th>
-                                <th>Bobot Pilihan Ganda</th>
-                                <th>Interview Average</th>
-                                <th>Bobot Interview</th>
-                            </tr>
-                        </thead>
-                        <tbody class="table-border-bottom-0">
-                        </tbody>
-                    </table>
                 </div>
             </div>
             <!--/ Transactions -->
@@ -441,8 +478,7 @@
                             <option value="3b">TIDAK LOLOS</option>
                         </select>
                     </div>
-                    {{-- <div id="lolos_manager">
-
+                    <div id="lolos_manager">
                         <div class="form-floating form-floating-outline py-3">
                             <input type="date" id="tanggal_wawancara" name="tanggal_wawancara"
                                 class="form-control @error('tanggal_wawancara') is-invalid @enderror" placeholder="Tanggal"
@@ -505,12 +541,12 @@
                                 <strong>{{ $message }}</strong>
                             </span>
                         @enderror
-                    </div> --}}
-                    {{-- <div id="lolos_langsung">
+                    </div>
+                    <div id="lolos_langsung">
                         <div class="form-floating form-floating-outline py-3">
-                            <input type="date" id="tanggal_masuk_update" name="tanggal_masuk"
-                                class="form-control @error('tanggal_masuk') is-invalid @enderror" placeholder="Tanggal"
-                                value="{{ old('tanggal_masuk') }}" />
+                            <input type="date" id="tanggal_diterima_update" name="tanggal_diterima"
+                                class="form-control @error('tanggal_diterima') is-invalid @enderror" placeholder="Tanggal"
+                                value="{{ old('tanggal_diterima') }}" />
                             <label for="bagian_recruitment">TANGGAL MASUK KERJA</label>
                         </div>
                         <label for="bagian_recruitment px-2"><small>GAJI</small></label>
@@ -524,7 +560,7 @@
                             <textarea type="text" id="notes_langsung_update" name="notes_langsung"
                                 class="form-control @error('notes_langsung') is-invalid @enderror" value="{{ old('notes_langsung') }}"></textarea>
                         </div>
-                    </div> --}}
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
@@ -564,14 +600,6 @@
                     name: 'nama_lengkap'
                 },
                 {
-                    data: 'pilih_status',
-                    name: 'pilih_status'
-                },
-                {
-                    data: 'status',
-                    name: 'status'
-                },
-                {
                     data: 'total_koefisien',
                     name: 'total_koefisien'
                 },
@@ -602,8 +630,56 @@
 
             ],
             order: [
-                [4, 'desc']
+                [2, 'desc']
             ]
+        });
+        $('#ranking-tab').on('shown.bs.tab', function(e) {
+            table.columns.adjust().draw().responsive.recalc();
+            // table.draw();
+        });
+        var table2 = $('#tabel_progres').DataTable({
+            "scrollY": true,
+            "scrollX": true,
+            processing: true,
+            serverSide: true,
+            ajax: {
+                url: "{{ url('dt/data-list-progres') }}" + '/' + id + '/' + holding,
+            },
+            columns: [{
+                    data: null,
+                    render: function(data, type, row, meta) {
+                        return meta.row + 1;
+                    },
+                    orderable: false,
+                    searchable: false
+                }, {
+                    data: 'nama_lengkap',
+                    name: 'nama_lengkap'
+                },
+                {
+                    data: 'total_koefisien',
+                    name: 'total_koefisien'
+                },
+                {
+                    data: 'pilih_status',
+                    name: 'pilih_status'
+                },
+                {
+                    data: 'status',
+                    name: 'status'
+                },
+                {
+                    data: 'feedback',
+                    name: 'feedback'
+                },
+            ],
+            order: [
+                [2, 'desc']
+            ]
+        });
+        $('#progres-tab').on('shown.bs.tab', function(e) {
+            table2.columns.adjust().draw().responsive.recalc();
+            // table.draw();
         });
         $(document).on('click', '#btn_status_ranking', function() {
             console.log('asooy');
@@ -619,6 +695,14 @@
             formData.append('_token', '{{ csrf_token() }}');
             formData.append('id', $('#id_update').val());
             formData.append('status', $('#status_update').val());
+            formData.append('gaji', $('#gaji_update').val());
+            formData.append('tanggal_diterima', $('#tanggal_diterima_update').val());
+            formData.append('tanggal_wawancara', $('#tanggal_wawancara').val());
+            formData.append('online', $('#online_add').val());
+            formData.append('tempat_wawancara', $('#tempat_wawancara').val());
+            formData.append('link_wawancara', $('#link_wawancara').val());
+            formData.append('waktu_wawancara', $('#waktu_wawancara').val());
+            formData.append('notes_langsung', $('#notes_langsung_update').val());
             $.ajax({
                 type: "POST",
 
@@ -640,7 +724,14 @@
                         })
                         //mengosongkan modal dan menyembunyikannya
                         $('#modal_status').modal('hide');
-                        $('#tabel_ranking').DataTable().ajax.reload();
+                        $('#tanggal_diterima_update').val('');
+                        $('#notes_langsung_update').val('');
+                        $('#gaji_update').val('');
+                        $('#tanggal_wawancara').val('');
+                        $('#tempat_wawancara').val('');
+                        $('#link_wawancara').val('');
+                        $('#waktu_wawancara').val('');
+                        $('#tabel_progres').DataTable().ajax.reload();
                     } else if (data.code == 400) {
                         let errors = data.errors;
                         // console.log(errors);
@@ -671,40 +762,42 @@
 
             });
         });
-        // $('#lolos_langsung').hide();
-        // $('#status_update').on('change', function() {
-        //     let value = $(this).val();
+        $('#lolos_langsung').hide();
+        $('#status_update').on('change', function() {
+            let value = $(this).val();
 
-        //     if (value == '') {
-        //         $('#lolos_manager').hide();
-        //         $('#tanggal_wawancara').val('');
-        //         $('#tempat_wawancara').val('');
-        //         $('#waktu_wawancara').val('');
+            if (value == '') {
+                $('#lolos_langsung').hide();
+                $('#tanggal_wawancara').val('');
+                $('#tempat_wawancara').val('');
+                $('#waktu_wawancara').val('');
 
-        //     } else if (value == '1b') {
-        //         $('#lolos_manager').show();
+            } else if (value == '1b') {
+                $('#lolos_manager').show();
+                $('#lolos_langsung').hide();
 
-        //     } else if (value == '2b') {
-        //         $('#lolos_langsung').show();
-        //     } else {
-        //         $('#lolos_manager').hide();
-        //         $('#tanggal_wawancara').val('');
-        //         $('#tempat_wawancara').val('');
-        //         $('#waktu_wawancara').val('');
-        //     }
-        // });
-        // $('#link_wawancara_form').hide();
-        // $('#online_add').on('change', function() {
-        //     let value = $(this).val();
-        //     console.log('asooy');
-        //     if (value == '2') {
-        //         $('#link_wawancara_form').show();
-        //         $('#tempat_wawancara_form').hide();
-        //     } else {
-        //         $('#link_wawancara_form').hide();
-        //         $('#tempat_wawancara_form').show();
-        //     }
-        // });
+            } else if (value == '2b') {
+                $('#lolos_langsung').show();
+                $('#lolos_manager').hide();
+            } else {
+                $('#lolos_manager').hide();
+                $('#lolos_langsung').hide();
+                $('#tanggal_wawancara').val('');
+                $('#tempat_wawancara').val('');
+                $('#waktu_wawancara').val('');
+            }
+        });
+        $('#link_wawancara_form').hide();
+        $('#online_add').on('change', function() {
+            let value = $(this).val();
+            if (value == '2') {
+                $('#link_wawancara_form').show();
+                $('#tempat_wawancara_form').hide();
+            } else {
+                $('#link_wawancara_form').hide();
+                $('#tempat_wawancara_form').show();
+            }
+        });
     </script>
     </script>
     {{-- end datatable  --}}
