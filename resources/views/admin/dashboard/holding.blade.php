@@ -684,78 +684,44 @@
 <body>
     <div class="page-wraper">
         <div class="page-content">
-
+            @include('sweetalert::alert')
             <div class="content-body">
                 <div class="stripe_background">
                     <div class="col-12" style="margin-top: 10%; height: 77vh !important; justify-content: center;">
                         <h1 class="text-center" style="position: relative; z-index: 1 !important;">Silahkan Pilih Holding</h1>
                         <div class="row" style="margin:0px; padding: 0;">
                             <!-- Congratulations card -->
+                            @foreach($holding as $data)
                             <div class="col-md-4 col-lg-4">
-                                <a href="@if(Auth::user()->is_admin =='hrd'){{ url('hrd/dashboard/holding/sp') }}@else {{ url('dashboard/holding/sp') }} @endif">
+                                <a href="@if(Auth::user()->is_admin =='hrd'){{ url('hrd/dashboard/holding/'.$data->holding_code) }}@else {{ url('dashboard/holding/'.$data->holding_code) }} @endif">
                                     <div class="fixed-content" style="border-radius: 10px; box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19); ">
                                         <div class="card" style="height: 200px;">
                                             <div class="card-body">
                                                 <figure>
                                                     <blockquote class="blockquote">
-                                                        <h4 class="card-title mb-1">CV. SUMBER PANGAN</h4>
+                                                        <h4 class="card-title mb-1">{{$data->holding_name}}</h4>
                                                     </blockquote>
                                                     <figcaption class="blockquote-footer" style="margin: 0;">
                                                         Lokasi <cite title="Source Title">Pabrik</cite>
+                                                        @if($data->holding_category=='SP')
                                                         <p style="margin: 0;"><i class="mdi mdi-google-maps"></i>Kabupaten Kediri, Jawa Timur</p>
-                                                    </figcaption>
-                                                </figure>
-                                            </div>
-                                            <img src="{{asset('admin/assets/img/icons/misc/triangle-light.png')}}" class="scaleX-n1-rtl position-absolute bottom-0 end-0" width="166" alt="triangle background" data-app-light-img="icons/misc/triangle-light.png" data-app-dark-img="icons/misc/triangle-dark.png" />
-                                            <img src="{{ asset('holding/assets/img/logosp.png') }}" class="logo scaleX-n1-rtl position-absolute bottom-0 end-0 me-4 pb-2" alt="view sales" />
-                                        </div>
-                                    </div>
-                                </a>
-                            </div>
-                            <div class="col-md-4 col-lg-4">
-                                <a href="@if(Auth::user()->is_admin =='hrd'){{ url('hrd/dashboard/holding/sps') }} @else {{ url('dashboard/holding/sps') }} @endif">
-                                    <div class="fixed-content" style="border-radius: 10px; box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19); ">
-                                        <div class="card" style="height: 200px; display: block;">
-                                            <div class="card-body">
-                                                <figure>
-                                                    <blockquote class="blockquote">
-                                                        <h4 class="card-title mb-1">PT. SURYA PANGAN SEMESTA</h4>
-                                                    </blockquote>
-                                                    <figcaption class="location blockquote-footer" style="margin: 0;">
-                                                        Lokasi <cite title="Source Title">Pabrik</cite>
+                                                        @elseif($data->holding_category=='SPS')
                                                         <p style="margin: 0;"><i class="mdi mdi-google-maps"></i>Kabupaten Kediri, Jawa Timur</p>
                                                         <p style="margin: 0;"><i class="mdi mdi-google-maps"></i>Kabupaten Ngawi, Jawa Timur</p>
                                                         <p style="margin: 0;"><i class="mdi mdi-google-maps"></i>Kabupaten Subang, Jawa Barat</p>
-                                                    </figcaption>
-                                                </figure>
-                                            </div>
-                                            <img src="{{asset('admin/assets/img/icons/misc/triangle-light.png')}}" class="scaleX-n1-rtl position-absolute bottom-0 end-0" width="166" alt="triangle background" data-app-light-img="icons/misc/triangle-light.png" data-app-dark-img="icons/misc/triangle-dark.png" />
-                                            <img src="{{ asset('holding/assets/img/logosps.png') }}" class="logo scaleX-n1-rtl position-absolute bottom-0 end-0 me-4 pb-2" width="150" alt="view sales" />
-                                        </div>
-                                    </div>
-                                </a>
-                            </div>
-                            <div class="col-md-4 col-lg-4">
-                                <a href="@if(Auth::user()->is_admin =='hrd') {{ url('hrd/dashboard/holding/sip') }} @else {{ url('dashboard/holding/sip') }} @endif">
-                                    <div class="fixed-content" style="border-radius: 10px; box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19); ">
-                                        <div class="card" style="height: 200px; display: block;">
-                                            <div class="card-body">
-                                                <figure>
-                                                    <blockquote class="blockquote">
-                                                        <h4 class="card-title mb-1">CV. SURYA INTI PANGAN</h4>
-                                                    </blockquote>
-                                                    <figcaption class="blockquote-footer" style="margin: 0;">
-                                                        Lokasi <cite title="Source Title">Pabrik</cite>
+                                                        @else
                                                         <p><i class="mdi mdi-google-maps"></i>Makasar, Sulawesi Utara</p>
+                                                        @endif
                                                     </figcaption>
                                                 </figure>
                                             </div>
                                             <img src="{{asset('admin/assets/img/icons/misc/triangle-light.png')}}" class="scaleX-n1-rtl position-absolute bottom-0 end-0" width="166" alt="triangle background" data-app-light-img="icons/misc/triangle-light.png" data-app-dark-img="icons/misc/triangle-dark.png" />
-                                            <img src="{{ asset('holding/assets/img/logosipbaru.png') }}" class="logo scaleX-n1-rtl position-absolute bottom-0 end-0 me-4 pb-2" width="200" alt="view sales" />
+                                            <img src="{{ asset('holding/assets/img/'.$data->holding_image) }}" class="logo scaleX-n1-rtl position-absolute bottom-0 end-0 me-4 pb-2" alt="view sales" />
                                         </div>
                                     </div>
                                 </a>
                             </div>
+                            @endforeach
                         </div>
                     </div>
 
@@ -770,7 +736,7 @@
         <script src="{{ asset('assets/assets_users/vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
         <script src="{{asset('assets/assets_users/vendor/swiper/swiper-bundle.min.js')}}"></script>
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
-        <script src="{{ asset('/sw.js') }}"></script>
+        <!-- <script src="{{ asset('/sw.js') }}"></script> -->
         <script>
             if ("serviceWorker" in navigator) {
                 // Register a service worker hosted at the root of the

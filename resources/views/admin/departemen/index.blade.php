@@ -25,7 +25,7 @@
                     <button type="button" class="btn btn-sm btn-success waves-effect waves-light" data-bs-toggle="modal" data-bs-target="#modal_import_departemen"><i class="menu-icon tf-icons mdi mdi-file-excel"></i>Import</button>
                     <div class="modal fade" id="modal_tambah_shift" data-bs-backdrop="static" tabindex="-1">
                         <div class="modal-dialog modal-dialog-scrollable">
-                            <form method="post" action="@if(Auth::user()->is_admin=='hrd'){{ url('/hrd/departemen/insert/'.$holding) }}@else{{ url('/departemen/insert/'.$holding) }}@endif" class="modal-content" enctype="multipart/form-data">
+                            <form method="post" action="@if(Auth::user()->is_admin=='hrd'){{ url('/hrd/departemen/insert/'.$holding->holding_code) }}@else{{ url('/departemen/insert/'.$holding->holding_code) }}@endif" class="modal-content" enctype="multipart/form-data">
                                 @csrf
                                 <div class="modal-header">
                                     <h4 class="modal-title" id="backDropModalTitle">Tambah Departemen</h4>
@@ -57,7 +57,7 @@
                     </div>
                     <div class="modal fade" id="modal_import_departemen" data-bs-backdrop="static" tabindex="-1">
                         <div class="modal-dialog modal-dialog-scrollable modal-lg">
-                            <form method="post" action="@if(Auth::user()->is_admin=='hrd'){{ url('/hrd/departemen/ImportDepartemen/'.$holding) }}@else{{ url('/departemen/ImportDepartemen/'.$holding) }}@endif" class="modal-content" enctype="multipart/form-data">
+                            <form method="post" action="@if(Auth::user()->is_admin=='hrd'){{ url('/hrd/departemen/ImportDepartemen/'.$holding->holding_code) }}@else{{ url('/departemen/ImportDepartemen/'.$holding->holding_code) }}@endif" class="modal-content" enctype="multipart/form-data">
                                 @csrf
                                 <div class="modal-header">
                                     <h4 class="modal-title" id="backDropModalTitle">Import Departemen</h4>
@@ -88,7 +88,7 @@
                     <!-- modal edit -->
                     <div class="modal fade" id="modal_edit_shift" data-bs-backdrop="static" tabindex="-1">
                         <div class="modal-dialog modal-dialog-scrollable">
-                            <form method="post" action="@if(Auth::user()->is_admin=='hrd'){{ url('/hrd/departemen/update/'.$holding) }}@else{{ url('/departemen/update/'.$holding) }}@endif" class="modal-content" enctype="multipart/form-data">
+                            <form method="post" action="@if(Auth::user()->is_admin=='hrd'){{ url('/hrd/departemen/update/'.$holding->holding_code) }}@else{{ url('/departemen/update/'.$holding->holding_code) }}@endif" class="modal-content" enctype="multipart/form-data">
                                 @csrf
                                 <div class="modal-header">
                                     <h4 class="modal-title" id="backDropModalTitle">Edit Shift</h4>
@@ -322,7 +322,7 @@
         let id = $(this).data('id');
         let holding = $(this).data("holding");
         let url = "@if(Auth::user()->is_admin=='hrd'){{ url('hrd/departemen/divisi-datatable') }}@else{{ url('departemen/divisi-datatable') }}@endif" + '/' + id + '/' + holding;
-        // console.log(url);
+        console.log(url);
         var table1 = $('#table_lihat_divisi').DataTable({
             "scrollY": true,
             "scrollX": true,

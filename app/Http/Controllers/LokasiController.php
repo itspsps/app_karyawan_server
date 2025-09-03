@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Lokasi;
 use Illuminate\Http\Request;
 use App\Models\ActivityLog;
+use App\Models\Holding;
+use App\Models\Site;
 use App\Models\Titik;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Auth;
@@ -13,82 +15,94 @@ use Yajra\DataTables\Facades\DataTables;
 
 class LokasiController extends Controller
 {
-    public function index()
+    public function index($holding)
     {
-        $holding = request()->segment(count(request()->segments()));
+        $holding = Holding::where('holding_code', $holding)->first();
         return view('admin.lokasi.index', [
             'title' => 'Setting Lokasi Kantor',
             'holding' => $holding,
-            'data_lokasi' => Lokasi::where('kategori_kantor', $holding)->get(),
+            'data_site' => Site::where('site_holding_category', $holding->id)->get(),
             'lokasi' => Lokasi::all()
         ]);
     }
     public function get_lokasi(Request $request)
     {
         // dd($request->all());
-        $data = Lokasi::where('kategori_kantor', $request->holding)->where('lokasi_kantor', $request->value)->first();
+        $data = Site::where('id', $request->value)->first();
+        // dd($data);
         return json_encode($data);
     }
-    public function tambah_lokasi()
+    public function tambah_lokasi($holding)
     {
-        $holding = request()->segment(count(request()->segments()));
-        $lokasi_kantor = Lokasi::where('kategori_kantor', $holding)->get();
+        $holding = Holding::where('holding_code', $holding)->first();
+        $site = Site::where('site_holding_category', $holding->id)->get();
         return view('admin.lokasi.tambah_lokasi', [
             'title' => 'Setting Lokasi Kantor',
             'holding' => $holding,
-            'lokasi_kantor' => $lokasi_kantor,
-            'data_lokasi' => Lokasi::where('kategori_kantor', $holding)->get(),
-            'lokasi' => Lokasi::all()
+            'site' => $site,
+            'data_lokasi' => Site::where('site_holding_category', $holding->id)->get(),
+            'lokasi' => Site::all()
         ]);
     }
-    public function datatable(Request $request)
+    public function datatable($holding)
     {
-        $holding = request()->segment(count(request()->segments()));
+        $holding = Holding::where('holding_code', $holding)->first();
         // $table = Titik::get();
-        $table = Titik::Join('lokasis', 'lokasis.id', 'titiks.lokasi_id')->where('lokasis.kategori_kantor', $holding)
-            ->select('titiks.*', 'lokasis.lokasi_kantor')
-            ->get();
+        $table = Lokasi::with(['Site' => function ($query) use ($holding) {
+            $query->where('site_holding_category', $holding->id);
+        }])->whereHas('Site', function ($query) use ($holding) {
+            $query->where('site_holding_category', $holding->id);
+        })->get();
         // dd($table);
         if (request()->ajax()) {
             return DataTables::of($table)
-                ->addColumn('lokasi_kantor', function ($row) use ($holding) {
+                ->addColumn('nama_lokasi', function ($row) use ($holding) {
 
-                    return $row->lokasi_kantor;
+                    return $row->nama_lokasi;
+                })
+                ->addColumn('nama_site', function ($row) use ($holding) {
+
+                    return $row->Site->site_name;
+                })
+                ->addColumn('radius_lokasi', function ($row) use ($holding) {
+
+                    return $row->radius_lokasi . ' M';
                 })
 
                 ->addColumn('lihat_maps', function ($row) use ($holding) {
 
-                    $btn = '<button id="btn_lihat_lokasi" data-id="' . $row->id . '" data-lokasi="' . $row->lokasi_kantor . '" data-nama_titik="' . $row->nama_titik . '" data-lat="' . $row->lat_titik . '" data-long="' . $row->long_titik . '"  data-radius="' . $row->radius_titik . '" data-holding="' . $holding . '" type="button" class="btn btn-sm btn-success "><i class="menu-icon tf-icons mdi mdi-file-image-marker-outline"></i>Lihat Maps</button>';
+                    $btn = '<button id="btn_lihat_lokasi" data-id="' . $row->id . '" data-site="' . $row->Site->site_name . '" data-lokasi="' . $row->nama_lokasi . '" data-lat="' . $row->lat_lokasi . '" data-long="' . $row->long_lokasi . '"  data-radius="' . $row->radius_lokasi . '" data-holding="' . $holding->id . '" type="button" class="btn btn-sm btn-success "><i class="menu-icon tf-icons mdi mdi-file-image-marker-outline"></i>Lihat Maps</button>';
                     return $btn;
                 })
                 ->addColumn('option', function ($row) use ($holding) {
 
-                    $btn = '<button id="btn_edit_lokasi" data-id="' . $row->id . '" data-lokasi="' . $row->lokasi_kantor . '" data-nama_titik="' . $row->nama_titik . '" data-lat="' . $row->lat_titik . '" data-long="' . $row->long_titik . '"  data-radius="' . $row->radius_titik . '" data-holding="' . $holding . '" type="button" class="btn btn-icon btn-warning waves-effect waves-light"><span class="tf-icons mdi mdi-pencil-outline"></span></button>';
-                    $btn = $btn . '<button type="button" id="btn_delete_lokasi" data-id="' . $row->id . '" data-holding="' . $holding . '" class="btn btn-icon btn-danger waves-effect waves-light"><span class="tf-icons mdi mdi-delete-outline"></span></button>';
+                    $btn = '<button id="btn_edit_lokasi" data-sitename="' . $row->Site->site_name . '" data-id="' . $row->id . '" data-lokasi="' . $row->nama_lokasi . '" data-site="' . $row->site_id . '" data-lat="' . $row->lat_lokasi . '" data-long="' . $row->long_lokasi . '"  data-radius="' . $row->radius_lokasi . '" data-holding="' . $holding->id . '" type="button" class="btn btn-icon btn-warning waves-effect waves-light"><span class="tf-icons mdi mdi-pencil-outline"></span></button>';
+                    $btn = $btn . '<button type="button" id="btn_delete_lokasi" data-id="' . $row->id . '" data-holding="' . $holding->id . '" class="btn btn-icon btn-danger waves-effect waves-light"><span class="tf-icons mdi mdi-delete-outline"></span></button>';
                     return $btn;
                 })
-                ->rawColumns(['lokasi_kantor', 'lihat_maps', 'nama_titik', 'lat_titik', 'long_titik', 'radius_titik', 'option'])
+                ->rawColumns(['nama_lokasi', 'nama_site', 'radius_lokasi', 'lihat_maps', 'lat_lokasi', 'long_lokasi', 'radius_lokasi', 'option'])
                 ->make(true);
         }
     }
-    public function addLokasi(Request $request)
+    public function addLokasi(Request $request, $holding)
     {
         // dd($request->all());
-        $holding = request()->segment(count(request()->segments()));
+        $holding = Holding::where('holding_code', $holding)->first();
+        // dd($holding, $holding->holding_code);
         $validatedData = $request->validate([
-            'lokasi_kantor' => 'required',
-            'nama_titik' => 'required',
-            'lat_titik' => 'required',
-            'long_titik' => 'required',
-            'radius' => 'required'
+            'nama_lokasi' => 'required',
+            'lat_lokasi' => 'required',
+            'long_lokasi' => 'required',
+            'radius' => 'required',
+            'site' => 'required'
         ]);
-        Titik::create(
+        Lokasi::create(
             [
-                'lokasi_id' => Lokasi::where('lokasi_kantor', $validatedData['lokasi_kantor'])->value('id'),
-                'nama_titik' => $validatedData['nama_titik'],
-                'lat_titik' => $validatedData['lat_titik'],
-                'long_titik' => $validatedData['long_titik'],
-                'radius_titik' => $validatedData['radius'],
+                'site_id' => $validatedData['site'],
+                'nama_lokasi' => $validatedData['nama_lokasi'],
+                'lat_lokasi' => $validatedData['lat_lokasi'],
+                'long_lokasi' => $validatedData['long_lokasi'],
+                'radius_lokasi' => $validatedData['radius'],
             ]
         );
         ActivityLog::create([
@@ -96,36 +110,39 @@ class LokasiController extends Controller
             'activity' => 'Tambah',
             'description' => 'Menambah data Titik lokasi kantor'
         ]);
-        return redirect('/lokasi-kantor/' . $holding)->with('success', 'Lokasi Berhasil Ditambahkan');
+        return redirect('/lokasi/' . $holding->holding_code)->with('success', 'Lokasi Berhasil Ditambahkan');
     }
-    public function updateLokasi(Request $request)
+    public function updateLokasi(Request $request, $holding)
     {
         // dd($request->all());
-        $holding = request()->segment(count(request()->segments()));
         $validatedData = $request->validate([
-            'lokasi_kantor_update' => 'required',
-            'nama_titik_update' => 'required',
-            'kategori_kantor_update' => 'required',
-            'lat_kantor_update' => 'required',
-            'long_kantor_update' => 'required',
-            'radius_update' => 'required'
+            'nama_lokasi_update' => 'required',
+            'long_lokasi_update' => 'required',
+            'lat_lokasi_update' => 'required',
+            'radius_update' => 'required',
+            'site_update' => 'required'
         ]);
-
-        Titik::where('id', $request->id_lokasi)->update(
-            [
-                'nama_titik' => $validatedData['nama_titik_update'],
-                'lokasi_id' => Lokasi::where('lokasi_kantor', $validatedData['lokasi_kantor_update'])->value('id'),
-                'lat_titik' => $validatedData['lat_kantor_update'],
-                'long_titik' => $validatedData['long_kantor_update'],
-                'radius_titik' => $validatedData['radius_update'],
-            ]
-        );
-        ActivityLog::create([
-            'user_id' => Auth::user()->id,
-            'activity' => 'update',
-            'description' => 'Mengubah data lokasi kantor'
-        ]);
-        return redirect('/lokasi-kantor/' . $holding)->with('success', 'Lokasi Berhasil Diupdate');
+        $cek = Lokasi::where('id', $request->id_lokasi)->first();
+        // dd($cek);
+        if (!$cek) {
+            return redirect()->back()->with('error', 'Lokasi tidak ditemukan');
+        } else {
+            Lokasi::where('id', $request->id_lokasi)->update(
+                [
+                    'nama_lokasi' => $validatedData['nama_lokasi_update'],
+                    'site_id' => Site::where('id', $validatedData['site_update'])->value('id'),
+                    'lat_lokasi' => $validatedData['lat_lokasi_update'],
+                    'long_lokasi' => $validatedData['long_lokasi_update'],
+                    'radius_lokasi' => $validatedData['radius_update'],
+                ]
+            );
+            ActivityLog::create([
+                'user_id' => Auth::user()->id,
+                'activity' => 'update',
+                'description' => 'Mengubah data lokasi kantor'
+            ]);
+            return redirect()->back()->with('success', 'Lokasi Berhasil Diupdate');
+        }
     }
 
     public function deleteLokasi($id)
@@ -135,7 +152,7 @@ class LokasiController extends Controller
     }
     public function updateRadiusLokasi(Request $request, $id)
     {
-        $holding = request()->segment(count(request()->segments()));
+        $holding = Holding::where('holding_code', $holding)->first();
         $validatedData = $request->validate([
             'radius' => 'required',
         ]);

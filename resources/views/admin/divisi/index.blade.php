@@ -25,7 +25,7 @@
                     <button type="button" class="btn btn-sm btn-success waves-effect waves-light" data-bs-toggle="modal" data-bs-target="#modal_import_divisi"><i class="menu-icon tf-icons mdi mdi-file-excel"></i>Import</button>
                     <div class="modal fade" id="modal_tambah_divisi" data-bs-backdrop="static" tabindex="-1">
                         <div class="modal-dialog modal-dialog-scrollable">
-                            <form method="post" action="@if(Auth::user()->is_admin=='hrd'){{ url('/hrd/divisi/insert/'.$holding) }}@else{{ url('/divisi/insert/'.$holding) }}@endif" class="modal-content" enctype="multipart/form-data">
+                            <form method="post" action="@if(Auth::user()->is_admin=='hrd'){{ url('/hrd/divisi/insert/'.$holding->holding_code) }}@else{{ url('/divisi/insert/'.$holding->holding_code) }}@endif" class="modal-content" enctype="multipart/form-data">
                                 @csrf
                                 <div class="modal-header">
                                     <h4 class="modal-title" id="backDropModalTitle">Tambah Divisi</h4>
@@ -76,7 +76,7 @@
                     </div>
                     <div class="modal fade" id="modal_import_divisi" data-bs-backdrop="static" tabindex="-1">
                         <div class="modal-dialog modal-dialog-scrollable modal-lg">
-                            <form method="post" action="@if(Auth::user()->is_admin=='hrd'){{ url('/hrd/divisi/ImportDivisi/'.$holding) }}@else{{ url('/divisi/ImportDivisi/'.$holding) }}@endif" class="modal-content" enctype="multipart/form-data">
+                            <form method="post" action="@if(Auth::user()->is_admin=='hrd'){{ url('/hrd/divisi/ImportDivisi/'.$holding->holding_code) }}@else{{ url('/divisi/ImportDivisi/'.$holding->holding_code) }}@endif" class="modal-content" enctype="multipart/form-data">
                                 @csrf
                                 <div class="modal-header">
                                     <h4 class="modal-title" id="backDropModalTitle">Import Divisi</h4>
@@ -107,7 +107,7 @@
                     <!-- modal edit -->
                     <div class="modal fade" id="modal_edit_divisi" data-bs-backdrop="static" tabindex="-1">
                         <div class="modal-dialog modal-dialog-scrollable">
-                            <form method="post" action="@if(Auth::user()->is_admin=='hrd'){{ url('/hrd/divisi/update/'.$holding) }}@else{{ url('/divisi/update/'.$holding) }}@endif" class="modal-content" enctype="multipart/form-data">
+                            <form method="post" action="@if(Auth::user()->is_admin=='hrd'){{ url('/hrd/divisi/update/'.$holding->holding_code) }}@else{{ url('/divisi/update/'.$holding->holding_code) }}@endif" class="modal-content" enctype="multipart/form-data">
                                 @csrf
                                 <div class="modal-header">
                                     <h4 class="modal-title" id="backDropModalTitle">Edit Divisi</h4>

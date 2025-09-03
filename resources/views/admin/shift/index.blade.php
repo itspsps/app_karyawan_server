@@ -99,7 +99,7 @@
                     <!-- modal edit -->
                     <div class="modal fade" id="modal_edit_shift" data-bs-backdrop="static" tabindex="-1">
                         <div class="modal-dialog modal-dialog-scrollable">
-                            <form method="post" action="@if(Auth::user()->is_admin =='hrd'){{ url('hrd/shift/update/'.$holding) }}@else {{ url('/shift/update/'.$holding) }} @endif" class="modal-content" enctype="multipart/form-data">
+                            <form method="post" action="@if(Auth::user()->is_admin =='hrd'){{ url('hrd/shift/update/'.$holding->id) }}@else {{ url('/shift/update/'.$holding->id) }} @endif" class="modal-content" enctype="multipart/form-data">
                                 @csrf
                                 <div class="modal-header">
                                     <h4 class="modal-title" id="backDropModalTitle">Edit Shift</h4>
@@ -256,7 +256,7 @@
     $(document).on('click', '#btn_delete_shift', function() {
         var id = $(this).data('id');
         let holding = $(this).data("holding");
-        console.log(id);
+        console.log(id, holding);
         Swal.fire({
             title: 'Apakah kamu yakin?',
             text: "Kamu tidak dapat mengembalikan data ini",
@@ -274,12 +274,21 @@
                         alert('Something is wrong');
                     },
                     success: function(data) {
-                        Swal.fire({
-                            title: 'Terhapus!',
-                            text: 'Data anda berhasil di hapus.',
-                            icon: 'success',
-                            timer: 1500
-                        })
+                        if (data.code === 200) {
+                            Swal.fire({
+                                title: 'Deleted!',
+                                text: data.message,
+                                icon: 'success',
+                                timer: 4500
+                            });
+                        } else {
+                            Swal.fire({
+                                title: 'Error!',
+                                text: data.message,
+                                icon: 'error',
+                                timer: 4500
+                            });
+                        }
                         $('#table_shift').DataTable().ajax.reload();
                     }
                 });

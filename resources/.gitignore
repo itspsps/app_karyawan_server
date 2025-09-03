@@ -1,0 +1,55 @@
+# ==================================
+# Laravel / PHP
+# ==================================
+/vendor/
+/node_modules/
+/public/storage
+/storage/*.key
+/storage/framework/*
+/storage/logs/*
+/bootstrap/cache/
+.env
+.env.*
+.phpunit.result.cache
+
+# ==================================
+# Composer
+# ==================================
+composer.lock
+
+# ==================================
+# Visual Studio / .NET
+# ==================================
+bin/
+obj/
+.vs/
+*.user
+*.suo
+*.db
+*.db-shm
+*.db-wal
+
+# Cache / Backup
+*.cache
+*.bak
+*.swp
+*.slnx.sqlite
+
+# ==================================
+# NuGet / Packages
+# ==================================
+/packages/
+/*.nupkg
+project.lock.json
+project.fragment.lock.json
+
+# ==================================
+# Logs
+# ==================================
+*.log
+
+# ==================================
+# Misc
+# ==================================
+Thumbs.db
+.DS_Store

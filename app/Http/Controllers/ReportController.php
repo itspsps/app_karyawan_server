@@ -2,30 +2,36 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\AttendanceLog;
 use App\Models\Bagian;
 use App\Models\Departemen;
 use App\Models\Divisi;
+use App\Models\FingerUser;
+use App\Models\Holding;
 use App\Models\Jabatan;
 use App\Models\Karyawan;
 use App\Models\MappingShift;
+use App\Models\SolutionUser;
+use App\Models\User;
 use Carbon\Carbon;
 use Carbon\CarbonPeriod;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Facades\Excel;
+use ParagonIE\Sodium\Core\Curve25519\H;
 use Yajra\DataTables\Facades\DataTables;
 
 class ReportController extends Controller
 {
-    public function index(Request $request)
+    public function index(Request $request, $holding)
     {
         // dd($request->all());
 
-        $holding = request()->segment(count(request()->segments()));
+        $holding = Holding::where('holding_code', $holding)->first();
         $departemen = Departemen::where('holding', $holding)->orderBy('nama_departemen', 'ASC')->get();
         $start_date = Carbon::now()->startOfMonth();
         $end_date = Carbon::now()->endOfMonth();
         $period = CarbonPeriod::create($start_date, $end_date);
-
         foreach ($period as $date) {
             $data_columns[] = ['data' => 'tanggal_' . $date->format('dmY'), 'name' => 'tanggal_' . $date->format('dmY')];
             $data_columns_header[] = '<th>' . $date->format('d/m/Y') . '</th>';
@@ -41,11 +47,11 @@ class ReportController extends Controller
         // $header1 = str_replace(['["', '"]','","'], '', json_encode($header));
         // $data_columns_header = str_replace(['\/'], "/", $header1);
 
-        // dd($header1);
         // $datacolumn = [];
         // dd($datacolumn);
         return view('admin.report.index', [
             'holding' => $holding,
+            // 'data_finger' => $data_finger,
             'departemen' => $departemen,
             'period' => $period,
             'start_date' => $start_date,
@@ -55,9 +61,10 @@ class ReportController extends Controller
             'count_period' => $count_period,
         ]);
     }
-    public function index_kedisiplinan(Request $request)
+    public function index_kedisiplinan(Request $request, $holding)
     {
-        $holding = request()->segment(count(request()->segments()));
+        $holding = Holding::where('holding_code', $holding)->first();
+        // dd($holding);
         date_default_timezone_set('Asia/Jakarta');
 
         // $bulan = date('m');
@@ -77,8 +84,8 @@ class ReportController extends Controller
             $tanggal_akhir = $request["akhir"];
             $title = "Rekap Data Absensi Tanggal " . $tanggal_mulai . " s/d " . $tanggal_akhir;
         }
-        $departemen = Departemen::where('holding', $holding)->orderBy('nama_departemen', 'ASC')->get();
-        // dd($departemen);
+        $departemen = Departemen::where('holding', $holding->id)->orderBy('nama_departemen', 'ASC')->get();
+        // dd($holding->id);
         // dd(Carbon::createFromFormat('H:i:s', '17:12:00'));
         return view('admin.report.index_kedisiplinan', [
             'title' => $title,
@@ -97,11 +104,19 @@ class ReportController extends Controller
         $period = CarbonPeriod::create($start_date, $end_date);
         foreach ($period as $date) {
             $data_columns_header[] = ['header' => $date->format('d/m/Y')];
-            $data_columns[] = ['data' => 'tanggal_' . $date->format('dmY'), 'name' => 'tanggal_' . $date->format('dmY')];
+            $data_columns[] = [
+                'data' => 'tanggal_' . $date->format('dmY'),
+                'name' => 'tanggal_' . $date->format('dmY')
+            ];
         }
         $count_period = count($period);
 
-        return array('data_columns_header' => $data_columns_header, 'count_period' => $count_period, 'datacolumn' => $data_columns, 'filter_month' => $request->filter_month);
+        return array(
+            'data_columns_header' => $data_columns_header,
+            'count_period' => $count_period,
+            'datacolumn' => $data_columns,
+            'filter_month' => $request->filter_month
+        );
     }
     public function get_columns_kedisiplinan(Request $request)
     {
@@ -115,7 +130,12 @@ class ReportController extends Controller
         }
         $count_period = count($period);
 
-        return array('data_columns_header' => $data_columns_header, 'count_period' => $count_period, 'datacolumn' => $data_columns, 'filter_month' => $request->filter_month);
+        return array(
+            'data_columns_header' => $data_columns_header,
+            'count_period' => $count_period,
+            'datacolumn' => $data_columns,
+            'filter_month' => $request->filter_month
+        );
     }
     public function get_filter_month(Request $request)
     {
@@ -130,10 +150,10 @@ class ReportController extends Controller
         $count_period = count($period);
         return array('data_columns_header' => $data_columns_header, 'count_period' => $count_period, 'datacolumn' => $data_columns, 'filter_month' => $request->filter_month);
     }
-    public function datatable_kedisiplinan(Request $request)
+    public function datatable_kedisiplinan(Request $request, $holding)
     {
         // dd($request->all());
-        $holding = request()->segment(count(request()->segments()));
+        $holding = Holding::where('holding_code', $holding)->first();
         // if (request()->ajax()) {
         $now = Carbon::parse($request->filter_month)->startOfMonth();
         $now1 = Carbon::parse($request->filter_month)->endOfMonth();
@@ -150,7 +170,7 @@ class ReportController extends Controller
                                 ->where('divisi_id', $request->divisi_filter)
                                 ->where('bagian_id', $request->bagian_filter)
                                 ->where('jabatan_id', $request->jabatan_filter)
-                                ->where('kontrak_kerja', $holding)
+                                ->where('kontrak_kerja', $holding->id)
                                 ->where('kategori', 'Karyawan Bulanan')
                                 ->where('status_aktif', 'AKTIF')
                                 ->select('karyawans.name', 'karyawans.id', 'karyawans.nomor_identitas_karyawan')
@@ -160,7 +180,7 @@ class ReportController extends Controller
                             $table = Karyawan::where('dept_id', $request->departemen_filter)
                                 ->where('divisi_id', $request->divisi_filter)
                                 ->where('bagian_id', $request->bagian_filter)
-                                ->where('kontrak_kerja', $holding)
+                                ->where('kontrak_kerja', $holding->id)
                                 ->where('kategori', 'Karyawan Bulanan')
                                 ->where('status_aktif', 'AKTIF')
                                 ->select('karyawans.name', 'karyawans.id', 'karyawans.nomor_identitas_karyawan')
@@ -170,7 +190,7 @@ class ReportController extends Controller
                     } else {
                         $table = Karyawan::where('dept_id', $request->departemen_filter)
                             ->where('divisi_id', $request->divisi_filter)
-                            ->where('kontrak_kerja', $holding)
+                            ->where('kontrak_kerja', $holding->id)
                             ->where('kategori', 'Karyawan Bulanan')
                             ->where('status_aktif', 'AKTIF')
                             ->select('karyawans.name', 'karyawans.id', 'karyawans.nomor_identitas_karyawan')
@@ -179,7 +199,7 @@ class ReportController extends Controller
                     }
                 } else {
                     $table = Karyawan::where('dept_id', $request->departemen_filter)
-                        ->where('kontrak_kerja', $holding)
+                        ->where('kontrak_kerja', $holding->id)
                         ->where('kategori', 'Karyawan Bulanan')
                         ->where('status_aktif', 'AKTIF')
                         ->select('karyawans.name', 'karyawans.id', 'karyawans.nomor_identitas_karyawan')
@@ -189,48 +209,113 @@ class ReportController extends Controller
             } else {
                 // dd($now, $now1);
                 // dd($tgl_mulai, $tgl_selesai);
-                $table = Karyawan::where('kontrak_kerja', $holding)
+                $table = Karyawan::where('kontrak_kerja', $holding->id)
                     ->where('kategori', 'Karyawan Bulanan')
                     ->where('status_aktif', 'AKTIF')
+                    // ->where('nomor_identitas_karyawan', '2002302270999')
                     ->select('karyawans.name', 'karyawans.id', 'karyawans.nomor_identitas_karyawan')
                     ->orderBy('karyawans.name', 'ASC')
                     // ->limit(6)
                     ->get();
                 // dd($table);
             }
-            $column = DataTables::of($table);
+            $absensi = DB::connection('solution_access')
+                ->table('CHECKINOUT as c')
+                ->join('USERINFO as u', 'c.USERID', '=', 'u.USERID')
+                ->select('c.*', 'u.USERID', 'u.Badgenumber', 'u.Name')
+                ->where('c.SENSORID', '105')
+                ->whereBetween('c.CHECKTIME', [$now, $now1])
+                ->orderByDesc('c.CHECKTIME')
+                ->get();
+            $absensiGrouped = collect($absensi)->groupBy('Badgenumber');
+
+            // 4. Mapping: masukkan absensi ke masing-masing karyawan
+
+
+            $final = $table->map(function ($k) use ($absensiGrouped) {
+                $nik = $k->nomor_identitas_karyawan;
+
+                $logs = $absensiGrouped[$nik] ?? collect([]);
+
+                // group log absensi berdasarkan tanggal (Y-m-d)
+                $uniqueDays = collect($logs)->groupBy(function ($a) {
+                    return Carbon::parse($a->CHECKTIME)->format('Y-m-d');
+                });
+
+                // hitung berapa hari unik (kehadiran)
+                $k->jumlah_hadir = $uniqueDays->count();
+
+                // hitung telat (jam masuk > 07:50)
+                $countTelat = 0;
+                $countTelatRingan  = 0;
+                $countTepatWaktu = 0;
+
+                foreach ($uniqueDays as $tanggal => $dayLogs) {
+                    $checkIn = Carbon::parse($dayLogs->min('CHECKTIME'));
+
+                    // bikin threshold dengan tanggal yang sama
+                    $threshold = Carbon::parse($checkIn->format('Y-m-d') . ' 07:50:00');
+                    $threshold1 = Carbon::parse($checkIn->format('Y-m-d') . ' 08:00:00');
+
+                    if ($checkIn->gt($threshold) && $checkIn->lt($threshold1)) {
+                        $countTelatRingan++;
+                    } else if ($checkIn->gte($threshold1)) {
+                        $countTelat++;
+                    } else {
+                        $countTepatWaktu++;
+                    }
+                }
+
+                $k->telat = $countTelat;
+                $k->tepat_waktu  = $countTepatWaktu;
+                $k->telat_ringan  = $countTelatRingan;
+                $k->absensi = $uniqueDays;
+                return $k;
+            });
+            // dd($final);
+            $column = DataTables::of($final);
             foreach ($period as $date) {
                 $column->addColumn('tanggal_' . $date->format('dmY'), function ($row) use ($date) {
-                    // $id_karyawan = Karyawan::where('nomor_identitas_karyawan', $row->nomor_identitas_karyawan)->value('id');
-                    $jumlah_kehadiran = MappingShift::where('user_id', $row->id)
-                        ->where('tanggal_masuk', $date->format('Y-m-d'))->value('status_absen');
-                    if ($jumlah_kehadiran == '') {
-                        return '-';
-                    } else {
-                        return $jumlah_kehadiran;
+                    // ambil log absensi pada tanggal tertentu
+                    $logs = $row->absensi[$date->format('Y-m-d')] ?? collect([]);
+                    $threshold = '07:50';
+                    $threshold1 = '08:00';
+                    if ($logs->isNotEmpty()) {
+                        $checkIn  = Carbon::parse($logs->min('CHECKTIME'))->format('H:i');
+                        $checkOut = Carbon::parse($logs->max('CHECKTIME'))->format('H:i');
+
+                        // kalau hanya ada 1 absen (masuk == keluar)
+                        if ($checkIn === $checkOut) {
+                            $checkOut = '<p style="color:red;">Kosong</p>';
+                        }
+                        if ($checkIn > $threshold && $checkIn < $threshold1) {
+                            $checkIn = '<span class="badge bg-warning">' . $checkIn . '</span>';
+                        } else if ($checkIn > $threshold1) {
+                            $checkIn = '<span class="badge bg-danger">' . $checkIn . '</span>';
+                        }
+                        return "(" . $checkIn . ' - ' . $checkOut . ")";
                     }
+
+                    // kalau tidak ada absensi sama sekali
+                    return '-';
                 });
+
                 $data_tanggal[] = 'tanggal_' . $date->format('dmY');
             }
             $column->addColumn('btn_detail', function ($row) use ($holding) {
-                $btn_detail = '<a id="btn_detail" type="button" href="' . url('rekap-data/detail', ['id' => $row->nomor_identitas_karyawan]) . '/' . $holding . '" class="btn btn-sm btn-info"><i class="menu-icon tf-icons mdi mdi-eye"></i> Detail</a>';
+                $btn_detail = '<a id="btn_detail" type="button" href="' . url('rekap-data/detail', ['id' => $row->nomor_identitas_karyawan]) . '/' . $holding->holding_code . '" class="btn btn-sm btn-info"><i class="menu-icon tf-icons mdi mdi-eye"></i> Detail</a>';
                 return $btn_detail;
             });
-            $column->addColumn('total_hadir_tepat_waktu', function ($row) use ($now, $now1) {
-                // $id_karyawan = Karyawan::where('nomor_identitas_karyawan', $row->nomor_identitas_karyawan)->value('id');
-                $jumlah_hadir_tepat_waktu = MappingShift::where('user_id', $row->id)->whereBetween('tanggal_masuk', [$now, $now1])->where('keterangan_absensi', 'TEPAT WAKTU')->where('status_absen', 'HADIR KERJA')->count();
-                // dd($jumlah_hadir_tepat_waktu);
-                return $jumlah_hadir_tepat_waktu;
+            $column->addColumn('total_hadir_tepat_waktu', function ($row) {
+
+                return $row->tepat_waktu;
             });
-            $column->addColumn('total_hadir_telat_hadir', function ($row) use ($now, $now1) {
-                // $id_karyawan = Karyawan::where('nomor_identitas_karyawan', $row->nomor_identitas_karyawan)->value('id');
-                $jumlah_hadir_telat_hadir = MappingShift::where('user_id', $row->id)->whereBetween('tanggal_masuk', [$now, $now1])->where('status_absen', 'HADIR KERJA')->where('keterangan_absensi', 'TELAT HADIR')->where('telat', '<', '00:10:59')->count();
-                return $jumlah_hadir_telat_hadir;
+            $column->addColumn('total_hadir_telat_hadir', function ($row) {
+
+                return $row->telat_ringan;
             });
-            $column->addColumn('total_hadir_telat_hadir1', function ($row) use ($now, $now1) {
-                // $id_karyawan = Karyawan::where('nomor_identitas_karyawan', $row->nomor_identitas_karyawan)->value('id');
-                $total_hadir_telat_hadir1 = MappingShift::where('user_id', $row->id)->whereBetween('tanggal_masuk', [$now, $now1])->where('status_absen', 'HADIR KERJA')->where('keterangan_absensi', 'TELAT HADIR')->where('telat', '>', '00:10:59')->count();
-                return $total_hadir_telat_hadir1;
+            $column->addColumn('total_hadir_telat_hadir1', function ($row) {
+                return $row->telat;
             });
             $column->addColumn('total_izin_true', function ($row) use ($now, $now1) {
                 // $id_karyawan = Karyawan::where('nomor_identitas_karyawan', $row->nomor_identitas_karyawan)->value('id');
@@ -293,23 +378,97 @@ class ReportController extends Controller
                 $total_semua = ($total_hadir + $total_cuti_true + $total_libur + $total_izin_true + $total_dinas_true + $total_tidak_hadir);
                 return $total_semua;
             });
-            return $column->rawColumns(['total_hadir_tepat_waktu', 'total_libur', 'btn_detail', 'total_hadir_telat_hadir', 'total_hadir_telat_hadir1', 'total_izin_true', 'total_cuti_true', 'total_dinas_true', 'total_pulang_cepat', 'tidak_hadir_kerja', 'total_semua'])
+            $rawCols = array_merge([
+                'total_hadir_tepat_waktu',
+                'total_libur',
+                'btn_detail',
+                'total_hadir_telat_hadir',
+                'total_hadir_telat_hadir1',
+                'total_izin_true',
+                'total_cuti_true',
+                'total_dinas_true',
+                'total_pulang_cepat',
+                'tidak_hadir_kerja',
+                'total_semua'
+            ], $data_tanggal);
+            return $column->rawColumns($rawCols)
                 ->make(true);
         }
     }
-    public function datatable(Request $request)
+    public function datatable_finger(Request $request, $holding)
     {
-        // dd($request->filter_month);
-        $holding = request()->segment(count(request()->segments()));
+        // 1. Ambil semua karyawan dari MySQL
+        $holding = Holding::where('holding_code', $holding)->first();
+        $karyawan  = Karyawan::where('kontrak_kerja', $holding->id)
+            ->where('kategori', 'Karyawan Bulanan')
+            ->where('status_aktif', 'AKTIF')
+            // ->where('nomor_identitas_karyawan', '2002302270999')
+            ->select('karyawans.name', 'karyawans.id', 'karyawans.nomor_identitas_karyawan')
+            ->orderBy('karyawans.name', 'ASC')
+            // ->limit(6)
+            ->get();
+
+        $now = Carbon::parse($request->filter_month)->startOfMonth();
+        $now1 = Carbon::parse($request->filter_month)->endOfMonth();
+        $period = CarbonPeriod::create($now, $now1);
+
+
+        // hasil: setiap karyawan punya field ->absensi (berisi list log absensi)
+        // dd($period);
+        $column = DataTables::of($karyawan);
+        foreach ($period as $date) {
+            $column->addColumn('tanggal_' . $date->format('dmY'), function ($row) use ($date) {
+                // ambil log absensi pada tanggal tertentu
+                $logs = AttendanceLog::where('EnrollNumber', $row->nomor_identitas_karyawan)->whereDate('LogTime', $date->toDateString())->pluck('LogTime');
+
+                if ($logs->isNotEmpty()) {
+                    $minLog = $logs->min();
+                    $maxLog = $logs->max();
+
+                    if ($minLog && $maxLog) {
+                        $checkIn  = Carbon::parse($minLog)->format('H:i');
+                        $checkOut = Carbon::parse($maxLog)->format('H:i');
+
+                        if ($checkIn === $checkOut) {
+                            $checkOut = '<p style="color:red;">Kosong</p>';
+                        }
+
+                        return "(" . $checkIn . ' - ' . $checkOut . ")";
+                    }
+                }
+                return '-';
+            });
+
+            $data_tanggal[] = 'tanggal_' . $date->format('dmY');
+        }
+        $column->addColumn('action', function ($row) {
+            return '<button class="btn btn-sm btn-primary" onclick="edit(' . $row->USERID . ')">Edit</button>';
+        })
+            ->addColumn('jumlah_hadir', function ($row) use ($now, $now1) {
+                $jumlah_hadir = AttendanceLog::where('EnrollNumber', $row->nomor_identitas_karyawan)->whereBetween('LogTime', [$now, $now1])->count();
+                return $jumlah_hadir;
+            })
+            ->addColumn('name', function ($row) {
+                return $row->name;
+            });
+
+        $rawCols = array_merge(['action', 'name', 'jumlah_hadir'], $data_tanggal);
+        return $column->rawColumns($rawCols)
+            ->make('true');
+    }
+    public function datatable(Request $request, $holding)
+    {
+        // dd($request->filter_month, $holding);
+        $holding = Holding::where('holding_code', $holding)->first();
         // if (request()->ajax()) {
 
         $now = Carbon::parse($request->filter_month)->startOfMonth();
         $now1 = Carbon::parse($request->filter_month)->endOfMonth();
         $period = CarbonPeriod::create($now, $now1);
 
-        // dd($now, $now1);
+        // dd($holding);
         // dd($tgl_mulai, $tgl_selesai);
-        $table = Karyawan::where('kontrak_kerja', $holding)
+        $table = Karyawan::where('kontrak_kerja', $holding->id)
             ->where('kategori', 'Karyawan Bulanan')
             ->where('status_aktif', 'AKTIF')
             // ->where('name', 'MUHAMMAD FAIZAL IZAK')
@@ -322,8 +481,8 @@ class ReportController extends Controller
         foreach ($period as $date) {
             $column->addColumn('tanggal_' . $date->format('dmY'), function ($row) use ($date) {
                 // $id_karyawan = Karyawan::where('nomor_identitas_karyawan', $row->nomor_identitas_karyawan)->value('id');
-                $jumlah_kehadiran = MappingShift::where('user_id', $row->id)
-                    ->where('tanggal_masuk', $date->format('Y-m-d'))->value('status_absen');
+                $jumlah_kehadiran = AttendanceLog::where('EnrollNumber', $row->nomor_identitas_karyawan)
+                    ->where('LogTime', $date->format('Y-m-d'))->value('LogTime');
                 if ($jumlah_kehadiran == '') {
                     return '-';
                 } else {

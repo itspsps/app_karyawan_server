@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Shift;
 use App\Models\ActivityLog;
+use App\Models\Holding;
 use Illuminate\Support\Facades\Auth;
 
 use Illuminate\Http\Request;
@@ -16,24 +17,24 @@ class ShiftController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index($holding)
     {
-        $holding = request()->segment(count(request()->segments()));
+        $holding = Holding::where('holding_code', $holding)->first();
         return view('admin.shift.index', [
             'title' => 'Master Shift',
             'holding' => $holding,
             'shift' => Shift::all()
         ]);
     }
-    public function datatable(Request $request)
+    public function datatable(Request $request, $holding)
     {
-        $holding = request()->segment(count(request()->segments()));
+        $holding = Holding::where('holding_code', $holding)->first();
         $table = Shift::all();
         if (request()->ajax()) {
             return DataTables::of($table)
                 ->addColumn('option', function ($row) use ($holding) {
-                    $btn = '<button id="btn_edit_shift" data-id="' . $row->id . '" data-shift="' . $row->nama_shift . '" data-jamkerja="' . $row->nama_jam_kerja . '" data-jammasuk="' . $row->jam_masuk . '" data-jamkeluar="' . $row->jam_keluar . '" data-holding="' . $holding . '" type="button" class="btn btn-icon btn-warning waves-effect waves-light"><span class="tf-icons mdi mdi-pencil-outline"></span></button>';
-                    $btn = $btn . '<button type="button" id="btn_delete_shift" data-id="' . $row->id . '" data-holding="' . $holding . '" class="btn btn-icon btn-danger waves-effect waves-light"><span class="tf-icons mdi mdi-delete-outline"></span></button>';
+                    $btn = '<button id="btn_edit_shift" data-id="' . $row->id . '" data-shift="' . $row->nama_shift . '" data-jamkerja="' . $row->nama_jam_kerja . '" data-jammasuk="' . $row->jam_masuk . '" data-jamkeluar="' . $row->jam_keluar . '" data-holding="' . $holding->id . '" type="button" class="btn btn-icon btn-warning waves-effect waves-light"><span class="tf-icons mdi mdi-pencil-outline"></span></button>';
+                    $btn = $btn . '<button type="button" id="btn_delete_shift" data-id="' . $row->id . '" data-holding="' . $holding->id . '" class="btn btn-icon btn-danger waves-effect waves-light"><span class="tf-icons mdi mdi-delete-outline"></span></button>';
                     return $btn;
                 })
                 ->rawColumns(['option'])
@@ -62,7 +63,7 @@ class ShiftController extends Controller
      */
     public function store(Request $request)
     {
-        $holding = request()->segment(count(request()->segments()));
+        $holding = Holding::where('holding_code', $request->holding)->first();
         $validatedData = $request->validate([
             'nama_shift' => 'required|max:255',
             'jam_masuk' => 'required',
@@ -75,7 +76,10 @@ class ShiftController extends Controller
             'activity' => 'create',
             'description' => 'Menambahkan data master shift dengan nama shift ' . $request->nama_shift
         ]);
-        return redirect('/shift/' . $holding)->with('success', 'data berhasil ditambahkan');
+        return response()->json([
+            'code' => 200,
+            'message' => 'data berhasil ditambahkan'
+        ]);
     }
 
     /**
@@ -112,9 +116,9 @@ class ShiftController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request)
+    public function update(Request $request, $holding)
     {
-        $holding = request()->segment(count(request()->segments()));
+        $holding = Holding::where('id', $holding)->first();
         $validatedData = $request->validate([
             'nama_shift_update' => 'required|max:255',
             'jam_masuk_update' => 'required',
@@ -140,7 +144,7 @@ class ShiftController extends Controller
             'activity' => 'Update Master Shift',
             'description' => 'Mengubah data master shift dengan nama shift ' . $request->nama_shift
         ]);
-        return redirect('/shift/' . $holding)->with('success', 'data berhasil diupdate');
+        return redirect('/shift/' . $holding->holding_code)->with('success', 'data berhasil diupdate');
     }
 
     /**
@@ -149,16 +153,27 @@ class ShiftController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy($id, $holding)
     {
-        $holding = request()->segment(count(request()->segments()));
-        $delete = Shift::find($id);
-        $delete->delete();
-        ActivityLog::create([
-            'user_id' => Auth::user()->id,
-            'activity' => 'delete',
-            'description' => 'Menghapus data master shift dengan nama shift ' . $delete->nama_shift
-        ]);
-        return redirect('/shift/' . $holding)->with('success', 'Data Berhasil di Delete');
+        $holding = Holding::where('id', $holding)->first();
+        if ($holding) {
+            $holding = $holding->holding_code;
+            $delete = Shift::find($id);
+            $delete->delete();
+            ActivityLog::create([
+                'user_id' => Auth::user()->id,
+                'activity' => 'delete',
+                'description' => 'Menghapus data master shift dengan nama shift ' . $delete->nama_shift
+            ]);
+            return response()->json([
+                'code' => 200,
+                'message' => 'Data Berhasil di Delete'
+            ]);
+        } else {
+            return response()->json([
+                'code' => 404,
+                'message' => 'Holding tidak ditemukan'
+            ]);
+        }
     }
 }

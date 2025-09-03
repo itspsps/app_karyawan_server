@@ -48,11 +48,11 @@ return [
             'provider' => 'users',
         ],
         'admin' => [
-            'driver' => 'session',
+            'driver' => 'jwt',
             'provider' => 'admins',
         ],
         'hrd' => [
-            'driver' => 'session',
+            'driver' => 'jwt',
             'provider' => 'hrd',
         ],
     ],
@@ -85,8 +85,8 @@ return [
         ],
 
         'hrd' => [
-            'driver' => 'database',
-            'table' => 'users',
+            'driver' => 'eloquent',
+            'model' => App\Models\Admin::class,
         ],
     ],
 

@@ -16,7 +16,7 @@
             <div class="card">
                 <div class="card-header">
                     <div class="d-flex align-items-center justify-content-between">
-                        <h5 class="card-title m-0 me-2"><a href="@if(Auth::user()->is_admin =='hrd'){{url('hrd/jabatan/'.$holding)}}@else{{url('jabatan/'.$holding)}}@endif"><i class="mdi mdi-arrow-left-bold"></i></a>&nbsp;DAFTAR JABATAN</h5>
+                        <h5 class="card-title m-0 me-2"><a href="@if(Auth::user()->is_admin =='hrd'){{url('hrd/jabatan/'.$holding->holding_code)}}@else{{url('jabatan/'.$holding->holding_code)}}@endif"><i class="mdi mdi-arrow-left-bold"></i></a>&nbsp;DAFTAR JABATAN</h5>
                     </div>
                 </div>
                 <div class="card-body">
@@ -45,13 +45,14 @@
                         </table>
                     </div>
                     <hr class="my-5">
-                    <button type="button" class="btn btn-sm btn-primary waves-effect waves-light" data-bs-toggle="modal" data-bs-target="#modal_tambah_jabatan"><i class="menu-icon tf-icons mdi mdi-plus"></i>Tambah</button>
+                    <button type="button" id="btn_add_jabatan" class="btn btn-sm btn-primary waves-effect waves-light" data-bs-toggle="modal" data-bs-target="#modal_tambah_jabatan"><i class="menu-icon tf-icons mdi mdi-plus"></i>Tambah</button>
+
                     <div class="modal fade" id="modal_karyawan_jabatan" data-bs-backdrop="static" tabindex="-1">
                         <div class="modal-dialog modal-lg modal-dialog-scrollable">
                             <div class=" modal-content">
 
                                 <div class="modal-header">
-                                    <h4 class="modal-title" id="backDropModalTitle"> Jabatan Bawahan</h4>
+                                    <h4 class="modal-title" id="backDropModalTitle"> Daftar Karyawan</h4>
                                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                 </div>
                                 <div class="modal-body">
@@ -113,7 +114,7 @@
                     </div>
                     <div class="modal fade" id="modal_tambah_jabatan" data-bs-backdrop="static" tabindex="-1">
                         <div class="modal-dialog modal-dialog-scrollable">
-                            <form method="post" action="@if(Auth::user()->is_admin =='hrd'){{ url('/hrd/jabatan/insert/'.$holding) }}@else{{ url('/jabatan/insert/'.$holding) }}@endif" class=" modal-content" enctype="multipart/form-data">
+                            <form id="form_add_jabatan" method="post" action="@if(Auth::user()->is_admin =='hrd'){{ url('/hrd/jabatan/insert/'.$holding->holding_code) }}@else{{ url('/jabatan/insert/'.$holding->holding_code) }}@endif" class=" modal-content" enctype="multipart/form-data">
                                 @csrf
                                 <div class="modal-header">
                                     <h4 class="modal-title" id="backDropModalTitle">Tambah Jabatan</h4>
@@ -122,9 +123,10 @@
                                 <div class="modal-body">
                                     <div class="row g-2">
                                         <div class="col mb-2">
+                                            <input type="hidden" id="nama_departemen" name="nama_departemen" value="{{$divisi->Departemen->id}}">
                                             <div class="form-floating form-floating-outline">
-                                                <input type="hidden" id="nama_departemen" name="nama_departemen" value="{{$divisi->dept_id}}">
                                                 <input type="text" class="form-control" name="nama_divisi" id="nama_divisi" value="{{$divisi->nama_divisi}}" readonly>
+                                                <label for="nama_divisi" class="float-left">Nama Divisi</label>
                                             </div>
                                         </div>
                                     </div>
@@ -260,7 +262,7 @@
                     <!-- modal edit -->
                     <div class="modal fade" id="modal_edit_jabatan" data-bs-backdrop="static" tabindex="-1">
                         <div class="modal-dialog modal-dialog-scrollable">
-                            <form method="post" action="@if(Auth::user()->is_admin =='hrd'){{ url('/hrd/jabatan/update/'.$holding) }}@else{{ url('/jabatan/update/'.$holding) }}@endif" class="modal-content" enctype="multipart/form-data">
+                            <form method="post" action="@if(Auth::user()->is_admin =='hrd'){{ url('/hrd/jabatan/update/'.$holding->holding_code) }}@else{{ url('/jabatan/update/'.$holding->holding_code) }}@endif" class="modal-content" enctype="multipart/form-data">
                                 @csrf
                                 <div class="modal-header">
                                     <h4 class="modal-title" id="backDropModalTitle">Edit Jabatan</h4>
@@ -435,14 +437,9 @@
 <script src="https://cdn.datatables.net/2.0.5/js/dataTables.bootstrap5.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
 <script>
-    let holding = window.location.pathname.split("/").pop();
-    let oke = window.location.pathname.split("/");
-    let auth = '{{ Auth::user()->is_admin }}';
-    if (auth == 'hrd') {
-        var id = oke[3];
-    } else {
-        var id = oke[2];
-    }
+    let holding = '{{$holding->holding_code}}';
+    var id = '{{$divisi->id}}';
+    console.log(id);
     var table = $('#table_jabatan').DataTable({
         pageLength: 50,
         "scrollY": true,
@@ -694,6 +691,10 @@
         $('#nama_jabatan_atasan_update').val(atasan);
         $('#modal_edit_jabatan').modal('show');
 
+    });
+    $(document).on('click', '#btn_add_jabatan', function() {
+        $('#form_add_jabatan').trigger('reset');
+        $('#modal_tambah_jabatan').modal('show');
     });
     $(document).on('click', '#btn_lihat_bawahan', function() {
 

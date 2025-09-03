@@ -74,7 +74,7 @@
                         <div class="card">
                             <div class="card-header">
                                 <div class="d-flex justify-content-between">
-                                    <h6 class="mb-1">Grafik Absensi Karyawan Kontrak Kerja @if($holding=='sps') PT. SURYA PANGAN SEMESTA @elseif($holding=='sp') CV. SUMBER PANGAN @else CV. SURYA INTI PANGAN @endif</h6>
+                                    <h6 class="mb-1">Grafik Absensi Karyawan Kontrak Kerja @if($holding->holding_category=='SPS') PT. SURYA PANGAN SEMESTA @elseif($holding->holding_category=='SP') CV. SUMBER PANGAN @else CV. SURYA INTI PANGAN @endif</h6>
                                 </div>
                             </div>
                             <div class="card-body">
@@ -92,7 +92,7 @@
                         <div class="col-8">
                             <ul class="nav nav-pills nav-fill" role="tablist">
                                 <li class="nav-item">
-                                    <a type=" button" style="width: auto;" class="nav-link active" role="tab" data-bs-toggle="tab" href="#navs-pills-justified-home">
+                                    <a type="button" style="width: auto;" class="nav-link active" role="tab" data-bs-toggle="tab" href="#navs-pills-justified-home">
                                         <i class="tf-icons mdi mdi-account-tie me-1"></i><span class="d-none d-sm-block">Karyawan Bulanan</span>
                                     </a>
                                 </li>
@@ -179,10 +179,9 @@
 <script src="https://cdn.datatables.net/buttons/3.1.2/js/buttons.print.min.js"></script>
 <script src="{{asset('admin/assets/vendor/libs/apex-charts/apexcharts.js')}}"></script>
 <script>
-    let holding = window.location.pathname.split("/").pop();
     $(document).ready(function() {
 
-        var holding = '{{$holding}}';
+        var holding = '{{$holding->holding_code}}';
         var chart_absensi_masuk;
         var data_column;
         let table_rekapdata;
@@ -200,7 +199,7 @@
             bagian_filter_month = $('#bagian_filter').val();
             jabatan_filter_month = $('#jabatan_filter').val();
             $.ajax({
-                url: "@if(Auth::user()->is_admin=='hrd'){{ url('/hrd/report_kedisiplinan/get_columns') }}@else{{ url('report_kedisiplinan/get_columns') }}@endif",
+                url: "@if(Auth::user()->is_admin=='hrd'){{ url('/hrd/report_kedisiplinan/get_columns') }}@else{{ url('report_kedisiplinan/get_columns') }}@endif" + '/' + holding,
                 method: "get",
                 data: {
                     filter_month: filter_month1,
@@ -299,7 +298,7 @@
             // $('#table_rekapdata').DataTable().destroy();
             $.ajax({
                 type: 'GET',
-                url: "@if(Auth::user()->is_admin=='hrd'){{url('hrd/report/get_divisi')}}@else{{url('report/get_divisi')}}@endif",
+                url: "@if(Auth::user()->is_admin=='hrd'){{url('hrd/report/get_divisi')}}@else{{url('report/get_divisi')}}@endif" + holding,
                 data: {
                     holding: holding,
                     filter_month: filter_month_dept,
@@ -310,7 +309,7 @@
                 },
                 cache: false,
                 success: function(data_dept) {
-                    // console.log(data_dept);
+                    console.log(data_dept);
                     datacolumn_departemen = [{
                             data: 'btn_detail',
                             name: 'btn_detail'
@@ -539,7 +538,7 @@
 
 
         $.ajax({
-            url: "@if(Auth::user()->is_admin=='hrd'){{ url('/hrd/report_kedisiplinan/get_columns') }}@else{{ url('report_kedisiplinan/get_columns') }}@endif",
+            url: "@if(Auth::user()->is_admin=='hrd'){{ url('/hrd/report_kedisiplinan/get_columns') }}@else{{ url('report_kedisiplinan/get_columns') }}@endif" + '/' + holding,
             method: "get",
             data: {
                 filter_month: filter_month,
@@ -609,7 +608,7 @@
                 const data_column = datacolumn.concat(data.datacolumn);
                 // console.log(data_column);
 
-                $('#date_absensi').append('<th>Tepat&nbsp;Waktu</th><th>Telat&nbsp;Hadir&nbsp;<span>(&nbsp;+&nbsp;15&nbsp;Menit)</span></th><th>Telat&nbsp;Hadir&nbsp;<span>(&nbsp;-&nbsp;15&nbsp;Menit)</span></th><th>Izin</th><th>Cuti</th><th>Dinas</th><th>Libur</th><th>Alfa</th>');
+                $('#date_absensi').append('<th>Tepat&nbsp;Waktu</th><th>Telat&nbsp;Hadir&nbsp;<span>(&nbsp;-&nbsp;15&nbsp;Menit)</span></th><th>Telat&nbsp;Hadir&nbsp;<span>(&nbsp;+&nbsp;15&nbsp;Menit)</span></th><th>Izin</th><th>Cuti</th><th>Dinas</th><th>Libur</th><th>Alfa</th>');
 
                 $.each(data.data_columns_header, function(count) {
                     $('#date_absensi').append("<th id='th_date'>" + data.data_columns_header[count].header + "</th>");

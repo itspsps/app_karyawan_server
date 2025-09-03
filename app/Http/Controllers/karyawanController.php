@@ -26,6 +26,7 @@ use App\Models\City;
 use App\Models\Departemen;
 use App\Models\District;
 use App\Models\Divisi;
+use App\Models\Holding;
 use App\Models\Karyawan;
 use App\Models\KaryawanNonActive;
 use App\Models\Lokasi;
@@ -52,25 +53,47 @@ use Yajra\DataTables\DataTables;
 
 class karyawanController extends Controller
 {
-    public function index()
+    public function index($holding)
     {
-
-        $holding = request()->segment(count(request()->segments()));
-        $departemen = Departemen::orderBy('nama_departemen', 'ASC')->where('holding', $holding)->get();
-        $user = Karyawan::where('kontrak_kerja', $holding)->where('status_aktif', 'AKTIF')->get();
-        $jabatan = Jabatan::orderBy('nama_jabatan', 'ASC')->where('holding', $holding)->get();
-        $karyawan_laki = Karyawan::where('gender', 'Laki-Laki')->where('kontrak_kerja', $holding)->where('status_aktif', 'AKTIF')->count();
-        $karyawan_perempuan = Karyawan::where('gender', 'Perempuan')->where('kontrak_kerja', $holding)->where('status_aktif', 'AKTIF')->count();
-        $karyawan_office = Karyawan::where('kategori', 'Karyawan Bulanan')->where('kontrak_kerja', $holding)->where('status_aktif', 'AKTIF')->count();
-        $karyawan_shift = Karyawan::where('kategori', 'Karyawan Harian')->where('kontrak_kerja', $holding)->where('status_aktif', 'AKTIF')->count();
+        $getHolding = Holding::where('holding_code', $holding)->first();
+        $table = Karyawan::select(
+            'id',
+            'nomor_identitas_karyawan',
+            'name',
+            'telepon',
+            'email',
+            'kontrak_kerja',
+            'tgl_mulai_kontrak',
+            'tgl_selesai_kontrak',
+            'kontrak_kerja',
+            'divisi_id',
+            'penempatan_kerja',
+            'jabatan_id'
+        )
+            ->with('Divisi')
+            ->with('Jabatan')
+            ->with('KontrakKerja')
+            ->where('kontrak_kerja', $getHolding->id)
+            ->where('status_aktif', 'AKTIF')
+            ->where('kategori', 'Karyawan Bulanan')
+            ->orderBy('id', 'DESC')
+            ->limit(10)
+            ->get();
+        // dd($table);
+        $departemen = Departemen::orderBy('nama_departemen', 'ASC')->where('holding', $getHolding->id)->get();
+        $user = Karyawan::where('kontrak_kerja', $getHolding->id)->where('status_aktif', 'AKTIF')->get();
+        $jabatan = Jabatan::orderBy('nama_jabatan', 'ASC')->where('holding', $getHolding->id)->get();
+        $karyawan_laki = Karyawan::where('gender', 'Laki-Laki')->where('kontrak_kerja', $getHolding->id)->where('status_aktif', 'AKTIF')->count();
+        $karyawan_perempuan = Karyawan::where('gender', 'Perempuan')->where('kontrak_kerja', $getHolding->id)->where('status_aktif', 'AKTIF')->count();
+        $karyawan_office = Karyawan::where('kategori', 'Karyawan Bulanan')->where('kontrak_kerja', $getHolding->id)->where('status_aktif', 'AKTIF')->count();
+        $karyawan_shift = Karyawan::where('kategori', 'Karyawan Harian')->where('kontrak_kerja', $getHolding->id)->where('status_aktif', 'AKTIF')->count();
         return view('admin.karyawan.index', [
-            // return view('karyawan.index', [
+            'holding' => $getHolding,
             'title' => 'Karyawan',
             "data_departemen" => $departemen,
-            'holding' => $holding,
             'data_user' => $user,
             "data_jabatan" => $jabatan,
-            "data_lokasi" => Lokasi::orderBy('lokasi_kantor', 'ASC')->get(),
+            "data_lokasi" => Lokasi::orderBy('nama_lokasi', 'ASC')->get(),
             "karyawan_laki" => $karyawan_laki,
             "karyawan_perempuan" => $karyawan_perempuan,
             "karyawan_office" => $karyawan_office,
@@ -534,16 +557,36 @@ class karyawanController extends Controller
         $pdf = PDF::loadView('admin/karyawan/cetak_pdf_karyawan', $data)->setPaper('F4', 'landscape');
         return $pdf->stream('DATA KARYAWAN' . $holding . '_' . $date . 'pdf');
     }
-    public function datatable_bulanan(Request $request)
+    public function datatable_bulanan($holding)
     {
-        $holding = request()->segment(count(request()->segments()));
-        $table = Karyawan::with('Divisi')->with('Jabatan')->where('kontrak_kerja', $holding)->where('status_aktif', 'AKTIF')
+        $getHolding = Holding::where('holding_code', $holding)->first();
+        $table = Karyawan::select(
+            'id',
+            'nomor_identitas_karyawan',
+            'name',
+            'telepon',
+            'email',
+            'kontrak_kerja',
+            'tgl_mulai_kontrak',
+            'tgl_selesai_kontrak',
+            'kontrak_kerja',
+            'divisi_id',
+            'penempatan_kerja',
+            'jabatan_id'
+        )
+            ->with('Divisi')
+            ->with('Jabatan')
+            ->with('KontrakKerja')
+            ->where('kontrak_kerja', $getHolding->id)
+            ->where('status_aktif', 'AKTIF')
             ->where('kategori', 'Karyawan Bulanan')
             ->orderBy('id', 'DESC')
+            // ->limit(10)
             ->get();
+        // dd($table);
         if (request()->ajax()) {
             return DataTables::of($table)
-                ->addColumn('nama_divisi', function ($row) use ($holding) {
+                ->addColumn('nama_divisi', function ($row) use ($getHolding) {
                     if ($row->divisi_id == '' || $row->divisi_id == NULL) {
                         $divisi = NULL;
                     } else {
@@ -551,7 +594,15 @@ class karyawanController extends Controller
                     }
                     return $divisi;
                 })
-                ->addColumn('nama_jabatan', function ($row) use ($holding) {
+                ->addColumn('kontrak_kerja', function ($row) use ($getHolding) {
+                    if ($row->KontrakKerja == '') {
+                        $kontrak_kerja = $row->kontrak_kerja;
+                    } else {
+                        $kontrak_kerja = $row->KontrakKerja->holding_name;
+                    }
+                    return $kontrak_kerja;
+                })
+                ->addColumn('nama_jabatan', function ($row) use ($getHolding) {
                     if ($row->jabatan_id == '' || $row->jabatan_id == NULL) {
                         $jabatan = NULL;
                     } else {
@@ -559,7 +610,7 @@ class karyawanController extends Controller
                     }
                     return $jabatan;
                 })
-                ->addColumn('option', function ($row) use ($holding) {
+                ->addColumn('option', function ($row) use ($getHolding) {
                     if ($row->Divisi == 'NULL' || $row->Divisi == '') {
                         $divisi = '-';
                     } else {
@@ -575,26 +626,27 @@ class karyawanController extends Controller
                     } else {
                         $jabatan = $row->Jabatan->nama_jabatan;
                     }
-                    $btn = '<button id="btndetail_karyawan" data-id="' . $row->id . '" data-holding="' . $holding . '" class="btn btn-icon btn-success waves-effect waves-light"><span class="tf-icons mdi mdi-eye-outline"></span></button>';
-                    // $btn = $btn . '<button id="btn_mapping_shift" data-id="' . $row->id . '" data-holding="' . $holding . '" type="button" class="btn btn-icon btn-info waves-effect waves-light"><span class="tf-icons mdi mdi-clock-outline"></span></button>';
-                    $btn = $btn . '<button id="btn_non_aktif_karyawan" data-status_aktif="' . $row->status_aktif . '" data-foto="' . $row->foto . '" data-id="' . $row->id . '" data-tgl_mulai_kontrak="' . $row->tgl_mulai_kontrak . '" data-tgl_selesai_kontrak="' . $row->tgl_selesai_kontrak . '" data-nama="' . $row->name . '" data-divisi="' . $divisi . '" data-jabatan="' . $jabatan . '" data-bagian="' . $bagian . '"  data-holding="' . $holding . '" data-penempatan_kerja="' . $row->penempatan_kerja . '" data-kontrak_kerja="' . $row->kontrak_kerja . '" class="btn btn-icon btn-danger waves-effect waves-light"><span class="tf-icons mdi mdi-account-multiple-remove-outline"></span></button>';
+                    $btn = '<button id="btndetail_karyawan" data-id="' . $row->id . '" data-holding="' . $getHolding->holding_code . '" class="btn btn-icon btn-success waves-effect waves-light"><span class="tf-icons mdi mdi-eye-outline"></span></button>';
+                    // $btn = $btn . '<button id="btn_mapping_shift" data-id="' . $row->id . '" data-holding="' . $holding_category . '" type="button" class="btn btn-icon btn-info waves-effect waves-light"><span class="tf-icons mdi mdi-clock-outline"></span></button>';
+                    $btn = $btn . '<button id="btn_non_aktif_karyawan" data-status_aktif="' . $row->status_aktif . '" data-foto="' . $row->foto . '" data-id="' . $row->id . '" data-tgl_mulai_kontrak="' . $row->tgl_mulai_kontrak . '" data-tgl_selesai_kontrak="' . $row->tgl_selesai_kontrak . '" data-nama="' . $row->name . '" data-divisi="' . $divisi . '" data-jabatan="' . $jabatan . '" data-bagian="' . $bagian . '"  data-holding="' . $getHolding->id . '" data-penempatan_kerja="' . $row->penempatan_kerja . '" data-kontrak_kerja="' . $row->kontrak_kerja . '" class="btn btn-icon btn-danger waves-effect waves-light"><span class="tf-icons mdi mdi-account-multiple-remove-outline"></span></button>';
                     return $btn;
                 })
-                ->rawColumns(['nama_jabatan', 'nama_divisi', 'option'])
+                ->rawColumns(['nama_jabatan', 'nama_divisi', 'kontrak_kerja', 'option'])
                 ->make(true);
         }
     }
-    public function datatable_harian(Request $request)
+    public function datatable_harian($holding)
     {
-        $holding = request()->segment(count(request()->segments()));
-        $table = Karyawan::where('kontrak_kerja', $holding)->where('kategori', 'Karyawan Harian')->where('status_aktif', 'AKTIF')->orderBy('id', 'DESC')->get();
+        $getHolding = Holding::where('holding_code', $holding)->first();
+        $holding_category = $getHolding->holding_category;
+        $table = Karyawan::where('kontrak_kerja', $holding_category)->where('kategori', 'Karyawan Harian')->where('status_aktif', 'AKTIF')->orderBy('id', 'DESC')->get();
         if (request()->ajax()) {
             return DataTables::of($table)
-                ->addColumn('option', function ($row) use ($holding) {
-                    $btn = '<button id="btndetail_karyawan" data-id="' . $row->id . '" data-holding="' . $holding . '" class="btn btn-icon btn-success waves-effect waves-light"><span class="tf-icons mdi mdi-eye-outline"></span></button>';
-                    $btn = $btn . '<button id="btn_mapping_shift" data-id="' . $row->id . '" data-holding="' . $holding . '" type="button" class="btn btn-icon btn-info waves-effect waves-light"><span class="tf-icons mdi mdi-clock-outline"></span></button>';
-                    $btn = $btn . '<button id="btn_edit_password" data-id="' . $row->id . '" data-holding="' . $holding . '" type="button" class="btn btn-icon btn-secondary waves-effect waves-light"><span class="tf-icons mdi mdi-key-outline"></span></button>';
-                    $btn = $btn . '<button type="button" id="btn_delete_karyawan" data-id="' . $row->id . '" data-holding="' . $holding . '" class="btn btn-icon btn-danger waves-effect waves-light"><span class="tf-icons mdi mdi-delete-outline"></span></button>';
+                ->addColumn('option', function ($row) use ($holding_category) {
+                    $btn = '<button id="btndetail_karyawan" data-id="' . $row->id . '" data-holding="' . $holding_category . '" class="btn btn-icon btn-success waves-effect waves-light"><span class="tf-icons mdi mdi-eye-outline"></span></button>';
+                    $btn = $btn . '<button id="btn_mapping_shift" data-id="' . $row->id . '" data-holding="' . $holding_category . '" type="button" class="btn btn-icon btn-info waves-effect waves-light"><span class="tf-icons mdi mdi-clock-outline"></span></button>';
+                    $btn = $btn . '<button id="btn_edit_password" data-id="' . $row->id . '" data-holding="' . $holding_category . '" type="button" class="btn btn-icon btn-secondary waves-effect waves-light"><span class="tf-icons mdi mdi-key-outline"></span></button>';
+                    $btn = $btn . '<button type="button" id="btn_delete_karyawan" data-id="' . $row->id . '" data-holding="' . $holding_category . '" class="btn btn-icon btn-danger waves-effect waves-light"><span class="tf-icons mdi mdi-delete-outline"></span></button>';
                     return $btn;
                 })
                 ->rawColumns(['option'])
@@ -730,26 +782,35 @@ class karyawanController extends Controller
             echo "<option value='$atasan->id'>$atasan->name ($atasan->nama_jabatan | $atasan->nama_bagian)</option>";
         }
     }
-    public function tambahKaryawan()
+    public function tambahKaryawan($holding)
     {
-        $holding = request()->segment(count(request()->segments()));
+        $getHolding = Holding::where('holding_code', $holding)->first();
+        $getHoldingall = Holding::get();
+        // dd($getHoldingall);
+        $holding_category = $getHolding->holding_category;
         return view('admin.karyawan.tambah_karyawan', [
             'title' => 'Karyawan',
-            "data_departemen" => Departemen::orderBy('nama_departemen', 'ASC')->where('holding', $holding)->get(),
-            'holding' => $holding,
-            "data_jabatan" => Jabatan::orderBy('nama_jabatan', 'ASC')->where('holding', $holding)->get(),
+            "data_departemen" => Departemen::orderBy('nama_departemen', 'ASC')->where('holding', $getHolding->id)->get(),
+            'holding' => $getHolding,
+            'holdingAll' => $getHoldingall,
+            "data_jabatan" => Jabatan::orderBy('nama_jabatan', 'ASC')->where('holding', $getHolding->id)->get(),
             "data_provinsi" => Provincies::orderBy('name', 'ASC')->get(),
-            "data_lokasi" => Lokasi::orderBy('lokasi_kantor', 'ASC')->get(),
-            "karyawan_laki" => Karyawan::where('gender', 'Laki-Laki')->where('kontrak_kerja', $holding)->where('status_aktif', 'AKTIF')->count(),
-            "karyawan_perempuan" => Karyawan::where('gender', 'Perempuan')->where('kontrak_kerja', $holding)->where('status_aktif', 'AKTIF')->count(),
-            "karyawan_office" => Karyawan::where('kategori', 'Karyawan Bulanan')->where('kontrak_kerja', $holding)->where('status_aktif', 'AKTIF')->count(),
-            "karyawan_shift" => Karyawan::where('kategori', 'Karyawan Harian')->where('kontrak_kerja', $holding)->where('status_aktif', 'AKTIF')->count(),
+            "data_lokasi" => Lokasi::orderBy('nama_lokasi', 'ASC')->get(),
+            "karyawan_laki" => Karyawan::where('gender', 'Laki-Laki')->where('kontrak_kerja', $getHolding->id)->where('status_aktif', 'AKTIF')->count(),
+            "karyawan_perempuan" => Karyawan::where('gender', 'Perempuan')->where('kontrak_kerja', $getHolding->id)->where('status_aktif', 'AKTIF')->count(),
+            "karyawan_office" => Karyawan::where('kategori', 'Karyawan Bulanan')->where('kontrak_kerja', $getHolding->id)->where('status_aktif', 'AKTIF')->count(),
+            "karyawan_shift" => Karyawan::where('kategori', 'Karyawan Harian')->where('kontrak_kerja', $getHolding->id)->where('status_aktif', 'AKTIF')->count(),
         ]);
     }
 
     public function tambahKaryawanProses(Request $request)
     {
-        // dd($request->all());
+        // dd($request->all(), $request->holding);
+        if ($request->holding) {
+            $holding = $request->holding;
+        } else {
+            $holding = '';
+        }
 
         if ($request["kuota_cuti"] == null) {
             $request["kuota_cuti"] = "0";
@@ -1268,11 +1329,10 @@ class karyawanController extends Controller
                 $errors = $validasi->errors()->first();
                 // dd($errors);
                 Alert::error('Gagal', $errors);
-                return back()->withInput();
+                return back()->withErrors($validasi)->withInput();
             }
             $validatedData = $request->validate($rules, $customMessages);
         }
-        $holding = request()->segment(count(request()->segments()));
         if ($holding == 'sp') {
             $id_holding = '100';
             $kontrak_kerja = 'SP';
@@ -1417,11 +1477,12 @@ class karyawanController extends Controller
         return redirect()->back()->with('success', 'data berhasil ditambahkan');
     }
 
-    public function detail($id)
+    public function detail($id, $holding)
     {
         // dd($id);
         // dd(Karyawan::find($id));
-        $holding = request()->segment(count(request()->segments()));
+        $getHolding = Holding::where('holding_code', $holding)->first();
+        $getHoldingall = Holding::get();
         $karyawan = Karyawan::find($id);
         if ($karyawan == NULL) {
             return redirect()->back()->with('error', 'Karyawan Tidak Ada', 1500);
@@ -1430,10 +1491,11 @@ class karyawanController extends Controller
             return view('admin.karyawan.detail_karyawan', [
                 // return view('karyawan.editkaryawan', [
                 'title' => 'Detail Karyawan',
-                'holding' => $holding,
+                'holding' => $getHolding,
+                'holdingAll' => $getHoldingall,
                 'karyawan' => $karyawan,
-                "data_lokasi" => Lokasi::whereNotIn('status_kantor', ['DEPO'])->orderBy('lokasi_kantor', 'ASC')->get(),
-                "data_lokasi1" => Lokasi::orderBy('lokasi_kantor', 'ASC')->get(),
+                "data_lokasi" => Lokasi::whereNotIn('nama_lokasi', ['DEPO'])->orderBy('nama_lokasi', 'ASC')->get(),
+                "data_lokasi1" => Lokasi::orderBy('nama_lokasi', 'ASC')->get(),
                 "data_provinsi" => Provincies::orderBy('name', 'ASC')->get(),
             ]);
         }
@@ -1697,16 +1759,6 @@ class karyawanController extends Controller
         }
 
 
-        // $userId = Karyawan::find($id);
-
-        // if ($request->email != $userId->email) {
-        //     $rules['email'] = 'required|unique:karyawans';
-        // }
-
-        // if ($request->username != $userId->username) {
-        //     $rules['username'] = 'required|max:255|unique:karyawans';
-        // }
-
         $customMessages = [
             'required' => ':attribute tidak boleh kosong.',
             'unique' => ':attribute tidak boleh sama',
@@ -1720,7 +1772,7 @@ class karyawanController extends Controller
             $errors = $validasi->errors()->first();
             // dd($errors);
             Alert::error('Gagal', $errors);
-            return back()->withInput();
+            return back()->withErrors($validasi)->withInput();
         }
         $validatedData = $request->validate($rules, $customMessages);
         $site_job = $validatedData['site_job'];
@@ -1764,7 +1816,6 @@ class karyawanController extends Controller
             }
         }
         if ($validatedData['pilihan_alamat_domisili'] == "tidak") {
-
             $provinsi = Provincies::where('code', $validatedData['provinsi'])->value('code');
             $provinsi1 = Provincies::where('code', $validatedData['provinsi_domisili'])->value('code');
             $kabupaten = Cities::where('code', $validatedData['kabupaten'])->value('code');
@@ -1995,6 +2046,7 @@ class karyawanController extends Controller
     {
         // dd($request->all());
         $departemen    = Departemen::where('id', $request->id_departemen)->first();
+        dd($departemen);
         if ($departemen->holding == 'sp') {
             $holding_1 = 'CV. SUMBER PANGAN';
             // dd('ok2');

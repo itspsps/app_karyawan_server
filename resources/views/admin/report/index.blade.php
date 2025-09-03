@@ -52,19 +52,14 @@
                         </div>
                         <div class="tab-content">
                             <div class="tab-pane fade show active" id="navs-pills-justified-home" role="tabpanel">
-                                <table class="table" id="table_report" style="width: 100%; font-size: smaller;">
-                                    <thead class="table-primary">
+
+                                <table class="table" id="table_finger" style="width: 100%; font-size: smaller;">
+                                    <thead>
                                         <tr>
-                                            <th rowspan="2" class="text-center">No.</th>
-                                            <th rowspan="2" class="text-center">ID&nbsp;Karyawan</th>
-                                            <th rowspan="2" class="text-center">Nama&nbsp;Karyawan</th>
-                                            <th rowspan="2" class="text-center">Jumlah&nbsp;Hadir&nbsp;Kerja</th>
-                                            <th rowspan="2" class="text-center">Jumlah&nbsp;Tidak&nbsp;Hadir&nbsp;Kerja</th>
-                                            <th rowspan="2" class="text-center">Jumlah&nbsp;Cuti</th>
-                                            <th rowspan="2" class="text-center">Jumlah&nbsp;Izin&nbsp;Sakit</th>
-                                            <th rowspan="2" class="text-center">Jumlah&nbsp;Izin&nbsp;Lainnya</th>
-                                            <th rowspan="2" class="text-center">Jumlah&nbsp;Libur</th>
-                                            <th rowspan="2" class="text-center">&nbsp;Total&nbsp;</th>
+                                            <th rowspan="2">No.</th>
+                                            <th rowspan="2">ID&nbsp;Karyawan</th>
+                                            <th rowspan="2">Nama&nbsp;Karyawan</th>
+                                            <th rowspan="2">Jumlah&nbsp;Kehadiran</th>
                                             <th id="th_count_date" class="text-center">&nbsp;Tanggal&nbsp;</th>
                                         </tr>
                                         <tr id="date_absensi" class="date_absensi">
@@ -120,21 +115,25 @@
     <script src="https://cdn.datatables.net/buttons/3.1.2/js/buttons.print.min.js"></script>
     <script type="text/javascript" src="{{ asset('assets/assets_users/js/daterangepicker.js') }}"></script>
     <script>
-        let holding = window.location.pathname.split("/").pop();
+        let holding = '{{$holding->holding_code}}';
+        // console.log(holding);
         $(document).ready(function() {
             // console.log(colspan);
 
             var filter_month = $('#filter_month').val();
             var month_now = "{{date('Y-m')}}";
-            // console.log(filter_month, month_now);
+            var url = "@if(Auth::user()->is_admin=='hrd'){{ url('hrd/report/get_columns') }}@else{{ url('report/get_columns') }}@endif" + "/" + holding;
+            // console.log(url);
             if (filter_month == month_now) {
+                // console.log(filter_month, month_now);
                 $.ajax({
-                    url: "@if(Auth::user()->is_admin=='hrd'){{ url('hrd/report/get_columns') }}@else{{ url('report/get_columns') }}@endif",
+                    url: url,
                     method: "get",
                     data: {
                         filter_month: filter_month,
                     },
                     success: function(data) {
+                        // console.log(data);
                         datacolumn = [{
                                 data: 'no',
                                 render: function(data, type, row, meta) {
@@ -150,33 +149,10 @@
                                 name: 'name'
                             },
                             {
-                                data: 'total_hadir_kerja',
-                                name: 'total_hadir_kerja'
+                                data: 'jumlah_hadir',
+                                name: 'jumlah_hadir'
                             },
-                            {
-                                data: 'total_tidak_hadir_kerja',
-                                name: 'total_tidak_hadir_kerja',
-                            },
-                            {
-                                data: 'total_cuti',
-                                name: 'total_cuti'
-                            },
-                            {
-                                data: 'total_izin_sakit',
-                                name: 'total_izin_sakit'
-                            },
-                            {
-                                data: 'total_izin_lainnya',
-                                name: 'total_izin_lainnya'
-                            },
-                            {
-                                data: 'total_libur',
-                                name: 'total_libur'
-                            },
-                            {
-                                data: 'total_semua',
-                                name: 'total_semua'
-                            },
+
                         ];
                         $('#th_count_date').attr('colspan', data.count_period);
                         $.each(data.data_columns_header, function(count) {
@@ -184,8 +160,8 @@
                         });
 
                         const data_column = datacolumn.concat(data.datacolumn);
-
-                        $('#table_report').DataTable().destroy();
+                        // console.log(data_column);
+                        $('#table_finger').DataTable().destroy();
                         load_data(filter_month, data_column, data.count_period, data.data_columns_header);
                     },
                     error: function(data) {
@@ -197,8 +173,9 @@
             $(document).on("change", "#filter_month", function(e) {
                 e.preventDefault();
                 let filter_month1 = $(this).val();
+                // console.log(filter_month1);
                 $.ajax({
-                    url: "@if(Auth::user()->is_admin=='hrd'){{ url('hrd/report/get_columns') }}@else{{ url('report/get_columns') }}@endif",
+                    url: url,
                     type: "GET",
                     data: {
                         filter_month: filter_month1,
@@ -223,45 +200,22 @@
                                 name: 'name'
                             },
                             {
-                                data: 'total_hadir_kerja',
-                                name: 'total_hadir_kerja'
+                                data: 'jumlah_hadir',
+                                name: 'jumlah_hadir'
                             },
-                            {
-                                data: 'total_tidak_hadir_kerja',
-                                name: 'total_tidak_hadir_kerja'
-                            },
-                            {
-                                data: 'total_cuti',
-                                name: 'total_cuti'
-                            },
-                            {
-                                data: 'total_izin_sakit',
-                                name: 'total_izin_sakit'
-                            },
-                            {
-                                data: 'total_izin_lainnya',
-                                name: 'total_izin_lainnya'
-                            },
-                            {
-                                data: 'total_libur',
-                                name: 'total_libur'
-                            },
-                            {
-                                data: 'total_semua',
-                                name: 'total_semua'
-                            },
+
                         ];
                         const data_column1 = datacolumn1.concat(data1.datacolumn);
-                        $('#table_report').DataTable().clear();
-                        $('#table_report').DataTable().destroy();
+                        $('#table_finger').DataTable().clear();
+                        $('#table_finger').DataTable().destroy();
                         $('.date_absensi').empty();
                         $.each(data1.data_columns_header, function(count) {
-                            console.log(count);
+                            // console.log(count);
                             $('#date_absensi').append("<th id='th_date" + count + "'>" + data1.data_columns_header[count].header + "</th>");
                         });
                         $('#th_count_date').attr('colspan', data1.count_period);
                         load_data(filter_month1, data_column1, data1.count_period, data1.data_columns_header);
-                        // $('#table_report').DataTable().ajax.reload();
+                        // $('#table_finger').DataTable().ajax.reload();
                     }
                 });
                 // console.log(filter_month);
@@ -279,12 +233,14 @@
                 'BW', 'BX', 'BY', 'BZ'
             ];
 
+
             function load_data(filter_month = '', data_column = '', colspan = '', data_columns_header = '') {
                 // console.log(colspan, data_columns_header);
-                url = "@if(Auth::user()->is_admin =='hrd'){{ url('hrd/report-datatable') }}@else {{ url('report-datatable') }} @endif" + '/' + holding;
-                // $('#table_report').DataTable().destroy();
+                var url_finger = "@if(Auth::user()->is_admin =='hrd'){{ url('hrd/report-datatable_finger') }}@else{{ url('report-datatable_finger') }}@endif" + '/' + holding;
+                // console.log(url_finger);
+                // $('#table_finger').DataTable().destroy();
 
-                var table_report = $('#table_report').DataTable({
+                var table_finger = $('#table_finger').DataTable({
                     scrollY: '600px',
                     scrollCollapse: true,
                     scrollX: true,
@@ -307,7 +263,7 @@
                                 var d = new Date();
                                 var l = d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate();
                                 var n = d.getHours() + ':' + d.getMinutes() + ':' + d.getSeconds();
-                                return 'REKAP_DATA_ABSENSI_KARYAWAN_{{$holding}}_' + l + ' ' + n;
+                                return 'REKAP_DATA_ABSENSI_KARYAWAN_{{$holding->holding_name}}_' + l + ' ' + n;
                             },
                             // customize: function(xlsx) {
                             //     var sheet = xlsx.xl.worksheets['sheet1.xml'];
@@ -360,7 +316,7 @@
                                 var d = new Date();
                                 var l = d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate();
                                 var n = d.getHours() + ":" + d.getMinutes() + ":" + d.getSeconds();
-                                return 'REKAP_DATA_ABSENSI_KARYAWAN_{{$holding}}_' + l + ' ' + n;
+                                return 'REKAP_DATA_ABSENSI_KARYAWAN_{{$holding->holding_name}}_' + l + ' ' + n;
                             },
                         }, {
                             extend: 'print',
@@ -378,20 +334,12 @@
                     ],
                     pageLength: 50,
                     ajax: {
-                        url: url,
+                        url: url_finger,
                         data: {
                             filter_month: filter_month,
                         },
                     },
                     columns: data_column,
-                    // initComplete: function() {
-                    //     $('#date_absensi th').each(function(count) {
-                    //         // console.log(data_columns_header[index].header);
-                    //         $(this).text(data_columns_header[count].header);
-                    //     });
-
-                    // }
-                    // order: [3, 'ASC'],
                 });
             }
 

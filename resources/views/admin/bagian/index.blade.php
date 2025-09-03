@@ -25,7 +25,7 @@
                     <button type="button" class="btn btn-sm btn-success waves-effect waves-light" data-bs-toggle="modal" data-bs-target="#modal_import_bagian"><i class="menu-icon tf-icons mdi mdi-file-excel"></i>Import</button>
                     <div class="modal fade" id="modal_tambah_bagian" data-bs-backdrop="static" tabindex="-1">
                         <div class="modal-dialog modal-dialog-scrollable">
-                            <form method="post" action="@if(Auth::user()->is_admin =='hrd'){{ url('/hrd/bagian/insert/'.$holding) }}@else{{ url('/bagian/insert/'.$holding) }}@endif" class="modal-content" enctype="multipart/form-data">
+                            <form method="post" action="@if(Auth::user()->is_admin =='hrd'){{ url('/hrd/bagian/insert/'.$holding->holding_code) }}@else{{ url('/bagian/insert/'.$holding->holding_code) }}@endif" class="modal-content" enctype="multipart/form-data">
                                 @csrf
                                 <div class="modal-header">
                                     <h4 class="modal-title" id="backDropModalTitle">Tambah Bagian</h4>
@@ -92,7 +92,7 @@
                     </div>
                     <div class="modal fade" id="modal_import_bagian" data-bs-backdrop="static" tabindex="-1">
                         <div class="modal-dialog modal-dialog-scrollable modal-lg">
-                            <form method="post" action="@if(Auth::user()->is_admin =='hrd'){{ url('/hrd/bagian/ImportBagian/'.$holding) }}@else{{ url('/bagian/ImportBagian/'.$holding) }}@endif" class="modal-content" enctype="multipart/form-data">
+                            <form method="post" action="@if(Auth::user()->is_admin =='hrd'){{ url('/hrd/bagian/ImportBagian/'.$holding->holding_code) }}@else{{ url('/bagian/ImportBagian/'.$holding->holding_code) }}@endif" class="modal-content" enctype="multipart/form-data">
                                 @csrf
                                 <div class="modal-header">
                                     <h4 class="modal-title" id="backDropModalTitle">Import Bagian</h4>
@@ -123,7 +123,7 @@
                     <!-- modal edit -->
                     <div class="modal fade" id="modal_edit_bagian" data-bs-backdrop="static" tabindex="-1">
                         <div class="modal-dialog modal-dialog-scrollable">
-                            <form method="post" action="@if(Auth::user()->is_admin =='hrd'){{ url('/hrd/bagian/update/'.$holding) }}@else{{ url('/bagian/update/'.$holding) }}@endif" class="modal-content" enctype="multipart/form-data">
+                            <form method="post" action="@if(Auth::user()->is_admin =='hrd'){{ url('/hrd/bagian/update/'.$holding->holding_code) }}@else{{ url('/bagian/update/'.$holding->holding_code) }}@endif" class="modal-content" enctype="multipart/form-data">
                                 @csrf
                                 <div class="modal-header">
                                     <h4 class="modal-title" id="backDropModalTitle">Edit Bagian</h4>
@@ -284,7 +284,7 @@
 <script src="https://cdn.datatables.net/2.0.5/js/dataTables.bootstrap5.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
 <script>
-    let holding = window.location.pathname.split("/").pop();
+    let holding = '{{$holding->holding_code}}';
     var table = $('#table_bagian').DataTable({
         pageLength: 50,
         "scrollY": true,
@@ -334,8 +334,10 @@
 <script>
     $('#nama_dept').on('change', function() {
         let id_dept = $(this).val();
-        let url = "{{url('/bagian/get_divisi')}}" + "/" + id_dept;
-        // console.log(id_dept);
+        var holding = '{{$holding->id}}';
+
+        let url = "{{url('/bagian/get_divisi')}}" + "/" + id_dept + "/" + holding
+        console.log(holding);
         // console.log(url);
         $.ajax({
             url: url,
@@ -386,10 +388,10 @@
         let divisi = $(this).data("divisi");
         let bagian = $(this).data("bagian");
         let holding = $(this).data("holding");
-        // console.log(divisi);
+        console.log(dept);
         $('#id_bagian').val(id);
         $('#nama_departemen_update option').filter(function() {
-            // console.log($(this).val().trim());
+            console.log($(this).val().trim());
             return $(this).val().trim() == dept
         }).prop('selected', true)
         $('#nama_divisi_update option').filter(function() {

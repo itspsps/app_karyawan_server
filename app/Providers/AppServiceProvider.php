@@ -2,10 +2,13 @@
 
 namespace App\Providers;
 
+use App\Database\OdbcConnector;
 use App\Models\User;
+use Illuminate\Database\Connection;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Pagination\Paginator;
+use Illuminate\Support\Facades\DB;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -26,6 +29,12 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        DB::extend('odbc', function ($config, $name) {
+            $connector = new OdbcConnector();
+            $pdo = $connector->connect($config);
+
+            return new Connection($pdo, $config['database'] ?? null, $config['prefix'] ?? '', $config);
+        });
         Gate::define('admin', function (User $user) {
             return $user->is_admin === 'admin';
         });
@@ -33,7 +42,7 @@ class AppServiceProvider extends ServiceProvider
         Gate::define('ricky', function (User $user) {
             return $user->name === 'Ricky Ramadhan Arya Hussein';
         });
-        
+
         Paginator::useBootstrap();
     }
 }

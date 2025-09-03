@@ -712,7 +712,7 @@
                                             <?php
                                             if (old('kategori_jabatan', $karyawan->kategori_jabatan) == NULL) {
                                                 // echo 'ok';
-                                                $get_kategori_jabatan = App\Models\Lokasi::where('lokasi_kantor', old('site_job', $karyawan->site_job))->value('kategori_kantor');
+                                                $get_kategori_jabatan = App\Models\Lokasi::where('site_id', old('site_job', $karyawan->site_job))->value('nama_lokasi');
                                                 if (old('kategori_jabatan', $get_kategori_jabatan) == 'sp' || old('kategori_jabatan', $get_kategori_jabatan) == 'all sp') {
                                                     $kategori_jabatan = 'sp';
                                                     $holding_jabatan = 'CV. SUMBER PANGAN';
@@ -1927,6 +1927,8 @@
         $('#content_alamat_domisili').hide();
     } else if (pilih_domisili_alamat == 'tidak') {
         $('#content_alamat_domisili').show();
+
+
     } else {
         $('#content_alamat_domisili').hide();
     }
@@ -1983,13 +1985,14 @@
         var isChecked = $(this).is(':checked')
         if (isChecked) {
             $('#content_alamat_domisili').hide();
-
         }
     });
     $(document).on("click", "#btnradio_tidak", function() {
         var isChecked = $(this).is(':checked')
         if (isChecked) {
             $('#content_alamat_domisili').show();
+            console.log('ok');
+            $('#id_provinsi_domisili option:selected').prop('selected', false);
         }
     });
     $(document).on("click", "#status_npwp_tidak", function() {

@@ -20,7 +20,7 @@
                     </div>
                 </div>
                 <div class="card-body">
-                    <a type="button" href="@if(Auth::user()->is_admin=='hrd'){{url('hrd/karyawan/tambah-karyawan/'.$holding)}}@else{{url('karyawan/tambah-karyawan/'.$holding)}}@endif" class="btn btn-xs btn-primary waves-effect waves-light"><i class="menu-icon tf-icons mdi mdi-plus"></i>Tambah</a>
+                    <button type="button" id="btn_tambah_karyawan" class="btn btn-xs btn-primary waves-effect waves-light"><i class="menu-icon tf-icons mdi mdi-plus"></i>Tambah</button>
 
                     <button class="btn btn-xs btn-success waves-effect waves-light dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                         <i class="menu-icon tf-icons mdi mdi-file-excel"></i> Excel
@@ -30,7 +30,7 @@
                         <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#modal_import_update_karyawan" href="">Import Update Excel</a></li>
                         <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#modal_export_karyawan" href="#">Export Excel</a></li>
                     </ul>
-                    <a type="button" href="@if(Auth::user()->is_admin=='hrd'){{url('hrd/karyawan/pdfKaryawan/'.$holding)}}@else{{url('karyawan/pdfKaryawan/'.$holding)}}@endif" class="btn btn-xs btn-danger waves-effect waves-light"><i class="menu-icon tf-icons mdi mdi-file-pdf-box"></i>PDF</a>
+                    <a type="button" href="@if(Auth::user()->is_admin=='hrd'){{url('hrd/karyawan/pdfKaryawan/'.$holding->holding_code)}}@else{{url('karyawan/pdfKaryawan/'.$holding->holding_code)}}@endif" class="btn btn-xs btn-danger waves-effect waves-light"><i class="menu-icon tf-icons mdi mdi-file-pdf-box"></i>PDF</a>
 
                     <hr class="my-5">
                     <div class="row g-3">
@@ -389,9 +389,10 @@
 <script src="https://cdn.datatables.net/2.0.5/js/dataTables.bootstrap5.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
 <script>
-    let holding = window.location.pathname.split("/").pop();
+    var holding = '{{$holding->holding_code}}';
     var url = "@if(Auth::user()->is_admin=='hrd'){{ url('hrd/karyawan_bulanan-datatable') }}@else{{ url('karyawan_bulanan-datatable') }}@endif" + '/' + holding;
     var url1 = "@if(Auth::user()->is_admin=='hrd'){{ url('hrd/karyawan_harian-datatable') }}@else{{ url('karyawan_harian-datatable') }}@endif" + '/' + holding;
+    var url_add_karyawan = "@if(Auth::user()->is_admin=='hrd'){{url('hrd/karyawan/tambah-karyawan/')}}@else{{url('karyawan/tambah-karyawan')}}@endif" + '/' + holding;
     // console.log(url);
     var table = $('#table_karyawan_bulanan').DataTable({
         pageLength: 50,
@@ -942,6 +943,48 @@
     });
 </script>
 <script>
+    $(document).on("click", "#btn_tambah_karyawan", function() {
+        let holding = $(this).data("holding");
+        console.log(holding);
+        Swal.fire({
+            allowOutsideClick: false,
+            background: 'transparent',
+            html: ' <div class="spinner-grow text-primary spinner-grow-sm me-2" role="status"></div><div class="spinner-grow text-primary spinner-grow-sm me-2" role="status"></div><div class="spinner-grow text-primary spinner-grow-sm me-2" role="status"></div>',
+            showCancelButton: false,
+            showConfirmButton: false,
+            onBeforeOpen: () => {
+                // Swal.showLoading()
+                $.ajax({
+                    url: url_add_karyawan,
+                    method: 'GET',
+                    contentType: false,
+                    cache: false,
+                    processData: false,
+                    // data: {
+                    //     id_kecamatan: id_kecamatan
+                    // },
+                    success: function(response) {
+                        // console.log(response);
+                        Swal.close();
+                        window.location.assign(url_add_karyawan);
+                    },
+                    error: function(data) {
+                        Swal.fire({
+                            icon: 'warning',
+                            title: 'Error',
+                            text: 'Error : ' + data.responseJSON.message,
+                            showConfirmButton: true,
+                        });
+                        // console.log('error:', data)
+                    },
+
+                })
+            },
+            onAfterClose() {
+                Swal.close()
+            }
+        });
+    });
     $(document).on("click", "#btndetail_karyawan", function() {
         let id = $(this).data('id');
         let holding = $(this).data("holding");
@@ -966,6 +1009,7 @@
                     // },
                     success: function(response) {
                         // console.log(response);
+                        Swal.close();
                         window.location.assign(url);
                     },
                     error: function(data) {

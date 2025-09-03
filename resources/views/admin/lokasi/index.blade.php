@@ -31,8 +31,8 @@
                     </div>
                 </div>
                 <div class="card-body">
-                    <hr class="my-5">
-                    <a type="button" href="@if(Auth::user()->is_admin =='hrd'){{url('hrd/lokasi-kantor/tambah_lokasi/'.$holding)}} @else {{url('lokasi-kantor/tambah_lokasi/'.$holding)}} @endif " id="btn_tambah_lokasi" class="btn btn-sm btn-primary waves-effect waves-light"><i class="menu-icon tf-icons mdi mdi-plus"></i>Tambah</a>
+                    <hr class="my-1">
+                    <a type="button" href="@if(Auth::user()->is_admin =='hrd'){{url('hrd/lokasi/tambah_lokasi/'.$holding->holding_code)}} @else {{url('lokasi/tambah_lokasi/'.$holding->holding_code)}} @endif " id="btn_tambah_lokasi" class="btn btn-sm btn-primary waves-effect waves-light"><i class="menu-icon tf-icons mdi mdi-plus"></i>Tambah</a>
                     <div class="modal fade" id="modal_lihat_lokasi" data-bs-backdrop="static" tabindex="-1">
                         <div class="modal-dialog modal-dialog-scrollable modal-lg">
                             <div class="modal-content">
@@ -53,10 +53,10 @@
                                                             <td id="nama_lokasi"></td>
                                                         </tr>
                                                         <tr>
-                                                            <th>Nama Titik</th>
+                                                            <th>Site</th>
                                                             <td>&nbsp;</td>
                                                             <td>:</td>
-                                                            <td id="nama_titik_lokasi"> </td>
+                                                            <td id="nama_site"> </td>
                                                         </tr>
                                                         <tr>
                                                             <th>Radius</th>
@@ -91,27 +91,30 @@
                     <!-- modal edit -->
                     <div class="modal fade" id="modal_edit_lokasi" data-bs-backdrop="static" tabindex="-1">
                         <div class="modal-dialog modal-dialog-scrollable modal-lg">
-                            <form method="post" action="@if(Auth::user()->is_admin =='hrd'){{ url('hrd/lokasi-kantor/edit/'.$holding) }} @else {{ url('lokasi-kantor/edit/'.$holding) }} @endif" class=" modal-content" enctype="multipart/form-data">
+                            <form method="post" action="@if(Auth::user()->is_admin =='hrd'){{ url('hrd/lokasi/edit/'.$holding->holding_code) }} @else {{ url('lokasi/edit/'.$holding->holding_code) }} @endif" class=" modal-content" enctype="multipart/form-data">
                                 @csrf
                                 <div class="modal-header">
                                     <h4 class="modal-title" id="backDropModalTitle">Edit Lokasi</h4>
                                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                 </div>
                                 <div class="modal-body">
-                                    <input type="hidden" name="id_lokasi" id="id_lokasi" value="">
-                                    <input type="hidden" name="kategori_kantor_update" id="kategori_kantor_update" value="{{$holding}}">
+                                    <input type="text" name="id_lokasi" id="id_lokasi" value="">
+                                    <input type="text" name="holding_update" id="holding_update" value="{{$holding->holding_code}}">
+                                    <input type="text" id="site_name_update" name="site_name_update" value="">
+                                    <input type="text" id="lat_site_update" name="lat_site_update" value="">
+                                    <input type="text" id="long_site_update" name="long_site_update" value="">
                                     <div class="row g-2">
                                         <div class="col mb-2">
                                             <div class="form-floating form-floating-outline">
-                                                <select name="lokasi_kantor_update" id="lokasi_kantor_update" class="form-control  @error('lokasi_kantor_update') is-invalid @enderror">
-                                                    <option value="">Pilih Lokasi</option>
-                                                    @foreach ($data_lokasi as $g)
-                                                    <option value="{{ $g['lokasi_kantor'] }}">{{ $g['lokasi_kantor'] }}</option>
+                                                <select name="site_update" id="site_update" class="form-control  @error('site_update') is-invalid @enderror">
+                                                    <option value="">Pilih Site</option>
+                                                    @foreach ($data_site as $g)
+                                                    <option value="{{ $g['id'] }}">{{ $g['site_name'] }}</option>
                                                     @endforeach
                                                 </select>
-                                                <label for="lokasi_kantor_update">Lokasi Kantor</label>
+                                                <label for="site_update">Site</label>
                                             </div>
-                                            @error('lokasi_kantor_update')
+                                            @error('site_update')
                                             <span class="invalid-feedback" role="alert">
                                                 <strong>{{ $message }}</strong>
                                             </span>
@@ -119,8 +122,8 @@
                                         </div>
                                     </div>
                                     <br>
-                                    <input type="hidden" class="form-control" id="lat_kantor_update" name="lat_kantor_update" value="">
-                                    <input type="hidden" class="form-control" id="long_kantor_update" name="long_kantor_update" value="">
+                                    <input type="text" class="form-control" id="lat_lokasi_update" name="lat_lokasi_update" value="">
+                                    <input type="text" class="form-control" id="long_lokasi_update" name="long_lokasi_update" value="">
 
                                     <!-- <button type="button" id="btn_lokasi_saya" class="btn btn-icon btn-outline-success waves-effect" title="Lokasi Saya">
                                         <span class="tf-icons mdi mdi-map-marker"></span>
@@ -133,10 +136,10 @@
                                     <div class="row g-2">
                                         <div class="col mb-2">
                                             <div class="form-floating form-floating-outline">
-                                                <input type="text" class="form-control @error('nama_titik_update') is-invalid @enderror" id="nama_titik_update" name="nama_titik_update" value="">
-                                                <label for="nama_titik_update" class="float-left">Nama Titik</label>
+                                                <input type="text" class="form-control @error('nama_lokasi_update') is-invalid @enderror" id="nama_lokasi_update" name="nama_lokasi_update" value="">
+                                                <label for="nama_lokasi_update" class="float-left">Nama Lokasi</label>
                                             </div>
-                                            @error('nama_titik_update')
+                                            @error('nama_lokasi_update')
                                             <div class="invalid-feedback">
                                                 {{ $message }}
                                             </div>
@@ -174,10 +177,10 @@
                         <thead class="table-primary">
                             <tr>
                                 <th>No.</th>
-                                <th>Lokasi&nbsp;Kantor</th>
-                                <th>Nama&nbsp;Titik</th>
-                                <th>Lat&nbsp;Kantor</th>
-                                <th>Long&nbsp;Kantor</th>
+                                <th>Nama&nbsp;Lokasi</th>
+                                <th>Nama&nbsp;Site</th>
+                                <th>Lat&nbsp;Lokasi</th>
+                                <th>Long&nbsp;Lokasi</th>
                                 <th>Radius</th>
                                 <th>Maps</th>
                                 <th>Opsi</th>
@@ -202,14 +205,14 @@
 
 
 <script>
-    let holding = window.location.pathname.split("/").pop();
+    let holding = '{{$holding->holding_code}}';
     var table = $('#table_lokasi').DataTable({
         "scrollY": true,
         "scrollX": true,
         processing: true,
         serverSide: true,
         ajax: {
-            url: "@if(Auth::user()->is_admin =='hrd'){{ url('/hrd/lokasi-datatable') }}@else {{ url('lokasi-datatable') }} @endif" + '/' + holding,
+            url: "@if(Auth::user()->is_admin =='hrd'){{ url('/hrd/lokasi-datatable') }}@else{{ url('lokasi-datatable') }}@endif" + '/' + holding,
         },
         columns: [{
                 data: "id_titik",
@@ -219,24 +222,25 @@
                 }
             },
             {
-                data: 'lokasi_kantor',
-                name: 'lokasi_kantor'
+                data: 'nama_lokasi',
+                name: 'nama_lokasi'
             },
             {
-                data: 'nama_titik',
-                name: 'nama_titik'
+                data: 'nama_site',
+                name: 'nama_site'
+            },
+
+            {
+                data: 'lat_lokasi',
+                name: 'lat_lokasi'
             },
             {
-                data: 'lat_titik',
-                name: 'lat_titik'
+                data: 'long_lokasi',
+                name: 'long_lokasi'
             },
             {
-                data: 'long_titik',
-                name: 'long_titik'
-            },
-            {
-                data: 'radius_titik',
-                name: 'radius_titik'
+                data: 'radius_lokasi',
+                name: 'radius_lokasi'
             },
             {
                 data: 'lihat_maps',
@@ -253,21 +257,23 @@
 <script>
     $(document).on("click", "#btn_edit_lokasi", function() {
         let id = $(this).data('id');
-        let lokasi = $(this).data("lokasi");
+        let site = $(this).data("site");
         let lat = $(this).data("lat");
         let long = $(this).data("long");
         let radius = $(this).data("radius");
-        var titik = $(this).data('nama_titik');
+        var lokasi = $(this).data('lokasi');
         let holding = $(this).data("holding");
-        // console.log(long);
+        let sitename = $(this).data("sitename");
+        // console.log(id);
         $('#id_lokasi').val(id);
-        $('#lat_kantor_update').val(lat);
-        $('#long_kantor_update').val(long);
+        $('#lat_lokasi_update').val(lat);
+        $('#site_name_update').val(sitename);
+        $('#long_lokasi_update').val(long);
         $('#radius_update').val(radius);
-        $('#nama_titik_update').val(titik);
-        $('#lokasi_kantor_update option').filter(function() {
-            // console.log($(this).val().trim());
-            return $(this).val().trim() == lokasi
+        $('#nama_lokasi_update').val(lokasi);
+        $('#site_update option').filter(function() {
+            // console.log($(this).val().trim(), site);
+            return $(this).val().trim() == site
         }).prop('selected', true)
         $('#modal_edit_lokasi').modal('show');
         maps_edit_lokasi();
@@ -289,21 +295,21 @@
         function showPosition(position) {
             $('#lat_kantor').val(position.coords.latitude);
             $('#long_kantor').val(position.coords.longitude);
-            $('#lat_kantor_update').val(position.coords.latitude);
-            $('#long_kantor_update').val(position.coords.longitude);
+            $('#lat_lokasi_update').val(position.coords.latitude);
+            $('#long_lokasi_update').val(position.coords.longitude);
         }
     })
     $(document).on('click', '#btn_refresh_lokasi', function() {
         $('#lat_kantor').val('');
         $('#long_kantor').val('');
-        $('#lat_kantor_update').val('');
-        $('#long_kantor_update').val('');
+        $('#lat_lokasi_update').val('');
+        $('#long_lokasi_update').val('');
     })
 
     $(document).on('click', '#btn_delete_lokasi', function() {
         var cek = $(this).data('id');
         var holding = $(this).data('holding');
-        // console.log(holding);
+        console.log(holding);
         Swal.fire({
             title: 'Apakah kamu yakin?',
             text: "Kamu tidak dapat mengembalikan data ini",
@@ -315,7 +321,7 @@
         }).then((result) => {
             if (result.value) {
                 $.ajax({
-                    url: "@if(Auth::user()->is_admin =='hrd') {{url('/hrd/lokasi-kantor/delete/')}} @else {{url('lokasi-kantor/delete/')}} @endif" + cek + "/" + holding,
+                    url: "@if(Auth::user()->is_admin =='hrd') {{url('/hrd/lokasi/delete/')}} @else {{url('lokasi/delete/')}} @endif" + cek + "/" + holding,
                     type: "GET",
                     error: function() {
                         alert('Something is wrong');
@@ -340,19 +346,61 @@
         var lokasi = $(this).data('lokasi');
         var lat = $(this).data('lat');
         var long = $(this).data('long');
-        var titik = $(this).data('nama_titik');
+        var site = $(this).data('site');
         var radius = $(this).data('radius');
         $('#radius').val(radius);
         $('#lat_titik').val(lat);
         $('#long_titik').val(long);
         $('#lokasi_kantor').val(lokasi);
         $('#nama_lokasi').html(lokasi);
-        $('#nama_titik_lokasi').html(titik);
-        $('#nama_titik').val(titik);
+        $('#nama_site').html(site);
         $('#radius_titik').html(radius + ' M');
         $('#modal_lihat_lokasi').modal('show');
         maps_lokasi();
     });
+    $(function() {
+        $(document).on('change', '#site_update', function() {
+            let value = $(this).val();
+            let holding = '{{$holding->id}}';
+            console.log(holding);
+            $.ajax({
+                type: 'GET',
+                url: "@if(Auth::user()->is_admin =='hrd'){{url('hrd/lokasi/get_lokasi')}}/ @else {{url('lokasi/get_lokasi')}}/ @endif" + holding,
+                data: {
+                    holding: holding,
+                    value: value
+                },
+                cache: false,
+
+                success: function(response) {
+                    var result = JSON.parse(response);
+                    // console.log(result);
+                    if (result != null) {
+                        $('#site_name_update').val(result.site_name);
+                        $('#lat_site_update').val(result.site_lat);
+                        $('#long_site_update').val(result.site_long);
+                        maps_edit_lokasi();
+                    } else {
+                        $('#tambah_lokasi').hide();
+                    }
+                },
+                error: function(data) {
+                    console.log('error:', data)
+                },
+
+            });
+        });
+        var typingTimer; //timer identifier
+        var doneTypingInterval = 0;
+        $(document).on('keyup', '#radius', function() {
+            let value = $(this).val();
+            let holding = '{{$holding}}';
+            console.log(value);
+            clearTimeout(typingTimer);
+            typingTimer = setTimeout(maps_lokasi, doneTypingInterval);
+
+        });
+    })
 </script>
 <script>
     var map = null;
@@ -363,6 +411,7 @@
         var long = $('#long_titik').val();
         var lokasi_kantor = $("#lokasi_kantor").val()
         var nama_titik = $("#nama_titik").val()
+        console.log(lokasi_kantor, ' & ', nama_titik);
         if (map) {
             map.off();
             map.remove();
@@ -582,12 +631,15 @@
             map.off();
             map.remove();
         }
-        var long_titik = $("#long_kantor_update").val();
-        var lat_titik = $("#lat_kantor_update").val()
-        var lokasi_kantor = $("#lokasi_kantor_update").val()
-        var nama_titik = $("#nama_titik_update").val()
+        var long_site = $("#long_site_update").val();
+        var lat_site = $("#lat_site_update").val()
+        var long_lokasi = $("#long_lokasi_update").val();
+        var lat_lokasi = $("#lat_lokasi_update").val()
+        var lokasi = $("#nama_lokasi_update").val()
+        var nama_titik = $("#nama_lokasi_update").val()
+        var sitename = $("#site_name_update").val()
 
-        map = L.map('lihat_edit_lokasi').fitWorld().setView([lat_titik, long_titik], 17);
+        map = L.map('lihat_edit_lokasi').fitWorld().setView([lat_site, long_site], 17);
 
         L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
             maxZoom: 25,
@@ -596,12 +648,12 @@
 
 
         var popup = L.popup()
-            .setLatLng([lat_titik, long_titik])
-            .setContent(lokasi_kantor)
+            .setLatLng([lat_site, long_site])
+            .setContent(sitename)
             .openOn(map);
         // console.log(lokasi_kantor);
         // SP
-        if (lokasi_kantor == 'CV. SUMBER PANGAN - KEDIRI') {
+        if (sitename == 'CV. SUMBER PANGAN - KEDIRI') {
             var latlngs = [
                 [-7.757852, 112.093890],
                 [-7.756964, 112.094195],
@@ -611,7 +663,7 @@
             var polygon = L.polygon(latlngs, {
                 color: 'red'
             }).addTo(map);
-        } else if (lokasi_kantor == 'CV. SUMBER PANGAN - TUBAN') {
+        } else if (sitename == 'CV. SUMBER PANGAN - TUBAN') {
             var latlngs = [
                 [-6.991758822037412, 112.12048943252134],
                 [-6.992285922956118, 112.12087444394012],
@@ -638,7 +690,7 @@
             var polygon = L.polygon(latlngs, {
                 color: 'red'
             }).addTo(map);
-        } else if (lokasi_kantor == 'DEPO SP SIDOARJO') {
+        } else if (sitename == 'DEPO SP SIDOARJO') {
             var latlngs = [
                 [-7.361735, 112.784873],
                 [-7.361757, 112.785147],
@@ -648,7 +700,7 @@
             var polygon = L.polygon(latlngs, {
                 color: 'red'
             }).addTo(map);
-        } else if (lokasi_kantor == 'DEPO SP SAMARINDA') {
+        } else if (sitename == 'DEPO SP SAMARINDA') {
             var latlngs = [
                 [-0.46124004439708466, 117.1890440835615],
                 [-0.4612392469974343, 117.18918363302389],
@@ -658,7 +710,7 @@
             var polygon = L.polygon(latlngs, {
                 color: 'red'
             }).addTo(map);
-        } else if (lokasi_kantor == 'DEPO SP DENPASAR') {
+        } else if (sitename == 'DEPO SP DENPASAR') {
             var latlngs = [
                 [-8.652895481207116, 115.20293696056507],
                 [-8.652912717125513, 115.2030294967747],
@@ -668,7 +720,7 @@
             var polygon = L.polygon(latlngs, {
                 color: 'red'
             }).addTo(map);
-        } else if (lokasi_kantor == 'DEPO SP MALANG') {
+        } else if (sitename == 'DEPO SP MALANG') {
             var latlngs = [
                 [-7.967760845267797, 112.65873922458452],
                 [-7.967798033683292, 112.65879957428648],
@@ -678,7 +730,7 @@
             var polygon = L.polygon(latlngs, {
                 color: 'red'
             }).addTo(map);
-        } else if (lokasi_kantor == 'DEPO SP MALANG') {
+        } else if (sitename == 'DEPO SP MALANG') {
             var latlngs = [
                 [-7.967760845267797, 112.65873922458452],
                 [-7.967798033683292, 112.65879957428648],
@@ -688,7 +740,7 @@
             var polygon = L.polygon(latlngs, {
                 color: 'red'
             }).addTo(map);
-        } else if (lokasi_kantor == 'DEPO SP PALANGKARAYA') {
+        } else if (sitename == 'DEPO SP PALANGKARAYA') {
             var latlngs = [
                 [-2.1739101807413506, 113.864207945572],
                 [-2.1737446735313326, 113.86422269772137],
@@ -698,7 +750,7 @@
             var polygon = L.polygon(latlngs, {
                 color: 'red'
             }).addTo(map);
-        } else if (lokasi_kantor == 'DEPO SP SEMARANG') {
+        } else if (sitename == 'DEPO SP SEMARANG') {
             var latlngs = [
                 [-6.99848157965858, 110.46462216952277],
                 [-6.998261280500614, 110.4646979419191],
@@ -709,7 +761,7 @@
             var polygon = L.polygon(latlngs, {
                 color: 'red'
             }).addTo(map);
-        } else if (lokasi_kantor == 'PT. SURYA PANGAN SEMESTA - KEDIRI') {
+        } else if (sitename == 'PT. SURYA PANGAN SEMESTA - KEDIRI') {
             var latlngs = [
                 [-7.811054254338505, 112.07984213086016],
                 [-7.810839096224432, 112.08081884380057],
@@ -721,7 +773,7 @@
             var polygon = L.polygon(latlngs, {
                 color: 'red'
             }).addTo(map);
-        } else if (lokasi_kantor == 'PT. SURYA PANGAN SEMESTA - NGAWI') {
+        } else if (sitename == 'PT. SURYA PANGAN SEMESTA - NGAWI') {
             var latlngs = [
                 [-7.503903124866787, 111.42901333909559],
                 [-7.503780799880943, 111.42583760362271],
@@ -733,7 +785,7 @@
             var polygon = L.polygon(latlngs, {
                 color: 'red'
             }).addTo(map);
-        } else if (lokasi_kantor == 'PT. SURYA PANGAN SEMESTA - SUBANG') {
+        } else if (sitename == 'PT. SURYA PANGAN SEMESTA - SUBANG') {
             var latlngs = [
                 [-6.29533870949617, 107.90681938912391],
                 [-6.295727870479563, 107.90769375045888],
@@ -743,7 +795,7 @@
             var polygon = L.polygon(latlngs, {
                 color: 'red'
             }).addTo(map);
-        } else if (lokasi_kantor == 'DEPO SPS BANDUNG') {
+        } else if (sitename == 'DEPO SPS BANDUNG') {
             var latlngs = [
                 [-6.887528841438018, 107.60032030611694],
                 [-6.887538161422427, 107.60048257975994],
@@ -753,7 +805,7 @@
             var polygon = L.polygon(latlngs, {
                 color: 'red'
             }).addTo(map);
-        } else if (lokasi_kantor == 'BULOG PARON - KEDIRI') {
+        } else if (sitename == 'BULOG PARON - KEDIRI') {
             var latlngs = [
                 [-7.813968757527632, 112.05662997145677],
                 [-7.81236784846995, 112.05722929959332],
@@ -763,7 +815,7 @@
             var polygon = L.polygon(latlngs, {
                 color: 'red'
             }).addTo(map);
-        } else if (lokasi_kantor == 'DEPO SPS CIPINANG (JAKARTA)') {
+        } else if (sitename == 'DEPO SPS CIPINANG (JAKARTA)') {
             var latlngs = [
                 [-6.21311187156196, 106.88544203302257],
                 [-6.2120446956529545, 106.88543065337363],
@@ -795,10 +847,10 @@
         // map.on('click', onMapClick);
         var marker = null;
         var circle = null;
-        marker = L.marker([lat_titik, long_titik]).addTo(map)
+        marker = L.marker([lat_lokasi, long_lokasi]).addTo(map)
             .bindPopup(nama_titik).openPopup();
         radius = $("#radius_update").val()
-        circle = L.circle([lat_titik, long_titik], {
+        circle = L.circle([lat_lokasi, long_lokasi], {
             color: 'purple',
             fillColor: 'purple',
             fillOpacity: 0.5,
@@ -812,11 +864,11 @@
             let latitude = e.latlng.lat.toString().substring(0, 15);
             let longitude = e.latlng.lng.toString().substring(0, 15);
             // console.log(longitude);
-            $("#long_kantor_update").val(longitude);
-            $("#lat_kantor_update").val(latitude);
+            $("#long_lokasi_update").val(longitude);
+            $("#lat_lokasi_update").val(latitude);
             // map.removeLayer(circle1);
             // map.removeLayer(circle);
-            var nama_titik = $("#nama_titik_update").val()
+            var nama_titik = $("#nama_lokasi_update").val()
             // console.log(nama_titik);
             if (marker !== null) {
                 map.removeLayer(marker);

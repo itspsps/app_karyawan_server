@@ -6,49 +6,52 @@ use App\Imports\BagianImport;
 use App\Models\Bagian;
 use App\Models\Departemen;
 use App\Models\Divisi;
+use App\Models\Holding;
 use App\Models\Jabatan;
 use App\Models\Karyawan;
 use App\Models\User;
+use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
 use Ramsey\Uuid\Uuid;
+use RealRashid\SweetAlert\Facades\Alert;
 use Yajra\DataTables\Facades\DataTables;
 
 class BagianController extends Controller
 {
-    public function index()
+    public function index($holding)
     {
-        $holding = request()->segment(count(request()->segments()));
+        $holding = Holding::where('holding_code', $holding)->first();
         // $get = Bagian::with('Divisi')->get();
         // dd($get);
         return view('admin.bagian.index', [
             'title' => 'Master Divisi',
             'holding' => $holding,
-            'data_bagian' => Bagian::with('Divisi')->where('holding', $holding)->get(),
-            'data_dept' => Departemen::orderBy('nama_departemen', 'asc')->where('holding', $holding)->get(),
-            'data_divisi' => Divisi::orderBy('nama_divisi', 'asc')->where('holding', $holding)->get()
+            'data_bagian' => Bagian::with('Divisi')->where('holding', $holding->id)->get(),
+            'data_dept' => Departemen::orderBy('nama_departemen', 'asc')->where('holding', $holding->id)->get(),
+            'data_divisi' => Divisi::orderBy('nama_divisi', 'asc')->where('holding', $holding->id)->get()
         ]);
     }
-    public function ImportBagian(Request $request)
+    public function ImportBagian(Request $request, $holding)
     {
-        $holding = request()->segment(count(request()->segments()));
+        $holding = Holding::where('holding_code', $holding)->first();
         Excel::import(new BagianImport, $request->file_excel);
 
-        return redirect('/bagian/' . $holding)->with('success', 'Import Bagian Sukses');
+        return redirect('/bagian/' . $holding->holding_code)->with('success', 'Import Bagian Sukses');
     }
-    public function get_divisi($id)
+    public function get_divisi($id, $holding)
     {
         // dd($id);
-        $get_divisi = Divisi::where('dept_id', $id)->get();
+        $get_divisi = Divisi::where('dept_id', $id)->where('holding',$holding)->get();
         // dd($get_divisi);
         echo "<option value=''>Pilih Divisi...</option>";
         foreach ($get_divisi as $divisi) {
             echo "<option value='$divisi->id'>$divisi->nama_divisi</option>";
         }
     }
-    public function datatable(Request $request)
+    public function datatable(Request $request, $holding)
     {
-        $holding = request()->segment(count(request()->segments()));
+        $holding = Holding::where('holding_code', $holding)->first();
         $table =  Bagian::with([
             'Divisi' =>  function ($query) {
                 $query->with(['Departemen' => function ($query) {
@@ -56,7 +59,10 @@ class BagianController extends Controller
                 }]);
                 $query->orderBy('nama_divisi', 'ASC');
             },
-        ])->where('holding', $holding)->orderBy('nama_bagian', 'ASC')->get();
+        ])
+            ->where('holding', $holding->id)
+            ->orderBy('nama_bagian', 'ASC')
+            ->get();
         // dd($table);
         if (request()->ajax()) {
             return DataTables::of($table)
@@ -79,12 +85,12 @@ class BagianController extends Controller
                 ->addColumn('jumlah_jabatan', function ($row) use ($holding) {
                     $cek_jabatan = Jabatan::where('bagian_id', $row->id)
                         ->where('divisi_id', $row->divisi_id)
-                        ->where('holding', $holding)
+                        ->where('holding', $holding->id)
                         ->count();
                     if ($cek_jabatan == 0) {
                         $jumlah_jabatan = $cek_jabatan;
                     } else {
-                        $jumlah_jabatan = $cek_jabatan . '&nbsp; <button id="btn_lihat_jabatan" data-id="' . $row->id . '" data-holding="' . $holding . '" type="button" class="btn btn-sm btn-outline-primary">
+                        $jumlah_jabatan = $cek_jabatan . '&nbsp; <button id="btn_lihat_jabatan" data-id="' . $row->id . '" data-holding="' . $holding->holding_code . '" type="button" class="btn btn-sm btn-outline-primary">
                     <span class="tf-icons mdi mdi-eye-circle-outline me-1"></span>Lihat
                   </button>';
                     }
@@ -97,21 +103,21 @@ class BagianController extends Controller
                         ->orWhere('bagian2_id', $row->id)
                         ->orWhere('bagian3_id', $row->id)
                         ->orWhere('bagian4_id', $row->id)
-                        ->where('kontrak_kerja', $holding)
+                        ->where('kontrak_kerja', $holding->id)
                         ->where('status_aktif', 'AKTIF')
                         ->count();
                     if ($cek_karyawan == 0) {
                         $jumlah_karyawan = $cek_karyawan;
                     } else {
-                        $jumlah_karyawan = $cek_karyawan . '&nbsp; <button id="btn_lihat_karyawan" data-id="' . $row->id . '" data-holding="' . $holding . '" type="button" class="btn btn-sm btn-outline-info">
+                        $jumlah_karyawan = $cek_karyawan . '&nbsp; <button id="btn_lihat_karyawan" data-id="' . $row->id . '" data-holding="' . $holding->holding_code . '" type="button" class="btn btn-sm btn-outline-info">
                         <span class="tf-icons mdi mdi-eye-circle-outline me-1"></span>Lihat
                         </button>';
                     }
                     return $jumlah_karyawan;
                 })
                 ->addColumn('option', function ($row) use ($holding) {
-                    $btn = '<button id="btn_edit_bagian" data-id="' . $row->id . '" data-dept="' . $row->Dept_id . '" data-divisi="' . $row->divisi_id . '" data-bagian="' . $row->nama_bagian . '" data-holding="' . $holding . '" type="button" class="btn btn-icon btn-warning waves-effect waves-light"><span class="tf-icons mdi mdi-pencil-outline"></span></button>';
-                    $btn = $btn . '<button type="button" id="btn_delete_bagian" data-id="' . $row->id . '" data-holding="' . $holding . '"  data-divisi="' . $row->divisi_id . '" class="btn btn-icon btn-danger waves-effect waves-light"><span class="tf-icons mdi mdi-delete-outline"></span></button>';
+                    $btn = '<button id="btn_edit_bagian" data-id="' . $row->id . '" data-dept="' . $row->Divisi->Departemen->id . '" data-divisi="' . $row->divisi_id . '" data-bagian="' . $row->nama_bagian . '" data-holding="' . $holding->holding_code . '" type="button" class="btn btn-icon btn-warning waves-effect waves-light"><span class="tf-icons mdi mdi-pencil-outline"></span></button>';
+                    $btn = $btn . '<button type="button" id="btn_delete_bagian" data-id="' . $row->id . '" data-holding="' . $holding->holding_code . '"  data-divisi="' . $row->divisi_id . '" class="btn btn-icon btn-danger waves-effect waves-light"><span class="tf-icons mdi mdi-delete-outline"></span></button>';
 
                     return $btn;
                 })
@@ -119,11 +125,11 @@ class BagianController extends Controller
                 ->make(true);
         }
     }
-    public function jabatan_datatable(Request $request, $id)
+    public function jabatan_datatable($id, $holding)
     {
-        $holding = request()->segment(count(request()->segments()));
+        $holding = Holding::where('holding_code', $holding)->first();
         $table =  Jabatan::where('bagian_id', $id)
-            ->where('holding', $holding)
+            ->where('holding', $holding->id)
             ->get();
         // dd($table);
         if (request()->ajax()) {
@@ -136,7 +142,7 @@ class BagianController extends Controller
                         ->orWhere('jabatan2_id', $row->id)
                         ->orWhere('jabatan3_id', $row->id)
                         ->orWhere('jabatan4_id', $row->id)
-                        ->where('kontrak_kerja', $holding)
+                        ->where('kontrak_kerja', $holding->id)
                         ->where('b.is_admin', 'user')
                         ->count();
                     return $karyawan;
@@ -145,9 +151,9 @@ class BagianController extends Controller
                 ->make(true);
         }
     }
-    public function karyawanjabatan_datatable(Request $request, $id)
+    public function karyawanjabatan_datatable($id, $holding)
     {
-        $holding = request()->segment(count(request()->segments()));
+        $holding = Holding::where('holding_code', $holding)->first();
         $table =   Karyawan::leftJoin('users as b', 'b.karyawan_id', 'karyawans.id')
             ->where('status_aktif', 'AKTIF')
             ->where('bagian_id', $id)
@@ -156,22 +162,22 @@ class BagianController extends Controller
             ->orWhere('bagian3_id', $id)
             ->orWhere('bagian4_id', $id)
             ->where('b.is_admin', 'user')
-            ->where('kontrak_kerja', $holding)
+            ->where('kontrak_kerja', $holding->id)
             ->get();
         // dd($table);
         if (request()->ajax()) {
             return DataTables::of($table)
                 ->addColumn('nama_jabatan', function ($row) use ($holding) {
-                    $jabatan = Jabatan::where('holding', $holding)->where('id', $row->jabatan_id)->value('nama_jabatan');
+                    $jabatan = Jabatan::where('holding', $holding->id)->where('id', $row->jabatan_id)->value('nama_jabatan');
                     return $jabatan;
                 })
                 ->rawColumns(['nama_jabatan'])
                 ->make(true);
         }
     }
-    public function create()
+    public function create($holding)
     {
-        $holding = request()->segment(count(request()->segments()));
+        $holding = Holding::where('holding_code', $holding)->first();
         return view('bagian.create', [
             'title' => 'Tambah Data Divisi',
             'holding' => $holding,
@@ -179,29 +185,34 @@ class BagianController extends Controller
         ]);
     }
 
-    public function insert(Request $request)
+    public function insert(Request $request, $holding)
     {
         // dd($request->all());
-        $holding = request()->segment(count(request()->segments()));
+        $holding = Holding::where('holding_code', $holding)->first();
         $validatedData = $request->validate([
             'nama_divisi' => 'required|max:255',
             'nama_bagian' => 'required',
         ]);
+        try {
+            Bagian::create(
+                [
+                    'id' => Uuid::uuid4(),
+                    'holding' => $holding->id,
+                    'nama_bagian' => $validatedData['nama_bagian'],
+                    'divisi_id' => Divisi::where('id', $validatedData['nama_divisi'])->value('id'),
+                ]
+            );
+            return redirect('/bagian/' . $holding->holding_code)->with('success', 'Data Berhasil di Tambahkan');
+        } catch (QueryException $e) {
+            Alert::error('Error', $e->getMessage());
+            return redirect('/bagian/' . $holding->holding_code)->with('Error', $e->getMessage()); // bisa disembunyikan di production
 
-        Bagian::create(
-            [
-                'id' => Uuid::uuid4(),
-                'holding' => $holding,
-                'nama_bagian' => $validatedData['nama_bagian'],
-                'divisi_id' => Divisi::where('id', $validatedData['nama_divisi'])->value('id'),
-            ]
-        );
-        return redirect('/bagian/' . $holding)->with('success', 'Data Berhasil di Tambahkan');
+        }
     }
 
-    public function edit($id)
+    public function edit($id, $holding)
     {
-        $holding = request()->segment(count(request()->segments()));
+        $holding = Holding::where('holding_code', $holding)->first();
         return view('bagian.edit', [
             'title' => 'Edit Data Divisi',
             'holding' => $holding,
@@ -210,9 +221,9 @@ class BagianController extends Controller
         ]);
     }
 
-    public function update(Request $request)
+    public function update(Request $request, $holding)
     {
-        $holding = request()->segment(count(request()->segments()));
+        $holding = Holding::where('holding_code', $holding)->first();
         $validatedData = $request->validate([
             'nama_divisi_update' => 'required|max:255',
             'nama_bagian_update' => 'required',
@@ -220,12 +231,12 @@ class BagianController extends Controller
 
         Bagian::where('id', $request->id_bagian)->update(
             [
-                'holding' => $holding,
+                'holding' => $holding->id,
                 'nama_bagian' => $validatedData['nama_bagian_update'],
                 'divisi_id' => Divisi::where('id', $validatedData['nama_divisi_update'])->value('id'),
             ]
         );
-        return redirect('/bagian/' . $holding)->with('success', 'data berhasil diupdate');
+        return redirect('/bagian/' . $holding->holding_code)->with('success', 'data berhasil diupdate');
     }
 
     public function get_bagian($id)
@@ -238,17 +249,17 @@ class BagianController extends Controller
         }
     }
 
-    public function delete(Request $request, $id)
+    public function delete(Request $request, $id, $holding)
     {
         // dd($request->all());
-        $holding = request()->segment(count(request()->segments()));
+        $holding = Holding::where('holding_code', $holding)->first();
         $cek_jabatan = Jabatan::where('bagian_id', $id)
             ->where('divisi_id', $request->divisi)
             ->where('holding', $request->holding)
             ->count();
         // dd($cek_jabatan);
         if ($cek_jabatan == 0) {
-            $cek_karyawan = Karyawan::where('jabatan_id', $id)->where('kontrak_kerja', $holding)->where('status_aktif', 'AKTIF')->count();
+            $cek_karyawan = Karyawan::where('jabatan_id', $id)->where('kontrak_kerja', $holding->id)->where('status_aktif', 'AKTIF')->count();
             if ($cek_karyawan == 0) {
                 $bagian = Bagian::where('id', $id)->delete();
                 return response()->json(['status' => 1]);

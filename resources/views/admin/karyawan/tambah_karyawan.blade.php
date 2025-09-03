@@ -13,8 +13,9 @@
             <div class="card mb-4">
                 <h4 class="card-header">Tambah Karyawan</h4>
                 <!-- Account -->
-                <form method="post" action="@if(Auth::user()->is_admin=='hrd'){{ url('/hrd/karyawan/tambah-karyawan-proses/'.$holding) }}@else{{ url('/karyawan/tambah-karyawan-proses/'.$holding) }}@endif" enctype="multipart/form-data">
+                <form method="post" action="@if(Auth::user()->is_admin=='hrd'){{ url('/hrd/karyawan/tambah-karyawan-proses/'.$holding->code) }}@else{{ url('/karyawan/tambah-karyawan-proses/'.$holding->code) }}@endif" enctype="multipart/form-data">
                     @csrf
+                    <input type="hidden" name="holding" value="{{$holding=='' ? '':$holding->holding_code}}">
                     <div class="card-body">
                         <div class="nav-align-top mb-4">
                             <ul class="nav nav-pills mb-3" role="tablist">
@@ -325,8 +326,8 @@
                                         </div>
                                         <div id="form_kontrak" class="col-md-6">
                                             <div class="form-floating form-floating-outline">
-                                                <input style="font-size: small;" type="text" class="form-control" readonly value="@if($holding =='sp')CV. SUMBER PANGAN @elseif($holding =='sps') PT. SURYA PANGAN SEMESTA @elseif($holding =='sip') CV. SURYA INTI PANGAN  @endif">
-                                                <input style="font-size: small;" type="hidden" class="form-control" id="kontrak_kerja" name="kontrak_kerja" value="@if($holding =='sp') SP @elseif($holding =='sps') SPS @elseif($holding =='sip') SIP @endif">
+                                                <input style="font-size: small;" type="text" class="form-control" readonly value="{{$holding->holding_name}}">
+                                                <input style="font-size: small;" type="hidden" class="form-control" id="kontrak_kerja" name="kontrak_kerja" value="{{$holding->holding_category}}">
                                                 <label for="kontrak_kerja">Kontrak Kerja</label>
                                             </div>
 
@@ -674,22 +675,16 @@
                                             <label class="form-check-label" for="kategori_jabatan">Pilih Kategori Jabatan (Untuk All Site)</label>
                                             <div class="form-floating form-floating-outline">
                                                 <div class="row gy-4">
+                                                    @foreach($holdingAll as $data)
                                                     <div class="col-lg-4 form-check">
-                                                        <input style="font-size: small;" type="radio" id="kategori_jabatan_sp" name="kategori_jabatan" class="form-check-input" value="sp" @if(old('kategori_jabatan')=='sp' ) checked @else @endif>
-                                                        <label class="form-check-label" for="kategori_jabatan_sp">CV. SUMBER PANGAN</label>
+                                                        <input style="font-size: small;" type="radio" id="kategori_jabatan_{{strtolower($data->holding_category)}}" name="kategori_jabatan" class="form-check-input" value="{{$data->holding_category}}" {{old('kategori_jabatan')== $data->holding_category ? checked:'' }}>
+                                                        <label class="form-check-label" for="kategori_jabatan_{{strtolower($data->holding_category)}}">{{$data->holding_name}}</label>
                                                     </div>
-                                                    <div class="col-lg-4 form-check">
-                                                        <input style="font-size: small;" type="radio" id="kategori_jabatan_sps" name="kategori_jabatan" class="form-check-input" value="sps" @if(old('kategori_jabatan')=='sps' ) checked @else @endif>
-                                                        <label class="form-check-label" for="kategori_jabatan_sps">PT. SURYA PANGAN SEMESTA</label>
-                                                    </div>
-                                                    <div class="col-lg-4 form-check">
-                                                        <input style="font-size: small;" type="radio" id="kategori_jabatan_sip" name="kategori_jabatan" class="form-check-input" value="sip" @if(old('kategori_jabatan')=='sip' ) checked @else @endif>
-                                                        <label class="form-check-label" for="kategori_jabatan_sip">CV. SURYA INTI PANGAN</label>
-                                                    </div>
+                                                    @endforeach
                                                 </div>
                                             </div>
                                         </div>
-                                        <input style="font-size: small;" type="hidden" id="kategori_jabatan" value="{{$holding}}">
+                                        <input style="font-size: small;" type="hidden" id="kategori_jabatan" value="{{$holding->holding_code}}">
                                     </div>
                                     <div class="row mt-2 gy-4">
                                         <div id="form_departemen" class="col-md-3">
@@ -697,20 +692,8 @@
                                             <div class="form-floating form-floating-outline">
                                                 <select style="font-size: small;" name="departemen_id" id="id_departemen" class="form-control @error('departemen_id') is-invalid @enderror">
                                                     <option value=""> Pilih Departemen</option>
-                                                    @if($holding == 'sp')
-                                                    @php
-                                                    $ok = 'CV. SUMBER PANGAN';
-                                                    @endphp
-                                                    @elseif ($holding == 'sps')
-                                                    @php
-                                                    $ok = 'PT. SURYA PANGAN SEMESTA';
-                                                    @endphp
-                                                    @else
-                                                    @php
-                                                    $ok = 'CV. SURYA INTI PANGAN';
-                                                    @endphp
-                                                    @endif
-                                                    <optgroup label='Daftar Departemen {{$ok}}'>
+
+                                                    <optgroup label='Daftar Departemen {{$holding->holding_name}}'>
                                                         @foreach ($data_departemen as $dj)
                                                         <option value="{{$dj->id}}" {{($dj->id == old('departemen_id')) ? 'selected' : ''}}>{{$dj->nama_departemen}}</option>
                                                         @endforeach
@@ -2155,7 +2138,7 @@
     $('#id_departemen').on('change', function() {
         let id_departemen = $('#id_departemen').val();
         let holding = $('#kategori_jabatan').val();
-        // console.log(holding);
+        console.log(holding);
         $.ajax({
             type: 'GET',
             url: "@if(Auth::user()->is_admin=='hrd'){{url('hrd/karyawan/get_divisi')}}@else{{url('karyawan/get_divisi')}}@endif",

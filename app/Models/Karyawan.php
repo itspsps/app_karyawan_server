@@ -128,6 +128,10 @@ class Karyawan extends Model
         return $this->hasMany(Izin::class, 'user_id', 'id');
     }
 
+    public function KontrakKerja(): BelongsTo
+    {
+        return $this->belongsTo(Holding::class, 'kontrak_kerja', 'id');
+    }
     public function Penugasan()
     {
         return $this->hasMany(Penugasan::class);

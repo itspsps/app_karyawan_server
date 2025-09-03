@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Holding;
 use App\Models\Karyawan;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
+use Ramsey\Uuid\Uuid;
 use RealRashid\SweetAlert\Facades\Alert;
 use Symfony\Component\Console\Input\Input;
 
@@ -22,7 +24,7 @@ class authController extends Controller
         } else {
             if (auth()->user()->is_admin == 'admin') {
                 return redirect('dashboard/holding');
-            } else if (auth()->user()->is_admin == 'superadmin') {
+            } else if (auth()->user()->is_admin == 'hrd') {
                 return redirect('dashboard/holding');
             } else {
                 return redirect('home');
@@ -90,9 +92,13 @@ class authController extends Controller
                 $request->session()->flash('user_nonaktif');
                 return redirect('/');
             } else {
-                // dd('ok');
-                Alert::success('Berhasil', 'Selamat Datang');
-                return redirect('/dashboard/holding')->with('Berhasil', 'Selamat Datang');
+                $holding = Holding::get();
+                foreach ($holding as $data) {
+                    $update_holding = Holding::where('id', $data->id)->first();
+                    $update_holding->holding_code = $data->holding_category . 'Code_' . Uuid::uuid4();
+                    $update_holding->save();
+                }
+                return redirect()->route('dashboard_holding');
             }
         } else if (Auth::guard('web')->attempt(array($fieldType => $credentials['username'], 'password' => $credentials['password'], 'is_admin' => 'hrd'), $remember)) {
             // dd('superadmin');
@@ -105,7 +111,7 @@ class authController extends Controller
                 // dd('ok');
                 // dd(Auth::user());
                 Alert::success('Berhasil', 'Selamat Datang');
-                return redirect('hrd/dashboard/holding')->with('Berhasil', 'Selamat Datang');
+                return redirect()->route('dashboard_holding')->with('Berhasil', 'Selamat Datang');
             }
         } else if (Auth::guard('web')->attempt(array($fieldType => $credentials['username'], 'password' => $credentials['password'], 'is_admin' => 'user'), $remember)) {
             // dd('user');

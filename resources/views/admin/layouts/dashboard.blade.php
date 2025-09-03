@@ -44,6 +44,11 @@
     <!--! Template customizer & Theme config files MUST be included after core stylesheets and helpers.js in the <head> section -->
     <!--? Config:  Mandatory theme config file contain global vars & default theme options, Set your preferred theme option in this file.  -->
     <script src="{{asset('admin/assets/js/config.js')}}"></script>
+    <style>
+        .menu_bg_color {
+            background-color: rgba(58, 53, 65, 0.08);
+        }
+    </style>
 </head>
 
 <body>

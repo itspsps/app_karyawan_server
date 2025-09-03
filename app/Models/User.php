@@ -11,8 +11,9 @@ use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Support\Str;
 use Spatie\Permission\Traits\HasRoles;
+use Tymon\JWTAuth\Contracts\JWTSubject;
 
-class User extends Authenticatable
+class User extends Authenticatable implements JWTSubject
 {
     use HasApiTokens, HasFactory, Notifiable, UuidTrait, HasRoles;
 
@@ -46,7 +47,15 @@ class User extends Authenticatable
         'password',
         'remember_token',
     ];
+    public function getJWTIdentifier()
+    {
+        return $this->getKey();
+    }
 
+    public function getJWTCustomClaims()
+    {
+        return [];
+    }
     /**
      * The attributes that should be cast.
      *

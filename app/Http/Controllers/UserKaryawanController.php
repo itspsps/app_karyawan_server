@@ -9,6 +9,7 @@ use App\Imports\UserUpdateImport;
 use App\Models\ActivityLog;
 use App\Models\Departemen;
 use App\Models\Divisi;
+use App\Models\Holding;
 use App\Models\Jabatan;
 use App\Models\Karyawan;
 use App\Models\Lokasi;
@@ -16,6 +17,7 @@ use App\Models\User;
 use App\Models\UserNonActive;
 use PDF;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Maatwebsite\Excel\Facades\Excel;
@@ -24,24 +26,24 @@ use Yajra\DataTables\Facades\DataTables;
 
 class UserKaryawanController extends Controller
 {
-    public function index_users()
+    public function index_users($holding)
     {
 
-        $holding = request()->segment(count(request()->segments()));
+        $holding = Holding::where('holding_code', $holding)->first();
         $karyawan = Karyawan::where('karyawans.status_aktif', 'AKTIF')
-            ->where('karyawans.kontrak_kerja', $holding)
+            ->where('karyawans.kontrak_kerja', $holding->holding_name)
             ->orderBy('karyawans.name', 'ASC')
             ->get();
         $data_user = User::Join('karyawans', 'users.karyawan_id', 'karyawans.id')->where('kontrak_kerja', $holding)->where('user_aktif', 'AKTIF')->get();
         return view('admin.karyawan.index_users', [
             // return view('karyawan.index', [
             'title' => 'Karyawan',
-            "data_departemen" => Departemen::orderBy('nama_departemen', 'ASC')->where('holding', $holding)->get(),
+            "data_departemen" => Departemen::orderBy('nama_departemen', 'ASC')->where('holding', $holding->id)->get(),
             'holding' => $holding,
             'karyawan' => $karyawan,
             'data_user' => $data_user,
             "data_jabatan" => Jabatan::orderBy('nama_jabatan', 'ASC')->where('holding', $holding)->get(),
-            "data_lokasi" => Lokasi::orderBy('lokasi_kantor', 'ASC')->get(),
+            "data_lokasi" => Lokasi::orderBy('nama_lokasi', 'ASC')->get(),
             "karyawan_laki" => User::Join('karyawans', 'users.karyawan_id', 'karyawans.id')->where('karyawans.gender', 'Laki-Laki')->where('kontrak_kerja', $holding)->where('user_aktif', 'AKTIF')->count(),
             "karyawan_perempuan" => User::Join('karyawans', 'users.karyawan_id', 'karyawans.id')->where('karyawans.gender', 'Perempuan')->where('kontrak_kerja', $holding)->where('user_aktif', 'AKTIF')->count(),
             "karyawan_office" => User::Join('karyawans', 'users.karyawan_id', 'karyawans.id')->where('karyawans.kategori', 'Karyawan Bulanan')->where('kontrak_kerja', $holding)->where('user_aktif', 'AKTIF')->count(),
@@ -50,6 +52,29 @@ class UserKaryawanController extends Controller
     }
 
 
+    public function index_finger(Request $request, $holding)
+    {
+        $holding = Holding::where('holding_code', $holding)->first();
+        $karyawan = Karyawan::where('karyawans.status_aktif', 'AKTIF')
+            ->where('karyawans.kontrak_kerja', $holding->holding_name)
+            ->orderBy('karyawans.name', 'ASC')
+            ->get();
+        $data_user = User::Join('karyawans', 'users.karyawan_id', 'karyawans.id')->where('kontrak_kerja', $holding)->where('user_aktif', 'AKTIF')->get();
+        return view('admin.karyawan.index_finger', [
+            // return view('karyawan.index', [
+            'title' => 'Karyawan',
+            "data_departemen" => Departemen::orderBy('nama_departemen', 'ASC')->where('holding', $holding->id)->get(),
+            'holding' => $holding,
+            'karyawan' => $karyawan,
+            'data_user' => $data_user,
+            "data_jabatan" => Jabatan::orderBy('nama_jabatan', 'ASC')->where('holding', $holding)->get(),
+            "data_lokasi" => Lokasi::orderBy('nama_lokasi', 'ASC')->get(),
+            "karyawan_laki" => User::Join('karyawans', 'users.karyawan_id', 'karyawans.id')->where('karyawans.gender', 'Laki-Laki')->where('kontrak_kerja', $holding)->where('user_aktif', 'AKTIF')->count(),
+            "karyawan_perempuan" => User::Join('karyawans', 'users.karyawan_id', 'karyawans.id')->where('karyawans.gender', 'Perempuan')->where('kontrak_kerja', $holding)->where('user_aktif', 'AKTIF')->count(),
+            "karyawan_office" => User::Join('karyawans', 'users.karyawan_id', 'karyawans.id')->where('karyawans.kategori', 'Karyawan Bulanan')->where('kontrak_kerja', $holding)->where('user_aktif', 'AKTIF')->count(),
+            "karyawan_shift" => User::Join('karyawans', 'users.karyawan_id', 'karyawans.id')->where('karyawans.kategori', 'Karyawan Harian')->where('kontrak_kerja', $holding)->where('user_aktif', 'AKTIF')->count(),
+        ]);
+    }
     public function prosesTambahUser(Request $request)
     {
         $rules = [
@@ -87,23 +112,23 @@ class UserKaryawanController extends Controller
 
         return redirect()->back()->with('success', 'Data Berhasil di Simpan');
     }
-    public function datatable_users_bulanan(Request $request)
+    public function datatable_users_bulanan(Request $request, $holding)
     {
-        $holding = request()->segment(count(request()->segments()));
+        $holding = Holding::where('holding_code', $holding)->first();
         $table = User::With(['Karyawan' => function ($query) use ($holding) {
 
             $query->with('Divisi');
             $query->with('Jabatan');
-            $query->where('kontrak_kerja', $holding);
+            $query->where('kontrak_kerja', $holding->id);
             $query->where('kategori', 'Karyawan Bulanan');
         }])->Join('karyawans', 'karyawans.id', 'users.karyawan_id')
             ->where('karyawans.kategori', 'Karyawan Bulanan')
-            ->where('karyawans.kontrak_kerja', $holding)
+            ->where('karyawans.kontrak_kerja', $holding->id)
             ->select('users.*')
             ->orderBy('id', 'DESC')
             // ->limit(2)
             ->get();
-        // dd($table);
+        // dd($table, $holding->holding_name);
         if (request()->ajax()) {
             return DataTables::of($table)
                 ->addColumn('name', function ($row) use ($holding) {
@@ -257,9 +282,25 @@ class UserKaryawanController extends Controller
                 ->make(true);
         }
     }
-    public function datatable_users_harian(Request $request)
+    public function users_finger_datatable(Request $request, $holding)
     {
-        $holding = request()->segment(count(request()->segments()));
+        $holding = Holding::where('holding_code', $holding)->first();
+        $table = DB::connection('solution_access')->select('SELECT TOP 20 * FROM USERINFO');
+        // dd($table);
+        if (request()->ajax()) {
+            $column = DataTables::of($table);
+            $column->addColumn('action', function ($row) {
+                return '<button class="btn btn-sm btn-primary" onclick="edit(' . $row->USERID . ')">Edit</button>';
+            });
+            return $column->rawColumns(['action'])
+                ->make('true');
+        }
+    }
+    // dd($table, $holding->holding_name);
+
+    public function datatable_users_harian(Request $request, $holding)
+    {
+        $holding = Holding::where('id', $holding)->first();
         $table = User::With(['Karyawan' => function ($query) use ($holding) {
 
             $query->with('Divisi');

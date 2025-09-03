@@ -61,14 +61,14 @@
                     <hr class="5">
                     <div class="containerItems row">
                         @foreach($data_divisi as $divisi)
-                        <div class="col-md-6 col-lg-4" data-search="{{$divisi->nama_divisi}}" style="">
+                        <div class="col-md-6 col-lg-4" data-search="{{$divisi->Departemen->nama_departemen}}">
                             <div class="card text-center mb-3">
                                 <div class="card-body">
                                     <h6 class="card-title">
                                         <p class="card-text">Departemen : </p>@if($divisi->Departemen==NULL)@else {{$divisi->Departemen->nama_departemen}} @endif
                                     </h6>
                                     <p class="card-text">({{$divisi->nama_divisi}})</p>
-                                    <a href="@if(Auth::user()->is_admin =='hrd'){{url('hrd/detail_jabatan',$divisi->id).'/'.$holding}}@else{{url('detail_jabatan',$divisi->id).'/'.$holding}}@endif" class="btn btn-primary btn-sm waves-effect waves-light">Lihat Jabatan ({{count($divisi->Jabatan)}})</a>
+                                    <a href="@if(Auth::user()->is_admin =='hrd'){{url('hrd/detail_jabatan',$divisi->id).'/'.$holding->holding_code}}@else{{url('detail_jabatan',$divisi->id).'/'.$holding->holding_code}}@endif" class="btn btn-primary btn-sm waves-effect waves-light">Lihat Jabatan ({{count($divisi->Jabatan)}})</a>
                                 </div>
                             </div>
                         </div>
@@ -89,8 +89,13 @@
 <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
 <script src="{{asset('search/e-search.js')}}"></script>
 <script type="text/javascript">
-    $('#search-jabatan').search(function() {
-
+    $(document).ready(function() {
+        $('#search-jabatan').on('keyup', function() {
+            var value = $(this).val().toLowerCase();
+            $('[data-search]').filter(function() {
+                $(this).toggle($(this).data('search').toLowerCase().indexOf(value) > -1);
+            });
+        });
     });
 </script>
 <script type="text/javascript">
@@ -111,7 +116,8 @@
 <script>
     $('#nama_divisi').on('change', function() {
         let id_divisi = $(this).val();
-        let url = "@if(Auth::user()->is_admin =='hrd'){{url('/hrd/jabatan/get_bagian')}}@else{{url('/jabatan/get_bagian')}}@endif" + "/" + id_divisi;
+        var holding = '{{$holding->id}}';
+        let url = "@if(Auth::user()->is_admin =='hrd'){{url('/hrd/jabatan/get_bagian')}}@else{{url('/jabatan/get_bagian')}}@endif" + "/" + id_divisi + "/" + holding;
         // console.log(id_divisi);
         // console.log(url);
         $.ajax({

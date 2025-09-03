@@ -167,6 +167,7 @@ return [
         Illuminate\View\ViewServiceProvider::class,
         Barryvdh\DomPDF\ServiceProvider::class,
         Maatwebsite\Excel\ExcelServiceProvider::class,
+        Laravel\Sanctum\SanctumServiceProvider::class,
         /*
          * Package Service Providers...
          */

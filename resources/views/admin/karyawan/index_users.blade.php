@@ -588,6 +588,7 @@
                     // },
                     success: function(response) {
                         // console.log(response);
+                        Swal.close();
                         window.location.assign(url);
                     },
                     error: function(data) {

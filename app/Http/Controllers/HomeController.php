@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Holding;
 use Illuminate\Http\Request;
 
 class HomeController extends Controller
@@ -30,7 +31,8 @@ class HomeController extends Controller
             ]);
         } else {
             if (auth()->user()->is_admin == 'admin') {
-                return redirect('dashboard/holding');
+                $holding = Holding::all();
+                return redirect('dashboard/holding', compact('holding'));
             } else {
                 return redirect('home');
             }
