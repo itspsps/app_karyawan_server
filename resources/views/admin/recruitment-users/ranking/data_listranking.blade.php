@@ -161,7 +161,7 @@
         .timeline-centered .timeline-entry {
             position: relative;
             /*width: 50%;
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                float: right;*/
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                float: right;*/
             margin-top: 5px;
             margin-left: 30px;
             margin-bottom: 10px;
@@ -422,6 +422,8 @@
                                         <th>Aksi</th>
                                         <th>Status</th>
                                         <th>Konfirmasi Pelamar</th>
+                                        <th>Alasan</th>
+
                                     </tr>
                                 </thead>
                                 <tbody class="table-border-bottom-0">
@@ -549,7 +551,7 @@
                                 value="{{ old('tanggal_diterima') }}" />
                             <label for="bagian_recruitment">TANGGAL MASUK KERJA</label>
                         </div>
-                        <label for="bagian_recruitment px-2"><small>GAJI</small></label>
+                        <label for="bagian_recruitment px-2"><small>GAJI (Rp)</small></label>
                         <div class="form-floating form-floating-outline mb-2">
 
                             <input type="text" id="gaji_update" name="gaji"
@@ -577,6 +579,30 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
 
     <script>
+        $(document).on('keyup', '#gaji_update', function(e) {
+            var data = $(this).val();
+            var hasil = formatRupiah(data, "Rp. ");
+            $(this).val(hasil);
+        });
+
+        function formatRupiah(angka, prefix) {
+            var number_string = angka.replace(/[^,\d]/g, '').toString(),
+                split = number_string.split(','),
+                sisa = split[0].length % 3,
+                rupiah = split[0].substr(0, sisa),
+                ribuan = split[0].substr(sisa).match(/\d{3}/gi);
+            if (ribuan) {
+                separator = sisa ? '.' : '';
+                rupiah += separator + ribuan.join('.');
+            }
+
+            rupiah = split[1] != undefined ? rupiah + ',' + split[1] : rupiah;
+            return prefix == undefined ? rupiah : (rupiah ? '' + rupiah : '');
+        }
+
+        function replace_titik(x) {
+            return ((x.replace('.', '')).replace('.', '')).replace('.', '');
+        }
         let holding = window.location.pathname.split("/").pop();
         let id = @json($id_recruitment);
         console.log(id);
@@ -671,6 +697,10 @@
                 {
                     data: 'feedback',
                     name: 'feedback'
+                },
+                {
+                    data: 'alasan_lanjutan',
+                    name: 'alasan_lanjutan'
                 },
             ],
             order: [

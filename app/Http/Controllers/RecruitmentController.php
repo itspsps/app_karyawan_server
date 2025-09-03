@@ -3072,7 +3072,10 @@ Maaf Anda Belum lolos sesi interview dan ujian
                         return '<p class="bg-danger p-2 text-white">Menolak</p>';
                     }
                 })
-                ->rawColumns(['nama_lengkap', 'pilih_status', 'status', 'total_koefisien', 'feedback'])
+                ->addColumn('alasan_lanjutan', function ($row) {
+                    return $row->alasan_lanjutan;
+                })
+                ->rawColumns(['nama_lengkap', 'pilih_status', 'status', 'total_koefisien', 'feedback', 'alasan_lanjutan'])
                 ->make(true);
         }
     }

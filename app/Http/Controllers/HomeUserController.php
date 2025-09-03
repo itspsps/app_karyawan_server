@@ -71,7 +71,7 @@ class HomeUserController extends Controller
                 ->whereNotNull('ttd_pengajuan')
                 ->where('status_izin', 1);
             // dd($dataizin);
-            // get atasan tingkat 
+            // get atasan tingkat
             $datacuti_tingkat1       = Cuti::with('KategoriCuti')
                 ->where('status_cuti', 1)
                 ->join('karyawans', 'karyawans.id', '=', 'cutis.user_id')
@@ -1638,7 +1638,7 @@ class HomeUserController extends Controller
                             $toleransi_mnt = '00:05:00';
                             $jml_all = ($interval->format('%H') . ':' . $interval->format('%I') . ':' . $interval->format('%S'));
                             // $jum_all_toleransi = ($jml_all - $toleransi_mnt);
-                            // 
+                            //
                             $lokasi_kantor = Lokasi::where('lokasi_kantor', $lokasi_kerja)->first();
                             $lat_kantor = $lokasi_kantor->lat_kantor;
                             $long_kantor = $lokasi_kantor->long_kantor;
@@ -1751,7 +1751,7 @@ class HomeUserController extends Controller
                         $jum_second  = $interval->format('%S');
                         $jml_all = ($jum_hours . ':' . $jum_mnt_toleransi . ':' . $jum_second);
                         // dd($jml_all);
-                        // 
+                        //
                         $lokasi_kantor = Lokasi::where('lokasi_kantor', $lokasi_kerja)->first();
                         $lat_kantor = $lokasi_kantor->lat_kantor;
                         $long_kantor = $lokasi_kantor->long_kantor;
