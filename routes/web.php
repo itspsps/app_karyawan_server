@@ -35,6 +35,7 @@ use App\Http\Controllers\IzinUserController;
 use App\Http\Controllers\CutiUserController;
 use App\Http\Controllers\DepartemenController;
 use App\Http\Controllers\DivisiController;
+use App\Http\Controllers\InterviewController;
 use App\Http\Controllers\IzinController;
 use App\Http\Controllers\MappingShiftController;
 use App\Http\Controllers\PenugasanController;
@@ -139,6 +140,14 @@ Route::middleware('auth:web', 'log.activity')->group(function () {
 
     // Approval
     Route::get('/approval/dashboard', [ApprovalController::class, 'index']);
+
+    //Interview Manager
+    Route::get('/interview/dashboard', [InterviewController::class, 'index']);
+    Route::get('/interview/detail/{id}', [InterviewController::class, 'detail']);
+    Route::get('/interview/pdfUserKaryawan/{id}', [InterviewController::class, 'pdfUserKaryawan']);
+    Route::post('/interview/approve/proses', [InterviewController::class, 'prosesInterview']);
+
+
 
 
     // Menu bar
