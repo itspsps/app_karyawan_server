@@ -133,7 +133,7 @@ class KaryawanImportUpdate implements ToCollection, WithStartRow
                 $status_nikah = 'Lajang';
             } else if ($row[11] == 'MENIKAH') {
                 $status_nikah = 'Menikah';
-            } else if ($row[11] == 'menikah') {
+            } else if ($row[11] == 2) {
                 $status_nikah = 'Menikah';
             } else if ($row[11] == 'Menikah') {
                 $status_nikah = 'Menikah';

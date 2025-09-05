@@ -104,13 +104,13 @@
                     <td class="fw-bold"><small>STATUS PERNIKAHAN</small></td>
                     <td>:</td>
                     <td>
-                        @if ($data_cv->AuthLogin->recruitmentCV->status_pernikahan == 'lajang')
+                        @if ($data_cv->AuthLogin->recruitmentCV->status_pernikahan == 1)
                             LAJANG
-                        @elseif ($data_cv->AuthLogin->recruitmentCV->status_pernikahan == 'menikah')
+                        @elseif ($data_cv->AuthLogin->recruitmentCV->status_pernikahan == 2)
                             MENIKAH
-                        @elseif ($data_cv->AuthLogin->recruitmentCV->status_pernikahan == 'cerai_hidup')
+                        @elseif ($data_cv->AuthLogin->recruitmentCV->status_pernikahan == 3)
                             CERAI HIDUP
-                        @elseif ($data_cv->AuthLogin->recruitmentCV->status_pernikahan == 'cerai_mati')
+                        @elseif ($data_cv->AuthLogin->recruitmentCV->status_pernikahan == 4)
                             CERAI MATI
                         @endif
                     </td>

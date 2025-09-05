@@ -1222,6 +1222,7 @@ selamat Anda lolos wawancara manager
                     echo $error_msg;
                 }
             } elseif ($request->status == '2b') {
+                // dd($request->all);
                 $validator = Validator::make(
                     $request->all(),
                     [
@@ -3006,6 +3007,11 @@ Maaf Anda Belum lolos sesi interview dan ujian
                                 type="button" class="btn btn-sm btn-info " id="btn_status_ranking">
                                 <i class="tf-icons mdi mdi-eye-circle-outline me-1"></i>
                                 Pilih&nbsp;
+                            </button>' . '<button
+                                data-id="' . $row->id . '"
+                                type="button" class="btn btn-sm btn-info " id="btn_lolos">
+                                <i class="tf-icons mdi mdi-eye-circle-outline me-1"></i>
+                                Pilih&nbsp;
                             </button>';
                 })
                 ->addColumn('status', function ($row) {
@@ -3018,7 +3024,9 @@ Maaf Anda Belum lolos sesi interview dan ujian
                     } elseif ($row->status_lanjutan == '3b') {
                         return '<p class="bg-danger p-2 text-white">Tidak Lolos</p>';
                     } elseif ($row->status_lanjutan == '4b') {
-                        return '<p class="bg-danger p-2 text-white">Menolak</p>';
+                        return '<p class="bg-warning p-2 text-white">Lolos Interview Manager</p>';
+                    } elseif ($row->status_lanjutan == '5b') {
+                        return '<p class="bg-danger p-2 text-white">Ditolak Manager</p>';
                     }
                 })
                 ->addColumn('total_koefisien', function ($row) {
@@ -3069,7 +3077,7 @@ Maaf Anda Belum lolos sesi interview dan ujian
                     } elseif ($row->feedback_lanjutan == '3b') {
                         return '<p class="bg-danger p-2 text-white">Menolak</p>';
                     } elseif ($row->feedback_lanjutan == '4b') {
-                        return '<p class="bg-danger p-2 text-white">Menolak</p>';
+                        return '<p class="bg-warning p-2 text-white">Menerima</p>';
                     }
                 })
                 ->addColumn('alasan_lanjutan', function ($row) {

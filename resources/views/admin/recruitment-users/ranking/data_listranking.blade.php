@@ -161,7 +161,7 @@
         .timeline-centered .timeline-entry {
             position: relative;
             /*width: 50%;
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                float: right;*/
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    float: right;*/
             margin-top: 5px;
             margin-left: 30px;
             margin-bottom: 10px;
@@ -571,6 +571,43 @@
             </div>
         </div>
     </div>
+    <div class="modal fade" id="modal_lolos" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Lolos Bekerja</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" id="id_lolos" name="id">
+                    <div class="form-floating form-floating-outline py-3">
+                        <input type="hidden" value="2b" name="status" id="status_lolos">
+                    </div>
+                    <div class="form-floating form-floating-outline py-3">
+                        <input type="date" id="tanggal_diterima_lolos" name="tanggal_diterima"
+                            class="form-control @error('tanggal_diterima') is-invalid @enderror" placeholder="Tanggal"
+                            value="{{ old('tanggal_diterima') }}" />
+                        <label for="bagian_recruitment">TANGGAL MASUK KERJA</label>
+                    </div>
+                    <label for="bagian_recruitment px-2"><small>GAJI (Rp)</small></label>
+                    <div class="form-floating form-floating-outline mb-2">
+
+                        <input type="text" id="gaji_lolos" name="gaji"
+                            class="form-control @error('gaji') is-invalid @enderror" value="{{ old('gaji') }}" />
+                    </div>
+                    <label for="bagian_recruitment px-2"><small>NOTES</small></label>
+                    <div class="form-floating form-floating-outline mb-2">
+                        <textarea type="text" id="notes_langsung_lolos" name="notes_langsung"
+                            class="form-control @error('notes_langsung') is-invalid @enderror" value="{{ old('notes_langsung') }}"></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                    <button type="button" class="btn btn-primary" id="btn_save_lolos">submit</button>
+                </div>
+            </div>
+        </div>
+    </div>
 @endsection
 @section('js')
     <script src="https://cdn.datatables.net/2.0.5/js/dataTables.js"></script>
@@ -718,6 +755,13 @@
             $('#modal_status').modal('show');
 
         });
+        $(document).on('click', '#btn_lolos', function() {
+            console.log('asooy');
+            var id = $(this).data('id');
+            $('#id_lolos').val(id);
+            $('#modal_lolos').modal('show');
+
+        });
         $('#btn_save_status').on('click', function(e) {
             e.preventDefault();
             var formData = new FormData();
@@ -733,6 +777,7 @@
             formData.append('link_wawancara', $('#link_wawancara').val());
             formData.append('waktu_wawancara', $('#waktu_wawancara').val());
             formData.append('notes_langsung', $('#notes_langsung_update').val());
+
             $.ajax({
                 type: "POST",
 
@@ -761,6 +806,71 @@
                         $('#tempat_wawancara').val('');
                         $('#link_wawancara').val('');
                         $('#waktu_wawancara').val('');
+                        $('#tabel_progres').DataTable().ajax.reload();
+                    } else if (data.code == 400) {
+                        let errors = data.errors;
+                        // console.log(errors);
+                        let errorMessages = '';
+
+                        Object.keys(errors).forEach(function(key) {
+                            errors[key].forEach(function(message) {
+                                errorMessages += `• ${message}\n`;
+                            });
+                        });
+                        Swal.fire({
+                            // title: data.message,
+                            text: errorMessages,
+                            icon: 'warning',
+                            timer: 4500
+                        })
+
+                    } else {
+                        Swal.fire({
+                            title: 'Gagal',
+                            text: data.error,
+                            icon: 'error',
+                            timer: 10000
+                        })
+                        $('#modal_status').modal('hide');
+                    }
+                }
+
+            });
+        });
+        $('#btn_save_lolos').on('click', function(e) {
+            e.preventDefault();
+            var formData = new FormData();
+
+            formData.append('_token', '{{ csrf_token() }}');
+            formData.append('id', $('#id_lolos').val());
+            formData.append('status', $('#status_lolos').val());
+            formData.append('gaji', $('#gaji_lolos').val());
+            formData.append('tanggal_diterima', $('#tanggal_diterima_lolos').val());
+            formData.append('notes_langsung', $('#notes_langsung_lolos').val());
+            $.ajax({
+                type: "POST",
+
+                url: "{{ url('/dt/data-interview/ranking_update_status') }}",
+                data: formData,
+                contentType: false,
+                processData: false,
+                error: function() {
+                    alert('Something is wrong');
+                    // console.log(formData);
+                },
+                success: function(data) {
+                    if (data.code == 200) {
+                        Swal.fire({
+                            title: 'Berhasil',
+                            text: data.message,
+                            icon: 'success',
+                            timer: 5000
+                        })
+                        //mengosongkan modal dan menyembunyikannya
+                        $('#modal_status').modal('hide');
+                        $('#tanggal_diterima_lolos').val('');
+                        $('#notes_langsung_lolos').val('');
+                        $('#gaji_lolos').val('');
                         $('#tabel_progres').DataTable().ajax.reload();
                     } else if (data.code == 400) {
                         let errors = data.errors;

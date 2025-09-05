@@ -128,13 +128,13 @@ class KaryawanImport implements ToModel, WithStartRow, WithCalculatedFormulas
             $status_nikah = NULL;
         } else if ($row[11] == 'LAJANG') {
             $status_nikah = 'Lajang';
-        } else if ($row[11] == 'lajang') {
+        } else if ($row[11] == 1) {
             $status_nikah = 'Lajang';
         } else if ($row[11] == 'Lajang') {
             $status_nikah = 'Lajang';
         } else if ($row[11] == 'MENIKAH') {
             $status_nikah = 'Menikah';
-        } else if ($row[11] == 'menikah') {
+        } else if ($row[11] == 2) {
             $status_nikah = 'Menikah';
         } else if ($row[11] == 'Menikah') {
             $status_nikah = 'Menikah';

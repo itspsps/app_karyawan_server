@@ -17,6 +17,7 @@ use App\Models\RecruitmentUserRecord;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Ramsey\Uuid\Uuid;
 
 class InterviewController extends Controller
 {
@@ -324,8 +325,11 @@ class InterviewController extends Controller
         $recruitment->feedback_lanjutan = NULL;
         $recruitment->save();
 
-        $record = RecruitmentUserRecord::where('recruitment_user_id', $id)->first();
+        $record = new RecruitmentUserRecord();
+        $record->id = Uuid::uuid4();
+        $record->recruitment_user_id = $id;
         $record->status = $status;
+        $record->created_at = date('Y-m-d H:i:s');
         $record->save();
 
         $interview = RecruitmentInterview::where('recruitment_user_id', $id)->first();
