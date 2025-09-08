@@ -161,7 +161,7 @@
         .timeline-centered .timeline-entry {
             position: relative;
             /*width: 50%;
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    float: right;*/
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    float: right;*/
             margin-top: 5px;
             margin-left: 30px;
             margin-bottom: 10px;
@@ -608,6 +608,124 @@
             </div>
         </div>
     </div>
+    <div class="modal fade" id="modal_pindah" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Pemindahan Lowongan</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-floating form-floating-outline py-3">
+                        <input type="hidden" id="id_pindah" name="id">
+                        <input type="hidden" value="{{ $id_recruitment }}" id="lowongan_lama_pindah"
+                            name="lowongan_lama">
+                        <select class="form-select" id="lowongan_baru_pindah" name="lowongan_baru">
+                            <label for="bagian_recruitment">PILIH LOWONGAN</label>
+                            <option value="" selected>PILIH LOWONGAN</option>
+                            @foreach ($recruitment_admin as $admin)
+                                <option value="{{ $admin->id }}">
+                                    {{ $admin->jabatan->nama_jabatan }}, {{ $admin->jabatan->bagian->nama_bagian }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="form-floating form-floating-outline py-3">
+                        <select class="form-select" id="status_pindah" name="status">
+                            <label for="bagian_recruitment">PILIH STATUS</label>
+                            <option value="6b" selected>LOLOS INTERVIEW MANAGER</option>
+                            <option value="7b">LOLOS LANGSUNG</option>
+                        </select>
+                    </div>
+                    <div id="pindah_manager">
+                        <div class="form-floating form-floating-outline py-3">
+                            <input type="date" id="tanggal_wawancara_pindah" name="tanggal_wawancara"
+                                class="form-control @error('tanggal_wawancara') is-invalid @enderror"
+                                placeholder="Tanggal" value="{{ old('tanggal_wawancara') }}" />
+                            <label for="bagian_recruitment">TANGGAL WAWANCARA</label>
+                        </div>
+                        <div class="form-floating form-floating-outline py-3">
+                            <select class="form-select @error('online') is-invalid @enderror" id="online_add2"
+                                name="online" autofocus value="{{ old('online') }}">
+                                <option value="1" selected>OFFLINE</option>
+                                <option value="2">ONLINE</option>
+                            </select>
+                            <label for="penempatan">KEPUTUSAN HRD</label>
+                            @error('online')
+                                <div class="invalid-feedback">
+                                    {{ $message }}
+                                </div>
+                            @enderror
+                        </div>
+                        @error('tanggal_wawancara')
+                            <span class="invalid-feedback" role="alert">
+                                <strong>{{ $message }}</strong>
+                            </span>
+                        @enderror
+                        <div id="tempat_wawancara_form2">
+                            <label for="bagian_recruitment px-2"><small>TEMPAT
+                                    WAWANCARA</small></label>
+                            <div class="form-floating form-floating-outline mb-2">
+
+                                <input type="text" id="tempat_wawancara2" name="tempat_wawancara"
+                                    class="form-control @error('tempat_wawancara2') is-invalid @enderror"value="{{ old('tempat_wawancara2') }}" />
+                            </div>
+                        </div>
+                        <div id="link_wawancara_form2">
+                            <label for="bagian_recruitment px-2"><small>LINK
+                                    WAWANCARA ONLINE</small></label>
+                            <div class="form-floating form-floating-outline mb-2">
+
+                                <input type="text" id="link_wawancara2" name="link_wawancara"
+                                    class="form-control @error('link_wawancara') is-invalid @enderror"
+                                    value="{{ old('link_wawancara') }}" />
+                            </div>
+                        </div>
+                        @error('link_wawancara2')
+                            <span class="invalid-feedback" role="alert">
+                                <strong>{{ $message }}</strong>
+                            </span>
+                        @enderror
+                        <label for="bagian_recruitment"><small>WAKTU (JAM)
+                                WAWANCARA</small></label>
+                        <div class="form-floating form-floating-outline ">
+
+                            <input type="time" id="waktu_wawancara_pindah" name="waktu_wawancara"
+                                class="form-control @error('waktu_wawancara') is-invalid @enderror"
+                                value="{{ old('waktu_wawancara') }}" />
+                        </div>
+                        @error('waktu_wawancara')
+                            <span class="invalid-feedback" role="alert">
+                                <strong>{{ $message }}</strong>
+                            </span>
+                        @enderror
+                    </div>
+                    <div id="pindah_langsung">
+                        <div class="form-floating form-floating-outline py-3">
+                            <input type="date" id="tanggal_diterima_pindah" name="tanggal_diterima"
+                                class="form-control @error('tanggal_diterima') is-invalid @enderror"
+                                placeholder="Tanggal" value="{{ old('tanggal_diterima') }}" />
+                            <label for="bagian_recruitment">TANGGAL MASUK KERJA</label>
+                        </div>
+                        <label for="bagian_recruitment px-2"><small>GAJI (Rp)</small></label>
+                        <div class="form-floating form-floating-outline mb-2">
+                            <input type="text" id="gaji_pindah" name="gaji"
+                                class="form-control @error('gaji') is-invalid @enderror" value="{{ old('gaji') }}" />
+                        </div>
+                        <label for="bagian_recruitment px-2"><small>NOTES</small></label>
+                        <div class="form-floating form-floating-outline mb-2">
+                            <textarea type="text" id="notes_langsung_pindah" name="notes_pindah"
+                                class="form-control @error('notes_langsung') is-invalid @enderror" value="{{ old('notes_langsung') }}"></textarea>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                    <button type="button" class="btn btn-primary" id="btn_save_pindah">submit</button>
+                </div>
+            </div>
+        </div>
+    </div>
 @endsection
 @section('js')
     <script src="https://cdn.datatables.net/2.0.5/js/dataTables.js"></script>
@@ -762,6 +880,13 @@
             $('#modal_lolos').modal('show');
 
         });
+        $(document).on('click', '#btn_pemindahan', function() {
+            console.log('asooy');
+            var id = $(this).data('id');
+            $('#id_pindah').val(id);
+            $('#modal_pindah').modal('show');
+
+        });
         $('#btn_save_status').on('click', function(e) {
             e.preventDefault();
             var formData = new FormData();
@@ -849,7 +974,6 @@
             formData.append('notes_langsung', $('#notes_langsung_lolos').val());
             $.ajax({
                 type: "POST",
-
                 url: "{{ url('/dt/data-interview/ranking_update_status') }}",
                 data: formData,
                 contentType: false,
@@ -902,6 +1026,84 @@
 
             });
         });
+        $('#btn_save_pindah').on('click', function(e) {
+            e.preventDefault();
+            var formData = new FormData();
+
+            formData.append('_token', '{{ csrf_token() }}');
+            formData.append('id', $('#id_pindah').val());
+            formData.append('lowongan_baru', $('#lowongan_baru_pindah').val());
+            formData.append('lowongan_lama', $('#lowongan_lama_pindah').val());
+            formData.append('status', $('#status_pindah').val());
+            formData.append('gaji', $('#gaji_pindah').val());
+            formData.append('tanggal_wawancara', $('#tanggal_wawancara_pindah').val());
+            formData.append('online', $('#online_add2').val());
+            formData.append('tempat_wawancara', $('#tempat_wawancara2').val());
+            formData.append('link_wawancara', $('#link_wawancara2').val());
+            formData.append('tanggal_diterima', $('#tanggal_diterima_pindah').val());
+            formData.append('waktu_wawancara', $('#waktu_wawancara_pindah').val());
+            formData.append('notes_pindah', $('#notes_langsung_pindah').val());
+
+            $.ajax({
+                type: "POST",
+
+                url: "{{ url('/dt/data-interview/ranking_update_status') }}",
+                data: formData,
+                contentType: false,
+                processData: false,
+                error: function() {
+                    alert('Something is wrong');
+                    // console.log(formData);
+                },
+                success: function(data) {
+                    if (data.code == 200) {
+                        Swal.fire({
+                            title: 'Berhasil',
+                            text: data.message,
+                            icon: 'success',
+                            timer: 5000
+                        })
+                        //mengosongkan modal dan menyembunyikannya
+                        $('#modal_pindah').modal('hide');
+                        $('#lowongan_baru_pindah').val('');
+                        $('#tanggal_wawancara_pindah').val('');
+                        $('#tabel_progres').DataTable().ajax.reload();
+                        $('#tempat_wawancara2').val('');
+                        $('#link_wawancara2').val('');
+                        $('#gaji_pindah').val('');
+                        $('#tanggal_diterima_pindah').val('');
+                        $('#waktu_wawancara_pindah').val('');
+                        $('#notes_langsung_pindah').val('');
+                    } else if (data.code == 400) {
+                        let errors = data.errors;
+                        // console.log(errors);
+                        let errorMessages = '';
+
+                        Object.keys(errors).forEach(function(key) {
+                            errors[key].forEach(function(message) {
+                                errorMessages += `• ${message}\n`;
+                            });
+                        });
+                        Swal.fire({
+                            // title: data.message,
+                            text: errorMessages,
+                            icon: 'warning',
+                            timer: 4500
+                        })
+
+                    } else {
+                        Swal.fire({
+                            title: 'Gagal',
+                            text: data.error,
+                            icon: 'error',
+                            timer: 10000
+                        })
+                        $('#modal_pindah').modal('hide');
+                    }
+                }
+
+            });
+        });
         $('#lolos_langsung').hide();
         $('#status_update').on('change', function() {
             let value = $(this).val();
@@ -936,6 +1138,35 @@
             } else {
                 $('#link_wawancara_form').hide();
                 $('#tempat_wawancara_form').show();
+            }
+        });
+        $('#pindah_langsung').hide();
+        $('#status_pindah').on('change', function() {
+            let value = $(this).val();
+            if (value == '') {
+                $('#pindah_langsung').hide();
+                $('#tanggal_wawancara').val('');
+                $('#tempat_wawancara').val('');
+                $('#waktu_wawancara').val('');
+
+            } else if (value == '6b') {
+                $('#pindah_manager').show();
+                $('#pindah_langsung').hide();
+
+            } else if (value == '7b') {
+                $('#pindah_langsung').show();
+                $('#pindah_manager').hide();
+            }
+        });
+        $('#link_wawancara_form2').hide();
+        $('#online_add2').on('change', function() {
+            let value = $(this).val();
+            if (value == '2') {
+                $('#link_wawancara_form2').show();
+                $('#tempat_wawancara_form2').hide();
+            } else {
+                $('#link_wawancara_form2').hide();
+                $('#tempat_wawancara_form2').show();
             }
         });
     </script>

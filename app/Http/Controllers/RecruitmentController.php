@@ -1353,6 +1353,181 @@ Maaf Anda Belum lolos sesi interview dan ujian
                 if (isset($error_msg)) {
                     echo $error_msg;
                 }
+            } elseif ($request->status == '6b') {
+                // dd($request->all());
+                if ($request->online == 1) {
+                    $link_wawancara = 'nullable';
+                    $tempat_wawancara = 'required';
+                } elseif ($request->online == 2) {
+                    $link_wawancara = 'required';
+                    $tempat_wawancara = 'nullable';
+                }
+                $validator = Validator::make(
+                    $request->all(),
+                    [
+                        'lowongan_baru' => 'required',
+                        'tanggal_wawancara' => 'required',
+                        'link_wawancara' => $link_wawancara,
+                        'tempat_wawancara' => $tempat_wawancara,
+                        'waktu_wawancara' => 'required',
+                    ],
+                    [
+                        'required' => ':attribute tidak boleh kosong'
+                    ]
+                );
+                if ($validator->fails()) {
+                    return response()->json([
+                        'code' => 400,
+                        'message' => 'Validasi gagal',
+                        'errors' => $validator->errors()
+                    ]);
+                }
+                if ($request->online == 1) {
+                    $tempat = $request->tempat_wawancara;
+                } elseif ($request->online == 2) {
+                    $tempat = $request->link_wawancara;
+                }
+                // dd($request->all());
+                RecruitmentUser::where('id', $request->id)->update(
+
+                    [
+                        'tanggal_wawancara_manager'     => $request->tanggal_wawancara,
+                        'tempat_wawancara'              => $tempat,
+                        'waktu_wawancara'               => $request->waktu_wawancara,
+                        'status_lanjutan'               => $request->status,
+                        'tanggal_konfirmasi_manager'    => date('Y-m-d H:i:s', strtotime('+1 days')),
+                        'updated_at'                    => date('Y-m-d H:i:s'),
+                    ]
+                );
+                RecruitmentUserRecord::insert(
+                    [
+                        'id'                        => Uuid::uuid4(),
+                        'lowongan_baru'             => $request->lowongan_baru,
+                        'lowongan_lama'             => $request->lowongan_lama,
+                        'recruitment_user_id'       => $request->id,
+                        'status'                    => $request->status,
+                        'created_at'                => date('Y-m-d H:i:s'),
+                    ]
+                );
+                $get_wa = RecruitmentUser::with([
+                    'AuthLogin' => function ($query) {
+                        $query;
+                    }
+                ])->where('id', $request->id)->first();
+                // dd($get_wa);
+                $curl = curl_init();
+                curl_setopt_array($curl, array(
+                    CURLOPT_URL => 'https://api.fonnte.com/send',
+                    CURLOPT_RETURNTRANSFER => true,
+                    CURLOPT_ENCODING => '',
+                    CURLOPT_MAXREDIRS => 10,
+                    CURLOPT_TIMEOUT => 0,
+                    CURLOPT_FOLLOWLOCATION => true,
+                    CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                    CURLOPT_CUSTOMREQUEST => 'POST',
+                    CURLOPT_POSTFIELDS => array(
+                        'target' => $get_wa->Authlogin->nomor_whatsapp,
+                        'message' =>
+                        "Pemberitahuan
+
+selamat Anda lolos wawancara manager
+",
+                        'countryCode' => '62', //optional
+                    ),
+                    CURLOPT_HTTPHEADER => array(
+                        'Authorization: Xp5bwZZN22VPhojYcPEB' //change TOKEN to your actual token
+                    ),
+                ));
+
+                $response = curl_exec($curl);
+                if (curl_errno($curl)) {
+                    $error_msg = curl_error($curl);
+                }
+                curl_close($curl);
+
+                if (isset($error_msg)) {
+                    echo $error_msg;
+                }
+            } elseif ($request->status == '7b') {
+                // dd($request->all);
+                $validator = Validator::make(
+                    $request->all(),
+                    [
+                        'gaji' => 'required',
+                        'lowongan_baru' => 'required',
+                        'tanggal_diterima' => 'required',
+                    ],
+                    [
+                        'required' => ':attribute tidak boleh kosong'
+                    ]
+                );
+                if ($validator->fails()) {
+                    return response()->json([
+                        'code' => 400,
+                        'message' => 'Validasi gagal',
+                        'errors' => $validator->errors()
+                    ]);
+                }
+                RecruitmentUser::where('id', $request->id)->update(
+
+                    [
+                        'status_lanjutan'       => $request->status,
+                        'gaji'                  => $request->gaji,
+                        'tanggal_diterima'      => $request->tanggal_diterima,
+                        'notes'                 => $request->notes_langsung,
+                        'konfirmasi_diterima'      => date('Y-m-d H:i:s', strtotime('+1 days')),
+                        'updated_at'            => date('Y-m-d H:i:s'),
+                    ]
+                );
+                RecruitmentUserRecord::insert(
+                    [
+                        'id'                        => Uuid::uuid4(),
+                        'lowongan_baru'             => $request->lowongan_baru,
+                        'lowongan_lama'             => $request->lowongan_lama,
+                        'recruitment_user_id'       => $request->id,
+                        'status'           => $request->status,
+                        'created_at'                => date('Y-m-d H:i:s'),
+                    ]
+                );
+                $get_wa = RecruitmentUser::with([
+                    'AuthLogin' => function ($query) {
+                        $query;
+                    }
+                ])->where('id', $request->id)->first();
+                // dd($get_wa);
+                $curl = curl_init();
+                curl_setopt_array($curl, array(
+                    CURLOPT_URL => 'https://api.fonnte.com/send',
+                    CURLOPT_RETURNTRANSFER => true,
+                    CURLOPT_ENCODING => '',
+                    CURLOPT_MAXREDIRS => 10,
+                    CURLOPT_TIMEOUT => 0,
+                    CURLOPT_FOLLOWLOCATION => true,
+                    CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                    CURLOPT_CUSTOMREQUEST => 'POST',
+                    CURLOPT_POSTFIELDS => array(
+                        'target' => $get_wa->Authlogin->nomor_whatsapp,
+                        'message' =>
+                        "Pemberitahuan
+
+selamat Anda lolos bekerja
+",
+                        'countryCode' => '62', //optional
+                    ),
+                    CURLOPT_HTTPHEADER => array(
+                        'Authorization: Xp5bwZZN22VPhojYcPEB' //change TOKEN to your actual token
+                    ),
+                ));
+
+                $response = curl_exec($curl);
+                if (curl_errno($curl)) {
+                    $error_msg = curl_error($curl);
+                }
+                curl_close($curl);
+
+                if (isset($error_msg)) {
+                    echo $error_msg;
+                }
             }
 
             return response()->json([
@@ -2716,12 +2891,35 @@ Maaf Anda Belum lolos sesi interview dan ujian
 
     function pg_list_ranking($id)
     {
+        $currentDate = date('Y-m-d');
+        $recruitment_admin = Recruitment::with([
+            'Jabatan' => function ($query) {
+                $query->with([
+                    'Bagian' =>  function ($query) {
+                        $query->with([
+                            'Divisi' => function ($query) {
+                                $query->with([
+                                    'Departemen' => function ($query) {
+                                        $query->orderBy('nama_departemen', 'ASC');
+                                    }
+                                ]);
+                                $query->orderBy('nama_divisi', 'ASC');
+                            },
+                        ]);
+                    },
+                ]);
+            },
+
+        ])
+            ->where('deadline_recruitment', '>=', $currentDate)
+            ->get();
         $holding = request()->segment(count(request()->segments()));
         // dd($holding);
         $holding = request()->segment(count(request()->segments()));
         return view('admin.recruitment-users.ranking.data_listranking', [
             'title' => 'Data Recruitment',
             'holding'   => $holding,
+            'recruitment_admin'   => $recruitment_admin,
             'id_recruitment'        => $id,
             'data_departemen' => Departemen::all(),
             'data_bagian' => Bagian::with('Divisi')->where('holding', $holding)->get(),
@@ -3012,6 +3210,11 @@ Maaf Anda Belum lolos sesi interview dan ujian
                                 type="button" class="btn btn-sm btn-info " id="btn_lolos">
                                 <i class="tf-icons mdi mdi-eye-circle-outline me-1"></i>
                                 Pilih&nbsp;
+                            </button>' . '<button
+                                data-id="' . $row->id . '"
+                                type="button" class="btn btn-sm btn-info " id="btn_pemindahan">
+                                <i class="tf-icons mdi mdi-eye-circle-outline me-1"></i>
+                                Pindah&nbsp;
                             </button>';
                 })
                 ->addColumn('status', function ($row) {
@@ -3027,6 +3230,10 @@ Maaf Anda Belum lolos sesi interview dan ujian
                         return '<p class="bg-warning p-2 text-white">Lolos Interview Manager</p>';
                     } elseif ($row->status_lanjutan == '5b') {
                         return '<p class="bg-danger p-2 text-white">Ditolak Manager</p>';
+                    } elseif ($row->status_lanjutan == '6b') {
+                        return '<p class="bg-warning p-2 text-white">Perubahan Posisi Lowongan</p>';
+                    } elseif ($row->status_lanjutan == '7b') {
+                        return '<p class="bg-success p-2 text-white">Lolos Posisi Lain</p>';
                     }
                 })
                 ->addColumn('total_koefisien', function ($row) {
