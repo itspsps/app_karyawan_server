@@ -12,7 +12,7 @@ class MappingShift extends Model
     protected $guarded = ['id'];
     public $incrementing = true;
     protected $fillable = [
-        'user_id',
+        'karyawan_id',
         'nik_karyawan',
         'nama_karyawan',
         'shift_id',
@@ -51,7 +51,7 @@ class MappingShift extends Model
 
     public function User(): BelongsTo
     {
-        return $this->belongsTo(Karyawan::class, 'id', 'user_id');
+        return $this->belongsTo(Karyawan::class, 'id', 'karyawan_id');
     }
     public function Koordinator()
     {

@@ -60,6 +60,10 @@
                                             <th rowspan="2">ID&nbsp;Karyawan</th>
                                             <th rowspan="2">Nama&nbsp;Karyawan</th>
                                             <th rowspan="2">Jumlah&nbsp;Kehadiran</th>
+                                            <th rowspan="2" class="text-center">Jumlah&nbsp;Tidak&nbsp;Hadir</th>
+                                            <th rowspan="2">Jumlah&nbsp;Libur</th>
+                                            <th rowspan="2">Jumlah&nbsp;Cuti</th>
+                                            <th rowspan="2" class="text-center">Total&nbsp;Semua</th>
                                             <th id="th_count_date" class="text-center">&nbsp;Tanggal&nbsp;</th>
                                         </tr>
                                         <tr id="date_absensi" class="date_absensi">
@@ -152,6 +156,22 @@
                                 data: 'jumlah_hadir',
                                 name: 'jumlah_hadir'
                             },
+                            {
+                                data: 'total_tidak_hadir_kerja',
+                                name: 'total_tidak_hadir_kerja'
+                            },
+                            {
+                                data: 'total_libur',
+                                name: 'total_libur'
+                            },
+                            {
+                                data: 'total_cuti',
+                                name: 'total_cuti'
+                            },
+                            {
+                                data: 'total_semua',
+                                name: 'total_semua'
+                            },
 
                         ];
                         $('#th_count_date').attr('colspan', data.count_period);
@@ -202,6 +222,22 @@
                             {
                                 data: 'jumlah_hadir',
                                 name: 'jumlah_hadir'
+                            },
+                            {
+                                data: 'total_tidak_hadir_kerja',
+                                name: 'total_tidak_hadir_kerja'
+                            },
+                            {
+                                data: 'total_libur',
+                                name: 'total_libur'
+                            },
+                            {
+                                data: 'total_cuti',
+                                name: 'total_cuti'
+                            },
+                            {
+                                data: 'total_semua',
+                                name: 'total_semua'
                             },
 
                         ];

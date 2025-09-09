@@ -186,7 +186,6 @@ Route::middleware('hrd')->group(function () {
         Route::get('/mapping_shift/get_divisi', [MappingShiftController::class, 'get_divisi']);
         Route::get('/mapping_shift/get_bagian', [MappingShiftController::class, 'get_bagian']);
         Route::get('/mapping_shift/get_jabatan', [MappingShiftController::class, 'get_jabatan']);
-        Route::get('/karyawan/get_karyawan_selected', [MappingShiftController::class, 'get_karyawan_selected']);
         Route::get('mapping_shift/dashboard/', [MappingShiftController::class, 'index']);
         Route::post('/karyawan/mapping_shift/prosesAddMappingShift/sp', [MappingShiftController::class, 'prosesAddMappingShift']);
         Route::post('/karyawan/mapping_shift/prosesAddMappingShift/sps', [MappingShiftController::class, 'prosesAddMappingShift']);

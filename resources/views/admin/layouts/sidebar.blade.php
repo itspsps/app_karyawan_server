@@ -395,7 +395,7 @@
             <ul class="menu-sub">
 
                 <li class="menu-item @if(Auth::user()->is_admin =='hrd'){{ Request::is('hrd/karyawan/mapping_shift*') ? 'active' : '' }}@else {{ Request::is('karyawan/mapping_shift*') ? 'active' : '' }} @endif">
-                    <a href="@if(Auth::user()->is_admin =='hrd'){{ url('hrd/karyawan/mapping_shift/'.$holding->holding_code) }}@else @endif" class=" menu-link">
+                    <a href="@if(Auth::user()->is_admin =='hrd'){{ url('hrd/karyawan/mapping_shift/'.$holding->holding_code) }}@else {{ url('karyawan/mapping_shift/'.$holding->holding_code) }} @endif" class=" menu-link">
                         <div style="font-size: 10pt;" data-i18n="Without navbar"><i class="mdi mdi-account-clock-outline"></i>&nbsp;Mapping&nbsp;Absensi&nbsp;Karyawan</div>
                     </a>
                 </li>

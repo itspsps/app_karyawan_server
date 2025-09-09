@@ -604,7 +604,8 @@
                         data: 'total_semua',
                         name: 'total_semua'
                     },
-                ];
+                ]
+
                 const data_column = datacolumn.concat(data.datacolumn);
                 // console.log(data_column);
 
@@ -652,7 +653,7 @@
                             var d = new Date();
                             var l = d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate();
                             var n = d.getHours() + ':' + d.getMinutes() + ':' + d.getSeconds();
-                            return 'REKAP_DATA_ABSENSI_KARYAWAN_{{$holding}}_' + l + ' ' + n;
+                            return 'REKAP_DATA_ABSENSI_KARYAWAN_{{$holding->holding_name}}_' + l + ' ' + n;
                         },
                     },
                     {
@@ -671,7 +672,7 @@
                             var d = new Date();
                             var l = d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate();
                             var n = d.getHours() + ":" + d.getMinutes() + ":" + d.getSeconds();
-                            return 'REKAP_DATA_ABSENSI_KARYAWAN_{{$holding}}_' + l + ' ' + n;
+                            return 'REKAP_DATA_ABSENSI_KARYAWAN_{{$holding->holding_name}}_' + l + ' ' + n;
                         },
                     }, {
                         extend: 'print',
@@ -699,6 +700,9 @@
                     }
                 },
                 columns: data_column,
+                order: [
+                    [3, 'asc']
+                ]
 
             });
         }

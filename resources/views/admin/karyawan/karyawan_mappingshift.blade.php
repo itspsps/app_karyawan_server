@@ -21,7 +21,7 @@
                 </div>
                 <div class="card-body">
                     <hr class="">
-                    <form action="@if(Auth::user()->is_admin =='hrd'){{ url('hrd/karyawan/mapping_shift/'.$holding) }}@else {{ url('/karyawan/mapping_shift/'.$holding) }} @endif">
+                    <form action="@if(Auth::user()->is_admin =='hrd'){{ url('hrd/karyawan/mapping_shift/'.$holding->holding_code) }}@else {{ url('/karyawan/mapping_shift/'.$holding->holding_code) }} @endif">
                         <div class="row g-3 text-center">
                             <div class="col-2">
                                 <div class="form-floating form-floating-outline">
@@ -74,7 +74,7 @@
                     </div>
                     <div class="modal fade" id="modal_tambah_shift" data-bs-backdrop="static" tabindex="-1">
                         <div class="modal-dialog modal-dialog-scrollable ">
-                            <form method="post" action="@if(Auth::user()->is_admin=='hrd'){{ url('/hrd/karyawan/mapping_shift/prosesAddMappingShift/'.$holding) }}@else{{ url('/karyawan/mapping_shift/prosesAddMappingShift/'.$holding) }}@endif" class=" modal-content" enctype="multipart/form-data">
+                            <form method="post" action="@if(Auth::user()->is_admin=='hrd'){{ url('/hrd/karyawan/mapping_shift/prosesAddMappingShift/'.$holding->holding_code) }}@else{{ url('/karyawan/mapping_shift/prosesAddMappingShift/'.$holding->holding_code) }}@endif" class=" modal-content" enctype="multipart/form-data">
                                 @csrf
                                 <div class="modal-header">
                                     <h4 class="modal-title" id="backDropModalTitle">Tambah Shift</h4>
@@ -130,6 +130,25 @@
                                             <strong>{{ $message }}</strong>
                                         </span>
                                         @enderror
+                                        <br>
+                                        <div class="form-floating form-floating-outline">
+                                            <select class="form-control @error('libur') is-invalid @enderror" id="libur" name="libur" value="{{ old('libur') }}">
+                                                <option value="">-- Pilih Hari Libur --</option>
+                                                <option value="0">Minggu</option>
+                                                <option value="1">Senin</option>
+                                                <option value="2">Selasa</option>
+                                                <option value="3">Rabu</option>
+                                                <option value="4">Kamis</option>
+                                                <option value="5">Jumat</option>
+                                                <option value="6">Sabtu</option>
+                                            </select>
+                                            <label for="libur">Set Libur</label>
+                                        </div>
+                                        @error('libur')
+                                        <span class="invalid-feedback" role="alert">
+                                            <strong>{{ $message }}</strong>
+                                        </span>
+                                        @enderror
                                         <input type="hidden" name="tanggal">
                                         <input type="hidden" name="status_absen">
                                     </div>
@@ -151,7 +170,7 @@
                                 <th class="text-center">Nama&nbsp;Karyawan</th>
                                 <th class="text-center">Jabatan</th>
                                 <th class="text-center" width="70%">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Mapping&nbsp;Jadwal&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
-                                <th class="text-center" style="text-align: ;" width="30%">
+                                <th class="text-center" width="30%">
                                     <input class="form-check-input" type="checkbox" value="" id="select_karyawan_all">
                                     <label class="form-check-label" for="select_karyawan_all">&nbsp;&nbsp;Select&nbsp;All&nbsp;&nbsp;</label>
                                 </th>
@@ -174,7 +193,8 @@
     <script>
         // $('#table_mapping_shift').hide();
         $('#btn_selected_karyawan').hide();
-        let holding = window.location.pathname.split("/").pop();
+        let holding = '{{ $holding->holding_code }}';
+        // console.log(holding);
         $(document).ready(function() {
             $('#departemen_filter').change(function() {
                 departemen_filter = $(this).val();
@@ -409,20 +429,19 @@
                 $('.group_select:checked').each(function() {
                     value.push($(this).val());
                 });
-                // console.log(value);
+                console.log(holding);
                 var count = value.length;
                 $.ajax({
-                    url: "@if(Auth::user()->is_admin =='hrd'){{ url('hrd/karyawan/get_karyawan_selected')}}@else {{ url('karyawan/get_karyawan_selected')}} @endif",
+                    url: "@if(Auth::user()->is_admin =='hrd'){{ url('hrd/karyawan/get_karyawan_selected')}}@else{{ url('karyawan/get_karyawan_selected')}}@endif" + "/" + holding,
                     method: "get",
                     data: {
                         value: value
                     },
                     success: function(data) {
-                        console.log(count);
+                        console.log(data, count);
                         $.each(data, function(count) {
                             $('#data_karyawan').append("<dd id=" + 'no_id' + " class=" + 'col-sm-4 col-xs-12' + ">" + data[count].nomor_identitas_karyawan + "</dd><dd id=" + 'name' + "  class=" + 'col-sm-8 col-xs-12' + ">" + data[count].name + "</dd>");
                         });
-                        console.log(data);
                         $('#id_karyawan').val(value);
                         // Swal.fire({
                         //     title: 'Sukses!',

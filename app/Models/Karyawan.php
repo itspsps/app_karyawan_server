@@ -6,6 +6,7 @@ use App\Traits\UuidTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use maliklibs\Zkteco\Lib\Helper\Attendance;
 
 class Karyawan extends Model
 {
@@ -106,7 +107,11 @@ class Karyawan extends Model
 
     public function MappingShift()
     {
-        return $this->hasMany(MappingShift::class, 'user_id', 'id');
+        return $this->hasMany(MappingShift::class, 'karyawan_id', 'id');
+    }
+    public function Absensi()
+    {
+        return $this->hasMany(AttendanceLog::class, 'EnrollNumber', 'nomor_identitas_karyawan');
     }
 
     public function Sip()

@@ -64,13 +64,13 @@ class dashboardController extends Controller
 
         foreach ($period as $date) {
             $label_absensi[] = $date->format('d/m/Y');
-            $data_absensi_masuk[] = MappingShift::Join('karyawans', 'karyawans.id', 'mapping_shifts.user_id')
+            $data_absensi_masuk[] = MappingShift::Join('karyawans', 'karyawans.id', 'mapping_shifts.karyawan_id')
                 ->where('mapping_shifts.tanggal_masuk', $date->format('Y-m-d'))
                 ->whereIn('mapping_shifts.keterangan_absensi', ['TELAT HADIR', 'TEPAT WAKTU'])
                 ->where('mapping_shifts.status_absen', 'HADIR KERJA')
                 ->where('karyawans.kontrak_kerja', $getHolding->holding_category)->count();
 
-            $data_absensi_pulang[] = MappingShift::Join('karyawans', 'karyawans.id', 'mapping_shifts.user_id')
+            $data_absensi_pulang[] = MappingShift::Join('karyawans', 'karyawans.id', 'mapping_shifts.karyawan_id')
                 ->where('mapping_shifts.tanggal_masuk', $date->format('Y-m-d'))
                 ->whereIn('mapping_shifts.keterangan_absensi_pulang', ['PULANG CEPAT', 'TEPAT WAKTU'])
                 ->where('mapping_shifts.status_absen', 'HADIR KERJA')
@@ -242,12 +242,12 @@ class dashboardController extends Controller
         $data_absensi_pulang = [];
         foreach ($period as $date) {
             $label_absensi[] = $date->format('d/m/Y');
-            $data_absensi_masuk[] = MappingShift::Join('karyawans', 'karyawans.id', 'mapping_shifts.user_id')
+            $data_absensi_masuk[] = MappingShift::Join('karyawans', 'karyawans.id', 'mapping_shifts.karyawan_id')
                 ->where('mapping_shifts.tanggal_masuk', $date->format('Y-m-d'))
                 ->where('mapping_shifts.keterangan_absensi', 'TEPAT WAKTU')
                 ->where('mapping_shifts.status_absen', 'HADIR KERJA')
                 ->where('karyawans.kontrak_kerja', $holding)->count();
-            $data_absensi_pulang[] = MappingShift::Join('karyawans', 'karyawans.id', 'mapping_shifts.user_id')
+            $data_absensi_pulang[] = MappingShift::Join('karyawans', 'karyawans.id', 'mapping_shifts.karyawan_id')
                 ->where('mapping_shifts.tanggal_masuk', $date->format('Y-m-d'))
                 ->whereIn('mapping_shifts.keterangan_absensi_pulang', ['PULANG CEPAT', 'TEPAT WAKTU'])
                 ->where('mapping_shifts.status_absen', 'HADIR KERJA')
