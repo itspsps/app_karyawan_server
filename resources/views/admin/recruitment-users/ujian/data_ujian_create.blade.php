@@ -27,31 +27,21 @@
                         </div>
                         <div class="card-body">
                             <div class="row mt-3">
-                                <div class="col-lg-4">
+                                <div class="col-lg-6">
                                     <div class="form-group">
                                         <label for="">Nama Ujian / Quiz</label>
                                         <input type="text" name="nama_ujian" class="form-control" required>
+                                        <input type="hidden" name="esai" value="0" class="form-control" required>
+                                        <input type="hidden" name="holding" value="{{ $holding }}">
                                     </div>
                                 </div>
-                                <div class="col-lg-4">
+                                <div class="col-lg-6">
                                     <div class="form-group">
-                                        <label for="">Mapel Kategori</label>
-                                        <select class="form-control" name="mapel" id="mapel" required>
+                                        <label for="">Kategori</label>
+                                        <select class="form-select" name="kategori_id" id="kategori_id" required>
                                             <option value="">Pilih</option>
-                                            @foreach ($guru_mapel as $gm)
-                                                <option value="{{ $gm->mapel->id }}">{{ $gm->mapel->nama_mapel }}
-                                                </option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="col-lg-4">
-                                    <div class="form-group">
-                                        <label for="">Kelas</label>
-                                        <select class="form-control" name="kelas" id="kelas" required>
-                                            <option value="">Pilih</option>
-                                            @foreach ($guru_kelas as $gk)
-                                                <option value="{{ $gk->kelas->id }}">{{ $gk->kelas->nama_kelas }}
+                                            @foreach ($kategori as $k)
+                                                <option value="{{ $k->id }}">{{ $k->nama_kategori }}
                                                 </option>
                                             @endforeach
                                         </select>
@@ -62,21 +52,91 @@
                                 <div class="col-lg-6">
                                     <div class="form-group">
                                         <label for="">Waktu Jam</label>
-                                        <input type="number" name="jam" class="form-control" value="0" required>
+                                        <select class="form-select" name="jam" id="jam" required>
+                                            @for ($h = 0; $h < 25; $h++)
+                                                <option value="{{ $h }}">{{ $h }}
+                                                </option>
+                                            @endfor
+                                        </select>
                                     </div>
                                 </div>
                                 <div class="col-lg-6">
                                     <div class="form-group">
                                         <label for="">Waktu Menit</label>
-                                        <input type="number" name="menit" class="form-control" value="0" required>
+                                        <select class="form-select" name="menit" id="menit" required>
+                                            @for ($i = 0; $i < 60; $i++)
+                                                <option value="{{ $i }}">{{ $i }}
+                                                </option>
+                                            @endfor
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mt-3">
+                                <div class="col-lg-6">
+                                    <div class="form-group">
+                                        <label for="">Soal yang Ditampilkan</label>
+                                        <select class="form-select" name="soal_tampil" id="soal_tampil" required>
+                                            @for ($j = 0; $j < 100; $j++)
+                                                <option value="{{ $j }}">{{ $j }}
+                                                </option>
+                                            @endfor
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="form-group">
+                                        <label for="">Bobot Nilai</label>
+                                        <input type="text" name="pembobotan_pilihan_ganda"
+                                            value="{{ $pembobotan->pilihan_ganda }}%" class="form-control" disabled>
+                                        <input type="hidden" name="pembobotan_id" value="{{ $pembobotan->pembobotan_id }}"
+                                            class="form-control">
                                     </div>
                                 </div>
                             </div>
                             <div class="row mt-3">
                                 <div class="col-lg-12">
-                                    <div class="custom-control custom-checkbox">
-                                        <input type="checkbox" class="custom-control-input" id="customCheck1" name="acak"
+                                    <div class="custom-control custom-checkbox py-2">
+                                        <input type="checkbox" class="custom-control-input" id="customCheck1" name="nol"
                                             value="1">
+                                        <label class="custom-control-label" for="customCheck1">Direktur</label>
+                                    </div>
+                                    <div class="custom-control custom-checkbox py-2">
+                                        <input type="checkbox" class="custom-control-input" id="customCheck1" name="satu"
+                                            value="1">
+                                        <label class="custom-control-label" for="customCheck1">Head</label>
+                                    </div>
+                                    <div class="custom-control custom-checkbox py-2">
+                                        <input type="checkbox" class="custom-control-input" id="customCheck1" name="dua"
+                                            value="1">
+                                        <label class="custom-control-label" for="customCheck1">Manager / Regional Sales
+                                            Manager</label>
+                                    </div>
+                                    <div class="custom-control custom-checkbox py-2">
+                                        <input type="checkbox" class="custom-control-input" id="customCheck1"
+                                            name="tiga" value="1">
+                                        <label class="custom-control-label" for="customCheck1">Junior Sales Manager / Area
+                                            Sales Manager</label>
+                                    </div>
+                                    <div class="custom-control custom-checkbox py-2">
+                                        <input type="checkbox" class="custom-control-input" id="customCheck1"
+                                            name="empat" value="1">
+                                        <label class="custom-control-label" for="customCheck1">Supervisor</label>
+                                    </div>
+                                    <div class="custom-control custom-checkbox py-2">
+                                        <input type="checkbox" class="custom-control-input" id="customCheck1"
+                                            name="lima" value="1">
+                                        <label class="custom-control-label" for="customCheck1">Koordinator</label>
+                                    </div>
+                                    <div class="custom-control custom-checkbox py-2">
+                                        <input type="checkbox" class="custom-control-input" id="customCheck1"
+                                            name="enam" value="1">
+                                        <label class="custom-control-label" for="customCheck1">Admin, Operator, Drafter,
+                                            Staff, Sales, Sopir</label>
+                                    </div>
+                                    <div class="custom-control custom-checkbox py-2">
+                                        <input type="checkbox" class="custom-control-input" id="customCheck1"
+                                            name="acak" value="1">
                                         <label class="custom-control-label" for="customCheck1">Acak Soal Siswa</label>
                                     </div>
                                 </div>
@@ -179,8 +239,14 @@
                                                             </svg>
                                                         </span>
                                                     </div>
-                                                    <input type="text" name="jawaban[]" class="form-control"
-                                                        placeholder="Contoh : A" autocomplete="off" required>
+                                                    <select class="form-select" name="jawaban[]" id="jawaban[]" required>
+                                                        <option value="">PILIH JAWABAN</option>
+                                                        <option value="A">A</option>
+                                                        <option value="B">B</option>
+                                                        <option value="C">C</option>
+                                                        <option value="D">D</option>
+                                                        <option value="E">E</option>
+                                                    </select>
                                                 </div>
                                             </div>
                                         </div>
@@ -199,7 +265,7 @@
 
 
     <!-- Modal Tambah -->
-    <div class="modal fade" id="excel_ujian" tabindex="-1" role="dialog" aria-labelledby="excel_ujianLabel"
+    {{-- <div class="modal fade" id="excel_ujian" tabindex="-1" role="dialog" aria-labelledby="excel_ujianLabel"
         aria-hidden="true">
         <div class="modal-dialog modal-lg" role="document">
             <form action="{{ url('/guru/pg_excel') }}" method="POST" enctype="multipart/form-data">
@@ -224,9 +290,6 @@
                                     <label for="">Mapel</label>
                                     <select class="form-control" name="e_mapel" id="e_mapel" required>
                                         <option value="">Pilih</option>
-                                        {{-- @foreach ($guru_mapel as $gm)
-                                    <option value="{{ $gm->mapel->id }}">{{ $gm->mapel->nama_mapel }}</option>
-                                @endforeach --}}
                                     </select>
                                 </div>
                             </div>
@@ -235,9 +298,6 @@
                                     <label for="">Kelas</label>
                                     <select class="form-control" name="e_kelas" id="e_kelas" required>
                                         <option value="">Pilih</option>
-                                        {{-- @foreach ($guru_kelas as $gk)
-                                    <option value="{{ $gk->kelas->id }}">{{ $gk->kelas->nama_kelas }}</option>
-                                @endforeach --}}
                                     </select>
                                 </div>
                             </div>
@@ -285,7 +345,7 @@
                 </div>
             </form>
         </div>
-    </div>
+    </div> --}}
 
 
     {!! session('pesan') !!}
@@ -301,289 +361,6 @@
             // $("#show_desc_recruitment").summernote();
             $("#desc_recruitment_update").summernote();
             $('.dropdown-toggle').dropdown();
-        });
-    </script>
-    {{-- start datatable  --}}
-    <script>
-        let holding = window.location.pathname.split("/").pop();
-        var table = $('#table_recruitment').DataTable({
-            "scrollY": true,
-            "scrollX": true,
-            processing: true,
-            serverSide: true,
-            ajax: {
-                url: "{{ url('/dt/data-recruitment') }}" + '/' + holding,
-            },
-            columns: [{
-                    data: "id",
-
-                    render: function(data, type, row, meta) {
-                        return meta.row + meta.settings._iDisplayStart + 1;
-                    }
-                },
-                {
-                    data: 'nama_departemen',
-                    name: 'nama_departemen'
-                },
-                {
-                    data: 'nama_divisi',
-                    name: 'nama_divisi'
-                },
-                {
-                    data: 'nama_bagian',
-                    name: 'nama_bagian'
-                },
-                {
-                    data: 'desc_recruitment',
-                    name: 'desc_recruitment'
-                },
-                {
-                    data: 'pelamar',
-                    name: 'pelamar'
-                },
-                {
-                    data: 'status_recruitment',
-                    name: 'status_recruitment'
-                },
-                {
-                    data: 'created_recruitment',
-                    render: function(data, type, row, meta) {
-                        let dateParts = data.split('-');
-                        let formattedDate = dateParts[2] + '-' + dateParts[1] + '-' + dateParts[0];
-                        return '<pre style="font-size: inherit;font-family: inherit;margin: 0;">' +
-                            formattedDate + '</pre>';
-                    }
-                },
-                {
-                    data: 'option',
-                    name: 'option'
-                },
-            ]
-        });
-    </script>
-    {{-- end datatable  --}}
-    <script>
-        // start add departemen
-        $('#nama_dept').on('change', function() {
-            let id_dept = $(this).val();
-            let url = "{{ url('/bagian/get_divisi') }}" + "/" + id_dept;
-            console.log(id_dept);
-            console.log(url);
-            $.ajax({
-                url: url,
-                method: 'GET',
-                contentType: false,
-                cache: false,
-                processData: false,
-                // data: {
-                //     id_dept: id_dept
-                // },
-                success: function(response) {
-                    // console.log(response);
-                    $('#nama_divisi').html(response);
-                },
-                error: function(data) {
-                    console.log('error:', data)
-                },
-
-            })
-        })
-        // end add departemen
-
-        // start add divisi
-        $('#nama_divisi').on('change', function() {
-            let id_divisi = $(this).val();
-            let url = "{{ url('/bagian/get_bagian') }}" + "/" + id_divisi;
-            console.log(id_divisi);
-            console.log(url);
-            $.ajax({
-                url: url,
-                method: 'GET',
-                contentType: false,
-                cache: false,
-                processData: false,
-                // data: {
-                //     id_dept: id_dept
-                // },
-                success: function(response) {
-                    // console.log(response);
-                    $('#nama_bagian').html(response);
-                },
-                error: function(data) {
-                    console.log('error:', data)
-                },
-
-            })
-        })
-        // show modal syarat
-        $(document).on('click', '#btn_lihat_syarat', function() {
-            let id = $(this).data('id');
-            let desc = $(this).data('desc'); // Mendapatkan data dengan HTML
-            // desc = $('<div>').html(desc).text();
-            let holding = $(this).data("holding");
-            $('#show_desc_recruitment').summernote('code', desc);
-            $('#show_desc_recruitment').summernote('disable');
-            // let url = "{{ url('recruitment/show/') }}" + '/' + id + '/' + holding;
-            $('#modal_lihat_syarat').modal('show');
-        });
-        // update status aktif to non aktif
-        $(document).on('click', '#btn_status_aktif', function() {
-            var id = $(this).data('id');
-            let holding = $(this).data("holding");
-            console.log(id);
-            console.log(holding);
-            Swal.fire({
-                title: 'Apakah kamu yakin?',
-                text: "Menonaktifkan Recruitment",
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Yes!'
-            }).then((result) => {
-                if (result.value) {
-                    $.ajax({
-                        url: "{{ url('/recruitment/update/status-recruitment/') }}" + '/' + id +
-                            '/' + holding,
-                        type: "GET",
-                        error: function() {
-                            alert('Something is wrong');
-                        },
-                        success: function(data) {
-                            Swal.fire({
-                                title: 'Terupdate!',
-                                text: 'Data anda berhasil di update.',
-                                icon: 'success',
-                                timer: 1500
-                            })
-                            $('#table_recruitment').DataTable().ajax.reload();
-                        }
-                    });
-                } else {
-                    Swal.fire({
-                        title: 'Cancelled!',
-                        text: 'Your data is safe :',
-                        icon: 'error',
-                        timer: 1500
-                    })
-                }
-            });
-
-        });
-        // update status non aktif to aktif
-        $(document).on('click', '#btn_status_naktif', function() {
-            var id = $(this).data('id');
-            let holding = $(this).data("holding");
-            console.log(id);
-            console.log(holding);
-            Swal.fire({
-                title: 'Apakah kamu yakin?',
-                text: "Mengaktifkan Recruitment",
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Yes!'
-            }).then((result) => {
-                if (result.value) {
-                    $.ajax({
-                        url: "{{ url('/recruitment/update/status-recruitment/') }}" + '/' + id +
-                            '/' + holding,
-                        type: "GET",
-                        error: function() {
-                            alert('Something is wrong');
-                        },
-                        success: function(data) {
-                            Swal.fire({
-                                title: 'Terupdate!',
-                                text: 'Data anda berhasil di update.',
-                                icon: 'success',
-                                timer: 1500
-                            })
-                            $('#table_recruitment').DataTable().ajax.reload();
-                        }
-                    });
-                } else {
-                    Swal.fire({
-                        title: 'Cancelled!',
-                        text: 'Your data is safe :',
-                        icon: 'error',
-                        timer: 1500
-                    })
-                }
-            });
-
-        });
-        // edit data
-        $(document).on("click", "#btn_edit_recruitment", function() {
-            let id = $(this).data('id');
-            let dept = $(this).data("dept");
-            let divisi = $(this).data("divisi");
-            let bagian = $(this).data("bagian");
-            let tanggal = $(this).data("tanggal");
-            let holding = $(this).data("holding");
-            console.log(dept);
-            console.log(divisi);
-            console.log(bagian);
-            console.log(tanggal);
-            // console.log(desc);
-            console.log(holding);
-            $('#id_recruitment').val(id);
-            $('#nama_departemen_update option').filter(function() {
-                // console.log($(this).val().trim());
-                return $(this).val().trim() == dept
-            }).prop('selected', true)
-            $('#nama_divisi_update option').filter(function() {
-                // console.log($(this).val().trim());
-                return $(this).val().trim() == divisi
-            }).prop('selected', true)
-            $('#nama_bagian_update').val(bagian);
-            $('#created_recruitment_update').val(tanggal);
-            $('#modal_edit_recruitment').modal('show');
-
-        });
-
-        // delete data
-        $(document).on('click', '#btn_delete_recruitment', function() {
-            var id = $(this).data('id');
-            let holding = $(this).data("holding");
-            console.log(id);
-            Swal.fire({
-                title: 'Apakah kamu yakin?',
-                text: "Kamu tidak dapat mengembalikan data ini",
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Yes!'
-            }).then((result) => {
-                if (result.value) {
-                    $.ajax({
-                        url: "{{ url('/recruitment/delete/') }}" + '/' + id + '/' + holding,
-                        type: "GET",
-                        error: function() {
-                            alert('Something is wrong');
-                        },
-                        success: function(data) {
-                            Swal.fire({
-                                title: 'Terhapus!',
-                                text: 'Data anda berhasil di hapus.',
-                                icon: 'success',
-                                timer: 1500
-                            })
-                            $('#table_recruitment').DataTable().ajax.reload();
-                        }
-                    });
-                } else {
-                    Swal.fire({
-                        title: 'Cancelled!',
-                        text: 'Your data is safe :',
-                        icon: 'error',
-                        timer: 1500
-                    })
-                }
-            });
-
         });
     </script>
 
@@ -729,7 +506,13 @@
                                             </svg>
                                         </span>
                                     </div>
-                                    <input type="text" name="jawaban[]" class="form-control" placeholder="Contoh : A" autocomplete="off" required>
+                                      <select class="form-select" name="jawaban[]" id="jawaban[]" required>
+                                                        <option value="A" selected>A</option>
+                                                        <option value="B">B</option>
+                                                        <option value="C">C</option>
+                                                        <option value="D">D</option>
+                                                        <option value="E">E</option>
+                                                    </select>
                                 </div>
                             </div>
                         </div>

@@ -32,6 +32,8 @@ class User extends Authenticatable implements JWTSubject
         'password_show',
         'is_admin',
         'access_1',
+        'access_2',
+        'access_3',
         'user_aktif',
         'alasan',
     ];

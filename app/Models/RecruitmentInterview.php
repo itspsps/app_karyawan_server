@@ -15,6 +15,7 @@ class RecruitmentInterview extends Model
     protected $fillable = [
         'id',
         'holding',
+        'catatan',
         'recruitment_admin_id',
         'recruitment_userid',
         'tanggal_interview',
@@ -25,9 +26,9 @@ class RecruitmentInterview extends Model
         'created_at',
     ];
 
-    public function DataRecruitment(): BelongsTo
+    public function recruitmentUser(): BelongsTo
     {
-        return $this->belongsTo(RecruitmentUser::class, 'recruitment_userid', 'id');
+        return $this->belongsTo(RecruitmentUser::class, 'recruitment_user_id', 'id');
     }
     public function Departemen(): BelongsTo
     {

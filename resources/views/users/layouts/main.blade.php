@@ -37,7 +37,14 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <!-- <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet"> -->
     <link href="https://cdn.datatables.net/2.0.3/css/dataTables.bootstrap5.css" rel="stylesheet">
-
+    <style>
+        .scrollable-menu {
+            max-height: 70vh;
+            /* tinggi maksimal 70% layar */
+            overflow-y: auto;
+            /* aktifkan scroll vertikal */
+        }
+    </style>
 </head>
 
 <body>

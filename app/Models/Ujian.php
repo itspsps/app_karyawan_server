@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Ujian extends Model
 {
@@ -17,11 +19,11 @@ class Ujian extends Model
     {
         return $this->belongsTo(User::class);
     }
-    // Relasi Ke Mapel
-    public function mapel()
+    public function ujianKategori()
     {
-        return $this->belongsTo(Mapel::class);
+        return $this->belongsTo(UjianKategori::class, 'kategori_id', 'id');
     }
+
     // relasi Ke kelas
     public function kelas()
     {
@@ -31,7 +33,7 @@ class Ujian extends Model
     // relasi Ke WaktuUjian
     public function waktuujian()
     {
-        return $this->hasMany(WaktuUjian::class, 'kode', 'kode');
+        return $this->belongsTo(WaktuUjian::class, 'kode', 'kode');
     }
 
     // relasi Ke DetailUjian
@@ -41,14 +43,30 @@ class Ujian extends Model
     }
 
     // relasi Ke DetailEssay
-    public function detailessay()
+    public function detailesai()
     {
-        return $this->hasMany(DetailEssay::class, 'kode', 'kode');
+        return $this->hasMany(DetailEsai::class, 'kode', 'kode');
     }
 
     // DEFAULT KEY DI UBAH JADI KODE BUKAN ID LAGI
     public function getRouteKeyName()
     {
         return 'kode';
+    }
+    public function esaiJawab(): BelongsTo
+    {
+        return $this->belongsTo(UjianEsaiJawab::class, 'kode', 'kode');
+    }
+    public function pgSiswa(): BelongsTo
+    {
+        return $this->belongsTo(PgSiswa::class, 'kode', 'kode');
+    }
+    public function pembobotan(): BelongsTo
+    {
+        return $this->belongsTo(Pembobotan::class, 'pembobotan_id', 'pembobotan_id');
+    }
+    public function ujianEsaiJawabDetail(): BelongsTo
+    {
+        return $this->belongsTo(Pembobotan::class, 'kode', 'kode');
     }
 }

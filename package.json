@@ -25,7 +25,8 @@
     },
     "dependencies": {
         "scrolling-tabs-bootstrap-5": "^1.1.1",
-        "select2-bootstrap-theme": "^0.1.0-beta.10"
+        "select2-bootstrap-theme": "^0.1.0-beta.10",
+        "sweetalert2": "^11.22.5"
     },
     "type": "module"
 }

@@ -105,20 +105,20 @@ class KaryawanImport implements ToModel, WithStartRow, WithCalculatedFormulas
         if ($row[10] == NULL || $row[10] == 0) {
             // dd($row);
             $kelamin = NULL;
-        } else if ($row[10] == 'Laki-Laki') {
+        } else if ($row[10] == "1") {
             $kelamin = $row[10];
-        } else if ($row[10] == 'laki-laki') {
-            $kelamin = 'Laki-Laki';
+        } else if ($row[10] == "1") {
+            $kelamin = "1";
         } else if ($row[10] == 'laki laki') {
-            $kelamin = 'Laki-Laki';
+            $kelamin = "1";
         } else if ($row[10] == 'L') {
-            $kelamin = 'Laki-Laki';
-        } else if ($row[10] == 'Perempuan') {
+            $kelamin = "1";
+        } else if ($row[10] == "2") {
             $kelamin = $row[10];
         } else if ($row[10] == 'P') {
-            $kelamin = 'Perempuan';
-        } else if ($row[10] == 'perempuan') {
-            $kelamin = 'Perempuan';
+            $kelamin = "2";
+        } else if ($row[10] == "2") {
+            $kelamin = "2";
         }
 
 
@@ -128,13 +128,13 @@ class KaryawanImport implements ToModel, WithStartRow, WithCalculatedFormulas
             $status_nikah = NULL;
         } else if ($row[11] == 'LAJANG') {
             $status_nikah = 'Lajang';
-        } else if ($row[11] == 'lajang') {
+        } else if ($row[11] == 1) {
             $status_nikah = 'Lajang';
         } else if ($row[11] == 'Lajang') {
             $status_nikah = 'Lajang';
         } else if ($row[11] == 'MENIKAH') {
             $status_nikah = 'Menikah';
-        } else if ($row[11] == 'menikah') {
+        } else if ($row[11] == 2) {
             $status_nikah = 'Menikah';
         } else if ($row[11] == 'Menikah') {
             $status_nikah = 'Menikah';
@@ -350,7 +350,7 @@ class KaryawanImport implements ToModel, WithStartRow, WithCalculatedFormulas
         if ($row[31] == NULL || $row[31] == 0) {
             $tgl_join = NULL;
         } else {
-            // $tgl_join = Carbon::parse($row[31])->format('Y-m-d'); 
+            // $tgl_join = Carbon::parse($row[31])->format('Y-m-d');
             $tgl_join = is_numeric($row[31]) ? Carbon::parse(\PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($row[31]))->format('Y-m-d') : Carbon::createFromFormat('Y-m-d', $row[31])->format('Y-m-d');
             // dd($tgl_mulai);
         }
@@ -363,7 +363,7 @@ class KaryawanImport implements ToModel, WithStartRow, WithCalculatedFormulas
         if ($row[33] == NULL || $row[33] == '0') {
             $tgl_mulai = NULL;
         } else {
-            // $tgl_mulai = Carbon::parse($row[33])->format('Y-m-d'); 
+            // $tgl_mulai = Carbon::parse($row[33])->format('Y-m-d');
             $tgl_mulai = is_numeric($row[33]) ? Carbon::parse(\PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($row[33]))->format('Y-m-d') : Carbon::createFromFormat('Y-m-d', $row[33])->format('Y-m-d');
             // dd($tgl_mulai);
         }

@@ -29,7 +29,7 @@ class UserSeeder extends Seeder
                 'username' => 'admin',
                 'password' => Hash::make('admin123'),
                 'tgl_lahir' => date('Y-m-d'),
-                'gender' => 'Laki-Laki',
+                'gender' => "1",
                 'tgl_join' => date('Y-m-d'),
                 'status_nikah' => 'Menikah',
                 'alamat' => 'alamat admin',
@@ -45,7 +45,8 @@ class UserSeeder extends Seeder
                 'dept_id' => DB::table('departemens')->where('nama_departemen', 'HRD & GA')->value('id'),
                 'divisi_id' => DB::table('divisis')->where('nama_divisi', 'HUMAN RESOURCE DEVELOPMENT')->value('id'),
                 'jabatan_id' => DB::table('jabatans')->where('nama_jabatan', 'MANAGER HRD')->value('id')
-            ], [
+            ],
+            [
                 'id' => Uuid::uuid4(),
                 'name' => 'STAFF HRD',
                 'fullname' => 'User1',
@@ -56,7 +57,7 @@ class UserSeeder extends Seeder
                 'username' => 'user1',
                 'password' => Hash::make('user123'),
                 'tgl_lahir' => date('Y-m-d'),
-                'gender' => 'Laki-Laki',
+                'gender' => "1",
                 'tgl_join' => '2022-01-28',
                 'status_nikah' => 'Menikah',
                 'alamat' => 'alamat user',
@@ -72,7 +73,8 @@ class UserSeeder extends Seeder
                 'dept_id' => DB::table('departemens')->where('nama_departemen', 'HRD & GA')->value('id'),
                 'divisi_id' => DB::table('divisis')->where('nama_divisi', 'HUMAN RESOURCE DEVELOPMENT')->value('id'),
                 'jabatan_id' => DB::table('jabatans')->where('nama_jabatan', 'STAFF HRD')->value('id')
-            ], [
+            ],
+            [
                 'id' => Uuid::uuid4(),
                 'name' => 'SPV HRD',
                 'fullname' => 'User2',
@@ -83,7 +85,7 @@ class UserSeeder extends Seeder
                 'username' => 'user2',
                 'password' => Hash::make('user123'),
                 'tgl_lahir' => date('Y-m-d'),
-                'gender' => 'Laki-Laki',
+                'gender' => "1",
                 'tgl_join' => '2022-01-28',
                 'status_nikah' => 'Menikah',
                 'alamat' => 'alamat user',
@@ -111,7 +113,7 @@ class UserSeeder extends Seeder
                 'username' => 'user3',
                 'password' => Hash::make('user123'),
                 'tgl_lahir' => date('Y-m-d'),
-                'gender' => 'Laki-Laki',
+                'gender' => "1",
                 'tgl_join' => '2022-01-28',
                 'status_nikah' => 'Menikah',
                 'alamat' => 'alamat user',
@@ -139,7 +141,7 @@ class UserSeeder extends Seeder
                 'username' => 'user4',
                 'password' => Hash::make('user123'),
                 'tgl_lahir' => date('Y-m-d'),
-                'gender' => 'Laki-Laki',
+                'gender' => "1",
                 'tgl_join' => '2022-01-28',
                 'status_nikah' => 'Menikah',
                 'alamat' => 'alamat user',
@@ -167,7 +169,7 @@ class UserSeeder extends Seeder
                 'username' => 'user5',
                 'password' => Hash::make('user123'),
                 'tgl_lahir' => date('Y-m-d'),
-                'gender' => 'Laki-Laki',
+                'gender' => "1",
                 'tgl_join' => '2022-01-28',
                 'status_nikah' => 'Menikah',
                 'alamat' => 'alamat user',

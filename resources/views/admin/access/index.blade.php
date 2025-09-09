@@ -108,6 +108,18 @@
                                                     </div>
                                                 </td>
                                             </tr>
+                                            <tr>
+                                                <td>3</td>
+                                                <td>Menu Interview Manager</td>
+                                                <td>
+                                                    <div class="form-check mb-2">
+                                                        <input class="form-check-input" type="checkbox" id="access_3" name="access_3">
+                                                        <label class="form-check-label" for="access_3">
+                                                            Buka Access
+                                                        </label>
+                                                    </div>
+                                                </td>
+                                            </tr>
                                         </tbody>
                                     </table>
                                 </div>
@@ -373,7 +385,7 @@
 <script>
     $(document).on("click", "#btn_add_access_karyawan", function() {
         let id = $(this).data('id');
-        // console.log(id);
+        console.log(id);
         let holding = $(this).data("holding");
         $('#modal_tambah_access_karyawan').modal('show');
         let url = "{{ url('/access/add_access/')}}" + '/' + id + '/' + holding;
@@ -387,8 +399,7 @@
             //     id_kecamatan: id_kecamatan
             // },
             success: function(response) {
-                var parsed = $.parseJSON(response);
-                console.log(parsed);
+                var parsed = response.karyawan;
                 $('#td_name').text(parsed.name);
                 $('#td_departemen').text(parsed.departemen.nama_departemen);
                 if (parsed.jabatan1_id != null && parsed.jabatan2_id != null && parsed.jabatan3_id != null && parsed.jabatan4_id != null) {
@@ -420,8 +431,20 @@
                 } else if (parsed.kontrak_kerja == 'SIP') {
                     $('#td_kontrak_kerja').text('CV. SURYA INTI PANGAN');
                 }
-                if (parsed.access_1 == 'on') {
-
+                if (response.user.access_1 == 'on') {
+                    $('#access_1').prop('checked', true);
+                } else {
+                    $('#access_1').prop('checked', false);
+                }
+                if (response.user.access_2 == 'on') {
+                    $('#access_2').prop('checked', true);
+                } else {
+                    $('#access_2').prop('checked', false);
+                }
+                if (response.user.access_3 == 'on') {
+                    $('#access_3').prop('checked', true);
+                } else {
+                    $('#access_3').prop('checked', false);
                 }
                 $('#id_karyawan').val(parsed.id);
             },

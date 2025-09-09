@@ -53,6 +53,7 @@ return [
     */
 
     'url' => env('APP_URL', 'http://localhost'),
+    'url_karir' => env('APP_URL_KARIR', 'http://localhost'),
 
     'asset_url' => env('ASSET_URL', null),
 

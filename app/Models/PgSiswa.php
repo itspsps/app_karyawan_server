@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class PgSiswa extends Model
 {
-    public $table = 'pg_siswa';
+    public $table = 'ujian_pg_siswa';
     // Disable the model timestamps
     public $timestamps = false;
     use HasFactory;

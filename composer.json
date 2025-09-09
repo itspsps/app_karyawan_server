@@ -27,7 +27,7 @@
         "maatwebsite/excel": "^3.1",
         "maliklibs/zkteco": "*",
         "pusher/pusher-php-server": "^7.2",
-        "realrashid/sweet-alert": "^7.1",
+        "realrashid/sweet-alert": "^7.3",
         "spatie/laravel-permission": "^6.9",
         "tymon/jwt-auth": "^1.0@dev",
         "yajra/laravel-datatables-oracle": "^9.21"
@@ -46,7 +46,11 @@
             "Database\\Factories\\": "database/factories/",
             "Database\\Seeders\\": "database/seeders/",
             "Maliklibs\\Zkteco\\": "vendor/maliklibs/zkteco/src/"
-        }
+        },
+        "files": [
+            "app/Helpers/UrlExternal.php",
+            "app/Helpers/rupiah.php"
+        ]
     },
     "autoload-dev": {
         "psr-4": {
