@@ -49,8 +49,9 @@
                                 <thead class="table-primary">
                                     <tr>
                                         <th>Tanggal&nbsp;Wawancara</th>
-                                        <th>Presensi&nbsp;Kehadiran</th>
                                         <th>Nama&nbsp;Lengkap</th>
+                                        <th>Presensi&nbsp;Kehadiran</th>
+                                        <th>Ujian</th>
                                         <th>Nama&nbsp;Bagian</th>
                                         <th>Nama&nbsp;Divisi</th>
                                         <th>Nama&nbsp;Departemen</th>
@@ -163,7 +164,10 @@
                     data: 'presensi',
                     name: 'presensi',
                 },
-
+                {
+                    data: 'ujian',
+                    name: 'ujian',
+                },
                 {
                     data: 'nama_bagian',
                     name: 'nama_bagian'
@@ -176,6 +180,9 @@
                     data: 'nama_departemen',
                     name: 'nama_departemen'
                 },
+            ],
+            order: [
+                [0, 'desc']
             ]
         });
         $('#icon-tab-0').on('shown.bs.tab', function(e) {
