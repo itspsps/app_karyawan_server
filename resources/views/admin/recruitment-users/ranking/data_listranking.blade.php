@@ -161,7 +161,7 @@
         .timeline-centered .timeline-entry {
             position: relative;
             /*width: 50%;
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    float: right;*/
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    float: right;*/
             margin-top: 5px;
             margin-left: 30px;
             margin-bottom: 10px;
@@ -902,7 +902,6 @@
             formData.append('link_wawancara', $('#link_wawancara').val());
             formData.append('waktu_wawancara', $('#waktu_wawancara').val());
             formData.append('notes_langsung', $('#notes_langsung_update').val());
-
             $.ajax({
                 type: "POST",
 
@@ -991,7 +990,7 @@
                             timer: 5000
                         })
                         //mengosongkan modal dan menyembunyikannya
-                        $('#modal_status').modal('hide');
+                        $('#modal_lolos').modal('hide');
                         $('#tanggal_diterima_lolos').val('');
                         $('#notes_langsung_lolos').val('');
                         $('#gaji_lolos').val('');
@@ -1020,7 +1019,7 @@
                             icon: 'error',
                             timer: 10000
                         })
-                        $('#modal_status').modal('hide');
+                        $('#modal_lolos').modal('hide');
                     }
                 }
 
@@ -1107,7 +1106,6 @@
         $('#lolos_langsung').hide();
         $('#status_update').on('change', function() {
             let value = $(this).val();
-
             if (value == '') {
                 $('#lolos_langsung').hide();
                 $('#tanggal_wawancara').val('');

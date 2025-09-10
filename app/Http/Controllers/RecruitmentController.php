@@ -896,6 +896,10 @@ asoy.com
                     }
                     return $btn;
                 })
+                ->addColumn('ujian', function ($row) {
+                    $holding = request()->segment(count(request()->segments()));
+                    return '<a href="' . url("/dt/data-data_ujian_user/$row->recruitment_user_id/$holding") . '" type="button" class="btn btn-info"><small>Lihat</small></a>';
+                })
                 ->addColumn('nama_lengkap', function ($row) {
                     return $row->recruitmentUser->Cv->nama_lengkap;
                 })
@@ -908,7 +912,7 @@ asoy.com
                 ->addColumn('nama_departemen', function ($row) {
                     return $row->recruitmentUser->Bagian->Divisi->Departemen->nama_departemen;
                 })
-                ->rawColumns(['tanggal_wawancara', 'presensi', 'nama_lengkap', 'nama_bagian', 'nama_departemen', 'nama_divisi', 'nama_departemen'])
+                ->rawColumns(['tanggal_wawancara', 'presensi', 'ujian', 'nama_lengkap', 'nama_bagian', 'nama_departemen', 'nama_divisi', 'nama_departemen'])
                 ->make(true);
         }
     }
@@ -3200,22 +3204,53 @@ selamat Anda lolos bekerja
                     return $row->Cv->nama_lengkap;
                 })
                 ->addColumn('pilih_status', function ($row) {
-                    return '<button
+                    if ($row->status_lanjutan == null) {
+                        return '<button
                                 data-id="' . $row->id . '"
                                 type="button" class="btn btn-sm btn-info " id="btn_status_ranking">
                                 <i class="tf-icons mdi mdi-eye-circle-outline me-1"></i>
                                 Pilih&nbsp;
-                            </button>' . '<button
+                            </button>';
+                    } elseif ($row->status_lanjutan == '4b') {
+                        return '<button
                                 data-id="' . $row->id . '"
-                                type="button" class="btn btn-sm btn-info " id="btn_lolos">
+                                type="button" class="btn btn-sm btn-success " id="btn_lolos">
                                 <i class="tf-icons mdi mdi-eye-circle-outline me-1"></i>
-                                Pilih&nbsp;
-                            </button>' . '<button
+                                Lolos&nbsp;
+                            </button>';
+                    } elseif ($row->status_lanjutan == '5b') {
+                        return   '<button
                                 data-id="' . $row->id . '"
-                                type="button" class="btn btn-sm btn-info " id="btn_pemindahan">
+                                type="button" class="btn btn-sm btn-danger " id="btn_pemindahan">
                                 <i class="tf-icons mdi mdi-eye-circle-outline me-1"></i>
                                 Pindah&nbsp;
                             </button>';
+                    } elseif ($row->status_lanjutan == '2b' && $row->feedback_lanjutan == '2b') {
+                        return   '<button
+                                data-id="' . $row->id . '"
+                                type="button" class="btn btn-sm btn-success " id="btn_pemindahan">
+                                <i class="tf-icons mdi mdi-eye-circle-outline me-1"></i>
+                                Masukkan&nbspDatabase&nbspKaryawan
+                            </button>';
+                    } elseif ($row->status_lanjutan == '7b' && $row->feedback_lanjutan == '2b') {
+                        return   '<button
+                                data-id="' . $row->id . '"
+                                type="button" class="btn btn-sm btn-success " id="btn_pemindahan">
+                                <i class="tf-icons mdi mdi-eye-circle-outline me-1"></i>
+                                Masukkan&nbspDatabase&nbspKaryawan
+                            </button>';
+                    } else {
+                        // if ($row->feedback_lanjutan == '2b') {
+                        //     return '<button
+                        //         data-id="' . $row->id . '"
+                        //         type="button" class="btn btn-sm btn-success " id="btn_lolos">
+                        //         <i class="tf-icons mdi mdi-eye-circle-outline me-1"></i>
+                        //         Lolos&nbsp;
+                        //     </button>';
+                        // } else {
+                        //     return '';
+                        // }
+                    }
                 })
                 ->addColumn('status', function ($row) {
                     if ($row->status_lanjutan == null) {
