@@ -23,7 +23,7 @@
                     </div>
                     <div class="card-body">
                         <!-- <hr class="my-5">
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            <hr class="my-5"> -->
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    <hr class="my-5"> -->
                         <button type="button" class="btn btn-sm btn-primary waves-effect waves-light mb-3"
                             data-bs-toggle="modal" data-bs-target="#modal_tambah_recruitment"><i
                                 class="menu-icon tf-icons mdi mdi-plus"></i>Tambah</button>
@@ -143,7 +143,7 @@
                                         </option>
                                     @endforeach
                                 </select>
-                                <label for="nama_dept">Nama Departemen</label>
+                                <label for="nama_dept">Nama Departemen </label>
                             </div>
                             @error('nama_dept')
                                 <div class="invalid-feedback">
