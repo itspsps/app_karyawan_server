@@ -76,7 +76,7 @@
                                                 <input class="form-control" type="hidden" name="recruitment_user_id"
                                                     id="" value="{{ $recruitment_user_id }}">
                                                 <input class="form-control" type="hidden" name="holding" id=""
-                                                    value="{{ $holding }}">
+                                                    value="{{ $holding->holding_code }}">
                                                 <input class="form-control" type="hidden" name="kode" id=""
                                                     value="{{ $ujian->kode }}">
                                                 <div class="py-2">

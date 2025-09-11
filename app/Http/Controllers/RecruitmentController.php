@@ -21,6 +21,7 @@ use App\Models\WaktuUjian;
 use App\Models\PgSiswa;
 use App\Models\EssaySiswa;
 use App\Models\DetailEssay;
+use App\Models\Holding;
 use App\Models\InterviewAdmin;
 use App\Models\InterviewUser;
 use App\Models\Pembobotan;
@@ -33,6 +34,7 @@ use App\Models\RecruitmentKesehatanRS;
 use App\Models\RecruitmentPendidikan;
 use App\Models\RecruitmentRiwayat;
 use App\Models\RecruitmentUserRecord;
+use App\Models\Site;
 use App\Models\UjianEsaiJawabDetail;
 use App\Models\UjianKategori;
 use Illuminate\Http\Request;
@@ -56,24 +58,26 @@ use PhpParser\Builder\Function_;
 
 class RecruitmentController extends Controller
 {
-    public function pg_recruitment()
+    public function pg_recruitment($holding)
     {
-        $holding = request()->segment(count(request()->segments()));
+        // $holding = request()->segment(count(request()->segments()));
+        $holdings = Holding::where('holding_code', $holding)->first();
         return view('admin.recruitment-users.recruitment.index', [
             // return view('karyawan.index', [
             'title'             => 'Data Recruitment',
-            'holding'           => $holding,
+            'holding'           => $holdings,
+            'site'              => Site::where('site_holding_category', $holdings->id)->get(),
             'data_departemen'   => Departemen::all(),
-            'data_bagian'       => Bagian::with('Divisi')->where('holding', $holding)->get(),
-            'data_jabatan'      => Jabatan::with('Bagian')->where('holding', $holding)->get(),
-            'data_dept'         => Departemen::orderBy('nama_departemen', 'asc')->where('holding', $holding)->get(),
-            'data_divisi'       => Divisi::orderBy('nama_divisi', 'asc')->where('holding', $holding)->get()
+            'data_bagian'       => Bagian::with('Divisi')->where('holding', $holdings->id)->get(),
+            'data_jabatan'      => Jabatan::with('Bagian')->where('holding', $holdings->id)->get(),
+            'data_dept'         => Departemen::orderBy('nama_departemen', 'asc')->where('holding', $holdings->id)->get(),
+            'data_divisi'       => Divisi::orderBy('nama_divisi', 'asc')->where('holding', $holdings->id)->get()
         ]);
     }
 
-    function dt_recruitment(Request $request)
+    function dt_recruitment($holding)
     {
-        $holding = request()->segment(count(request()->segments()));
+        $holdings = Holding::where('holding_code', $holding)->first();
         $table = Recruitment::with([
             'Jabatan' => function ($query) {
                 $query->with([
@@ -91,7 +95,7 @@ class RecruitmentController extends Controller
                 ]);
                 $query->orderBy('nama_jabatan', 'ASC');
             },
-        ])->where('holding_Recruitment', $holding)->orderBy('created_at', 'DESC')->get();;
+        ])->where('holding_recruitment', $holdings->id)->orderBy('created_at', 'DESC')->get();;
         // dd($table);
         if (request()->ajax()) {
             return DataTables::of($table)
@@ -151,11 +155,11 @@ class RecruitmentController extends Controller
                             </a>';
                     return $btn;
                 })
-                ->addColumn('status_recruitment', function ($row) use ($holding) {
+                ->addColumn('status_recruitment', function ($row) use ($holdings) {
                     if ($row->status_recruitment == 0) {
                         $status = '<button id="btn_status_aktif"
                             data-id="' . $row->id . '"
-                            data-holding="' . $holding . '"
+                            data-holding="' . $holdings->id . '"
                             type="button" class="btn btn-sm btn-success ">
                             <i class="tf-icons mdi mdi-account-search"> </i>
                             &nbsp;AKTIF
@@ -163,7 +167,7 @@ class RecruitmentController extends Controller
                     } else {
                         $status = '<button id="btn_status_naktif"
                             data-id="' . $row->id . '"
-                            data-holding="' . $holding . '"
+                            data-holding="' . $holdings->id . '"
                             type="button" class="btn btn-sm btn-danger ">
                             <i class="tf-icons mdi mdi-account-off"></i>
                             &nbspN&nbsp;AKTIF
@@ -172,7 +176,7 @@ class RecruitmentController extends Controller
                     return $status;
                 })
 
-                ->addColumn('option', function ($row) use ($holding) {
+                ->addColumn('option', function ($row) use ($holdings) {
                     $btn =
                         '<button id="btn_edit_recruitment"
                             data-id="' . $row->id . '"
@@ -182,7 +186,7 @@ class RecruitmentController extends Controller
                             data-jabatan="' . $row->nama_jabatan . '"
                             data-tanggal_awal="' . $row->created_recruitment . '"
                             data-tanggal_akhir="' . $row->deadline_recruitment . '"
-                            data-holding="' . $holding . '"
+                            data-holding="' . $holdings->id . '"
                             data-desc="' . $row->desc_recruitment . '"
                             type="button"
                             class="btn btn-icon btn-warning waves-effect waves-light">
@@ -190,7 +194,7 @@ class RecruitmentController extends Controller
                         </button>
                         <button type="button" id="btn_delete_recruitment"
                             data-id="' . $row->id . '"
-                            data-holding="' . $holding . '"
+                            data-holding="' . $holdings->id . '"
                             class="btn btn-icon btn-danger waves-effect waves-light">
                             <span class="tf-icons mdi mdi-delete-outline"></span>
                         </button>
@@ -204,15 +208,15 @@ class RecruitmentController extends Controller
 
     function create(Request $request)
     {
-
         // dd($request->all());
         $validatedData = $request->validate([
-            'penempatan'             => 'required',
+            'penempatan'            => 'required',
             'nama_dept'             => 'required',
             'nama_divisi'           => 'required',
             'nama_bagian'           => 'required|max:255',
             'nama_jabatan'          => 'required',
             'created_recruitment'   => 'required',
+            'holding_recruitment'   => 'required',
             'deadline_recruitment'  => 'required',
             'desc_recruitment'      => 'required',
         ]);
@@ -221,7 +225,7 @@ class RecruitmentController extends Controller
         $insert = Recruitment::create(
             [
                 'id'                    => Uuid::uuid4(),
-                'holding_recruitment'   => $holding,
+                'holding_recruitment'   => $validatedData['holding_recruitment'],
                 'penempatan'            => $validatedData['penempatan'],
                 'nama_dept'             => $validatedData['nama_dept'],
                 'nama_divisi'           => $validatedData['nama_divisi'],
@@ -264,9 +268,9 @@ class RecruitmentController extends Controller
         return redirect()->back()->with('success', 'Data Berhasil di Diupdate');
     }
 
-    function update(Request $request)
+    function update(Request $request, $holding)
     {
-        $holding = request()->segment(count(request()->segments()));
+        $holding = Holding::where('holding_code', $holding)->value('id');
         $recruitment = Recruitment::where('id', $request->id_recruitment)->where('holding_recruitment', $holding)->first();
         $data = Recruitment::where('id', $request->id_recruitment)->where('holding_recruitment', $holding)->update([
             'created_recruitment' => $request->created_recruitment_update,
@@ -320,9 +324,9 @@ class RecruitmentController extends Controller
     //         'data_divisi' => Divisi::orderBy('nama_divisi', 'asc')->where('holding', $holding)->get()
     //     ]);
     // }
-    function pg_list_pelamar($id)
+    function pg_list_pelamar($id, $holding)
     {
-        $holding = request()->segment(count(request()->segments()));
+        $holdings = Holding::where('holding_code', $holding)->first();
         // $get_user = RecruitmentUser::where('recruitment_admin_id', $id)->first();
         // $get_cv = RecruitmentCV::where('users_career_id', $get_user->users_career_id)->first();
         // Hapus pelamar kadaluarsa
@@ -355,7 +359,7 @@ class RecruitmentController extends Controller
                 ]);
             }
         ])
-            ->where('holding', $holding)
+            ->where('holding', $holdings->id)
             ->where('status', '0')
             ->where('recruitment_admin_id', $id)
             ->get();
@@ -368,7 +372,7 @@ class RecruitmentController extends Controller
                 ]);
             }
         ])
-            ->where('holding', $holding)
+            ->where('holding', $holdings->id)
             ->where('recruitment_admin_id', $id)
             ->whereIn('status', array('1', '1a', '2a'))
             ->get();
@@ -381,7 +385,7 @@ class RecruitmentController extends Controller
                 ]);
             }
         ])
-            ->where('holding', $holding)
+            ->where('holding', $holdings->id)
             ->where('status', '2')
             ->where('recruitment_admin_id', $id)
             ->get();
@@ -394,19 +398,19 @@ class RecruitmentController extends Controller
                 ]);
             }
         ])
-            ->where('holding', $holding)
+            ->where('holding', $holdings->id)
             ->where('status', '3')
             ->where('recruitment_admin_id', $id)
             ->get();
 
         return view('admin.recruitment-users.recruitment.list_pelamar', [
             'title' => 'Data Recruitment',
-            'holding'   => $holding,
+            'holding'   => $holdings,
         ], compact('user_meta', 'user_wait', 'user_kandidat', 'user_reject'));
     }
-    function pelamar_detail($id)
+    function pelamar_detail($id, $holding)
     {
-        $holding = request()->segment(count(request()->segments()));
+        $holdings = Holding::where('holding_code', $holding)->first();
         $data_cv =  RecruitmentUser::with([
             'AuthLogin' => function ($query) use ($id) {
                 $query->with([
@@ -477,7 +481,7 @@ class RecruitmentController extends Controller
         // dd($pendidikan);
         return view('admin.recruitment-users.recruitment.user_detail', [
             'ti$pekerjaan_counttle' => 'Data Recruitment',
-            'holding'   => $holding,
+            'holding'   => $holdings,
         ], compact(
             'data_cv',
             'pendidikan',
@@ -491,9 +495,9 @@ class RecruitmentController extends Controller
             'kesehatan_kecelakaan'
         ));
     }
-    function pelamar_detail_pdf($id)
+    function pelamar_detail_pdf($id, $holding)
     {
-        $holding = request()->segment(count(request()->segments()));
+        $holdings = Holding::where('holding_code', $holding)->first();
         $data_cv =  RecruitmentUser::with([
             'AuthLogin' => function ($query) use ($id) {
                 $query->with([
@@ -564,7 +568,7 @@ class RecruitmentController extends Controller
         // dd($pendidikan);
         $pdf = Pdf::loadView('admin.recruitment-users.recruitment.user_detail_pdf', [
             'ti$pekerjaan_counttle' => 'Data Recruitment',
-            'holding'   => $holding,
+            'holding'   => $holdings,
         ], compact(
             'data_cv',
             'pendidikan',
@@ -594,10 +598,10 @@ class RecruitmentController extends Controller
         //     'kesehatan_kecelakaan'
         // ));
     }
-    public function pelamar_detail_ubah(Request $request)
+    public function pelamar_detail_ubah(Request $request, $holding)
     {
         // dd($request->all());
-        $holding = request()->segment(count(request()->segments()));
+        $holdings = Holding::where('holding_code', $holding)->first();
         $recruitment_admin_id = RecruitmentUser::where('id', $request->recruitment_user_id)->first();
         // dd($request->nomor_whatsapp);
         // dd($recruitment_admin_id);
@@ -651,13 +655,7 @@ class RecruitmentController extends Controller
         }
         if ($request->status == '1') {
             // mencari nama PT
-            if ($request->nama_holding == 'sp') {
-                $nama_holding = 'CV SUMBER PANGAN';
-            } elseif ($request->nama_holding == 'sps') {
-                $nama_holding = 'PT SURYA PANGAN SEMESTA';
-            } elseif ($request->nama_holding == 'sip') {
-                $nama_holding = 'PT SURYA INTI PANGAN';
-            }
+
 
             Carbon::setLocale('id');
             $tanggal_wawancara = Carbon::parse($request->tanggal_wawancara);
@@ -679,7 +677,7 @@ class RecruitmentController extends Controller
                     "PEMBERITAHUAN WAWANCARA!
 
 Selamat $request->nama
-Anda dinyatakan *LOLOS* tahap seleksi administrasi di $nama_holding, untuk posisi $request->nama_bagian
+Anda dinyatakan *LOLOS* tahap seleksi administrasi di $holdings->holding_category, untuk posisi $request->nama_bagian
 
 Kami ingin mengundang Anda untuk wawancara pada :
 
@@ -739,85 +737,86 @@ asoy.com
     }
 
     // Lolos Administrasi -> Panggil INterview
-    function lolos_administrasi(Request $request)
-    {
-        $holding = request()->segment(count(request()->segments()));
-        $selectedUsers = $request->users;
+    // function lolos_administrasi(Request $request, $holding)
+    // {
+    //     $holding = request()->segment(count(request()->segments()));
+    //     $selectedUsers = $request->users;
 
-        if (!empty($selectedUsers) && is_array($selectedUsers)) {
-            $userIds = array_keys($selectedUsers);
-            $data_user = RecruitmentUser::with([
-                'Bagian' => function ($query) {
-                    $query->orderBy('nama_bagian', 'ASC');
-                },
-                'Cv' => function ($query) {
-                    $query->orderBy('id', 'ASC');
-                },
-                'AuthLogin' => function ($query) {
-                    $query->orderBy('id', 'ASC');
-                }
-            ])->whereIn('id', $userIds)->get();
-            // dd($data_user);
-            foreach ($data_user as $user) {
+    //     if (!empty($selectedUsers) && is_array($selectedUsers)) {
+    //         $userIds = array_keys($selectedUsers);
+    //         $data_user = RecruitmentUser::with([
+    //             'Bagian' => function ($query) {
+    //                 $query->orderBy('nama_bagian', 'ASC');
+    //             },
+    //             'Cv' => function ($query) {
+    //                 $query->orderBy('id', 'ASC');
+    //             },
+    //             'AuthLogin' => function ($query) {
+    //                 $query->orderBy('id', 'ASC');
+    //             }
+    //         ])->whereIn('id', $userIds)->get();
+    //         // dd($data_user);
+    //         foreach ($data_user as $user) {
 
-                // Insert interview data
-                RecruitmentInterview::create([
-                    'id' => Uuid::uuid4(),
-                    'holding' => $holding,
-                    'recruitment_admin_id' => $request->recruitment_admin_id,
-                    'recruitment_userid' => $user->id,
-                    'tanggal_interview' => $request->tanggal_interview,
-                    'jam_interview' => $request->jam_interview,
-                    'lokasi_interview' => $request->lokasi_interview,
-                ]);
+    //             // Insert interview data
+    //             RecruitmentInterview::create([
+    //                 'id' => Uuid::uuid4(),
+    //                 'holding' => $holding,
+    //                 'recruitment_admin_id' => $request->recruitment_admin_id,
+    //                 'recruitment_userid' => $user->id,
+    //                 'tanggal_interview' => $request->tanggal_interview,
+    //                 'jam_interview' => $request->jam_interview,
+    //                 'lokasi_interview' => $request->lokasi_interview,
+    //             ]);
 
-                // Update user status
-                RecruitmentUser::where('status_recruitmentuser', 0)
-                    ->where('id', $user->id)
-                    ->update(['status_recruitmentuser' => 1]);
-                //Merekam aktivitas pengguna
-                ActivityLog::create([
-                    'user_id' => $request->user()->id,
-                    'activity' => 'create',
-                    'description' => 'Pemanggilan Interview' . $request->name,
-                ]);
-            }
-        } else {
-            $data_user = collect();
-        }
-        return redirect()->back()->with('success', 'Data Berhasil di informasikan');
-    }
+    //             // Update user status
+    //             RecruitmentUser::where('status_recruitmentuser', 0)
+    //                 ->where('id', $user->id)
+    //                 ->update(['status_recruitmentuser' => 1]);
+    //             //Merekam aktivitas pengguna
+    //             ActivityLog::create([
+    //                 'user_id' => $request->user()->id,
+    //                 'activity' => 'create',
+    //                 'description' => 'Pemanggilan Interview' . $request->name,
+    //             ]);
+    //         }
+    //     } else {
+    //         $data_user = collect();
+    //     }
+    //     return redirect()->back()->with('success', 'Data Berhasil di informasikan');
+    // }
 
-    // Tidak Lolos Administrasi -> konfirmasi
-    function tidak_lolos_administrasi(Request $request)
-    {
-        $holding = request()->segment(count(request()->segments()));
-        $selectedUsers = $request->users;
-        if (!empty($selectedUsers) && is_array($selectedUsers)) {
-            $userIds = array_keys($selectedUsers);
-            $data_user = RecruitmentUser::with([
-                'Bagian' =>  function ($query) {
-                    $query->orderBy('nama_bagian', 'ASC');
-                },
-            ])->whereIn('id', $userIds)->get();
-            foreach ($data_user as $user) {
-                RecruitmentUser::where('status_recruitmentuser', 0)->where('id', $user->id)->update(['status_recruitmentuser' => 5]);
-                // Merekam aktivitas pengguna
-                ActivityLog::create([
-                    'user_id' => $request->user()->id,
-                    'activity' => 'update',
-                    'description' => 'Mengupdate data Recruitment User' . $request->name,
-                ]);
-            }
-        } else {
-            $data_user = collect();
-        }
-        return redirect()->back()->with('success', 'Data Berhasil diupdate');
-    }
+    // // Tidak Lolos Administrasi -> konfirmasi
+    // function tidak_lolos_administrasi(Request $request, $holding)
+    // {
+    //     // $holdings = Holding::where('holding_code', $holding)->first();
+    //     $selectedUsers = $request->users;
+    //     if (!empty($selectedUsers) && is_array($selectedUsers)) {
+    //         $userIds = array_keys($selectedUsers);
+    //         $data_user = RecruitmentUser::with([
+    //             'Bagian' =>  function ($query) {
+    //                 $query->orderBy('nama_bagian', 'ASC');
+    //             },
+    //         ])->whereIn('id', $userIds)->get();
+    //         foreach ($data_user as $user) {
+    //             RecruitmentUser::where('status_recruitmentuser', 0)->where('id', $user->id)->update(['status_recruitmentuser' => 5]);
+    //             // Merekam aktivitas pengguna
+    //             ActivityLog::create([
+    //                 'user_id' => $request->user()->id,
+    //                 'activity' => 'update',
+    //                 'description' => 'Mengupdate data Recruitment User' . $request->name,
+    //             ]);
+    //         }
+    //     } else {
+    //         $data_user = collect();
+    //     }
+    //     return redirect()->back()->with('success', 'Data Berhasil diupdate');
+    // }
 
-    function pg_data_interview()
+    function pg_data_interview($holding)
     {
         // Hapus pelamar kadaluarsa
+        $holdings = Holding::where('holding_code', $holding)->first();
         $get_recruitment_user_id = RecruitmentUser::where('status', '1')
             ->whereDate('tanggal_wawancara', '<', date('Y-m-d'))
             ->get();
@@ -838,15 +837,15 @@ asoy.com
         return view('admin.recruitment-users.interview.data_interview', [
             // return view('karyawan.index', [
             'title' => 'Data Interview',
-            'holding'   => $holding,
+            'holding'   => $holdings,
         ]);
     }
-    function dt_data_interview()
+    function dt_data_interview($holding)
     {
-        $holding = request()->segment(count(request()->segments()));
+        $holdings = Holding::where('holding_code', $holding)->first();
         $table = RecruitmentInterview::with([
-            'recruitmentUser' => function ($query) use ($holding) {
-                $query->where('holding', $holding)->whereDate('tanggal_wawancara', date('Y-m-d'))->with([
+            'recruitmentUser' => function ($query) use ($holdings) {
+                $query->where('holding', $holdings->id)->whereDate('tanggal_wawancara', date('Y-m-d'))->with([
                     'Bagian' =>  function ($query) {
                         $query->with([
                             'Divisi' => function ($query) {
@@ -870,8 +869,8 @@ asoy.com
             ->whereHas('recruitmentUser', function ($query) {
                 $query->whereDate('tanggal_wawancara', date('Y-m-d'));
             })
-            ->whereHas('recruitmentUser', function ($query) use ($holding) {
-                $query->where('holding', $holding);
+            ->whereHas('recruitmentUser', function ($query) use ($holdings) {
+                $query->where('holding', $holdings->id);
             })
             ->orderBy('created_at', 'DESC')
             ->get();
@@ -916,12 +915,12 @@ asoy.com
                 ->make(true);
         }
     }
-    function dt_data_interview1()
+    function dt_data_interview1($holding)
     {
-        $holding = request()->segment(count(request()->segments()));
+        $holdings = Holding::where('holding_code', $holding)->first();
         $table = RecruitmentInterview::with([
-            'recruitmentUser' => function ($query) use ($holding) {
-                $query->where('holding', $holding)->where('status', '1a')->with([
+            'recruitmentUser' => function ($query) use ($holdings) {
+                $query->where('holding', $holdings->id)->where('status', '1a')->with([
                     'Bagian' =>  function ($query) {
                         $query->with([
                             'Divisi' => function ($query) {
@@ -945,8 +944,8 @@ asoy.com
             ->whereHas('recruitmentUser', function ($query) {
                 $query->where('status', '1a');
             })
-            ->whereHas('recruitmentUser', function ($query) use ($holding) {
-                $query->where('holding', $holding);
+            ->whereHas('recruitmentUser', function ($query) use ($holdings) {
+                $query->where('holding', $holdings->id);
             })
             ->orderBy('created_at', 'DESC')
             ->get();
@@ -992,12 +991,12 @@ asoy.com
                 ->make(true);
         }
     }
-    function dt_data_interview2()
+    function dt_data_interview2($holding)
     {
-        $holding = request()->segment(count(request()->segments()));
+        $holdings = Holding::where('holding_code', $holding)->first();
         $table = RecruitmentInterview::with([
-            'recruitmentUser' => function ($query) use ($holding) {
-                $query->where('holding', $holding)->where('status', '2a')->with([
+            'recruitmentUser' => function ($query) use ($holdings) {
+                $query->where('holding', $holdings->id)->where('status', '2a')->with([
                     'Bagian' =>  function ($query) {
                         $query->with([
                             'Divisi' => function ($query) {
@@ -1018,8 +1017,8 @@ asoy.com
                 ]);
             }
         ])
-            ->whereHas('recruitmentUser', function ($query) use ($holding) {
-                $query->where('holding', $holding);
+            ->whereHas('recruitmentUser', function ($query) use ($holdings) {
+                $query->where('holding', $holdings->id);
             })
             ->whereHas('recruitmentUser', function ($query) {
                 $query->where('status', '2a');
@@ -1063,9 +1062,9 @@ asoy.com
                 ->make(true);
         }
     }
-    public function data_ujian_user($id)
+    public function data_ujian_user($id, $holding)
     {
-        $holding = request()->segment(count(request()->segments()));
+        $holdings = Holding::where('holding_code', $holding)->first();
         $user_recruitment = RecruitmentUser::where('id', $id)->with([
             'Cv' => function ($query) {
                 $query;
@@ -1074,7 +1073,7 @@ asoy.com
         $user_interview = RecruitmentInterview::where('recruitment_user_id', $id)->first();
         return view('admin.recruitment-users.interview.data_ujian_user', [
             // return view('karyawan.index', [
-            'holding'   => $holding,
+            'holding'   => $holdings,
             'recruitment_user_id' => $id,
             'user_recruitment'   => $user_recruitment,
             'user_interview'   => $user_interview,
@@ -1915,42 +1914,42 @@ selamat Anda lolos bekerja
             ]);
         }
     }
-    function dt_pembobotan()
-    {
-        $data = Pembobotan::get();
-        if (request()->ajax()) {
-            return DataTables::of($data)
-                ->addColumn('esai', function ($row) {
-                    return $row->esai . '%';
-                })
-                ->addColumn('pilihan_ganda', function ($row) {
-                    return $row->pilihan_ganda . '%';
-                })
-                ->addColumn('interview', function ($row) {
-                    return $row->interview . '%';
-                })
-                ->addColumn('interview_user', function ($row) {
-                    return $row->interview_user . '%';
-                })
-                ->addColumn('option', function ($row) {
-                    return '
-                        <button type="button" id="btn_modal_pembobotan"
-                            data-pembobotan_id="' . $row->pembobotan_id . '"
-                            data-esai="' . $row->esai . '"
-                            data-pilihan_ganda="' . $row->pilihan_ganda . '"
-                            data-interview="' . $row->interview . '"
-                            data-interview_user="' . $row->interview_user . '"
-                            class="btn btn-icon btn-info waves-effect waves-light">
-                           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
-                            <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
-                            <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"/>
-                            </svg>
-                        </button>';
-                })
-                ->rawColumns(['esai', 'pilihan_ganda', 'interview', 'option'])
-                ->make(true);
-        }
-    }
+    // function dt_pembobotan()
+    // {
+    //     $data = Pembobotan::get();
+    //     if (request()->ajax()) {
+    //         return DataTables::of($data)
+    //             ->addColumn('esai', function ($row) {
+    //                 return $row->esai . '%';
+    //             })
+    //             ->addColumn('pilihan_ganda', function ($row) {
+    //                 return $row->pilihan_ganda . '%';
+    //             })
+    //             ->addColumn('interview', function ($row) {
+    //                 return $row->interview . '%';
+    //             })
+    //             ->addColumn('interview_user', function ($row) {
+    //                 return $row->interview_user . '%';
+    //             })
+    //             ->addColumn('option', function ($row) {
+    //                 return '
+    //                     <button type="button" id="btn_modal_pembobotan"
+    //                         data-pembobotan_id="' . $row->pembobotan_id . '"
+    //                         data-esai="' . $row->esai . '"
+    //                         data-pilihan_ganda="' . $row->pilihan_ganda . '"
+    //                         data-interview="' . $row->interview . '"
+    //                         data-interview_user="' . $row->interview_user . '"
+    //                         class="btn btn-icon btn-info waves-effect waves-light">
+    //                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
+    //                         <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
+    //                         <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"/>
+    //                         </svg>
+    //                     </button>';
+    //             })
+    //             ->rawColumns(['esai', 'pilihan_ganda', 'interview', 'option'])
+    //             ->make(true);
+    //     }
+    // }
 
 
     function dt_ujian()
@@ -2820,19 +2819,19 @@ selamat Anda lolos bekerja
         return redirect()->back()->with('success', 'data berhasil ditambahkan');
     }
 
-    function pg_ranking()
+    function pg_ranking($holding)
     {
-        $holding = request()->segment(count(request()->segments()));
+        $holdings = Holding::where('holding_code', $holding)->first();
         return view('admin.recruitment-users.ranking.data_rankinginterview', [
             // return view('karyawan.index', [
             'title' => 'Data Ranking',
-            'holding'   => $holding,
+            'holding'   => $holdings,
         ]);
     }
 
-    function dt_data_ranking()
+    function dt_data_ranking($holding)
     {
-        $holding = request()->segment(count(request()->segments()));
+        $holdings = Holding::where('holding_code', $holding)->first();
         $table =  Recruitment::with([
             'Bagian' =>  function ($query) {
                 $query->with([
@@ -2848,7 +2847,7 @@ selamat Anda lolos bekerja
                 $query->orderBy('nama_bagian', 'ASC');
             },
         ])
-            ->where('holding_recruitment', $holding)
+            ->where('holding_recruitment', $holdings->id)
             ->orderBy('created_at', 'DESC')
             ->get();
         if (request()->ajax()) {
@@ -2893,7 +2892,7 @@ selamat Anda lolos bekerja
         }
     }
 
-    function pg_list_ranking($id)
+    function pg_list_ranking($id, $holding)
     {
         $currentDate = date('Y-m-d');
         $recruitment_admin = Recruitment::with([
@@ -2917,12 +2916,12 @@ selamat Anda lolos bekerja
         ])
             ->where('deadline_recruitment', '>=', $currentDate)
             ->get();
-        $holding = request()->segment(count(request()->segments()));
+        $holdings = Holding::where('holding_code', $holding)->first();
         // dd($holding);
         $holding = request()->segment(count(request()->segments()));
         return view('admin.recruitment-users.ranking.data_listranking', [
             'title' => 'Data Recruitment',
-            'holding'   => $holding,
+            'holding'   => $holdings,
             'recruitment_admin'   => $recruitment_admin,
             'id_recruitment'        => $id,
             'data_departemen' => Departemen::all(),

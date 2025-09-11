@@ -598,7 +598,7 @@ Route::middleware('admin')->group(function () {
     Route::post('/bagian/update/{holding}', [BagianController::class, 'update'])->middleware('admin');
     Route::get('/bagian/delete/{id}/{holding}', [BagianController::class, 'delete'])->middleware('admin');
     Route::get('/bagian/get_divisi/{id}/{holding}', [BagianController::class, 'get_divisi'])->middleware('admin');
-    Route::get('/bagian/get_bagian/{id}/{holding}', [BagianController::class, 'get_bagian'])->middleware('admin');
+    Route::get('/bagian/get_bagian/{id}', [BagianController::class, 'get_bagian'])->middleware('admin');
     Route::post('/bagian/ImportBagian/{holding}', [BagianController::class, 'ImportBagian'])->middleware('admin');
     Route::get('/jabatan/jabatan-datatable/{id?}/{holding}', [BagianController::class, 'jabatan_datatable'])->middleware('admin');
     Route::get('/jabatan/karyawanjabatan-datatable/{id?}/{holding}', [BagianController::class, 'karyawanjabatan_datatable'])->middleware('admin');
@@ -839,110 +839,72 @@ Route::get('/logout', [authController::class, 'logout'])->name('logout');
 // Include file route tambahan
 require __DIR__ . '/api_hrd.php';
 
-// RECRUITMENT DASHBOARD ADMIN
-Route::get('/pg-data-recruitment/sp', [RecruitmentController::class, 'pg_recruitment'])->middleware('admin');
-Route::get('/pg-data-recruitment/sps', [RecruitmentController::class, 'pg_recruitment'])->middleware('admin');
-Route::get('/pg-data-recruitment/sip', [RecruitmentController::class, 'pg_recruitment'])->middleware('admin');
+// RECRUITMENT DASHBOARD ADMIN heheheghe
+Route::get('/pg-data-recruitment/{holding}', [RecruitmentController::class, 'pg_recruitment'])->middleware('admin');
 
-Route::post('/recruitment/create/sp', [RecruitmentController::class, 'create'])->middleware('admin');
-Route::post('/recruitment/create/sps', [RecruitmentController::class, 'create'])->middleware('admin');
-Route::post('/recruitment/create/sip', [RecruitmentController::class, 'create'])->middleware('admin');
+Route::post('/recruitment/create/{holding}', [RecruitmentController::class, 'create'])->middleware('admin');
 
-Route::post('/recruitment/update/sp', [RecruitmentController::class, 'update'])->middleware('admin');
-Route::post('/recruitment/update/sps', [RecruitmentController::class, 'update'])->middleware('admin');
-Route::post('/recruitment/update/sip', [RecruitmentController::class, 'update'])->middleware('admin');
+Route::post('/recruitment/update/{holding}', [RecruitmentController::class, 'update'])->middleware('admin');
 
-Route::get('/recruitment/delete/{id?}/sp', [RecruitmentController::class, 'delete'])->middleware('admin');
-Route::get('/recruitment/delete/{id?}/sps', [RecruitmentController::class, 'delete'])->middleware('admin');
-Route::get('/recruitment/delete/{id?}/sip', [RecruitmentController::class, 'delete'])->middleware('admin');
+Route::get('/recruitment/delete/{id?}/{holding}', [RecruitmentController::class, 'delete'])->middleware('admin');
 
-Route::get('/recruitment/update/status-recruitment/{id?}/sp', [RecruitmentController::class, 'update_status'])->middleware('admin');
-Route::get('/recruitment/update/status-recruitment/{id?}/sps', [RecruitmentController::class, 'update_status'])->middleware('admin');
-Route::get('/recruitment/update/status-recruitment/{id?}/sip', [RecruitmentController::class, 'update_status'])->middleware('admin');
+// Route::get('/recruitment/update/status-recruitment/{id?}/sp', [RecruitmentController::class, 'update_status'])->middleware('admin');
+// Route::get('/recruitment/update/status-recruitment/{id?}/sps', [RecruitmentController::class, 'update_status'])->middleware('admin');
+// Route::get('/recruitment/update/status-recruitment/{id?}/sip', [RecruitmentController::class, 'update_status'])->middleware('admin');
 
-Route::get('/dt/data-recruitment/sp', [RecruitmentController::class, 'dt_recruitment'])->middleware('admin');
-Route::get('/dt/data-recruitment/sps', [RecruitmentController::class, 'dt_recruitment'])->middleware('admin');
-Route::get('/dt/data-recruitment/sip', [RecruitmentController::class, 'dt_recruitment'])->middleware('admin');
+Route::get('/dt/data-recruitment/{holding}', [RecruitmentController::class, 'dt_recruitment'])->middleware('admin');
 
-Route::get('/pg/data-list-pelamar/{id?}/sp', [RecruitmentController::class, 'pg_list_pelamar'])->middleware('admin');
-Route::get('/pg/data-list-pelamar/{id?}/sps', [RecruitmentController::class, 'pg_list_pelamar'])->middleware('admin');
-Route::get('/pg/data-list-pelamar/{id?}/sip', [RecruitmentController::class, 'pg_list_pelamar'])->middleware('admin');
+Route::get('/pg/data-list-pelamar/{id?}/{holding}', [RecruitmentController::class, 'pg_list_pelamar'])->middleware('admin');
 
-Route::get('/dt/data-list-pelamar/{id?}/sp', [RecruitmentController::class, 'dt_list_pelamar'])->middleware('admin');
-Route::get('/dt/data-list-pelamar/{id?}/sps', [RecruitmentController::class, 'dt_list_pelamar'])->middleware('admin');
-Route::get('/dt/data-list-pelamar/{id?}/sip', [RecruitmentController::class, 'dt_list_pelamar'])->middleware('admin');
+// Route::get('/dt/data-list-pelamar/{id?}/sp', [RecruitmentController::class, 'dt_list_pelamar'])->middleware('admin');
+// Route::get('/dt/data-list-pelamar/{id?}/sps', [RecruitmentController::class, 'dt_list_pelamar'])->middleware('admin');
+// Route::get('/dt/data-list-pelamar/{id?}/sip', [RecruitmentController::class, 'dt_list_pelamar'])->middleware('admin');
 
-Route::get('/pg/pelamar-detail/{id?}/sip', [RecruitmentController::class, 'pelamar_detail'])->middleware('admin');
-Route::get('/pg/pelamar-detail/{id?}/sp', [RecruitmentController::class, 'pelamar_detail'])->middleware('admin');
-Route::get('/pg/pelamar-detail/{id?}/sps', [RecruitmentController::class, 'pelamar_detail'])->middleware('admin');
+Route::get('/pg/pelamar-detail/{id?}/{holding}', [RecruitmentController::class, 'pelamar_detail'])->middleware('admin');
 
-Route::get('/pg/pelamar-detail_pdf/{id?}/sip', [RecruitmentController::class, 'pelamar_detail_pdf'])->middleware('admin');
-Route::get('/pg/pelamar-detail_pdf/{id?}/sp', [RecruitmentController::class, 'pelamar_detail_pdf'])->middleware('admin');
-Route::get('/pg/pelamar-detail_pdf/{id?}/sps', [RecruitmentController::class, 'pelamar_detail_pdf'])->middleware('admin');
+Route::get('/pg/pelamar-detail_pdf/{id?}/{holding}', [RecruitmentController::class, 'pelamar_detail_pdf'])->middleware('admin');
 
-Route::post('/pg/pelamar-detail-ubah/sip', [RecruitmentController::class, 'pelamar_detail_ubah'])->middleware('admin');
-Route::post('/pg/pelamar-detail-ubah/sp', [RecruitmentController::class, 'pelamar_detail_ubah'])->middleware('admin');
-Route::post('/pg/pelamar-detail-ubah/sps', [RecruitmentController::class, 'pelamar_detail_ubah'])->middleware('admin');
+Route::post('/pg/pelamar-detail-ubah/{holding}', [RecruitmentController::class, 'pelamar_detail_ubah'])->middleware('admin');
 
 
-Route::post('/recruitment/lolos-administrasi/sp', [RecruitmentController::class, 'lolos_administrasi'])->middleware('admin');
-Route::post('/recruitment/lolos-administrasi/sps', [RecruitmentController::class, 'lolos_administrasi'])->middleware('admin');
-Route::post('/recruitment/lolos-administrasi/sip', [RecruitmentController::class, 'lolos_administrasi'])->middleware('admin');
+// Route::post('/recruitment/lolos-administrasi/sp', [RecruitmentController::class, 'lolos_administrasi'])->middleware('admin');
+// Route::post('/recruitment/lolos-administrasi/sps', [RecruitmentController::class, 'lolos_administrasi'])->middleware('admin');
+// Route::post('/recruitment/lolos-administrasi/sip', [RecruitmentController::class, 'lolos_administrasi'])->middleware('admin');
 
-Route::post('/recruitment/tidak-lolos-administrasi/sp', [RecruitmentController::class, 'tidak_lolos_administrasi'])->middleware('admin');
-Route::post('/recruitment/tidak-lolos-administrasi/sps', [RecruitmentController::class, 'tidak_lolos_administrasi'])->middleware('admin');
-Route::post('/recruitment/tidak-lolos-administrasi/sip', [RecruitmentController::class, 'tidak_lolos_administrasi'])->middleware('admin');
+// Route::post('/recruitment/tidak-lolos-administrasi/sp', [RecruitmentController::class, 'tidak_lolos_administrasi'])->middleware('admin');
+// Route::post('/recruitment/tidak-lolos-administrasi/sps', [RecruitmentController::class, 'tidak_lolos_administrasi'])->middleware('admin');
+// Route::post('/recruitment/tidak-lolos-administrasi/sip', [RecruitmentController::class, 'tidak_lolos_administrasi'])->middleware('admin');
 
-Route::get('/pg-data-interview/sp', [RecruitmentController::class, 'pg_data_interview'])->middleware('admin');
-Route::get('/pg-data-interview/sps', [RecruitmentController::class, 'pg_data_interview'])->middleware('admin');
-Route::get('/pg-data-interview/sip', [RecruitmentController::class, 'pg_data_interview'])->middleware('admin');
+Route::get('/pg-data-interview/{holding}', [RecruitmentController::class, 'pg_data_interview'])->middleware('admin');
 
-Route::get('/dt/data-interview/sp', [RecruitmentController::class, 'dt_data_interview'])->middleware('admin');
-Route::get('/dt/data-interview/sps', [RecruitmentController::class, 'dt_data_interview'])->middleware('admin');
-Route::get('/dt/data-interview/sip', [RecruitmentController::class, 'dt_data_interview'])->middleware('admin');
+Route::get('/dt/data-interview/{holding}', [RecruitmentController::class, 'dt_data_interview'])->middleware('admin');
 
-Route::get('/dt/data-interview1/sp', [RecruitmentController::class, 'dt_data_interview1'])->middleware('admin');
-Route::get('/dt/data-interview1/sps', [RecruitmentController::class, 'dt_data_interview1'])->middleware('admin');
-Route::get('/dt/data-interview1/sip', [RecruitmentController::class, 'dt_data_interview1'])->middleware('admin');
+Route::get('/dt/data-interview1/{holding}', [RecruitmentController::class, 'dt_data_interview1'])->middleware('admin');
 
-Route::get('/dt/data-interview2/sp', [RecruitmentController::class, 'dt_data_interview2'])->middleware('admin');
-Route::get('/dt/data-interview2/sps', [RecruitmentController::class, 'dt_data_interview2'])->middleware('admin');
-Route::get('/dt/data-interview2/sip', [RecruitmentController::class, 'dt_data_interview2'])->middleware('admin');
+Route::get('/dt/data-interview2/{holding}', [RecruitmentController::class, 'dt_data_interview2'])->middleware('admin');
 
-Route::get('/dt/data-data_ujian_user/{id}/sp', [RecruitmentController::class, 'data_ujian_user'])->middleware('admin');
-Route::get('/dt/data-data_ujian_user/{id}/sps', [RecruitmentController::class, 'data_ujian_user'])->middleware('admin');
-Route::get('/dt/data-data_ujian_user/{id}/sip', [RecruitmentController::class, 'data_ujian_user'])->middleware('admin');
+Route::get('/dt/data-data_ujian_user/{id}/{holding}', [RecruitmentController::class, 'data_ujian_user'])->middleware('admin');
 
-Route::get('/dt/data-get_data_esai/{id}/sp', [UjianUserController::class, 'dt_ujian_esai'])->middleware('admin');
-Route::get('/dt/data-get_data_esai/{id}/sps', [UjianUserController::class, 'dt_ujian_esai'])->middleware('admin');
-Route::get('/dt/data-get_data_esai/{id}/sip', [UjianUserController::class, 'dt_ujian_esai'])->middleware('admin');
+Route::get('/dt/data-get_data_esai/{id}/{holding}', [UjianUserController::class, 'dt_ujian_esai'])->middleware('admin');
 
-Route::get('/dt/data-dt_interview_user/{id}/sp', [UjianUserController::class, 'dt_interview_user'])->middleware('admin');
-Route::get('/dt/data-dt_interview_user/{id}/sps', [UjianUserController::class, 'dt_interview_user'])->middleware('admin');
-Route::get('/dt/data-dt_interview_user/{id}/sip', [UjianUserController::class, 'dt_interview_user'])->middleware('admin');
+Route::get('/dt/data-dt_interview_user/{id}/{holding}', [UjianUserController::class, 'dt_interview_user'])->middleware('admin');
 
 Route::post('/dt/interview_user_post', [UjianUserController::class, 'interview_user_post'])->middleware('admin');
 Route::get('/dt/get_catatan_interview/{id}', [UjianUserController::class, 'get_catatan_interview'])->middleware('admin');
 Route::post('/dt/update_catatan', [UjianUserController::class, 'update_catatan'])->middleware('admin');
 Route::get('/dt/dt_catatan/{id}', [UjianUserController::class, 'dt_catatan'])->middleware('admin');
 
-Route::get('/dt/data-get_data_pg/{id}/sp', [UjianUserController::class, 'dt_ujian_pg'])->middleware('admin');
-Route::get('/dt/data-get_data_pg/{id}/sps', [UjianUserController::class, 'dt_ujian_pg'])->middleware('admin');
-Route::get('/dt/data-get_data_pg/{id}/sip', [UjianUserController::class, 'dt_ujian_pg'])->middleware('admin');
+Route::get('/dt/data-get_data_pg/{id}/{holding}', [UjianUserController::class, 'dt_ujian_pg'])->middleware('admin');
 
 Route::post('/dt/data-interview/penilaian_esai', [UjianUserController::class, 'penilaian_esai'])->name('penilaian_esai')->middleware('admin');
 
-Route::get('/dt/data-get_esai_interview/{id}/{id_user}/sp', [UjianUserController::class, 'show_esai'])->middleware('admin');
-Route::get('/dt/data-get_esai_interview/{id}/{id_user}/sps', [UjianUserController::class, 'show_esai'])->middleware('admin');
-Route::get('/dt/data-get_esai_interview/{id}/{id_user}/sip', [UjianUserController::class, 'show_esai'])->middleware('admin');
+Route::get('/dt/data-get_esai_interview/{id}/{id_user}/{holding}', [UjianUserController::class, 'show_esai'])->middleware('admin');
 
 Route::get('/dt/data-get_interview_user/{id}/{id_user}/sp', [UjianUserController::class, 'show_interview_user'])->middleware('admin');
 Route::get('/dt/data-get_interview_user/{id}/{id_user}/sps', [UjianUserController::class, 'show_interview_user'])->middleware('admin');
 Route::get('/dt/data-get_interview_user/{id}/{id_user}/sip', [UjianUserController::class, 'show_interview_user'])->middleware('admin');
 
-Route::get('/dt/data-get_pg_interview/{id}/{id_user}/sp', [UjianUserController::class, 'show_pg'])->middleware('admin');
-Route::get('/dt/data-get_pg_interview/{id}/{id_user}/sps', [UjianUserController::class, 'show_pg'])->middleware('admin');
-Route::get('/dt/data-get_pg_interview/{id}/{id_user}/sip', [UjianUserController::class, 'show_pg'])->middleware('admin');
+Route::get('/dt/data-get_pg_interview/{id}/{id_user}/{holding}', [UjianUserController::class, 'show_pg'])->middleware('admin');
 
 Route::post('/dt/data-interview/presensi_recruitment_update', [RecruitmentController::class, 'presensi_recruitment_update'])->middleware('admin');
 Route::post('/dt/data-interview/ranking_update_status', [RecruitmentController::class, 'ranking_update_status'])->middleware('admin');
@@ -963,12 +925,10 @@ Route::get('/pg-data-ujian/sp', [RecruitmentController::class, 'pg_ujian'])->mid
 Route::get('/pg-data-ujian/sps', [RecruitmentController::class, 'pg_ujian'])->middleware('admin');
 Route::get('/pg-data-ujian/sip', [RecruitmentController::class, 'pg_ujian'])->middleware('admin');
 
-Route::post('/pg-data-pembobotan_post', [RecruitmentController::class, 'pembobotan_post'])->middleware('admin');
-Route::get('/pg-data-dt_pembobotan', [RecruitmentController::class, 'dt_pembobotan'])->name('dt_pembobotan')->middleware('admin');
+// Route::post('/pg-data-pembobotan_post', [RecruitmentController::class, 'pembobotan_post'])->middleware('admin');
+// Route::get('/pg-data-dt_pembobotan', [RecruitmentController::class, 'dt_pembobotan'])->name('dt_pembobotan')->middleware('admin');
 
-Route::get('/dt-data-list-ujian/sp', [RecruitmentController::class, 'dt_ujian'])->middleware('admin');
-Route::get('/dt-data-list-ujian/sps', [RecruitmentController::class, 'dt_ujian'])->middleware('admin');
-Route::get('/dt-data-list-ujian/sip', [RecruitmentController::class, 'dt_ujian'])->middleware('admin');
+Route::get('/dt-data-list-ujian/{holding}', [RecruitmentController::class, 'dt_ujian'])->middleware('admin');
 
 Route::get('/dt-data-list-esai/sp', [RecruitmentController::class, 'dt_esai'])->middleware('admin');
 Route::get('/dt-data-list-esai/sps', [RecruitmentController::class, 'dt_esai'])->middleware('admin');
@@ -1050,25 +1010,15 @@ Route::post('/nilai-interview-manager/update/sp', [RecruitmentController::class,
 Route::post('/nilai-interview-manager/update/sps', [RecruitmentController::class, 'nilai_interview_manager'])->middleware('admin');
 Route::post('/nilai-interview-manager/update/sip', [RecruitmentController::class, 'nilai_interview_manager'])->middleware('admin');
 
-Route::get('/pg-data-ranking/sp', [RecruitmentController::class, 'pg_ranking'])->middleware('admin');
-Route::get('/pg-data-ranking/sps', [RecruitmentController::class, 'pg_ranking'])->middleware('admin');
-Route::get('/pg-data-ranking/sip', [RecruitmentController::class, 'pg_ranking'])->middleware('admin');
+Route::get('/pg-data-ranking/{holding}', [RecruitmentController::class, 'pg_ranking'])->middleware('admin');
 
-Route::get('/dt/data-ranking/sp', [RecruitmentController::class, 'dt_data_ranking'])->middleware('admin');
-Route::get('/dt/data-ranking/sps', [RecruitmentController::class, 'dt_data_ranking'])->middleware('admin');
-Route::get('/dt/data-ranking/sip', [RecruitmentController::class, 'dt_data_ranking'])->middleware('admin');
+Route::get('/dt/data-ranking/{holding}', [RecruitmentController::class, 'dt_data_ranking'])->middleware('admin');
 
-Route::get('/pg/data-list-ranking/{id?}/sp', [RecruitmentController::class, 'pg_list_ranking'])->middleware('admin');
-Route::get('/pg/data-list-ranking/{id?}/sps', [RecruitmentController::class, 'pg_list_ranking'])->middleware('admin');
-Route::get('/pg/data-list-ranking/{id?}/sip', [RecruitmentController::class, 'pg_list_ranking'])->middleware('admin');
+Route::get('/pg/data-list-ranking/{id?}/{holding}', [RecruitmentController::class, 'pg_list_ranking'])->middleware('admin');
 
-Route::get('/dt/data-list-ranking/{id?}/sp', [RecruitmentController::class, 'dt_list_ranking'])->middleware('admin');
-Route::get('/dt/data-list-ranking/{id?}/sps', [RecruitmentController::class, 'dt_list_ranking'])->middleware('admin');
-Route::get('/dt/data-list-ranking/{id?}/sip', [RecruitmentController::class, 'dt_list_ranking'])->middleware('admin');
+Route::get('/dt/data-list-ranking/{id?}/{holding}', [RecruitmentController::class, 'dt_list_ranking'])->middleware('admin');
 
-Route::get('/dt/data-list-progres/{id?}/sp', [RecruitmentController::class, 'dt_list_progres'])->middleware('admin');
-Route::get('/dt/data-list-progres/{id?}/sps', [RecruitmentController::class, 'dt_list_progres'])->middleware('admin');
-Route::get('/dt/data-list-progres/{id?}/sip', [RecruitmentController::class, 'dt_list_progres'])->middleware('admin');
+Route::get('/dt/data-list-progres/{id?}/{holding}', [RecruitmentController::class, 'dt_list_progres'])->middleware('admin');
 
 Route::get('/konfirmasi-interview/{email?}/tidak-konfirmasi', [RecruitmentUserController::class, 'tidak_konfirmasi']);
 Route::get('/konfirmasi-interview/{email?}/konfirmasi', [RecruitmentUserController::class, 'konfirmasi']);
