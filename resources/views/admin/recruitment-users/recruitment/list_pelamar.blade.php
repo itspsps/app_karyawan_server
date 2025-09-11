@@ -159,7 +159,7 @@
         .timeline-centered .timeline-entry {
             position: relative;
             /*width: 50%;
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                float: right;*/
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        float: right;*/
             margin-top: 5px;
             margin-left: 30px;
             margin-bottom: 10px;
@@ -455,7 +455,7 @@
                                                                     Belum Dilihat
                                                                 @endif
                                                             </td>
-                                                            <td><a href="{{ url('/pg/pelamar-detail/' . $user->id . '/' . $holding . '') }}"
+                                                            <td><a href="{{ url('/pg/pelamar-detail/' . $user->id . '/' . $holding->holding_code . '') }}"
                                                                     type="button" class="btn btn-sm btn-info">
                                                                     <i class="tf-icons mdi mdi-eye-circle-outline me-1"></i>
                                                                     Detail&nbsp;CV
@@ -515,7 +515,7 @@
                                                                     TIdak Hadir Wawancara
                                                                 @endif
                                                             </td>
-                                                            <td><a href="{{ url('/pg/pelamar-detail/' . $user->id . '/' . $holding . '') }}"
+                                                            <td><a href="{{ url('/pg/pelamar-detail/' . $user->id . '/' . $holding->holding_code . '') }}"
                                                                     type="button" class="btn btn-sm btn-info">
                                                                     <i class="tf-icons mdi mdi-eye-circle-outline me-1"></i>
                                                                     Detail&nbsp;CV
@@ -554,7 +554,7 @@
                                                                     Daftar Tunggu
                                                                 @endif
                                                             </td>
-                                                            <td><a href="{{ url('/pg/pelamar-detail/' . $user->id . '/' . $holding . '') }}"
+                                                            <td><a href="{{ url('/pg/pelamar-detail/' . $user->id . '/' . $holding->holding_code . '') }}"
                                                                     type="button" class="btn btn-sm btn-info">
                                                                     <i
                                                                         class="tf-icons mdi mdi-eye-circle-outline me-1"></i>
@@ -596,7 +596,7 @@
                                                                     Ditolak
                                                                 @endif
                                                             </td>
-                                                            <td><a href="{{ url('/pg/pelamar-detail/' . $user->id . '/' . $holding . '') }}"
+                                                            <td><a href="{{ url('/pg/pelamar-detail/' . $user->id . '/' . $holding->holding_code . '') }}"
                                                                     type="button" class="btn btn-sm btn-info">
                                                                     <i
                                                                         class="tf-icons mdi mdi-eye-circle-outline me-1"></i>

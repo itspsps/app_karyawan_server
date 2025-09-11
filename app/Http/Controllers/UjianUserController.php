@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Holding;
 use App\Models\InterviewUser;
 use App\Models\PgSiswa;
 use App\Models\Recruitment;
@@ -136,9 +137,9 @@ class UjianUserController extends Controller
                 ->make(true);
         }
     }
-    function show_pg($kode, $recruitment_user_id)
+    function show_pg($kode, $recruitment_user_id, $holding)
     {
-        $holding = request()->segment(count(request()->segments()));
+        $holdings = Holding::where('holding_code', $holding)->first();
         $ujian = Ujian::where('kode', $kode)->first();
         $PgSiswa = PgSiswa::where('kode', $kode)->where('siswa_id', $recruitment_user_id)->orderBy('id', 'ASC')->limit($ujian->soal_tampil)->get();
         $benar = $PgSiswa->where('benar', '1')->count();
@@ -158,7 +159,7 @@ class UjianUserController extends Controller
                 'expanded' => 'ujian'
             ],
             'ujian' => $ujian,
-            'holding' => $holding,
+            'holding' => $holdings,
             'PgSiswa' => $PgSiswa,
             'benar' => $benar,
             'salah' => $salah,
@@ -429,9 +430,9 @@ class UjianUserController extends Controller
             ]);
         }
     }
-    function show_esai($kode, $recruitment_user_id)
+    function show_esai($kode, $recruitment_user_id, $holding)
     {
-        $holding = request()->segment(count(request()->segments()));
+        $holdings = Holding::where('holding_code', $holding)->first();
         $ujian = Ujian::where('kode', $kode)->first();
         $ujianEsaiJawab = UjianEsaiJawab::where('kode', $kode)->where('recruitment_user_id', $recruitment_user_id)->first();
         $esaiDetailjawab = UjianEsaiJawabDetail::where('kode', $kode)->where('recruitment_user_id', $recruitment_user_id)->get();
@@ -449,7 +450,7 @@ class UjianUserController extends Controller
                 'expanded' => 'ujian'
             ],
             'ujian' => $ujian,
-            'holding' => $holding,
+            'holding' => $holdings,
             'ujianEsaiJawab' => $ujianEsaiJawab,
             'esaiDetailjawab' => $esaiDetailjawab,
             'recruitment_user_id' => $recruitment_user_id

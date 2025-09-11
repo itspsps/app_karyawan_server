@@ -24,7 +24,7 @@
                         </div>
                         <input type="hidden" value="{{ $user_recruitment->id }}" name="recruitment_user_id"
                             id="recruitment_user_id_add">
-                        <input type="hidden" value="{{ $holding }}" name="holding" id="holding_add">
+                        <input type="hidden" value="{{ $holding->holding_code }}" name="holding" id="holding_add">
 
                     </div>
                     <ul class="nav nav-tabs" role="tablist">
