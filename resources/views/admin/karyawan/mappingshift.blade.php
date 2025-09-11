@@ -17,6 +17,9 @@
         <div class="col-md-12">
             <div class="card mb-4">
                 <div class="card-header">
+                    <a href="@if(Auth::user()->is_admin=='hrd'){{url('hrd/karyawan/mapping_shift/'.$holding->holding_code)}}@else{{url('karyawan/mapping_shift/'.$holding->holding_code)}}@endif" class="btn btn-sm btn-secondary">
+                        <i class="mdi mdi-arrow-left"></i>
+                    </a>
                     <a href="@if(Auth::user()->is_admin=='hrd'){{url('hrd/karyawan/detail/'.$karyawan->id.'/'.$holding)}}@else{{url('karyawan/detail/'.$karyawan->id.'/'.$holding)}}@endif" class="btn btn-sm btn-primary">
                         <i class="mdi mdi-account-arrow-left"></i>
                         &nbsp;Profil
@@ -72,7 +75,7 @@
                                 <td>&nbsp;</td>
                                 <td>:</td>
                                 <td>
-                                    @if($karyawan->kontrak_kerja=='SP') CV. SUMBER PANGAN @elseif($karyawan->kontrak_kerja=='SPS') PT. SURYA PANGAN SEMESTA @else CV. SUMBER INTI PANGAN @endif
+                                    {{$karyawan->KontrakKerja->holding_name}}
                                 </td>
                             </tr>
                             <tr>
@@ -119,10 +122,9 @@
                 <!-- Account -->
                 <div class="card-body">
                     <div class="row">
-                        <div class="col-md-3">
-                            <button type="button" class="btn btn-sm btn-primary waves-effect waves-light mb-3" data-bs-toggle="modal" data-bs-target="#modal_tambah_shift"><i class="menu-icon tf-icons mdi mdi-plus"></i>Tambah&nbsp;Shift</button>
+                        <div class="col-md-2">
                         </div>
-                        <div class="col-md-9">
+                        <div class="col-md-8">
                             <div id="reportrange" style="background: #fff; cursor: pointer; padding: 5px 10px; width: 100%">
                                 <button class="btn btn-outline-secondary waves-effect">
                                     FILTER DATE : &nbsp;
@@ -133,67 +135,7 @@
                                 </button>
                             </div>
                         </div>
-                    </div>
-                    <div class="modal fade" id="modal_tambah_shift" data-bs-backdrop="static" tabindex="-1">
-                        <div class="modal-dialog modal-dialog-scrollable ">
-                            <form method="post" action="@if(Auth::user()->is_admin=='hrd'){{ url('/hrd/karyawan/shift/proses-tambah-shift/'.$holding) }}@else{{ url('/karyawan/shift/proses-tambah-shift/'.$holding) }}@endif" class=" modal-content" enctype="multipart/form-data">
-                                @csrf
-                                <div class="modal-header">
-                                    <h4 class="modal-title" id="backDropModalTitle">Tambah Shift</h4>
-                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                </div>
-                                <div class="modal-body">
-                                    <div class="col-12">
-                                        <div class="form-floating form-floating-outline">
-                                            <select class="form-control @error('shift_id') is-invalid @enderror" id="shift_id" name="shift_id">
-                                                <option value="">-- Pilih Shift --</option>
-                                                @foreach ($shift as $s)
-                                                @if(old('shift_id') == $s->id)
-                                                <option value=" {{ $s->id }}" selected>{{ $s->nama_shift . " (" . $s->jam_masuk . " - " . $s->jam_keluar . ") " }}</option>
-                                                @else
-                                                <option value="{{ $s->id }}">{{ $s->nama_shift . " (" . $s->jam_masuk . " - " . $s->jam_keluar . ") " }}</option>
-                                                @endif
-                                                @endforeach
-                                            </select>
-                                            <label for="shift_id">Shift</label>
-                                        </div>
-                                        @error('nik')
-                                        <span class="invalid-feedback" role="alert">
-                                            <strong>{{ $message }}</strong>
-                                        </span>
-                                        @enderror
-                                        <br>
-                                        <div class="form-floating form-floating-outline">
-                                            <input type="date" class="form-control @error('tanggal_mulai') is-invalid @enderror" id="tanggal_mulai" name="tanggal_mulai" value="{{ old('tanggal_mulai') }}">
-                                            <label for="tanggal_mulai">Tanggal Mulai</label>
-                                        </div>
-                                        @error('tanggal_mulai')
-                                        <span class="invalid-feedback" role="alert">
-                                            <strong>{{ $message }}</strong>
-                                        </span>
-                                        @enderror
-                                        <br>
-                                        <div class="form-floating form-floating-outline">
-                                            <input type="date" class="form-control @error('tanggal_akhir') is-invalid @enderror" id="tanggal_akhir" name="tanggal_akhir" value="{{ old('tanggal_akhir') }}">
-                                            <label for="tanggal_akhir">Tanggal Akhir</label>
-                                        </div>
-                                        @error('tanggal_akhir')
-                                        <span class="invalid-feedback" role="alert">
-                                            <strong>{{ $message }}</strong>
-                                        </span>
-                                        @enderror
-                                        <input type="hidden" name="tanggal">
-                                        <input type="hidden" name="status_absen">
-                                        <input type="hidden" name="user_id" value="{{ $karyawan->id }}">
-                                    </div>
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
-                                        Close
-                                    </button>
-                                    <button type="submit" class="btn btn-primary">Save</button>
-                                </div>
-                            </form>
+                        <div class="col-md-2">
                         </div>
                     </div>
                     <!-- modal edit -->
@@ -263,7 +205,6 @@
                                 <th>Jam&nbsp;Masuk</th>
                                 <th>Tanggal&nbsp;Pulang</th>
                                 <th>Jam&nbsp;Keluar</th>
-                                <th>Keterangan</th>
                                 <th>Actions</th>
                             </tr>
                         </thead>
@@ -318,21 +259,15 @@
     });
 </script>
 <script type="text/javascript">
-    let holding = window.location.pathname.split("/");
+    let holding = '{{$holding->holding_code}}';
+    let id = '{{$karyawan->id}}';
     let auth = '{{ Auth::user()->is_admin }}';
-    if (auth == 'hrd') {
-        var holding1 = holding[4];
-        var holding2 = holding[5];
-    } else {
-        var holding1 = holding[3];
-        var holding2 = holding[4];
-    }
     end_date = $('#end_date').val();
     start_date = $('#start_date').val();
 
     function load_data(start_date = '', end_date = '') {
         $('#table_mapping_shift').DataTable().destroy();
-        // console.log(start_date);
+        console.log(start_date, end_date);
         var table = $('#table_mapping_shift').DataTable({
             pageLength: 50,
             "scrollY": true,
@@ -340,7 +275,7 @@
             processing: true,
             serverSide: true,
             ajax: {
-                url: "@if(Auth::user()->is_admin=='hrd'){{ url('hrd/karyawan/mapping_shift_datatable') }}@else{{ url('karyawan/mapping_shift_datatable') }}@endif" + '/' + holding1 + '/' + holding2,
+                url: "@if(Auth::user()->is_admin=='hrd'){{ url('hrd/karyawan/mapping_shift_detail_datatable') }}@else{{ url('karyawan/mapping_shift_detail_datatable') }}@endif" + '/' + id + '/' + holding,
                 data: {
                     start_date: start_date,
                     end_date: end_date,
@@ -372,10 +307,6 @@
                 {
                     data: 'jam_keluar',
                     name: 'jam_keluar'
-                },
-                {
-                    data: 'status_absen',
-                    name: 'status_absen'
                 },
                 {
                     data: 'option',

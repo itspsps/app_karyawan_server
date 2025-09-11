@@ -329,7 +329,9 @@ Route::middleware('admin')->group(function () {
     // mapping shift NEW
     Route::get('/karyawan/mapping_shift/{holding}', [MappingShiftController::class, 'mapping_shift_index']);
     Route::get('/karyawan/mapping_shift/{id}/{holding}', [MappingShiftController::class, 'mapping_shift_detail_index']);
-    Route::get('/mapping_shift_datatable/{holding}', [MappingShiftController::class, 'mapping_shift_datatable']);
+    Route::get('/karyawan/mapping_shift_datatable/{holding}', [MappingShiftController::class, 'mapping_shift_datatable']);
+    Route::get('/karyawan/mapping_shift_detail_datatable/{id}/{holding}', [MappingShiftController::class, 'mapping_shift_detail_datatable']);
+    Route::post('/karyawan/mapping_shift/proses-tambah-shift/{holding}', [MappingShiftController::class, 'prosesTambahDetailShift']);
     Route::post('/shift/proses-tambah-shift/sp', [MappingShiftController::class, 'prosesTambahShift']);
     Route::post('/shift/proses-tambah-shift/sps', [MappingShiftController::class, 'prosesTambahShift']);
     Route::post('/shift/proses-tambah-shift/sip', [MappingShiftController::class, 'prosesTambahShift']);
@@ -678,8 +680,8 @@ Route::middleware('admin')->group(function () {
     Route::get('/report-datatable/{holding}', [ReportController::class, 'datatable']);
     Route::get('/report-datatable_finger/{holding}', [ReportController::class, 'datatable_finger']);
     Route::get('/report/get_divisi/{holding}', [ReportController::class, 'get_divisi']);
-    Route::get('/report/get_bagian', [ReportController::class, 'get_bagian']);
-    Route::get('/report/get_jabatan', [ReportController::class, 'get_jabatan']);
+    Route::get('/report/get_bagian/{holding}', [ReportController::class, 'get_bagian']);
+    Route::get('/report/get_jabatan/{holding}', [ReportController::class, 'get_jabatan']);
     Route::get('/report/get_columns/{holding}', [ReportController::class, 'get_columns']);
     Route::get('/report/get_filter_month', [ReportController::class, 'get_filter_month']);
     Route::get('/report/ExportReport', [ReportController::class, 'ExportReport']);
@@ -687,6 +689,9 @@ Route::middleware('admin')->group(function () {
 
     Route::get('/report_kedisiplinan/{holding}', [ReportController::class, 'index_kedisiplinan']);
     Route::get('/report_kedisiplinan-datatable/{holding}', [ReportController::class, 'datatable_kedisiplinan']);
+    Route::get('/report_kedisiplinan/get_divisi/{holding}', [ReportController::class, 'get_divisi']);
+    Route::get('/report_kedisiplinan/get_bagian/{holding}', [ReportController::class, 'get_bagian']);
+    Route::get('/report_kedisiplinan/get_jabatan/{holding}', [ReportController::class, 'get_jabatan']);
     Route::get('/report_kedisiplinan/get_columns/{holding}', [ReportController::class, 'get_columns_kedisiplinan']);
 
     // reset Cuti

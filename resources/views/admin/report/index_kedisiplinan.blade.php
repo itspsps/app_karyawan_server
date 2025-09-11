@@ -182,6 +182,7 @@
     $(document).ready(function() {
 
         var holding = '{{$holding->holding_code}}';
+        var holding_id = '{{$holding->id}}';
         var chart_absensi_masuk;
         var data_column;
         let table_rekapdata;
@@ -296,11 +297,13 @@
             jabatan_filter_dept = $('#jabatan_filter').val();
             filter_month_dept = $('#filter_month').val();
             // $('#table_rekapdata').DataTable().destroy();
+            var url = "@if(Auth::user()->is_admin=='hrd'){{url('hrd/report_kedisiplinan/get_divisi')}}@else{{url('report_kedisiplinan/get_divisi')}}@endif" + '/' + holding_id;
+            console.log(url);
             $.ajax({
                 type: 'GET',
-                url: "@if(Auth::user()->is_admin=='hrd'){{url('hrd/report/get_divisi')}}@else{{url('report/get_divisi')}}@endif" + holding,
+                url: url,
                 data: {
-                    holding: holding,
+                    holding: holding_id,
                     filter_month: filter_month_dept,
                     departemen_filter: departemen_filter_dept,
                     divisi_filter: divisi_filter_dept,
@@ -309,7 +312,7 @@
                 },
                 cache: false,
                 success: function(data_dept) {
-                    console.log(data_dept);
+                    // console.log(data_dept);
                     datacolumn_departemen = [{
                             data: 'btn_detail',
                             name: 'btn_detail'
@@ -365,7 +368,7 @@
                             data: 'total_semua',
                             name: 'total_semua'
                         },
-                    ];
+                    ]
                     const data_column_departemen = datacolumn_departemen.concat(data_dept.datacolumn);
                     // console.log(data_column);
                     $('#table_rekapdata').DataTable().clear();
@@ -401,9 +404,9 @@
             // $('#table_rekapdata').DataTable().destroy();
             $.ajax({
                 type: 'GET',
-                url: "@if(Auth::user()->is_admin=='hrd'){{url('hrd/report/get_bagian')}}@else{{url('report/get_bagian')}}@endif",
+                url: "@if(Auth::user()->is_admin=='hrd'){{url('hrd/report/get_bagian')}}@else{{url('report/get_bagian')}}@endif" + '/' + holding_id,
                 data: {
-                    holding: holding,
+                    holding: holding_id,
                     filter_month: filter_month,
                     divisi_filter: divisi_filter,
                     bagian_filter: bagian_filter,
@@ -413,7 +416,7 @@
                 cache: false,
 
                 success: function(data_divisi) {
-                    // console.log(data_divisi);
+                    console.log(data_divisi);
                     datacolumn_divisi = [{
                             data: 'btn_detail',
                             name: 'btn_detail'

@@ -194,6 +194,7 @@
         // $('#table_mapping_shift').hide();
         $('#btn_selected_karyawan').hide();
         let holding = '{{ $holding->holding_code }}';
+        let holding_id = '{{ $holding->id }}';
         // console.log(holding);
         $(document).ready(function() {
             $('#departemen_filter').change(function() {
@@ -202,6 +203,7 @@
                 bagian_filter = $('#bagian_filter').val();
                 jabatan_filter = $('#jabatan_filter').val();
                 filter_month = $('#date_filter').val();
+
                 $('#btn_selected_karyawan').hide();
                 console.log(filter_month);
                 // $('#table_mapping_shift').DataTable().destroy();
@@ -210,7 +212,7 @@
                     type: 'GET',
                     url: "@if(Auth::user()->is_admin =='hrd'){{url('hrd/mapping_shift/get_divisi')}}@else {{url('mapping_shift/get_divisi')}}@endif",
                     data: {
-                        holding: holding,
+                        holding: holding_id,
                         filter_month: filter_month,
                         departemen_filter: departemen_filter
                     },
@@ -242,7 +244,7 @@
                     type: 'GET',
                     url: "@if(Auth::user()->is_admin =='hrd'){{url('hrd/mapping_shift/get_bagian')}}@else {{url('mapping_shift/get_bagian')}}@endif",
                     data: {
-                        holding: holding,
+                        holding: holding_id,
                         departemen_filter: departemen_filter,
                         divisi_filter: divisi_filter,
                         filter_month: filter_month,
@@ -273,7 +275,7 @@
                     type: 'GET',
                     url: "@if(Auth::user()->is_admin =='hrd'){{url('hrd/mapping_shift/get_jabatan')}}@else {{url('mapping_shift/get_jabatan')}}@endif",
                     data: {
-                        holding: holding,
+                        holding: holding_id,
                         departemen_filter: departemen_filter,
                         divisi_filter: divisi_filter,
                         filter_month: filter_month,
@@ -333,7 +335,7 @@
                         headers: {
                             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
                         },
-                        url: "@if(Auth::user()->is_admin =='hrd'){{ url('hrd/mapping_shift_datatable') }}@else {{ url('mapping_shift_datatable') }}@endif" + '/' + holding,
+                        url: "@if(Auth::user()->is_admin =='hrd'){{ url('hrd/karyawan/mapping_shift_datatable') }}@else {{ url('karyawan/mapping_shift_datatable') }}@endif" + '/' + holding,
                         type: 'get',
                         data: {
                             departemen_filter: departemen_filter,
