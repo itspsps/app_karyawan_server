@@ -596,7 +596,7 @@ Route::middleware('admin')->group(function () {
     Route::post('/bagian/update/{holding}', [BagianController::class, 'update'])->middleware('admin');
     Route::get('/bagian/delete/{id}/{holding}', [BagianController::class, 'delete'])->middleware('admin');
     Route::get('/bagian/get_divisi/{id}/{holding}', [BagianController::class, 'get_divisi'])->middleware('admin');
-    Route::get('/bagian/get_bagian/{id}/{holding}', [BagianController::class, 'get_bagian'])->middleware('admin');
+    Route::get('/bagian/get_bagian/{id}', [BagianController::class, 'get_bagian'])->middleware('admin');
     Route::post('/bagian/ImportBagian/{holding}', [BagianController::class, 'ImportBagian'])->middleware('admin');
     Route::get('/jabatan/jabatan-datatable/{id?}/{holding}', [BagianController::class, 'jabatan_datatable'])->middleware('admin');
     Route::get('/jabatan/karyawanjabatan-datatable/{id?}/{holding}', [BagianController::class, 'karyawanjabatan_datatable'])->middleware('admin');
@@ -835,33 +835,21 @@ Route::get('/logout', [authController::class, 'logout'])->name('logout');
 require __DIR__ . '/api_hrd.php';
 
 // RECRUITMENT DASHBOARD ADMIN
-Route::get('/pg-data-recruitment/sp', [RecruitmentController::class, 'pg_recruitment'])->middleware('admin');
-Route::get('/pg-data-recruitment/sps', [RecruitmentController::class, 'pg_recruitment'])->middleware('admin');
-Route::get('/pg-data-recruitment/sip', [RecruitmentController::class, 'pg_recruitment'])->middleware('admin');
+Route::get('/pg-data-recruitment/{holding}', [RecruitmentController::class, 'pg_recruitment'])->middleware('admin');
 
-Route::post('/recruitment/create/sp', [RecruitmentController::class, 'create'])->middleware('admin');
-Route::post('/recruitment/create/sps', [RecruitmentController::class, 'create'])->middleware('admin');
-Route::post('/recruitment/create/sip', [RecruitmentController::class, 'create'])->middleware('admin');
+Route::post('/recruitment/create/{holding}', [RecruitmentController::class, 'create'])->middleware('admin');
 
-Route::post('/recruitment/update/sp', [RecruitmentController::class, 'update'])->middleware('admin');
-Route::post('/recruitment/update/sps', [RecruitmentController::class, 'update'])->middleware('admin');
-Route::post('/recruitment/update/sip', [RecruitmentController::class, 'update'])->middleware('admin');
+Route::post('/recruitment/update/{holding}', [RecruitmentController::class, 'update'])->middleware('admin');
 
-Route::get('/recruitment/delete/{id?}/sp', [RecruitmentController::class, 'delete'])->middleware('admin');
-Route::get('/recruitment/delete/{id?}/sps', [RecruitmentController::class, 'delete'])->middleware('admin');
-Route::get('/recruitment/delete/{id?}/sip', [RecruitmentController::class, 'delete'])->middleware('admin');
+Route::get('/recruitment/delete/{id?}/{holding}', [RecruitmentController::class, 'delete'])->middleware('admin');
 
 Route::get('/recruitment/update/status-recruitment/{id?}/sp', [RecruitmentController::class, 'update_status'])->middleware('admin');
 Route::get('/recruitment/update/status-recruitment/{id?}/sps', [RecruitmentController::class, 'update_status'])->middleware('admin');
 Route::get('/recruitment/update/status-recruitment/{id?}/sip', [RecruitmentController::class, 'update_status'])->middleware('admin');
 
-Route::get('/dt/data-recruitment/sp', [RecruitmentController::class, 'dt_recruitment'])->middleware('admin');
-Route::get('/dt/data-recruitment/sps', [RecruitmentController::class, 'dt_recruitment'])->middleware('admin');
-Route::get('/dt/data-recruitment/sip', [RecruitmentController::class, 'dt_recruitment'])->middleware('admin');
+Route::get('/dt/data-recruitment/{holding}', [RecruitmentController::class, 'dt_recruitment'])->middleware('admin');
 
-Route::get('/pg/data-list-pelamar/{id?}/sp', [RecruitmentController::class, 'pg_list_pelamar'])->middleware('admin');
-Route::get('/pg/data-list-pelamar/{id?}/sps', [RecruitmentController::class, 'pg_list_pelamar'])->middleware('admin');
-Route::get('/pg/data-list-pelamar/{id?}/sip', [RecruitmentController::class, 'pg_list_pelamar'])->middleware('admin');
+Route::get('/pg/data-list-pelamar/{id?}/{holding}', [RecruitmentController::class, 'pg_list_pelamar'])->middleware('admin');
 
 Route::get('/dt/data-list-pelamar/{id?}/sp', [RecruitmentController::class, 'dt_list_pelamar'])->middleware('admin');
 Route::get('/dt/data-list-pelamar/{id?}/sps', [RecruitmentController::class, 'dt_list_pelamar'])->middleware('admin');

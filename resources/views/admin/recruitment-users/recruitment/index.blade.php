@@ -23,7 +23,7 @@
                     </div>
                     <div class="card-body">
                         <!-- <hr class="my-5">
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                    <hr class="my-5"> -->
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            <hr class="my-5"> -->
                         <button type="button" class="btn btn-sm btn-primary waves-effect waves-light mb-3"
                             data-bs-toggle="modal" data-bs-target="#modal_tambah_recruitment"><i
                                 class="menu-icon tf-icons mdi mdi-plus"></i>Tambah</button>
@@ -104,9 +104,10 @@
                     <div class="row g-2">
                         <div class="col mb-2">
                             <div class="form-floating form-floating-outline">
-                                <input type="text" id="holding_recruitment" readonly name="holding_recruitment"
-                                    class="form-control" placeholder="Masukkan Holding Inventaris"
-                                    value="@if ($holding == 'sp') CV. SUMBER PANGAN @elseif($holding == 'sps') PT. SURYA PANGAN SEMESTA @else CV. SURYA INTI PANGAN @endif" />
+                                <input type="text" readonly class="form-control"
+                                    placeholder="Masukkan Holding Inventaris" value="{{ $holding->holding_name }}" />
+                                <input type="hidden" id="holding_recruitment" name="holding_recruitment"
+                                    class="form-control" value="{{ $holding->id }}" />
                                 <label for="holding_recruitment">Holding Recruitment</label>
                             </div>
                         </div>
@@ -117,17 +118,9 @@
                             <div class="form-floating form-floating-outline">
                                 <select class="form-control @error('penempatan') is-invalid @enderror" id="penempatan"
                                     name="penempatan" autofocus value="{{ old('penempatan') }}">
-                                    <option value="">Pilih Penempatan</option>
-                                    <option value="CV. SUMBER PANGAN (KEDIRI)">SP (KEDIRI)</option>
-                                    <option value="CV. SUMBER PANGAN (KEDIRI)">SP (TUBAN)</option>
-                                    <option value="CV. SURYA INTI PANGAN (MAKASAR)">SIP (MAKASAR)
-                                    </option>
-                                    <option value="PT. SURYA PANGAN SEMESTA (KEDIRI)">SPS (KEDIRI)
-                                    </option>
-                                    <option value="PT. SURYA PANGAN SEMESTA (NGAWI)">SPS (NGAWI)
-                                    </option>
-                                    <option value="PT. SURYA PANGAN SEMESTA (SUBANG)">SPS (SUBANG)
-                                    </option>
+                                    @foreach ($site as $st)
+                                        <option value="{{ $st->id }}">{{ $st->site_name }}</option>
+                                    @endforeach
                                 </select>
                                 <label for="penempatan">Penempatan</label>
                             </div>
@@ -286,8 +279,8 @@
     </div>
     <div class="modal fade" id="modal_edit_recruitment" data-bs-backdrop="static" tabindex="-1">
         <div class="modal-dialog modal-dialog-scrollable">
-            <form method="post" action="{{ url('/recruitment/update/' . $holding) }}" class="modal-content"
-                enctype="multipart/form-data">
+            <form method="post" action="{{ url('/recruitment/update/' . $holding->holding_code) }}"
+                class="modal-content" enctype="multipart/form-data">
                 @csrf
                 <div class="modal-header">
                     <h4 class="modal-title" id="backDropModalTitle">Edit Recruitment</h4>
@@ -298,8 +291,7 @@
                     <div class="row g-2">
                         <div class="col mb-2">
                             <div class="form-floating form-floating-outline">
-                                <select disabled
-                                    class="form-control @error('nama_departemen_update') is-invalid @enderror"
+                                <select disabled class="form-control @error('nama_departemen_update') is-invalid @enderror"
                                     id="nama_departemen_update" name="nama_departemen_update" autofocus
                                     value="{{ old('nama_departemen_update') }}">
                                     <option value=""> Pilih Departemen</option>
@@ -524,8 +516,9 @@
     <script>
         // start add departemen
         $('#nama_dept').on('change', function() {
+            let holding = window.location.pathname.split("/").pop();
             let id_dept = $(this).val();
-            let url = "{{ url('/bagian/get_divisi') }}" + "/" + id_dept;
+            let url = "{{ url('/bagian/get_divisi') }}" + "/" + id_dept + "/" + holding;
             console.log(id_dept);
             console.log(url);
             $.ajax({
@@ -613,7 +606,7 @@
         // update status aktif to non aktif
         $(document).on('click', '#btn_status_aktif', function() {
             var id = $(this).data('id');
-            let holding = $(this).data("holding");
+            let holding = window.location.pathname.split("/").pop();
             console.log(id);
             console.log(holding);
             Swal.fire({
@@ -657,7 +650,7 @@
         // update status non aktif to aktif
         $(document).on('click', '#btn_status_naktif', function() {
             var id = $(this).data('id');
-            let holding = $(this).data("holding");
+            let holding = window.location.pathname.split("/").pop();
             console.log(id);
             console.log(holding);
             Swal.fire({

@@ -42,7 +42,8 @@ class BagianController extends Controller
     public function get_divisi($id, $holding)
     {
         // dd($id);
-        $get_divisi = Divisi::where('dept_id', $id)->where('holding',$holding)->get();
+        $id_holding = Holding::where('holding_code', $holding)->value('id');
+        $get_divisi = Divisi::where('dept_id', $id)->where('holding', $id_holding)->get();
         // dd($get_divisi);
         echo "<option value=''>Pilih Divisi...</option>";
         foreach ($get_divisi as $divisi) {

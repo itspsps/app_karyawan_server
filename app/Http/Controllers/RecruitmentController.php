@@ -21,6 +21,7 @@ use App\Models\WaktuUjian;
 use App\Models\PgSiswa;
 use App\Models\EssaySiswa;
 use App\Models\DetailEssay;
+use App\Models\Holding;
 use App\Models\InterviewAdmin;
 use App\Models\InterviewUser;
 use App\Models\Pembobotan;
@@ -33,6 +34,7 @@ use App\Models\RecruitmentKesehatanRS;
 use App\Models\RecruitmentPendidikan;
 use App\Models\RecruitmentRiwayat;
 use App\Models\RecruitmentUserRecord;
+use App\Models\Site;
 use App\Models\UjianEsaiJawabDetail;
 use App\Models\UjianKategori;
 use Illuminate\Http\Request;
@@ -56,24 +58,26 @@ use PhpParser\Builder\Function_;
 
 class RecruitmentController extends Controller
 {
-    public function pg_recruitment()
+    public function pg_recruitment($holding)
     {
-        $holding = request()->segment(count(request()->segments()));
+        // $holding = request()->segment(count(request()->segments()));
+        $holdings = Holding::where('holding_code', $holding)->first();
         return view('admin.recruitment-users.recruitment.index', [
             // return view('karyawan.index', [
             'title'             => 'Data Recruitment',
-            'holding'           => $holding,
+            'holding'           => $holdings,
+            'site'              => Site::where('site_holding_category', $holdings->id)->get(),
             'data_departemen'   => Departemen::all(),
-            'data_bagian'       => Bagian::with('Divisi')->where('holding', $holding)->get(),
-            'data_jabatan'      => Jabatan::with('Bagian')->where('holding', $holding)->get(),
-            'data_dept'         => Departemen::orderBy('nama_departemen', 'asc')->where('holding', $holding)->get(),
-            'data_divisi'       => Divisi::orderBy('nama_divisi', 'asc')->where('holding', $holding)->get()
+            'data_bagian'       => Bagian::with('Divisi')->where('holding', $holdings->id)->get(),
+            'data_jabatan'      => Jabatan::with('Bagian')->where('holding', $holdings->id)->get(),
+            'data_dept'         => Departemen::orderBy('nama_departemen', 'asc')->where('holding', $holdings->id)->get(),
+            'data_divisi'       => Divisi::orderBy('nama_divisi', 'asc')->where('holding', $holdings->id)->get()
         ]);
     }
 
-    function dt_recruitment(Request $request)
+    function dt_recruitment($holding)
     {
-        $holding = request()->segment(count(request()->segments()));
+        $holdings = Holding::where('holding_code', $holding)->first();
         $table = Recruitment::with([
             'Jabatan' => function ($query) {
                 $query->with([
@@ -91,7 +95,7 @@ class RecruitmentController extends Controller
                 ]);
                 $query->orderBy('nama_jabatan', 'ASC');
             },
-        ])->where('holding_Recruitment', $holding)->orderBy('created_at', 'DESC')->get();;
+        ])->where('holding_recruitment', $holdings->id)->orderBy('created_at', 'DESC')->get();;
         // dd($table);
         if (request()->ajax()) {
             return DataTables::of($table)
@@ -143,19 +147,19 @@ class RecruitmentController extends Controller
                             </button>';
                     return $btn;
                 })
-                ->addColumn('pelamar', function ($row) use ($holding) {
-                    $url = url('/pg/data-list-pelamar/' . $row->id . '/' . $holding);
+                ->addColumn('pelamar', function ($row) use ($holdings) {
+                    $url = url('/pg/data-list-pelamar/' . $row->id . '/' . $holdings);
                     $btn = '<a href="' . $url . '" class="btn btn-sm btn-info">
                                 <i class="tf-icons mdi mdi-eye-circle-outline me-1"></i>
                                 Lihat&nbsp;Pelamar
                             </a>';
                     return $btn;
                 })
-                ->addColumn('status_recruitment', function ($row) use ($holding) {
+                ->addColumn('status_recruitment', function ($row) use ($holdings) {
                     if ($row->status_recruitment == 0) {
                         $status = '<button id="btn_status_aktif"
                             data-id="' . $row->id . '"
-                            data-holding="' . $holding . '"
+                            data-holding="' . $holdings->id . '"
                             type="button" class="btn btn-sm btn-success ">
                             <i class="tf-icons mdi mdi-account-search"> </i>
                             &nbsp;AKTIF
@@ -163,7 +167,7 @@ class RecruitmentController extends Controller
                     } else {
                         $status = '<button id="btn_status_naktif"
                             data-id="' . $row->id . '"
-                            data-holding="' . $holding . '"
+                            data-holding="' . $holdings->id . '"
                             type="button" class="btn btn-sm btn-danger ">
                             <i class="tf-icons mdi mdi-account-off"></i>
                             &nbspN&nbsp;AKTIF
@@ -172,7 +176,7 @@ class RecruitmentController extends Controller
                     return $status;
                 })
 
-                ->addColumn('option', function ($row) use ($holding) {
+                ->addColumn('option', function ($row) use ($holdings) {
                     $btn =
                         '<button id="btn_edit_recruitment"
                             data-id="' . $row->id . '"
@@ -182,7 +186,7 @@ class RecruitmentController extends Controller
                             data-jabatan="' . $row->nama_jabatan . '"
                             data-tanggal_awal="' . $row->created_recruitment . '"
                             data-tanggal_akhir="' . $row->deadline_recruitment . '"
-                            data-holding="' . $holding . '"
+                            data-holding="' . $holdings->id . '"
                             data-desc="' . $row->desc_recruitment . '"
                             type="button"
                             class="btn btn-icon btn-warning waves-effect waves-light">
@@ -190,7 +194,7 @@ class RecruitmentController extends Controller
                         </button>
                         <button type="button" id="btn_delete_recruitment"
                             data-id="' . $row->id . '"
-                            data-holding="' . $holding . '"
+                            data-holding="' . $holdings->id . '"
                             class="btn btn-icon btn-danger waves-effect waves-light">
                             <span class="tf-icons mdi mdi-delete-outline"></span>
                         </button>
@@ -204,15 +208,15 @@ class RecruitmentController extends Controller
 
     function create(Request $request)
     {
-
         // dd($request->all());
         $validatedData = $request->validate([
-            'penempatan'             => 'required',
+            'penempatan'            => 'required',
             'nama_dept'             => 'required',
             'nama_divisi'           => 'required',
             'nama_bagian'           => 'required|max:255',
             'nama_jabatan'          => 'required',
             'created_recruitment'   => 'required',
+            'holding_recruitment'   => 'required',
             'deadline_recruitment'  => 'required',
             'desc_recruitment'      => 'required',
         ]);
@@ -221,7 +225,7 @@ class RecruitmentController extends Controller
         $insert = Recruitment::create(
             [
                 'id'                    => Uuid::uuid4(),
-                'holding_recruitment'   => $holding,
+                'holding_recruitment'   => $validatedData['holding_recruitment'],
                 'penempatan'            => $validatedData['penempatan'],
                 'nama_dept'             => $validatedData['nama_dept'],
                 'nama_divisi'           => $validatedData['nama_divisi'],
@@ -264,9 +268,9 @@ class RecruitmentController extends Controller
         return redirect()->back()->with('success', 'Data Berhasil di Diupdate');
     }
 
-    function update(Request $request)
+    function update(Request $request, $holding)
     {
-        $holding = request()->segment(count(request()->segments()));
+        $holding = Holding::where('holding_code', $holding)->value('id');
         $recruitment = Recruitment::where('id', $request->id_recruitment)->where('holding_recruitment', $holding)->first();
         $data = Recruitment::where('id', $request->id_recruitment)->where('holding_recruitment', $holding)->update([
             'created_recruitment' => $request->created_recruitment_update,
@@ -320,9 +324,10 @@ class RecruitmentController extends Controller
     //         'data_divisi' => Divisi::orderBy('nama_divisi', 'asc')->where('holding', $holding)->get()
     //     ]);
     // }
-    function pg_list_pelamar($id)
+    function pg_list_pelamar($id, $holding)
     {
-        $holding = request()->segment(count(request()->segments()));
+        $holdings = Holding::where('holding_code', $holding)->first();
+        $holding_category = $holdings->holding_category;
         // $get_user = RecruitmentUser::where('recruitment_admin_id', $id)->first();
         // $get_cv = RecruitmentCV::where('users_career_id', $get_user->users_career_id)->first();
         // Hapus pelamar kadaluarsa
@@ -355,7 +360,7 @@ class RecruitmentController extends Controller
                 ]);
             }
         ])
-            ->where('holding', $holding)
+            ->where('holding', $holding_category)
             ->where('status', '0')
             ->where('recruitment_admin_id', $id)
             ->get();
@@ -368,7 +373,7 @@ class RecruitmentController extends Controller
                 ]);
             }
         ])
-            ->where('holding', $holding)
+            ->where('holding', $holding_category)
             ->where('recruitment_admin_id', $id)
             ->whereIn('status', array('1', '1a', '2a'))
             ->get();
@@ -381,7 +386,7 @@ class RecruitmentController extends Controller
                 ]);
             }
         ])
-            ->where('holding', $holding)
+            ->where('holding', $holding_category)
             ->where('status', '2')
             ->where('recruitment_admin_id', $id)
             ->get();
@@ -394,14 +399,14 @@ class RecruitmentController extends Controller
                 ]);
             }
         ])
-            ->where('holding', $holding)
+            ->where('holding', $holding_category)
             ->where('status', '3')
             ->where('recruitment_admin_id', $id)
             ->get();
 
         return view('admin.recruitment-users.recruitment.list_pelamar', [
             'title' => 'Data Recruitment',
-            'holding'   => $holding,
+            'holding'   => $holdings,
         ], compact('user_meta', 'user_wait', 'user_kandidat', 'user_reject'));
     }
     function pelamar_detail($id)
