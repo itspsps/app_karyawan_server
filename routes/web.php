@@ -834,7 +834,7 @@ Route::get('/logout', [authController::class, 'logout'])->name('logout');
 // Include file route tambahan
 require __DIR__ . '/api_hrd.php';
 
-// RECRUITMENT DASHBOARD ADMIN
+// RECRUITMENT DASHBOARD ADMIN heheheghe
 Route::get('/pg-data-recruitment/{holding}', [RecruitmentController::class, 'pg_recruitment'])->middleware('admin');
 
 Route::post('/recruitment/create/{holding}', [RecruitmentController::class, 'create'])->middleware('admin');
