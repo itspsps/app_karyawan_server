@@ -242,9 +242,9 @@
 
                         ];
                         const data_column1 = datacolumn1.concat(data1.datacolumn);
-                        $('#table_finger').DataTable().clear();
+                                $('#table_finger').DataTable().clear();
                         $('#table_finger').DataTable().destroy();
-                        $('.date_absensi').empty();
+                $('.date_absensi').empty();
                         $.each(data1.data_columns_header, function(count) {
                             // console.log(count);
                             $('#date_absensi').append("<th id='th_date" + count + "'>" + data1.data_columns_header[count].header + "</th>");

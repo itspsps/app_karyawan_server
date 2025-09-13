@@ -189,6 +189,17 @@
                         <div style="font-size: 10pt;" data-i18n="Without navbar"><i class="mdi mdi-timetable"></i>&nbsp;Master Shift</div>
                     </a>
                 </li>
+                <li class="menu-item
+                    @if(Auth::user()->is_admin =='hrd')
+                    {{ Request::is('hrd/finger*') ? 'active' : '' }}
+                    @else
+                    {{ Request::is('finger*') ? 'active' : '' }}
+                    @endif
+                ">
+                    <a href=" @if(Auth::user()->is_admin =='hrd'){{ url('hrd/finger/'.$holding->holding_code) }}@else {{ url('/finger/'.$holding->holding_code) }}@endif" class=" menu-link">
+                        <div style="font-size: 10pt;" data-i18n="Without navbar"><i class="mdi mdi-fingerprint"></i>&nbsp;Master Finger</div>
+                    </a>
+                </li>
             </ul>
         </li>
         <!-- END DATA MASTER -->

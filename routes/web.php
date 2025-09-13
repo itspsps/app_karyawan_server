@@ -35,6 +35,7 @@ use App\Http\Controllers\IzinUserController;
 use App\Http\Controllers\CutiUserController;
 use App\Http\Controllers\DepartemenController;
 use App\Http\Controllers\DivisiController;
+use App\Http\Controllers\FingerController;
 use App\Http\Controllers\HoldingController;
 use App\Http\Controllers\InterviewController;
 use App\Http\Controllers\IzinController;
@@ -443,6 +444,12 @@ Route::middleware('admin')->group(function () {
     Route::get('/karyawan/edit-shift/{id}/sp', [karyawanController::class, 'editShift'])->middleware('admin');
     Route::get('/karyawan/edit-shift/{id}/sps', [karyawanController::class, 'editShift'])->middleware('admin');
     Route::get('/karyawan/edit-shift/{id}/sip', [karyawanController::class, 'editShift'])->middleware('admin');
+
+    // FINGER MACHINE
+    Route::get('/finger/{holding}', [FingerController::class, 'index'])->middleware('admin');
+    Route::get('/finger-datatable/{holding}', [FingerController::class, 'datatable'])->middleware('admin');
+    Route::post('/finger/store/{holding}', [FingerController::class, 'store'])->middleware('admin');
+
     //
     Route::get('/karyawan/get_departemen', [karyawanController::class, 'get_departemen'])->middleware('admin');
     Route::get('/karyawan/get_divisi', [karyawanController::class, 'get_divisi'])->middleware('admin');
@@ -685,7 +692,6 @@ Route::middleware('admin')->group(function () {
     Route::get('/report/get_columns/{holding}', [ReportController::class, 'get_columns']);
     Route::get('/report/get_filter_month', [ReportController::class, 'get_filter_month']);
     Route::get('/report/ExportReport', [ReportController::class, 'ExportReport']);
-    Route::get('/report/get_grafik_absensi', [ReportController::class, 'get_grafik_absensi']);
 
     Route::get('/report_kedisiplinan/{holding}', [ReportController::class, 'index_kedisiplinan']);
     Route::get('/report_kedisiplinan-datatable/{holding}', [ReportController::class, 'datatable_kedisiplinan']);
@@ -693,6 +699,7 @@ Route::middleware('admin')->group(function () {
     Route::get('/report_kedisiplinan/get_bagian/{holding}', [ReportController::class, 'get_bagian']);
     Route::get('/report_kedisiplinan/get_jabatan/{holding}', [ReportController::class, 'get_jabatan']);
     Route::get('/report_kedisiplinan/get_columns/{holding}', [ReportController::class, 'get_columns_kedisiplinan']);
+    Route::get('/report_kedisiplinan/get_grafik_absensi/{holding}', [ReportController::class, 'get_grafik_absensi']);
 
     // reset Cuti
     Route::get('/reset-cuti/sp', [KaryawanController::class, 'resetCuti']);

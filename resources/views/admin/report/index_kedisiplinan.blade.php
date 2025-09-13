@@ -130,7 +130,7 @@
                             </table>
                         </div>
                         <div class="tab-pane fade" id="navs-pills-justified-profile" role="tabpanel">
-                            <table class="table" id="table_rekapdata1" style="width: 100%; font-size: small;">
+                            <!-- <table class="table" id="table_rekapdata1" style="width: 100%; font-size: small;">
                                 <thead class="table-primary">
                                     <tr>
                                         <th rowspan="2" class="text-center">Detail</th>
@@ -155,7 +155,7 @@
                                 </thead>
                                 <tbody class="table-border-bottom-0">
                                 </tbody>
-                            </table>
+                            </table> -->
                         </div>
                     </div>
                 </div>
@@ -298,7 +298,7 @@
             filter_month_dept = $('#filter_month').val();
             // $('#table_rekapdata').DataTable().destroy();
             var url = "@if(Auth::user()->is_admin=='hrd'){{url('hrd/report_kedisiplinan/get_divisi')}}@else{{url('report_kedisiplinan/get_divisi')}}@endif" + '/' + holding_id;
-            console.log(url);
+            // console.log(url);
             $.ajax({
                 type: 'GET',
                 url: url,
@@ -404,7 +404,7 @@
             // $('#table_rekapdata').DataTable().destroy();
             $.ajax({
                 type: 'GET',
-                url: "@if(Auth::user()->is_admin=='hrd'){{url('hrd/report/get_bagian')}}@else{{url('report/get_bagian')}}@endif" + '/' + holding_id,
+                url: "@if(Auth::user()->is_admin=='hrd'){{url('hrd/report_kedisiplinan/get_bagian')}}@else{{url('report_kedisiplinan/get_bagian')}}@endif" + '/' + holding_id,
                 data: {
                     holding: holding_id,
                     filter_month: filter_month,
@@ -499,6 +499,7 @@
         })
         $('#bagian_filter').change(function() {
             bagian_filter = $(this).val();
+            // console.log(bagian_filter);
             departemen_filter = $('#departemen_filter').val();
             divisi_filter = $('#divisi_filter').val();
             jabatan_filter = $('#jabatan_filter').val();
@@ -507,19 +508,92 @@
             // $('#table_rekapdata').DataTable().destroy();
             $.ajax({
                 type: 'GET',
-                url: "{{url('report/get_jabatan')}}",
+                url: "{{url('report_kedisiplinan/get_jabatan')}}" + '/' + holding_id,
                 data: {
-                    holding: holding,
-                    bagian_filter: bagian_filter
+                    holding: holding_id,
+                    bagian_filter: bagian_filter,
+                    jabatan_filter: jabatan_filter,
+                    filter_month: filter_month,
+                    departemen_filter: departemen_filter,
+                    divisi_filter: divisi_filter
                 },
                 cache: false,
 
-                success: function(msg) {
-                    // console.log(msg);
-                    // $('#id_bagian').html(msg);
-                    $('#jabatan_filter').html(msg);
+                success: function(data_jabatan) {
+                    console.log(data_jabatan);
+                    datacolumn_jabatan = [{
+                            data: 'btn_detail',
+                            name: 'btn_detail'
+                        },
+                        {
+                            data: 'no',
+                            render: function(data, type, row, meta) {
+                                return meta.row + meta.settings._iDisplayStart + 1;
+                            }
+
+                        },
+                        {
+                            data: 'nomor_identitas_karyawan',
+                            name: 'nomor_identitas_karyawan'
+                        },
+                        {
+                            data: 'name',
+                            name: 'name'
+                        },
+                        {
+                            data: 'total_hadir_tepat_waktu',
+                            name: 'total_hadir_tepat_waktu'
+                        },
+                        {
+                            data: 'total_hadir_telat_hadir',
+                            name: 'total_hadir_telat_hadir'
+                        },
+                        {
+                            data: 'total_hadir_telat_hadir1',
+                            name: 'total_hadir_telat_hadir1'
+                        },
+                        {
+                            data: 'total_izin_true',
+                            name: 'total_izin_true'
+                        },
+                        {
+                            data: 'total_cuti_true',
+                            name: 'total_cuti_true'
+                        },
+                        {
+                            data: 'total_dinas_true',
+                            name: 'total_dinas_true'
+                        },
+                        {
+                            data: 'total_libur',
+                            name: 'total_libur'
+                        },
+                        {
+                            data: 'tidak_hadir_kerja',
+                            name: 'tidak_hadir_kerja'
+                        },
+                        {
+                            data: 'total_semua',
+                            name: 'total_semua'
+                        },
+                    ];
+                    const data_column_jabatan = datacolumn_jabatan.concat(data_jabatan.datacolumn);
+                    // console.log(data_column);
+                    $('#table_rekapdata').DataTable().clear();
+                    $('#table_rekapdata').DataTable().destroy();
+                    $('#date_absensi').empty();
+                    $('#date_absensi').append('<th>Tepat&nbsp;Waktu</th><th>Telat&nbsp;Hadir&nbsp;<span>(&nbsp;+&nbsp;15&nbsp;Menit)</span></th><th>Telat&nbsp;Hadir&nbsp;<span>(&nbsp;-&nbsp;15&nbsp;Menit)</span></th><th>Izin</th><th>Cuti</th><th>Dinas</th><th>Libur</th><th>Alfa</th>');
+
+                    $.each(data_jabatan.data_columns_header, function(count) {
+                        // console.log(count);
+                        $('#date_absensi').append("<th id='th_date'>" + data_jabatan.data_columns_header[count].header + "</th>");
+                    });
+                    $('#th_count_date').attr('colspan', data_jabatan.count_period);
+                    // $('#id_divisi').html(data_divisi);
+                    console.log(departemen_filter, divisi_filter, bagian_filter, jabatan_filter, filter_month);
+                    $('#jabatan_filter').html(data_jabatan.select);
                     get_grafik_absensi(departemen_filter, divisi_filter, bagian_filter, jabatan_filter, filter_month);
-                    load_data(departemen_filter, divisi_filter, bagian_filter, jabatan_filter, filter_month);
+                    load_data(departemen_filter, divisi_filter, bagian_filter, jabatan_filter, filter_month, data_column_jabatan);
                 },
                 error: function(data) {
                     console.log('error:', data)
@@ -533,9 +607,93 @@
             divisi_filter = $('#divisi_filter').val();
             bagian_filter = $('#bagian_filter').val();
             filter_month = $('#filter_month').val();
-            // $('#table_rekapdata').DataTable().destroy();
-            get_grafik_absensi(departemen_filter, divisi_filter, bagian_filter, jabatan_filter, filter_month);
-            load_data(departemen_filter, divisi_filter, bagian_filter, jabatan_filter, filter_month);
+            $.ajax({
+                url: "@if(Auth::user()->is_admin=='hrd'){{ url('/hrd/report_kedisiplinan/get_columns') }}@else{{ url('report_kedisiplinan/get_columns') }}@endif" + '/' + holding,
+                method: "get",
+                data: {
+                    filter_month: filter_month,
+                    departemen_filter: departemen_filter,
+                    divisi_filter: divisi_filter,
+                    bagian_filter: bagian_filter,
+                    jabatan_filter: jabatan_filter,
+                },
+                success: function(data) {
+                    // console.log(data);
+                    datacolumn = [{
+                            data: 'btn_detail',
+                            name: 'btn_detail'
+                        },
+                        {
+                            data: 'no',
+                            render: function(data, type, row, meta) {
+                                return meta.row + meta.settings._iDisplayStart + 1;
+                            }
+
+                        },
+                        {
+                            data: 'nomor_identitas_karyawan',
+                            name: 'nomor_identitas_karyawan'
+                        },
+                        {
+                            data: 'name',
+                            name: 'name'
+                        },
+                        {
+                            data: 'total_hadir_tepat_waktu',
+                            name: 'total_hadir_tepat_waktu'
+                        },
+                        {
+                            data: 'total_hadir_telat_hadir',
+                            name: 'total_hadir_telat_hadir'
+                        },
+                        {
+                            data: 'total_hadir_telat_hadir1',
+                            name: 'total_hadir_telat_hadir1'
+                        },
+                        {
+                            data: 'total_izin_true',
+                            name: 'total_izin_true'
+                        },
+                        {
+                            data: 'total_cuti_true',
+                            name: 'total_cuti_true'
+                        },
+                        {
+                            data: 'total_dinas_true',
+                            name: 'total_dinas_true'
+                        },
+                        {
+                            data: 'total_libur',
+                            name: 'total_libur'
+                        },
+                        {
+                            data: 'tidak_hadir_kerja',
+                            name: 'tidak_hadir_kerja'
+                        },
+                        {
+                            data: 'total_semua',
+                            name: 'total_semua'
+                        },
+                    ]
+
+                    const data_column = datacolumn.concat(data.datacolumn);
+                    // console.log(data_column);
+
+                    $('#date_absensi').append('<th>Tepat&nbsp;Waktu</th><th>Telat&nbsp;Hadir&nbsp;<span>(&nbsp;-&nbsp;15&nbsp;Menit)</span></th><th>Telat&nbsp;Hadir&nbsp;<span>(&nbsp;+&nbsp;15&nbsp;Menit)</span></th><th>Izin</th><th>Cuti</th><th>Dinas</th><th>Libur</th><th>Alfa</th>');
+
+                    $.each(data.data_columns_header, function(count) {
+                        $('#date_absensi').append("<th id='th_date'>" + data.data_columns_header[count].header + "</th>");
+                    });
+                    $('#th_count_date').attr('colspan', data.count_period);
+                    $('#table_rekapdata').DataTable().destroy();
+                    load_data(departemen_filter, divisi_filter, bagian_filter, jabatan_filter, filter_month, data_column);
+                    get_grafik_absensi(departemen_filter, divisi_filter, bagian_filter, jabatan_filter, filter_month);
+                },
+                error: function(data) {
+                    var errors = data.errors();
+                    console.log(errors);
+                }
+            });
         })
         // load_data(departemen_filter, divisi_filter, bagian_filter, jabatan_filter, start_date, end_date);
 
@@ -775,9 +933,9 @@
 
 
         function get_grafik_absensi(departemen_filter = '', divisi_filter = '', bagian_filter = '', jabatan_filter = '', filter_month = '') {
-            // console.log(start_date);
+            // console.log(filter_month);
             $.ajax({
-                url: "@if(Auth::user()->is_admin =='hrd'){{url('hrd/report/get_grafik_absensi')}}@else {{url('report/get_grafik_absensi')}} @endif",
+                url: "@if(Auth::user()->is_admin =='hrd'){{url('hrd/report_kedisiplinan/get_grafik_absensi')}}@else{{url('report_kedisiplinan/get_grafik_absensi')}}@endif" + '/' + holding,
                 data: {
                     holding: holding,
                     filter_month: filter_month,
@@ -789,7 +947,7 @@
                 method: "GET",
                 dataType: "json",
                 success: function(data) {
-                    // console.log(data);
+                    console.log(data);
                     var label_absensi5 = data.label_absensi;
                     var data_absensi_masuk_tepatwaktu = data.data_absensi_masuk_tepatwaktu;
                     var data_absensi_masuk_tidak_hadir = data.data_absensi_masuk_tidak_hadir;

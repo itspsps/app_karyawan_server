@@ -18,6 +18,7 @@ use App\Models\Jabatan;
 use App\Models\Karyawan;
 use App\Models\LevelJabatan;
 use App\Models\Penugasan;
+use App\Models\Site;
 use App\Models\Titik;
 use App\Notifications\TestPusherNotification;
 use Carbon\Carbon;
@@ -54,16 +55,16 @@ class HomeUserController extends Controller
             $thnskrg = date('Y');
             // dd($blnskrg);
             $tglkmrn            = date('Y-m-d', strtotime('-1 days'));
-            $mapping_shift      = MappingShift::where('user_id', $user_login)->where('tanggal_masuk', $tglkmrn)->first();
-            $count_absen_hadir  = MappingShift::where('user_id', $user_login)->where('status_absen', 'HADIR KERJA')->whereMonth('tanggal_masuk', $blnskrg)
+            $mapping_shift      = MappingShift::where('karyawan_id', $user_login)->where('tanggal_masuk', $tglkmrn)->first();
+            $count_absen_hadir  = MappingShift::where('karyawan_id', $user_login)->where('status_absen', 'HADIR KERJA')->whereMonth('tanggal_masuk', $blnskrg)
                 ->count();
-            $count_absen_sakit  = MappingShift::where('user_id', $user_login)->where('status_absen', 'Sakit')->where('tanggal_masuk', '<=', $tglskrg)
+            $count_absen_sakit  = MappingShift::where('karyawan_id', $user_login)->where('status_absen', 'Sakit')->where('tanggal_masuk', '<=', $tglskrg)
                 ->whereMonth('tanggal_masuk', $blnskrg)
                 ->count();
-            $count_absen_izin  = MappingShift::where('user_id', $user_login)->where('status_absen', 'Izin')->where('tanggal_masuk', '<=', $tglskrg)
+            $count_absen_izin  = MappingShift::where('karyawan_id', $user_login)->where('status_absen', 'Izin')->where('tanggal_masuk', '<=', $tglskrg)
                 ->whereMonth('tanggal_masuk', $blnskrg)
                 ->count();
-            $count_absen_telat  = MappingShift::where('user_id', $user_login)->where('status_absen', 'HADIR KERJA')->where('keterangan_absensi', 'TELAT HADIR')->where('tanggal_masuk', '<=', $tglskrg)
+            $count_absen_telat  = MappingShift::where('karyawan_id', $user_login)->where('status_absen', 'HADIR KERJA')->where('keterangan_absensi', 'TELAT HADIR')->where('tanggal_masuk', '<=', $tglskrg)
                 ->whereMonth('tanggal_masuk', $blnskrg)
                 ->count();
             $user           = $user_karyawan->id;
@@ -106,7 +107,7 @@ class HomeUserController extends Controller
                 foreach ($data_user_penugasaan as $user_penugasan) {
                     if ($user_penugasan->wilayah_penugasan == 'Diluar Kantor') {
                         $kantor_penugasan = NULL;
-                        $cek_absensi      = MappingShift::where('user_id', $user_login)
+                        $cek_absensi      = MappingShift::where('karyawan_id', $user_login)
                             ->where('status_absen', 'NULL')
                             ->whereBetween('tanggal_masuk', [$user_penugasan->tanggal_kunjungan, $user_penugasan->selesai_kunjungan])
                             ->update([
@@ -120,7 +121,7 @@ class HomeUserController extends Controller
                             ]);
                     } else if ($user_penugasan->wilayah_penugasan == 'Wilayah Kantor') {
                         $kantor_penugasan = $user_penugasan->alamat_dikunjungi;
-                        $cek_absensi      = MappingShift::where('user_id', $user_login)
+                        $cek_absensi      = MappingShift::where('karyawan_id', $user_login)
                             ->where('status_absen', 'NULL')
                             ->whereBetween('tanggal_masuk', [$user_penugasan->tanggal_kunjungan, $user_penugasan->selesai_kunjungan])
                             ->update([
@@ -135,7 +136,7 @@ class HomeUserController extends Controller
             if ($mapping_shift == '' || $mapping_shift == NULL) {
                 $jam_absen = null;
                 $jam_pulang = null;
-                $status_absen_skrg = MappingShift::where('user_id', $user_login)->where('tanggal_masuk', $tglskrg)->orderBy('tanggal_masuk', 'DESC')->first();
+                $status_absen_skrg = MappingShift::where('karyawan_id', $user_login)->where('tanggal_masuk', $tglskrg)->orderBy('tanggal_masuk', 'DESC')->first();
                 $jam_kerja = MappingShift::with('Shift')->where('user_id', $user_login)->where('tanggal_masuk', $tglskrg)->orderBy('tanggal_masuk', 'DESC')->first();
                 // dd($jam_kerja->status_absensi);
 
@@ -143,7 +144,7 @@ class HomeUserController extends Controller
                     'title'             => 'Absen',
                     'jam_kerja'         => $jam_kerja,
                     'user_karyawan'     => $user_karyawan,
-                    'shift_karyawan'    => MappingShift::where('user_id', $user_login)->where('tanggal_masuk', $tglskrg)->first(),
+                    'shift_karyawan'    => MappingShift::where('karyawan_id', $user_login)->where('tanggal_masuk', $tglskrg)->first(),
                     'count_absen_hadir' => $count_absen_hadir,
                     'thnskrg'           => $thnskrg,
                     'lokasi_kantor'     => $lokasi_kantor,
@@ -174,17 +175,17 @@ class HomeUserController extends Controller
                 if ($status_absen_skrg == 'Malam') {
                     if ($jam_absen != null && $jam_pulang == null) {
                         if ($hours_1_pulang > $timenow) {
-                            $status_absen_skrg = MappingShift::where('user_id', $user_login)->where('tanggal_masuk', $tglkmrn)->orderBy('tanggal_masuk', 'DESC')->first();
+                            $status_absen_skrg = MappingShift::where('karyawan_id', $user_login)->where('tanggal_masuk', $tglkmrn)->orderBy('tanggal_masuk', 'DESC')->first();
                         } else {
-                            $status_absen_skrg = MappingShift::where('user_id', $user_login)->where('tanggal_masuk', $tglskrg)->orderBy('tanggal_masuk', 'DESC')->first();
+                            $status_absen_skrg = MappingShift::where('karyawan_id', $user_login)->where('tanggal_masuk', $tglskrg)->orderBy('tanggal_masuk', 'DESC')->first();
                         }
                     } else {
-                        $status_absen_skrg = MappingShift::where('user_id', $user_login)->where('tanggal_masuk', $tglskrg)->orderBy('tanggal_masuk', 'DESC')->first();
+                        $status_absen_skrg = MappingShift::where('karyawan_id', $user_login)->where('tanggal_masuk', $tglskrg)->orderBy('tanggal_masuk', 'DESC')->first();
                     }
                 } else {
-                    $status_absen_skrg = MappingShift::where('user_id', $user_login)->where('tanggal_masuk', $tglskrg)->orderBy('tanggal_masuk', 'DESC')->first();
+                    $status_absen_skrg = MappingShift::where('karyawan_id', $user_login)->where('tanggal_masuk', $tglskrg)->orderBy('tanggal_masuk', 'DESC')->first();
                 }
-                $jam_kerja = MappingShift::with('Shift')->where('user_id', $user_login)->where('tanggal_masuk', $tglskrg)->orderBy('tanggal_masuk', 'DESC')->first();
+                $jam_kerja = MappingShift::with('Shift')->where('karyawan_id', $user_login)->where('tanggal_masuk', $tglskrg)->orderBy('tanggal_masuk', 'DESC')->first();
                 // $hours_1 = Carbon::parse($status_absen_skrg->shift->jam_masuk)->subHour(-1)->format('H:i:s');
                 // dd($hours_1);
                 // dd($faceid);
@@ -193,7 +194,7 @@ class HomeUserController extends Controller
 
                 return view('users.home.index', [
                     'title'             => 'Absen',
-                    'shift_karyawan'    => MappingShift::where('user_id', $user_login)->where('tanggal_masuk', $tglskrg)->first(),
+                    'shift_karyawan'    => MappingShift::where('karyawan_id', $user_login)->where('tanggal_masuk', $tglskrg)->first(),
                     'count_absen_hadir' => $count_absen_hadir,
                     'user_karyawan'     => $user_karyawan,
                     'thnskrg'           => $thnskrg,
@@ -212,7 +213,7 @@ class HomeUserController extends Controller
                     'count_absen_sakit'     => $count_absen_sakit,
                     'count_absen_telat'     => $count_absen_telat,
                     'kantor_penugasan'     => $kantor_penugasan,
-                    'location'     => Titik::all(),
+                    'location'     => Site::all(),
 
                 ]);
             }
@@ -274,7 +275,7 @@ class HomeUserController extends Controller
             ->join('departemens', 'departemens.id', '=', 'karyawans.dept_id')
             ->join('divisis', 'divisis.id', '=', 'karyawans.divisi_id')
             ->where('karyawans.id', $user_karyawan->id)->first();
-        $jam_kerja = MappingShift::with('Shift')->where('user_id', $user_karyawan->id)->where('tanggal_masuk', date('Y-m-d'))->first();
+        $jam_kerja = MappingShift::with('Shift')->where('karyawan_id', $user_karyawan->id)->where('tanggal_masuk', date('Y-m-d'))->first();
         // dd($jam_kerja);
         $site_job = $user_karyawan->site_job;
         $kontrak = $user_karyawan->kontrak_kerja;
@@ -1207,16 +1208,16 @@ class HomeUserController extends Controller
         // dd($request->all());
         if ($request->ajax()) {
             if (!empty($request->filter_month)) {
-                $count_absen_hadir = MappingShift::where('user_id', $user_login)->whereMonth('tanggal_masuk', $request->filter_month)->where('status_absen', 'HADIR KERJA')->count();
-                $count_telat = MappingShift::where('user_id', $user_login)->whereMonth('tanggal_masuk', $request->filter_month)->where('keterangan_absensi', 'TELAT HADIR')->where('status_absen', 'HADIR KERJA')->count();
-                $count_izin = MappingShift::where('user_id', $user_login)->whereMonth('tanggal_masuk', $request->filter_month)->where('status_absen', 'TIDAK HADIR KERJA')->where('keterangan_absensi', 'IZIN TIDAK MASUK')->count();
-                $count_sakit = MappingShift::where('user_id', $user_login)->whereMonth('tanggal_masuk', $request->filter_month)->where('status_absen', 'TIDAK HADIR KERJA')->where('keterangan_absensi', 'IZIN SAKIT')->count();
+                $count_absen_hadir = MappingShift::where('karyawan_id', $user_login)->whereMonth('tanggal_masuk', $request->filter_month)->where('status_absen', 'HADIR KERJA')->count();
+                $count_telat = MappingShift::where('karyawan_id', $user_login)->whereMonth('tanggal_masuk', $request->filter_month)->where('keterangan_absensi', 'TELAT HADIR')->where('status_absen', 'HADIR KERJA')->count();
+                $count_izin = MappingShift::where('karyawan_id', $user_login)->whereMonth('tanggal_masuk', $request->filter_month)->where('status_absen', 'TIDAK HADIR KERJA')->where('keterangan_absensi', 'IZIN TIDAK MASUK')->count();
+                $count_sakit = MappingShift::where('karyawan_id', $user_login)->whereMonth('tanggal_masuk', $request->filter_month)->where('status_absen', 'TIDAK HADIR KERJA')->where('keterangan_absensi', 'IZIN SAKIT')->count();
                 // dd($count_absen_hadir);
             } else {
-                $count_absen_hadir = MappingShift::where('user_id', $user_login)->whereMonth('tanggal_masuk', $blnskrg)->where('status_absen', 'HADIR KERJA')->count();
-                $count_telat = MappingShift::where('user_id', $user_login)->whereMonth('tanggal_masuk', $blnskrg)->where('keterangan_absensi', 'TELAT HADIR')->where('status_absen', 'HADIR KERJA')->count();
-                $count_izin = MappingShift::where('user_id', $user_login)->whereMonth('tanggal_masuk', $blnskrg)->where('status_absen', 'TIDAK HADIR KERJA')->where('keterangan_absensi', 'IZIN TIDAK MASUK')->count();
-                $count_sakit = MappingShift::where('user_id', $user_login)->whereMonth('tanggal_masuk', $blnskrg)->where('status_absen', 'TIDAK HADIR KERJA')->where('keterangan_absensi', 'IZIN SAKIT')->count();
+                $count_absen_hadir = MappingShift::where('karyawan_id', $user_login)->whereMonth('tanggal_masuk', $blnskrg)->where('status_absen', 'HADIR KERJA')->count();
+                $count_telat = MappingShift::where('karyawan_id', $user_login)->whereMonth('tanggal_masuk', $blnskrg)->where('keterangan_absensi', 'TELAT HADIR')->where('status_absen', 'HADIR KERJA')->count();
+                $count_izin = MappingShift::where('karyawan_id', $user_login)->whereMonth('tanggal_masuk', $blnskrg)->where('status_absen', 'TIDAK HADIR KERJA')->where('keterangan_absensi', 'IZIN TIDAK MASUK')->count();
+                $count_sakit = MappingShift::where('karyawan_id', $user_login)->whereMonth('tanggal_masuk', $blnskrg)->where('status_absen', 'TIDAK HADIR KERJA')->where('keterangan_absensi', 'IZIN SAKIT')->count();
             }
         }
         $result = [
@@ -1239,9 +1240,9 @@ class HomeUserController extends Controller
         if ($request->ajax()) {
             if (!empty($request->filter_month)) {
                 if ($request->filter_month == $blnskrg) {
-                    $data = MappingShift::where('user_id', $user_login)->whereMonth('tanggal_masuk', $blnskrg)->whereBetween('tanggal_masuk', array($dateweek, $datenow))->get();
+                    $data = MappingShift::where('karyawan_id', $user_login)->whereMonth('tanggal_masuk', $blnskrg)->whereBetween('tanggal_masuk', array($dateweek, $datenow))->get();
                 } else {
-                    $data = MappingShift::where('user_id', $user_login)->whereMonth('tanggal_masuk', $request->filter_month)->limit(7)->orderBy('tanggal_masuk', 'DESC')->get();
+                    $data = MappingShift::where('karyawan_id', $user_login)->whereMonth('tanggal_masuk', $request->filter_month)->limit(7)->orderBy('tanggal_masuk', 'DESC')->get();
                 }
                 return DataTables::of($data)->addIndexColumn()
                     ->addColumn('tanggal_masuk', function ($row) {
@@ -1293,7 +1294,7 @@ class HomeUserController extends Controller
                     ->rawColumns(['tanggal_masuk', 'jam_absen', 'jam_pulang', 'keterangan'])
                     ->make(true);
             } else {
-                $data = MappingShift::where('user_id', $user_login)->whereMonth('tanggal_masuk', $blnskrg)->whereBetween('tanggal_masuk', array($dateweek, $datenow))->orderBy('tanggal_masuk', 'DESC')->get();
+                $data = MappingShift::where('karyawan_id', $user_login)->whereMonth('tanggal_masuk', $blnskrg)->whereBetween('tanggal_masuk', array($dateweek, $datenow))->orderBy('tanggal_masuk', 'DESC')->get();
                 // dd($data);
                 return DataTables::of($data)
                     ->addColumn('tanggal_masuk', function ($row) {
@@ -1362,38 +1363,38 @@ class HomeUserController extends Controller
         $tglskrg = date('Y-m-d');
         $tglkmrn = date('Y-m-d', strtotime('-1 days'));
         $tidak_masuk = MappingShift::where('status_absen', 'TIDAK HADIR KERJA')
-            ->where('user_id', $user_login)
+            ->where('karyawan_id', $user_login)
             ->select(DB::raw("COUNT(*) as count"))
             ->whereYear('tanggal_masuk', date('Y'))
             ->groupBy(DB::raw("Month(tanggal_masuk)"))
             ->pluck('count');
         $masuk = MappingShift::where('mapping_shifts.status_absen', 'HADIR KERJA')
-            ->where('user_id', $user_login)
+            ->where('karyawan_id', $user_login)
             ->select(DB::raw("COUNT(mapping_shifts.tanggal_masuk) as count"))
             ->whereYear('tanggal_masuk', date('Y'))
             ->groupBy(DB::raw("Month(tanggal_masuk)"))
             ->pluck('count');
         $telat = MappingShift::where('status_absen', 'HADIR KERJA')
             ->where('keterangan_absensi', 'TELAT HADIR')
-            ->where('user_id', $user_login)
+            ->where('karyawan_id', $user_login)
             ->select(DB::raw("COUNT(*) as count"))
             ->whereYear('tanggal_masuk', date('Y'))
             ->groupBy(DB::raw("Month(tanggal_masuk)"))
             ->pluck('count');
         // dd();
 
-        $get_mapping = MappingShift::where('user_id', $user_login)->where('tanggal_masuk', $tglkmrn)->first();
+        $get_mapping = MappingShift::where('karyawan_id', $user_login)->where('tanggal_masuk', $tglkmrn)->first();
         if ($get_mapping == '' || $get_mapping == NULL) {
             $tanggal = $tglskrg;
-            $mapping_shift = MappingShift::where('user_id', $user_login)->where('tanggal_masuk', $tanggal)->first();
+            $mapping_shift = MappingShift::where('karyawan_id', $user_login)->where('tanggal_masuk', $tanggal)->first();
         } else {
             $tanggal = $tglkmrn;
-            $mapping_shift = MappingShift::where('user_id', $user_login)->where('tanggal_masuk', $tanggal)->first();
+            $mapping_shift = MappingShift::where('karyawan_id', $user_login)->where('tanggal_masuk', $tanggal)->first();
         }
 
         date_default_timezone_set('Asia/Jakarta');
         $tglskrg = date('Y-m-d');
-        $data_absen = MappingShift::where('tanggal_masuk', $tglskrg)->where('user_id', $user_karyawan->id);
+        $data_absen = MappingShift::where('tanggal_masuk', $tglskrg)->where('karyawan_id', $user_karyawan->id);
 
         if ($request["mulai"] == null) {
             $request["mulai"] = $request["akhir"];
@@ -1404,7 +1405,7 @@ class HomeUserController extends Controller
         }
 
         if ($request["mulai"] && $request["akhir"]) {
-            $data_absen = MappingShift::where('user_id', $user_karyawan->id)->whereBetween('tanggal_masuk', [$request["mulai"], $request["akhir"]]);
+            $data_absen = MappingShift::where('karyawan_id', $user_karyawan->id)->whereBetween('tanggal_masuk', [$request["mulai"], $request["akhir"]]);
         }
         // dd($mapping_shift);
         if ($mapping_shift == NULL) {
@@ -1422,13 +1423,13 @@ class HomeUserController extends Controller
             if ($hours_1_pulang > $timenow) {
                 // dd('1');
                 // dd('oke');
-                $status_absen_skrg = MappingShift::where('user_id', $user_login)->where('tanggal_masuk', $tglkmrn)->orderBy('tanggal_masuk', 'DESC')->first();
+                $status_absen_skrg = MappingShift::where('karyawan_id', $user_login)->where('tanggal_masuk', $tglkmrn)->orderBy('tanggal_masuk', 'DESC')->first();
             } else {
                 // dd('2');
-                $status_absen_skrg = MappingShift::where('user_id', $user_login)->where('tanggal_masuk', $tglskrg)->orderBy('tanggal_masuk', 'DESC')->first();
+                $status_absen_skrg = MappingShift::where('karyawan_id', $user_login)->where('tanggal_masuk', $tglskrg)->orderBy('tanggal_masuk', 'DESC')->first();
             }
         } else {
-            $status_absen_skrg = MappingShift::where('user_id', $user_login)->where('tanggal_masuk', $tglskrg)->orderBy('tanggal_masuk', 'DESC')->first();
+            $status_absen_skrg = MappingShift::where('karyawan_id', $user_login)->where('tanggal_masuk', $tglskrg)->orderBy('tanggal_masuk', 'DESC')->first();
             // dd($status_absen_skrg);
         }
         // dd($status_absen_skrg->status_absen);
@@ -1440,7 +1441,7 @@ class HomeUserController extends Controller
             $request->session()->flash('jam_kerja_libur');
             return redirect('home');
         }
-        $cek_jam_maks_kerja = MappingShift::With('Shift')->where('user_id', $user_login)->where('tanggal_masuk', $tglskrg)->first();
+        $cek_jam_maks_kerja = MappingShift::With('Shift')->where('karyawan_id', $user_login)->where('tanggal_masuk', $tglskrg)->first();
         $time_now = date('H:i:s');
         // dd($cek_jam_maks_kerja->Shift->jam_keluar);
         $date1          = new DateTime($cek_jam_maks_kerja->tanggal_masuk . $cek_jam_maks_kerja->Shift->jam_keluar);
@@ -1470,7 +1471,7 @@ class HomeUserController extends Controller
                     'face' => Karyawan::where('id', $user_login)->whereNotNull('face_id')->select('id', 'name', 'face_id')->get(),
                     'karyawan' => Karyawan::where('id', $user_login)->whereNotNull('face_id')->select('id', 'name', 'face_id')->get(),
                     'angka' => 1,
-                    'absensi' => MappingShift::where('tanggal_masuk', date('Y-m-d'))->where('user_id', $user_login)->get(),
+                    'absensi' => MappingShift::where('tanggal_masuk', date('Y-m-d'))->where('karyawan_id', $user_login)->get(),
                     'jumlah_absensi' => 1,
                     'faceid' => Karyawan::where('id', $user_login)->value('face_id'),
 
@@ -1493,7 +1494,7 @@ class HomeUserController extends Controller
                         'face' => Karyawan::where('id', $user_login)->whereNotNull('face_id')->select('id', 'name', 'face_id')->get(),
                         'karyawan' => Karyawan::where('id', $user_login)->whereNotNull('face_id')->select('id', 'name', 'face_id')->get(),
                         'angka' => 1,
-                        'absensi' => MappingShift::where('tanggal_masuk', date('Y-m-d'))->where('user_id', $user_login)->get(),
+                        'absensi' => MappingShift::where('tanggal_masuk', date('Y-m-d'))->where('karyawan_id', $user_login)->get(),
                         'jumlah_absensi' => 1,
                         'faceid' => Karyawan::where('id', $user_login)->value('face_id'),
                     ]);
@@ -1528,7 +1529,7 @@ class HomeUserController extends Controller
                 'face' => Karyawan::where('id', $user_login)->whereNotNull('face_id')->select('id', 'name', 'face_id')->get(),
                 'karyawan' => Karyawan::where('id', $user_login)->whereNotNull('face_id')->select('id', 'name', 'face_id')->get(),
                 'angka' => 1,
-                'absensi' => MappingShift::where('tanggal_masuk', date('Y-m-d'))->where('user_id', $user_login)->get(),
+                'absensi' => MappingShift::where('tanggal_masuk', date('Y-m-d'))->where('karyawan_id', $user_login)->get(),
                 'jumlah_absensi' => 1,
                 'faceid' => Karyawan::where('id', $user_login)->value('face_id'),
             ]);
@@ -1555,7 +1556,7 @@ class HomeUserController extends Controller
                 $request->session()->flash('penugasan_wilayah_kantor');
                 return redirect('/home');
             } else {
-                $jam_kerja = MappingShift::with('Shift')->where('user_id', $user_karyawan->id)->where('tanggal_masuk', date('Y-m-d'))->first();
+                $jam_kerja = MappingShift::with('Shift')->where('karyawan_id', $user_karyawan->id)->where('tanggal_masuk', date('Y-m-d'))->first();
                 if ($jam_kerja == '' || $jam_kerja == NULL) {
                     $request->session()->flash('mapping_kosong');
                     return redirect('/izin/dashboard');
@@ -1934,7 +1935,7 @@ class HomeUserController extends Controller
                         $telat = $jml_all;
                         $site_job = $user_karyawan->site_job;
                         $lokasi_site_job = Lokasi::where('lokasi_kantor', $site_job)->first();
-                        $jam_kerja = MappingShift::with('Shift')->where('user_id', $user_karyawan->id)->where('tanggal_masuk', date('Y-m-d'))->first();
+                        $jam_kerja = MappingShift::with('Shift')->where('karyawan_id', $user_karyawan->id)->where('tanggal_masuk', date('Y-m-d'))->first();
                         // dd($jam_kerja);
                         $kontrak = $user_karyawan->kontrak_kerja;
                         // dd($user);
@@ -4869,7 +4870,7 @@ class HomeUserController extends Controller
         }
 
         if ($request["user_id"] && $request["mulai"] && $request["akhir"]) {
-            $data_absen = MappingShift::where('user_id', $request["user_id"])->whereBetween('tanggal_masuk', [$request["mulai"], $request["akhir"]]);
+            $data_absen = MappingShift::where('karyawan_id', $request["user_id"])->whereBetween('tanggal_masuk', [$request["mulai"], $request["akhir"]]);
         }
 
         return view('absen.dataabsen', [
@@ -5049,7 +5050,7 @@ class HomeUserController extends Controller
         $tanggal = "";
         $tglskrg = date('Y-m-d');
         $tglkmrn = date('Y-m-d', strtotime('-1 days'));
-        $mapping_shift = MappingShift::where('user_id', $user_login)->where('tanggal_masuk', $tglkmrn)->get();
+        $mapping_shift = MappingShift::where('karyawan_id', $user_login)->where('tanggal_masuk', $tglkmrn)->get();
         $tidak_masuk = MappingShift::where('status_absen', 'Tidak Masuk')
             ->where('user_id', $user_login)
             ->select(DB::raw("COUNT(*) as count"))
@@ -5121,12 +5122,12 @@ class HomeUserController extends Controller
         }
 
         if ($request["mulai"] && $request["akhir"]) {
-            $data_absen = MappingShift::where('user_id', auth()->user()->id)->whereBetween('tanggal_masuk', [$request["mulai"], $request["akhir"]]);
+            $data_absen = MappingShift::where('karyawan_id', auth()->user()->id)->whereBetween('tanggal_masuk', [$request["mulai"], $request["akhir"]]);
         }
 
         return view('absen.myabsen', [
             'title' => 'My Absen',
-            'shift_karyawan' => MappingShift::where('user_id', $user_login)->where('tanggal_masuk', $tanggal)->get(),
+            'shift_karyawan' => MappingShift::where('karyawan_id', $user_login)->where('tanggal_masuk', $tanggal)->get(),
             'data_absen' => $data_absen->get(),
             'masuk' => array_map('intval', json_decode($masuk)),
             'tidak_masuk' => array_map('intval', json_decode($tidak_masuk)),
