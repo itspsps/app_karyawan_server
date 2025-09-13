@@ -34,7 +34,7 @@
                                             class="form-control" required>
                                         <input type="hidden" name="id_soal" value="{{ $ujian->id }}">
                                         <input type="hidden" name="kode" value="{{ $ujian->kode }}">
-                                        <input type="hidden" name="holding" value="{{ $holding }}">
+                                        <input type="hidden" name="holding" value="{{ $holding->holding_code }}">
 
                                     </div>
                                 </div>

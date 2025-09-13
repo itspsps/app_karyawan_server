@@ -161,7 +161,7 @@
         .timeline-centered .timeline-entry {
             position: relative;
             /*width: 50%;
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            float: right;*/
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        float: right;*/
             margin-top: 5px;
             margin-left: 30px;
             margin-bottom: 10px;
@@ -726,6 +726,28 @@
             </div>
         </div>
     </div>
+    <div class="modal fade" id="modal_integrasi" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Integrasi ke Data Karyawan</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" id="id_integrasi" name="id">
+                    <select class="form-select @error('online') is-invalid @enderror" id="pilihan_add" name="pilihan"
+                        autofocus value="{{ old('online') }}">
+                        <option value="1" selected>YA</option>
+                        <option value="2">TIDAK</option>
+                    </select>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                    <button type="button" class="btn btn-primary" id="btn_save_integrasi">submit</button>
+                </div>
+            </div>
+        </div>
+    </div>
 @endsection
 @section('js')
     <script src="https://cdn.datatables.net/2.0.5/js/dataTables.js"></script>
@@ -885,6 +907,13 @@
             var id = $(this).data('id');
             $('#id_pindah').val(id);
             $('#modal_pindah').modal('show');
+
+        });
+        $(document).on('click', '#btn_integrasi', function() {
+            console.log('asooy44');
+            var id = $(this).data('id');
+            $('#id_integrasi').val(id);
+            $('#modal_integrasi').modal('show');
 
         });
         $('#btn_save_status').on('click', function(e) {
@@ -1098,6 +1127,64 @@
                             timer: 10000
                         })
                         $('#modal_pindah').modal('hide');
+                    }
+                }
+
+            });
+        });
+        $('#btn_save_integrasi').on('click', function(e) {
+            e.preventDefault();
+            var formData = new FormData();
+
+            formData.append('_token', '{{ csrf_token() }}');
+            formData.append('id', $('#id_integrasi').val());
+            formData.append('pilihan', $('#pilihan_add').val());
+            $.ajax({
+                type: "POST",
+                url: "{{ url('/dt/data-interview/integrasi') }}",
+                data: formData,
+                contentType: false,
+                processData: false,
+                error: function() {
+                    alert('Something is wrong');
+                    // console.log(formData);
+                },
+                success: function(data) {
+                    if (data.code == 200) {
+                        Swal.fire({
+                            title: 'Berhasil',
+                            text: data.message,
+                            icon: 'success',
+                            timer: 5000
+                        })
+                        //mengosongkan modal dan menyembunyikannya
+                        $('#modal_integrasi').modal('hide');
+                        $('#tabel_progres').DataTable().ajax.reload();
+                    } else if (data.code == 400) {
+                        let errors = data.errors;
+                        // console.log(errors);
+                        let errorMessages = '';
+
+                        Object.keys(errors).forEach(function(key) {
+                            errors[key].forEach(function(message) {
+                                errorMessages += `• ${message}\n`;
+                            });
+                        });
+                        Swal.fire({
+                            // title: data.message,
+                            text: errorMessages,
+                            icon: 'warning',
+                            timer: 4500
+                        })
+
+                    } else {
+                        Swal.fire({
+                            title: 'Gagal',
+                            text: data.error,
+                            icon: 'error',
+                            timer: 10000
+                        })
+                        $('#modal_lolos').modal('hide');
                     }
                 }
 

@@ -24,6 +24,7 @@ use App\Models\DetailEssay;
 use App\Models\Holding;
 use App\Models\InterviewAdmin;
 use App\Models\InterviewUser;
+use App\Models\Karyawan;
 use App\Models\Pembobotan;
 use App\Models\RecruitmentCV;
 use App\Models\RecruitmentKeahlian;
@@ -37,6 +38,7 @@ use App\Models\RecruitmentUserRecord;
 use App\Models\Site;
 use App\Models\UjianEsaiJawabDetail;
 use App\Models\UjianKategori;
+use App\Models\UsersCareer;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Ramsey\Uuid\Uuid;
@@ -1544,6 +1546,59 @@ selamat Anda lolos bekerja
             ]);
         }
     }
+    public function user_integrasi(Request $request)
+    {
+        try {
+            if ($request->pilihan == '1') {
+                $validator = Validator::make(
+                    $request->all(),
+                    [
+                        'pilihan' => 'required',
+                    ],
+                    [
+                        'required' => ':attribute tidak boleh kosong'
+                    ]
+                );
+                if ($validator->fails()) {
+                    return response()->json([
+                        'code' => 400,
+                        'message' => 'Validasi gagal',
+                        'errors' => $validator->errors()
+                    ]);
+                }
+                // dd($request->all());
+                $get_recruitment_user = RecruitmentUser::where('id', $request->id)->first();
+                $get_user = UsersCareer::where('id', $get_recruitment_user->users_career_id)->first();
+                $get_cv = RecruitmentCV::where('users_career_id', $get_user->id)->first();
+                // dd($get_cv);
+                Karyawan::insert(
+
+                    [
+                        'id'                        => Uuid::uuid4(),
+                        'name'                      => $get_cv->nama_lengkap,
+                    ]
+                );
+                // RecruitmentUserRecord::insert(
+                //     [
+                //         'id'                        => Uuid::uuid4(),
+                //         'recruitment_user_id'       => $request->id,
+                //         'status'                    => $request->status,
+                //         'created_at'                => date('Y-m-d H:i:s'),
+                //     ]
+                // );
+            }
+
+            return response()->json([
+                'code' => 200,
+                'message' => 'Data Berhasil Diupdate'
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'code' => 500,
+                'error' => $e->getMessage(),
+            ]);
+        }
+    }
     function pg_list_interview($id)
     {
         $holding = request()->segment(count(request()->segments()));
@@ -1852,12 +1907,12 @@ selamat Anda lolos bekerja
         return redirect()->back()->with('success', 'Data Berhasil di Dibuat');
     }
 
-    function pg_ujian()
+    function pg_ujian($holding)
     {
-        $holding = request()->segment(count(request()->segments()));
+        $holdings = Holding::where('holding_code', $holding)->first();
         $pembobotan = Pembobotan::first();
         return view('admin.recruitment-users.ujian.data_ujian', [
-            'holding' => $holding,
+            'holding' => $holdings,
             'title' => 'Data Ujian',
             'plugin' => '
                 <link rel="stylesheet" type="text/css" href="' . url("/public/assets/cbt-malela/plugins/table/datatable/datatables.css") . '">
@@ -1914,42 +1969,42 @@ selamat Anda lolos bekerja
             ]);
         }
     }
-    // function dt_pembobotan()
-    // {
-    //     $data = Pembobotan::get();
-    //     if (request()->ajax()) {
-    //         return DataTables::of($data)
-    //             ->addColumn('esai', function ($row) {
-    //                 return $row->esai . '%';
-    //             })
-    //             ->addColumn('pilihan_ganda', function ($row) {
-    //                 return $row->pilihan_ganda . '%';
-    //             })
-    //             ->addColumn('interview', function ($row) {
-    //                 return $row->interview . '%';
-    //             })
-    //             ->addColumn('interview_user', function ($row) {
-    //                 return $row->interview_user . '%';
-    //             })
-    //             ->addColumn('option', function ($row) {
-    //                 return '
-    //                     <button type="button" id="btn_modal_pembobotan"
-    //                         data-pembobotan_id="' . $row->pembobotan_id . '"
-    //                         data-esai="' . $row->esai . '"
-    //                         data-pilihan_ganda="' . $row->pilihan_ganda . '"
-    //                         data-interview="' . $row->interview . '"
-    //                         data-interview_user="' . $row->interview_user . '"
-    //                         class="btn btn-icon btn-info waves-effect waves-light">
-    //                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
-    //                         <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
-    //                         <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"/>
-    //                         </svg>
-    //                     </button>';
-    //             })
-    //             ->rawColumns(['esai', 'pilihan_ganda', 'interview', 'option'])
-    //             ->make(true);
-    //     }
-    // }
+    function dt_pembobotan()
+    {
+        $data = Pembobotan::get();
+        if (request()->ajax()) {
+            return DataTables::of($data)
+                ->addColumn('esai', function ($row) {
+                    return $row->esai . '%';
+                })
+                ->addColumn('pilihan_ganda', function ($row) {
+                    return $row->pilihan_ganda . '%';
+                })
+                ->addColumn('interview', function ($row) {
+                    return $row->interview . '%';
+                })
+                ->addColumn('interview_user', function ($row) {
+                    return $row->interview_user . '%';
+                })
+                ->addColumn('option', function ($row) {
+                    return '
+                        <button type="button" id="btn_modal_pembobotan"
+                            data-pembobotan_id="' . $row->pembobotan_id . '"
+                            data-esai="' . $row->esai . '"
+                            data-pilihan_ganda="' . $row->pilihan_ganda . '"
+                            data-interview="' . $row->interview . '"
+                            data-interview_user="' . $row->interview_user . '"
+                            class="btn btn-icon btn-info waves-effect waves-light">
+                           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
+                            <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
+                            <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"/>
+                            </svg>
+                        </button>';
+                })
+                ->rawColumns(['esai', 'pilihan_ganda', 'interview', 'option'])
+                ->make(true);
+        }
+    }
 
 
     function dt_ujian()
@@ -2425,29 +2480,29 @@ selamat Anda lolos bekerja
         }
     }
 
-    function show_ujian(Ujian $ujian)
-    {
-        // dd($ujian);
-        $holding = request()->segment(count(request()->segments()));
+    // function show_ujian(Ujian $ujian)
+    // {
+    //     // dd($ujian);
+    //     $holding = request()->segment(count(request()->segments()));
 
-        return view('admin.recruitment-users.ujian.data_show', [
-            'title' => 'Detail Ujian Pilihan Ganda',
-            'plugin' => '
-                <link href="' . url("/public/assets/ew/css/style.css") . '" rel="stylesheet" type="text/css" />
-                <script src="' . url("/public/assets/ew/js/examwizard.js") . '"></script>
-            ',
-            'menu' => [
-                'menu' => 'ujian',
-                'expanded' => 'ujian'
-            ],
-            'ujian' => $ujian,
-            'holding' => $holding
-        ]);
-    }
-    function edit_ujian($kode)
+    //     return view('admin.recruitment-users.ujian.data_show', [
+    //         'title' => 'Detail Ujian Pilihan Ganda',
+    //         'plugin' => '
+    //             <link href="' . url("/public/assets/ew/css/style.css") . '" rel="stylesheet" type="text/css" />
+    //             <script src="' . url("/public/assets/ew/js/examwizard.js") . '"></script>
+    //         ',
+    //         'menu' => [
+    //             'menu' => 'ujian',
+    //             'expanded' => 'ujian'
+    //         ],
+    //         'ujian' => $ujian,
+    //         'holding' => $holding
+    //     ]);
+    // }
+    function edit_ujian($kode, $holding)
     {
         // dd($ujian);
-        $holding = request()->segment(count(request()->segments()));
+        $holdings = Holding::where('holding_code', $holding)->first();
         $ujian = Ujian::where('kode', $kode)->with([
             'ujianKategori' => function ($query) {
                 $query;
@@ -2467,7 +2522,7 @@ selamat Anda lolos bekerja
             ],
             'ujian' => $ujian,
             'detail_ujian' => $detail_ujian,
-            'holding' => $holding,
+            'holding' => $holdings,
             'kategori' =>  UjianKategori::get(),
             'pembobotan' =>  Pembobotan::first()
         ]);
@@ -2522,11 +2577,11 @@ selamat Anda lolos bekerja
         ]);
     }
 
-    function pg_ujian_pg()
+    function pg_ujian_pg($holding)
     {
-        $holding = request()->segment(count(request()->segments()));
+        $holdings = Holding::where('holding_code', $holding)->first();
         return view('admin.recruitment-users.ujian.data_ujian_create', [
-            'holding'   => $holding,
+            'holding'   => $holdings,
             'title' => 'Tambah Ujian Pilihan Ganda',
             'plugin' => '
                 <link href="' . asset("/assets/cbt-malela/plugins/file-upload/file-upload-with-preview.min.css") . '" rel="stylesheet" type="text/css" />
@@ -2542,11 +2597,11 @@ selamat Anda lolos bekerja
             'pembobotan' =>  Pembobotan::first()
         ]);
     }
-    function pg_esai_pg()
+    function pg_esai_pg($holding)
     {
-        $holding = request()->segment(count(request()->segments()));
+        $holdings = Holding::where('holding_code', $holding)->first();
         return view('admin.recruitment-users.ujian.data_esai_create', [
-            'holding'   => $holding,
+            'holding'   => $holdings,
             'title' => 'Tambah Ujian Pilihan Ganda',
             'plugin' => '
                 <link href="' . asset("/assets/cbt-malela/plugins/file-upload/file-upload-with-preview.min.css") . '" rel="stylesheet" type="text/css" />
@@ -3227,14 +3282,14 @@ selamat Anda lolos bekerja
                     } elseif ($row->status_lanjutan == '2b' && $row->feedback_lanjutan == '2b') {
                         return   '<button
                                 data-id="' . $row->id . '"
-                                type="button" class="btn btn-sm btn-success " id="btn_pemindahan">
+                                type="button" class="btn btn-sm btn-success " id="btn_integrasi">
                                 <i class="tf-icons mdi mdi-eye-circle-outline me-1"></i>
                                 Masukkan&nbspDatabase&nbspKaryawan
                             </button>';
                     } elseif ($row->status_lanjutan == '7b' && $row->feedback_lanjutan == '2b') {
                         return   '<button
                                 data-id="' . $row->id . '"
-                                type="button" class="btn btn-sm btn-success " id="btn_pemindahan">
+                                type="button" class="btn btn-sm btn-success " id="btn_integrasi">
                                 <i class="tf-icons mdi mdi-eye-circle-outline me-1"></i>
                                 Masukkan&nbspDatabase&nbspKaryawan
                             </button>';

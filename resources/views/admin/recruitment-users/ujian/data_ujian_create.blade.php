@@ -32,7 +32,7 @@
                                         <label for="">Nama Ujian / Quiz</label>
                                         <input type="text" name="nama_ujian" class="form-control" required>
                                         <input type="hidden" name="esai" value="0" class="form-control" required>
-                                        <input type="hidden" name="holding" value="{{ $holding }}">
+                                        <input type="hidden" name="holding" value="{{ $holding->holding_code }}">
                                     </div>
                                 </div>
                                 <div class="col-lg-6">

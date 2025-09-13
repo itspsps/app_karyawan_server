@@ -57,7 +57,7 @@
                             <div class="d-">
                                 <h5 class="card-title m-0 me-2">SOAL UJIAN PILIHAN GANDA</h5>
                             </div>
-                            <a href="{{ url('/pg-data-ujian/ujian_pg/' . $holding) }}" type="button"
+                            <a href="{{ url('/pg-data-ujian/ujian_pg/' . $holding->holding_code) }}" type="button"
                                 class="btn btn-sm btn-primary waves-effect waves-light my-3"><i
                                     class="menu-icon tf-icons mdi mdi-plus"></i>Tambah</a>
                             <table class="table" id="table_ujian" style="width: 100%;">
@@ -83,7 +83,7 @@
                             <div class="d-">
                                 <h5 class="card-title m-0 me-2">SOAL UJIAN ESAI</h5>
                             </div>
-                            <a href="{{ url('/pg-data-ujian/ujian_pg_esai/' . $holding) }}" type="button"
+                            <a href="{{ url('/pg-data-ujian/ujian_pg_esai/' . $holding->holding_code) }}" type="button"
                                 class="btn btn-sm btn-primary waves-effect waves-light my-3"><i
                                     class="menu-icon tf-icons mdi mdi-plus"></i>Tambah</a>
                             <table class="table" id="table_esai" style="width: 100%;">
