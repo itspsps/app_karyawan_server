@@ -908,6 +908,7 @@ Route::get('/dt/data-get_pg_interview/{id}/{id_user}/{holding}', [UjianUserContr
 
 Route::post('/dt/data-interview/presensi_recruitment_update', [RecruitmentController::class, 'presensi_recruitment_update'])->middleware('admin');
 Route::post('/dt/data-interview/ranking_update_status', [RecruitmentController::class, 'ranking_update_status'])->middleware('admin');
+Route::post('/dt/data-interview/integrasi', [RecruitmentController::class, 'user_integrasi'])->middleware('admin');
 
 Route::get('/pg/data-list-interview/{id?}/sp', [RecruitmentController::class, 'pg_list_interview'])->middleware('admin');
 Route::get('/pg/data-list-interview/{id?}/sps', [RecruitmentController::class, 'pg_list_interview'])->middleware('admin');

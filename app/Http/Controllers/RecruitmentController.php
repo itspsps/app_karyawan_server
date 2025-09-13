@@ -24,6 +24,7 @@ use App\Models\DetailEssay;
 use App\Models\Holding;
 use App\Models\InterviewAdmin;
 use App\Models\InterviewUser;
+use App\Models\Karyawan;
 use App\Models\Pembobotan;
 use App\Models\RecruitmentCV;
 use App\Models\RecruitmentKeahlian;
@@ -37,6 +38,7 @@ use App\Models\RecruitmentUserRecord;
 use App\Models\Site;
 use App\Models\UjianEsaiJawabDetail;
 use App\Models\UjianKategori;
+use App\Models\UsersCareer;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Ramsey\Uuid\Uuid;
@@ -1531,6 +1533,59 @@ selamat Anda lolos bekerja
                 if (isset($error_msg)) {
                     echo $error_msg;
                 }
+            }
+
+            return response()->json([
+                'code' => 200,
+                'message' => 'Data Berhasil Diupdate'
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'code' => 500,
+                'error' => $e->getMessage(),
+            ]);
+        }
+    }
+    public function user_integrasi(Request $request)
+    {
+        try {
+            if ($request->pilihan == '1') {
+                $validator = Validator::make(
+                    $request->all(),
+                    [
+                        'pilihan' => 'required',
+                    ],
+                    [
+                        'required' => ':attribute tidak boleh kosong'
+                    ]
+                );
+                if ($validator->fails()) {
+                    return response()->json([
+                        'code' => 400,
+                        'message' => 'Validasi gagal',
+                        'errors' => $validator->errors()
+                    ]);
+                }
+                // dd($request->all());
+                $get_recruitment_user = RecruitmentUser::where('id', $request->id)->first();
+                $get_user = UsersCareer::where('id', $get_recruitment_user->users_career_id)->first();
+                $get_cv = RecruitmentCV::where('users_career_id', $get_user->id)->first();
+                // dd($get_cv);
+                Karyawan::insert(
+
+                    [
+                        'id'                        => Uuid::uuid4(),
+                        'name'                      => $get_cv->nama_lengkap,
+                    ]
+                );
+                // RecruitmentUserRecord::insert(
+                //     [
+                //         'id'                        => Uuid::uuid4(),
+                //         'recruitment_user_id'       => $request->id,
+                //         'status'                    => $request->status,
+                //         'created_at'                => date('Y-m-d H:i:s'),
+                //     ]
+                // );
             }
 
             return response()->json([
@@ -3227,14 +3282,14 @@ selamat Anda lolos bekerja
                     } elseif ($row->status_lanjutan == '2b' && $row->feedback_lanjutan == '2b') {
                         return   '<button
                                 data-id="' . $row->id . '"
-                                type="button" class="btn btn-sm btn-success " id="btn_pemindahan">
+                                type="button" class="btn btn-sm btn-success " id="btn_integrasi">
                                 <i class="tf-icons mdi mdi-eye-circle-outline me-1"></i>
                                 Masukkan&nbspDatabase&nbspKaryawan
                             </button>';
                     } elseif ($row->status_lanjutan == '7b' && $row->feedback_lanjutan == '2b') {
                         return   '<button
                                 data-id="' . $row->id . '"
-                                type="button" class="btn btn-sm btn-success " id="btn_pemindahan">
+                                type="button" class="btn btn-sm btn-success " id="btn_integrasi">
                                 <i class="tf-icons mdi mdi-eye-circle-outline me-1"></i>
                                 Masukkan&nbspDatabase&nbspKaryawan
                             </button>';
