@@ -162,12 +162,14 @@ class ReportController extends Controller
         // dd(request()->ajax());
         if (request()->ajax()) {
             $query = Karyawan::with(['Absensi' => function ($q) use ($now, $now1) {
-                $q->whereBetween('LogTime', [$now, $now1]);
+                $q->whereBetween('LogTime', [$now, $now1])
+                    ->select('EnrollNumber', 'LogTime'); // supaya jelas field yg dibawa
             }])
                 ->with(['MappingShift' => function ($q) use ($now, $now1) {
                     $q->with('Shift');
                     $q->whereBetween('tanggal_masuk', [$now, $now1]);
                 }])->where('kontrak_kerja', $holding->id)
+                ->where('nomor_identitas_karyawan', '=', '2002205090298')
                 ->where('kategori', 'Karyawan Bulanan')
                 ->where('status_aktif', 'AKTIF');
 
@@ -189,6 +191,7 @@ class ReportController extends Controller
             $table = $query->select('karyawans.name', 'karyawans.id', 'karyawans.nomor_identitas_karyawan')
                 ->orderBy('karyawans.name', 'ASC')
                 ->get();
+            // dd($table);
             $column = DataTables::of($table);
             foreach ($period as $date) {
                 $colName = 'tanggal_' . $date->format('dmY');
@@ -231,13 +234,13 @@ class ReportController extends Controller
                             $logs = $row->Absensi->filter(function ($log) use ($data) {
                                 return Carbon::parse($log->LogTime)->isSameDay($data->tanggal_masuk);
                             });
-                            if ($logs) {
-                                $logtime = $logs->LogTime;
+                            if ($logs->isNotEmpty()) {
+                                $logtime  = $logs->min('LogTime'); // ambil check-in paling awal
                                 $check_in = Carbon::parse($logtime)->format('H:i');
                                 $shift    = Carbon::parse($timeplus5)->format('H:i');
 
                                 if ($check_in <= $shift) {
-                                    $row->tepat_waktu += 1;
+                                    $row->tepat_waktu = ($row->tepat_waktu ?? 0) + 1;
                                 }
                             }
                         }
@@ -248,15 +251,18 @@ class ReportController extends Controller
                 return $row->tepat_waktu ?? 0;
             });
             $column->addColumn('total_hadir_telat_hadir', function ($row) use ($now, $now1) {
-                $mapping_shift = MappingShift::with('Shift')->where('karyawan_id', $row->id)->whereBetween('tanggal_masuk', [$now, $now1])->where('status_absen', '!=', 'LIBUR')->get();
+                $mapping_shift = $row->MappingShift;
                 foreach ($mapping_shift as $data) {
                     if ($data->status_absen != 'LIBUR') {
                         if ($data->Shift != NULL) {
                             $plus5  = Carbon::parse($data->tanggal_masuk . ' ' . $data->Shift->jam_masuk)->addMinutes(5)->format('H:i');
                             $plus15 = Carbon::parse($data->tanggal_masuk . ' ' . $data->Shift->jam_masuk)->addMinutes(15)->format('H:i');
-                            $logs = AttendanceLog::where('EnrollNumber', $row->nomor_identitas_karyawan)->whereDate('LogTime', $data->tanggal_masuk)->first();
-                            if ($logs) {
-                                $check_in = Carbon::parse($logs->LogTime)->format('H:i');
+                            $logs = $row->Absensi->filter(function ($log) use ($data) {
+                                return Carbon::parse($log->LogTime)->isSameDay($data->tanggal_masuk);
+                            });
+                            if ($logs->isNotEmpty()) {
+                                $logtime  = $logs->min('LogTime'); // ambil check-in paling awal
+                                $check_in = Carbon::parse($logtime)->format('H:i');
                                 if ($check_in > $plus5 && $check_in <= $plus15) {
                                     $row->telat_ringan += 1;
                                 }
@@ -267,14 +273,17 @@ class ReportController extends Controller
                 return $row->telat_ringan ?? 0;
             });
             $column->addColumn('total_hadir_telat_hadir1', function ($row) use ($now, $now1) {
-                $mapping_shift = MappingShift::with('Shift')->where('karyawan_id', $row->id)->whereBetween('tanggal_masuk', [$now, $now1])->where('status_absen', '!=', 'LIBUR')->get();
+                $mapping_shift = $row->MappingShift;
                 foreach ($mapping_shift as $data) {
                     if ($data->status_absen != 'LIBUR') {
                         if ($data->Shift != NULL) {
                             $plus15 = Carbon::parse($data->tanggal_masuk . ' ' . $data->Shift->jam_masuk)->addMinutes(15)->format('H:i');
-                            $logs = AttendanceLog::where('EnrollNumber', $row->nomor_identitas_karyawan)->whereDate('LogTime', $data->tanggal_masuk)->first();
-                            if ($logs) {
-                                $check_in = Carbon::parse($logs->LogTime)->format('H:i');
+                            $logs = $row->Absensi->filter(function ($log) use ($data) {
+                                return Carbon::parse($log->LogTime)->isSameDay($data->tanggal_masuk);
+                            });
+                            if ($logs->isNotEmpty()) {
+                                $logtime  = $logs->min('LogTime'); // ambil check-in paling awal
+                                $check_in = Carbon::parse($logtime)->format('H:i');
                                 if ($check_in > $plus15) {
                                     $row->telat_berat += 1;
                                 }
@@ -287,41 +296,77 @@ class ReportController extends Controller
             });
             $column->addColumn('total_izin_true', function ($row) use ($now, $now1) {
                 // $id_karyawan = Karyawan::where('nomor_identitas_karyawan', $row->nomor_identitas_karyawan)->value('id');
-                $total_izin_true = MappingShift::where('karyawan_id', $row->id)->whereBetween('tanggal_masuk', [$now, $now1])->where('status_absen', 'TIDAK HADIR KERJA')
-                    ->where(function ($query) {
-                        $query->where('keterangan_absensi', 'IZIN SAKIT')
-                            ->orWhere('keterangan_absensi', 'IZIN TIDAK MASUK');
-                    })->where('keterangan_izin', 'TRUE')
+                $total_izin_true = $row->MappingShift
+                    ->filter(function ($shift) {
+                        return $shift->status_absen === 'TIDAK HADIR KERJA'
+                            && ($shift->keterangan_absensi === 'IZIN SAKIT'
+                                || $shift->keterangan_absensi === 'IZIN TIDAK MASUK')
+                            && $shift->keterangan_izin === 'TRUE';
+                    })
                     ->count();
                 $row->total_izin = $total_izin_true;
                 return $total_izin_true;
             });
             $column->addColumn('total_cuti_true', function ($row) use ($now, $now1) {
-                // $id_karyawan = Karyawan::where('nomor_identitas_karyawan', $row->nomor_identitas_karyawan)->value('id');
-                $total_cuti_true = MappingShift::where('karyawan_id', $row->id)->whereBetween('tanggal_masuk', [$now, $now1])->where('status_absen', 'TIDAK HADIR KERJA')
-                    ->where(function ($query) {
-                        $query->where('keterangan_absensi', 'CUTI');
-                    })->where('keterangan_cuti', 'TRUE')->count();
+                $total_cuti_true = $row->MappingShift
+                    ->filter(function ($shift) {
+                        return $shift->status_absen === 'TIDAK HADIR KERJA'
+                            && $shift->keterangan_absensi === 'CUTI'
+                            && $shift->keterangan_cuti === 'TRUE';
+                    })
+                    ->count();
+
                 $row->total_cuti = $total_cuti_true;
                 return $total_cuti_true;
             });
             $column->addColumn('total_dinas_true', function ($row) use ($now, $now1) {
                 // $id_karyawan = Karyawan::where('nomor_identitas_karyawan', $row->nomor_identitas_karyawan)->value('id');
-                $total_dinas_true = MappingShift::where('karyawan_id', $row->id)->whereBetween('tanggal_masuk', [$now, $now1])->where('status_absen', 'TIDAK HADIR KERJA')
-                    ->where(function ($query) {
-                        $query->where('keterangan_absensi', 'PENUGASAN');
-                    })->where('keterangan_dinas', 'TRUE')->count();
+                $total_dinas_true = $row->MappingShift
+                    ->filter(function ($shift) {
+                        return $shift->status_absen === 'TIDAK HADIR KERJA'
+                            && $shift->keterangan_absensi === 'PENUGASAN'
+                            && $shift->keterangan_dinas === 'TRUE';
+                    })
+                    ->count();
                 $row->total_dinas = $total_dinas_true;
                 return $total_dinas_true;
             });
             $column->addColumn('tidak_hadir_kerja', function ($row) use ($now, $now1) {
-                // $id_karyawan = Karyawan::where('nomor_identitas_karyawan', $row->nomor_identitas_karyawan)->value('id');
-                $tidak_hadir_kerja = MappingShift::where('karyawan_id', $row->id)->whereBetween('tanggal_masuk', [$now, $now1])->where('status_absen', 'TIDAK HADIR KERJA')->where('keterangan_dinas', 'FALSE')->where('keterangan_cuti', 'FALSE')->where('keterangan_izin', 'FALSE')->count();
-                return $tidak_hadir_kerja;
+                $tidak_hadir = 0;
+                $today = Carbon::today();
+                foreach ($row->MappingShift as $data) {
+                    // Kalau bukan libur & ada shift
+                    if (Carbon::parse($data->tanggal_masuk)->gt($today)) {
+                        continue;
+                    }
+                    if ($data->status_absen != 'LIBUR' && $data->Shift) {
+
+                        // Cek log absensi pada tanggal itu
+                        $logs = $row->Absensi->filter(function ($log) use ($data) {
+                            return Carbon::parse($log->LogTime)
+                                ->isSameDay($data->tanggal_masuk);
+                        });
+
+                        // Kalau kosong → tidak hadir
+                        if ($logs->isEmpty()) {
+                            $tidak_hadir++;
+                        }
+                    }
+                }
+                $row->tidak_hadir = $tidak_hadir;
+                return $tidak_hadir;
             });
             $column->addColumn('total_libur', function ($row) use ($now, $now1) {
-                // $id_karyawan = Karyawan::where('nomor_identitas_karyawan', $row->nomor_identitas_karyawan)->value('id');
-                $total_libur = MappingShift::where('karyawan_id', $row->id)->whereBetween('tanggal_masuk', [$now, $now1])->where('status_absen', 'LIBUR')->count();
+                $today = Carbon::today();
+
+                // ambil hanya libur yang <= hari ini
+                $total_libur = $row->MappingShift
+                    ->filter(function ($shift) use ($today) {
+                        return $shift->status_absen === 'LIBUR'
+                            && Carbon::parse($shift->tanggal_masuk)->lte($today);
+                    })
+                    ->count();
+
                 $row->libur = $total_libur;
                 return $total_libur;
             });
@@ -333,24 +378,7 @@ class ReportController extends Controller
                 $total_libur = $row->libur ?? 0;
                 $total_telat_ringan = $row->telat_ringan ?? 0;
                 $total_dinas_true = $row->total_dinas ?? 0;
-                // cek shift hari ini
-                $shift_today = MappingShift::where('karyawan_id', $row->id)
-                    ->whereDate('tanggal_masuk', $today)
-                    ->where('status_absen', '!=', 'LIBUR')
-                    ->first();
-
-                if ($shift_today) {
-                    // cek log hari ini
-                    $log_today = AttendanceLog::where('EnrollNumber', $row->nomor_identitas_karyawan)
-                        ->whereDate('LogTime', $today)
-                        ->exists();
-
-                    if (! $log_today) {
-                        $row->tidak_masuk += 1; // tambah 1 kalau ada shift tapi tidak ada log
-                    }
-                }
-                $mapping_shift = MappingShift::where('karyawan_id', $row->id)->whereBetween('tanggal_masuk', [$now, $today])->where('status_absen', '!=', 'LIBUR')->count();
-                $total_tidak_hadir = $mapping_shift - ($total_telat_berat + $total_tepat_waktu + $total_telat_ringan + $row->tidak_masuk ?? 0);
+                $total_tidak_hadir = $row->tidak_hadir ?? 0;
                 $total_cuti_true = $row->total_cuti ?? 0;
                 $total_izin_true = $row->total_izin ?? 0;
                 $total_semua = ($total_telat_berat + $total_tepat_waktu + $total_cuti_true + $total_libur + $total_izin_true + $total_dinas_true  + $total_telat_ringan + $total_tidak_hadir);
@@ -783,9 +811,9 @@ class ReportController extends Controller
             ->make(true);
         // }
     }
-    public function get_divisi(Request $request)
+    public function get_divisi(Request $request, $holding)
     {
-        $holding = Holding::where('holding_code', $request->holding)->first();
+        // dd($request->all());
         $id_departemen    = $request->departemen_filter;
         $start_date = Carbon::parse($request->filter_month)->startOfMonth();
         $end_date = Carbon::parse($request->filter_month)->endOfMonth();
@@ -810,11 +838,17 @@ class ReportController extends Controller
             $select = array_merge($select_divisi, $select_divisi1);
         }
         // dd($select);
-        return array('select' => $select, 'data_columns_header' => $data_columns_header, 'count_period' => $count_period, 'datacolumn' => $data_columns, 'filter_month' => $request->filter_month);
+        return array(
+            'select' => $select,
+            'data_columns_header' => $data_columns_header,
+            'count_period' => $count_period,
+            'datacolumn' => $data_columns,
+            'filter_month' => $request->filter_month
+        );
     }
     public function get_bagian(Request $request)
     {
-        // dd($request->holding);
+        // dd($request->all());
         $id_divisi    = $request->divisi_filter;
         $start_date = Carbon::parse($request->filter_month)->startOfMonth();
         $end_date = Carbon::parse($request->filter_month)->endOfMonth();
@@ -837,7 +871,14 @@ class ReportController extends Controller
             }
             $select = array_merge($select_bagian + $select_bagian1);
         }
-        return array('select' => $select, 'data_columns_header' => $data_columns_header, 'count_period' => $count_period, 'datacolumn' => $data_columns, 'filter_month' => $request->filter_month);
+        dd($select_bagian1);
+        return array(
+            'select' => $select,
+            'data_columns_header' => $data_columns_header,
+            'count_period' => $count_period,
+            'datacolumn' => $data_columns,
+            'filter_month' => $request->filter_month
+        );
     }
     public function get_jabatan(Request $request)
     {
