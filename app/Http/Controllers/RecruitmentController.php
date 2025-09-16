@@ -1576,6 +1576,8 @@ selamat Anda lolos bekerja
                     [
                         'id'                        => Uuid::uuid4(),
                         'name'                      => $get_cv->nama_lengkap,
+                        'email'                     => $get_user->email,
+                        'nomor_wa'                  => $get_user->nomor_whatsapp,
                     ]
                 );
                 // RecruitmentUserRecord::insert(
