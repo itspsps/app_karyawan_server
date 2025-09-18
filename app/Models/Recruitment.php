@@ -34,4 +34,12 @@ class Recruitment extends Model
     {
         return $this->belongsTo(Jabatan::class, 'nama_jabatan', 'id');
     }
+    public function Sites(): BelongsTo
+    {
+        return $this->belongsTo(Site::class, 'penempatan', 'id');
+    }
+    public function Holding(): BelongsTo
+    {
+        return $this->belongsTo(Holding::class, 'holding_recruitment', 'id');
+    }
 }
