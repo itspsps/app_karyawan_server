@@ -125,14 +125,14 @@
                                                 @enderror
                                             </div>
                                             <!-- <div class="col-md-6">
-                                                                <div class="form-floating form-floating-outline">
-                                                                    <input style="font-size: small;" class="form-control @error('fullname') is-invalid @enderror" type="text" name="fullname" id="fullname" value="{{ old('fullname', $karyawan->fullname) }}" />
-                                                                    <label for="fullname">Fullname</label>
-                                                                </div>
-                                                                @error('fullname')
+                                                                            <div class="form-floating form-floating-outline">
+                                                                                <input style="font-size: small;" class="form-control @error('fullname') is-invalid @enderror" type="text" name="fullname" id="fullname" value="{{ old('fullname', $karyawan->fullname) }}" />
+                                                                                <label for="fullname">Fullname</label>
+                                                                            </div>
+                                                                            @error('fullname')
         <p class="alert alert-danger">{{ $message }}</p>
     @enderror
-                                                            </div> -->
+                                                                        </div> -->
                                             <div class="col-md-6">
                                                 <div class="form-floating form-floating-outline">
                                                     <input style="font-size: small;" type="email"
@@ -232,15 +232,15 @@
                                             </div>
 
                                             <!-- <div class="col-md-6">
-                                                                <div class="form-floating form-floating-outline">
-                                                                    <input style="font-size: small;"type="text" class="form-control @error('username') is-invalid @enderror" id="username" name="username" value="{{ old('username', $karyawan->username) }}">
-                                                                    <input style="font-size: small;"type="hidden" name="password" value="{{ $karyawan->password }}">
-                                                                    <label for="username">Username</label>
-                                                                </div>
-                                                                @error('username')
+                                                                            <div class="form-floating form-floating-outline">
+                                                                                <input style="font-size: small;"type="text" class="form-control @error('username') is-invalid @enderror" id="username" name="username" value="{{ old('username', $karyawan->username) }}">
+                                                                                <input style="font-size: small;"type="hidden" name="password" value="{{ $karyawan->password }}">
+                                                                                <label for="username">Username</label>
+                                                                            </div>
+                                                                            @error('username')
         <p class="alert alert-danger">{{ $message }}</p>
     @enderror
-                                                            </div> -->
+                                                                        </div> -->
                                             <div class="col-md-6">
                                                 <div class="form-floating form-floating-outline">
                                                     <select style="font-size: small;" class="form-control" id="agama"
@@ -984,7 +984,7 @@
                                             <?php
                                             if (old('kategori_jabatan', $karyawan->kategori_jabatan) == null) {
                                                 // echo 'ok';
-                                                $get_kategori_jabatan = App\Models\Lokasi::where('lokasi_kantor', old('site_job', $karyawan->site_job))->value('kategori_kantor');
+                                                $get_kategori_jabatan = App\Models\Lokasi::where('nama_lokasi', old('site_job', $karyawan->site_job))->value('nama_lokasi');
                                                 if (old('kategori_jabatan', $get_kategori_jabatan) == 'sp' || old('kategori_jabatan', $get_kategori_jabatan) == 'all sp') {
                                                     $kategori_jabatan = 'sp';
                                                     $holding_jabatan = 'CV. SUMBER PANGAN';

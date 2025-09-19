@@ -1229,7 +1229,7 @@ selamat Anda lolos wawancara manager
                     [
                         'id'                        => Uuid::uuid4(),
                         'recruitment_user_id'       => $request->id,
-                        'status'           => $request->status,
+                        'status'                    => $request->status,
                         'created_at'                => date('Y-m-d H:i:s'),
                     ]
                 );
@@ -3029,12 +3029,12 @@ selamat Anda lolos bekerja
         $holdings = Holding::where('holding_code', $holding)->first();
 
         //kadaluarsa diterima langsung
-        $get_recruitment_user_id = RecruitmentUser::whereDate('konfirmasi_diterima', '<', date('Y-m-d H:i:s'))
+        $get_recruitment_user_id1 = RecruitmentUser::whereDate('konfirmasi_diterima', '<', date('Y-m-d H:i:s'))
             ->where('konfirmasi_diterima', '!=', null)
             ->where('feedback_lanjutan', null)
             ->get();
-        if ($get_recruitment_user_id != null) {
-            foreach ($get_recruitment_user_id as $ii) {
+        if ($get_recruitment_user_id1 != null) {
+            foreach ($get_recruitment_user_id1 as $ii) {
                 RecruitmentUser::where('id', $ii->id)->update([
                     'status_lanjutan'        => '3b',
                 ]);
@@ -3047,12 +3047,12 @@ selamat Anda lolos bekerja
         }
         //kadaluarsa diterima langsung end
         //kadaluarsa diterima wawancara manager
-        $get_recruitment_user_id = RecruitmentUser::whereDate('tanggal_konfirmasi_manager', '<', date('Y-m-d H:i:s'))
+        $get_recruitment_user_id2 = RecruitmentUser::whereDate('tanggal_konfirmasi_manager', '<', date('Y-m-d H:i:s'))
             ->where('tanggal_konfirmasi_manager', '!=', null)
             ->where('feedback_lanjutan', null)
             ->get();
-        if ($get_recruitment_user_id != null) {
-            foreach ($get_recruitment_user_id as $ii) {
+        if ($get_recruitment_user_id2 != null) {
+            foreach ($get_recruitment_user_id2 as $ii) {
                 RecruitmentUser::where('id', $ii->id)->update([
                     'status_lanjutan'        => '3b',
                 ]);
@@ -3063,6 +3063,7 @@ selamat Anda lolos bekerja
                 ]);
             }
         }
+        // dd($get_recruitment_user_id1, $get_recruitment_user_id2);
         //kadaluarsa diterima wawancara manager end
 
         return view('admin.recruitment-users.ranking.data_rankinginterview', [
