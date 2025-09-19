@@ -33,7 +33,7 @@ class ShiftController extends Controller
         if (request()->ajax()) {
             return DataTables::of($table)
                 ->addColumn('option', function ($row) use ($holding) {
-                    $btn = '<button id="btn_edit_shift" data-id="' . $row->id . '" data-shift="' . $row->nama_shift . '" data-jamkerja="' . $row->nama_jam_kerja . '" data-jammasuk="' . $row->jam_masuk . '" data-jamkeluar="' . $row->jam_keluar . '" data-holding="' . $holding->id . '" type="button" class="btn btn-icon btn-warning waves-effect waves-light"><span class="tf-icons mdi mdi-pencil-outline"></span></button>';
+                    $btn = '<button id="btn_edit_shift" data-id="' . $row->id . '" data-shift="' . $row->nama_shift . '" data-terlambat="' . $row->jam_terlambat . '" data-pulangcepat="' . $row->jam_pulang_cepat . '" data-jammasuk="' . $row->jam_masuk . '" data-jamkeluar="' . $row->jam_keluar . '" data-holding="' . $holding->id . '" type="button" class="btn btn-icon btn-warning waves-effect waves-light"><span class="tf-icons mdi mdi-pencil-outline"></span></button>';
                     $btn = $btn . '<button type="button" id="btn_delete_shift" data-id="' . $row->id . '" data-holding="' . $holding->id . '" class="btn btn-icon btn-danger waves-effect waves-light"><span class="tf-icons mdi mdi-delete-outline"></span></button>';
                     return $btn;
                 })
@@ -64,17 +64,41 @@ class ShiftController extends Controller
     public function store(Request $request)
     {
         $holding = Holding::where('holding_code', $request->holding)->first();
-        $validatedData = $request->validate([
-            'nama_shift' => 'required|max:255',
-            'jam_masuk' => 'required',
-            'jam_keluar' => 'required'
-        ]);
+        try {
+            $validatedData = $request->validate([
+                'nama_shift' => 'required|max:255',
+                'jam_min_masuk' => 'required',
+                'jam_masuk' => 'required',
+                'jam_keluar' => 'required',
+                'jam_terlambat' => 'required',
+                'jam_pulang_cepat' => 'required'
+            ], [
+                'nama_shift.required' => 'Nama shift wajib diisi',
+                'jam_min_masuk.required' => 'Jam min masuk wajib diisi',
+                'jam_masuk.required' => 'Jam masuk wajib diisi',
+                'jam_keluar.required' => 'Jam keluar wajib diisi',
+                'jam_terlambat.required' => 'Jam terlambat wajib diisi',
+                'jam_pulang_cepat.required' => 'Jam pulang cepat wajib diisi'
+            ]);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return response()->json([
+                'code'   => 422,
+                'message' => $e->errors()
+            ], 422);
+        }
 
-        Shift::create($validatedData);
+        Shift::create([
+            'nama_shift' => $validatedData['nama_shift'],
+            'jam_min_masuk' => $validatedData['jam_min_masuk'],
+            'jam_masuk' => $validatedData['jam_masuk'],
+            'jam_keluar' => $validatedData['jam_keluar'],
+            'jam_terlambat' => $validatedData['jam_terlambat'],
+            'jam_pulang_cepat' => $validatedData['jam_pulang_cepat']
+        ]);
         ActivityLog::create([
             'user_id' => Auth::user()->id,
             'activity' => 'create',
-            'description' => 'Menambahkan data master shift dengan nama shift ' . $request->nama_shift
+            'description' => 'Menambahkan data master shift dengan nama shift ' . $validatedData['nama_shift']
         ]);
         return response()->json([
             'code' => 200,
