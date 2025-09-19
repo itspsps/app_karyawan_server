@@ -24,8 +24,17 @@
                 <div class="card-body">
                     <hr class="">
                     <div class="row mt-3 g-3">
-                        <div class="col-lg-3">
-                            <input type="month" name="filter_month" id="filter_month" class="form-control" value="{{date('Y-m')}}">
+                        <div class="col-lg-8">
+                            <div id="reportrange" style="background: #fff; cursor: pointer; padding: 5px 10px; width: 100%">
+                                <button class="btn btn-outline-secondary waves-effect">
+                                    FILTER DATE : &nbsp;
+                                    <i class="mdi mdi-calendar-filter-outline"></i>&nbsp;
+                                    <span></span> <i class="mdi mdi-menu-down"></i>
+                                    <input type="date" id="start_date" name="start_date" hidden value="">
+                                    <input type="date" id="end_date" name="end_date" hidden value="">
+                                </button>
+                            </div>
+
                         </div>
                     </div>
                     <hr class="my-5">
@@ -117,6 +126,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
     <script src="https://cdn.datatables.net/buttons/3.1.2/js/buttons.html5.min.js"></script>
     <script src="https://cdn.datatables.net/buttons/3.1.2/js/buttons.print.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
     <script type="text/javascript" src="{{ asset('assets/assets_users/js/daterangepicker.js') }}"></script>
     <script>
         let holding = '{{$holding->holding_code}}';
@@ -128,13 +138,25 @@
             var month_now = "{{date('Y-m')}}";
             var url = "@if(Auth::user()->is_admin=='hrd'){{ url('hrd/report/get_columns') }}@else{{ url('report/get_columns') }}@endif" + "/" + holding;
             // console.log(url);
-            if (filter_month == month_now) {
-                // console.log(filter_month, month_now);
+            var start_date = $('#start_date').val();
+            var end_date = $('#end_date').val();
+            var start = moment().startOf('month');
+            var end = moment().endOf('month');
+            var lstart, lend;
+
+            function cb(start, end) {
+                $('#reportrange span').html(start.format('D MMMM YYYY') + ' - ' + end.format('D MMMM YYYY'));
+                lstart = start.format('YYYY-MM-DD');
+                lend = end.format('YYYY-MM-DD');
+                $('#start_date').val(lstart);
+                $('#end_date').val(lend);
+                // console.log(lstart, lend);
                 $.ajax({
                     url: url,
                     method: "get",
                     data: {
-                        filter_month: filter_month,
+                        start_date: lstart,
+                        end_date: lend,
                     },
                     success: function(data) {
                         // console.log(data);
@@ -174,15 +196,18 @@
                             },
 
                         ];
+                        const data_column = datacolumn.concat(data.datacolumn);
+                        if ($.fn.DataTable.isDataTable('#table_finger')) {
+                            $('#table_finger').DataTable().clear().destroy();
+                        }
+                        $('#date_absensi').empty();
                         $('#th_count_date').attr('colspan', data.count_period);
                         $.each(data.data_columns_header, function(count) {
                             $('#date_absensi').append("<th id='th_date" + count + "'>" + data.data_columns_header[count].header + "</th>");
                         });
 
-                        const data_column = datacolumn.concat(data.datacolumn);
                         // console.log(data_column);
-                        $('#table_finger').DataTable().destroy();
-                        load_data(filter_month, data_column, data.count_period, data.data_columns_header);
+                        load_data(start_date, end_date, data_column, data.count_period, data.data_columns_header);
                     },
                     error: function(data) {
                         var errors = data.responseJSON;
@@ -190,74 +215,21 @@
                     }
                 });
             }
-            $(document).on("change", "#filter_month", function(e) {
-                e.preventDefault();
-                let filter_month1 = $(this).val();
-                // console.log(filter_month1);
-                $.ajax({
-                    url: url,
-                    type: "GET",
-                    data: {
-                        filter_month: filter_month1,
-                    },
-                    error: function() {
-                        alert('Something is wrong');
-                    },
-                    success: function(data1) {
-                        // console.log(data1);
-                        datacolumn1 = [{
-                                data: 'no',
-                                render: function(data, type, row, meta) {
-                                    return meta.row + meta.settings._iDisplayStart + 1;
-                                }
-                            },
-                            {
-                                data: 'nomor_identitas_karyawan',
-                                name: 'nomor_identitas_karyawan'
-                            },
-                            {
-                                data: 'name',
-                                name: 'name'
-                            },
-                            {
-                                data: 'jumlah_hadir',
-                                name: 'jumlah_hadir'
-                            },
-                            {
-                                data: 'total_tidak_hadir_kerja',
-                                name: 'total_tidak_hadir_kerja'
-                            },
-                            {
-                                data: 'total_libur',
-                                name: 'total_libur'
-                            },
-                            {
-                                data: 'total_cuti',
-                                name: 'total_cuti'
-                            },
-                            {
-                                data: 'total_semua',
-                                name: 'total_semua'
-                            },
 
-                        ];
-                        const data_column1 = datacolumn1.concat(data1.datacolumn);
-                                $('#table_finger').DataTable().clear();
-                        $('#table_finger').DataTable().destroy();
-                $('.date_absensi').empty();
-                        $.each(data1.data_columns_header, function(count) {
-                            // console.log(count);
-                            $('#date_absensi').append("<th id='th_date" + count + "'>" + data1.data_columns_header[count].header + "</th>");
-                        });
-                        $('#th_count_date').attr('colspan', data1.count_period);
-                        load_data(filter_month1, data_column1, data1.count_period, data1.data_columns_header);
-                        // $('#table_finger').DataTable().ajax.reload();
-                    }
-                });
-                // console.log(filter_month);
-            });
+            $('#reportrange').daterangepicker({
+                startDate: start,
+                endDate: end,
+                ranges: {
+                    'Today': [moment(), moment()],
+                    'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+                    'Last 7 Days': [moment().subtract(6, 'days'), moment()],
+                    'Last 30 Days': [moment().subtract(29, 'days'), moment()],
+                    'This Month': [moment().startOf('month'), moment().endOf('month')],
+                    'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+                }
+            }, cb);
 
-
+            cb(start, end);
             // console.log(datacolumn);
             var xlsLetters = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M',
                 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
@@ -270,7 +242,7 @@
             ];
 
 
-            function load_data(filter_month = '', data_column = '', colspan = '', data_columns_header = '') {
+            function load_data(start_date = '', end_date = '', data_column = '', colspan = '', data_columns_header = '') {
                 // console.log(colspan, data_columns_header);
                 var url_finger = "@if(Auth::user()->is_admin =='hrd'){{ url('hrd/report-datatable_finger') }}@else{{ url('report-datatable_finger') }}@endif" + '/' + holding;
                 // console.log(url_finger);
@@ -372,7 +344,8 @@
                     ajax: {
                         url: url_finger,
                         data: {
-                            filter_month: filter_month,
+                            start_date: start_date,
+                            end_date: end_date,
                         },
                     },
                     columns: data_column,

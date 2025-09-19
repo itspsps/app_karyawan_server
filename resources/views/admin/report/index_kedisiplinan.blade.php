@@ -62,8 +62,16 @@
                         </div>
                     </div>
                     <div class="row mt-3 g-3">
-                        <div class="col-lg-3">
-                            <input id="filter_month" class="form-control" name="filter_month" type="month" value="{{date('Y-m')}}">
+                        <div class="col-lg-8">
+                            <div id="reportrange" style="background: #fff; cursor: pointer; padding: 5px 10px; width: 100%">
+                                <button class="btn btn-outline-secondary waves-effect">
+                                    FILTER DATE : &nbsp;
+                                    <i class="mdi mdi-calendar-filter-outline"></i>&nbsp;
+                                    <span></span> <i class="mdi mdi-menu-down"></i>
+                                    <input type="date" id="start_date" name="start_date" hidden value="">
+                                    <input type="date" id="end_date" name="end_date" hidden value="">
+                                </button>
+                            </div>
 
                         </div>
                     </div>
@@ -74,7 +82,7 @@
                         <div class="card">
                             <div class="card-header">
                                 <div class="d-flex justify-content-between">
-                                    <h6 class="mb-1">Grafik Absensi Karyawan Kontrak Kerja @if($holding->holding_category=='SPS') PT. SURYA PANGAN SEMESTA @elseif($holding->holding_category=='SP') CV. SUMBER PANGAN @else CV. SURYA INTI PANGAN @endif</h6>
+                                    <h6 class="mb-1">Grafik Absensi Karyawan Kontrak Kerja {{ $holding->holding_name }}</h6>
                                 </div>
                             </div>
                             <div class="card-body">
@@ -85,7 +93,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="nav-align-top">
+                <div class="nav-align-top mt-4">
                     <div class="row">
                         <div class="col-2">
                         </div>
@@ -115,7 +123,7 @@
                                         <th rowspan="2" class="text-center">No.</th>
                                         <th rowspan="2" class="text-center">ID&nbsp;Karyawan</th>
                                         <th rowspan="2" class="text-center">Nama&nbsp;Karyawan</th>
-                                        <th colspan="3" class="text-center">&nbsp;ABSENSI&nbsp;</th>
+                                        <th colspan="4" class="text-center">&nbsp;ABSENSI&nbsp;</th>
                                         <th colspan="4" class="text-center">Keterangan</th>
                                         <th colspan="1" class="text-center">Tidak&nbsp;Hadir&nbsp;Kerja</th>
                                         <th rowspan="2" class="text-center">Total&nbsp;Keseluruhan</th>
@@ -186,35 +194,45 @@
         var chart_absensi_masuk;
         var data_column;
         let table_rekapdata;
-        var filter_month = $('#filter_month').val();
-        departemen_filter = $('#departemen_filter').val();
-        divisi_filter = $('#divisi_filter').val();
-        bagian_filter = $('#bagian_filter').val();
-        jabatan_filter = $('#jabatan_filter').val();
+        var start_date = $('#start_date').val();
+        var end_date = $('#end_date').val();
+        var departemen_filter = [];
+        var divisi_filter = [];
+        var bagian_filter = [];
+        var jabatan_filter = [];
 
-        $(document).on("change", "#filter_month", function(e) {
-            e.preventDefault();
-            let filter_month1 = $(this).val();
-            departemen_filter_month = $('#departemen_filter').val();
-            divisi_filter_month = $('#divisi_filter').val();
-            bagian_filter_month = $('#bagian_filter').val();
-            jabatan_filter_month = $('#jabatan_filter').val();
+        var start = moment().startOf('month');
+        var end = moment().endOf('month');
+        var lstart, lend;
+
+        function cb(start, end) {
+            $('#reportrange span').html(start.format('D MMMM YYYY') + ' - ' + end.format('D MMMM YYYY'));
+            lstart = start.format('YYYY-MM-DD');
+            lend = end.format('YYYY-MM-DD');
+            $('#start_date').val(lstart);
+            $('#end_date').val(lend);
+            // console.log(lstart, lend);
+            // ambil langsung dari form
+            var departemen_filter = $('#departemen_filter').val() || [];
+            var divisi_filter = $('#divisi_filter').val() || [];
+            var bagian_filter = $('#bagian_filter').val() || [];
+            var jabatan_filter = $('#jabatan_filter').val() || [];
+
+            //console.log(lstart, lend, departemen_filter, divisi_filter, bagian_filter, jabatan_filter, start, end);
             $.ajax({
                 url: "@if(Auth::user()->is_admin=='hrd'){{ url('/hrd/report_kedisiplinan/get_columns') }}@else{{ url('report_kedisiplinan/get_columns') }}@endif" + '/' + holding,
                 method: "get",
                 data: {
-                    filter_month: filter_month1,
-                    departemen_filter: departemen_filter_month,
-                    divisi_filter: divisi_filter_month,
-                    bagian_filter: bagian_filter_month,
-                    jabatan_filter: jabatan_filter_month,
+                    start_date: lstart,
+                    end_date: lend,
+                    departemen_filter: departemen_filter,
+                    divisi_filter: divisi_filter,
+                    bagian_filter: bagian_filter,
+                    jabatan_filter: jabatan_filter,
                 },
-                error: function() {
-                    alert('Something is wrong');
-                },
-                success: function(data1) {
-                    // console.log(data1);
-                    datacolumn1 = [{
+                success: function(data) {
+                    // console.log(data);
+                    datacolumn = [{
                             data: 'btn_detail',
                             name: 'btn_detail'
                         },
@@ -246,6 +264,10 @@
                             name: 'total_hadir_telat_hadir1'
                         },
                         {
+                            data: 'total_pulang_cepat',
+                            name: 'total_pulang_cepat'
+                        },
+                        {
                             data: 'total_izin_true',
                             name: 'total_izin_true'
                         },
@@ -269,33 +291,65 @@
                             data: 'total_semua',
                             name: 'total_semua'
                         },
-                    ];
-                    const data_column1 = datacolumn1.concat(data1.datacolumn);
-                    // console.log(data_column);
-                    $('#table_rekapdata').DataTable().clear();
-                    $('#table_rekapdata').DataTable().destroy();
+                    ]
+                    const data_column = datacolumn.concat(data.datacolumn);
+                    // 1. Destroy DataTable dulu kalau sudah ada
+                    if ($.fn.DataTable.isDataTable('#table_rekapdata')) {
+                        $('#table_rekapdata').DataTable().clear().destroy();
+                    }
                     $('#date_absensi').empty();
-                    $('#date_absensi').append('<th>Tepat&nbsp;Waktu</th><th>Telat&nbsp;Hadir&nbsp;<span>(&nbsp;+&nbsp;15&nbsp;Menit)</span></th><th>Telat&nbsp;Hadir&nbsp;<span>(&nbsp;-&nbsp;15&nbsp;Menit)</span></th><th>Izin</th><th>Cuti</th><th>Dinas</th><th>Libur</th><th>Alfa</th>');
+                    // kolom absensi summary (misalnya 8 kolom)
+                    $('#date_absensi').append('<th>Tepat&nbsp;Waktu</th>')
+                        .append('<th>Telat&nbsp;(-15&nbsp;Menit)</th>')
+                        .append('<th>Telat&nbsp;(+15&nbsp;Menit)</th>')
+                        .append('<th>Pulang&nbsp;Cepat</th>')
+                        .append('<th>Izin</th>')
+                        .append('<th>Cuti</th>')
+                        .append('<th>Dinas</th>')
+                        .append('<th>Libur</th>')
+                        .append('<th>Alfa</th>');
 
-                    $.each(data1.data_columns_header, function(count) {
-                        // console.log(count);
-                        $('#date_absensi').append("<th id='th_date'>" + data1.data_columns_header[count].header + "</th>");
+                    // kolom tanggal dinamis dari backend
+                    $.each(data.data_columns_header, function(i, col) {
+                        $('#date_absensi').append('<th>' + col.header + '</th>');
                     });
-                    $('#th_count_date').attr('colspan', data1.count_period);
-                    load_data(departemen_filter_month, divisi_filter_month, bagian_filter_month, jabatan_filter_month, filter_month1, data_column1);
-                    get_grafik_absensi(departemen_filter_month, divisi_filter_month, bagian_filter_month, jabatan_filter_month, filter_month1);
-                },
-            });
-            // console.log(filter_month);
-        });
+                    // console.log('Header baris kedua sekarang:');
 
-        $(document).on("change", "#departemen_filter", function(e) {
-            e.preventDefault();
+
+                    $('#th_count_date').attr('colspan', data.count_period);
+
+                    load_data(departemen_filter, divisi_filter, bagian_filter, jabatan_filter, lstart, lend, data_column);
+                    get_grafik_absensi(departemen_filter, divisi_filter, bagian_filter, jabatan_filter, lstart, lend);
+                },
+                error: function(data) {
+                    var errors = data.errors();
+                    console.log(errors);
+                }
+            });
+        }
+
+        $('#reportrange').daterangepicker({
+            startDate: start,
+            endDate: end,
+            ranges: {
+                'Today': [moment(), moment()],
+                'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+                'Last 7 Days': [moment().subtract(6, 'days'), moment()],
+                'Last 30 Days': [moment().subtract(29, 'days'), moment()],
+                'This Month': [moment().startOf('month'), moment().endOf('month')],
+                'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+            }
+        }, cb);
+
+        cb(start, end);
+
+        $('#departemen_filter').change(function() {
             departemen_filter_dept = $(this).val();
             divisi_filter_dept = $('#divisi_filter').val();
             bagian_filter_dept = $('#bagian_filter').val();
             jabatan_filter_dept = $('#jabatan_filter').val();
-            filter_month_dept = $('#filter_month').val();
+            start_date_dept = $('#start_date').val();
+            end_date_dept = $('#end_date').val();
             // $('#table_rekapdata').DataTable().destroy();
             var url = "@if(Auth::user()->is_admin=='hrd'){{url('hrd/report_kedisiplinan/get_divisi')}}@else{{url('report_kedisiplinan/get_divisi')}}@endif" + '/' + holding_id;
             // console.log(url);
@@ -304,7 +358,8 @@
                 url: url,
                 data: {
                     holding: holding_id,
-                    filter_month: filter_month_dept,
+                    start_date: start_date_dept,
+                    end_date: end_date_dept,
                     departemen_filter: departemen_filter_dept,
                     divisi_filter: divisi_filter_dept,
                     bagian_filter: bagian_filter_dept,
@@ -345,6 +400,10 @@
                             name: 'total_hadir_telat_hadir1'
                         },
                         {
+                            data: 'total_pulang_cepat',
+                            name: 'total_pulang_cepat'
+                        },
+                        {
                             data: 'total_izin_true',
                             name: 'total_izin_true'
                         },
@@ -374,20 +433,30 @@
                     $('#table_rekapdata').DataTable().clear();
                     $('#table_rekapdata').DataTable().destroy();
                     $('#date_absensi').empty();
-                    $('#date_absensi').append('<th>Tepat&nbsp;Waktu</th><th>Telat&nbsp;Hadir&nbsp;<span>(&nbsp;+&nbsp;15&nbsp;Menit)</span></th><th>Telat&nbsp;Hadir&nbsp;<span>(&nbsp;-&nbsp;15&nbsp;Menit)</span></th><th>Izin</th><th>Cuti</th><th>Dinas</th><th>Libur</th><th>Alfa</th>');
+                    $('#date_absensi').append('<th>Tepat&nbsp;Waktu</th>')
+                        .append('<th>Telat&nbsp;Hadir&nbsp;<span>(&nbsp;+&nbsp;15&nbsp;Menit)</span></th>')
+                        .append('<th>Telat&nbsp;Hadir&nbsp;<span>(&nbsp;-&nbsp;15&nbsp;Menit)</span></th>')
+                        .append('<th>Pulang&nbsp;Cepat</th>')
+                        .append('<th>Izin</th>')
+                        .append('<th>Cuti</th>')
+                        .append('<th>Dinas</th>')
+                        .append('<th>Libur</th>')
+                        .append('<th>Alfa</th>');
 
                     $.each(data_dept.data_columns_header, function(count) {
                         // console.log(count);
                         $('#date_absensi').append("<th id='th_date'>" + data_dept.data_columns_header[count].header + "</th>");
                     });
+
                     $('#th_count_date').attr('colspan', data_dept.count_period);
                     // console.log(msg);
                     // $('#id_divisi').html(msg);
                     $('#divisi_filter').html(data_dept.select);
                     $('#bagian_filter').html('<option value="">Pilih Bagian</option>');
                     $('#jabatan_filter').html('<option value="">Pilih Jabatan</option>');
-                    get_grafik_absensi(departemen_filter_dept, divisi_filter_dept, bagian_filter_dept, jabatan_filter_dept, filter_month_dept);
-                    load_data(departemen_filter_dept, divisi_filter_dept, bagian_filter_dept, jabatan_filter_dept, filter_month_dept, data_column_departemen);
+                    // get_grafik_absensi(departemen_filter_dept, divisi_filter_dept, bagian_filter_dept, jabatan_filter_dept, start_date_dept, end_date_dept);
+                    // load_data(departemen_filter_dept, divisi_filter_dept, bagian_filter_dept, jabatan_filter_dept, start_date_dept, end_date_dept, data_column_departemen);
+                    cb(moment(start_date_dept), moment(end_date_dept));
                 },
                 error: function(data) {
                     console.log('error:', data)
@@ -400,14 +469,16 @@
             departemen_filter = $('#departemen_filter').val();
             bagian_filter = $('#bagian_filter').val();
             jabatan_filter = $('#jabatan_filter').val();
-            filter_month = $('#filter_month').val();
+            start_date_divisi = $('#start_date').val();
+            end_date_divisi = $('#end_date').val();
             // $('#table_rekapdata').DataTable().destroy();
             $.ajax({
                 type: 'GET',
                 url: "@if(Auth::user()->is_admin=='hrd'){{url('hrd/report_kedisiplinan/get_bagian')}}@else{{url('report_kedisiplinan/get_bagian')}}@endif" + '/' + holding_id,
                 data: {
                     holding: holding_id,
-                    filter_month: filter_month,
+                    start_date: start_date_divisi,
+                    end_date: end_date_divisi,
                     divisi_filter: divisi_filter,
                     bagian_filter: bagian_filter,
                     jabatan_filter: jabatan_filter,
@@ -449,6 +520,10 @@
                             name: 'total_hadir_telat_hadir1'
                         },
                         {
+                            data: 'total_pulang_cepat',
+                            name: 'total_pulang_cepat'
+                        },
+                        {
                             data: 'total_izin_true',
                             name: 'total_izin_true'
                         },
@@ -478,7 +553,15 @@
                     $('#table_rekapdata').DataTable().clear();
                     $('#table_rekapdata').DataTable().destroy();
                     $('#date_absensi').empty();
-                    $('#date_absensi').append('<th>Tepat&nbsp;Waktu</th><th>Telat&nbsp;Hadir&nbsp;<span>(&nbsp;+&nbsp;15&nbsp;Menit)</span></th><th>Telat&nbsp;Hadir&nbsp;<span>(&nbsp;-&nbsp;15&nbsp;Menit)</span></th><th>Izin</th><th>Cuti</th><th>Dinas</th><th>Libur</th><th>Alfa</th>');
+                    $('#date_absensi').append('<th>Tepat&nbsp;Waktu</th>')
+                        .append('<th>Telat&nbsp;Hadir&nbsp;<span>(&nbsp;+&nbsp;15&nbsp;Menit)</span></th>')
+                        .append('<th>Telat&nbsp;Hadir&nbsp;<span>(&nbsp;-&nbsp;15&nbsp;Menit)</span></th>')
+                        .append('<th>Pulang&nbsp;Cepat</th>')
+                        .append('<th>Izin</th>')
+                        .append('<th>Cuti</th>')
+                        .append('<th>Dinas</th>')
+                        .append('<th>Libur</th>')
+                        .append('<th>Alfa</th>');
 
                     $.each(data_divisi.data_columns_header, function(count) {
                         // console.log(count);
@@ -488,8 +571,7 @@
                     // $('#id_divisi').html(data_divisi);
                     $('#bagian_filter').html(data_divisi.select);
                     $('#jabatan_filter').html('<option value="">Pilih Jabatan..</option>');
-                    get_grafik_absensi(departemen_filter, divisi_filter, bagian_filter, jabatan_filter, filter_month);
-                    load_data(departemen_filter, divisi_filter, bagian_filter, jabatan_filter, filter_month, data_column_divisi);
+                    cb(moment(start_date_divisi), moment(end_date_divisi));
                 },
                 error: function(data) {
                     console.log('error:', data)
@@ -503,7 +585,8 @@
             departemen_filter = $('#departemen_filter').val();
             divisi_filter = $('#divisi_filter').val();
             jabatan_filter = $('#jabatan_filter').val();
-            filter_month = $('#filter_month').val();
+            start_date_bagian = $('#start_date').val();
+            end_date_bagian = $('#end_date').val();
 
             // $('#table_rekapdata').DataTable().destroy();
             $.ajax({
@@ -513,7 +596,8 @@
                     holding: holding_id,
                     bagian_filter: bagian_filter,
                     jabatan_filter: jabatan_filter,
-                    filter_month: filter_month,
+                    start_date: start_date_bagian,
+                    end_date: end_date_bagian,
                     departemen_filter: departemen_filter,
                     divisi_filter: divisi_filter
                 },
@@ -553,6 +637,10 @@
                             name: 'total_hadir_telat_hadir1'
                         },
                         {
+                            data: 'total_pulang_cepat',
+                            name: 'total_pulang_cepat'
+                        },
+                        {
                             data: 'total_izin_true',
                             name: 'total_izin_true'
                         },
@@ -582,7 +670,15 @@
                     $('#table_rekapdata').DataTable().clear();
                     $('#table_rekapdata').DataTable().destroy();
                     $('#date_absensi').empty();
-                    $('#date_absensi').append('<th>Tepat&nbsp;Waktu</th><th>Telat&nbsp;Hadir&nbsp;<span>(&nbsp;+&nbsp;15&nbsp;Menit)</span></th><th>Telat&nbsp;Hadir&nbsp;<span>(&nbsp;-&nbsp;15&nbsp;Menit)</span></th><th>Izin</th><th>Cuti</th><th>Dinas</th><th>Libur</th><th>Alfa</th>');
+                    $('#date_absensi').append('<th>Tepat&nbsp;Waktu</th>')
+                        .append('<th>Telat&nbsp;Hadir&nbsp;<span>(&nbsp;+&nbsp;15&nbsp;Menit)</span></th>')
+                        .append('<th>Telat&nbsp;Hadir&nbsp;<span>(&nbsp;-&nbsp;15&nbsp;Menit)</span></th>')
+                        .append('<th>Pulang&nbsp;Cepat</th>')
+                        .append('<th>Izin</th>')
+                        .append('<th>Cuti</th>')
+                        .append('<th>Dinas</th>')
+                        .append('<th>Libur</th>')
+                        .append('<th>Alfa</th>');
 
                     $.each(data_jabatan.data_columns_header, function(count) {
                         // console.log(count);
@@ -590,10 +686,9 @@
                     });
                     $('#th_count_date').attr('colspan', data_jabatan.count_period);
                     // $('#id_divisi').html(data_divisi);
-                    console.log(departemen_filter, divisi_filter, bagian_filter, jabatan_filter, filter_month);
+                    console.log(departemen_filter, divisi_filter, bagian_filter, jabatan_filter, start_date_bagian, end_date_bagian);
                     $('#jabatan_filter').html(data_jabatan.select);
-                    get_grafik_absensi(departemen_filter, divisi_filter, bagian_filter, jabatan_filter, filter_month);
-                    load_data(departemen_filter, divisi_filter, bagian_filter, jabatan_filter, filter_month, data_column_jabatan);
+                    cb(moment(start_date_bagian), moment(end_date_bagian));
                 },
                 error: function(data) {
                     console.log('error:', data)
@@ -606,12 +701,14 @@
             departemen_filter = $('#departemen_filter').val();
             divisi_filter = $('#divisi_filter').val();
             bagian_filter = $('#bagian_filter').val();
-            filter_month = $('#filter_month').val();
+            start_date_jabatan = $('#start_date').val();
+            end_date_jabatan = $('#end_date').val();
             $.ajax({
                 url: "@if(Auth::user()->is_admin=='hrd'){{ url('/hrd/report_kedisiplinan/get_columns') }}@else{{ url('report_kedisiplinan/get_columns') }}@endif" + '/' + holding,
                 method: "get",
                 data: {
-                    filter_month: filter_month,
+                    start_date: start_date_jabatan,
+                    end_date: end_date_jabatan,
                     departemen_filter: departemen_filter,
                     divisi_filter: divisi_filter,
                     bagian_filter: bagian_filter,
@@ -651,6 +748,10 @@
                             name: 'total_hadir_telat_hadir1'
                         },
                         {
+                            data: 'total_pulang_cepat',
+                            name: 'total_pulang_cepat'
+                        },
+                        {
                             data: 'total_izin_true',
                             name: 'total_izin_true'
                         },
@@ -679,15 +780,22 @@
                     const data_column = datacolumn.concat(data.datacolumn);
                     // console.log(data_column);
 
-                    $('#date_absensi').append('<th>Tepat&nbsp;Waktu</th><th>Telat&nbsp;Hadir&nbsp;<span>(&nbsp;-&nbsp;15&nbsp;Menit)</span></th><th>Telat&nbsp;Hadir&nbsp;<span>(&nbsp;+&nbsp;15&nbsp;Menit)</span></th><th>Izin</th><th>Cuti</th><th>Dinas</th><th>Libur</th><th>Alfa</th>');
+                    $('#date_absensi').append('<th>Tepat&nbsp;Waktu</th>')
+                        .append('<th>Telat&nbsp;Hadir&nbsp;<span>(&nbsp;-&nbsp;15&nbsp;Menit)</span></th>')
+                        .append('<th>Telat&nbsp;Hadir&nbsp;<span>(&nbsp;+&nbsp;15&nbsp;Menit)</span></th>')
+                        .append('<th>Pulang&nbsp;Cepat</th>')
+                        .append('<th>Izin</th>')
+                        .append('<th>Cuti</th>')
+                        .append('<th>Dinas</th>')
+                        .append('<th>Libur</th>')
+                        .append('<th>Alfa</th>');
 
                     $.each(data.data_columns_header, function(count) {
                         $('#date_absensi').append("<th id='th_date'>" + data.data_columns_header[count].header + "</th>");
                     });
                     $('#th_count_date').attr('colspan', data.count_period);
                     $('#table_rekapdata').DataTable().destroy();
-                    load_data(departemen_filter, divisi_filter, bagian_filter, jabatan_filter, filter_month, data_column);
-                    get_grafik_absensi(departemen_filter, divisi_filter, bagian_filter, jabatan_filter, filter_month);
+                    cb(moment(start_date_jabatan), moment(end_date_jabatan));
                 },
                 error: function(data) {
                     var errors = data.errors();
@@ -697,97 +805,11 @@
         })
         // load_data(departemen_filter, divisi_filter, bagian_filter, jabatan_filter, start_date, end_date);
 
-
-        $.ajax({
-            url: "@if(Auth::user()->is_admin=='hrd'){{ url('/hrd/report_kedisiplinan/get_columns') }}@else{{ url('report_kedisiplinan/get_columns') }}@endif" + '/' + holding,
-            method: "get",
-            data: {
-                filter_month: filter_month,
-                departemen_filter: departemen_filter,
-                divisi_filter: divisi_filter,
-                bagian_filter: bagian_filter,
-                jabatan_filter: jabatan_filter,
-            },
-            success: function(data) {
-                // console.log(data);
-                datacolumn = [{
-                        data: 'btn_detail',
-                        name: 'btn_detail'
-                    },
-                    {
-                        data: 'no',
-                        render: function(data, type, row, meta) {
-                            return meta.row + meta.settings._iDisplayStart + 1;
-                        }
-
-                    },
-                    {
-                        data: 'nomor_identitas_karyawan',
-                        name: 'nomor_identitas_karyawan'
-                    },
-                    {
-                        data: 'name',
-                        name: 'name'
-                    },
-                    {
-                        data: 'total_hadir_tepat_waktu',
-                        name: 'total_hadir_tepat_waktu'
-                    },
-                    {
-                        data: 'total_hadir_telat_hadir',
-                        name: 'total_hadir_telat_hadir'
-                    },
-                    {
-                        data: 'total_hadir_telat_hadir1',
-                        name: 'total_hadir_telat_hadir1'
-                    },
-                    {
-                        data: 'total_izin_true',
-                        name: 'total_izin_true'
-                    },
-                    {
-                        data: 'total_cuti_true',
-                        name: 'total_cuti_true'
-                    },
-                    {
-                        data: 'total_dinas_true',
-                        name: 'total_dinas_true'
-                    },
-                    {
-                        data: 'total_libur',
-                        name: 'total_libur'
-                    },
-                    {
-                        data: 'tidak_hadir_kerja',
-                        name: 'tidak_hadir_kerja'
-                    },
-                    {
-                        data: 'total_semua',
-                        name: 'total_semua'
-                    },
-                ]
-
-                const data_column = datacolumn.concat(data.datacolumn);
-                // console.log(data_column);
-
-                $('#date_absensi').append('<th>Tepat&nbsp;Waktu</th><th>Telat&nbsp;Hadir&nbsp;<span>(&nbsp;-&nbsp;15&nbsp;Menit)</span></th><th>Telat&nbsp;Hadir&nbsp;<span>(&nbsp;+&nbsp;15&nbsp;Menit)</span></th><th>Izin</th><th>Cuti</th><th>Dinas</th><th>Libur</th><th>Alfa</th>');
-
-                $.each(data.data_columns_header, function(count) {
-                    $('#date_absensi').append("<th id='th_date'>" + data.data_columns_header[count].header + "</th>");
-                });
-                $('#th_count_date').attr('colspan', data.count_period);
-                $('#table_rekapdata').DataTable().destroy();
-                load_data(departemen_filter, divisi_filter, bagian_filter, jabatan_filter, filter_month, data_column);
-                get_grafik_absensi(departemen_filter, divisi_filter, bagian_filter, jabatan_filter, filter_month);
-            },
-            error: function(data) {
-                var errors = data.errors();
-                console.log(errors);
-            }
-        });
+        // console.log(start_date, end_date);
 
 
-        function load_data(departemen_filter = '', divisi_filter = '', bagian_filter = '', jabatan_filter = '', filter_month = '', data_column = '') {
+
+        function load_data(departemen_filter = '', divisi_filter = '', bagian_filter = '', jabatan_filter = '', start_date = '', end_date = '', data_column = '') {
             // console.log(data_column);
 
             var table_rekapdata = $('#table_rekapdata').DataTable({
@@ -806,7 +828,7 @@
                         text: '<i class="menu-icon tf-icons mdi mdi-file-excel"></i>Excel',
                         titleAttr: 'Excel',
                         title: 'DATA ABSENSI KARYAWAN ',
-                        messageTop: 'Bulan : '.filter_month,
+                        messageTop: 'Bulan : '.start_date + ' s/d ' + end_date,
                         exportOptions: {
                             columns: ':not(:first-child)',
                         },
@@ -850,10 +872,15 @@
                     }
                 ],
                 pageLength: 50,
+                lengthMenu: [
+                    [10, 25, 50, 100, -1],
+                    [10, 25, 50, 100, "All"]
+                ],
                 ajax: {
                     url: "@if(Auth::user()->is_admin=='hrd'){{ url('hrd/report_kedisiplinan-datatable') }}@else {{ url('report_kedisiplinan-datatable') }}@endif" + '/' + holding,
                     data: {
-                        filter_month: filter_month,
+                        start_date: start_date,
+                        end_date: end_date,
                         departemen_filter: departemen_filter,
                         divisi_filter: divisi_filter,
                         bagian_filter: bagian_filter,
@@ -932,13 +959,14 @@
         })
 
 
-        function get_grafik_absensi(departemen_filter = '', divisi_filter = '', bagian_filter = '', jabatan_filter = '', filter_month = '') {
+        function get_grafik_absensi(departemen_filter = '', divisi_filter = '', bagian_filter = '', jabatan_filter = '', start_date = '', end_date = '') {
             // console.log(filter_month);
             $.ajax({
                 url: "@if(Auth::user()->is_admin =='hrd'){{url('hrd/report_kedisiplinan/get_grafik_absensi')}}@else{{url('report_kedisiplinan/get_grafik_absensi')}}@endif" + '/' + holding,
                 data: {
                     holding: holding,
-                    filter_month: filter_month,
+                    start_date: start_date,
+                    end_date: end_date,
                     departemen_filter: departemen_filter,
                     divisi_filter: divisi_filter,
                     bagian_filter: bagian_filter,
@@ -947,7 +975,7 @@
                 method: "GET",
                 dataType: "json",
                 success: function(data) {
-                    console.log(data);
+                    // console.log(data);
                     var label_absensi5 = data.label_absensi;
                     var data_absensi_masuk_tepatwaktu = data.data_absensi_masuk_tepatwaktu;
                     var data_absensi_masuk_tidak_hadir = data.data_absensi_masuk_tidak_hadir;
@@ -955,16 +983,16 @@
                     var data_absensi_masuk_cuti = data.data_absensi_masuk_cuti;
                     var options = {
                         series: [{
-                            name: 'Jumlah Karyawan Absen Masuk Tepat Waktu',
+                            name: 'Total Tepat Waktu',
                             data: data_absensi_masuk_tepatwaktu
                         }, {
-                            name: 'Jumlah Karyawan Absen Masuk Terlambat ',
+                            name: 'Total Terlambat ',
                             data: data_absensi_masuk_telat
                         }, {
-                            name: 'Jumlah Karyawan Tidak Hadir ',
+                            name: 'Total Tidak Hadir ',
                             data: data_absensi_masuk_tidak_hadir,
                         }, {
-                            name: 'Jumlah Karyawan Cuti ',
+                            name: 'Total Cuti ',
                             data: data_absensi_masuk_cuti
                         }],
                         annotations: {
@@ -1037,16 +1065,16 @@
 
                     chart_absensi_masuk.render();
                     chart_absensi_masuk.updateSeries([{
-                        name: 'Jumlah Karyawan Absen Masuk Tepat Waktu',
+                        name: 'Total Tepat Waktu',
                         data: data_absensi_masuk_tepatwaktu
                     }, {
-                        name: 'Jumlah Karyawan Absen Masuk Terlambat ',
+                        name: 'Total Terlambat ',
                         data: data_absensi_masuk_telat
                     }, {
-                        name: 'Jumlah Karyawan Tidak Hadir ',
+                        name: 'Total Tidak Hadir ',
                         data: data_absensi_masuk_tidak_hadir
                     }, {
-                        name: 'Jumlah Karyawan Cuti ',
+                        name: 'Total Cuti ',
                         data: data_absensi_masuk_cuti
                     }])
                 }

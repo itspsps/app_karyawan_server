@@ -2,8 +2,12 @@
 @section('css')
 <link rel="stylesheet" href="https://cdn.datatables.net/2.0.5/css/dataTables.bootstrap5.css">
 <style type="text/css">
-    .my-swal {
-        z-index: X;
+    .swal2-container {
+        z-index: 9999 !important;
+    }
+
+    .swal-left {
+        text-align: left !important;
     }
 </style>
 @endsection
@@ -24,8 +28,8 @@
                     <button type="button" class="btn btn-sm btn-primary waves-effect waves-light" data-bs-toggle="modal" data-bs-target="#modal_tambah_shift"><i class="menu-icon tf-icons mdi mdi-plus"></i>Tambah</button>
                     <div class="modal fade" id="modal_tambah_shift" data-bs-backdrop="static" tabindex="-1">
                         <div class="modal-dialog modal-dialog-scrollable">
-                            <form method="post" action="@if(Auth::user()->is_admin =='hrd'){{ url('hrd/shift/store/'.$holding) }}@else {{ url('/shift/store/'.$holding) }} @endif" class="modal-content" enctype="multipart/form-data">
-                                @csrf
+                            <form method="post" id="form_tambah_shift" class="modal-content" enctype="multipart/form-data">
+
                                 <div class="modal-header">
                                     <h4 class="modal-title" id="backDropModalTitle">Tambah Shift</h4>
                                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -62,10 +66,24 @@
                                     <div class="row g-2">
                                         <div class="col mb-2">
                                             <div class="form-floating form-floating-outline">
-                                                <input type="time" id="jam_kerja" name="jam_kerja" class="form-control @error('jam_kerja') is-invalid @enderror" placeholder="Masukkan jam_kerja" value="{{ old('jam_kerja') }}" />
-                                                <label for="jam_kerja">Jam Kerja</label>
+                                                <input type="time" id="jam_terlambat" name="jam_terlambat" class="form-control @error('jam_terlambat') is-invalid @enderror" placeholder="Masukkan Jam Terlambat" value="{{ old('jam_terlambat') }}" />
+                                                <label for="jam_terlambat">Jam Terlambat</label>
                                             </div>
-                                            @error('jam_kerja')
+                                            @error('jam_terlambat')
+                                            <span class="invalid-feedback" role="alert">
+                                                <strong>{{ $message }}</strong>
+                                            </span>
+                                            @enderror
+                                        </div>
+                                    </div>
+                                    <br>
+                                    <div class="row g-2">
+                                        <div class="col mb-2">
+                                            <div class="form-floating form-floating-outline">
+                                                <input type="time" id="jam_pulang_cepat" name="jam_pulang_cepat" class="form-control @error('jam_pulang_cepat') is-invalid @enderror" placeholder="Masukkan Jam Pulang Cepat" value="{{ old('jam_pulang_cepat') }}" />
+                                                <label for="jam_pulang_cepat">Jam Pulang Cepat</label>
+                                            </div>
+                                            @error('jam_pulang_cepat')
                                             <span class="invalid-feedback" role="alert">
                                                 <strong>{{ $message }}</strong>
                                             </span>
@@ -89,9 +107,9 @@
                                 </div>
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
-                                        Close
+                                        Tutup
                                     </button>
-                                    <button type="submit" class="btn btn-primary">Save</button>
+                                    <button type="button" id="btn_simpan_shift" class="btn btn-primary">Simpan</button>
                                 </div>
                             </form>
                         </div>
@@ -177,9 +195,11 @@
                             <tr>
                                 <th>No.</th>
                                 <th>Nama&nbsp;Shift</th>
+                                <th>Jam&nbsp;Min&nbsp;Masuk</th>
                                 <th>Jam&nbsp;Masuk</th>
-                                <th>Jam&nbsp;Kerja</th>
+                                <th>Jam&nbsp;Batas&nbsp;Terlambat</th>
                                 <th>Jam&nbsp;Keluar</th>
+                                <th>Jam&nbsp;Batas&nbsp;Pulang</th>
                                 <th>Opsi</th>
                             </tr>
                         </thead>
@@ -220,16 +240,24 @@
                 name: 'nama_shift'
             },
             {
+                data: 'jam_min_masuk',
+                name: 'jam_min_masuk'
+            },
+            {
                 data: 'jam_masuk',
                 name: 'jam_masuk'
             },
             {
-                data: 'jam_kerja',
-                name: 'jam_kerja'
+                data: 'jam_terlambat',
+                name: 'jam_terlambat'
             },
             {
                 data: 'jam_keluar',
                 name: 'jam_keluar'
+            },
+            {
+                data: 'jam_pulang_cepat',
+                name: 'jam_pulang_cepat'
             },
             {
                 data: 'option',
@@ -252,6 +280,98 @@
         $('#jam_keluar_update').val(jamkeluar);
         $('#modal_edit_shift').modal('show');
 
+    });
+    $(document).on("click", "#btn_simpan_shift", function() {
+        let shift = $('#nama_shift').val();
+        let jammasuk = $('#jam_masuk').val();
+        let jamkeluar = $('#jam_keluar').val();
+        let jamminmasuk = $('#jam_min_masuk').val();
+        let jamterlambat = $('#jam_terlambat').val();
+        let jampulangcepat = $('#jam_pulang_cepat').val();
+        let url = "@if(Auth::user()->is_admin =='hrd'){{ url('hrd/shift/store/'.$holding->holding_code) }}@else {{ url('/shift/store/'.$holding->holding_code) }} @endif";
+        Swal.fire({
+            title: 'Apakah kamu yakin?',
+            text: "Data akan disimpan",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes!'
+        }).then((result) => {
+            if (result.value) {
+                $.ajax({
+                    url: url,
+                    type: "POST",
+                    data: {
+                        _token: "{{ csrf_token() }}",
+                        nama_shift: shift,
+                        jam_masuk: jammasuk,
+                        jam_keluar: jamkeluar,
+                        jam_min_masuk: jamminmasuk,
+                        jam_terlambat: jamterlambat,
+                        jam_pulang_cepat: jampulangcepat,
+                    },
+                    error: function(data) {
+                        let errors = data.responseJSON.message;
+                        console.log(errors);
+                        let message = "<ul>";
+                        Object.keys(errors).forEach(function(key) {
+                            message += "<li>" + errors[key][0] + "</li>";
+                        });
+                        message += "</ul>";
+                        Swal.fire({
+                            title: 'Error',
+                            html: message,
+                            icon: 'error',
+                            customClass: {
+                                htmlContainer: 'swal-left' // kasih class custom
+                            },
+                            timer: 4500
+                        });
+                    },
+                    success: function(data) {
+                        console.log(data);
+                        if (data.code === 200) {
+                            Swal.fire({
+                                title: 'Success',
+                                text: data.message,
+                                icon: 'success',
+                                timer: 4500
+                            });
+                        } else if (data.code === 422) {
+                            let errors = data.responseJSON.errors;
+                            let message = "";
+                            Object.keys(errors).forEach(function(key) {
+                                message += errors[key][0] + "\n";
+                            });
+                            Swal.fire({
+                                title: 'Error!',
+                                text: message,
+                                icon: 'error',
+                                timer: 4500
+                            });
+                        } else {
+                            Swal.fire({
+                                title: 'Error!',
+                                text: data.message,
+                                icon: 'error',
+                                timer: 4500
+                            });
+                        }
+                        $('#modal_tambah_shift').modal('hide');
+                        $('#form_tambah_shift').trigger('reset');
+                        $('#table_shift').DataTable().ajax.reload();
+                    }
+                });
+            } else {
+                Swal.fire({
+                    title: 'Cancelled!',
+                    text: 'Your data is safe :',
+                    icon: 'error',
+                    timer: 1500
+                })
+            }
+        });
     });
     $(document).on('click', '#btn_delete_shift', function() {
         var id = $(this).data('id');

@@ -421,34 +421,21 @@ Route::middleware('admin')->group(function () {
     Route::get('/shift/{holding}', [ShiftController::class, 'index'])->middleware('admin');
     Route::get('/shift-datatable/{holding}', [ShiftController::class, 'datatable'])->middleware('admin');
     Route::get('/shift/create/{holding}', [ShiftController::class, 'create'])->middleware('admin');
-    Route::get('/shift/create/sp', [ShiftController::class, 'create'])->middleware('admin');
-    Route::get('/shift/create/sps', [ShiftController::class, 'create'])->middleware('admin');
-    Route::get('/shift/create/sip', [ShiftController::class, 'create'])->middleware('admin');
-    Route::post('/shift/store/sp', [ShiftController::class, 'store']);
-    Route::post('/shift/store/sps', [ShiftController::class, 'store']);
-    Route::post('/shift/store/sip', [ShiftController::class, 'store']);
+    Route::post('/shift/store/{holding}', [ShiftController::class, 'store']);
     Route::post('/shift/update/{holding}', [ShiftController::class, 'update'])->middleware('admin');
     Route::get('/shift/delete/{id}/{holding}', [ShiftController::class, 'destroy'])->middleware('admin');
-    Route::get('/karyawan/shift/{id}/sp', [karyawanController::class, 'shift'])->middleware('admin');
-    Route::get('/karyawan/shift/{id}/sps', [karyawanController::class, 'shift'])->middleware('admin');
-    Route::get('/karyawan/shift/{id}/sip', [karyawanController::class, 'shift'])->middleware('admin');
-    Route::get('/karyawan/mapping_shift_datatable/{id}/sp', [karyawanController::class, 'mapping_shift_datatable'])->middleware('admin');
-    Route::get('/karyawan/mapping_shift_datatable/{id}/sps', [karyawanController::class, 'mapping_shift_datatable'])->middleware('admin');
-    Route::get('/karyawan/mapping_shift_datatable/{id}/sip', [karyawanController::class, 'mapping_shift_datatable'])->middleware('admin');
-    Route::post('/karyawan/shift/proses-tambah-shift/sp', [karyawanController::class, 'prosesTambahShift'])->middleware('admin');
-    Route::post('/karyawan/shift/proses-tambah-shift/sps', [karyawanController::class, 'prosesTambahShift'])->middleware('admin');
-    Route::post('/karyawan/shift/proses-tambah-shift/sip', [karyawanController::class, 'prosesTambahShift'])->middleware('admin');
-    Route::get('/karyawan/delete-shift/{id}/sp', [karyawanController::class, 'deleteShift'])->middleware('admin');
-    Route::get('/karyawan/delete-shift/{id}/sps', [karyawanController::class, 'deleteShift'])->middleware('admin');
-    Route::get('/karyawan/delete-shift/{id}/sip', [karyawanController::class, 'deleteShift'])->middleware('admin');
-    Route::get('/karyawan/edit-shift/{id}/sp', [karyawanController::class, 'editShift'])->middleware('admin');
-    Route::get('/karyawan/edit-shift/{id}/sps', [karyawanController::class, 'editShift'])->middleware('admin');
-    Route::get('/karyawan/edit-shift/{id}/sip', [karyawanController::class, 'editShift'])->middleware('admin');
+    Route::get('/karyawan/shift/{id}/{holding}', [karyawanController::class, 'shift'])->middleware('admin');
+    Route::get('/karyawan/mapping_shift_datatable/{id}/{holding}', [karyawanController::class, 'mapping_shift_datatable'])->middleware('admin');
+    Route::post('/karyawan/shift/proses-tambah-shift/{holding}', [karyawanController::class, 'prosesTambahShift'])->middleware('admin');
+    Route::get('/karyawan/delete-shift/{id}/{holding}', [karyawanController::class, 'deleteShift'])->middleware('admin');
+    Route::get('/karyawan/edit-shift/{id}/{holding}', [karyawanController::class, 'editShift'])->middleware('admin');
 
     // FINGER MACHINE
     Route::get('/finger/{holding}', [FingerController::class, 'index'])->middleware('admin');
     Route::get('/finger-datatable/{holding}', [FingerController::class, 'datatable'])->middleware('admin');
     Route::post('/finger/store/{holding}', [FingerController::class, 'store'])->middleware('admin');
+    Route::post('/finger/update/{holding}', [FingerController::class, 'update'])->middleware('admin');
+    Route::get('/finger/delete/{id}/{holding}', [FingerController::class, 'destroy'])->middleware('admin');
 
     //
     Route::get('/karyawan/get_departemen', [karyawanController::class, 'get_departemen'])->middleware('admin');

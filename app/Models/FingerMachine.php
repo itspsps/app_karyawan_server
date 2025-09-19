@@ -12,5 +12,11 @@ class FingerMachine extends Model
     public $incrementing = false;
     protected $table = 'fingerprint_machines';
     protected $guarded = ['Id'];
-    protected $fillable = ['Name', 'Ip', 'Port', 'IsActive'];
+    protected $fillable = [
+        'Name',
+        'Ip',
+        'Port',
+        'IsActive',
+        'status'
+    ];
 }

@@ -43,7 +43,7 @@
                                                 <input type="text" id="nama_mesin" name="nama_mesin" class="form-control @error('nama_mesin') is-invalid @enderror" placeholder="Masukkan Nama Mesin" value="{{ old('nama_mesin') }}" />
                                                 <label for="nama_mesin">Nama Mesin</label>
                                             </div>
-                                            @error('name')
+                                            @error('nama_mesin')
                                             <span class="invalid-feedback" role="alert">
                                                 <strong>{{ $message }}</strong>
                                             </span>
@@ -68,8 +68,8 @@
                                     <div class="row g-2">
                                         <div class="col mb-2">
                                             <div class="form-floating form-floating-outline">
-                                                <input type="number" id="port_mesin" name="port_mesin" class="form-control @error('port_mesin') is-invalid @enderror" placeholder="Masukkan port_mesin" value="{{ old('port_mesin') }}" />
-                                                <label for="port_mesin">Jam Kerja</label>
+                                                <input type="number" id="port_mesin" name="port_mesin" class="form-control @error('port_mesin') is-invalid @enderror" placeholder="Masukkan Port Mesin" value="{{ old('port_mesin') }}" />
+                                                <label for="port_mesin">Port Mesin</label>
                                             </div>
                                             @error('port_mesin')
                                             <span class="invalid-feedback" role="alert">
@@ -90,23 +90,23 @@
                         </div>
                     </div>
                     <!-- modal edit -->
-                    <div class="modal fade" id="modal_edit_shift" data-bs-backdrop="static" tabindex="-1">
+                    <div class="modal fade" id="modal_edit_finger" data-bs-backdrop="static" tabindex="-1">
                         <div class="modal-dialog modal-dialog-scrollable">
-                            <form method="post" action="@if(Auth::user()->is_admin =='hrd'){{ url('hrd/finger/update/'.$holding->id) }}@else {{ url('/finger/update/'.$holding->id) }} @endif" class="modal-content" enctype="multipart/form-data">
-                                @csrf
+                            <form method="post" id="form_edit_finger" class="modal-content" enctype="multipart/form-data">
+
                                 <div class="modal-header">
-                                    <h4 class="modal-title" id="backDropModalTitle">Edit Shift</h4>
+                                    <h4 class="modal-title" id="backDropModalTitle">Edit Finger</h4>
                                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                 </div>
                                 <div class="modal-body">
                                     <div class="row g-2">
                                         <div class="col mb-2">
-                                            <input type="hidden" name="id_shift" id="id_shift" value="">
+                                            <input type="hidden" name="id_finger" id="id_finger" value="">
                                             <div class="form-floating form-floating-outline">
-                                                <input type="text" id="nama_shift_update" name="nama_shift_update" class="form-control @error('nama_shift_update') is-invalid @enderror" placeholder="Masukkan Nama Shift" value="" />
-                                                <label for="nama_shift_update">Nama Shift</label>
+                                                <input type="text" id="nama_mesin_update" name="nama_mesin_update" class="form-control @error('nama_mesin_update') is-invalid @enderror" placeholder="Masukkan Nama Shift" value="" />
+                                                <label for="nama_mesin_update">Nama Mesin</label>
                                             </div>
-                                            @error('name')
+                                            @error('nama_mesin_update')
                                             <span class="invalid-feedback" role="alert">
                                                 <strong>{{ $message }}</strong>
                                             </span>
@@ -117,10 +117,10 @@
                                     <div class="row g-2">
                                         <div class="col mb-2">
                                             <div class="form-floating form-floating-outline">
-                                                <input type="time" id="jam_masuk_update" name="jam_masuk_update" class="form-control @error('jam_masuk_update') is-invalid @enderror" placeholder="Masukkan Jam Masuk" value="" />
-                                                <label for="jam_masuk_update">Jam Masuk</label>
+                                                <input type="text" id="ip_mesin_update" name="ip_mesin_update" class="form-control @error('ip_mesin_update') is-invalid @enderror" placeholder="Masukkan IP Mesin" value="" />
+                                                <label for="ip_mesin_update">IP Mesin</label>
                                             </div>
-                                            @error('jam_masuk_update')
+                                            @error('ip_mesin_update')
                                             <span class="invalid-feedback" role="alert">
                                                 <strong>{{ $message }}</strong>
                                             </span>
@@ -131,24 +131,10 @@
                                     <div class="row g-2">
                                         <div class="col mb-2">
                                             <div class="form-floating form-floating-outline">
-                                                <input type="time" id="jam_kerja_update" name="jam_kerja_update" class="form-control @error('jam_kerja_update') is-invalid @enderror" placeholder="Masukkan Jam Kerja" value="{{ old('jam_kerja_update') }}" />
-                                                <label for="jam_kerja_update">Jam Kerja</label>
+                                                <input type="number" id="port_mesin_update" name="port_mesin_update" class="form-control @error('port_mesin_update') is-invalid @enderror" placeholder="Masukkan Jam Kerja" value="{{ old('port_mesin_update') }}" />
+                                                <label for="port_mesin_update">Port Mesin</label>
                                             </div>
-                                            @error('jam_kerja_update')
-                                            <span class="invalid-feedback" role="alert">
-                                                <strong>{{ $message }}</strong>
-                                            </span>
-                                            @enderror
-                                        </div>
-                                    </div>
-                                    <br>
-                                    <div class="row g-2">
-                                        <div class="col mb-2">
-                                            <div class="form-floating form-floating-outline">
-                                                <input type="time" id="jam_keluar_update" name="jam_keluar_update" class="form-control @error('jam_keluar_update') is-invalid @enderror" placeholder="Masukkan jam_keluar_update" value="" />
-                                                <label for="jam_keluar_update">Jam Keluar</label>
-                                            </div>
-                                            @error('jam_keluar_update')
+                                            @error('port_mesin_update')
                                             <span class="invalid-feedback" role="alert">
                                                 <strong>{{ $message }}</strong>
                                             </span>
@@ -160,7 +146,7 @@
                                     <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
                                         Close
                                     </button>
-                                    <button type="submit" class="btn btn-primary">Save</button>
+                                    <button type="button" id="btn_save_edit_finger" class="btn btn-primary">Save</button>
                                 </div>
                             </form>
                         </div>
@@ -233,8 +219,9 @@
 
     $(document).on("click", "#btn_save_add_finger", function() {
         var nama_mesin = $('#nama_mesin').val();
-        var ip_mesin = $('ip_mesin').val();
-        var port_mesin = $('port_mesin').val();
+        var ip_mesin = $('#ip_mesin').val();
+        var port_mesin = $('#port_mesin').val();
+        // console.log(nama_mesin, ip_mesin, port_mesin);
         Swal.fire({
             title: 'Apakah kamu yakin?',
             text: "Kamu tidak dapat mengembalikan data ini",
@@ -248,8 +235,14 @@
                 $.ajax({
                     url: "@if(Auth::user()->is_admin =='hrd'){{ url('hrd/finger/store/'.$holding->holding_code) }}@else {{ url('/finger/store/'.$holding->holding_code) }} @endif",
                     type: 'POST',
-                    data: formData,
+                    data: {
+                        nama_mesin: nama_mesin,
+                        ip_mesin: ip_mesin,
+                        port_mesin: port_mesin,
+                        _token: '{{ csrf_token() }}',
+                    },
                     success: function(data) {
+                        console.log(data);
                         Swal.fire({
                             title: 'Sukses!',
                             text: data.message,
@@ -269,7 +262,12 @@
                             Object.keys(errors).forEach(function(key) {
                                 message += errors[key][0] + "\n";
                             });
-                            alert("Validasi gagal:\n" + message);
+                            Swal.fire({
+                                title: 'Gagal!',
+                                text: message,
+                                icon: 'error',
+                                timer: 4500
+                            });
                         }
                     }
                 });
@@ -283,21 +281,86 @@
             }
         });
     });
-    $(document).on("click", "#btn_edit_shift", function() {
+    $(document).on("click", "#btn_save_edit_finger", function() {
+        var id = $('#id_finger').val();
+        var nama_mesin = $('#nama_mesin_update').val();
+        var ip_mesin = $('#ip_mesin_update').val();
+        var port_mesin = $('#port_mesin_update').val();
+        // console.log(nama_mesin, ip_mesin, port_mesin);
+        Swal.fire({
+            title: 'Apakah kamu yakin?',
+            text: "Kamu tidak dapat mengembalikan data ini",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes!',
+        }).then((result) => {
+            if (result.value) {
+                $.ajax({
+                    url: "@if(Auth::user()->is_admin =='hrd'){{ url('hrd/finger/update/'.$holding->holding_code) }}@else {{ url('/finger/update/'.$holding->holding_code) }} @endif",
+                    type: 'POST',
+                    data: {
+                        id: id,
+                        nama_mesin: nama_mesin,
+                        ip_mesin: ip_mesin,
+                        port_mesin: port_mesin,
+                        _token: '{{ csrf_token() }}',
+                    },
+                    success: function(data) {
+                        console.log(data);
+                        Swal.fire({
+                            title: 'Sukses!',
+                            text: data.message,
+                            icon: 'success',
+                            timer: 4500
+                        });
+                        $('#form_edit_finger')[0].reset();
+
+                        // reload datatable tanpa refresh page
+                        table.ajax.reload(null, false);
+                        $('#modal_edit_finger').modal('hide');
+                    },
+                    error: function(err) {
+                        if (err.status === 422) {
+                            let errors = err.responseJSON.errors;
+                            let message = "";
+                            Object.keys(errors).forEach(function(key) {
+                                message += errors[key][0] + "\n";
+                            });
+                            Swal.fire({
+                                title: 'Gagal!',
+                                text: message,
+                                icon: 'error',
+                                timer: 4500
+                            });
+                        }
+                    }
+                });
+            } else {
+                Swal.fire({
+                    title: 'Cancelled!',
+                    text: 'Your data is safe :',
+                    icon: 'error',
+                    timer: 3500
+                })
+            }
+        });
+    });
+    $(document).on("click", "#btn_edit_finger", function() {
         let id = $(this).data('id');
-        let shift = $(this).data("shift");
-        let jammasuk = $(this).data("jammasuk");
-        let jamkeluar = $(this).data("jamkeluar");
-        let holding = $(this).data("holding");
+        let name_finger = $(this).data("name_finger");
+        let ip_mesin = $(this).data("ip_mesin");
+        let port_mesin = $(this).data("port_mesin");
         // console.log(jamkeluar);
-        $('#id_shift').val(id);
-        $('#nama_shift_update').val(shift);
-        $('#jam_masuk_update').val(jammasuk);
-        $('#jam_keluar_update').val(jamkeluar);
-        $('#modal_edit_shift').modal('show');
+        $('#id_finger').val(id);
+        $('#nama_mesin_update').val(name_finger);
+        $('#ip_mesin_update').val(ip_mesin);
+        $('#port_mesin_update').val(port_mesin);
+        $('#modal_edit_finger').modal('show');
 
     });
-    $(document).on('click', '#btn_delete_shift', function() {
+    $(document).on('click', '#btn_delete_finger', function() {
         var id = $(this).data('id');
         let holding = $(this).data("holding");
         console.log(id, holding);
@@ -312,10 +375,15 @@
         }).then((result) => {
             if (result.value) {
                 $.ajax({
-                    url: "@if(Auth::user()->is_admin =='hrd'){{ url('hrd/shift/delete/') }} @else {{ url('/shift/delete/') }}@endif" + '/' + id + '/' + holding,
+                    url: "@if(Auth::user()->is_admin =='hrd'){{ url('hrd/finger/delete/') }}@else{{ url('/finger/delete/') }}@endif" + '/' + id + '/' + holding,
                     type: "GET",
                     error: function() {
-                        alert('Something is wrong');
+                        Swal.fire({
+                            title: 'Error!',
+                            text: 'Something is wrong',
+                            icon: 'error',
+                            timer: 4500
+                        });
                     },
                     success: function(data) {
                         if (data.code === 200) {
