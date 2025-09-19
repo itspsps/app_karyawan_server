@@ -21,6 +21,11 @@
                     <div class="card-header">
                         <div class="d-flex align-items-center justify-content-between">
                             <h5 class="card-title m-0 me-2">DATA INTERVIEW ({{ $user_recruitment->Cv->nama_lengkap }})</h5>
+                            <a href="{{ url('/pg/pelamar-detail_pdf/' . $user_recruitment->id . '/' . $holding->holding_code) }}"
+                                type="button" class="btn btn-sm btn-info" target="_blank">
+                                <i class="tf-icons mdi mdi-eye-circle-outline me-1"></i>
+                                Lihat CV PDF
+                            </a>
                         </div>
                         <input type="hidden" value="{{ $user_recruitment->id }}" name="recruitment_user_id"
                             id="recruitment_user_id_add">

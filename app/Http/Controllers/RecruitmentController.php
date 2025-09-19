@@ -316,25 +316,9 @@ class RecruitmentController extends Controller
         }
     }
 
-    // function pg_list_pelamar($id)
-    // {
-    //     $holding = request()->segment(count(request()->segments()));
-    //     return view('admin.recruitment-users.recruitment.list_pelamar', [
-    //         'title' => 'Data Recruitment',
-    //         'holding'   => $holding,
-    //         'id_recruitment'        => $id,
-    //         'data_departemen' => Departemen::all(),
-    //         'data_bagian' => Bagian::with('Divisi')->where('holding', $holding)->get(),
-    //         'data_dept' => Departemen::orderBy('nama_departemen', 'asc')->where('holding', $holding)->get(),
-    //         'data_divisi' => Divisi::orderBy('nama_divisi', 'asc')->where('holding', $holding)->get()
-    //     ]);
-    // }
     function pg_list_pelamar($id, $holding)
     {
         $holdings = Holding::where('holding_code', $holding)->first();
-        // $get_user = RecruitmentUser::where('recruitment_admin_id', $id)->first();
-        // $get_cv = RecruitmentCV::where('users_career_id', $get_user->users_career_id)->first();
-        // Hapus pelamar kadaluarsa
         $get_recruitment_user_id = RecruitmentUser::where('recruitment_admin_id', $id)
             ->whereDate('tanggal_konfirmasi', '<', date('Y-m-d H:i:s'))
             ->where('tanggal_konfirmasi', '!=', null)
@@ -569,8 +553,7 @@ class RecruitmentController extends Controller
         $pekerjaan_count = RecruitmentRiwayat::where('id_user', $data_cv->AuthLogin->id)->orderBy('tanggal_keluar', 'DESC')->count();
         $keahlian_count = RecruitmentKeahlian::where('id_user', $data_cv->AuthLogin->id)->count();
         $keahlian = RecruitmentKeahlian::where('id_user', $data_cv->AuthLogin->id)->get();
-        // dd($pekerjaan);
-        // dd($pendidikan);
+
         $pdf = Pdf::loadView('admin.recruitment-users.recruitment.user_detail_pdf', [
             'ti$pekerjaan_counttle' => 'Data Recruitment',
             'holding'   => $holdings,
@@ -587,21 +570,6 @@ class RecruitmentController extends Controller
             'kesehatan_kecelakaan'
         ));
         return $pdf->stream('admin.recruitment-users.recruitment.user_detail_pdf');
-        // return view('admin.recruitment-users.recruitment.user_detail_pdf', [
-        //     'ti$pekerjaan_counttle' => 'Data Recruitment',
-        //     'holding'   => $holding,
-        // ], compact(
-        //     'data_cv',
-        //     'pendidikan',
-        //     'pekerjaan',
-        //     'pekerjaan_count',
-        //     'keahlian_count',
-        //     'keahlian',
-        //     'kesehatan',
-        //     'kesehatan_pengobatan',
-        //     'kesehatan_rs',
-        //     'kesehatan_kecelakaan'
-        // ));
     }
     public function pelamar_detail_ubah(Request $request, $holding)
     {
@@ -1122,8 +1090,6 @@ asoy.com
                     }
                 }
             }
-
-
             return response()->json([
                 'code' => 200,
                 'message' => 'Data Berhasil Diupdate'
@@ -1403,6 +1369,7 @@ Maaf Anda Belum lolos sesi interview dan ujian
                         'tempat_wawancara'              => $tempat,
                         'waktu_wawancara'               => $request->waktu_wawancara,
                         'status_lanjutan'               => $request->status,
+                        'feedback_lanjutan'             => null,
                         'tanggal_konfirmasi_manager'    => date('Y-m-d H:i:s', strtotime('+1 days')),
                         'updated_at'                    => date('Y-m-d H:i:s'),
                     ]
@@ -1480,10 +1447,11 @@ selamat Anda lolos wawancara manager
 
                     [
                         'status_lanjutan'       => $request->status,
+                        'feedback_lanjutan'     => null,
                         'gaji'                  => $request->gaji,
                         'tanggal_diterima'      => $request->tanggal_diterima,
                         'notes'                 => $request->notes_langsung,
-                        'konfirmasi_diterima'      => date('Y-m-d H:i:s', strtotime('+1 days')),
+                        'konfirmasi_diterima'   => date('Y-m-d H:i:s', strtotime('+1 days')),
                         'updated_at'            => date('Y-m-d H:i:s'),
                     ]
                 );
@@ -1493,7 +1461,7 @@ selamat Anda lolos wawancara manager
                         'lowongan_baru'             => $request->lowongan_baru,
                         'lowongan_lama'             => $request->lowongan_lama,
                         'recruitment_user_id'       => $request->id,
-                        'status'           => $request->status,
+                        'status'                    => $request->status,
                         'created_at'                => date('Y-m-d H:i:s'),
                     ]
                 );
@@ -3059,6 +3027,44 @@ selamat Anda lolos bekerja
     function pg_ranking($holding)
     {
         $holdings = Holding::where('holding_code', $holding)->first();
+
+        //kadaluarsa diterima langsung
+        $get_recruitment_user_id = RecruitmentUser::whereDate('konfirmasi_diterima', '<', date('Y-m-d H:i:s'))
+            ->where('konfirmasi_diterima', '!=', null)
+            ->where('feedback_lanjutan', null)
+            ->get();
+        if ($get_recruitment_user_id != null) {
+            foreach ($get_recruitment_user_id as $ii) {
+                RecruitmentUser::where('id', $ii->id)->update([
+                    'status_lanjutan'        => '3b',
+                ]);
+                RecruitmentUserRecord::insert([
+                    'id' => Uuid::uuid4(),
+                    'recruitment_user_id' => $ii->id,
+                    'status' => '3b',
+                ]);
+            }
+        }
+        //kadaluarsa diterima langsung end
+        //kadaluarsa diterima wawancara manager
+        $get_recruitment_user_id = RecruitmentUser::whereDate('tanggal_konfirmasi_manager', '<', date('Y-m-d H:i:s'))
+            ->where('tanggal_konfirmasi_manager', '!=', null)
+            ->where('feedback_lanjutan', null)
+            ->get();
+        if ($get_recruitment_user_id != null) {
+            foreach ($get_recruitment_user_id as $ii) {
+                RecruitmentUser::where('id', $ii->id)->update([
+                    'status_lanjutan'        => '3b',
+                ]);
+                RecruitmentUserRecord::insert([
+                    'id' => Uuid::uuid4(),
+                    'recruitment_user_id' => $ii->id,
+                    'status' => '3b',
+                ]);
+            }
+        }
+        //kadaluarsa diterima wawancara manager end
+
         return view('admin.recruitment-users.ranking.data_rankinginterview', [
             // return view('karyawan.index', [
             'title' => 'Data Ranking',
