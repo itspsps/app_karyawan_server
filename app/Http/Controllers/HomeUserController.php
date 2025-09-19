@@ -137,7 +137,7 @@ class HomeUserController extends Controller
                 $jam_absen = null;
                 $jam_pulang = null;
                 $status_absen_skrg = MappingShift::where('karyawan_id', $user_login)->where('tanggal_masuk', $tglskrg)->orderBy('tanggal_masuk', 'DESC')->first();
-                $jam_kerja = MappingShift::with('Shift')->where('user_id', $user_login)->where('tanggal_masuk', $tglskrg)->orderBy('tanggal_masuk', 'DESC')->first();
+                $jam_kerja = MappingShift::with('Shift')->where('karyawan_id', $user_login)->where('tanggal_masuk', $tglskrg)->orderBy('tanggal_masuk', 'DESC')->first();
                 // dd($jam_kerja->status_absensi);
 
                 return view('users.home.index', [

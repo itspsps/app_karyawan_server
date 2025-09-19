@@ -25,6 +25,8 @@ use App\Models\Holding;
 use App\Models\InterviewAdmin;
 use App\Models\InterviewUser;
 use App\Models\Karyawan;
+use App\Models\KaryawanKeahlian;
+use App\Models\KaryawanPendidikan;
 use App\Models\Pembobotan;
 use App\Models\RecruitmentCV;
 use App\Models\RecruitmentKeahlian;
@@ -55,6 +57,7 @@ use RealRashid\SweetAlert\Facades\Alert;
 use DB;
 use DivisionByZeroError;
 use Illuminate\Support\Facades\DB as FacadesDB;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Validation\Rules\Exists;
 use PhpParser\Builder\Function_;
 
@@ -1567,25 +1570,204 @@ selamat Anda lolos bekerja
                     ]);
                 }
                 // dd($request->all());
-                $get_recruitment_user = RecruitmentUser::where('id', $request->id)->first();
+                $get_recruitment_user = RecruitmentUser::where('id', $request->id)->with([
+                    'recruitmentAdmin' => function ($query) {
+                        $query->with([
+                            'Sites' => function ($query) {
+                                $query;
+                            }
+                        ])->with([
+                            'Holding' => function ($query) {
+                                $query;
+                            }
+                        ]);
+                    }
+                ])->first();
+                // dd($get_recruitment_user->recruitmentAdmin->Holding->holding_number);
                 $get_user = UsersCareer::where('id', $get_recruitment_user->users_career_id)->first();
-                $get_cv = RecruitmentCV::where('users_career_id', $get_user->id)->first();
-                // dd($get_cv);
+                $get_cv = RecruitmentCV::where('users_career_id', $get_user->id)->with([
+                    'provinsiKTP' => function ($query) {
+                        $query->orderBy('id', 'ASC');
+                    }
+                ])->with([
+                    'kabupatenKTP' => function ($query) {
+                        $query->orderBy('id', 'ASC');
+                    }
+                ])->with([
+                    'kecamatanKTP' => function ($query) {
+                        $query->orderBy('id', 'ASC');
+                    }
+                ])->with([
+                    'desaKTP' => function ($query) {
+                        $query->orderBy('id', 'ASC');
+                    }
+                ])->with([
+                    'provinsiNOW' => function ($query) {
+                        $query->orderBy('id', 'ASC');
+                    }
+                ])->with([
+                    'kabupatenNOW' => function ($query) {
+                        $query->orderBy('id', 'ASC');
+                    }
+                ])->with([
+                    'kecamatanNOW' => function ($query) {
+                        $query->orderBy('id', 'ASC');
+                    }
+                ])->with([
+                    'desaNOW' => function ($query) {
+                        $query->orderBy('id', 'ASC');
+                    }
+                ])->first();
+                if ($get_cv->alamat_sekarang == 'sama') {
+                    $dom = 'ya';
+                    $alamatDom  = null;
+                } else {
+                    $alamatDom  = $get_cv->provinsiNOW->name . ', ' . $get_cv->kabupatenNOW->name . ', ' . $get_cv->desaNOW->name . ', RT. ' . $get_cv->rw_now . ', RW. ' . $get_cv->rw_now;
+                    $dom = 'tidak';
+                }
+
+                // Foto Karyawan
+                $filePP = url_karir() . '/storage/file_pp/' . $get_cv->file_pp;
+                $response = Http::get($filePP);
+
+                if ($response->successful()) {
+                    Storage::disk('public')->put('file_pp/' . $get_cv->file_pp, $response->body());
+                }
+                // Foto Karyawan End
+
+                // Foto ktp
+                $fileKTP = url_karir() . '/storage/ktp/' . $get_cv->ktp;
+                $response = Http::get($fileKTP);
+
+                if ($response->successful()) {
+                    Storage::disk('public')->put('ktp/' . $get_cv->ktp, $response->body());
+                }
+                // Foto ktp End
+
+                // file ijazah
+                $fileIjazah = url_karir() . '/storage/ijazah/' . $get_cv->ijazah;
+                $response = Http::get($fileIjazah);
+
+                if ($response->successful()) {
+                    Storage::disk('public')->put('ijazah/' . $get_cv->ijazah, $response->body());
+                }
+                // file ijazah End
+
+                // Transkrip Nilai
+                $fileTranskripNilai = url_karir() . '/storage/transkrip_nilai/' . $get_cv->transkrip_nilai;
+                $response = Http::get($fileTranskripNilai);
+
+                if ($response->successful()) {
+                    Storage::disk('public')->put('transkrip_nilai/' . $get_cv->transkrip_nilai, $response->body());
+                }
+                // Transkrip Nilai End
+
+                $id_karyawan = Uuid::uuid4();
+
+                $no_karyawan = $get_recruitment_user->recruitmentAdmin->Holding->holding_number . '00' . date('ym', strtotime($get_recruitment_user->tanggal_diterima)) . date('dmy', strtotime($get_cv->tanggal_lahir));
                 Karyawan::insert(
 
                     [
-                        'id'                        => Uuid::uuid4(),
+                        'id'                        => $id_karyawan,
                         'name'                      => $get_cv->nama_lengkap,
+                        'nomor_identitas_karyawan'  => $no_karyawan,
+                        'email'                     => $get_user->email,
+                        'telepon'                   => $get_user->nomor_whatsapp,
+                        'agama'                     => $get_cv->agama,
+                        'foto_karyawan'             => $get_cv->file_pp,
+                        'email'                     => $get_user->email,
+                        'status_nomor'              => 'ya',
+                        'nomor_wa'                  => $get_user->nomor_whatsapp,
+                        'tempat_lahir'              => $get_cv->tempat_lahir,
+                        'tgl_lahir'                 => $get_cv->tanggal_lahir,
+                        'gender'                    => $get_cv->jenis_kelamin,
+                        'tgl_join'                  => $get_recruitment_user->tanggal_diterima,
+                        'status_alamat'             => $dom,
+                        'status_nikah'              => $get_cv->status_pernikahan,
+                        'ijazah'                    => $get_cv->ijazah,
+                        'transkrip_nilai'           => $get_cv->transkrip_nilai,
+                        'ipk'                       => $get_cv->ipk,
+                        'provinsi_domisili'         => $get_cv->provinsi_now,
+                        'kabupaten_domisili'        => $get_cv->kabupaten_now,
+                        'kecamatan_domisili'        => $get_cv->kecamatan_now,
+                        'desa_domisili'             => $get_cv->desa_now,
+                        'rt_domisili'               => $get_cv->rt_now,
+                        'rw_domisili'               => $get_cv->rw_now,
+                        'alamat_domisili'           => $alamatDom,
+                        'nik'                       => $get_cv->nik,
+                        'ktp'                       => $get_cv->ktp,
+                        'detail_alamat'             => $get_cv->nama_jalan_now,
+                        'provinsi'                  => $get_cv->provinsi_ktp,
+                        'kabupaten'                 => $get_cv->kabupaten_ktp,
+                        'kecamatan'                 => $get_cv->kecamatan_ktp,
+                        'desa'                      => $get_cv->desa_ktp,
+                        'rt'                        => $get_cv->rt_ktp,
+                        'rw'                        => $get_cv->rw_ktp,
+                        'alamat'                    => $get_cv->provinsiKTP->name . ', ' . $get_cv->kabupatenKTP->name
+                            . ', ' . $get_cv->kecamatanKTP->name . ', ' . $get_cv->desaKTP->name . ', RT. ' .  $get_cv->rw_ktp . ', RW. ' .  $get_cv->rw_ktp,
+                        'detail_alamat'             => $get_cv->nama_jalan_ktp,
+                        'kategori_jabatan'          => $get_recruitment_user->holding,
+                        'dept_id'                   => $get_recruitment_user->nama_dept,
+                        'divisi_id'                 => $get_recruitment_user->nama_divisi,
+                        'bagian_id'                 => $get_recruitment_user->nama_bagian,
+                        'jabatan_id'                => $get_recruitment_user->nama_jabatan,
+                        'penempatan_kerja'          => $get_recruitment_user->recruitmentAdmin->Sites->site_name,
+                        'status_aktif'              => 'AKTIF',
+                        'created_at'                => date('Y-m-d H:i:s'),
                     ]
                 );
-                // RecruitmentUserRecord::insert(
-                //     [
-                //         'id'                        => Uuid::uuid4(),
-                //         'recruitment_user_id'       => $request->id,
-                //         'status'                    => $request->status,
-                //         'created_at'                => date('Y-m-d H:i:s'),
-                //     ]
-                // );
+                $pendidikan = RecruitmentPendidikan::where('id_user', $get_user->id)->get();
+                foreach ($pendidikan as $pp) {
+                    KaryawanPendidikan::insert(
+                        [
+                            'id_pendidikan'         => Uuid::uuid4(),
+                            'id_karyawan'           => $id_karyawan,
+                            'institusi'             => $pp->institusi,
+                            'jurusan'               => $pp->jurusan,
+                            'jenjang'               => $pp->jenjang,
+                            'tanggal_masuk'         => $pp->tanggal_masuk,
+                            'created_at'            => date('Y-m-d H:i:s'),
+                        ]
+                    );
+                }
+                $keahlian = RecruitmentKeahlian::where('id_user', $get_user->id)->get();
+                foreach ($keahlian as $kk) {
+                    $fileKeahlian = url_karir() . '/storage/file_keahlian/' . $kk->file_keahlian;
+                    $response = Http::get($fileKeahlian);
+
+                    if ($response->successful()) {
+                        Storage::disk('public')->put('file_keahlian/' . $kk->file_keahlian, $response->body());
+                    }
+                    KaryawanKeahlian::insert(
+                        [
+                            'id_keahlian'           => Uuid::uuid4(),
+                            'id_karyawan'           => $id_karyawan,
+                            'keahlian'              => $kk->keahlian,
+                            'file_keahlian'         => $kk->file_keahlian,
+                            'created_at'            => date('Y-m-d H:i:s'),
+                        ]
+                    );
+                }
+                RecruitmentUserRecord::insert(
+                    [
+                        'id'                        => Uuid::uuid4(),
+                        'recruitment_user_id'       => $request->id,
+                        'status'                    => '8b',
+                        'created_at'                => date('Y-m-d H:i:s'),
+                    ]
+                );
+                RecruitmentUser::where('id', $request->id)->update(
+                    [
+                        'status_lanjutan'           => '8b',
+                        'updated_at'                => date('Y-m-d H:i:s'),
+                    ]
+                );
+                UserCareer::where('id', $get_user->id)->update(
+                    [
+                        'diterima'                  => '1',
+                        'updated_at'                => date('Y-m-d H:i:s'),
+                    ]
+                );
             }
 
             return response()->json([
@@ -3323,6 +3505,8 @@ selamat Anda lolos bekerja
                         return '<p class="bg-warning p-2 text-white">Perubahan Posisi Lowongan</p>';
                     } elseif ($row->status_lanjutan == '7b') {
                         return '<p class="bg-success p-2 text-white">Lolos Posisi Lain</p>';
+                    } elseif ($row->status_lanjutan == '8b') {
+                        return '<p class="bg-info p-2 text-white">Ditetapkan Sebagai Karyawan</p>';
                     }
                 })
                 ->addColumn('total_koefisien', function ($row) {
