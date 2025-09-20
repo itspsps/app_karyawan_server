@@ -1674,6 +1674,8 @@ selamat Anda lolos bekerja
                         'detail_alamat'             => $get_cv->nama_jalan_ktp,
                         'alamat'                    => $get_cv->provinsiKTP->name . ', ' . $get_cv->kabupatenKTP->name
                             . ', ' . $get_cv->kecamatanKTP->name . ', ' . $get_cv->desaKTP->name . ', RT. ' .  $get_cv->rw_ktp . ', RW. ' .  $get_cv->rw_ktp,
+                        'kuota_cuti_tahunan'        => '0',
+                        'kategori'                  => 'Karyawan Bulanan',
                         'kontrak_kerja'             => $get_recruitment_user->holding,
                         'kategori_jabatan'          => $get_recruitment_user->holding,
                         'dept_id'                   => $get_recruitment_user->nama_dept,
