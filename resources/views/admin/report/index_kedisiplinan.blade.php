@@ -203,6 +203,8 @@
 
         var start = moment().startOf('month');
         var end = moment().endOf('month');
+        // var start = moment('2025-06-21');
+        // var end = moment('2025-07-20');
         var lstart, lend;
 
         function cb(start, end) {

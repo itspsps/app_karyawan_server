@@ -1,9 +1,31 @@
 @extends('admin.layouts.dashboard')
 @section('css')
 <link rel="stylesheet" href="https://cdn.datatables.net/2.0.5/css/dataTables.bootstrap5.css">
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 <style type="text/css">
     .my-swal {
         z-index: X;
+    }
+
+    /* Samain tinggi & border dengan input form-floating */
+    .select2-container--bootstrap-5 .select2-selection {
+        min-height: calc(3.5rem + 2px);
+        border: 1px solid #ced4da;
+        border-radius: 0.375rem;
+        display: flex;
+        align-items: center;
+    }
+
+    .select2-container--bootstrap-5 .select2-results>.select2-results__options {
+        max-height: 200px;
+        /* atur sesuai kebutuhan, misalnya 200px */
+        overflow-y: auto;
+    }
+
+    /* Biar teks rapih di tengah */
+    .select2-container--bootstrap-5 .select2-selection__rendered {
+        line-height: 1.6 !important;
+        padding-left: 0.75rem !important;
     }
 </style>
 @endsection
@@ -93,19 +115,19 @@
                                         </div>
                                         <input type='hidden' name="id_karyawan" id="id_karyawan" value="" />
                                         <div class="form-floating form-floating-outline">
-                                            <select class="form-control @error('shift_id') is-invalid @enderror" id="shift_id" name="shift_id">
+                                            <select class="form-control select2 @error('shift_id') is-invalid @enderror"
+                                                id="shift_id" name="shift_id">
                                                 <option value="">-- Pilih Shift --</option>
                                                 @foreach ($shift as $s)
-                                                @if(old('shift_id') == $s->id)
-                                                <option value=" {{ $s->id }}" selected>{{ $s->nama_shift . " (" . $s->jam_masuk . " - " . $s->jam_keluar . ") " }}</option>
-                                                @else
-                                                <option value="{{ $s->id }}">{{ $s->nama_shift . " (" . $s->jam_masuk . " - " . $s->jam_keluar . ") " }}</option>
-                                                @endif
+                                                <option value="{{ $s->id }}" {{ old('shift_id') == $s->id ? 'selected' : '' }}>
+                                                    {{ $s->nama_shift . " (" . $s->jam_masuk . " - " . $s->jam_keluar . ") " }}
+                                                </option>
                                                 @endforeach
                                             </select>
                                             <label for="shift_id">Shift</label>
                                         </div>
-                                        @error('nik')
+
+                                        @error('shift_id')
                                         <span class="invalid-feedback" role="alert">
                                             <strong>{{ $message }}</strong>
                                         </span>
@@ -190,12 +212,24 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     <script>
         // $('#table_mapping_shift').hide();
         $('#btn_selected_karyawan').hide();
         let holding = '{{ $holding->holding_code }}';
         let holding_id = '{{ $holding->id }}';
         // console.log(holding);
+        $(document).ready(function() {
+            $('#shift_id').select2({
+                theme: 'bootstrap-5',
+                dropdownParent: $('#modal_tambah_shift'), // ganti dengan id modal kamu
+                placeholder: "-- Pilih Shift --",
+                allowClear: true,
+                width: '100%', // biar sama dengan input lain
+                dropdownAutoWidth: false
+            });
+        });
+
         $(document).ready(function() {
             $('#departemen_filter').change(function() {
                 departemen_filter = $(this).val();
@@ -346,7 +380,7 @@
                         },
                     },
                     columns: [{
-                            data: 'no',
+                            data: 'id',
                             render: function(data, type, row, meta) {
                                 return meta.row + meta.settings._iDisplayStart + 1;
                             }

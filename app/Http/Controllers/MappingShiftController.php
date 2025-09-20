@@ -526,14 +526,14 @@ class MappingShiftController extends Controller
         $no = 1;
         $no1 = 1;
         $oke = $user->MappingShift->last();
-        $shift = Carbon::parse($oke->tanggal_masuk)->addDay(1)->format('Y-m-d');
+        // $shift = Carbon::parse($oke->tanggal_masuk)->addDay(1)->format('Y-m-d');
 
         // dd($shift);
         return view('admin.karyawan.mappingshift', [
             'title'             => 'Mapping Shift',
             'karyawan'          => $user,
             'holding'           => $holding,
-            'shift_karyawan'    => $shift,
+            // 'shift_karyawan'    => $shift,
             'shift'             => Shift::all(),
             'jabatan_karyawan'  => $jabatan,
             'divisi_karyawan'   => $divisi,

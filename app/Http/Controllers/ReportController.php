@@ -154,7 +154,7 @@ class ReportController extends Controller
     }
     public function datatable_kedisiplinan(Request $request, $holding)
     {
-        // dd($request->all());
+        date_default_timezone_set('Asia/Jakarta');
         $holding = Holding::where('holding_code', $holding)->first();
         // if (request()->ajax()) {
         $now = Carbon::parse($request->start_date)->startOfDay();
@@ -170,7 +170,7 @@ class ReportController extends Controller
                     $q->whereBetween('tanggal_masuk', [$now, $now1]);
                 }])->where('kontrak_kerja', $holding->id)
                 ->where('kategori', 'Karyawan Bulanan')
-                // ->where('nomor_identitas_karyawan', '=', '2002305050895')
+                // ->where('name', 'DARUL SALAM')
                 ->where('status_aktif', 'AKTIF');
 
             if (!empty($request->departemen_filter)) {
@@ -206,14 +206,11 @@ class ReportController extends Controller
                     if ($jam_masuk->status_absen == 'LIBUR') {
                         return '<span class="badge bg-info">Libur</span>';
                     }
-                    $jam_pulang = $row->MappingShift->firstWhere('tanggal_pulang', $date->toDateString());
-                    if (!$jam_pulang) {
-                        return '<span class="badge bg-danger">Belum diassign shift</span>';
-                    }
+
                     $logs_absensi_masuk = $row->Absensi->filter(function ($log) use ($jam_masuk) {
                         $getcheckIn = Carbon::parse($log->LogTime);
                         $start = Carbon::parse($jam_masuk->tanggal_masuk)->setTimeFromTimeString(Carbon::parse($jam_masuk->Shift->jam_min_masuk)->format('H:i:59'));
-                        $end = Carbon::parse($jam_masuk->tanggal_masuk)->setTimeFromTimeString(Carbon::parse($jam_masuk->Shift->jam_terlambat)->addHours(3)->addMinutes(59)->format('H:i:59'));
+                        $end = Carbon::parse($jam_masuk->tanggal_masuk)->setTimeFromTimeString(Carbon::parse($jam_masuk->Shift->jam_terlambat)->addHours(3)->addMinutes(10)->format('H:i:59'));
                         return $getcheckIn->between($start, $end);
                     });
                     // return $logs_absensi_masuk;
@@ -228,27 +225,38 @@ class ReportController extends Controller
                         $checkIn = '';
                     }
 
-                    $logs_absensi_pulang = $row->Absensi->filter(function ($log) use ($jam_pulang) {
+                    $logs_absensi_pulang = $row->Absensi->filter(function ($log) use ($jam_masuk) {
                         $getcheckOut = Carbon::parse($log->LogTime);
-                        $start = Carbon::parse($jam_pulang->tanggal_pulang)->setTimeFromTimeString(Carbon::parse($jam_pulang->Shift->jam_pulang_cepat)->format('H:i:59'));
-                        $end = Carbon::parse($jam_pulang->tanggal_pulang)->setTimeFromTimeString(Carbon::parse($jam_pulang->Shift->jam_keluar)->addHours(3)->format('H:i:59'));
+                        $start = Carbon::parse($jam_masuk->tanggal_pulang)->setTimeFromTimeString(Carbon::parse($jam_masuk->Shift->jam_pulang_cepat)->format('H:i:00'));
+                        $end = Carbon::parse($jam_masuk->tanggal_pulang)->endOfDay()->format('H:i:00');
                         return $getcheckOut->between($start, $end);
                     });
-
+                    // return $logs_absensi_masuk . ' ' . $logs_absensi_pulang;
                     if ($logs_absensi_pulang->isNotEmpty()) {
                         $checkOut  = Carbon::parse($logs_absensi_pulang->min('LogTime'))->format('H:i');
-                        if ($checkOut < $jam_pulang->Shift->jam_keluar) {
-                            $checkOut = '<span style="color:rgba(var(--bs-danger-rgb));">' . $checkOut . '</span>';
+                        if (Carbon::parse($jam_masuk->tanggal_pulang)->format('Y-m-d') > $date->format('Y-m-d')) {
+
+                            // $checkOut = $row->Absensi;
+                            if ($checkOut < $jam_masuk->Shift->jam_keluar) {
+                                $checkOut = '<span style="color:rgba(var(--bs-danger-rgb));">' . $checkOut . ' (' . Carbon::parse($jam_masuk->tanggal_pulang)->format('d-m-Y') . ')' . '</span>';
+                            } else {
+                                $checkOut = '<span style="color:rgba(var(--bs-success-rgb));">' . $checkOut . '</span> (' . Carbon::parse($jam_masuk->tanggal_pulang)->format('d-m-Y') . ')';
+                            }
                         } else {
-                            $checkOut = '<span style="color:rgba(var(--bs-success-rgb));">' . $checkOut . '</span>';
+                            if ($checkOut < $jam_masuk->Shift->jam_keluar) {
+                                $checkOut = '<span style="color:rgba(var(--bs-danger-rgb));">' . $checkOut . '</span>';
+                            } else {
+                                $checkOut = '<span style="color:rgba(var(--bs-success-rgb));">' . $checkOut . '</span>';
+                            }
                         }
                     } else {
-                        $checkOut = '-';
+                        $checkOut = '';
                     }
-                    if ($checkIn == '<span style="color:red;">' . 'Belum Absen' . '</span>' || $checkOut == '<span style="color:red;">' . 'Belum Absen' . '</span>') {
+                    if ($checkIn == '<span style="color:red;">' . 'Belum Absen' . '</span>' && $checkOut == '<span style="color:red;">' . 'Belum Absen' . '</span>') {
                         $check_all = '<span style="color:red;">' . 'Tidak Hadir' . '</span>';
                         return $check_all;
                     }
+                    // return $logs_absensi_masuk . ' ' . $logs_absensi_pulang;
                     return $checkIn . ' - ' . $checkOut;
                 });
                 $data_tanggal[] = $colName;
@@ -614,7 +622,6 @@ class ReportController extends Controller
         $table = Karyawan::where('kontrak_kerja', $holding->id)
             ->where('kategori', 'Karyawan Bulanan')
             ->where('status_aktif', 'AKTIF')
-            // ->where('name', 'MUHAMMAD FAIZAL IZAK')
             ->select('karyawans.name', 'karyawans.id', 'karyawans.nomor_identitas_karyawan')
             ->orderBy('karyawans.name', 'ASC')
             // ->limit(6)
@@ -725,7 +732,7 @@ class ReportController extends Controller
                         ->orWhere('keterangan_izin', NULL)
                         ->orWhere('keterangan_izin', '');
                 });
-            foreach ($mapping_shift as $data) {
+            foreach ($total_tidak_hadir_kerja as $data) {
                 if ($data->status_absen != 'LIBUR') {
                     if ($data->Shift != NULL) {
                         $logs_masuk = $row->Absensi->filter(function ($log) use ($data) {

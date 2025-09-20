@@ -1599,7 +1599,7 @@ selamat Anda lolos bekerja
                 $response = Http::get($filePP);
 
                 if ($response->successful()) {
-                    Storage::disk('public')->put('file_pp/' . $get_cv->file_pp, $response->body());
+                    Storage::disk('public')->put('foto_karyawan/' . $get_cv->file_pp, $response->body());
                 }
                 // Foto Karyawan End
 

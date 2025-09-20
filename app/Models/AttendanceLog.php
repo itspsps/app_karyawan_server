@@ -10,6 +10,9 @@ class AttendanceLog extends Model
     use HasFactory;
     public $incrementing = false;
     protected $guarded = ['Id'];
+    protected $casts = [
+        'LogTime' => 'datetime',
+    ];
     protected $fillable = [
         'EnrollNumber ',
         'LogTime',
