@@ -159,7 +159,7 @@
         .timeline-centered .timeline-entry {
             position: relative;
             /*width: 50%;
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        float: right;*/
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                float: right;*/
             margin-top: 5px;
             margin-left: 30px;
             margin-bottom: 10px;
@@ -397,6 +397,7 @@
                     <div class="skills layout-spacing ">
                         <div class="widget-content widget-content-area bg-white p-3">
                             <h3 class="">Data Pelamar</h3>
+                            <input type="hidden" value="{{ $recruitment_admin_id }}" id="recruitment_admin_id">
                             <br>
                             <ul class="nav nav-tabs" role="tablist">
                                 <li class="nav-item" role="presentation">
@@ -412,15 +413,15 @@
                                     </a>
                                 </li>
                                 <li class="nav-item" role="presentation">
-                                    <a class="nav-link" id="icon-tab-3" data-bs-toggle="tab" href="#icon-tabpanel-3"
+                                    <a class="nav-link" id="icon-tab-2" data-bs-toggle="tab" href="#icon-tabpanel-2"
                                         role="tab" aria-controls="icon-tabpanel-2" aria-selected="false">
 
                                         Daftar Tunggu
                                     </a>
                                 </li>
                                 <li class="nav-item" role="presentation">
-                                    <a class="nav-link" id="icon-tab-2" data-bs-toggle="tab" href="#icon-tabpanel-2"
-                                        role="tab" aria-controls="icon-tabpanel-1" aria-selected="false">
+                                    <a class="nav-link" id="icon-tab-3" data-bs-toggle="tab" href="#icon-tabpanel-3"
+                                        role="tab" aria-controls="icon-tabpanel-3" aria-selected="false">
                                         Ditolak
                                     </a>
                                 </li>
@@ -441,28 +442,7 @@
                                                         <th>Lihat CV</th>
                                                     </tr>
                                                 </thead>
-                                                <tbody class="table-border-bottom-0">
-                                                    @php
-                                                        $i = 1;
-                                                    @endphp
-                                                    @foreach ($user_meta as $user)
-                                                        <tr>
-                                                            <td>{{ $i++ }}</td>
-                                                            <td>{{ $user->AuthLogin->recruitmentCV->nama_lengkap }}</td>
-                                                            <td>{{ $user->AuthLogin->nomor_whatsapp }}</td>
-                                                            <td class="bg-info text-white">
-                                                                @if ($user->status == '0')
-                                                                    Belum Dilihat
-                                                                @endif
-                                                            </td>
-                                                            <td><a href="{{ url('/pg/pelamar-detail/' . $user->id . '/' . $holding->holding_code . '') }}"
-                                                                    type="button" class="btn btn-sm btn-info">
-                                                                    <i class="tf-icons mdi mdi-eye-circle-outline me-1"></i>
-                                                                    Detail&nbsp;CV
-                                                                </a></td>
-                                                        </tr>
-                                                    @endforeach
-                                                </tbody>
+
                                             </table>
                                         </div>
                                     </div>
@@ -470,7 +450,7 @@
                                 <div class="tab-pane" id="icon-tabpanel-1" role="tabpanel" aria-labelledby="icon-tab-1">
                                     <div>
                                         <div class="table table-striped py-3">
-                                            <table class="table" id="table_pelamar2" style="width: 100%;">
+                                            <table class="table" id="table_pelamar1" style="width: 100%;">
                                                 <thead class="table-primary">
                                                     <tr>
                                                         <th>No.</th>
@@ -484,45 +464,24 @@
                                                         <th>Lihat CV</th>
                                                     </tr>
                                                 </thead>
-                                                <tbody class="table-border-bottom-0">
-                                                    @php
-                                                        $i = 1;
-                                                    @endphp
-                                                    @foreach ($user_kandidat as $user)
-                                                        <tr>
-                                                            <td>{{ $i++ }}</td>
-                                                            <td>{{ $user->AuthLogin->recruitmentCV->nama_lengkap }}</td>
-                                                            <td>{{ $user->AuthLogin->nomor_whatsapp }}</td>
-                                                            <td>{{ $user->tanggal_wawancara }}</td>
-                                                            <td>{{ $user->tempat_wawancara }}</td>
-                                                            <td>{{ $user->waktu_wawancara }}</td>
-                                                            <td>
-                                                                @if ($user->feedback != '1')
-                                                                    <div class="bg-warning text-white p-1">Menunggu
-                                                                        Konfirmasi
-                                                                    </div>
-                                                                @elseif ($user->feedback == '1')
-                                                                    <div class="bg-info text-white p-1">Bersedia Wawancara
-                                                                    </div>
-                                                                @endif
-                                                            </td>
-                                                            <td class="bg-success text-white">
-                                                                @if ($user->status == '1')
-                                                                    Kandidat
-                                                                @elseif ($user->status == '1a')
-                                                                    Panggilan Wawancara
-                                                                @elseif ($user->status == '2a')
-                                                                    TIdak Hadir Wawancara
-                                                                @endif
-                                                            </td>
-                                                            <td><a href="{{ url('/pg/pelamar-detail/' . $user->id . '/' . $holding->holding_code . '') }}"
-                                                                    type="button" class="btn btn-sm btn-info">
-                                                                    <i class="tf-icons mdi mdi-eye-circle-outline me-1"></i>
-                                                                    Detail&nbsp;CV
-                                                                </a></td>
-                                                        </tr>
-                                                    @endforeach
-                                                </tbody>
+
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="tab-pane" id="icon-tabpanel-2" role="tabpanel" aria-labelledby="icon-tab-2">
+                                    <div>
+                                        <div class="table table-striped py-3">
+                                            <table class="table nowrap" id="table_pelamar2" style="width: 100%;">
+                                                <thead class="table-primary">
+                                                    <tr>
+                                                        <th>No.</th>
+                                                        <th>Pelamar</th>
+                                                        <th>Nomor Whatsapp</th>
+                                                        <th>Status</th>
+                                                        <th>Rubah Status</th>
+                                                    </tr>
+                                                </thead>
                                             </table>
                                         </div>
                                     </div>
@@ -536,75 +495,12 @@
                                                         <th>No.</th>
                                                         <th>Pelamar</th>
                                                         <th>Nomor Whatsapp</th>
-                                                        <th>Status</th>
-                                                        <th>Rubah Status</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody class="table-border-bottom-0">
-                                                    @php
-                                                        $i = 1;
-                                                    @endphp
-                                                    @foreach ($user_wait as $user)
-                                                        <tr>
-                                                            <td>{{ $i++ }}</td>
-                                                            <td>{{ $user->AuthLogin->recruitmentCV->nama_lengkap }}</td>
-                                                            <td>{{ $user->AuthLogin->nomor_whatsapp }}</td>
-                                                            <td class="bg-secondary text-white">
-                                                                @if ($user->status == '2')
-                                                                    Daftar Tunggu
-                                                                @endif
-                                                            </td>
-                                                            <td><a href="{{ url('/pg/pelamar-detail/' . $user->id . '/' . $holding->holding_code . '') }}"
-                                                                    type="button" class="btn btn-sm btn-info">
-                                                                    <i
-                                                                        class="tf-icons mdi mdi-eye-circle-outline me-1"></i>
-                                                                    Detail&nbsp;CV
-                                                                </a></td>
-                                                        </tr>
-                                                    @endforeach
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="tab-pane" id="icon-tabpanel-2" role="tabpanel" aria-labelledby="icon-tab-2">
-                                    <div>
-                                        <div class="table table-striped py-3">
-                                            <table class="table" id="table_pelamar1" style="width: 100%;">
-                                                <thead class="table-primary">
-                                                    <tr>
-                                                        <th>No.</th>
-                                                        <th>Pelamar</th>
-                                                        <th>Nomor Whatsapp</th>
                                                         <th>Alasan</th>
                                                         <th>Status</th>
                                                         <th>Ubah Status</th>
                                                     </tr>
                                                 </thead>
-                                                <tbody class="table-border-bottom-0">
-                                                    @php
-                                                        $i = 1;
-                                                    @endphp
-                                                    @foreach ($user_reject as $user)
-                                                        <tr>
-                                                            <td>{{ $i++ }}</td>
-                                                            <td>{{ $user->AuthLogin->recruitmentCV->nama_lengkap }}</td>
-                                                            <td>{{ $user->AuthLogin->nomor_whatsapp }}</td>
-                                                            <td>{{ $user->alasan }}</td>
-                                                            <td class="bg-danger text-white">
-                                                                @if ($user->status == '3')
-                                                                    Ditolak
-                                                                @endif
-                                                            </td>
-                                                            <td><a href="{{ url('/pg/pelamar-detail/' . $user->id . '/' . $holding->holding_code . '') }}"
-                                                                    type="button" class="btn btn-sm btn-info">
-                                                                    <i
-                                                                        class="tf-icons mdi mdi-eye-circle-outline me-1"></i>
-                                                                    Ubah&nbsp;Status
-                                                                </a></td>
-                                                        </tr>
-                                                    @endforeach
-                                                </tbody>
+
                                             </table>
                                         </div>
                                     </div>
@@ -627,12 +523,190 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
     <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.min.js"></script>
     <script>
-        $('#table_pelamar0').DataTable();
-        $('a[data-bs-toggle="tab"]').on('shown.bs.tab', function(e) {
-            window.dispatchEvent(new Event('resize'));
+        let holding = window.location.pathname.split("/").pop();
+        let id = $('#recruitment_admin_id').val();
+        var table = $('#table_pelamar0').DataTable({
+            "scrollY": true,
+            "scrollX": true,
+            processing: true,
+            serverSide: true,
+            ajax: {
+                url: "{{ url('/pg/data-list-user_meta') }}" + '/' + id + '/' + holding,
+            },
+            columns: [{
+                    data: null,
+                    render: function(data, type, row, meta) {
+                        return meta.row + 1;
+                    },
+                    orderable: false,
+                    searchable: false
+                },
+                {
+                    data: 'pelamar',
+                    name: 'pelamar',
+                },
+                {
+                    data: 'no_wa',
+                    name: 'no_wa'
+                },
+                {
+                    data: 'status',
+                    name: 'status'
+                },
+                {
+                    data: 'lihat_cv',
+                    name: 'lihat_cv'
+                },
+            ],
+            order: [
+                [0, 'desc']
+            ]
         });
-        $('#table_pelamar1').DataTable();
-        $('#table_pelamar2').DataTable();
-        $('#table_pelamar3').DataTable();
+        $('#icon-tab-0').on('shown.bs.tab', function(e) {
+            table.columns.adjust().draw().responsive.recalc();
+            // table.draw();
+        });
+        var table1 = $('#table_pelamar1').DataTable({
+            "scrollY": true,
+            "scrollX": true,
+            processing: true,
+            serverSide: true,
+            ajax: {
+                url: "{{ url('/pg/data-list-user_kandidat') }}" + '/' + id + '/' + holding,
+            },
+            columns: [{
+                    data: null,
+                    render: function(data, type, row, meta) {
+                        return meta.row + 1;
+                    },
+                    orderable: false,
+                    searchable: false
+                },
+                {
+                    data: 'pelamar',
+                    name: 'pelamar',
+                },
+                {
+                    data: 'no_wa',
+                    name: 'no_wa'
+                },
+                {
+                    data: 'tanggal_wawancara',
+                    name: 'tanggal_wawancara',
+                },
+                {
+                    data: 'tempat_wawancara',
+                    name: 'tempat_wawancara',
+                },
+
+                {
+                    data: 'waktu_wawancara',
+                    name: 'waktu_wawancara',
+                },
+
+                {
+                    data: 'feedback',
+                    name: 'feedback'
+                },
+                {
+                    data: 'status',
+                    name: 'status'
+                },
+                {
+                    data: 'lihat_cv',
+                    name: 'lihat_cv'
+                },
+            ],
+            order: [
+                [0, 'desc']
+            ]
+        });
+        $('#icon-tab-1').on('shown.bs.tab', function(e) {
+            table1.columns.adjust().draw().responsive.recalc();
+        });
+        var table = $('#table_pelamar2').DataTable({
+            "scrollY": true,
+            "scrollX": true,
+            processing: true,
+            serverSide: true,
+            ajax: {
+                url: "{{ url('/pg/data-list-user_wait') }}" + '/' + id + '/' + holding,
+            },
+            columns: [{
+                    data: null,
+                    render: function(data, type, row, meta) {
+                        return meta.row + 1;
+                    },
+                    orderable: false,
+                    searchable: false
+                },
+                {
+                    data: 'pelamar',
+                    name: 'pelamar',
+                },
+                {
+                    data: 'no_wa',
+                    name: 'no_wa'
+                },
+                {
+                    data: 'status',
+                    name: 'status'
+                },
+                {
+                    data: 'lihat_cv',
+                    name: 'lihat_cv'
+                },
+            ],
+            order: [
+                [0, 'desc']
+            ]
+        });
+        $('#icon-tab-2').on('shown.bs.tab', function() {
+            table.columns.adjust().draw(false).responsive.recalc();
+        });
+        var table3 = $('#table_pelamar3').DataTable({
+            "scrollY": true,
+            "scrollX": true,
+            processing: true,
+            serverSide: true,
+            ajax: {
+                url: "{{ url('/pg/data-list-user_reject') }}" + '/' + id + '/' + holding,
+            },
+            columns: [{
+                    data: null,
+                    render: function(data, type, row, meta) {
+                        return meta.row + 1;
+                    },
+                    orderable: false,
+                    searchable: false
+                },
+                {
+                    data: 'pelamar',
+                    name: 'pelamar',
+                },
+                {
+                    data: 'no_wa',
+                    name: 'no_wa'
+                },
+                {
+                    data: 'alasan',
+                    name: 'alasan'
+                },
+                {
+                    data: 'status',
+                    name: 'status'
+                },
+                {
+                    data: 'lihat_cv',
+                    name: 'lihat_cv'
+                },
+            ],
+            order: [
+                [0, 'desc']
+            ]
+        });
+        $('#icon-tab-3').on('shown.bs.tab', function() {
+            table3.columns.adjust().draw(false).responsive.recalc();
+        });
     </script>
 @endsection

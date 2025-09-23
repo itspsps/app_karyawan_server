@@ -849,6 +849,10 @@ Route::get('/recruitment/delete/{id?}/{holding}', [RecruitmentController::class,
 Route::get('/dt/data-recruitment/{holding}', [RecruitmentController::class, 'dt_recruitment'])->middleware('admin');
 
 Route::get('/pg/data-list-pelamar/{id?}/{holding}', [RecruitmentController::class, 'pg_list_pelamar'])->middleware('admin');
+Route::get('/pg/data-list-user_meta/{id?}/{holding}', [RecruitmentController::class, 'user_meta'])->middleware('admin');
+Route::get('/pg/data-list-user_kandidat/{id?}/{holding}', [RecruitmentController::class, 'user_kandidat'])->middleware('admin');
+Route::get('/pg/data-list-user_wait/{id?}/{holding}', [RecruitmentController::class, 'user_wait'])->middleware('admin');
+Route::get('/pg/data-list-user_reject/{id?}/{holding}', [RecruitmentController::class, 'user_reject'])->middleware('admin');
 
 // Route::get('/dt/data-list-pelamar/{id?}/sp', [RecruitmentController::class, 'dt_list_pelamar'])->middleware('admin');
 // Route::get('/dt/data-list-pelamar/{id?}/sps', [RecruitmentController::class, 'dt_list_pelamar'])->middleware('admin');
