@@ -1785,6 +1785,7 @@ selamat Anda lolos bekerja
                         'tgl_join'                  => $get_recruitment_user->tanggal_diterima,
                         'status_alamat'             => $dom,
                         'status_nikah'              => $get_cv->status_pernikahan,
+                        'jumlah_anak'               => $get_cv->jumlah_anak,
                         'ijazah'                    => $get_cv->ijazah,
                         'transkrip_nilai'           => $get_cv->transkrip_nilai,
                         'ipk'                       => $get_cv->ipk,
