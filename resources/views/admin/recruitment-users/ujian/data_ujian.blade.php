@@ -165,7 +165,7 @@
         </div>
     </div>
 
-    <div class="modal fade" id="modal_tambah_recruitment" data-bs-backdrop="static" tabindex="-1">
+    {{-- <div class="modal fade" id="modal_tambah_recruitment" data-bs-backdrop="static" tabindex="-1">
         <div class="modal-dialog modal-dialog-scrollable modal-sm">
             <form class="modal-content" enctype="multipart/form-data">
                 @csrf
@@ -191,7 +191,7 @@
                 </div>
             </form>
         </div>
-    </div>
+    </div> --}}
     {{-- modal tambah kategori --}}
     <div class="modal fade" id="modal_tambah_kategori" tabindex="-1" aria-labelledby="exampleModalLabel"
         aria-hidden="true">
@@ -202,13 +202,9 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form method="post" enctype="multipart/form-data">
-                        <div class="mb-3">
-                            <input type="text" class="form-control" id="nama_kategori_add" name="nama_kategori"
-                                required>
-                        </div>
-
-                    </form>
+                    <div class="mb-3">
+                        <input type="text" class="form-control" id="nama_kategori_add" name="nama_kategori" required>
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
