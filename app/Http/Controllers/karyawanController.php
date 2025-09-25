@@ -1472,6 +1472,7 @@ class karyawanController extends Controller
         // dd($id);
         // dd(Karyawan::find($id));
         $getHolding = Holding::where('holding_code', $holding)->first();
+
         $getHoldingall = Holding::get();
         $karyawan = Karyawan::with('KontrakKerja')->find($id);
         if ($karyawan == NULL) {

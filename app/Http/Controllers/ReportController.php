@@ -1057,14 +1057,29 @@ class ReportController extends Controller
         }
         $count_period = count($period);
 
-        $bagian      = Bagian::where('divisi_id', $id_divisi)->where('holding', $request->holding)->orderBy('nama_bagian', 'ASC')->get();
+        $bagian      = Bagian::with('Divisi')->whereIn('divisi_id', $id_divisi)->where('holding', $request->holding)->orderBy('nama_bagian', 'ASC')->get();
         if ($bagian == NULL || $bagian == '' || count($bagian) == '0') {
             $select = "<option value=''>Pilih Bagian...</option>";
         } else {
 
             $select_bagian[] = "<option value=''>Pilih Bagian...</option>";
+            $currentBagian = null;
             foreach ($bagian as $bagian) {
+                if ($currentBagian !== $bagian->Divisi->nama_divisi) {
+                    // tutup optgroup sebelumnya
+                    if ($currentBagian !== null) {
+                        $select_bagian1[] = "</optgroup>";
+                    }
+
+                    // buka optgroup baru
+                    $currentBagian = $bagian->Divisi->nama_divisi;
+                    $select_bagian1[] = "<optgroup label='{$bagian->Divisi->nama_divisi}'>";
+                }
                 $select_bagian1[] = "<option value='$bagian->id'>$bagian->nama_bagian</option>";
+            }
+            // tutup optgroup terakhir
+            if ($currentBagian !== null) {
+                $select_bagian1[] = "</optgroup>";
             }
             $select = array_merge($select_bagian, $select_bagian1);
         }

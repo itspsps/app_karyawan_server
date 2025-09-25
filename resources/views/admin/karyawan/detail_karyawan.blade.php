@@ -1210,8 +1210,12 @@
                                     <div class="row mt-2 gy-4">
                                         <div id="form_departemen" class="col-md-3">
                                             <?php
-                                            $data_departemen = App\Models\Departemen::where('holding', $karyawan->PenempatanKerja->site_holding_category)->orderBy('nama_departemen', 'ASC')->get();
-                                            // print_r($data_departemen);
+                                            if ($karyawan->PenempatanKerja != null) {
+                                                $data_departemen = App\Models\Departemen::where('holding', $karyawan->PenempatanKerja->site_holding_category)->orderBy('nama_departemen', 'ASC')->get();
+                                                // print_r($data_departemen);
+                                            } else {
+                                                $data_departemen = App\Models\Departemen::where('holding', $holding->id)->orderBy('nama_departemen', 'ASC')->get();
+                                            }
                                             ?>
                                             <div class="form-floating form-floating-outline">
                                                 <select style="font-size: small;" name="departemen_id" id="id_departemen"

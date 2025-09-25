@@ -574,7 +574,24 @@
                 cache: false,
 
                 success: function(data_divisi) {
-                    console.log(data_divisi);
+                    // console.log(data_divisi);
+                    $('#bagian_filter').html(data_divisi.select);
+                    $('#jabatan_filter').html('<option value="">Pilih Jabatan..</option>');
+                    let isOpen = $('#bagian_filter').data('select2') && $('#bagian_filter').data('select2').isOpen();
+
+                    $('#bagian_filter').select2('destroy').select2({
+                        theme: "bootstrap-5",
+                        placeholder: "Pilih Bagian...",
+                        allowClear: true
+                    });
+                    // langsung pilih opsi pertama kalau ada
+                    let firstOpt = $('#bagian_filter option:eq(0)').val();
+                    if (firstOpt) {
+                        $('#bagian_filter').val(firstOpt).trigger('change');
+                    }
+                    if (isOpen) {
+                        $('#bagian_filter').select2('open');
+                    }
                     datacolumn_divisi = [{
                             data: 'btn_detail',
                             name: 'btn_detail'
@@ -659,9 +676,7 @@
                         $('#date_absensi').append("<th id='th_date'>" + data_divisi.data_columns_header[count].header + "</th>");
                     });
                     $('#th_count_date').attr('colspan', data_divisi.count_period);
-                    // $('#id_divisi').html(data_divisi);
-                    $('#bagian_filter').html(data_divisi.select);
-                    $('#jabatan_filter').html('<option value="">Pilih Jabatan..</option>');
+
                     cb(moment(start_date_divisi), moment(end_date_divisi));
                 },
                 error: function(data) {
