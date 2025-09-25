@@ -226,6 +226,9 @@
                     data: 'nama_departemen',
                     name: 'nama_departemen'
                 },
+            ],
+            order: [
+                [0, 'desc']
             ]
         });
         $('#icon-tab-1').on('shown.bs.tab', function(e) {

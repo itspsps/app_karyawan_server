@@ -131,14 +131,11 @@
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        <form method="post" enctype="multipart/form-data">
-                            <div class="mb-3">
-                                <input type="hidden" name="id" id="id_update">
-                                <label for="">Range 1-10</label>
-                                <input type="number" class="form-control" id="nilai_update" name="nilai" required>
-                            </div>
-
-                        </form>
+                        <div class="mb-3">
+                            <input type="hidden" name="id" id="id_update">
+                            <label for="">Range 1-10</label>
+                            <input type="number" class="form-control" id="nilai_update" name="nilai" required>
+                        </div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>

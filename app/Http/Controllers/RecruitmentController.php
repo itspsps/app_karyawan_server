@@ -339,6 +339,19 @@ class RecruitmentController extends Controller
             }
         }
         // end Hapus pelamar kadaluarsa
+
+
+
+        // $recruitment_user_id = RecruitmentUser::where('recruitment_admin_id', $id)->first();
+        return view('admin.recruitment-users.recruitment.list_pelamar', [
+            'title' => 'Data Recruitment',
+            'holding'   => $holdings,
+            'recruitment_admin_id'   => $id,
+        ]);
+    }
+    function user_meta($id, $holding)
+    {
+        $holdings = Holding::where('holding_code', $holding)->first();
         $user_meta =  RecruitmentUser::with([
             'AuthLogin' => function ($query) {
                 $query->with([
@@ -352,6 +365,33 @@ class RecruitmentController extends Controller
             ->where('status', '0')
             ->where('recruitment_admin_id', $id)
             ->get();
+        return DataTables::of($user_meta)
+
+            ->addColumn('pelamar', function ($row) {
+                return $row->AuthLogin->recruitmentCV->nama_lengkap;
+            })
+            ->addColumn('no_wa', function ($row) {
+                return $row->AuthLogin->nomor_whatsapp;
+            })
+
+            ->addColumn('status', function ($row) {
+                // dd($row->status);
+                if ($row->status == '0') {
+                    return '<div class="bg-primary text-white p-1">Belum Dilihat</div>';
+                } else {
+                    return 'Status Tidak Dikenal';
+                }
+            })
+            ->addColumn('lihat_cv', function ($row) use ($holding) {
+                return '<a href="/pg/pelamar-detail/' . $row->id . '/' . $holding . '" type="button" class="btn btn-sm btn-info"><i class="tf-icons mdi mdi-eye-circle-outline me-1"></i>Detail&nbsp;CV</a>';
+            })
+
+            ->rawColumns(['pelamar', 'no_wa', 'status', 'lihat_cv'])
+            ->make(true);
+    }
+    function user_kandidat($id, $holding)
+    {
+        $holdings = Holding::where('holding_code', $holding)->first();
         $user_kandidat =  RecruitmentUser::with([
             'AuthLogin' => function ($query) {
                 $query->with([
@@ -365,6 +405,52 @@ class RecruitmentController extends Controller
             ->where('recruitment_admin_id', $id)
             ->whereIn('status', array('1', '1a', '2a'))
             ->get();
+        // dd($user_kandidat);
+        return DataTables::of($user_kandidat)
+
+            ->addColumn('pelamar', function ($row) {
+                return $row->AuthLogin->recruitmentCV->nama_lengkap;
+            })
+            ->addColumn('no_wa', function ($row) {
+                return $row->AuthLogin->nomor_whatsapp;
+            })
+            ->addColumn('tanggal_wawancara', function ($row) {
+                return $row->tanggal_wawancara;
+            })
+            ->addColumn('tempat_wawancara', function ($row) {
+                return $row->tempat_wawancara;
+            })
+            ->addColumn('waktu_wawancara', function ($row) {
+                return $row->waktu_wawancara;
+            })
+            ->addColumn('feedback', function ($row) {
+                if ($row->feedback == '1') {
+                    return '<div class="bg-success text-white p-2">Bersedia Wawancara</div>';
+                } else {
+                    return '<div class="bg-warning text-white p-2">Menunggu Konfirmasi</div>';
+                }
+            })
+            ->addColumn('status', function ($row) {
+                if ($row->status == '1') {
+                    return '<div class="bg-info text-white p-2">Kandidat</div>';
+                } elseif ($row->status == '1a') {
+                    return '<div class="bg-info text-white p-2">Panggilan Wawancara</div>';
+                } elseif ($row->status == '2a') {
+                    return '<div class="bg-danger text-white p-2">Tidak Hadir Wawancara</div>';
+                } else {
+                    return 'Status Tidak Dikenal';
+                }
+            })
+            ->addColumn('lihat_cv', function ($row) use ($holding) {
+                return '<a href="/pg/pelamar-detail/' . $row->id . '/' . $holding . '" type="button" class="btn btn-sm btn-info"><i class="tf-icons mdi mdi-eye-circle-outline me-1"></i>Detail&nbsp;CV</a>';
+            })
+
+            ->rawColumns(['pelamar', 'no_wa', 'tanggal_wawancara', 'waktu_wawancara', 'waktu_wawancara', 'feedback', 'status', 'lihat_cv'])
+            ->make(true);
+    }
+    function user_wait($id, $holding)
+    {
+        $holdings = Holding::where('holding_code', $holding)->first();
         $user_wait =  RecruitmentUser::with([
             'AuthLogin' => function ($query) {
                 $query->with([
@@ -378,6 +464,33 @@ class RecruitmentController extends Controller
             ->where('status', '2')
             ->where('recruitment_admin_id', $id)
             ->get();
+        return DataTables::of($user_wait)
+
+            ->addColumn('pelamar', function ($row) {
+                return $row->AuthLogin->recruitmentCV->nama_lengkap;
+            })
+            ->addColumn('no_wa', function ($row) {
+                return $row->AuthLogin->nomor_whatsapp;
+            })
+
+            ->addColumn('status', function ($row) {
+                // dd($row->status);
+                if ($row->status == '2') {
+                    return '<div class="bg-secondary text-white p-1">Daftar Tunggu</div>';
+                } else {
+                    return 'Status Tidak Dikenal';
+                }
+            })
+            ->addColumn('lihat_cv', function ($row) use ($holding) {
+                return '<a href="/pg/pelamar-detail/' . $row->id . '/' . $holding . '" type="button" class="btn btn-sm btn-info"><i class="tf-icons mdi mdi-eye-circle-outline me-1"></i>Detail&nbsp;CV</a>';
+            })
+
+            ->rawColumns(['pelamar', 'no_wa', 'status', 'lihat_cv'])
+            ->make(true);
+    }
+    function user_reject($id, $holding)
+    {
+        $holdings = Holding::where('holding_code', $holding)->first();
         $user_reject =  RecruitmentUser::with([
             'AuthLogin' => function ($query) {
                 $query->with([
@@ -391,11 +504,31 @@ class RecruitmentController extends Controller
             ->where('status', '3')
             ->where('recruitment_admin_id', $id)
             ->get();
+        return DataTables::of($user_reject)
 
-        return view('admin.recruitment-users.recruitment.list_pelamar', [
-            'title' => 'Data Recruitment',
-            'holding'   => $holdings,
-        ], compact('user_meta', 'user_wait', 'user_kandidat', 'user_reject'));
+            ->addColumn('pelamar', function ($row) {
+                return $row->AuthLogin->recruitmentCV->nama_lengkap;
+            })
+            ->addColumn('no_wa', function ($row) {
+                return $row->AuthLogin->nomor_whatsapp;
+            })
+            ->addColumn('alasan', function ($row) {
+                return $row->alasan;
+            })
+            ->addColumn('status', function ($row) {
+                // dd($row->status);
+                if ($row->status == '3') {
+                    return '<div class="bg-danger text-white p-1">Ditolak</div>';
+                } else {
+                    return 'Status Tidak Dikenal';
+                }
+            })
+            ->addColumn('lihat_cv', function ($row) use ($holding) {
+                return '<a href="/pg/pelamar-detail/' . $row->id . '/' . $holding . '" type="button" class="btn btn-sm btn-info"><i class="tf-icons mdi mdi-eye-circle-outline me-1"></i>Detail&nbsp;CV</a>';
+            })
+
+            ->rawColumns(['pelamar', 'no_wa', 'alasan', 'status', 'lihat_cv'])
+            ->make(true);
     }
     function pelamar_detail($id, $holding)
     {
@@ -927,7 +1060,7 @@ asoy.com
 
             return DataTables::of($table)
                 ->addColumn('tanggal_wawancara', function ($row) {
-                    return Carbon::parse($row->recruitmentUser->tanggal_wawancara)->format('d-m-Y');
+                    return $row->recruitmentUser->tanggal_wawancara;
                 })
                 ->addColumn('presensi', function ($row) {
                     if ($row->recruitmentUser->status == '1a') {
@@ -1663,6 +1796,7 @@ selamat Anda lolos bekerja
                         'tgl_join'                  => $get_recruitment_user->tanggal_diterima,
                         'status_alamat'             => $dom,
                         'status_nikah'              => $get_cv->status_pernikahan,
+                        'jumlah_anak'               => $get_cv->jumlah_anak,
                         'ijazah'                    => $get_cv->ijazah,
                         'transkrip_nilai'           => $get_cv->transkrip_nilai,
                         'ipk'                       => $get_cv->ipk,
