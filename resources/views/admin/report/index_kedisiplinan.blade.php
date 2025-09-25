@@ -4,9 +4,64 @@
 <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/3.1.2/css/buttons.dataTables.css" />
 <link rel="preload" href="{{asset('admin/assets/vendor/libs/apex-charts/apex-charts.css')}}" as="style" onload="this.onload=null;this.rel='stylesheet'" />
+<!-- Select2 CSS -->
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+
+<link href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css" rel="stylesheet" />
 <style type="text/css">
     .my-swal {
         z-index: X;
+    }
+
+    /* ukuran teks di area pilihan (input select2) */
+    .select2-container--bootstrap-5 .select2-selection {
+        font-size: 0.875rem !important;
+        /* Bootstrap small (14px) */
+        min-height: calc(1.5em + 0.75rem + 2px);
+        /* biar tinggi konsisten */
+    }
+
+    /* ukuran teks di dropdown list */
+    .select2-container--bootstrap-5 .select2-results__option {
+        font-size: 0.875rem !important;
+    }
+
+    /* Fokus warna primary */
+    .select2-container--bootstrap-5.select2-container--focus .select2-selection {
+        border-color: var(--bs-primary) !important;
+        box-shadow: 0 0 0 0.25rem rgba(var(--bs-primary-rgb), 0.25) !important;
+    }
+
+    /* Background dan teks saat option terpilih */
+    .select2-container--bootstrap-5 .select2-results__option--selected {
+        background-color: var(--bs-primary) !important;
+        color: #fff !important;
+    }
+
+    /* Hover option */
+    .select2-container--bootstrap-5 .select2-results__option--highlighted {
+        background-color: rgba(var(--bs-primary-rgb), 0.1) !important;
+        color: var(--bs-primary) !important;
+    }
+
+    /* ukuran huruf untuk pilihan yang sudah dipilih (tag dalam box) */
+    .select2-container--bootstrap-5 .select2-selection--multiple .select2-selection__rendered .select2-selection__choice {
+        font-size: 0.75rem;
+        /* kecilin text */
+        padding: 2px 6px;
+        /* biar nggak terlalu tinggi */
+        line-height: 1.2;
+    }
+
+    /* icon "x" di tag */
+    .select2-container--bootstrap-5 .select2-selection--multiple .select2-selection__choice__remove {
+        font-size: 0.7rem;
+        margin-right: 2px;
+    }
+
+    /* tulisan placeholder / hasil render */
+    .select2-container--bootstrap-5 .select2-selection--multiple .select2-selection__rendered {
+        font-size: 0.8rem;
     }
 </style>
 @endsection
@@ -27,8 +82,8 @@
                     <div class="row g-3 text-center">
                         <div class="col-3">
                             <div class="form-floating form-floating-outline">
-                                <select type="text" class="form-control" name="departemen_filter" id="departemen_filter">
-                                    <option selected disabled value="">--</option>
+                                <select type="text" class="form-control" name="departemen_filter[]" id="departemen_filter" multiple style="font-size: small;">
+                                    <option disabled value="">-Pilih Departemen-</option>
                                     @foreach($departemen as $dept)
                                     <option value="{{$dept->id}}">{{$dept->nama_departemen}}</option>
                                     @endforeach
@@ -38,7 +93,7 @@
                         </div>
                         <div class="col-3">
                             <div class="form-floating form-floating-outline">
-                                <select type="text" class="form-control" name="divisi_filter" placeholder="Date Filter" id="divisi_filter">
+                                <select type="text" class="form-control" name="divisi_filter[]" placeholder="Date Filter" id="divisi_filter" multiple>
                                     <option selected disabled value="">--</option>
                                 </select>
                                 <label for="divisi_filter">Divisi</label>
@@ -46,7 +101,7 @@
                         </div>
                         <div class="col-3">
                             <div class="form-floating form-floating-outline">
-                                <select type="text" class="form-control" name="bagian_filter" placeholder="Date Filter" id="bagian_filter">
+                                <select type="text" class="form-control" name="bagian_filter[]" placeholder="Date Filter" id="bagian_filter" multiple>
                                     <option selected disabled value="">--</option>
                                 </select>
                                 <label for="bagian_filter">Bagian</label>
@@ -54,7 +109,7 @@
                         </div>
                         <div class="col-3">
                             <div class="form-floating form-floating-outline">
-                                <select type="text" class="form-control" name="jabatan_filter" placeholder="Date Filter" id="jabatan_filter">
+                                <select type="text" class="form-control" name="jabatan_filter[]" placeholder="Date Filter" id="jabatan_filter" multiple>
                                     <option selected disabled value="">--</option>
                                 </select>
                                 <label for="jabatan_filter">Jabatan</label>
@@ -123,6 +178,7 @@
                                         <th rowspan="2" class="text-center">No.</th>
                                         <th rowspan="2" class="text-center">ID&nbsp;Karyawan</th>
                                         <th rowspan="2" class="text-center">Nama&nbsp;Karyawan</th>
+                                        <th rowspan="2" class="text-center">Departemen</th>
                                         <th colspan="4" class="text-center">&nbsp;ABSENSI&nbsp;</th>
                                         <th colspan="4" class="text-center">Keterangan</th>
                                         <th colspan="1" class="text-center">Tidak&nbsp;Hadir&nbsp;Kerja</th>
@@ -186,6 +242,9 @@
 <script src="https://cdn.datatables.net/buttons/3.1.2/js/buttons.html5.min.js"></script>
 <script src="https://cdn.datatables.net/buttons/3.1.2/js/buttons.print.min.js"></script>
 <script src="{{asset('admin/assets/vendor/libs/apex-charts/apexcharts.js')}}"></script>
+<!-- Select2 JS -->
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
 <script>
     $(document).ready(function() {
 
@@ -252,6 +311,10 @@
                         {
                             data: 'name',
                             name: 'name'
+                        },
+                        {
+                            data: 'departemen',
+                            name: 'departemen'
                         },
                         {
                             data: 'total_hadir_tepat_waktu',
@@ -370,6 +433,26 @@
                 cache: false,
                 success: function(data_dept) {
                     // console.log(data_dept);
+                    $('#divisi_filter').html(data_dept.select);
+                    $('#bagian_filter').html('<option value="">Pilih Bagian</option>');
+                    $('#jabatan_filter').html('<option value="">Pilih Jabatan</option>');
+                    // refresh select2 biar dropdown kebaca data baru
+                    // destroy & init ulang
+                    let isOpen = $('#divisi_filter').data('select2') && $('#divisi_filter').data('select2').isOpen();
+
+                    $('#divisi_filter').select2('destroy').select2({
+                        theme: "bootstrap-5",
+                        placeholder: "Pilih Divisi...",
+                        allowClear: true
+                    });
+                    // langsung pilih opsi pertama kalau ada
+                    let firstOpt = $('#divisi_filter option:eq(0)').val();
+                    if (firstOpt) {
+                        $('#divisi_filter').val(firstOpt).trigger('change');
+                    }
+                    if (isOpen) {
+                        $('#divisi_filter').select2('open');
+                    }
                     datacolumn_departemen = [{
                             data: 'btn_detail',
                             name: 'btn_detail'
@@ -388,6 +471,10 @@
                         {
                             data: 'name',
                             name: 'name'
+                        },
+                        {
+                            data: 'departemen',
+                            name: 'departemen'
                         },
                         {
                             data: 'total_hadir_tepat_waktu',
@@ -453,9 +540,7 @@
                     $('#th_count_date').attr('colspan', data_dept.count_period);
                     // console.log(msg);
                     // $('#id_divisi').html(msg);
-                    $('#divisi_filter').html(data_dept.select);
-                    $('#bagian_filter').html('<option value="">Pilih Bagian</option>');
-                    $('#jabatan_filter').html('<option value="">Pilih Jabatan</option>');
+
                     // get_grafik_absensi(departemen_filter_dept, divisi_filter_dept, bagian_filter_dept, jabatan_filter_dept, start_date_dept, end_date_dept);
                     // load_data(departemen_filter_dept, divisi_filter_dept, bagian_filter_dept, jabatan_filter_dept, start_date_dept, end_date_dept, data_column_departemen);
                     cb(moment(start_date_dept), moment(end_date_dept));
@@ -508,6 +593,10 @@
                         {
                             data: 'name',
                             name: 'name'
+                        },
+                        {
+                            data: 'departemen',
+                            name: 'departemen'
                         },
                         {
                             data: 'total_hadir_tepat_waktu',
@@ -627,6 +716,10 @@
                             name: 'name'
                         },
                         {
+                            data: 'departemen',
+                            name: 'departemen'
+                        },
+                        {
                             data: 'total_hadir_tepat_waktu',
                             name: 'total_hadir_tepat_waktu'
                         },
@@ -738,6 +831,10 @@
                             name: 'name'
                         },
                         {
+                            data: 'departemen',
+                            name: 'departemen'
+                        },
+                        {
                             data: 'total_hadir_tepat_waktu',
                             name: 'total_hadir_tepat_waktu'
                         },
@@ -805,11 +902,26 @@
                 }
             });
         })
-        // load_data(departemen_filter, divisi_filter, bagian_filter, jabatan_filter, start_date, end_date);
-
-        // console.log(start_date, end_date);
-
-
+        $('#departemen_filter').select2({
+            theme: 'bootstrap-5',
+            placeholder: "Pilih Departemen",
+            allowClear: true
+        });
+        $('#divisi_filter').select2({
+            theme: 'bootstrap-5',
+            placeholder: "Pilih Divisi",
+            allowClear: true
+        });
+        $('#bagian_filter').select2({
+            theme: 'bootstrap-5',
+            placeholder: "Pilih Bagian",
+            allowClear: true
+        });
+        $('#jabatan_filter').select2({
+            theme: 'bootstrap-5',
+            placeholder: "Pilih Jabatan",
+            allowClear: true
+        });
 
         function load_data(departemen_filter = '', divisi_filter = '', bagian_filter = '', jabatan_filter = '', start_date = '', end_date = '', data_column = '') {
             // console.log(data_column);

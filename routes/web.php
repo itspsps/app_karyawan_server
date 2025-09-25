@@ -263,6 +263,18 @@ Route::middleware('admin')->group(function () {
     Route::get('/karyawan/pdfKaryawan/sp', [karyawanController::class, 'download_pdf_karyawan']);
     Route::get('/karyawan/pdfKaryawan/sip', [karyawanController::class, 'download_pdf_karyawan']);
 
+    // PENDIDIKAN KARYAWAN
+    Route::get('/karyawan/pendidikan/{id}', [karyawanController::class, 'pendidikan_datatable']);
+    Route::post('/karyawan/AddPendidikan/', [karyawanController::class, 'add_pendidikan']);
+    Route::post('/karyawan/UpdatePendidikan/', [karyawanController::class, 'update_pendidikan']);
+    Route::post('/karyawan/DeletePendidikan/', [karyawanController::class, 'delete_pendidikan']);
+
+    // KEAHLIAN KARYAWAN
+    Route::get('/karyawan/keahlian/{id}', [karyawanController::class, 'keahlian_datatable']);
+    Route::post('/karyawan/AddKeahlian/', [karyawanController::class, 'add_keahlian']);
+    Route::post('/karyawan/UpdateKeahlian/', [karyawanController::class, 'update_keahlian']);
+    Route::post('/karyawan/DeleteKeahlian/', [karyawanController::class, 'delete_keahlian']);
+
     Route::get('/karyawan_non_aktif/sp', [karyawanController::class, 'karyawan_non_aktif']);
     Route::get('/karyawan_non_aktif/sps', [karyawanController::class, 'karyawan_non_aktif']);
     Route::get('/karyawan_non_aktif/sip', [karyawanController::class, 'karyawan_non_aktif']);
@@ -355,10 +367,10 @@ Route::middleware('admin')->group(function () {
 
 
     //
-    Route::get('/karyawan/get_departemen', [karyawanController::class, 'get_departemen']);
-    Route::get('/karyawan/get_divisi', [karyawanController::class, 'get_divisi']);
-    Route::get('/karyawan/get_bagian', [karyawanController::class, 'get_bagian']);
-    Route::get('/karyawan/get_jabatan', [karyawanController::class, 'get_jabatan']);
+    // Route::get('/karyawan/get_departemen', [karyawanController::class, 'get_departemen']);
+    // Route::get('/karyawan/get_divisi', [karyawanController::class, 'get_divisi']);
+    // Route::get('/karyawan/get_bagian', [karyawanController::class, 'get_bagian']);
+    // Route::get('/karyawan/get_jabatan', [karyawanController::class, 'get_jabatan']);
 
     // STRUKTUR ORGANISASI
     Route::get('/struktur_organisasi/sp', [StrukturOrganisasiController::class, 'index']);
@@ -438,10 +450,10 @@ Route::middleware('admin')->group(function () {
     Route::get('/finger/delete/{id}/{holding}', [FingerController::class, 'destroy'])->middleware('admin');
 
     //
-    Route::get('/karyawan/get_departemen', [karyawanController::class, 'get_departemen'])->middleware('admin');
-    Route::get('/karyawan/get_divisi', [karyawanController::class, 'get_divisi'])->middleware('admin');
-    Route::get('/karyawan/get_bagian', [karyawanController::class, 'get_bagian'])->middleware('admin');
-    Route::get('/karyawan/get_jabatan', [karyawanController::class, 'get_jabatan'])->middleware('admin');
+    Route::get('/karyawan/get_departemen/{id}', [karyawanController::class, 'get_departemen'])->middleware('admin');
+    Route::get('/karyawan/get_divisi/{id}', [karyawanController::class, 'get_divisi'])->middleware('admin');
+    Route::get('/karyawan/get_bagian/{id}', [karyawanController::class, 'get_bagian'])->middleware('admin');
+    Route::get('/karyawan/get_jabatan/{id}', [karyawanController::class, 'get_jabatan'])->middleware('admin');
 
     // INVENTARIS
     Route::get('/inventaris/sp', [InventarisController::class, 'index'])->middleware('admin');

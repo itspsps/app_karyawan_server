@@ -13,8 +13,10 @@ class KaryawanKeahlian extends Model
     protected $primaryKey = 'id_keahlian';
     public $timestamps = false;
     protected $fillable = [
-        'id_user',
+        'id_keahlian',
+        'id_karyawan',
         'keahlian',
+        'file_keahlian',
         'created_at',
         'expired_at',
     ];

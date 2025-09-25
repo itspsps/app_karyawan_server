@@ -11,7 +11,13 @@ class Departemen extends Model
     use HasFactory;
     public $incrementing = false;
     protected $guarded = ['id'];
-    protected $fillable = ['id', 'holding', 'nama_departemen', 'created_at', 'updated_at'];
+    protected $fillable = [
+        'id',
+        'holding',
+        'nama_departemen',
+        'created_at',
+        'updated_at'
+    ];
 
     public function Jabatan()
     {

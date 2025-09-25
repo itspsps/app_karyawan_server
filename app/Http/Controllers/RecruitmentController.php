@@ -1519,6 +1519,7 @@ selamat Anda lolos bekerja
     }
     public function user_integrasi(Request $request)
     {
+        // dd($request->all());
         try {
             if ($request->pilihan == '1') {
                 $validator = Validator::make(
@@ -1593,43 +1594,53 @@ selamat Anda lolos bekerja
                     $alamatDom  = $get_cv->provinsiNOW->name . ', ' . $get_cv->kabupatenNOW->name . ', ' . $get_cv->desaNOW->name . ', RT. ' . $get_cv->rw_now . ', RW. ' . $get_cv->rw_now;
                     $dom = 'tidak';
                 }
-
+                // dd($get_cv);
                 // Foto Karyawan
                 $filePP = url_karir() . '/storage/file_pp/' . $get_cv->file_pp;
-                $response = Http::get($filePP);
-
-                if ($response->successful()) {
-                    Storage::disk('public')->put('foto_karyawan/' . $get_cv->file_pp, $response->body());
+                $response_pp = Http::get($filePP);
+                // dd($filePP);
+                // dd($response_pp->body());
+                if ($response_pp->successful()) {
+                    Storage::disk('public')->put('foto_karyawan/' . $get_cv->file_pp, $response_pp->body());
                 }
                 // Foto Karyawan End
 
                 // Foto ktp
                 $fileKTP = url_karir() . '/storage/ktp/' . $get_cv->ktp;
-                $response = Http::get($fileKTP);
+                $response_ktp = Http::get($fileKTP);
 
-                if ($response->successful()) {
-                    Storage::disk('public')->put('ktp/' . $get_cv->ktp, $response->body());
+                if ($response_ktp->successful()) {
+                    if (!Storage::disk('public')->exists('ktp')) {
+                        Storage::disk('public')->makeDirectory('ktp');
+                    }
+                    Storage::disk('public')->put('ktp/' . $get_cv->ktp, $response_ktp->body());
                 }
                 // Foto ktp End
 
                 // file ijazah
                 $fileIjazah = url_karir() . '/storage/ijazah/' . $get_cv->ijazah;
-                $response = Http::get($fileIjazah);
+                $response_ijazah = Http::get($fileIjazah);
 
-                if ($response->successful()) {
-                    Storage::disk('public')->put('ijazah/' . $get_cv->ijazah, $response->body());
+                if ($response_ijazah->successful()) {
+                    if (!Storage::disk('public')->exists('ijazah')) {
+                        Storage::disk('public')->makeDirectory('ijazah');
+                    }
+                    Storage::disk('public')->put('ijazah/' . $get_cv->ijazah, $response_ijazah->body());
                 }
                 // file ijazah End
 
                 // Transkrip Nilai
                 $fileTranskripNilai = url_karir() . '/storage/transkrip_nilai/' . $get_cv->transkrip_nilai;
-                $response = Http::get($fileTranskripNilai);
+                $response_transkrip_nilai = Http::get($fileTranskripNilai);
 
-                if ($response->successful()) {
-                    Storage::disk('public')->put('transkrip_nilai/' . $get_cv->transkrip_nilai, $response->body());
+                if ($response_transkrip_nilai->successful()) {
+                    if (!Storage::disk('public')->exists('transkrip_nilai')) {
+                        Storage::disk('public')->makeDirectory('transkrip_nilai');
+                    }
+                    Storage::disk('public')->put('transkrip_nilai/' . $get_cv->transkrip_nilai, $response_transkrip_nilai->body());
                 }
                 // Transkrip Nilai End
-
+                // dd($response_transkrip_nilai->body());
                 $id_karyawan = Uuid::uuid4();
 
                 $no_karyawan = $get_recruitment_user->recruitmentAdmin->Holding->holding_number . '00' . date('ym', strtotime($get_recruitment_user->tanggal_diterima)) . date('dmy', strtotime($get_cv->tanggal_lahir));

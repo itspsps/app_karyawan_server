@@ -156,15 +156,18 @@ class ReportController extends Controller
     {
         date_default_timezone_set('Asia/Jakarta');
         $holding = Holding::where('holding_code', $holding)->first();
-        // if (request()->ajax()) {
+        // dd($request->all());
         $now = Carbon::parse($request->start_date)->startOfDay();
         $now1 = Carbon::parse($request->end_date)->endOfDay();
         $period = CarbonPeriod::create($now, $now1);
         if (request()->ajax()) {
-            $query = Karyawan::with(['Absensi' => function ($q) use ($now, $now1) {
-                $q->whereBetween('LogTime', [$now, $now1])
-                    ->select('EnrollNumber', 'LogTime'); // supaya jelas field yg dibawa
+            $query = Karyawan::with(['Departemen' => function ($q) {
+                $q->select('id', 'nama_departemen');
             }])
+                ->with(['Absensi' => function ($q) use ($now, $now1) {
+                    $q->whereBetween('LogTime', [$now, $now1])
+                        ->select('EnrollNumber', 'LogTime'); // supaya jelas field yg dibawa
+                }])
                 ->with(['MappingShift' => function ($q) use ($now, $now1) {
                     $q->with('Shift');
                     $q->whereBetween('tanggal_masuk', [$now, $now1]);
@@ -174,22 +177,23 @@ class ReportController extends Controller
                 ->where('status_aktif', 'AKTIF');
 
             if (!empty($request->departemen_filter)) {
-                $query->where('dept_id', $request->departemen_filter);
+                $query->whereIn('dept_id', $request->departemen_filter);
             }
 
             if (!empty($request->divisi_filter)) {
-                $query->where('divisi_id', $request->divisi_filter);
+                $query->whereIn('divisi_id', $request->divisi_filter);
             }
 
             if (!empty($request->bagian_filter)) {
-                $query->where('bagian_id', $request->bagian_filter);
+                $query->whereIn('bagian_id', $request->bagian_filter);
             }
 
             if (!empty($request->jabatan_filter)) {
-                $query->where('jabatan_id', $request->jabatan_filter);
+                $query->whereIn('jabatan_id', $request->jabatan_filter);
             }
-            $table = $query->select('karyawans.name', 'karyawans.id', 'karyawans.nomor_identitas_karyawan')
+            $table = $query->select('karyawans.dept_id', 'karyawans.name', 'karyawans.id', 'karyawans.nomor_identitas_karyawan')
                 ->orderBy('karyawans.name', 'ASC')
+                // ->limit(10)
                 ->get();
             // dd($table);
             $column = DataTables::of($table);
@@ -222,16 +226,30 @@ class ReportController extends Controller
                             $checkIn = '<span style="color:rgba(var(--bs-success-rgb));">' . $checkIn . '</span>';
                         }
                     } else {
-                        $checkIn = '';
+                        $logs_absensi_masuk = $row->Absensi->filter(function ($log) use ($jam_masuk) {
+                            $getcheckIn = Carbon::parse($log->LogTime);
+                            $start = Carbon::parse($jam_masuk->tanggal_masuk);
+                            return $getcheckIn->toDateString() === $start->toDateString();
+                        });
+                        if ($logs_absensi_masuk->isNotEmpty()) {
+                            $checkIn  = Carbon::parse($logs_absensi_masuk->min('LogTime'))->format('H:i');
+                        } else {
+                            if ($date->format('Y-m-d') > Carbon::now()->format('Y-m-d')) {
+                                $checkIn = '';
+                            } else {
+                                $checkIn =
+                                    'Tidak Absen';
+                            }
+                        }
                     }
 
                     $logs_absensi_pulang = $row->Absensi->filter(function ($log) use ($jam_masuk) {
                         $getcheckOut = Carbon::parse($log->LogTime);
                         $start = Carbon::parse($jam_masuk->tanggal_pulang)->setTimeFromTimeString(Carbon::parse($jam_masuk->Shift->jam_pulang_cepat)->format('H:i:00'));
-                        $end = Carbon::parse($jam_masuk->tanggal_pulang)->endOfDay()->format('H:i:00');
+                        $end = Carbon::parse($jam_masuk->tanggal_pulang)->setTimeFromTimeString(Carbon::parse($jam_masuk->Shift->jam_keluar)->addHours(5)->format('H:i:59'));
                         return $getcheckOut->between($start, $end);
                     });
-                    // return $logs_absensi_masuk . ' ' . $logs_absensi_pulang;
+                    // return $logs_absensi_pulang;
                     if ($logs_absensi_pulang->isNotEmpty()) {
                         $checkOut  = Carbon::parse($logs_absensi_pulang->min('LogTime'))->format('H:i');
                         if (Carbon::parse($jam_masuk->tanggal_pulang)->format('Y-m-d') > $date->format('Y-m-d')) {
@@ -250,9 +268,25 @@ class ReportController extends Controller
                             }
                         }
                     } else {
-                        $checkOut = '';
+                        $logs_absensi_pulang = $row->Absensi->filter(function ($log) use ($jam_masuk) {
+                            $getcheckOut = Carbon::parse($log->LogTime);
+                            $start = Carbon::parse($jam_masuk->tanggal_pulang);
+                            return $getcheckOut->toDateString() === $start->toDateString();
+                        });
+                        if ($logs_absensi_pulang->isNotEmpty()) {
+                            $checkOut  = Carbon::parse($logs_absensi_pulang->max('LogTime'))->format('H:i');
+                            if ($checkOut == Carbon::parse($logs_absensi_masuk->min('LogTime'))->format('H:i')) {
+                                $checkOut = 'Tidak Absen';
+                            }
+                        } else {
+                            if ($date->format('Y-m-d') > Carbon::now()->format('Y-m-d')) {
+                                $checkOut = '';
+                            } else {
+                                $checkOut = 'Tidak Absen';
+                            }
+                        }
                     }
-                    if ($checkIn == '<span style="color:red;">' . 'Belum Absen' . '</span>' && $checkOut == '<span style="color:red;">' . 'Belum Absen' . '</span>') {
+                    if ($checkIn == 'Tidak Absen' && $checkOut == 'Tidak Absen') {
                         $check_all = '<span style="color:red;">' . 'Tidak Hadir' . '</span>';
                         return $check_all;
                     }
@@ -264,6 +298,14 @@ class ReportController extends Controller
             $column->addColumn('btn_detail', function ($row) use ($holding) {
                 $btn_detail = '<a id="btn_detail" type="button" href="' . url('rekap-data/detail', ['id' => $row->nomor_identitas_karyawan]) . '/' . $holding->holding_code . '" class="btn btn-sm btn-info"><i class="menu-icon tf-icons mdi mdi-eye"></i> Detail</a>';
                 return $btn_detail;
+            });
+            $column->addColumn('departemen', function ($row) use ($now, $now1) {
+                if ($row->Departemen != NULL) {
+                    $departemen = $row->Departemen->nama_departemen;
+                } else {
+                    $departemen = '-';
+                }
+                return $departemen;
             });
             $column->addColumn('total_hadir_tepat_waktu', function ($row) use ($now, $now1) {
                 $mapping_shift = $row->MappingShift;
@@ -459,6 +501,7 @@ class ReportController extends Controller
                 'total_cuti_true',
                 'total_dinas_true',
                 'tidak_hadir_kerja',
+                'departemen',
                 'total_semua'
             ], $data_tanggal);
             return $column->rawColumns($rawCols)
@@ -955,7 +998,7 @@ class ReportController extends Controller
         $id_departemen    = $request->departemen_filter;
         $start_date = $request->start_date;
         $end_date = $request->end_date;
-        // dd($end_date);
+        // dd($id_departemen);
         $period = CarbonPeriod::create($start_date, $end_date);
         foreach ($period as $date) {
             $data_columns_header[] = ['header' => $date->format('d/m/Y')];
@@ -963,15 +1006,30 @@ class ReportController extends Controller
         }
         $count_period = count($period);
 
-        $divisi      = Divisi::where('dept_id', $id_departemen)->where('holding', $request->holding)->orderBy('nama_divisi', 'ASC')->get();
+        $divisi      = Divisi::with('Departemen')->whereIn('dept_id', $id_departemen)->where('holding', $request->holding)->orderBy('nama_divisi', 'ASC')->get();
         // dd($divisi);
         if ($divisi == NULL || $divisi == '' || count($divisi) == '0') {
             $select = '<option value="">Pilih Divisi...</option>';
         } else {
 
             $select_divisi[] = "<option value=''>Pilih Divisi...</option>";
+            $currentDept = null;
             foreach ($divisi as $divisi) {
+                if ($currentDept !== $divisi->Departemen->nama_departemen) {
+                    // tutup optgroup sebelumnya
+                    if ($currentDept !== null) {
+                        $select_divisi1[] = "</optgroup>";
+                    }
+
+                    // buka optgroup baru
+                    $currentDept = $divisi->Departemen->nama_departemen;
+                    $select_divisi1[] = "<optgroup label='{$divisi->Departemen->nama_departemen}'>";
+                }
                 $select_divisi1[] = "<option value='$divisi->id'>$divisi->nama_divisi</option>";
+            }
+            // tutup optgroup terakhir
+            if ($currentDept !== null) {
+                $select_divisi1[] = "</optgroup>";
             }
             $select = array_merge($select_divisi, $select_divisi1);
         }

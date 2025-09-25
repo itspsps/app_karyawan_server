@@ -48,7 +48,7 @@ class Karyawan extends Model
         'lama_kontrak_kerja',
         'kontrak_site',
         'penempatan_kerja',
-        'site_job',
+        'approval_site',
         'provinsi',
         'kabupaten',
         'kecamatan',
@@ -83,10 +83,6 @@ class Karyawan extends Model
         'divisi3_id',
         'bagian3_id',
         'jabatan3_id',
-        'dept4_id',
-        'divisi4_id',
-        'bagian4_id',
-        'jabatan4_id',
         'atasan_1',
         'atasan_2',
         'ptkp',
@@ -133,6 +129,10 @@ class Karyawan extends Model
         return $this->hasMany(Izin::class, 'user_id', 'id');
     }
 
+    public function PenempatanKerja(): BelongsTo
+    {
+        return $this->belongsTo(Site::class, 'penempatan_kerja', 'id');
+    }
     public function KontrakKerja(): BelongsTo
     {
         return $this->belongsTo(Holding::class, 'kontrak_kerja', 'id');
@@ -154,14 +154,7 @@ class Karyawan extends Model
     {
         return $this->belongsTo(Departemen::class, 'dept_id2', 'id');
     }
-    public function Departemen3(): BelongsTo
-    {
-        return $this->belongsTo(Departemen::class, 'dept_id3', 'id');
-    }
-    public function Departemen4(): BelongsTo
-    {
-        return $this->belongsTo(Departemen::class, 'dept_id4', 'id');
-    }
+
     public function Divisi(): BelongsTo
     {
         return $this->belongsTo(Divisi::class, 'divisi_id', 'id');
@@ -174,14 +167,7 @@ class Karyawan extends Model
     {
         return $this->belongsTo(Divisi::class, 'divisi2_id', 'id');
     }
-    public function Divisi3(): BelongsTo
-    {
-        return $this->belongsTo(Divisi::class, 'divisi3_id', 'id');
-    }
-    public function Divisi4(): BelongsTo
-    {
-        return $this->belongsTo(Divisi::class, 'divisi4_id', 'id');
-    }
+
     public function Bagian(): BelongsTo
     {
         return $this->belongsTo(Bagian::class, 'bagian_id', 'id');
@@ -194,14 +180,7 @@ class Karyawan extends Model
     {
         return $this->belongsTo(Bagian::class, 'bagian2_id', 'id');
     }
-    public function Bagian3(): BelongsTo
-    {
-        return $this->belongsTo(Bagian::class, 'bagian3_id', 'id');
-    }
-    public function Bagian4(): BelongsTo
-    {
-        return $this->belongsTo(Bagian::class, 'bagian4_id', 'id');
-    }
+
     public function Jabatan(): BelongsTo
     {
         return $this->belongsTo(Jabatan::class, 'jabatan_id', 'id');
@@ -214,14 +193,7 @@ class Karyawan extends Model
     {
         return $this->belongsTo(Jabatan::class, 'jabatan2_id', 'id');
     }
-    public function Jabatan3(): BelongsTo
-    {
-        return $this->belongsTo(Jabatan::class, 'jabatan3_id', 'id');
-    }
-    public function Jabatan4(): BelongsTo
-    {
-        return $this->belongsTo(Jabatan::class, 'jabatan4_id', 'id');
-    }
+
     public function User(): BelongsTo
     {
         return $this->belongsTo(User::class, 'id', 'karyawan_id');

@@ -13,13 +13,14 @@ class KaryawanPendidikan extends Model
     protected $primaryKey = 'id_pendidikan';
     public $timestamps = false;
     protected $fillable = [
-        'id_user',
+        'id_pendidikan',
+        'id_karyawan',
         'institusi',
         'jurusan',
         'jenjang',
         'tanggal_masuk',
         'tanggal_keluar',
         'created_at',
-        'expired_at',
+        'updated_at',
     ];
 }
