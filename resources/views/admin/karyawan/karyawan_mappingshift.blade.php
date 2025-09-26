@@ -1,31 +1,65 @@
 @extends('admin.layouts.dashboard')
 @section('css')
 <link rel="stylesheet" href="https://cdn.datatables.net/2.0.5/css/dataTables.bootstrap5.css">
+<!-- Select2 CSS -->
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
 <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+
+<link href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css" rel="stylesheet" />
 <style type="text/css">
     .my-swal {
         z-index: X;
     }
 
-    /* Samain tinggi & border dengan input form-floating */
+    /* ukuran teks di area pilihan (input select2) */
     .select2-container--bootstrap-5 .select2-selection {
-        min-height: calc(3.5rem + 2px);
-        border: 1px solid #ced4da;
-        border-radius: 0.375rem;
-        display: flex;
-        align-items: center;
+        font-size: 0.875rem !important;
+        /* Bootstrap small (14px) */
+        min-height: calc(1.5em + 0.75rem + 2px);
+        /* biar tinggi konsisten */
     }
 
-    .select2-container--bootstrap-5 .select2-results>.select2-results__options {
-        max-height: 200px;
-        /* atur sesuai kebutuhan, misalnya 200px */
-        overflow-y: auto;
+    /* ukuran teks di dropdown list */
+    .select2-container--bootstrap-5 .select2-results__option {
+        font-size: 0.875rem !important;
     }
 
-    /* Biar teks rapih di tengah */
-    .select2-container--bootstrap-5 .select2-selection__rendered {
-        line-height: 1.6 !important;
-        padding-left: 0.75rem !important;
+    /* Fokus warna primary */
+    .select2-container--bootstrap-5.select2-container--focus .select2-selection {
+        border-color: var(--bs-primary) !important;
+        box-shadow: 0 0 0 0.25rem rgba(var(--bs-primary-rgb), 0.25) !important;
+    }
+
+    /* Background dan teks saat option terpilih */
+    .select2-container--bootstrap-5 .select2-results__option--selected {
+        background-color: var(--bs-primary) !important;
+        color: #fff !important;
+    }
+
+    /* Hover option */
+    .select2-container--bootstrap-5 .select2-results__option--highlighted {
+        background-color: rgba(var(--bs-primary-rgb), 0.1) !important;
+        color: var(--bs-primary) !important;
+    }
+
+    /* ukuran huruf untuk pilihan yang sudah dipilih (tag dalam box) */
+    .select2-container--bootstrap-5 .select2-selection--multiple .select2-selection__rendered .select2-selection__choice {
+        font-size: 0.75rem;
+        /* kecilin text */
+        padding: 2px 6px;
+        /* biar nggak terlalu tinggi */
+        line-height: 1.2;
+    }
+
+    /* icon "x" di tag */
+    .select2-container--bootstrap-5 .select2-selection--multiple .select2-selection__choice__remove {
+        font-size: 0.7rem;
+        margin-right: 2px;
+    }
+
+    /* tulisan placeholder / hasil render */
+    .select2-container--bootstrap-5 .select2-selection--multiple .select2-selection__rendered {
+        font-size: 0.8rem;
     }
 </style>
 @endsection
@@ -43,51 +77,57 @@
                 </div>
                 <div class="card-body">
                     <hr class="">
-                    <form action="@if(Auth::user()->is_admin =='hrd'){{ url('hrd/karyawan/mapping_shift/'.$holding->holding_code) }}@else {{ url('/karyawan/mapping_shift/'.$holding->holding_code) }} @endif">
-                        <div class="row g-3 text-center">
-                            <div class="col-2">
-                                <div class="form-floating form-floating-outline">
-                                    <select type="text" class="form-control" name="departemen_filter" id="departemen_filter">
-                                        <option selected disabled value="">--</option>
-                                        @foreach($departemen as $dept)
-                                        <option value="{{$dept->id}}">{{$dept->nama_departemen}}</option>
-                                        @endforeach
-                                    </select>
-                                    <label for="departemen_filter">Departemen</label>
-                                </div>
-                            </div>
-                            <div class="col-2">
-                                <div class="form-floating form-floating-outline">
-                                    <select type="text" class="form-control" name="divisi_filter" placeholder="Date Filter" id="divisi_filter">
-                                        <option selected disabled value="">--</option>
-                                    </select>
-                                    <label for="divisi_filter">Divisi</label>
-                                </div>
-                            </div>
-                            <div class="col-2">
-                                <div class="form-floating form-floating-outline">
-                                    <select type="text" class="form-control" name="bagian_filter" placeholder="Date Filter" id="bagian_filter">
-                                        <option selected disabled value="">--</option>
-                                    </select>
-                                    <label for="bagian_filter">Bagian</label>
-                                </div>
-                            </div>
-                            <div class="col-2">
-                                <div class="form-floating form-floating-outline">
-                                    <select type="text" class="form-control" name="jabatan_filter" placeholder="Date Filter" id="jabatan_filter">
-                                        <option selected disabled value="">--</option>
-                                    </select>
-                                    <label for="jabatan_filter">Jabatan</label>
-                                </div>
-                            </div>
-                            <div class="col-3">
-                                <div class="form-floating form-floating-outline">
-                                    <input type="month" class="form-control" name="date_filter" placeholder="Filter By Month:" id="date_filter" value="{{ date('Y-m') }}">
-                                    <label for="date_filter">Date Range Filter</label>
-                                </div>
+                    <div class="row g-3 text-center">
+                        <div class="col-lg-3">
+                            <div class="form-floating form-floating-outline">
+                                <select type="text" class="form-control" name="departemen_filter[]" id="departemen_filter" multiple>
+                                    <option disabled value="">--</option>
+                                    @foreach($departemen as $dept)
+                                    <option value="{{$dept->id}}">{{$dept->nama_departemen}}</option>
+                                    @endforeach
+                                </select>
+                                <label for="departemen_filter">Departemen</label>
                             </div>
                         </div>
-                    </form>
+                        <div class="col-lg-3">
+                            <div class="form-floating form-floating-outline">
+                                <select type="text" class="form-control" name="divisi_filter[]" placeholder="Date Filter" id="divisi_filter" multiple>
+                                    <option disabled value="">--</option>
+                                </select>
+                                <label for="divisi_filter">Divisi</label>
+                            </div>
+                        </div>
+                        <div class="col-lg-3">
+                            <div class="form-floating form-floating-outline">
+                                <select type="text" class="form-control" name="bagian_filter[]" placeholder="Date Filter" id="bagian_filter" multiple>
+                                    <option disabled value="">--</option>
+                                </select>
+                                <label for="bagian_filter">Bagian</label>
+                            </div>
+                        </div>
+                        <div class="col-lg-3">
+                            <div class="form-floating form-floating-outline">
+                                <select type="text" class="form-control" name="jabatan_filter[]" placeholder="Date Filter" id="jabatan_filter" multiple>
+                                    <option disabled value="">--</option>
+                                </select>
+                                <label for="jabatan_filter">Jabatan</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mt-3 g-3">
+                        <div class="col-lg-8">
+                            <div id="reportrange" style="background: #fff; cursor: pointer; padding: 5px 10px; width: 100%">
+                                <button type="button" class="btn btn-outline-secondary waves-effect">
+                                    FILTER DATE : &nbsp;
+                                    <i class="mdi mdi-calendar-filter-outline"></i>&nbsp;
+                                    <span></span> <i class="mdi mdi-menu-down"></i>
+                                    <input type="date" id="start_date" name="start_date" hidden value="">
+                                    <input type="date" id="end_date" name="end_date" hidden value="">
+                                </button>
+                            </div>
+
+                        </div>
+                    </div>
                     <hr class="my-5">
                     <div id="btn_selected_karyawan">
                         <button id="btn_selected_proses" class="btn btn-xs btn-primary waves-effect waves-light" type="button">
@@ -211,35 +251,48 @@
     <script src="https://cdn.datatables.net/2.0.5/js/dataTables.bootstrap5.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+    <script type="text/javascript" src="{{ asset('assets/assets_users/js/daterangepicker.js') }}"></script>
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     <script>
         // $('#table_mapping_shift').hide();
         $('#btn_selected_karyawan').hide();
         let holding = '{{ $holding->holding_code }}';
         let holding_id = '{{ $holding->id }}';
-        // console.log(holding);
         $(document).ready(function() {
-            $('#shift_id').select2({
+
+            $('#departemen_filter').select2({
                 theme: 'bootstrap-5',
-                dropdownParent: $('#modal_tambah_shift'), // ganti dengan id modal kamu
-                placeholder: "-- Pilih Shift --",
-                allowClear: true,
-                width: '100%', // biar sama dengan input lain
-                dropdownAutoWidth: false
+                placeholder: "Pilih Departemen",
+                allowClear: true
+            });
+            $('#divisi_filter').select2({
+                theme: 'bootstrap-5',
+                placeholder: "Pilih Divisi",
+                allowClear: true
+            });
+            $('#bagian_filter').select2({
+                theme: 'bootstrap-5',
+                placeholder: "Pilih Bagian",
+                allowClear: true
+            });
+            $('#jabatan_filter').select2({
+                theme: 'bootstrap-5',
+                placeholder: "Pilih Jabatan",
+                allowClear: true
             });
         });
 
         $(document).ready(function() {
             $('#departemen_filter').change(function() {
-                departemen_filter = $(this).val();
-                divisi_filter = $('#divisi_filter').val();
-                bagian_filter = $('#bagian_filter').val();
-                jabatan_filter = $('#jabatan_filter').val();
-                filter_month = $('#date_filter').val();
+                departemen_filter_dept = $(this).val();
+                divisi_filter_dept = $('#divisi_filter').val();
+                bagian_filter_dept = $('#bagian_filter').val();
+                jabatan_filter_dept = $('#jabatan_filter').val();
+                start_date = $('#start_date').val();
+                end_date = $('#end_date').val();
+
 
                 $('#btn_selected_karyawan').hide();
-                console.log(filter_month);
                 // $('#table_mapping_shift').DataTable().destroy();
 
                 $.ajax({
@@ -247,8 +300,13 @@
                     url: "@if(Auth::user()->is_admin =='hrd'){{url('hrd/mapping_shift/get_divisi')}}@else {{url('mapping_shift/get_divisi')}}@endif",
                     data: {
                         holding: holding_id,
-                        filter_month: filter_month,
-                        departemen_filter: departemen_filter
+                        start_date: start_date,
+                        end_date: end_date,
+                        departemen_filter: departemen_filter_dept,
+                        divisi_filter: divisi_filter_dept,
+                        bagian_filter: bagian_filter_dept,
+                        jabatan_filter: jabatan_filter_dept,
+
                     },
                     cache: false,
 
@@ -258,7 +316,7 @@
                         $('#divisi_filter').html(msg);
                         $('#bagian_filter').html('<option selected value="">Pilih Bagian</option>');
                         $('#jabatan_filter').html('<option selected value="">Pilih Jabatan</option>');
-                        load_data(departemen_filter, divisi_filter, bagian_filter, jabatan_filter, filter_month);
+                        load_data(departemen_filter_dept, divisi_filter_dept, bagian_filter_dept, jabatan_filter_dept, start_date, end_date);
                     },
                     error: function(data) {
                         console.log('error:', data)
@@ -340,21 +398,48 @@
                 // $('#table_mapping_shift').DataTable().destroy();
                 load_data(departemen_filter, divisi_filter, bagian_filter, jabatan_filter, filter_month);
             })
-            $('#date_filter').change(function() {
-                filter_month = $(this).val();
-                // console.log(filter_month);
-                departemen_filter = $('#departemen_filter').val();
-                divisi_filter = $('#divisi_filter').val();
-                bagian_filter = $('#bagian_filter').val();
-                jabatan_filter = $('#jabatan_filter').val();
-                $('#btn_selected_karyawan').hide();
-                // $('#table_mapping_shift').DataTable().destroy();
-                load_data(departemen_filter, divisi_filter, bagian_filter, jabatan_filter, filter_month);
-            })
-            // load_data(departemen_filter, divisi_filter, bagian_filter, jabatan_filter);
-            load_data();
+            var start = moment().startOf('month');
+            var end = moment().endOf('month');
+            var start_date = $('#start_date').val();
+            var end_date = $('#end_date').val();
+            var departemen_filter = [];
+            var divisi_filter = [];
+            var bagian_filter = [];
+            var jabatan_filter = [];
 
-            function load_data(departemen_filter = '', divisi_filter = '', bagian_filter = '', jabatan_filter = '', filter_month = '') {
+            function cb(start, end) {
+                $('#reportrange span').html(start.format('D MMMM YYYY') + ' - ' + end.format('D MMMM YYYY'));
+                lstart = start.format('YYYY-MM-DD');
+                lend = end.format('YYYY-MM-DD');
+                $('#start_date').val(lstart);
+                $('#end_date').val(lend);
+                // console.log(lstart, lend);
+                // ambil langsung dari form
+                var departemen_filter = $('#departemen_filter').val() || [];
+                var divisi_filter = $('#divisi_filter').val() || [];
+                var bagian_filter = $('#bagian_filter').val() || [];
+                var jabatan_filter = $('#jabatan_filter').val() || [];
+
+
+                load_data(departemen_filter, divisi_filter, bagian_filter, jabatan_filter, lstart, lend);
+
+            }
+            $('#reportrange').daterangepicker({
+                startDate: start,
+                endDate: end,
+                ranges: {
+                    'Today': [moment(), moment()],
+                    'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+                    'Last 7 Days': [moment().subtract(6, 'days'), moment()],
+                    'Last 30 Days': [moment().subtract(29, 'days'), moment()],
+                    'This Month': [moment().startOf('month'), moment().endOf('month')],
+                    'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+                }
+            }, cb);
+
+            cb(start, end);
+
+            function load_data(departemen_filter = '', divisi_filter = '', bagian_filter = '', jabatan_filter = '', start_date = '', end_date = '') {
                 // console.log(departemen_filter);
                 $('#table_mapping_shift').DataTable().destroy();
                 var table = $('#table_mapping_shift').DataTable({
@@ -376,7 +461,8 @@
                             divisi_filter: divisi_filter,
                             bagian_filter: bagian_filter,
                             jabatan_filter: jabatan_filter,
-                            filter_month: filter_month,
+                            start_date: start_date,
+                            end_date: end_date,
                         },
                     },
                     columns: [{

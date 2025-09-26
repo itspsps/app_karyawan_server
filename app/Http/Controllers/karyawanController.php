@@ -1469,8 +1469,6 @@ class karyawanController extends Controller
 
     public function detail($id, $holding)
     {
-        // dd($id);
-        // dd(Karyawan::find($id));
         $getHolding = Holding::where('holding_code', $holding)->first();
 
         $getHoldingall = Holding::get();
@@ -1478,7 +1476,6 @@ class karyawanController extends Controller
         if ($karyawan == NULL) {
             return redirect()->back()->with('error', 'Karyawan Tidak Ada', 1500);
         } else {
-
             return view('admin.karyawan.detail_karyawan', [
                 // return view('karyawan.editkaryawan', [
                 'title' => 'Detail Karyawan',

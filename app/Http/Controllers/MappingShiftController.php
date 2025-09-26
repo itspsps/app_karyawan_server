@@ -363,13 +363,15 @@ class MappingShiftController extends Controller
     {
         $holding = Holding::where('holding_code', $request->holding)->first();
         // dd($holding);
-        // dd($request->filter_month, $request->departemen_filter);
-        $nowMonth = Carbon::parse($request->filter_month)->month;
+        dd($request->filter_month, $request->departemen_filter);
+        $now = Carbon::parse($request->start_date)->format('Y-m-d');
+        $now1 = Carbon::parse($request->end_date)->format('Y-m-d');
         $table = Karyawan::query()
             ->with([
+                'Departemen',
                 'Jabatan',
-                'MappingShift' => function ($q) use ($nowMonth) {
-                    $q->whereMonth('tanggal_masuk', $nowMonth)
+                'MappingShift' => function ($q) use ($now, $now1) {
+                    $q->whereBetween('tanggal_masuk', [$now, $now1])
                         ->with('Shift')
                         ->orderBy('tanggal_masuk', 'ASC');
                 }
@@ -378,17 +380,17 @@ class MappingShiftController extends Controller
             ->where('kategori', 'Karyawan Bulanan')
             ->where('status_aktif', 'AKTIF');
 
-        if ($request->filled('departemen_filter')) {
-            $table->where('dept_id', $request->departemen_filter);
+        if (!empty($request->departemen_filter)) {
+            $table->whereIn('dept_id', $request->departemen_filter);
         }
         if ($request->filled('divisi_filter')) {
-            $table->where('divisi_id', $request->divisi_filter);
+            $table->whereIn('divisi_id', $request->divisi_filter);
         }
         if ($request->filled('bagian_filter')) {
-            $table->where('bagian_id', $request->bagian_filter);
+            $table->whereIn('bagian_id', $request->bagian_filter);
         }
         if ($request->filled('jabatan_filter')) {
-            $table->where('jabatan_id', $request->jabatan_filter);
+            $table->whereIn('jabatan_id', $request->jabatan_filter);
         }
         $table->orderBy('name', 'ASC')->get();
         // dd($table->get());
