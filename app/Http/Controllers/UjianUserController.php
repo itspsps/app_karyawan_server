@@ -487,11 +487,12 @@ class UjianUserController extends Controller
         // dd($request->recruitment_user_id);
         $rules =
             [
-                'nilai'             => 'required|numeric',
+                'nilai'             => 'required|numeric|max:100',
             ];
         $customessages =
             [
                 'required'             => ':attribute tidak boleh kosong!',
+                'max'                  => ':attribute tidak boleh lebih dari 100!',
             ];
         $validasi = Validator::make(
             $request->all(),

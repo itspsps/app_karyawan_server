@@ -1,8 +1,5 @@
 @extends('admin.layouts.dashboard')
 @section('css')
-    <link rel="stylesheet" href="https://cdn.datatables.net/2.0.5/css/dataTables.bootstrap5.css">
-
-
     <style type="text/css">
         .my-swal {
             z-index: X;

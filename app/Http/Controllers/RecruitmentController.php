@@ -709,6 +709,8 @@ class RecruitmentController extends Controller
         // dd($request->all());
         $holdings = Holding::where('holding_code', $holding)->first();
         $recruitment_admin_id = RecruitmentUser::where('id', $request->recruitment_user_id)->first();
+        $tanggal_wawancara = Carbon::parse($request->tanggal_wawancara);
+        $hari = $tanggal_wawancara->translatedFormat('l, j F Y');
         // dd($request->nomor_whatsapp);
         // dd($recruitment_admin_id);
         if ($request->status == '1') {
@@ -764,8 +766,6 @@ class RecruitmentController extends Controller
 
 
             Carbon::setLocale('id');
-            $tanggal_wawancara = Carbon::parse($request->tanggal_wawancara);
-            $hari = $tanggal_wawancara->translatedFormat('l, j F Y');
             //kirim pesan ke whatsapp
             $curl = curl_init();
             curl_setopt_array($curl, array(
@@ -780,21 +780,17 @@ class RecruitmentController extends Controller
                 CURLOPT_POSTFIELDS => array(
                     'target' => $request->nomor_whatsapp,
                     'message' =>
-                    "PEMBERITAHUAN WAWANCARA!
+                    "
+Halo $request->nama,
+Terima kasih telah melamar di $holdings->holding_name. Setelah proses seleksi administrasi, kami mengundang Anda untuk mengikuti wawancara tahap pertama pada:
 
-Selamat $request->nama
-Anda dinyatakan *LOLOS* tahap seleksi administrasi di $holdings->holding_category, untuk posisi $request->nama_bagian
+📅 Hari/Tanggal : $hari
+🕒 Pukul : $request->waktu_wawancara WIB
+📍 Lokasi/Link Zoom : $tempat_wawancara
 
-Kami ingin mengundang Anda untuk wawancara pada :
+Mohon konfirmasi kehadiran Anda pada link di bawah ini :
 
-Tanggal : $hari
-Waktu   : $request->waktu_wawancara WIB
-Tempat  : $tempat_wawancara
-
-untuk konfirmasi kehadiran bisa dilakukan di
-asoy.com
-
-*Konfirmasi maksimal 24 jam setelah pesan ini dikirim*
+http://192.168.101.241:8001/cpanel/recruitment_detail/$request->recruitment_user_id
 ",
 
                     'countryCode' => '62', //optional
@@ -1237,6 +1233,44 @@ asoy.com
     public function ranking_update_status(Request $request)
     {
         try {
+            $get_recruitment_admin = RecruitmentUser::with([
+                'recruitmentAdmin' => function ($query) {
+                    $query->with([
+                        'Jabatan' => function ($query) {
+                            $query->with([
+                                'Bagian' =>  function ($query) {
+                                    $query->with([
+                                        'Divisi' => function ($query) {
+                                            $query->with([
+                                                'Departemen' => function ($query) {
+                                                    $query->orderBy('nama_departemen', 'ASC');
+                                                }
+                                            ]);
+                                            $query->orderBy('nama_divisi', 'ASC');
+                                        },
+                                    ]);
+                                },
+                            ]);
+                        },
+                    ]);
+                },
+            ])
+                ->where('id', $request->id)
+                ->first();
+            // dd($request->all());
+            $holding = $request->holding;
+            $holdings = Holding::where('holding_code', $holding)->first();
+            $tanggal_wawancara = Carbon::parse($request->tanggal_wawancara);
+            $hari = $tanggal_wawancara->translatedFormat('l, j F Y');
+            $get_wa = RecruitmentUser::with([
+                'AuthLogin' => function ($query) {
+                    $query;
+                }
+            ])->with([
+                'Cv' => function ($query) {
+                    $query;
+                }
+            ])->where('id', $request->id)->first();
             if ($request->status == '1b') {
                 if ($request->online == 1) {
                     $link_wawancara = 'nullable';
@@ -1289,11 +1323,7 @@ asoy.com
                         'created_at'                => date('Y-m-d H:i:s'),
                     ]
                 );
-                $get_wa = RecruitmentUser::with([
-                    'AuthLogin' => function ($query) {
-                        $query;
-                    }
-                ])->where('id', $request->id)->first();
+
                 // dd($get_wa);
                 $curl = curl_init();
                 curl_setopt_array($curl, array(
@@ -1308,9 +1338,16 @@ asoy.com
                     CURLOPT_POSTFIELDS => array(
                         'target' => $get_wa->Authlogin->nomor_whatsapp,
                         'message' =>
-                        "Pemberitahuan
+                        "Halo " . $get_wa->Cv->nama_lengkap . " ,
 
-selamat Anda lolos wawancara manager
+Selamat, Anda lolos tahap wawancara awal. Kami mengundang Anda untuk melanjutkan ke wawancara bersama Manager pada:
+📅 Hari/Tanggal : $hari
+🕒 Pukul : $request->waktu_wawancara WIB
+📍 Lokasi/Link Zoom : $tempat
+
+Mohon konfirmasi kehadiran Anda pada link di bawah ini :
+http://192.168.101.241:8001/cpanel/recruitment_detail/$request->id
+
 ",
                         'countryCode' => '62', //optional
                     ),
@@ -1333,7 +1370,8 @@ selamat Anda lolos wawancara manager
                 $validator = Validator::make(
                     $request->all(),
                     [
-                        'gaji' => 'required',
+                        'tempat_bekerja' => 'required',
+                        'waktu_bekerja' => 'required',
                         'tanggal_diterima' => 'required',
                     ],
                     [
@@ -1351,10 +1389,10 @@ selamat Anda lolos wawancara manager
 
                     [
                         'status_lanjutan'       => $request->status,
-                        'gaji'                  => $request->gaji,
+                        'tempat_bekerja'        => $request->tempat_bekerja,
                         'tanggal_diterima'      => $request->tanggal_diterima,
                         'notes'                 => $request->notes_langsung,
-                        'konfirmasi_diterima'      => date('Y-m-d H:i:s', strtotime('+1 days')),
+                        'konfirmasi_diterima'   => date('Y-m-d H:i:s', strtotime('+1 days')),
                         'updated_at'            => date('Y-m-d H:i:s'),
                     ]
                 );
@@ -1385,9 +1423,21 @@ selamat Anda lolos wawancara manager
                     CURLOPT_POSTFIELDS => array(
                         'target' => $get_wa->Authlogin->nomor_whatsapp,
                         'message' =>
-                        "Pemberitahuan
+                        "Halo " . $get_wa->Cv->nama_lengkap . ",
 
-selamat Anda lolos bekerja
+Selamat! Anda telah dinyatakan diterima sebagai " . $get_recruitment_admin->recruitmentAdmin->Jabatan->nama_jabatan . "
+Bagian " . $get_recruitment_admin->recruitmentAdmin->Jabatan->Bagian->nama_bagian . " Divisi " . $get_recruitment_admin->recruitmentAdmin->Jabatan->Bagian->Divisi->nama_divisi . "
+di $holdings->holding_name. 🎉
+
+Kami mengundang Anda untuk hadir pada:
+📅 Hari/Tanggal : $hari
+🕒 Pukul : $request->waktu_bekerja
+📍 Lokasi : $request->tempat_bekerja
+Untuk penjelasan lebih lanjut terkait administrasi dan training karyawan baru. Harap membawa dokumen yang diperlukan sesuai instruksi yang akan kami kirimkan.
+
+Mohon konfirmasi kehadiran Anda pada link di bawah ini :
+http://192.168.101.241:8001/cpanel/recruitment_detail/$request->id
+
 ",
                         'countryCode' => '62', //optional
                     ),
@@ -1421,11 +1471,6 @@ selamat Anda lolos bekerja
                         'created_at'                => date('Y-m-d H:i:s'),
                     ]
                 );
-                $get_wa = RecruitmentUser::with([
-                    'AuthLogin' => function ($query) {
-                        $query;
-                    }
-                ])->where('id', $request->id)->first();
                 // dd($get_wa);
                 $curl = curl_init();
                 curl_setopt_array($curl, array(
@@ -1440,9 +1485,10 @@ selamat Anda lolos bekerja
                     CURLOPT_POSTFIELDS => array(
                         'target' => $get_wa->Authlogin->nomor_whatsapp,
                         'message' =>
-                        "Pemberitahuan
-
-Maaf Anda Belum lolos sesi interview dan ujian
+                        "Halo " . $get_wa->Cv->nama_lengkap . ",
+Terima kasih sudah mengikuti proses wawancara bersama Manager di $holdings->holding_name.
+Setelah mempertimbangkan hasil seleksi, dengan berat hati kami sampaikan bahwa Anda belum dapat melanjutkan ke tahap berikutnya.
+Kami sangat menghargai waktu dan usaha Anda, serta akan menyimpan data Anda untuk kesempatan lain yang lebih sesuai di kemudian hari.
 ",
                         'countryCode' => '62', //optional
                     ),
@@ -1517,12 +1563,28 @@ Maaf Anda Belum lolos sesi interview dan ujian
                         'created_at'                => date('Y-m-d H:i:s'),
                     ]
                 );
-                $get_wa = RecruitmentUser::with([
-                    'AuthLogin' => function ($query) {
-                        $query;
-                    }
-                ])->where('id', $request->id)->first();
                 // dd($get_wa);
+                $get_posisi_baru = Recruitment::with([
+                    'Jabatan' => function ($query) {
+                        $query->with([
+                            'Bagian' =>  function ($query) {
+                                $query->with([
+                                    'Divisi' => function ($query) {
+                                        $query->with([
+                                            'Departemen' => function ($query) {
+                                                $query->orderBy('nama_departemen', 'ASC');
+                                            }
+                                        ]);
+                                        $query->orderBy('nama_divisi', 'ASC');
+                                    },
+                                ]);
+                            },
+                        ]);
+                    },
+
+                ])
+                    ->where('id', $request->lowongan_baru)
+                    ->first();
                 $curl = curl_init();
                 curl_setopt_array($curl, array(
                     CURLOPT_URL => 'https://api.fonnte.com/send',
@@ -1536,9 +1598,21 @@ Maaf Anda Belum lolos sesi interview dan ujian
                     CURLOPT_POSTFIELDS => array(
                         'target' => $get_wa->Authlogin->nomor_whatsapp,
                         'message' =>
-                        "Pemberitahuan
+                        "Halo " . $get_wa->Cv->nama_lengkap . ",
+Terima kasih telah mengikuti proses seleksi di $holdings->holding_name. Setelah mempertimbangkan kualifikasi Anda,
+kami melihat potensi Anda lebih sesuai dengan posisi
+Jabatan : " . $get_posisi_baru->Jabatan->nama_jabatan . ".
+Bagian : " . $get_posisi_baru->Jabatan->Bagian->nama_bagian . ".
+Divisi : " . $get_posisi_baru->Jabatan->Bagian->Divisi->nama_divisi . ".
+Departemen : " . $get_posisi_baru->Jabatan->Bagian->Divisi->Departemen->nama_departemen . ".
 
-selamat Anda lolos wawancara manager
+Kami mengundang Anda untuk melanjutkan ke wawancara bersama Manager " . $get_posisi_baru->Jabatan->Bagian->Divisi->Departemen->nama_departemen . " pada:
+📅 Hari/Tanggal : $hari
+🕒 Pukul : $request->waktu_wawancara WIB
+📍 Lokasi/Link Zoom : $tempat
+
+Mohon konfirmasi kehadiran Anda pada link di bawah ini :
+http://192.168.101.241:8001/cpanel/recruitment_detail/$request->id
 ",
                         'countryCode' => '62', //optional
                     ),
@@ -1561,7 +1635,8 @@ selamat Anda lolos wawancara manager
                 $validator = Validator::make(
                     $request->all(),
                     [
-                        'gaji' => 'required',
+                        'tempat_bekerja' => 'required',
+                        'waktu_bekerja' => 'required',
                         'lowongan_baru' => 'required',
                         'tanggal_diterima' => 'required',
                     ],
@@ -1581,7 +1656,7 @@ selamat Anda lolos wawancara manager
                     [
                         'status_lanjutan'       => $request->status,
                         'feedback_lanjutan'     => null,
-                        'gaji'                  => $request->gaji,
+                        'tempat_bekerja'        => $request->tempat_bekerja,
                         'tanggal_diterima'      => $request->tanggal_diterima,
                         'notes'                 => $request->notes_langsung,
                         'konfirmasi_diterima'   => date('Y-m-d H:i:s', strtotime('+1 days')),
@@ -1604,6 +1679,27 @@ selamat Anda lolos wawancara manager
                     }
                 ])->where('id', $request->id)->first();
                 // dd($get_wa);
+                $get_posisi_baru = Recruitment::with([
+                    'Jabatan' => function ($query) {
+                        $query->with([
+                            'Bagian' =>  function ($query) {
+                                $query->with([
+                                    'Divisi' => function ($query) {
+                                        $query->with([
+                                            'Departemen' => function ($query) {
+                                                $query->orderBy('nama_departemen', 'ASC');
+                                            }
+                                        ]);
+                                        $query->orderBy('nama_divisi', 'ASC');
+                                    },
+                                ]);
+                            },
+                        ]);
+                    },
+
+                ])
+                    ->where('id', $request->lowongan_baru)
+                    ->first();
                 $curl = curl_init();
                 curl_setopt_array($curl, array(
                     CURLOPT_URL => 'https://api.fonnte.com/send',
@@ -1617,9 +1713,22 @@ selamat Anda lolos wawancara manager
                     CURLOPT_POSTFIELDS => array(
                         'target' => $get_wa->Authlogin->nomor_whatsapp,
                         'message' =>
-                        "Pemberitahuan
+                        "Halo " . $get_wa->Cv->nama_lengkap . ",
+Terima kasih telah mengikuti proses seleksi di $holdings->holding_name. Setelah mempertimbangkan kualifikasi Anda,
+kami melihat potensi Anda lebih sesuai dengan posisi
+Jabatan : " . $get_posisi_baru->Jabatan->nama_jabatan . ".
+Bagian : " . $get_posisi_baru->Jabatan->Bagian->nama_bagian . ".
+Divisi : " . $get_posisi_baru->Jabatan->Bagian->Divisi->nama_divisi . ".
+Departemen : " . $get_posisi_baru->Jabatan->Bagian->Divisi->Departemen->nama_departemen . ".
 
-selamat Anda lolos bekerja
+Kami mengundang Anda untuk hadir pada:
+📅 Hari/Tanggal : $hari
+🕒 Pukul : $request->waktu_bekerja
+📍 Lokasi : $request->tempat_bekerja
+Untuk penjelasan lebih lanjut terkait administrasi dan training karyawan baru. Harap membawa dokumen yang diperlukan sesuai instruksi yang akan kami kirimkan.
+
+Mohon konfirmasi kehadiran Anda pada link di bawah ini :
+http://192.168.101.241:8001/cpanel/recruitment_detail/$request->id
 ",
                         'countryCode' => '62', //optional
                     ),
@@ -1687,7 +1796,7 @@ selamat Anda lolos bekerja
                 ])->first();
                 // dd($get_recruitment_user->recruitmentAdmin->Holding->holding_number);
                 $get_user = UsersCareer::where('id', $get_recruitment_user->users_career_id)->first();
-                $get_cv = RecruitmentCV::where('users_career_id', $get_user->id)->with([
+                $get_cv = RecruitmentCV::where('users_career_id', $get_recruitment_user->users_career_id)->with([
                     'provinsiKTP' => function ($query) {
                         $query->orderBy('id', 'ASC');
                     }
@@ -1777,6 +1886,7 @@ selamat Anda lolos bekerja
                 $id_karyawan = Uuid::uuid4();
 
                 $no_karyawan = $get_recruitment_user->recruitmentAdmin->Holding->holding_number . '00' . date('ym', strtotime($get_recruitment_user->tanggal_diterima)) . date('dmy', strtotime($get_cv->tanggal_lahir));
+
                 Karyawan::insert(
 
                     [
@@ -1832,6 +1942,7 @@ selamat Anda lolos bekerja
                         'created_at'                => date('Y-m-d H:i:s'),
                     ]
                 );
+                // dd($ss);
                 $pendidikan = RecruitmentPendidikan::where('id_user', $get_user->id)->get();
                 foreach ($pendidikan as $pp) {
                     KaryawanPendidikan::insert(

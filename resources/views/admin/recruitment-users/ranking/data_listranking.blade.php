@@ -161,8 +161,8 @@
         .timeline-centered .timeline-entry {
             position: relative;
             /*width: 50%;
-    <<<<<<< HEAD
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            float: right;*/
+                                                                                                                                                                                                                                                                                            <<<<<<< HEAD
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    float: right;*/
             =======float: right;
             */>>>>>>>35c7aa3d6b16d59fd98c381919fe2f71c0ddf2f9 margin-top: 5px;
             margin-left: 30px;
@@ -552,11 +552,25 @@
                                 value="{{ old('tanggal_diterima') }}" />
                             <label for="bagian_recruitment">TANGGAL MASUK KERJA</label>
                         </div>
-                        <label for="bagian_recruitment px-2"><small>GAJI (Rp)</small></label>
-                        <div class="form-floating form-floating-outline mb-2">
+                        {{-- <label for="bagian_recruitment px-2"><small>GAJI (Rp)</small></label> --}}
+                        {{-- <div class="form-floating form-floating-outline mb-2">
 
                             <input type="text" id="gaji_update" name="gaji"
                                 class="form-control @error('gaji') is-invalid @enderror" value="{{ old('gaji') }}" />
+                        </div> --}}
+                        <label for="bagian_recruitment px-2"><small>TEMPAT BEKERJA</small></label>
+                        <div class="form-floating form-floating-outline mb-2">
+
+                            <input type="text" id="tempat_bekerja_update" name="tempat_bekerja"
+                                class="form-control @error('tempat_bekerja') is-invalid @enderror"
+                                value="{{ old('tempat_bekerja') }}" />
+                        </div>
+                        <label for="bagian_recruitment px-2"><small>WAKTU BEKERJA</small></label>
+                        <div class="form-floating form-floating-outline mb-2">
+
+                            <input type="time" id="waktu_bekerja_update" name="WAKTU_bekerja"
+                                class="form-control @error('WAKTU_bekerja') is-invalid @enderror"
+                                value="{{ old('WAKTU_bekerja') }}" />
                         </div>
                         <label for="bagian_recruitment px-2"><small>NOTES</small></label>
                         <div class="form-floating form-floating-outline mb-2">
@@ -590,11 +604,32 @@
                             value="{{ old('tanggal_diterima') }}" />
                         <label for="bagian_recruitment">TANGGAL MASUK KERJA</label>
                     </div>
-                    <label for="bagian_recruitment px-2"><small>GAJI (Rp)</small></label>
+                    {{-- <label for="bagian_recruitment px-2"><small>GAJI (Rp)</small></label>
                     <div class="form-floating form-floating-outline mb-2">
 
                         <input type="text" id="gaji_lolos" name="gaji"
                             class="form-control @error('gaji') is-invalid @enderror" value="{{ old('gaji') }}" />
+                    </div> --}}
+                    <label for="bagian_recruitment px-2"><small>TEMPAT BEKERJA</small></label>
+                    <div class="form-floating form-floating-outline mb-2">
+
+                        <input type="text" id="tempat_bekerja_lolos" name="tempat_bekerja"
+                            class="form-control @error('tempat_bekerja') is-invalid @enderror"
+                            value="{{ old('tempat_bekerja') }}" />
+                    </div>
+                    <label for="bagian_recruitment px-2"><small>WAKTU BEKERJA</small></label>
+                    <div class="form-floating form-floating-outline mb-2">
+
+                        <input type="time" id="waktu_bekerja_lolos" name="waktu_bekerja"
+                            class="form-control @error('waktu_bekerja') is-invalid @enderror"
+                            value="{{ old('waktu_bekerja') }}" />
+                    </div>
+                    <label for="bagian_recruitment px-2"><small>TEMPAT BEKERJA</small></label>
+                    <div class="form-floating form-floating-outline mb-2">
+
+                        <input type="text" id="tempat_bekerja_lolos" name="tempat_bekerja"
+                            class="form-control @error('tempat_bekerja') is-invalid @enderror"
+                            value="{{ old('tempat_bekerja') }}" />
                     </div>
                     <label for="bagian_recruitment px-2"><small>NOTES</small></label>
                     <div class="form-floating form-floating-outline mb-2">
@@ -621,12 +656,15 @@
                         <input type="hidden" id="id_pindah" name="id">
                         <input type="hidden" value="{{ $id_recruitment }}" id="lowongan_lama_pindah"
                             name="lowongan_lama">
+
                         <select class="form-select" id="lowongan_baru_pindah" name="lowongan_baru">
                             <label for="bagian_recruitment">PILIH LOWONGAN</label>
                             <option value="" selected>PILIH LOWONGAN</option>
                             @foreach ($recruitment_admin as $admin)
                                 <option value="{{ $admin->id }}">
-                                    {{ $admin->jabatan->nama_jabatan }}, {{ $admin->jabatan->bagian->nama_bagian }}
+                                    {{ $admin->jabatan->nama_jabatan }},
+                                    {{ $admin->jabatan->bagian->nama_bagian }},
+                                    {{ $admin->jabatan->bagian->divisi->nama_divisi }}
                                 </option>
                             @endforeach
                         </select>
@@ -708,10 +746,24 @@
                                 placeholder="Tanggal" value="{{ old('tanggal_diterima') }}" />
                             <label for="bagian_recruitment">TANGGAL MASUK KERJA</label>
                         </div>
-                        <label for="bagian_recruitment px-2"><small>GAJI (Rp)</small></label>
+                        {{-- <label for="bagian_recruitment px-2"><small>GAJI (Rp)</small></label>
                         <div class="form-floating form-floating-outline mb-2">
                             <input type="text" id="gaji_pindah" name="gaji"
                                 class="form-control @error('gaji') is-invalid @enderror" value="{{ old('gaji') }}" />
+                        </div> --}}
+                        <label for="bagian_recruitment px-2"><small>WAKTU BEKERJA</small></label>
+                        <div class="form-floating form-floating-outline mb-2">
+
+                            <input type="time" id="waktu_bekerja_pindah" name="waktu_bekerja"
+                                class="form-control @error('waktu_bekerja') is-invalid @enderror"
+                                value="{{ old('waktu_bekerja') }}" />
+                        </div>
+                        <label for="bagian_recruitment px-2"><small>TEMPAT BEKERJA</small></label>
+                        <div class="form-floating form-floating-outline mb-2">
+
+                            <input type="text" id="tempat_bekerja_pindah" name="tempat_bekerja"
+                                class="form-control @error('tempat_bekerja') is-invalid @enderror"
+                                value="{{ old('tempat_bekerja') }}" />
                         </div>
                         <label for="bagian_recruitment px-2"><small>NOTES</small></label>
                         <div class="form-floating form-floating-outline mb-2">
@@ -757,31 +809,31 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
 
     <script>
-        $(document).on('keyup', '#gaji_update', function(e) {
-            var data = $(this).val();
-            var hasil = formatRupiah(data, "Rp. ");
-            $(this).val(hasil);
-        });
-
-        function formatRupiah(angka, prefix) {
-            var number_string = angka.replace(/[^,\d]/g, '').toString(),
-                split = number_string.split(','),
-                sisa = split[0].length % 3,
-                rupiah = split[0].substr(0, sisa),
-                ribuan = split[0].substr(sisa).match(/\d{3}/gi);
-            if (ribuan) {
-                separator = sisa ? '.' : '';
-                rupiah += separator + ribuan.join('.');
-            }
-
-            rupiah = split[1] != undefined ? rupiah + ',' + split[1] : rupiah;
-            return prefix == undefined ? rupiah : (rupiah ? '' + rupiah : '');
-        }
-
-        function replace_titik(x) {
-            return ((x.replace('.', '')).replace('.', '')).replace('.', '');
-        }
         let holding = window.location.pathname.split("/").pop();
+        // $(document).on('keyup', '#gaji_update', function(e) {
+        //     var data = $(this).val();
+        //     var hasil = formatRupiah(data, "Rp. ");
+        //     $(this).val(hasil);
+        // });
+
+        // function formatRupiah(angka, prefix) {
+        //     var number_string = angka.replace(/[^,\d]/g, '').toString(),
+        //         split = number_string.split(','),
+        //         sisa = split[0].length % 3,
+        //         rupiah = split[0].substr(0, sisa),
+        //         ribuan = split[0].substr(sisa).match(/\d{3}/gi);
+        //     if (ribuan) {
+        //         separator = sisa ? '.' : '';
+        //         rupiah += separator + ribuan.join('.');
+        //     }
+
+        //     rupiah = split[1] != undefined ? rupiah + ',' + split[1] : rupiah;
+        //     return prefix == undefined ? rupiah : (rupiah ? '' + rupiah : '');
+        // }
+
+        // function replace_titik(x) {
+        //     return ((x.replace('.', '')).replace('.', '')).replace('.', '');
+        // }
         let id = @json($id_recruitment);
         console.log(id);
         var table = $('#tabel_ranking').DataTable({
@@ -924,7 +976,8 @@
             formData.append('_token', '{{ csrf_token() }}');
             formData.append('id', $('#id_update').val());
             formData.append('status', $('#status_update').val());
-            formData.append('gaji', $('#gaji_update').val());
+            formData.append('tempat_bekerja', $('#tempat_bekerja_update').val());
+            formData.append('waktu_bekerja', $('#waktu_bekerja_update').val());
             formData.append('tanggal_diterima', $('#tanggal_diterima_update').val());
             formData.append('tanggal_wawancara', $('#tanggal_wawancara').val());
             formData.append('online', $('#online_add').val());
@@ -932,10 +985,11 @@
             formData.append('link_wawancara', $('#link_wawancara').val());
             formData.append('waktu_wawancara', $('#waktu_wawancara').val());
             formData.append('notes_langsung', $('#notes_langsung_update').val());
+            formData.append('holding', holding);
             $.ajax({
                 type: "POST",
 
-                url: "{{ url('/dt/data-interview/ranking_update_status') }}",
+                url: "{{ url('/dt/data-interview/ranking_update_status') }} ",
                 data: formData,
                 contentType: false,
                 processData: false,
@@ -955,7 +1009,8 @@
                         $('#modal_status').modal('hide');
                         $('#tanggal_diterima_update').val('');
                         $('#notes_langsung_update').val('');
-                        $('#gaji_update').val('');
+                        $('#tempat_bekerja_update').val('');
+                        $('#waktu_bekerja_update').val('');
                         $('#tanggal_wawancara').val('');
                         $('#tempat_wawancara').val('');
                         $('#link_wawancara').val('');
@@ -998,9 +1053,11 @@
             formData.append('_token', '{{ csrf_token() }}');
             formData.append('id', $('#id_lolos').val());
             formData.append('status', $('#status_lolos').val());
-            formData.append('gaji', $('#gaji_lolos').val());
+            formData.append('tempat_bekerja', $('#tempat_bekerja_lolos').val());
+            formData.append('waktu_bekerja', $('#waktu_bekerja_lolos').val());
             formData.append('tanggal_diterima', $('#tanggal_diterima_lolos').val());
             formData.append('notes_langsung', $('#notes_langsung_lolos').val());
+            formData.append('holding', holding);
             $.ajax({
                 type: "POST",
                 url: "{{ url('/dt/data-interview/ranking_update_status') }}",
@@ -1023,7 +1080,8 @@
                         $('#modal_lolos').modal('hide');
                         $('#tanggal_diterima_lolos').val('');
                         $('#notes_langsung_lolos').val('');
-                        $('#gaji_lolos').val('');
+                        $('#tempat_bekerja_lolos').val('');
+                        $('#waktu_bekerja_lolos').val('');
                         $('#tabel_progres').DataTable().ajax.reload();
                     } else if (data.code == 400) {
                         let errors = data.errors;
@@ -1064,7 +1122,8 @@
             formData.append('lowongan_baru', $('#lowongan_baru_pindah').val());
             formData.append('lowongan_lama', $('#lowongan_lama_pindah').val());
             formData.append('status', $('#status_pindah').val());
-            formData.append('gaji', $('#gaji_pindah').val());
+            formData.append('tempat_bekerja', $('#tempat_bekerja_pindah').val());
+            formData.append('waktu_bekerja', $('#waktu_bekerja_pindah').val());
             formData.append('tanggal_wawancara', $('#tanggal_wawancara_pindah').val());
             formData.append('online', $('#online_add2').val());
             formData.append('tempat_wawancara', $('#tempat_wawancara2').val());
@@ -1072,6 +1131,8 @@
             formData.append('tanggal_diterima', $('#tanggal_diterima_pindah').val());
             formData.append('waktu_wawancara', $('#waktu_wawancara_pindah').val());
             formData.append('notes_pindah', $('#notes_langsung_pindah').val());
+            formData.append('holding', holding);
+
 
             $.ajax({
                 type: "POST",
@@ -1099,7 +1160,8 @@
                         $('#tabel_progres').DataTable().ajax.reload();
                         $('#tempat_wawancara2').val('');
                         $('#link_wawancara2').val('');
-                        $('#gaji_pindah').val('');
+                        $('#tempat_bekerja_pindah').val('');
+                        $('#waktu_bekerja_pindah').val('');
                         $('#tanggal_diterima_pindah').val('');
                         $('#waktu_wawancara_pindah').val('');
                         $('#notes_langsung_pindah').val('');
