@@ -872,7 +872,8 @@ Route::get('/pg/data-list-user_reject/{id?}/{holding}', [RecruitmentController::
 
 Route::get('/pg/pelamar-detail/{id?}/{holding}', [RecruitmentController::class, 'pelamar_detail'])->middleware('admin');
 
-Route::get('/pg/pelamar-detail_pdf/{id?}/{holding}', [RecruitmentController::class, 'pelamar_detail_pdf'])->middleware('admin');
+Route::get('/pg/pelamar-detail_pdf/{id?}', [RecruitmentController::class, 'pelamar_detail_pdf'])->middleware('admin');
+Route::get('/pg/pelamar-nilai_pdf/{id?}', [RecruitmentController::class, 'pelamar_nilai_pdf'])->middleware('admin');
 
 Route::post('/pg/pelamar-detail-ubah/{holding}', [RecruitmentController::class, 'pelamar_detail_ubah'])->middleware('admin');
 

@@ -617,9 +617,8 @@ class RecruitmentController extends Controller
             'kesehatan_kecelakaan'
         ));
     }
-    function pelamar_detail_pdf($id, $holding)
+    function pelamar_detail_pdf($id)
     {
-        $holdings = Holding::where('holding_code', $holding)->first();
         $data_cv =  RecruitmentUser::with([
             'AuthLogin' => function ($query) use ($id) {
                 $query->with([
@@ -689,7 +688,6 @@ class RecruitmentController extends Controller
 
         $pdf = Pdf::loadView('admin.recruitment-users.recruitment.user_detail_pdf', [
             'ti$pekerjaan_counttle' => 'Data Recruitment',
-            'holding'   => $holdings,
         ], compact(
             'data_cv',
             'pendidikan',
@@ -703,6 +701,84 @@ class RecruitmentController extends Controller
             'kesehatan_kecelakaan'
         ));
         return $pdf->stream('admin.recruitment-users.recruitment.user_detail_pdf');
+    }
+    function pelamar_nilai_pdf($id)
+    {
+        $table = RecruitmentUser::with([
+            'Cv' => function ($query) {
+                $query;
+            }
+        ])->with([
+            'interviewUser' => function ($query) {
+                $query;
+            }
+        ])->with([
+            'DataInterview' => function ($query) {
+                $query;
+            }
+        ])
+            ->with([
+                'ujianEsaiJawab' => function ($query) {
+                    $query->orderBy('recruitment_user_id')->with([
+                        'ujian' => function ($query) {
+                            $query->with([
+                                'pembobotan' => function ($query) {
+                                    $query;
+                                }
+                            ]);
+                        }
+                    ]);
+                }
+            ])->with([
+                'waktuujian' => function ($query) {
+                    $query->orderBy('recruitment_user_id')->with([
+                        'ujian' => function ($query) {
+                            $query->with([
+                                'pembobotan' => function ($query) {
+                                    $query;
+                                }
+                            ]);
+                        }
+                    ]);
+                }
+            ])
+            ->with([
+                'recruitmentAdmin' => function ($query) {
+                    $query;
+                }
+            ])
+            ->with([
+                'Jabatan' => function ($query) {
+                    $query->with([
+                        'Bagian' =>  function ($query) {
+                            $query->with([
+                                'Divisi' => function ($query) {
+                                    $query->with([
+                                        'Departemen' => function ($query) {
+                                            $query->orderBy('nama_departemen', 'ASC');
+                                        }
+                                    ]);
+                                    $query->orderBy('nama_divisi', 'ASC');
+                                },
+                            ]);
+                        },
+                    ])->with([
+                        'LevelJabatan' => function ($query) {
+                            $query;
+                        },
+                    ]);
+                },
+
+            ])
+            ->where('recruitment_admin_id', $id)
+            ->get();
+
+        $pdf = Pdf::loadView('admin.recruitment-users.recruitment.user_nilai_pdf', [
+            'ti$pekerjaan_counttle' => 'Data Recruitment',
+        ], compact(
+            'table',
+        ));
+        return $pdf->stream('admin.recruitment-users.recruitment.user_nilai_pdf');
     }
     public function pelamar_detail_ubah(Request $request, $holding)
     {
