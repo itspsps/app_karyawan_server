@@ -44,6 +44,7 @@ use App\Http\Controllers\PenugasanController;
 use App\Http\Controllers\PenugasanUserController;
 use App\Http\Controllers\StrukturOrganisasiController;
 use App\Http\Controllers\RecruitmentController;
+use App\Http\Controllers\RecruitmentLaporanController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\UserKaryawanController;
 use App\Http\Controllers\RecruitmentUserController;
@@ -1024,6 +1025,11 @@ Route::get('/konfirmasi-interview/{email?}/konfirmasi', [RecruitmentUserControll
 Route::get('/tes', function () {
     return view('admin.recruitment-users.email.email_interview');
 })->name('tes');
+
+//Laporan recruitment
+Route::get('/laporan_recruitment/{holding}', [RecruitmentLaporanController::class, 'index'])->middleware('admin');
+Route::get('/dt_laporan_recruitment/{holding}', [RecruitmentLaporanController::class, 'dt_laporan_recruitment'])->middleware('admin');
+//laporan recruitment end
 
 
 Route::post('/recruitment/insert/sp', [RecruitmentController::class, 'insert'])->middleware('admin');
