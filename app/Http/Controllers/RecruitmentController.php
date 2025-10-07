@@ -2513,65 +2513,65 @@ http://192.168.101.241:8001/cpanel/recruitment_detail/$request->id
                 })
                 ->addColumn('nol', function ($row) {
                     if ($row->nol == '1') {
-                        $jabatan = '<p class = "bg-success p-2 text-white">YA</p>';
+                        $jabatan = '<span class="badge bg-label-success">YA</span>';
                     } else {
-                        $jabatan = '<p class = "bg-danger p-2 text-white">TIDAK</p>';
+                        $jabatan = '<span class="badge bg-label-danger">TIDAK</span>';
                     };
                     return $jabatan;
                 })
                 ->addColumn('satu', function ($row) {
                     if ($row->satu == '1') {
-                        $jabatan = '<p class = "bg-success p-2 text-white">YA</p>';
+                        $jabatan = '<span class="badge bg-label-success">YA</span>';
                     } else {
-                        $jabatan = '<p class = "bg-danger p-2 text-white">TIDAK</p>';
+                        $jabatan = '<span class="badge bg-label-danger">TIDAK</span>';
                     };
                     return $jabatan;
                 })
                 ->addColumn('dua', function ($row) {
                     if ($row->dua == '1') {
-                        $jabatan = '<p class = "bg-success p-2 text-white">YA</p>';
+                        $jabatan = '<span class="badge bg-label-success">YA</span>';
                     } else {
-                        $jabatan = '<p class = "bg-danger p-2 text-white">TIDAK</p>';
+                        $jabatan = '<span class="badge bg-label-danger">TIDAK</span>';
                     };
                     return $jabatan;
                 })
                 ->addColumn('tiga', function ($row) {
                     if ($row->tiga == '1') {
-                        $jabatan = '<p class = "bg-success p-2 text-white">YA</p>';
+                        $jabatan = '<span class="badge bg-label-success">YA</span>';
                     } else {
-                        $jabatan = '<p class = "bg-danger p-2 text-white">TIDAK</p>';
+                        $jabatan = '<span class="badge bg-label-danger">TIDAK</span>';
                     };
                     return $jabatan;
                 })
                 ->addColumn('empat', function ($row) {
                     if ($row->empat == '1') {
-                        $jabatan = '<p class = "bg-success p-2 text-white">YA</p>';
+                        $jabatan = '<span class="badge bg-label-success">YA</span>';
                     } else {
-                        $jabatan = '<p class = "bg-danger p-2 text-white">TIDAK</p>';
+                        $jabatan = '<span class="badge bg-label-danger">TIDAK</span>';
                     };
                     return $jabatan;
                 })
                 ->addColumn('lima', function ($row) {
                     if ($row->lima == '1') {
-                        $jabatan = '<p class = "bg-success p-2 text-white">YA</p>';
+                        $jabatan = '<span class="badge bg-label-success">YA</span>';
                     } else {
-                        $jabatan = '<p class = "bg-danger p-2 text-white">TIDAK</p>';
+                        $jabatan = '<span class="badge bg-label-danger">TIDAK</span>';
                     };
                     return $jabatan;
                 })
                 ->addColumn('lima', function ($row) {
                     if ($row->lima == '1') {
-                        $jabatan = '<p class = "bg-success p-2 text-white">YA</p>';
+                        $jabatan = '<span class="badge bg-label-success">YA</span>';
                     } else {
-                        $jabatan = '<p class = "bg-danger p-2 text-white">TIDAK</p>';
+                        $jabatan = '<span class="badge bg-label-danger">TIDAK</span>';
                     };
                     return $jabatan;
                 })
                 ->addColumn('enam', function ($row) {
                     if ($row->enam == '1') {
-                        $jabatan = '<p class = "bg-success p-2 text-white">YA</p>';
+                        $jabatan = '<span class="badge bg-label-success">YA</span>';
                     } else {
-                        $jabatan = '<p class = "bg-danger p-2 text-white">TIDAK</p>';
+                        $jabatan = '<span class="badge bg-label-danger">TIDAK</span>';
                     };
                     return $jabatan;
                 })
@@ -2619,65 +2619,65 @@ http://192.168.101.241:8001/cpanel/recruitment_detail/$request->id
                 })
                 ->addColumn('nol', function ($row) {
                     if ($row->nol == '1') {
-                        $jabatan = '<p class = "bg-success p-2 text-white">YA</p>';
+                        $jabatan = '<span class="badge bg-label-success">YA</span>';
                     } else {
-                        $jabatan = '<p class = "bg-danger p-2 text-white">TIDAK</p>';
+                        $jabatan = '<span class="badge bg-label-danger">TIDAK</span>';
                     };
                     return $jabatan;
                 })
                 ->addColumn('satu', function ($row) {
                     if ($row->satu == '1') {
-                        $jabatan = '<p class = "bg-success p-2 text-white">YA</p>';
+                        $jabatan = '<span class="badge bg-label-success">YA</span>';
                     } else {
-                        $jabatan = '<p class = "bg-danger p-2 text-white">TIDAK</p>';
+                        $jabatan = '<span class="badge bg-label-danger">TIDAK</span>';
                     };
                     return $jabatan;
                 })
                 ->addColumn('dua', function ($row) {
                     if ($row->dua == '1') {
-                        $jabatan = '<p class = "bg-success p-2 text-white">YA</p>';
+                        $jabatan = '<span class="badge bg-label-success">YA</span>';
                     } else {
-                        $jabatan = '<p class = "bg-danger p-2 text-white">TIDAK</p>';
+                        $jabatan = '<span class="badge bg-label-danger">TIDAK</span>';
                     };
                     return $jabatan;
                 })
                 ->addColumn('tiga', function ($row) {
                     if ($row->tiga == '1') {
-                        $jabatan = '<p class = "bg-success p-2 text-white">YA</p>';
+                        $jabatan = '<span class="badge bg-label-success">YA</span>';
                     } else {
-                        $jabatan = '<p class = "bg-danger p-2 text-white">TIDAK</p>';
+                        $jabatan = '<span class="badge bg-label-danger">TIDAK</span>';
                     };
                     return $jabatan;
                 })
                 ->addColumn('empat', function ($row) {
                     if ($row->empat == '1') {
-                        $jabatan = '<p class = "bg-success p-2 text-white">YA</p>';
+                        $jabatan = '<span class="badge bg-label-success">YA</span>';
                     } else {
-                        $jabatan = '<p class = "bg-danger p-2 text-white">TIDAK</p>';
+                        $jabatan = '<span class="badge bg-label-danger">TIDAK</span>';
                     };
                     return $jabatan;
                 })
                 ->addColumn('lima', function ($row) {
                     if ($row->lima == '1') {
-                        $jabatan = '<p class = "bg-success p-2 text-white">YA</p>';
+                        $jabatan = '<span class="badge bg-label-success">YA</span>';
                     } else {
-                        $jabatan = '<p class = "bg-danger p-2 text-white">TIDAK</p>';
+                        $jabatan = '<span class="badge bg-label-danger">TIDAK</span>';
                     };
                     return $jabatan;
                 })
                 ->addColumn('lima', function ($row) {
                     if ($row->lima == '1') {
-                        $jabatan = '<p class = "bg-success p-2 text-white">YA</p>';
+                        $jabatan = '<span class="badge bg-label-success">YA</span>';
                     } else {
-                        $jabatan = '<p class = "bg-danger p-2 text-white">TIDAK</p>';
+                        $jabatan = '<span class="badge bg-label-danger">TIDAK</span>';
                     };
                     return $jabatan;
                 })
                 ->addColumn('enam', function ($row) {
                     if ($row->enam == '1') {
-                        $jabatan = '<p class = "bg-success p-2 text-white">YA</p>';
+                        $jabatan = '<span class="badge bg-label-success">YA</span>';
                     } else {
-                        $jabatan = '<p class = "bg-danger p-2 text-white">TIDAK</p>';
+                        $jabatan = '<span class="badge bg-label-danger">TIDAK</span>';
                     };
                     return $jabatan;
                 })
