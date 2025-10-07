@@ -25,12 +25,12 @@
                     <table class="table" id="table_recruitment" style="width: 100%;">
                         <thead class="table-primary">
                             <tr>
-                                <!-- <th>No.</th> -->
+                                <th>No.</th>
                                 <th>Waktu Melamar</th>
                                 <th>Nama Lengkap</th>
                                 <th>Alamat</th>
                                 <th>Tanggal Lahir</th>
-                                <th>Usia Saat Ini</th>
+                                <!-- <th>Usia Saat Ini</th> -->
                                 <th>Gender</th>
                                 <th>Nomor Whatsapp</th>
                                 <th>Lama Nomor Whatsapp</th>
@@ -78,6 +78,14 @@
             url: "{{ url('/dt_laporan_recruitment') }}" + '/' + holding,
         },
         columns: [{
+                data: null,
+                render: function(data, type, row, meta) {
+                    return meta.row + 1;
+                },
+                orderable: false,
+                searchable: false
+            },
+            {
                 data: 'waktu_melamar',
                 name: 'waktu_melamar'
             },
@@ -93,10 +101,10 @@
                 data: 'tanggal_lahir',
                 name: 'tanggal_lahir'
             },
-            {
-                data: 'usia',
-                name: 'usia'
-            },
+            // {
+            //     data: 'usia',
+            //     name: 'usia'
+            // },
             {
                 data: 'gender',
                 name: 'gender'
@@ -174,6 +182,9 @@
                 data: 'hasil_final',
                 name: 'hasil_final'
             },
+        ],
+        order: [
+            [2, 'desc']
         ]
     });
 </script>

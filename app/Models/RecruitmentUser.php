@@ -34,7 +34,6 @@ class RecruitmentUser extends Model
     {
         return $this->belongsTo(Jabatan::class, 'nama_jabatan', 'id');
     }
-
     public function Bagian(): BelongsTo
     {
         return $this->belongsTo(Bagian::class, 'nama_bagian', 'id');

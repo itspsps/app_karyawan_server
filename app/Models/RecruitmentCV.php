@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class RecruitmentCV extends Model
 {
@@ -84,6 +85,11 @@ class RecruitmentCV extends Model
     public function desaNOW(): BelongsTo
     {
         return $this->belongsTo(Village::class, 'desa_now', 'code');
+    }
+
+    public function recruitmentPendidikan(): HasMany
+    {
+        return $this->hasMany(RecruitmentPendidikan::class, 'users_career_id', 'id_user');
     }
     // end alamat user sekarang
 }
