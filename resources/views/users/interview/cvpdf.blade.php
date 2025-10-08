@@ -44,7 +44,7 @@
         style="max-height: 400px; max-width: 340px;">
     <div class="fw-bold py-3">Email : {{ $data_cv->AuthLogin->email }}</div>
     <div class="table table-striped">
-        <table border="1" class="table" id="table_pelamar3" style="width: 100%;">
+        <table border="1" class="table" id="table_pelamar3" style="width: 100%; font-size: small;">
             <tbody class="table-primary">
                 <tr>
                     <th class="fw-bold">PROFIL</th>
@@ -76,17 +76,17 @@
                     <td>:</td>
                     <td>
                         @if ($data_cv->AuthLogin->recruitmentCV->agama == '1')
-                            ISLAM
+                        ISLAM
                         @elseif ($data_cv->AuthLogin->recruitmentCV->agama == '2')
-                            KRISTEN PROTESTAN
+                        KRISTEN PROTESTAN
                         @elseif ($data_cv->AuthLogin->recruitmentCV->agama == '3')
-                            KRISTEN KATOLIK
+                        KRISTEN KATOLIK
                         @elseif ($data_cv->AuthLogin->recruitmentCV->agama == '4')
-                            HINDU
+                        HINDU
                         @elseif ($data_cv->AuthLogin->recruitmentCV->agama == '5')
-                            BUDHA
+                        BUDHA
                         @elseif ($data_cv->AuthLogin->recruitmentCV->agama == '6')
-                            KONGHUCHU
+                        KONGHUCHU
                         @endif
                     </td>
                 </tr>
@@ -95,9 +95,9 @@
                     <td>:</td>
                     <td>
                         @if ($data_cv->AuthLogin->recruitmentCV->jenis_kelamin == '1')
-                            LAKI - LAKI
+                        LAKI - LAKI
                         @else
-                            PEREMPUAN
+                        PEREMPUAN
                         @endif
                     </td>
                 </tr>
@@ -106,13 +106,13 @@
                     <td>:</td>
                     <td>
                         @if ($data_cv->AuthLogin->recruitmentCV->status_pernikahan == 1)
-                            LAJANG
+                        LAJANG
                         @elseif ($data_cv->AuthLogin->recruitmentCV->status_pernikahan == 2)
-                            MENIKAH
+                        MENIKAH
                         @elseif ($data_cv->AuthLogin->recruitmentCV->status_pernikahan == 3)
-                            CERAI HIDUP
+                        CERAI HIDUP
                         @elseif ($data_cv->AuthLogin->recruitmentCV->status_pernikahan == 4)
-                            CERAI MATI
+                        CERAI MATI
                         @endif
                     </td>
                 </tr>
@@ -167,25 +167,25 @@
                     <td>:</td>
                     <td>
                         @if ($data_cv->AuthLogin->recruitmentCV->alamat_sekarang == 'sama')
-                            {{ $data_cv->AuthLogin->recruitmentCV->nama_jalan_ktp }},
-                            RT {{ $data_cv->AuthLogin->recruitmentCV->rt_ktp }},
-                            RW {{ $data_cv->AuthLogin->recruitmentCV->rw_ktp }},
-                            {{ $data_cv->AuthLogin->recruitmentCV->desaKTP->name }},
-                            {{ $data_cv->AuthLogin->recruitmentCV->kecamatanKTP->name }},
-                            {{ $data_cv->AuthLogin->recruitmentCV->kabupatenKTP->name }},
-                            {{ $data_cv->AuthLogin->recruitmentCV->provinsiKTP->name }},
-                            KODE POS :
-                            {{ $data_cv->AuthLogin->recruitmentCV->kode_pos_ktp }}
+                        {{ $data_cv->AuthLogin->recruitmentCV->nama_jalan_ktp }},
+                        RT {{ $data_cv->AuthLogin->recruitmentCV->rt_ktp }},
+                        RW {{ $data_cv->AuthLogin->recruitmentCV->rw_ktp }},
+                        {{ $data_cv->AuthLogin->recruitmentCV->desaKTP->name }},
+                        {{ $data_cv->AuthLogin->recruitmentCV->kecamatanKTP->name }},
+                        {{ $data_cv->AuthLogin->recruitmentCV->kabupatenKTP->name }},
+                        {{ $data_cv->AuthLogin->recruitmentCV->provinsiKTP->name }},
+                        KODE POS :
+                        {{ $data_cv->AuthLogin->recruitmentCV->kode_pos_ktp }}
                         @else
-                            {{ $data_cv->AuthLogin->recruitmentCV->nama_jalan_now }},
-                            RT {{ $data_cv->AuthLogin->recruitmentCV->rt_now }},
-                            RW {{ $data_cv->AuthLogin->recruitmentCV->rw_now }},
-                            {{ $data_cv->AuthLogin->recruitmentCV->desaNOW->name }},
-                            {{ $data_cv->AuthLogin->recruitmentCV->kecamatanNOW->name }},
-                            {{ $data_cv->AuthLogin->recruitmentCV->kabupatenNOW->name }},
-                            {{ $data_cv->AuthLogin->recruitmentCV->provinsiNOW->name }},
-                            KODE POS :
-                            {{ $data_cv->AuthLogin->recruitmentCV->kode_pos_now }}
+                        {{ $data_cv->AuthLogin->recruitmentCV->nama_jalan_now }},
+                        RT {{ $data_cv->AuthLogin->recruitmentCV->rt_now }},
+                        RW {{ $data_cv->AuthLogin->recruitmentCV->rw_now }},
+                        {{ $data_cv->AuthLogin->recruitmentCV->desaNOW->name }},
+                        {{ $data_cv->AuthLogin->recruitmentCV->kecamatanNOW->name }},
+                        {{ $data_cv->AuthLogin->recruitmentCV->kabupatenNOW->name }},
+                        {{ $data_cv->AuthLogin->recruitmentCV->provinsiNOW->name }},
+                        KODE POS :
+                        {{ $data_cv->AuthLogin->recruitmentCV->kode_pos_now }}
                         @endif
                     </td>
                 </tr>
@@ -209,10 +209,10 @@
                     <td>{{ $data_cv->AuthLogin->recruitmentCV->lama_nomor_whatsapp }}
                         TAHUN
                         @if ($data_cv->AuthLogin->recruitmentCV->lama_nomor_bulan == null)
-                            -
+                        -
                         @else
-                            {{ $data_cv->AuthLogin->recruitmentCV->lama_nomor_bulan }}
-                            BULAN
+                        {{ $data_cv->AuthLogin->recruitmentCV->lama_nomor_bulan }}
+                        BULAN
                         @endif
 
                     </td>
@@ -234,7 +234,7 @@
     </div>
     <h2>RIWAYAT KESEHATAN</h2>
 
-    <table class="table" id="table_pelamar3" style="width: 100%;">
+    <table class="table" id="table_pelamar3" style="width: 100%; font-size: small;">
         <tbody class="table-primary">
             <tr>
                 <th class="fw-bold">PERSETUJUAN</th>
@@ -254,9 +254,9 @@
                 <td>:</td>
                 <td>
                     @if ($kesehatan->persetujuan_kesehatan == 'on')
-                        SETUJU
+                    SETUJU
                     @elseif ($kesehatan->persetujuan_kesehatan == null)
-                        TIDAK SETUJU
+                    TIDAK SETUJU
                     @endif
                 </td>
             </tr>
@@ -278,9 +278,9 @@
                 <td>:</td>
                 <td>
                     @if ($kesehatan->perokok == '1')
-                        YA
+                    YA
                     @elseif ($kesehatan->perokok == '2')
-                        TIDAK
+                    TIDAK
                     @endif
                 </td>
             </tr>
@@ -289,9 +289,9 @@
                 <td>:</td>
                 <td>
                     @if ($kesehatan->alkohol == '1')
-                        YA
+                    YA
                     @elseif ($kesehatan->alkohol == '2')
-                        TIDAK
+                    TIDAK
                     @endif
                 </td>
             </tr>
@@ -300,9 +300,9 @@
                 <td>:</td>
                 <td>
                     @if ($kesehatan->phobia == '1')
-                        YA
+                    YA
                     @elseif ($kesehatan->phobia == '2')
-                        TIDAK
+                    TIDAK
                     @endif
                 </td>
             </tr>
@@ -318,9 +318,9 @@
                 <td>:</td>
                 <td>
                     @if ($kesehatan->keterbatasan_fisik == '1')
-                        YA
+                    YA
                     @elseif ($kesehatan->keterbatasan_fisik == '2')
-                        TIDAK
+                    TIDAK
                     @endif
                 </td>
             </tr>
@@ -336,42 +336,42 @@
                 <td>:</td>
                 <td>
                     @if ($kesehatan->pengobatan_rutin == '1')
-                        YA
+                    YA
                     @elseif ($kesehatan->pengobatan_rutin == '2')
-                        TIDAK
+                    TIDAK
                     @endif
                 </td>
             </tr>
         </tbody>
         @if ($kesehatan->pengobatan_rutin == '1')
-            <tbody class="table-primary">
-                <tr>
-                    <th class="fw-bold">RIWAYAT PENGOBATAN RUTIN</th>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                </tr>
-            </tbody>
-            <tbody>
-                @php
-                    $n = 1;
-                @endphp
-                @foreach ($kesehatan_pengobatan as $rr)
-                    <tr>
-                        <td class="fw-bold"><small>{{ $n++ }}. JENIS
-                                OBAT</small>
-                        </td>
-                        <td>:</td>
-                        <td>{{ $rr->jenis_obat }}</td>
-                        <td class="fw-bold"><small>ALASAN</small></td>
-                        <td>:</td>
-                        <td>{{ $rr->alasan_obat }}</td>
-                    </tr>
-                @endforeach
-            </tbody>
+        <tbody class="table-primary">
+            <tr>
+                <th class="fw-bold">RIWAYAT PENGOBATAN RUTIN</th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+            </tr>
+        </tbody>
+        <tbody>
+            @php
+            $n = 1;
+            @endphp
+            @foreach ($kesehatan_pengobatan as $rr)
+            <tr>
+                <td class="fw-bold"><small>{{ $n++ }}. JENIS
+                        OBAT</small>
+                </td>
+                <td>:</td>
+                <td>{{ $rr->jenis_obat }}</td>
+                <td class="fw-bold"><small>ALASAN</small></td>
+                <td>:</td>
+                <td>{{ $rr->alasan_obat }}</td>
+            </tr>
+            @endforeach
+        </tbody>
         @endif
 
         <tbody class="table-primary">
@@ -391,18 +391,18 @@
                 <td>:</td>
                 <td>
                     @if ($kesehatan->asma == 'on')
-                        YA
+                    YA
                     @elseif ($kesehatan->asma == null)
-                        TIDAK
+                    TIDAK
                     @endif
                 </td>
                 <td class="fw-bold"><small>DIABETES</small></td>
                 <td>:</td>
                 <td>
                     @if ($kesehatan->diabetes == 'on')
-                        YA
+                    YA
                     @elseif ($kesehatan->diabetes == null)
-                        TIDAK
+                    TIDAK
                     @endif
                 </td>
             </tr>
@@ -411,18 +411,18 @@
                 <td>:</td>
                 <td>
                     @if ($kesehatan->hipertensi == 'on')
-                        YA
+                    YA
                     @elseif ($kesehatan->hipertensi == null)
-                        TIDAK
+                    TIDAK
                     @endif
                 </td>
                 <td class="fw-bold"><small>JANTUNG</small></td>
                 <td>:</td>
                 <td>
                     @if ($kesehatan->jantung == 'on')
-                        YA
+                    YA
                     @elseif ($kesehatan->jantung == null)
-                        TIDAK
+                    TIDAK
                     @endif
                 </td>
             </tr>
@@ -431,18 +431,18 @@
                 <td>:</td>
                 <td>
                     @if ($kesehatan->jantung == 'on')
-                        YA
+                    YA
                     @elseif ($kesehatan->jantung == null)
-                        TIDAK
+                    TIDAK
                     @endif
                 </td>
                 <td class="fw-bold"><small>HEPATITIS</small></td>
                 <td>:</td>
                 <td>
                     @if ($kesehatan->hepatitis == 'on')
-                        YA
+                    YA
                     @elseif ($kesehatan->hepatitis == null)
-                        TIDAK
+                    TIDAK
                     @endif
                 </td>
             </tr>
@@ -451,18 +451,18 @@
                 <td>:</td>
                 <td>
                     @if ($kesehatan->gangguan_mental == 'on')
-                        YA
+                    YA
                     @elseif ($kesehatan->gangguan_mental == null)
-                        TIDAK
+                    TIDAK
                     @endif
                 </td>
                 <td class="fw-bold"><small>GANGGUAN MENTAL</small></td>
                 <td>:</td>
                 <td>
                     @if ($kesehatan->gangguan_mental == 'on')
-                        YA
+                    YA
                     @elseif ($kesehatan->gangguan_mental == null)
-                        TIDAK
+                    TIDAK
                     @endif
                 </td>
             </tr>
@@ -471,9 +471,9 @@
                 <td>:</td>
                 <td>
                     @if ($kesehatan->gangguan_pengelihatan == 'on')
-                        YA
+                    YA
                     @elseif ($kesehatan->gangguan_pengelihatan == null)
-                        TIDAK
+                    TIDAK
                     @endif
                 </td>
             </tr>
@@ -482,9 +482,9 @@
                 <td>:</td>
                 <td>
                     @if ($kesehatan->gangguan_lainnya == 'on')
-                        YA
+                    YA
                     @elseif ($kesehatan->gangguan_lainnya == null)
-                        TIDAK
+                    TIDAK
                     @endif
                 </td>
             </tr>
@@ -513,41 +513,41 @@
                 <td>:</td>
                 <td>
                     @if ($kesehatan->pernah_dirawat_rs == '1')
-                        YA
+                    YA
                     @elseif ($kesehatan->pernah_dirawat_rs == '2')
-                        TIDAK
+                    TIDAK
                     @endif
                 </td>
             </tr>
         </tbody>
         @if ($kesehatan->pernah_dirawat_rs == '1')
-            <tbody class="table-primary">
-                <tr>
-                    <th class="fw-bold">RIWAYAT DIRAWAT DI RS</th>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                </tr>
-            </tbody>
-            <tbody>
-                @php
-                    $k = 1;
-                @endphp
-                @foreach ($kesehatan_rs as $rr)
-                    <tr>
-                        <td class="fw-bold"><small>{{ $k++ }}. TAHUN</small>
-                        </td>
-                        <td>:</td>
-                        <td>{{ $rr->tahun_rs }}</td>
-                        <td class="fw-bold"><small>PENYEBAB</small></td>
-                        <td>:</td>
-                        <td>{{ $rr->penyebab_rs }}</td>
-                    </tr>
-                @endforeach
-            </tbody>
+        <tbody class="table-primary">
+            <tr>
+                <th class="fw-bold">RIWAYAT DIRAWAT DI RS</th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+            </tr>
+        </tbody>
+        <tbody>
+            @php
+            $k = 1;
+            @endphp
+            @foreach ($kesehatan_rs as $rr)
+            <tr>
+                <td class="fw-bold"><small>{{ $k++ }}. TAHUN</small>
+                </td>
+                <td>:</td>
+                <td>{{ $rr->tahun_rs }}</td>
+                <td class="fw-bold"><small>PENYEBAB</small></td>
+                <td>:</td>
+                <td>{{ $rr->penyebab_rs }}</td>
+            </tr>
+            @endforeach
+        </tbody>
         @endif
 
         <tbody class="table-primary">
@@ -567,41 +567,41 @@
                 <td>:</td>
                 <td>
                     @if ($kesehatan->kecelakaan_serius == '1')
-                        YA
+                    YA
                     @elseif ($kesehatan->kecelakaan_serius == '2')
-                        TIDAK
+                    TIDAK
                     @endif
                 </td>
             </tr>
         </tbody>
         @if ($kesehatan->kecelakaan_serius == '1')
-            <tbody class="table-primary">
-                <tr>
-                    <th class="fw-bold">RIWAYAT KECELAKAAN SERIUS</th>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                </tr>
-            </tbody>
-            <tbody>
-                @php
-                    $l = 1;
-                @endphp
-                @foreach ($kesehatan_kecelakaan as $rr)
-                    <tr>
-                        <td class="fw-bold"><small>{{ $l++ }}. TAHUN</small>
-                        </td>
-                        <td>:</td>
-                        <td>{{ $rr->tahun_kecelakaan }}</td>
-                        <td class="fw-bold"><small>PENYEBAB</small></td>
-                        <td>:</td>
-                        <td>{{ $rr->penyebab_kecelakaan }}</td>
-                    </tr>
-                @endforeach
-            </tbody>
+        <tbody class="table-primary">
+            <tr>
+                <th class="fw-bold">RIWAYAT KECELAKAAN SERIUS</th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+            </tr>
+        </tbody>
+        <tbody>
+            @php
+            $l = 1;
+            @endphp
+            @foreach ($kesehatan_kecelakaan as $rr)
+            <tr>
+                <td class="fw-bold"><small>{{ $l++ }}. TAHUN</small>
+                </td>
+                <td>:</td>
+                <td>{{ $rr->tahun_kecelakaan }}</td>
+                <td class="fw-bold"><small>PENYEBAB</small></td>
+                <td>:</td>
+                <td>{{ $rr->penyebab_kecelakaan }}</td>
+            </tr>
+            @endforeach
+        </tbody>
         @endif
 
         <tbody class="table-primary">
@@ -621,9 +621,9 @@
                 <td>:</td>
                 <td>
                     @if ($kesehatan->covid == 'on')
-                        YA
+                    YA
                     @elseif ($kesehatan->covid == null)
-                        TIDAK
+                    TIDAK
                     @endif
                 </td>
             </tr>
@@ -632,9 +632,9 @@
                 <td>:</td>
                 <td>
                     @if ($kesehatan->tetanus == 'on')
-                        YA
+                    YA
                     @elseif ($kesehatan->tetanus == null)
-                        TIDAK
+                    TIDAK
                     @endif
                 </td>
             </tr>
@@ -643,9 +643,9 @@
                 <td>:</td>
                 <td>
                     @if ($kesehatan->vaksin_lainnya == 'on')
-                        YA
+                    YA
                     @elseif ($kesehatan->vaksin_lainnya == null)
-                        TIDAK
+                    TIDAK
                     @endif
                 </td>
             </tr>
@@ -674,9 +674,9 @@
                 <td>:</td>
                 <td>
                     @if ($kesehatan->mampu_shift == '1')
-                        YA
+                    YA
                     @elseif ($kesehatan->mampu_shift == '2')
-                        TIDAK
+                    TIDAK
                     @endif
                 </td>
             </tr>
@@ -686,9 +686,9 @@
                 <td>:</td>
                 <td>
                     @if ($kesehatan->pemeriksaan_kerja_sebelumnya == '1')
-                        YA
+                    YA
                     @elseif ($kesehatan->pemeriksaan_kerja_sebelumnya == '2')
-                        TIDAK
+                    TIDAK
                     @endif
                 </td>
             </tr>
@@ -697,9 +697,9 @@
                 <td>:</td>
                 <td>
                     @if ($kesehatan->pemeriksaan_sebelumnya_hasil == '1')
-                        YA
+                    YA
                     @elseif ($kesehatan->pemeriksaan_sebelumnya_hasil == '2')
-                        TIDAK
+                    TIDAK
                     @endif
                 </td>
             </tr>
@@ -708,7 +708,7 @@
     </table>
     <h2>RIWAYAT PENDIDIKAN</h2>
 
-    <table class="table" id="table_pelamar3" style="width: 100%;">
+    <table class="table" id="table_pelamar3" style="width: 100%; font-size: small;">
         <tbody class="table-primary">
             <tr>
                 <th class="fw-bold">DOKUMEN PENDIDIKAN</th>
@@ -743,43 +743,43 @@
             </tr>
         </tbody>
         @php
-            $i = 1;
+        $i = 1;
         @endphp
         @foreach ($pendidikan as $pp)
-            <tbody class="table-primary">
-                <tr>
-                    <th class="fw-bold">RIWAYAT PENDIDIKAN ({{ $i++ }})</th>
-                    <th class="fw-bold"></th>
-                    <th class="fw-bold"></th>
-                </tr>
+        <tbody class="table-primary">
+            <tr>
+                <th class="fw-bold">RIWAYAT PENDIDIKAN ({{ $i++ }})</th>
+                <th class="fw-bold"></th>
+                <th class="fw-bold"></th>
+            </tr>
 
-            </tbody>
-            <tbody class="table-border-bottom-0">
-                <tr>
-                    <td class="fw-bold"><small>NAMA INSTITUSI</small></td>
-                    <td>:</td>
-                    <td>{{ $pp->institusi }}</td>
-                </tr>
-                <tr>
-                    <td class="fw-bold"><small>JURUSAN</small></td>
-                    <td>:</td>
-                    <td>{{ $pp->jurusan }}</td>
-                </tr>
-                <tr>
-                    <td class="fw-bold"><small>JENJANG</small></td>
-                    <td>:</td>
-                    <td>{{ $pp->jenjang }}</td>
-                </tr>
-                <tr>
-                    <td class="fw-bold"><small>PERIODE</small></td>
-                    <td>:</td>
-                    <td>{{ $pp->tanggal_masuk }} - {{ $pp->tanggal_keluar }}</td>
-                </tr>
-            </tbody>
+        </tbody>
+        <tbody class="table-border-bottom-0">
+            <tr>
+                <td class="fw-bold"><small>NAMA INSTITUSI</small></td>
+                <td>:</td>
+                <td>{{ $pp->institusi }}</td>
+            </tr>
+            <tr>
+                <td class="fw-bold"><small>JURUSAN</small></td>
+                <td>:</td>
+                <td>{{ $pp->jurusan }}</td>
+            </tr>
+            <tr>
+                <td class="fw-bold"><small>JENJANG</small></td>
+                <td>:</td>
+                <td>{{ $pp->jenjang }}</td>
+            </tr>
+            <tr>
+                <td class="fw-bold"><small>PERIODE</small></td>
+                <td>:</td>
+                <td>{{ $pp->tanggal_masuk }} - {{ $pp->tanggal_keluar }}</td>
+            </tr>
+        </tbody>
         @endforeach
     </table>
     <h2>KEAHLIAN</h2>
-    <table class="table" id="table_pelamar3" style="width: 100%;">
+    <table class="table" id="table_pelamar3" style="width: 100%; font-size: small;">
 
         <tbody class="table-primary">
             <tr>
@@ -791,32 +791,32 @@
         </tbody>
         <tbody class="table-border-bottom-0">
             @if ($keahlian_count == 0)
-                <tr>
-                    <td colspan="3" class="fw-bold" style="text-align: center">
-                        <small>PELAMAR
-                            TIDAK MEMASUKKAN
-                            KEAHLIAN</small>
-                    </td>
-                </tr>
+            <tr>
+                <td colspan="3" class="fw-bold" style="text-align: center">
+                    <small>PELAMAR
+                        TIDAK MEMASUKKAN
+                        KEAHLIAN</small>
+                </td>
+            </tr>
             @else
-                @php
-                    $k = 1;
-                @endphp
-                @foreach ($keahlian as $kk)
-                    <tr>
-                        <td class="fw-bold"><small>{{ $k++ }}</small></td>
-                        <td class="fw-bold"><small>{{ $kk->keahlian }}</small></td>
-                        <td class="fw-bold">
-                            @if ($kk->file_keahlian != null)
-                                <a href="{{ url_karir() . '/storage/file_keahlian/' . $kk->file_keahlian }}"
-                                    target="_blank">
-                                    LIHAT
-                                </a>
-                            @endif
-                        </td>
+            @php
+            $k = 1;
+            @endphp
+            @foreach ($keahlian as $kk)
+            <tr>
+                <td class="fw-bold"><small>{{ $k++ }}</small></td>
+                <td class="fw-bold"><small>{{ $kk->keahlian }}</small></td>
+                <td class="fw-bold">
+                    @if ($kk->file_keahlian != null)
+                    <a href="{{ url_karir() . '/storage/file_keahlian/' . $kk->file_keahlian }}"
+                        target="_blank">
+                        LIHAT
+                    </a>
+                    @endif
+                </td>
 
-                    </tr>
-                @endforeach
+            </tr>
+            @endforeach
             @endif
         </tbody>
     </table>

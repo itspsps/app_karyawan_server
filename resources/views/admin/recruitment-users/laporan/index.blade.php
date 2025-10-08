@@ -22,7 +22,7 @@
                     </div>
                 </div>
                 <div class="card-body">
-                    <table class="table" id="table_recruitment" style="width: 100%;">
+                    <table class="table" id="table_recruitment" style="width: 100%; font-size: small;">
                         <thead class="table-primary">
                             <tr>
                                 <th>No.</th>

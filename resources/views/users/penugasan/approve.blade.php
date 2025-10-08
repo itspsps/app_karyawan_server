@@ -158,7 +158,7 @@
                             @if($penugasan->ttd_id_diajukan_oleh=='')
                             <h6 class="text-center">kosong</h6>
                             @else
-                            <img src="{{ url('https://hrd.sumberpangan.store:4430/public/signature/penugasan/'.$penugasan->ttd_id_diajukan_oleh.'.png') }}" style="width: 100%;" alt="">
+                            <img src="{{ url('https://hrd.sumberpangan.store:4430/public/signature/penugasan/'.$penugasan->ttd_id_diajukan_oleh.'.png') }}" style="width: 100%; font-size: small;" alt="">
                             @endif
                             {{-- <img width="100%" src="{{ asset('assets/assets_users/images/users/user_icon.jpg') }}" alt="/"> --}}
                             {{-- <img src="{{ url('signature/'.$penugasan->ttd_id_diajukan_oleh.'.png') }}" alt=""> --}}
@@ -211,7 +211,7 @@
                             @if($penugasan->ttd_id_diminta_oleh=='')
                             <h6 class="text-center">kosong</h6>
                             @else
-                            <img src="{{ url('https://hrd.sumberpangan.store:4430/public/signature/penugasan/'.$penugasan->ttd_id_diminta_oleh.'.png') }}" style="width: 100%;" alt="">
+                            <img src="{{ url('https://hrd.sumberpangan.store:4430/public/signature/penugasan/'.$penugasan->ttd_id_diminta_oleh.'.png') }}" style="width: 100%; font-size: small;" alt="">
                             @endif
                             {{-- <img width="100%" src="{{ asset('assets/assets_users/images/users/user_icon.jpg') }}" alt="/"> --}}
                             {{-- <img src="{{ url('signature/'.$penugasan->ttd_id_diminta_oleh.'.png') }}" alt=""> --}}

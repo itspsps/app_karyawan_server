@@ -226,7 +226,7 @@
                     </div>
 
                     <hr class="my-5">
-                    <table class="table" id="table_penugasan" style="width: 100%;">
+                    <table class="table" id="table_penugasan" style="width: 100%; font-size: small;">
                         <thead class="table-primary">
                             <tr>
                                 <th class="text-center">No.</th>

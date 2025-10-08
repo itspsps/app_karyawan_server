@@ -41,7 +41,7 @@
 <body>
     <h2>DETAIL CV</h2>
     <div class="table table-striped">
-        <table border="1" class="table" id="table_pelamar3" style="width: 100%;">
+        <table border="1" class="table" id="table_pelamar3" style="width: 100%; font-size: small;">
             <thead class="table-primary">
                 <tr>
                     <th class="fw-bold">JENIS TES</th>
@@ -75,7 +75,7 @@
     </div>
     <h2>HASIL WAWANCARA</h2>
     <div class="table table-striped">
-        <table border="1" class="table" id="table_pelamar3" style="width: 100%;">
+        <table border="1" class="table" id="table_pelamar3" style="width: 100%; font-size: small;">
             <thead class="table-primary">
                 <tr>
                     <th class="fw-bold">JENIS TES</th>

@@ -170,7 +170,7 @@
                             </form>
                         </div>
                     </div>
-                    <table class="table" id="table_site" style="width: 100%;">
+                    <table class="table" id="table_site" style="width: 100%; font-size: small;">
                         <thead class="table-primary">
                             <tr>
                                 <th>No.</th>

@@ -173,7 +173,7 @@
                         </div>
                         <div class="tab-content">
                             <div class="tab-pane fade show active" id="navs_cuti_tahunan" role="tabpanel">
-                                <table class="table" id="table_cuti_tahunan" style="width: 100%;">
+                                <table class="table" id="table_cuti_tahunan" style="width: 100%; font-size: small;">
                                     <thead class="table-primary">
                                         <tr>
                                             <th class="text-center">No.</th>
@@ -207,7 +207,7 @@
                                 </table>
                             </div>
                             <div class="tab-pane fade" id="navs_diluar_cuti_tahunan" role="tabpanel">
-                                <table class="table" id="table_izin_diluar_cuti_tahunan" style="width: 100%;">
+                                <table class="table" id="table_izin_diluar_cuti_tahunan" style="width: 100%; font-size: small;">
                                     <thead class="table-primary">
                                         <tr>
                                             <th class="text-center">No.</th>

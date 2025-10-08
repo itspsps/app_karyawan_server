@@ -415,7 +415,7 @@
                                 <h5 class="card-title m-0 me-2">DATA PROGRES RECRUITMENT</h5>
                             </div>
                         </div>
-                        <table class="table" id="tabel_progres" style="width: 100%;">
+                        <table class="table" id="tabel_progres" style="width: 100%; font-size: small;">
                             <thead class="table-primary">
                                 <tr>
                                     <th>Ranking.</th>
@@ -438,7 +438,7 @@
                                 <h5 class="card-title m-0 me-2">DATA RANKING RECRUITMENT</h5>
                             </div>
                         </div>
-                        <table class="table" id="tabel_ranking" style="width: 100%;">
+                        <table class="table" id="tabel_ranking" style="width: 100%; font-size: small;">
                             <thead class="table-primary">
                                 <tr>
                                     <th>No.</th>

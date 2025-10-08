@@ -219,7 +219,7 @@
                             @if($user->name=='')
                             <h6 class="text-center">kosong</h6>
                             @else
-                            <img src="{{ url('http://127.0.0.1:8000/signature/cuti/'.$get_cuti->ttd_user.'.png') }}" style="width: 100%;" alt="">
+                            <img src="{{ url('http://127.0.0.1:8000/signature/cuti/'.$get_cuti->ttd_user.'.png') }}" style="width: 100%; font-size: small;" alt="">
                             @endif
                             <p style="text-align: center;font-weight: bold">{{ \Carbon\Carbon::parse($get_cuti->waktu_ttd_user)->isoFormat('D MMMM Y HH:m')}} WIB</p>
                         </div>
@@ -367,7 +367,7 @@
                             @if($get_cuti->ttd_atasan=='')
                             <h6 class="text-center">kosong</h6>
                             @else
-                            <img src="{{ url('https://hrd.sumberpangan.store/signature/'.$get_cuti->ttd_atasan.'.png') }}" style="width: 100%;" alt="">
+                            <img src="{{ url('https://hrd.sumberpangan.store/signature/'.$get_cuti->ttd_atasan.'.png') }}" style="width: 100%; font-size: small;" alt="">
                             @endif
                             <p style="text-align: center;font-weight: bold">{{ $get_cuti->waktu_approve }}</p>
                         </div>
@@ -418,7 +418,7 @@
                             @if($get_cuti->ttd_atasan2=='')
                             <h6 class="text-center">kosong</h6>
                             @else
-                            <img src="{{ url('https://hrd.sumberpangan.store/signature/'.$get_cuti->ttd_atasan2.'.png') }}" style="width: 100%;" alt="">
+                            <img src="{{ url('https://hrd.sumberpangan.store/signature/'.$get_cuti->ttd_atasan2.'.png') }}" style="width: 100%; font-size: small;" alt="">
                             @endif
                             <p style="text-align: center;font-weight: bold">{{ \Carbon\Carbon::parse($get_cuti->waktu_approve2)->format('d/m/Y H:i')}}</p>
                         </div>

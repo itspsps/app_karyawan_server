@@ -160,7 +160,7 @@
                         </div>
                         <div class="tab-content">
                             <div class="tab-pane fade show active" id="navs_terlambat" role="tabpanel">
-                                <table class="table" id="table_izin_terlambat" style="width: 100%;">
+                                <table class="table" id="table_izin_terlambat" style="width: 100%; font-size: small;">
                                     <thead class="table-primary">
                                         <tr>
                                             <th class="text-center">No.</th>
@@ -186,7 +186,7 @@
                                 </table>
                             </div>
                             <div class="tab-pane fade" id="navs_pulangcepat" role="tabpanel">
-                                <table class="table" id="table_izin_pulangcepat" style="width: 100%;">
+                                <table class="table" id="table_izin_pulangcepat" style="width: 100%; font-size: small;">
                                     <thead class="table-primary">
                                         <tr>
                                             <th class="text-center">No.</th>
@@ -210,7 +210,7 @@
                                 </table>
                             </div>
                             <div class="tab-pane fade" id="navs_keluarkantor" role="tabpanel">
-                                <table class="table" id="table_izin_keluarkantor" style="width: 100%;">
+                                <table class="table" id="table_izin_keluarkantor" style="width: 100%; font-size: small;">
                                     <thead class="table-primary">
                                         <tr>
                                             <th class="text-center">No.</th>
@@ -235,7 +235,7 @@
                                 </table>
                             </div>
                             <div class="tab-pane fade" id="navs_sakit" role="tabpanel">
-                                <table class="table" id="table_izin_sakit" style="width: 100%;">
+                                <table class="table" id="table_izin_sakit" style="width: 100%; font-size: small;">
                                     <thead class="table-primary">
                                         <tr>
                                             <th class="text-center">No.</th>
@@ -258,7 +258,7 @@
                                 </table>
                             </div>
                             <div class="tab-pane fade" id="navs_tidak_masuk" role="tabpanel">
-                                <table class="table" id="table_izin_tidak_masuk" style="width: 100%;">
+                                <table class="table" id="table_izin_tidak_masuk" style="width: 100%; font-size: small;">
                                     <thead class="table-primary">
                                         <tr>
                                             <th class="text-center">No.</th>

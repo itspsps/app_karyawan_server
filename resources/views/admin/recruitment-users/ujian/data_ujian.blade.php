@@ -58,7 +58,7 @@
                         <a href="{{ url('/pg-data-ujian/ujian_pg/' . $holding->holding_code) }}" type="button"
                             class="btn btn-sm btn-primary waves-effect waves-light my-3"><i
                                 class="menu-icon tf-icons mdi mdi-plus"></i>Tambah</a>
-                        <table class="table" id="table_ujian" style="width: 100%;">
+                        <table class="table" id="table_ujian" style="width: 100%; font-size: small;">
                             <thead class="table-primary">
                                 <tr>
                                     <th>Nama</th>
@@ -84,7 +84,7 @@
                         <a href="{{ url('/pg-data-ujian/ujian_pg_esai/' . $holding->holding_code) }}" type="button"
                             class="btn btn-sm btn-primary waves-effect waves-light my-3"><i
                                 class="menu-icon tf-icons mdi mdi-plus"></i>Tambah</a>
-                        <table class="table" id="table_esai" style="width: 100%;">
+                        <table class="table" id="table_esai" style="width: 100%; font-size: small;">
                             <thead class="table-primary">
                                 <tr>
                                     <th>Nama</th>
@@ -109,7 +109,7 @@
                         </div>
                         <button type="button" class="btn btn-sm btn-primary waves-effect waves-light my-3"
                             id="btn_modal_interview"><i class="menu-icon tf-icons mdi mdi-plus"></i>Tambah</button>
-                        <table class="table" id="tabel_interview" style="width: 100%;">
+                        <table class="table" id="tabel_interview" style="width: 100%; font-size: small;">
                             <thead class="table-primary">
                                 <tr>
                                     <th>Soal</th>
@@ -127,7 +127,7 @@
                         </div>
                         <button type="button" class="btn btn-sm btn-primary waves-effect waves-light my-3"
                             id="btn_modal_kategori"><i class="menu-icon tf-icons mdi mdi-plus"></i>Tambah</button>
-                        <table class="table" id="tabel_ujian_kategori" style="width: 100%;">
+                        <table class="table" id="tabel_ujian_kategori" style="width: 100%; font-size: small;">
                             <thead class="table-primary">
                                 <tr>
                                     <th>Kategori</th>
@@ -142,7 +142,7 @@
                         <div class="d-">
                             <h5 class="card-title m-0 me-2">PEMBOBOTAN</h5>
                         </div>
-                        <table class="table" id="tabel_pembobotan" style="width: 100%;">
+                        <table class="table" id="tabel_pembobotan" style="width: 100%; font-size: small;">
                             <thead class="table-primary">
                                 <tr>
                                     <th class="text-start">esai</th>

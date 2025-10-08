@@ -157,7 +157,7 @@
                         </div>
                         <div class="tab-content">
                             <div class="tab-pane fade show active" id="navs-pills-justified-home" role="tabpanel">
-                                <table class="table" id="table_karyawan_bulanan" style="width: 100%;">
+                                <table class="table" id="table_karyawan_bulanan" style="width: 100%; font-size: small;">
                                     <thead class="table-primary">
                                         <tr>
                                             <th>No.</th>

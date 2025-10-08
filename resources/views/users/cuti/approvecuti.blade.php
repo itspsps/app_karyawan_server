@@ -86,7 +86,7 @@
                             @if($data->ttd_user=='')
                             <h6 class="text-center">kosong</h6>
                             @else
-                            <img src="{{ url('https://hrd.sumberpangan.store/signature/cuti/'.$data->ttd_user.'.png') }}" style="width: 100%;" alt="">
+                            <img src="{{ url('https://hrd.sumberpangan.store/signature/cuti/'.$data->ttd_user.'.png') }}" style="width: 100%; font-size: small;" alt="">
                             @endif
                             <p style="text-align: center;font-weight: bold">{{ \Carbon\Carbon::parse($data->waktu_ttd_user)->isoFormat('D MMMM Y HH:m')}} WIB</p>
                         </div>
