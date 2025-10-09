@@ -22,24 +22,30 @@
             <div class="card">
                 <div class="card-header">
                     <div class="d-flex align-items-center justify-content-between">
-                        <h5 class="card-title m-0 me-2">REPORT RECRUITMENT</h5>
+                        <h5 class="card-title m-0 me-2">{{ $table->Cv->nama_lengkap }} = {{ $table->Jabatan->nama_jabatan }}, {{ $table->Jabatan->Bagian->nama_bagian }},
+                            {{ $table->Jabatan->Bagian->Divisi->nama_divisi }}, {{ $table->Jabatan->Bagian->Divisi->Departemen->nama_departemen }}
+                        </h5>
                     </div>
                 </div>
                 <div class="card-body">
-                    <table class="table" id="table_recruitment" style="width: 100%; font-size: small;">
+                    <table class="table" id="table_riwayat" style="width: 100%; font-size: small;">
                         <thead class="table-primary">
                             <tr>
                                 <th>No.</th>
-                                <th>Waktu Melamar</th>
-                                <th>Nama Lengkap</th>
-                                <th>Posisi yang Dilamar</th>
-                                <th>CV</th>
-                                <th>Riwayat&nbsp;Lamaran</th>
-                                <th>Riwayat&nbsp;Detail</th>
-                                <th>Hasil Final</th>
+                                <th>Riwayat&nbsp;Waktu</th>
+                                <th>Riwayat&nbsp;Status</th>
+                                <th>Riwayat&nbsp;Feedback</th>
+                                <th>Waktu&nbsp;Feedback</th>
                             </tr>
                         </thead>
                         <tbody class="table-border-bottom-0">
+                        </tbody>
+                        <tbody>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
                         </tbody>
                     </table>
                 </div>
@@ -52,17 +58,17 @@
 <script src="https://cdn.datatables.net/2.0.5/js/dataTables.js"></script>
 <script src="https://cdn.datatables.net/2.0.5/js/dataTables.bootstrap5.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
-
 <!-- {{-- start datatable  --}} -->
 <script>
     let holding = window.location.pathname.split("/").pop();
-    var table = $('#table_recruitment').DataTable({
+    let id = "{{$id}}";
+    var table = $('#table_riwayat').DataTable({
         "scrollY": true,
         "scrollX": true,
         processing: true,
         serverSide: true,
         ajax: {
-            url: "{{ url('/dt_laporan_recruitment') }}" + '/' + holding,
+            url: "{{ url('/dt_riwayat_recruitment') }}" + '/' + id + '/' + holding,
         },
         columns: [{
                 data: null,
@@ -73,38 +79,25 @@
                 searchable: false
             },
             {
-                data: 'waktu_melamar',
-                name: 'waktu_melamar'
+                data: 'waktu',
+                name: 'waktu'
             },
             {
-                data: 'nama_lengkap',
-                name: 'nama_lengkap'
+                data: 'status',
+                name: 'status'
             },
             {
-                data: 'posisi_yang_dilamar',
-                name: 'posisi_yang_dilamar'
+                data: 'feedback',
+                name: 'feedback'
             },
             {
-                data: 'cv',
-                name: 'cv'
-            },
-            {
-                data: 'riwayat_lamaran',
-                name: 'riwayat_lamaran',
-                class: 'table-tbody'
-            },
-            {
-                data: 'status_detail',
-                name: 'status_detail'
-            },
-            {
-                data: 'hasil_final',
-                name: 'hasil_final'
-            },
+                data: 'waktu_feedback',
+                name: 'waktu_feedback'
+            }
         ],
-        order: [
-            [2, 'desc']
-        ]
+        // order: [
+        //     [2, 'desc']
+        // ]
     });
 </script>
 @endsection
