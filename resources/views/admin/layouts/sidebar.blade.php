@@ -473,13 +473,13 @@
                 <div style="font-size: 10pt;" data-i18n="Blank">User Level Access</div>
             </a>
         </li>
-        <li class="menu-item {{ Request::is('report*') ? 'active open' : '' }}">
+        <li class="menu-item {{ Request::is('report*') ? 'active open' : '' }} ">
             <a href="javascript:void(0);" class="menu-link menu-toggle">
                 <i class="menu-icon tf-icons mdi mdi-chart-box-multiple"></i>
                 <div style="font-size: 10pt;" data-i18n="Data Master">Report</div>
             </a>
             <ul class="menu-sub">
-                <li class="menu-item {{ Request::is('report*') ? 'active open' : '' }}">
+                <li class="menu-item {{ Request::is('report_kedisiplinan*') ? 'active open' : '' }}">
                     <a href="javascript:void(0);" class="menu-link menu-toggle">
                         <i class="menu-icon tf-icons mdi mdi-table-account"></i>
                         <div style="font-size: 10pt;" data-i18n="Data Master">Absensi</div>
@@ -492,29 +492,30 @@
                         </li>
                     </ul>
                 </li>
-                <li class="menu-item {{ Request::is('report*') ? 'active open' : '' }}">
+                <li class="menu-item {{ Request::is('report_pelamar*') ? 'active open' : '' }} {{ Request::is('report_Recruitment*') ? 'active open' : '' }}">
                     <a href="javascript:void(0);" class="menu-link menu-toggle">
                         <i class="menu-icon tf-icons mdi mdi-table-account"></i>
-                        <div style="font-size: 10pt;" data-i18n="Data Master">Absensi</div>
+                        <div style="font-size: 10pt;" data-i18n="Data Master">Recruitment</div>
                     </a>
                     <ul class="menu-sub">
-                        <li class="menu-item {{ Request::is('report_kedisiplinan*') ? 'active' : '' }}">
-                            <a href="@if(Auth::user()->is_admin =='hrd'){{ url('/report_kedisiplinan/'.$holding->holding_code) }}@else{{ url('/report_kedisiplinan/'.$holding->holding_code) }}@endif" class="menu-link">
-                                <div style="font-size: 10pt;" data-i18n="Container"><i class="mdi mdi-file-chart-check-outline"></i>&nbsp;Absensi&nbsp;&&nbsp;Kedisiplinan</div>
+                        <li class="menu-item {{ Request::is('report_pelamar*') ? 'active' : '' }}">
+                            <a href="@if(Auth::user()->is_admin =='hrd'){{ url('/hrd/report_pelamar/'.$holding->holding_code) }}@else{{ url('/report_pelamar/'.$holding->holding_code) }}@endif" class="menu-link">
+                                <div style="font-size: 10pt;" data-i18n="Container"><i class="mdi mdi-file-chart-check-outline"></i>&nbsp;Data&nbsp;Pelamar</div>
+                            </a>
+                        </li>
+                        <li class="menu-item {{ Request::is('report_Recruitment*') ? 'active' : '' }}">
+                            <a href="@if(Auth::user()->is_admin =='hrd'){{ url('hrd//report_Recruitment/'.$holding->holding_code) }}@else{{ url('/report_Recruitment/'.$holding->holding_code) }}@endif" class="menu-link">
+                                <div style="font-size: 10pt;" data-i18n="Container"><i class="mdi mdi-file-chart-check-outline"></i>&nbsp;Data&nbsp;Rekrutmen</div>
+                            </a>
+                        </li>
+                        <li class="menu-item {{ Request::is('report_Recruitment*') ? 'active' : '' }}">
+                            <a href="@if(Auth::user()->is_admin =='hrd'){{ url('hrd//report_Recruitment/'.$holding->holding_code) }}@else{{ url('/report_Recruitment/'.$holding->holding_code) }}@endif" class="menu-link">
+                                <div style="font-size: 10pt;" data-i18n="Container"><i class="mdi mdi-file-chart-check-outline"></i>&nbsp;Data&nbsp;Rekrutmen</div>
                             </a>
                         </li>
                     </ul>
                 </li>
-                <li class="menu-item {{ Request::is('pg-data-ranking*') ? 'active' : '' }}">
-                    <a href="{{ url('/pg-data-ranking/'.$holding->holding_code) }}" class="menu-link">
-                        <div style="font-size: 10pt;" data-i18n="Container"><i class="mdi mdi-file-chart-check-outline"></i>&nbsp;Data&nbsp;Rangking</div>
-                    </a>
-                </li>
-                <li class="menu-item {{ Request::is('pg-data-ujian*') ? 'active' : '' }}">
-                    <a href="{{ url('/pg-data-ujian/'.$holding->holding_code) }}" class=" menu-link">
-                        <div style="font-size: 10pt;" data-i18n="Without navbar"><i class="mdi mdi-account-arrow-left"></i>&nbsp;Data&nbsp;Ujian</div>
-                    </a>
-                </li>
+
             </ul>
         </li>
 

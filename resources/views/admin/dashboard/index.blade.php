@@ -76,7 +76,7 @@
                                 </div>
                             </div>
                         </div>
-                        @if($count_karyawan_habis_kontrak > 0)
+                        <!-- @if($count_karyawan_habis_kontrak > 0) -->
                         <div class="alert alert-warning" role="alert">
                             <i class="mdi mdi-account-alert-outline "></i>
                             <span>Karyawan Masa Tenggang Kontrak @if($holding=='') @else {{$holding->holding_name}} @endif </span><span>Total : {{$count_karyawan_habis_kontrak}} Orang
@@ -248,7 +248,7 @@
                                 <a href="@if(Auth::user()->is_admin =='hrd'){{url('hrd/karyawan/karyawan_masa_tenggang_kontrak/'.$holding->holding_code)}}@else {{url('karyawan/karyawan_masa_tenggang_kontrak/'.$holding->holding_code)}} @endif"><span class="badge bg-label-success">Lihat&nbsp;Semua&nbsp;<i class="mdi mdi-chevron-double-right"></i></span></a>
                             </div>
                         </div>
-                        @endif
+                        <!-- @endif -->
                     </div>
                 </div>
             </div>

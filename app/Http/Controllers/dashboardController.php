@@ -250,8 +250,19 @@ class dashboardController extends Controller
             ->select(DB::raw("COUNT(*) as jumlah"), 'gender')
             ->groupBy('karyawans.gender')
             ->pluck('jumlah', 'gender');
-        $nama_gender = $count_karyawan_gender->keys();
-        $jumlah_karyawan_gender = $count_karyawan_gender->values();
+        $custom_gender_data = $count_karyawan_gender->mapWithKeys(function ($jumlah, $gender_code) {
+            // Tentukan nama gender berdasarkan kode numerik
+            $nama_gender = match ((int)$gender_code) {
+                1 => 'LAKI-LAKI',
+                2 => 'PEREMPUAN',
+                default => 'Lainnya', // Jika ada kode lain, berikan fallback
+            };
+
+            // Kembalikan array dengan kunci (nama gender) dan nilai (jumlah) yang baru
+            return [$nama_gender => $jumlah];
+        });
+        $nama_gender = $custom_gender_data->keys();
+        $jumlah_karyawan_gender = $custom_gender_data->values();
 
         // chart karyawan kontrak
         $count_karyawan_kontrak = Karyawan::where('karyawans.kontrak_kerja', $getHolding->id)
@@ -268,8 +279,20 @@ class dashboardController extends Controller
             ->select(DB::raw("COUNT(*) as jumlah"), 'status_nikah')
             ->groupBy('status_nikah')
             ->pluck('jumlah', 'status_nikah');
-        $nama_status = $count_karyawan_status->keys();
-        $jumlah_karyawan_status = $count_karyawan_status->values();
+        $custom_status_data = $count_karyawan_status->mapWithKeys(function ($jumlah, $status_nikah) {
+            // Tentukan nama gender berdasarkan kode numerik
+            $nama_status = match ((int)$status_nikah) {
+                1 => 'Belum Kawin',
+                2 => 'Sudah Kawin',
+                3 => 'Cerai Hidup',
+                4 => 'Cerai Mati', // Jika ada kode lain, berikan fallback
+            };
+
+            // Kembalikan array dengan kunci (nama status) dan nilai (jumlah) yang baru
+            return [$nama_status => $jumlah];
+        });
+        $nama_status = $custom_status_data->keys();
+        $jumlah_karyawan_status = $custom_status_data->values();
         $jumlah_karyawan_jabatan_all = [];
 
         foreach ($jumlah_karyawan_jabatan->toArray() + $jumlah_karyawan_jabatan1->toArray() + $jumlah_karyawan_jabatan2->toArray() as $key => $value) {
