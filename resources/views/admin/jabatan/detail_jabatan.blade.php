@@ -57,7 +57,7 @@
                                 </div>
                                 <div class="modal-body">
                                     <div class="col-lg-12">
-                                        <table class="table" id="table_karyawan_jabatan" style="width: 100%;">
+                                        <table class="table" id="table_karyawan_jabatan" style="width: 100%; font-size: small;">
                                             <thead class="table-primary">
                                                 <tr>
                                                     <th>No.</th>
@@ -89,7 +89,7 @@
                                 </div>
                                 <div class="modal-body">
                                     <div class="col-lg-12">
-                                        <table class="table" id="table_bawahan_jabatan" style="width: 100%;">
+                                        <table class="table" id="table_bawahan_jabatan" style="width: 100%; font-size: small;">
                                             <thead class="table-primary">
                                                 <tr>
                                                     <th>No.</th>
@@ -408,7 +408,7 @@
                             </form>
                         </div>
                     </div>
-                    <table class="table" id="table_jabatan" style="width: 100%;">
+                    <table class="table" id="table_jabatan" style="width: 100%; font-size: small;">
                         <thead class="table-primary">
                             <tr>
                                 <th>No.</th>

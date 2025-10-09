@@ -251,27 +251,6 @@ class RecruitmentController extends Controller
         return redirect()->back()->with('success', 'data berhasil ditambahkan');
     }
 
-    function update_status($id)
-    {
-        // dd($id);
-        $holding = request()->segment(count(request()->segments()));
-        $recruitment = Recruitment::where('id', $id)->where('holding_recruitment', $holding)->first();
-        if ($recruitment->status_recruitment == 0) {
-            Recruitment::where('id', $id)->where('holding_recruitment', $holding)->update([
-                'status_recruitment' => 1,
-            ]);
-        } else {
-            Recruitment::where('id', $id)->where('holding_recruitment', $holding)->update([
-                'status_recruitment' => 0,
-            ]);
-        }
-        ActivityLog::create([
-            'user_id' => Auth::user()->id,
-            'activity' => 'update',
-            'description' => 'Update data Recruitment Status Close ' . Auth::user()->name,
-        ]);
-        return redirect()->back()->with('success', 'Data Berhasil di Diupdate');
-    }
 
     function update(Request $request, $holding)
     {
@@ -425,18 +404,18 @@ class RecruitmentController extends Controller
             })
             ->addColumn('feedback', function ($row) {
                 if ($row->feedback == '1') {
-                    return '<div class="bg-success text-white p-2">Bersedia Wawancara</div>';
+                    return '<span class="badge bg-label-success">Bersedia Wawancara</span>';
                 } else {
-                    return '<div class="bg-warning text-white p-2">Menunggu Konfirmasi</div>';
+                    return '<span class="badge bg-label-warning">Menunggu Konfirmasi</span>';
                 }
             })
             ->addColumn('status', function ($row) {
                 if ($row->status == '1') {
-                    return '<div class="bg-info text-white p-2">Kandidat</div>';
+                    return '<span class="badge bg-label-success">Kandidat</span>';
                 } elseif ($row->status == '1a') {
-                    return '<div class="bg-info text-white p-2">Panggilan Wawancara</div>';
+                    return '<span class="badge bg-label-info">Panggilan Wawancara</span>';
                 } elseif ($row->status == '2a') {
-                    return '<div class="bg-danger text-white p-2">Tidak Hadir Wawancara</div>';
+                    return '<span class="badge bg-label-danger">Tidak Hadir Wawancara</span>';
                 } else {
                     return 'Status Tidak Dikenal';
                 }
@@ -476,7 +455,7 @@ class RecruitmentController extends Controller
             ->addColumn('status', function ($row) {
                 // dd($row->status);
                 if ($row->status == '2') {
-                    return '<div class="bg-secondary text-white p-1">Daftar Tunggu</div>';
+                    return '<span class="badge bg-label-secondary">Daftar Tunggu</span>';
                 } else {
                     return 'Status Tidak Dikenal';
                 }
@@ -518,7 +497,7 @@ class RecruitmentController extends Controller
             ->addColumn('status', function ($row) {
                 // dd($row->status);
                 if ($row->status == '3') {
-                    return '<div class="bg-danger text-white p-1">Ditolak</div>';
+                    return '<span class="badge bg-label-danger">Ditolak</span>';
                 } else {
                     return 'Status Tidak Dikenal';
                 }
@@ -617,9 +596,8 @@ class RecruitmentController extends Controller
             'kesehatan_kecelakaan'
         ));
     }
-    function pelamar_detail_pdf($id, $holding)
+    function pelamar_detail_pdf($id)
     {
-        $holdings = Holding::where('holding_code', $holding)->first();
         $data_cv =  RecruitmentUser::with([
             'AuthLogin' => function ($query) use ($id) {
                 $query->with([
@@ -689,7 +667,6 @@ class RecruitmentController extends Controller
 
         $pdf = Pdf::loadView('admin.recruitment-users.recruitment.user_detail_pdf', [
             'ti$pekerjaan_counttle' => 'Data Recruitment',
-            'holding'   => $holdings,
         ], compact(
             'data_cv',
             'pendidikan',
@@ -704,11 +681,91 @@ class RecruitmentController extends Controller
         ));
         return $pdf->stream('admin.recruitment-users.recruitment.user_detail_pdf');
     }
+    function pelamar_nilai_pdf($id)
+    {
+        $table = RecruitmentUser::with([
+            'Cv' => function ($query) {
+                $query;
+            }
+        ])->with([
+            'interviewUser' => function ($query) {
+                $query;
+            }
+        ])->with([
+            'DataInterview' => function ($query) {
+                $query;
+            }
+        ])
+            ->with([
+                'ujianEsaiJawab' => function ($query) {
+                    $query->orderBy('recruitment_user_id')->with([
+                        'ujian' => function ($query) {
+                            $query->with([
+                                'pembobotan' => function ($query) {
+                                    $query;
+                                }
+                            ]);
+                        }
+                    ]);
+                }
+            ])->with([
+                'waktuujian' => function ($query) {
+                    $query->orderBy('recruitment_user_id')->with([
+                        'ujian' => function ($query) {
+                            $query->with([
+                                'pembobotan' => function ($query) {
+                                    $query;
+                                }
+                            ]);
+                        }
+                    ]);
+                }
+            ])
+            ->with([
+                'recruitmentAdmin' => function ($query) {
+                    $query;
+                }
+            ])
+            ->with([
+                'Jabatan' => function ($query) {
+                    $query->with([
+                        'Bagian' =>  function ($query) {
+                            $query->with([
+                                'Divisi' => function ($query) {
+                                    $query->with([
+                                        'Departemen' => function ($query) {
+                                            $query->orderBy('nama_departemen', 'ASC');
+                                        }
+                                    ]);
+                                    $query->orderBy('nama_divisi', 'ASC');
+                                },
+                            ]);
+                        },
+                    ])->with([
+                        'LevelJabatan' => function ($query) {
+                            $query;
+                        },
+                    ]);
+                },
+
+            ])
+            ->where('recruitment_admin_id', $id)
+            ->get();
+
+        $pdf = Pdf::loadView('admin.recruitment-users.recruitment.user_nilai_pdf', [
+            'ti$pekerjaan_counttle' => 'Data Recruitment',
+        ], compact(
+            'table',
+        ));
+        return $pdf->stream('admin.recruitment-users.recruitment.user_nilai_pdf');
+    }
     public function pelamar_detail_ubah(Request $request, $holding)
     {
         // dd($request->all());
         $holdings = Holding::where('holding_code', $holding)->first();
         $recruitment_admin_id = RecruitmentUser::where('id', $request->recruitment_user_id)->first();
+        $tanggal_wawancara = Carbon::parse($request->tanggal_wawancara);
+        $hari = $tanggal_wawancara->translatedFormat('l, j F Y');
         // dd($request->nomor_whatsapp);
         // dd($recruitment_admin_id);
         if ($request->status == '1') {
@@ -764,8 +821,6 @@ class RecruitmentController extends Controller
 
 
             Carbon::setLocale('id');
-            $tanggal_wawancara = Carbon::parse($request->tanggal_wawancara);
-            $hari = $tanggal_wawancara->translatedFormat('l, j F Y');
             //kirim pesan ke whatsapp
             $curl = curl_init();
             curl_setopt_array($curl, array(
@@ -780,21 +835,17 @@ class RecruitmentController extends Controller
                 CURLOPT_POSTFIELDS => array(
                     'target' => $request->nomor_whatsapp,
                     'message' =>
-                    "PEMBERITAHUAN WAWANCARA!
+                    "
+Halo $request->nama,
+Terima kasih telah melamar di $holdings->holding_name. Setelah proses seleksi administrasi, kami mengundang Anda untuk mengikuti wawancara tahap pertama pada:
 
-Selamat $request->nama
-Anda dinyatakan *LOLOS* tahap seleksi administrasi di $holdings->holding_category, untuk posisi $request->nama_bagian
+📅 Hari/Tanggal : $hari
+🕒 Pukul : $request->waktu_wawancara WIB
+📍 Lokasi/Link Zoom : $tempat_wawancara
 
-Kami ingin mengundang Anda untuk wawancara pada :
+Mohon konfirmasi kehadiran Anda pada link di bawah ini :
 
-Tanggal : $hari
-Waktu   : $request->waktu_wawancara WIB
-Tempat  : $tempat_wawancara
-
-untuk konfirmasi kehadiran bisa dilakukan di
-asoy.com
-
-*Konfirmasi maksimal 24 jam setelah pesan ini dikirim*
+http://192.168.101.241:8001/cpanel/recruitment_detail/$request->recruitment_user_id
 ",
 
                     'countryCode' => '62', //optional
@@ -841,83 +892,6 @@ asoy.com
         // Merekam aktivitas pengguna
         return redirect('/pg/data-list-pelamar/' . $recruitment_admin_id->recruitment_admin_id . '/' . $holding . '')->with('success', 'data berhasil ditambahkan');
     }
-
-    // Lolos Administrasi -> Panggil INterview
-    // function lolos_administrasi(Request $request, $holding)
-    // {
-    //     $holding = request()->segment(count(request()->segments()));
-    //     $selectedUsers = $request->users;
-
-    //     if (!empty($selectedUsers) && is_array($selectedUsers)) {
-    //         $userIds = array_keys($selectedUsers);
-    //         $data_user = RecruitmentUser::with([
-    //             'Bagian' => function ($query) {
-    //                 $query->orderBy('nama_bagian', 'ASC');
-    //             },
-    //             'Cv' => function ($query) {
-    //                 $query->orderBy('id', 'ASC');
-    //             },
-    //             'AuthLogin' => function ($query) {
-    //                 $query->orderBy('id', 'ASC');
-    //             }
-    //         ])->whereIn('id', $userIds)->get();
-    //         // dd($data_user);
-    //         foreach ($data_user as $user) {
-
-    //             // Insert interview data
-    //             RecruitmentInterview::create([
-    //                 'id' => Uuid::uuid4(),
-    //                 'holding' => $holding,
-    //                 'recruitment_admin_id' => $request->recruitment_admin_id,
-    //                 'recruitment_userid' => $user->id,
-    //                 'tanggal_interview' => $request->tanggal_interview,
-    //                 'jam_interview' => $request->jam_interview,
-    //                 'lokasi_interview' => $request->lokasi_interview,
-    //             ]);
-
-    //             // Update user status
-    //             RecruitmentUser::where('status_recruitmentuser', 0)
-    //                 ->where('id', $user->id)
-    //                 ->update(['status_recruitmentuser' => 1]);
-    //             //Merekam aktivitas pengguna
-    //             ActivityLog::create([
-    //                 'user_id' => $request->user()->id,
-    //                 'activity' => 'create',
-    //                 'description' => 'Pemanggilan Interview' . $request->name,
-    //             ]);
-    //         }
-    //     } else {
-    //         $data_user = collect();
-    //     }
-    //     return redirect()->back()->with('success', 'Data Berhasil di informasikan');
-    // }
-
-    // // Tidak Lolos Administrasi -> konfirmasi
-    // function tidak_lolos_administrasi(Request $request, $holding)
-    // {
-    //     // $holdings = Holding::where('holding_code', $holding)->first();
-    //     $selectedUsers = $request->users;
-    //     if (!empty($selectedUsers) && is_array($selectedUsers)) {
-    //         $userIds = array_keys($selectedUsers);
-    //         $data_user = RecruitmentUser::with([
-    //             'Bagian' =>  function ($query) {
-    //                 $query->orderBy('nama_bagian', 'ASC');
-    //             },
-    //         ])->whereIn('id', $userIds)->get();
-    //         foreach ($data_user as $user) {
-    //             RecruitmentUser::where('status_recruitmentuser', 0)->where('id', $user->id)->update(['status_recruitmentuser' => 5]);
-    //             // Merekam aktivitas pengguna
-    //             ActivityLog::create([
-    //                 'user_id' => $request->user()->id,
-    //                 'activity' => 'update',
-    //                 'description' => 'Mengupdate data Recruitment User' . $request->name,
-    //             ]);
-    //         }
-    //     } else {
-    //         $data_user = collect();
-    //     }
-    //     return redirect()->back()->with('success', 'Data Berhasil diupdate');
-    // }
 
     function pg_data_interview($holding)
     {
@@ -988,9 +962,9 @@ asoy.com
                 })
                 ->addColumn('presensi', function ($row) {
                     if ($row->recruitmentUser->status == '1a') {
-                        $btn = '<p class="p-2 bg-success text-white">Hadir</p>';
+                        $btn = '<span class="badge bg-label-success">Hadir</span>';
                     } elseif ($row->recruitmentUser->status == '2a') {
-                        $btn = '<p class="p-2 bg-danger text-white">Tidak Hadir</p>';
+                        $btn = '<span class="badge bg-label-danger">Tidak Hadir</span>';
                     } else {
                         $btn = '<button id="btn_presensi"
                                 data-id="' . $row->id . '"
@@ -1064,9 +1038,9 @@ asoy.com
                 })
                 ->addColumn('presensi', function ($row) {
                     if ($row->recruitmentUser->status == '1a') {
-                        $btn = '<p class="p-2 bg-success text-white">Hadir</p>';
+                        $btn = '<span class="badge bg-label-success">Hadir</span>';
                     } elseif ($row->recruitmentUser->status == '2a') {
-                        $btn = '<p class="p-2 bg-danger text-white">Tidak Hadir</p>';
+                        $btn = '<span class="badge bg-label-danger">Tidak Hadir</span>';
                     } else {
                         $btn = '<button id="btn_presensi"
                                 data-id="' . $row->id . '"
@@ -1139,9 +1113,9 @@ asoy.com
                 })
                 ->addColumn('presensi', function ($row) {
                     if ($row->recruitmentUser->status == '1a') {
-                        $btn = '<p class="p-2 bg-success text-white">Hadir</p>';
+                        $btn = '<span class="badge bg-label-success">Hadir</span>';
                     } elseif ($row->recruitmentUser->status == '2a') {
-                        $btn = '<p class="p-2 bg-danger text-white">Tidak Hadir</p>';
+                        $btn = '<span class="badge bg-label-danger">Tidak Hadir</span>';
                     } else {
                         $btn = '<button id="btn_presensi"
                                 data-id="' . $row->id . '"
@@ -1237,6 +1211,44 @@ asoy.com
     public function ranking_update_status(Request $request)
     {
         try {
+            $get_recruitment_admin = RecruitmentUser::with([
+                'recruitmentAdmin' => function ($query) {
+                    $query->with([
+                        'Jabatan' => function ($query) {
+                            $query->with([
+                                'Bagian' =>  function ($query) {
+                                    $query->with([
+                                        'Divisi' => function ($query) {
+                                            $query->with([
+                                                'Departemen' => function ($query) {
+                                                    $query->orderBy('nama_departemen', 'ASC');
+                                                }
+                                            ]);
+                                            $query->orderBy('nama_divisi', 'ASC');
+                                        },
+                                    ]);
+                                },
+                            ]);
+                        },
+                    ]);
+                },
+            ])
+                ->where('id', $request->id)
+                ->first();
+            // dd($request->all());
+            $holding = $request->holding;
+            $holdings = Holding::where('holding_code', $holding)->first();
+            $tanggal_wawancara = Carbon::parse($request->tanggal_wawancara);
+            $hari = $tanggal_wawancara->translatedFormat('l, j F Y');
+            $get_wa = RecruitmentUser::with([
+                'AuthLogin' => function ($query) {
+                    $query;
+                }
+            ])->with([
+                'Cv' => function ($query) {
+                    $query;
+                }
+            ])->where('id', $request->id)->first();
             if ($request->status == '1b') {
                 if ($request->online == 1) {
                     $link_wawancara = 'nullable';
@@ -1289,11 +1301,7 @@ asoy.com
                         'created_at'                => date('Y-m-d H:i:s'),
                     ]
                 );
-                $get_wa = RecruitmentUser::with([
-                    'AuthLogin' => function ($query) {
-                        $query;
-                    }
-                ])->where('id', $request->id)->first();
+
                 // dd($get_wa);
                 $curl = curl_init();
                 curl_setopt_array($curl, array(
@@ -1308,9 +1316,16 @@ asoy.com
                     CURLOPT_POSTFIELDS => array(
                         'target' => $get_wa->Authlogin->nomor_whatsapp,
                         'message' =>
-                        "Pemberitahuan
+                        "Halo " . $get_wa->Cv->nama_lengkap . " ,
 
-selamat Anda lolos wawancara manager
+Selamat, Anda lolos tahap wawancara awal. Kami mengundang Anda untuk melanjutkan ke wawancara bersama Manager pada:
+📅 Hari/Tanggal : $hari
+🕒 Pukul : $request->waktu_wawancara WIB
+📍 Lokasi/Link Zoom : $tempat
+
+Mohon konfirmasi kehadiran Anda pada link di bawah ini :
+http://192.168.101.241:8001/cpanel/recruitment_detail/$request->id
+
 ",
                         'countryCode' => '62', //optional
                     ),
@@ -1333,7 +1348,8 @@ selamat Anda lolos wawancara manager
                 $validator = Validator::make(
                     $request->all(),
                     [
-                        'gaji' => 'required',
+                        'tempat_bekerja' => 'required',
+                        'waktu_bekerja' => 'required',
                         'tanggal_diterima' => 'required',
                     ],
                     [
@@ -1351,10 +1367,10 @@ selamat Anda lolos wawancara manager
 
                     [
                         'status_lanjutan'       => $request->status,
-                        'gaji'                  => $request->gaji,
+                        'tempat_bekerja'        => $request->tempat_bekerja,
                         'tanggal_diterima'      => $request->tanggal_diterima,
                         'notes'                 => $request->notes_langsung,
-                        'konfirmasi_diterima'      => date('Y-m-d H:i:s', strtotime('+1 days')),
+                        'konfirmasi_diterima'   => date('Y-m-d H:i:s', strtotime('+1 days')),
                         'updated_at'            => date('Y-m-d H:i:s'),
                     ]
                 );
@@ -1385,9 +1401,21 @@ selamat Anda lolos wawancara manager
                     CURLOPT_POSTFIELDS => array(
                         'target' => $get_wa->Authlogin->nomor_whatsapp,
                         'message' =>
-                        "Pemberitahuan
+                        "Halo " . $get_wa->Cv->nama_lengkap . ",
 
-selamat Anda lolos bekerja
+Selamat! Anda telah dinyatakan diterima sebagai " . $get_recruitment_admin->recruitmentAdmin->Jabatan->nama_jabatan . "
+Bagian " . $get_recruitment_admin->recruitmentAdmin->Jabatan->Bagian->nama_bagian . " Divisi " . $get_recruitment_admin->recruitmentAdmin->Jabatan->Bagian->Divisi->nama_divisi . "
+di $holdings->holding_name. 🎉
+
+Kami mengundang Anda untuk hadir pada:
+📅 Hari/Tanggal : $hari
+🕒 Pukul : $request->waktu_bekerja
+📍 Lokasi : $request->tempat_bekerja
+Untuk penjelasan lebih lanjut terkait administrasi dan training karyawan baru. Harap membawa dokumen yang diperlukan sesuai instruksi yang akan kami kirimkan.
+
+Mohon konfirmasi kehadiran Anda pada link di bawah ini :
+http://192.168.101.241:8001/cpanel/recruitment_detail/$request->id
+
 ",
                         'countryCode' => '62', //optional
                     ),
@@ -1421,11 +1449,6 @@ selamat Anda lolos bekerja
                         'created_at'                => date('Y-m-d H:i:s'),
                     ]
                 );
-                $get_wa = RecruitmentUser::with([
-                    'AuthLogin' => function ($query) {
-                        $query;
-                    }
-                ])->where('id', $request->id)->first();
                 // dd($get_wa);
                 $curl = curl_init();
                 curl_setopt_array($curl, array(
@@ -1440,9 +1463,10 @@ selamat Anda lolos bekerja
                     CURLOPT_POSTFIELDS => array(
                         'target' => $get_wa->Authlogin->nomor_whatsapp,
                         'message' =>
-                        "Pemberitahuan
-
-Maaf Anda Belum lolos sesi interview dan ujian
+                        "Halo " . $get_wa->Cv->nama_lengkap . ",
+Terima kasih sudah mengikuti proses wawancara bersama Manager di $holdings->holding_name.
+Setelah mempertimbangkan hasil seleksi, dengan berat hati kami sampaikan bahwa Anda belum dapat melanjutkan ke tahap berikutnya.
+Kami sangat menghargai waktu dan usaha Anda, serta akan menyimpan data Anda untuk kesempatan lain yang lebih sesuai di kemudian hari.
 ",
                         'countryCode' => '62', //optional
                     ),
@@ -1517,12 +1541,28 @@ Maaf Anda Belum lolos sesi interview dan ujian
                         'created_at'                => date('Y-m-d H:i:s'),
                     ]
                 );
-                $get_wa = RecruitmentUser::with([
-                    'AuthLogin' => function ($query) {
-                        $query;
-                    }
-                ])->where('id', $request->id)->first();
                 // dd($get_wa);
+                $get_posisi_baru = Recruitment::with([
+                    'Jabatan' => function ($query) {
+                        $query->with([
+                            'Bagian' =>  function ($query) {
+                                $query->with([
+                                    'Divisi' => function ($query) {
+                                        $query->with([
+                                            'Departemen' => function ($query) {
+                                                $query->orderBy('nama_departemen', 'ASC');
+                                            }
+                                        ]);
+                                        $query->orderBy('nama_divisi', 'ASC');
+                                    },
+                                ]);
+                            },
+                        ]);
+                    },
+
+                ])
+                    ->where('id', $request->lowongan_baru)
+                    ->first();
                 $curl = curl_init();
                 curl_setopt_array($curl, array(
                     CURLOPT_URL => 'https://api.fonnte.com/send',
@@ -1536,9 +1576,21 @@ Maaf Anda Belum lolos sesi interview dan ujian
                     CURLOPT_POSTFIELDS => array(
                         'target' => $get_wa->Authlogin->nomor_whatsapp,
                         'message' =>
-                        "Pemberitahuan
+                        "Halo " . $get_wa->Cv->nama_lengkap . ",
+Terima kasih telah mengikuti proses seleksi di $holdings->holding_name. Setelah mempertimbangkan kualifikasi Anda,
+kami melihat potensi Anda lebih sesuai dengan posisi
+Jabatan : " . $get_posisi_baru->Jabatan->nama_jabatan . ".
+Bagian : " . $get_posisi_baru->Jabatan->Bagian->nama_bagian . ".
+Divisi : " . $get_posisi_baru->Jabatan->Bagian->Divisi->nama_divisi . ".
+Departemen : " . $get_posisi_baru->Jabatan->Bagian->Divisi->Departemen->nama_departemen . ".
 
-selamat Anda lolos wawancara manager
+Kami mengundang Anda untuk melanjutkan ke wawancara bersama Manager " . $get_posisi_baru->Jabatan->Bagian->Divisi->Departemen->nama_departemen . " pada:
+📅 Hari/Tanggal : $hari
+🕒 Pukul : $request->waktu_wawancara WIB
+📍 Lokasi/Link Zoom : $tempat
+
+Mohon konfirmasi kehadiran Anda pada link di bawah ini :
+http://192.168.101.241:8001/cpanel/recruitment_detail/$request->id
 ",
                         'countryCode' => '62', //optional
                     ),
@@ -1561,7 +1613,8 @@ selamat Anda lolos wawancara manager
                 $validator = Validator::make(
                     $request->all(),
                     [
-                        'gaji' => 'required',
+                        'tempat_bekerja' => 'required',
+                        'waktu_bekerja' => 'required',
                         'lowongan_baru' => 'required',
                         'tanggal_diterima' => 'required',
                     ],
@@ -1581,7 +1634,7 @@ selamat Anda lolos wawancara manager
                     [
                         'status_lanjutan'       => $request->status,
                         'feedback_lanjutan'     => null,
-                        'gaji'                  => $request->gaji,
+                        'tempat_bekerja'        => $request->tempat_bekerja,
                         'tanggal_diterima'      => $request->tanggal_diterima,
                         'notes'                 => $request->notes_langsung,
                         'konfirmasi_diterima'   => date('Y-m-d H:i:s', strtotime('+1 days')),
@@ -1604,6 +1657,27 @@ selamat Anda lolos wawancara manager
                     }
                 ])->where('id', $request->id)->first();
                 // dd($get_wa);
+                $get_posisi_baru = Recruitment::with([
+                    'Jabatan' => function ($query) {
+                        $query->with([
+                            'Bagian' =>  function ($query) {
+                                $query->with([
+                                    'Divisi' => function ($query) {
+                                        $query->with([
+                                            'Departemen' => function ($query) {
+                                                $query->orderBy('nama_departemen', 'ASC');
+                                            }
+                                        ]);
+                                        $query->orderBy('nama_divisi', 'ASC');
+                                    },
+                                ]);
+                            },
+                        ]);
+                    },
+
+                ])
+                    ->where('id', $request->lowongan_baru)
+                    ->first();
                 $curl = curl_init();
                 curl_setopt_array($curl, array(
                     CURLOPT_URL => 'https://api.fonnte.com/send',
@@ -1617,9 +1691,22 @@ selamat Anda lolos wawancara manager
                     CURLOPT_POSTFIELDS => array(
                         'target' => $get_wa->Authlogin->nomor_whatsapp,
                         'message' =>
-                        "Pemberitahuan
+                        "Halo " . $get_wa->Cv->nama_lengkap . ",
+Terima kasih telah mengikuti proses seleksi di $holdings->holding_name. Setelah mempertimbangkan kualifikasi Anda,
+kami melihat potensi Anda lebih sesuai dengan posisi
+Jabatan : " . $get_posisi_baru->Jabatan->nama_jabatan . ".
+Bagian : " . $get_posisi_baru->Jabatan->Bagian->nama_bagian . ".
+Divisi : " . $get_posisi_baru->Jabatan->Bagian->Divisi->nama_divisi . ".
+Departemen : " . $get_posisi_baru->Jabatan->Bagian->Divisi->Departemen->nama_departemen . ".
 
-selamat Anda lolos bekerja
+Kami mengundang Anda untuk hadir pada:
+📅 Hari/Tanggal : $hari
+🕒 Pukul : $request->waktu_bekerja
+📍 Lokasi : $request->tempat_bekerja
+Untuk penjelasan lebih lanjut terkait administrasi dan training karyawan baru. Harap membawa dokumen yang diperlukan sesuai instruksi yang akan kami kirimkan.
+
+Mohon konfirmasi kehadiran Anda pada link di bawah ini :
+http://192.168.101.241:8001/cpanel/recruitment_detail/$request->id
 ",
                         'countryCode' => '62', //optional
                     ),
@@ -1687,7 +1774,7 @@ selamat Anda lolos bekerja
                 ])->first();
                 // dd($get_recruitment_user->recruitmentAdmin->Holding->holding_number);
                 $get_user = UsersCareer::where('id', $get_recruitment_user->users_career_id)->first();
-                $get_cv = RecruitmentCV::where('users_career_id', $get_user->id)->with([
+                $get_cv = RecruitmentCV::where('users_career_id', $get_recruitment_user->users_career_id)->with([
                     'provinsiKTP' => function ($query) {
                         $query->orderBy('id', 'ASC');
                     }
@@ -1777,6 +1864,7 @@ selamat Anda lolos bekerja
                 $id_karyawan = Uuid::uuid4();
 
                 $no_karyawan = $get_recruitment_user->recruitmentAdmin->Holding->holding_number . '00' . date('ym', strtotime($get_recruitment_user->tanggal_diterima)) . date('dmy', strtotime($get_cv->tanggal_lahir));
+
                 Karyawan::insert(
 
                     [
@@ -1832,6 +1920,7 @@ selamat Anda lolos bekerja
                         'created_at'                => date('Y-m-d H:i:s'),
                     ]
                 );
+                // dd($ss);
                 $pendidikan = RecruitmentPendidikan::where('id_user', $get_user->id)->get();
                 foreach ($pendidikan as $pp) {
                     KaryawanPendidikan::insert(
@@ -1896,313 +1985,6 @@ selamat Anda lolos bekerja
                 'error' => $e->getMessage(),
             ]);
         }
-    }
-    function pg_list_interview($id)
-    {
-        $holding = request()->segment(count(request()->segments()));
-        return view('admin.recruitment-users.interview.data_listinterview', [
-            'title' => 'Data Recruitment',
-            'holding'   => $holding,
-            'id_recruitment'        => $id,
-            'data_departemen' => Departemen::all(),
-            'data_bagian' => Bagian::with('Divisi')->where('holding', $holding)->get(),
-            'data_dept' => Departemen::orderBy('nama_departemen', 'asc')->where('holding', $holding)->get(),
-            'data_divisi' => Divisi::orderBy('nama_divisi', 'asc')->where('holding', $holding)->get()
-        ]);
-    }
-
-    function dt_list_interview($id)
-    {
-        $holding = request()->segment(count(request()->segments()));
-        // dd($holding);
-        $table =  RecruitmentUser::with([
-            'Bagian' =>  function ($query) {
-                $query->with([
-                    'Divisi' => function ($query) {
-                        $query->with([
-                            'Departemen' => function ($query) {
-                                $query->orderBy('nama_departemen', 'ASC');
-                            }
-                        ]);
-                        $query->orderBy('nama_divisi', 'ASC');
-                    }
-                ]);
-                $query->orderBy('nama_bagian', 'ASC');
-            },
-            'AuthLogin' => function ($query) {
-                $query->orderBy('id', 'ASC');
-            },
-            'WaktuUjian' => function ($query) {
-                $query->orderBy('id', 'ASC');
-            },
-            'Cv' => function ($query) {
-                $query->whereNotNull('users_career_id')->orderBy('id', 'ASC');
-            },
-            'DataInterview' => function ($query) {
-                $query->orderBy('id', 'ASC');
-            },
-        ])
-            ->where('holding', $holding)
-            ->where('recruitment_admin_id', $id)
-            ->where('status_recruitmentuser', '!=', 0)
-            ->where('status_recruitmentuser', '!=', 5)
-            ->orderBy('nama_bagian', 'ASC')->get();
-        // dd($table);
-        if (request()->ajax()) {
-            return DataTables::of($table)
-                ->addColumn('email', function ($row) {
-                    $return = $row->AuthLogin->email;
-                    return $return;
-                })
-                ->addColumn('ujian', function ($row) use ($holding) {
-                    if (!$row->WaktuUjian != null) {
-                        if ($row->DataInterview->status_interview == 0) {
-                            $btn = '<button id="btn_warning"
-                                        type="button" class="btn btn-sm" style="background-color:#e9ddff;">
-                                        <i class="tf-icons mdi mdi-book"></i>
-                                        Mulai&nbsp;Ujian
-                                    </button>';
-                            return $btn;
-                        } else {
-                            $btn = '<button id="btn_ujian"
-                                    data-id_recruitment_user="' . $row->id . '"
-                                    data-id_users_career="' . $row->AuthLogin->id . '"
-                                    data-id_users_auth="' . $row->WaktuUjian . '"
-                                    type="button" class="btn btn-sm" style="background-color:#e9ddff;">
-                                    <i class="tf-icons mdi mdi-book"></i>
-                                    Mulai&nbsp;Ujian
-                                </button>';
-                            return $btn;
-                        }
-                    } else {
-                        if ($row->WaktuUjian->waktu_berakhir != null) {
-                            return '<button
-                                    type="button" class="btn btn-sm" style="background-color:#e9ddff;">
-                                    <i class="tf-icons mdi mdi-book"></i>
-                                    Ujian&nbsp;Selesai
-                                </button>';
-                        } else {
-                            $btn = '<button id="btn_prosesujian"
-                                        type="button" class="btn btn-sm" style="background-color:#e9ddff;">
-                                        <i class="tf-icons mdi mdi-book"></i>
-                                        Proses&nbsp;Ujian
-                                    </button>';
-                            return $btn;
-                        }
-                    }
-                })
-                ->addColumn('detail_cv', function ($row) use ($holding) {
-                    $btn = '<button id="btn_lihat_cv"
-                                data-id="' . $row->id . '"
-                                data-nama_pelamar="' . $row->Cv->nama_depan . ' ' . $row->Cv->nama_tengah . ' ' . $row->Cv->nama_belakang . '"
-                                data-tempat_lahir="' . $row->Cv->tempat_lahir . '"
-                                data-tanggal_lahir="' . $row->Cv->tanggal_lahir . '"
-                                data-gender="' . $row->Cv->gender . '"
-                                data-status_nikah="' . $row->Cv->status_nikah . '"
-                                data-nik="' . $row->Cv->nik . '"
-                                data-departemen="' . $row->Bagian->Divisi->Departemen->nama_departemen . '"
-                                data-divisi="' . $row->Bagian->Divisi->nama_divisi . '"
-                                data-bagian="' . $row->Bagian->nama_bagian . '"
-                                data-jabatan="' . $row->Bagian->nama_jabatan . '"
-                                data-email="' . $row->Cv->email . '"
-                                data-no_hp="' . $row->Cv->no_hp . '"
-                                data-alamatktp="' . $row->Cv->detail_alamat . '"
-                                data-nama_sdmi="' . $row->Cv->nama_sdmi . '"
-                                data-tahun_sdmi="' . $row->Cv->tahun_sdmi . '"
-                                data-nama_smpmts="' . $row->Cv->nama_smpmts . '"
-                                data-tahun_smpmts="' . $row->Cv->tahun_smpmts . '"
-                                data-nama_smamasmk="' . $row->Cv->nama_smamasmk . '"
-                                data-tahun_smamasmk="' . $row->Cv->tahun_smamasmk . '"
-                                data-nama_universitas="' . $row->Cv->nama_universitas . '"
-                                data-tahun_universitas="' . $row->Cv->tahun_universitas . '"
-                                data-judul_keterampilan1="' . $row->Cv->judul_keterampilan1 . '"
-                                data-ket_keterampilan1="' . $row->Cv->ket_keterampilan1 . '"
-                                data-judul_keterampilan2="' . $row->Cv->judul_keterampilan2 . '"
-                                data-ket_keterampilan2="' . $row->Cv->ket_keterampilan2 . '"
-                                data-judul_keterampilan3="' . $row->Cv->judul_keterampilan3 . '"
-                                data-ket_keterampilan3="' . $row->Cv->ket_keterampilan3 . '"
-                                data-judul_pengalaman1="' . $row->Cv->judul_pengalaman1 . '"
-                                data-lokasi_pengalaman1="' . $row->Cv->lokasi_pengalaman1 . '"
-                                data-tahun_pengalaman1="' . $row->Cv->tahun_pengalaman1 . '"
-                                data-judul_pengalaman2="' . $row->Cv->judul_pengalaman2 . '"
-                                data-lokasi_pengalaman2="' . $row->Cv->lokasi_pengalaman2 . '"
-                                data-tahun_pengalaman2="' . $row->Cv->tahun_pengalaman2 . '"
-                                data-judul_pengalaman3="' . $row->Cv->judul_pengalaman3 . '"
-                                data-lokasi_pengalaman3="' . $row->Cv->lokasi_pengalaman3 . '"
-                                data-tahun_pengalaman3="' . $row->Cv->tahun_pengalaman3 . '"
-                                data-prestasi1="' . $row->Cv->prestasi1 . '"
-                                data-prestasi2="' . $row->Cv->prestasi2 . '"
-                                data-prestasi3="' . $row->Cv->prestasi3 . '"
-                                data-img_ktp="' . $row->Cv->file_ktp . '"
-                                data-img_kk="' . $row->Cv->file_kk . '"
-                                data-img_ijazah="' . $row->Cv->file_ijazah . '"
-                                data-img_pp="' . $row->Cv->file_pp . '"
-                                type="button" class="btn btn-sm" style="background-color:#e9ddff">
-                                <i class="tf-icons mdi mdi-eye-circle-outline me-1"></i>
-                                Detail&nbsp;CV
-                            </button>';
-                    return $btn;
-                })
-                ->addColumn('penilaian', function ($row) use ($holding) {
-                    $btn = '<button id="btn_penilaian"
-                                data-recruitment_user_id="' . $row->id . '"
-                                data-recruitment_interview_id="' . $row->DataInterview->id . '"
-                                data-nama_pelamar="' . $row->Cv->nama_depan . ' ' . $row->Cv->nama_tengah . ' ' . $row->Cv->nama_belakang . '"
-                                data-email="' . $row->Cv->email . '"
-                                data-no_hp="' . $row->Cv->no_hp . '"
-                                data-alamatktp="' . $row->Cv->detail_alamat . '"
-                                data-nama_sdmi="' . $row->Cv->nama_sdmi . '"
-                                data-tahun_sdmi="' . $row->Cv->tahun_sdmi . '"
-                                data-nama_smpmts="' . $row->Cv->nama_smpmts . '"
-                                data-tahun_smpmts="' . $row->Cv->tahun_smpmts . '"
-                                data-nama_smamasmk="' . $row->Cv->nama_smamasmk . '"
-                                data-tahun_smamasmk="' . $row->Cv->tahun_smamasmk . '"
-                                data-nama_universitas="' . $row->Cv->nama_universitas . '"
-                                data-tahun_universitas="' . $row->Cv->tahun_universitas . '"
-                                data-nilai_ujian_analogi_verbal_antonim="' . $row->DataInterview->nilai_analogi_antonim . '"
-                                data-nilai_ujian_analogi_verbal_sinonim="' . $row->DataInterview->nilai_analogi_sinonim . '"
-                                data-nilai_ujian_nilai_penalaran="' . $row->DataInterview->nilai_penalaran . '"
-                                data-nilai_ujian_nilai_aritmatika="' . $row->DataInterview->nilai_aritmatika . '"
-                                data-nilai_total_psikotes="' . $row->DataInterview->nilai_aritmatika + $row->DataInterview->nilai_analogi_antonim + $row->DataInterview->nilai_analogi_sinonim + $row->DataInterview->nilai_penalaran . '"
-                                data-nilai_kehadiran="' . $row->DataInterview->nilai_kehadiran . '"
-                                data-catatan_ujian="' . $row->DataInterview->catatan_ujian . '"
-                                data-nilai_leadership="' . $row->DataInterview->nilai_leadership . '"
-                                data-catatan_leadership="' . $row->DataInterview->catatan_leadership . '"
-                                data-nilai_planning="' . $row->DataInterview->nilai_planning . '"
-                                data-catatan_planning="' . $row->DataInterview->catatan_planning . '"
-                                data-nilai_problemsolving="' . $row->DataInterview->nilai_problemsolving . '"
-                                data-catatan_problem_solving="' . $row->DataInterview->catatan_problem_solving . '"
-                                data-nilai_quallity="' . $row->DataInterview->nilai_quallity . '"
-                                data-catatan_quality="' . $row->DataInterview->catatan_quality . '"
-                                data-nilai_creativity="' . $row->DataInterview->nilai_creativity . '"
-                                data-catatan_creativity="' . $row->DataInterview->catatan_creativity . '"
-                                data-nilai_teamwork="' . $row->DataInterview->nilai_teamwork . '"
-                                data-catatan_teamwork="' . $row->DataInterview->catatan_teamwork . '"
-                                data-total_nilai_interview_hrd="' . $row->DataInterview->total_nilai_interview_hrd . '"
-                                data-nilai_interview_manager="' . $row->DataInterview->nilai_interview_manager . '"
-                                data-catatan_interview_manager="' . $row->DataInterview->catatan_interview_manager . '"
-                                data-img_pp="' . $row->file_pp . '"
-                                data-status_interview="' . $row->DataInterview->status_interview . '"
-                                data-status_interview_manager="' . $row->DataInterview->status_interview_manager . '"
-                                type="button" class="btn btn-sm" style="background-color:#e9ddff">
-                                <i class="tf-icons mdi mdi-account-edit me-1"></i>
-                                Detail&nbsp;Penilaian
-                            </button>';
-                    return $btn;
-                    // return 'b';
-                })
-                ->addColumn('status_kehadiran', function ($row) use ($holding) {
-                    if ($row->DataInterview->status_interview == 0 || $row->DataInterview->status_interview == 1) {
-                        $btn = '<button id="btn_kehadiran"
-                                data-recruitment_user_id="' . $row->id . '"
-                                data-recruitment_interview_id="' . $row->DataInterview->id . '"
-                                type="button" class="btn btn-sm btn-primary ">
-                                <i class="tf-icons mdi mdi-account-clock"></i>
-                                &nbsp;Absensi
-                            </button>';
-                        return $btn;
-                    } elseif ($row->DataInterview->status_interview == 3) {
-                        return '<button id=""
-                                type="button" class="btn btn-sm btn-success ">
-                                <i class="tf-icons mdi mdi-account-clock"></i>
-                                &nbsp;Hadir
-                            </button>';
-                    } elseif ($row->DataInterview->status_interview == 4) {
-                        return '<button id=""
-                                type="button" class="btn btn-sm btn-primary ">
-                                <i class="tf-icons mdi mdi-account-clock"></i>
-                                &nbsp;Tidak&nbsp;Hadir
-                            </button>';
-                    }
-                    // return 'a';
-
-                })
-                ->addColumn('departemen_id', function ($row) {
-                    $departemen_id = $row->nama_dept;
-                    return $departemen_id;
-                })
-                ->addColumn('nama_departemen', function ($row) {
-                    if ($row->Bagian == NULL) {
-                        $nama_departemen = NULL;
-                    } else {
-                        $nama_departemen = $row->Bagian->Divisi->Departemen->nama_departemen;
-                    }
-                    return $nama_departemen;
-                })
-                ->addColumn('nama_divisi', function ($row) {
-                    if ($row->Bagian == NULL) {
-                        $nama_divisi = NULL;
-                    } else {
-                        $nama_divisi = $row->Bagian->Divisi->nama_divisi;
-                    }
-                    return $nama_divisi;
-                })
-                ->addColumn('nama_bagian', function ($row) {
-                    if ($row->Bagian == NULL) {
-                        $nama_bagian = NULL;
-                    } else {
-                        $nama_bagian = $row->Bagian->nama_bagian;
-                    }
-                    return $nama_bagian;
-                })
-                ->rawColumns(['email', 'ujian', 'detail_cv', 'penilaian', 'status_kehadiran', 'departemen_id', 'nama_departemen', 'nama_divisi', 'nama_bagian'])
-                ->make(true);
-        }
-    }
-
-    function absensi_kehadiran_interview(Request $request)
-    {
-        if ($request->status_interview == 3) {
-            RecruitmentInterview::where('id', $request->show_recruitmentinterviewid3)->update([
-                'status_interview'  => 3,
-                'nilai_kehadiran'   => 4
-            ]);
-            RecruitmentUser::where('id', $request->show_recruitmentuserid3)->update([
-                'status_recruitmentuser'  => 3,
-            ]);
-
-            ActivityLog::create([
-                'user_id' => $request->user()->id,
-                'activity' => 'create',
-                'description' => 'Menambahkan data kehadrian ' . $request->name,
-            ]);
-            return redirect()->back()->with('success', 'data berhasil ditambahkan');
-        } else {
-            RecruitmentInterview::where('id', $request->show_recruitmentinterviewid3)->update([
-                'status_interview'  => 4,
-                'nilai_kehadiran'   => 0
-            ]);
-            RecruitmentUser::where('id', $request->show_recruitmentuserid3)->update([
-                'status_recruitmentuser'  => 4,
-            ]);
-
-            ActivityLog::create([
-                'user_id' => $request->user()->id,
-                'activity' => 'create',
-                'description' => 'Menambahkan data kehadrian ' . $request->name,
-            ]);
-            return redirect()->back()->with('success', 'data berhasil ditambahkan');
-        }
-    }
-
-    function kategori_ujian(Request $request)
-    {
-        // dd($request->all());
-        $get_recruitment_admin_id = RecruitmentUser::where('id', $request->id_recruitmentuser)->first();
-        $ujian = Ujian::where('kelas_id', $request->kelas)->get();
-        foreach ($ujian as $u) {
-            WaktuUjian::insert([
-                'kode'      => $u->kode,
-                'auth_id'   => $request->id_userscareer,
-                'recruitment_admin_id' => $get_recruitment_admin_id->recruitment_admin_id
-            ]);
-        }
-        ActivityLog::create([
-            'user_id' => $request->user()->id,
-            'activity' => 'create',
-            'description' => 'Mengaktifkan ujian user' . $request->name,
-        ]);
-        return redirect()->back()->with('success', 'Data Berhasil di Dibuat');
     }
 
     function pg_ujian($holding)
@@ -2326,86 +2108,76 @@ selamat Anda lolos bekerja
                 })
                 ->addColumn('nol', function ($row) {
                     if ($row->nol == '1') {
-                        $jabatan = '<p class = "bg-success p-2 text-white">YA</p>';
+                        $jabatan = '<span class="badge bg-label-success">YA</span>';
                     } else {
-                        $jabatan = '<p class = "bg-danger p-2 text-white">TIDAK</p>';
+                        $jabatan = '<span class="badge bg-label-danger">TIDAK</span>';
                     };
                     return $jabatan;
                 })
                 ->addColumn('satu', function ($row) {
                     if ($row->satu == '1') {
-                        $jabatan = '<p class = "bg-success p-2 text-white">YA</p>';
+                        $jabatan = '<span class="badge bg-label-success">YA</span>';
                     } else {
-                        $jabatan = '<p class = "bg-danger p-2 text-white">TIDAK</p>';
+                        $jabatan = '<span class="badge bg-label-danger">TIDAK</span>';
                     };
                     return $jabatan;
                 })
                 ->addColumn('dua', function ($row) {
                     if ($row->dua == '1') {
-                        $jabatan = '<p class = "bg-success p-2 text-white">YA</p>';
+                        $jabatan = '<span class="badge bg-label-success">YA</span>';
                     } else {
-                        $jabatan = '<p class = "bg-danger p-2 text-white">TIDAK</p>';
+                        $jabatan = '<span class="badge bg-label-danger">TIDAK</span>';
                     };
                     return $jabatan;
                 })
                 ->addColumn('tiga', function ($row) {
                     if ($row->tiga == '1') {
-                        $jabatan = '<p class = "bg-success p-2 text-white">YA</p>';
+                        $jabatan = '<span class="badge bg-label-success">YA</span>';
                     } else {
-                        $jabatan = '<p class = "bg-danger p-2 text-white">TIDAK</p>';
+                        $jabatan = '<span class="badge bg-label-danger">TIDAK</span>';
                     };
                     return $jabatan;
                 })
                 ->addColumn('empat', function ($row) {
                     if ($row->empat == '1') {
-                        $jabatan = '<p class = "bg-success p-2 text-white">YA</p>';
+                        $jabatan = '<span class="badge bg-label-success">YA</span>';
                     } else {
-                        $jabatan = '<p class = "bg-danger p-2 text-white">TIDAK</p>';
+                        $jabatan = '<span class="badge bg-label-danger">TIDAK</span>';
                     };
                     return $jabatan;
                 })
                 ->addColumn('lima', function ($row) {
                     if ($row->lima == '1') {
-                        $jabatan = '<p class = "bg-success p-2 text-white">YA</p>';
+                        $jabatan = '<span class="badge bg-label-success">YA</span>';
                     } else {
-                        $jabatan = '<p class = "bg-danger p-2 text-white">TIDAK</p>';
+                        $jabatan = '<span class="badge bg-label-danger">TIDAK</span>';
                     };
                     return $jabatan;
                 })
                 ->addColumn('lima', function ($row) {
                     if ($row->lima == '1') {
-                        $jabatan = '<p class = "bg-success p-2 text-white">YA</p>';
+                        $jabatan = '<span class="badge bg-label-success">YA</span>';
                     } else {
-                        $jabatan = '<p class = "bg-danger p-2 text-white">TIDAK</p>';
+                        $jabatan = '<span class="badge bg-label-danger">TIDAK</span>';
                     };
                     return $jabatan;
                 })
                 ->addColumn('enam', function ($row) {
                     if ($row->enam == '1') {
-                        $jabatan = '<p class = "bg-success p-2 text-white">YA</p>';
+                        $jabatan = '<span class="badge bg-label-success">YA</span>';
                     } else {
-                        $jabatan = '<p class = "bg-danger p-2 text-white">TIDAK</p>';
+                        $jabatan = '<span class="badge bg-label-danger">TIDAK</span>';
                     };
                     return $jabatan;
                 })
                 ->addColumn('option', function ($row) {
-                    if ($row->jenis == 0) {
-                        $holding = request()->segment(count(request()->segments()));
-                        return '<a href="/show-ujian/' . $row->kode . '/' . $holding . '" class="btn btn-primary btn-sm m-1">
-                                    <span class="mdi mdi-eye-outline"></span>
-                                </a>
-
-                                  <a href="/edit-ujian/' . $row->kode . '/' . $holding . '" class="btn btn-info btn-sm m-1">
+                    $holding = request()->segment(count(request()->segments()));
+                    return '<a href="/edit-ujian/' . $row->kode . '/' . $holding . '" class="btn btn-info btn-sm m-1">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
                                     <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
                                     <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"/>
                                     </svg>
                                 </a>';
-                    } elseif ($row->jenis == 1) {
-                        return '<a href="/show-ujian_essay/' . $row->kode . '" class="btn btn-primary btn-sm">
-                                    <span class="mdi mdi-eye-outline"></span>
-                                </a>';
-                    }
                 })
                 ->rawColumns(['created_at', 'kategori', 'nol', 'satu', 'dua', 'tiga', 'empat', 'lima', 'enam', 'option'])
                 ->make(true);
@@ -2432,92 +2204,76 @@ selamat Anda lolos bekerja
                 })
                 ->addColumn('nol', function ($row) {
                     if ($row->nol == '1') {
-                        $jabatan = '<p class = "bg-success p-2 text-white">YA</p>';
+                        $jabatan = '<span class="badge bg-label-success">YA</span>';
                     } else {
-                        $jabatan = '<p class = "bg-danger p-2 text-white">TIDAK</p>';
+                        $jabatan = '<span class="badge bg-label-danger">TIDAK</span>';
                     };
                     return $jabatan;
                 })
                 ->addColumn('satu', function ($row) {
                     if ($row->satu == '1') {
-                        $jabatan = '<p class = "bg-success p-2 text-white">YA</p>';
+                        $jabatan = '<span class="badge bg-label-success">YA</span>';
                     } else {
-                        $jabatan = '<p class = "bg-danger p-2 text-white">TIDAK</p>';
+                        $jabatan = '<span class="badge bg-label-danger">TIDAK</span>';
                     };
                     return $jabatan;
                 })
                 ->addColumn('dua', function ($row) {
                     if ($row->dua == '1') {
-                        $jabatan = '<p class = "bg-success p-2 text-white">YA</p>';
+                        $jabatan = '<span class="badge bg-label-success">YA</span>';
                     } else {
-                        $jabatan = '<p class = "bg-danger p-2 text-white">TIDAK</p>';
+                        $jabatan = '<span class="badge bg-label-danger">TIDAK</span>';
                     };
                     return $jabatan;
                 })
                 ->addColumn('tiga', function ($row) {
                     if ($row->tiga == '1') {
-                        $jabatan = '<p class = "bg-success p-2 text-white">YA</p>';
+                        $jabatan = '<span class="badge bg-label-success">YA</span>';
                     } else {
-                        $jabatan = '<p class = "bg-danger p-2 text-white">TIDAK</p>';
+                        $jabatan = '<span class="badge bg-label-danger">TIDAK</span>';
                     };
                     return $jabatan;
                 })
                 ->addColumn('empat', function ($row) {
                     if ($row->empat == '1') {
-                        $jabatan = '<p class = "bg-success p-2 text-white">YA</p>';
+                        $jabatan = '<span class="badge bg-label-success">YA</span>';
                     } else {
-                        $jabatan = '<p class = "bg-danger p-2 text-white">TIDAK</p>';
+                        $jabatan = '<span class="badge bg-label-danger">TIDAK</span>';
                     };
                     return $jabatan;
                 })
                 ->addColumn('lima', function ($row) {
                     if ($row->lima == '1') {
-                        $jabatan = '<p class = "bg-success p-2 text-white">YA</p>';
+                        $jabatan = '<span class="badge bg-label-success">YA</span>';
                     } else {
-                        $jabatan = '<p class = "bg-danger p-2 text-white">TIDAK</p>';
+                        $jabatan = '<span class="badge bg-label-danger">TIDAK</span>';
                     };
                     return $jabatan;
                 })
                 ->addColumn('lima', function ($row) {
                     if ($row->lima == '1') {
-                        $jabatan = '<p class = "bg-success p-2 text-white">YA</p>';
+                        $jabatan = '<span class="badge bg-label-success">YA</span>';
                     } else {
-                        $jabatan = '<p class = "bg-danger p-2 text-white">TIDAK</p>';
+                        $jabatan = '<span class="badge bg-label-danger">TIDAK</span>';
                     };
                     return $jabatan;
                 })
                 ->addColumn('enam', function ($row) {
                     if ($row->enam == '1') {
-                        $jabatan = '<p class = "bg-success p-2 text-white">YA</p>';
+                        $jabatan = '<span class="badge bg-label-success">YA</span>';
                     } else {
-                        $jabatan = '<p class = "bg-danger p-2 text-white">TIDAK</p>';
+                        $jabatan = '<span class="badge bg-label-danger">TIDAK</span>';
                     };
                     return $jabatan;
                 })
                 ->addColumn('option', function ($row) {
-                    if ($row->jenis == 0) {
-                        $holding = request()->segment(count(request()->segments()));
-                        return '<a href="/show-esai/' . $row->kode . '/' . $holding . '" class="btn btn-primary btn-sm m-1">
-                                    <span class="mdi mdi-eye-outline"></span>
-                                </a>
-                                 <a href="/edit-esai/' . $row->kode . '/' . $holding . '" class="btn btn-info btn-sm m-1">
+                    $holding = request()->segment(count(request()->segments()));
+                    return '<a href="/edit-esai/' . $row->kode . '/' . $holding . '" class="btn btn-info btn-sm m-1">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
                                     <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
                                     <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"/>
                                     </svg>
                                 </a>';
-                    } elseif ($row->jenis == 1) {
-                        return '
-                        <a href="/show-ujian_essay/ ' . $row->kode . '" class="btn btn-primary btn-sm">
-                                    <span class="mdi mdi-eye-outline"></span>
-                                </a>
-                                <a href="/show-ujian_essay/ ' . $row->kode . '" class="btn btn-primary btn-sm">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
-                                    <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
-                                    <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"/>
-                                    </svg>
-                                </a>';
-                    }
                 })
                 ->rawColumns(['created_at', 'kategori', 'nol', 'satu', 'dua', 'tiga', 'empat', 'lima', 'enam', 'option'])
                 ->make(true);
@@ -2777,26 +2533,6 @@ selamat Anda lolos bekerja
             ]);
         }
     }
-
-    // function show_ujian(Ujian $ujian)
-    // {
-    //     // dd($ujian);
-    //     $holding = request()->segment(count(request()->segments()));
-
-    //     return view('admin.recruitment-users.ujian.data_show', [
-    //         'title' => 'Detail Ujian Pilihan Ganda',
-    //         'plugin' => '
-    //             <link href="' . url("/public/assets/ew/css/style.css") . '" rel="stylesheet" type="text/css" />
-    //             <script src="' . url("/public/assets/ew/js/examwizard.js") . '"></script>
-    //         ',
-    //         'menu' => [
-    //             'menu' => 'ujian',
-    //             'expanded' => 'ujian'
-    //         ],
-    //         'ujian' => $ujian,
-    //         'holding' => $holding
-    //     ]);
-    // }
     function edit_ujian($kode, $holding)
     {
         // dd($ujian);
@@ -2825,10 +2561,10 @@ selamat Anda lolos bekerja
             'pembobotan' =>  Pembobotan::first()
         ]);
     }
-    function show_esai(Ujian $ujian)
+    function show_esai(Ujian $ujian, $holding)
     {
         // dd($ujian);
-        $holding = request()->segment(count(request()->segments()));
+        $holdings = Holding::where('holding_code', $holding)->first();
 
         return view('admin.recruitment-users.ujian.data_show_esai', [
             'title' => 'Detail Ujian Pilihan Ganda',
@@ -2841,14 +2577,14 @@ selamat Anda lolos bekerja
                 'expanded' => 'ujian'
             ],
             'ujian' => $ujian,
-            'holding' => $holding
+            'holding' => $holdings
         ]);
     }
 
-    function edit_esai($kode)
+    function edit_esai($kode, $holding)
     {
         // dd($ujian);
-        $holding = request()->segment(count(request()->segments()));
+        $holdings = Holding::where('holding_code', $holding)->first();
         $ujian = Ujian::where('kode', $kode)->with([
             'ujianKategori' => function ($query) {
                 $query;
@@ -2869,7 +2605,7 @@ selamat Anda lolos bekerja
             ],
             'ujian' => $ujian,
             'detail_esai' => $detail_esai,
-            'holding' => $holding,
+            'holding' => $holdings,
             'kategori' =>  UjianKategori::get(),
             'pembobotan' =>  Pembobotan::first()
         ]);
@@ -2918,12 +2654,6 @@ selamat Anda lolos bekerja
 
     function ujian_pg_store(Request $request)
     {
-        // dd($request->all());
-        // $siswa = UserCareer::where('kelas_id', $request->kelas)->get();
-        // if ($siswa->count() == 0) {
-        //     return redirect('pg-data-ujian/sp')->with('success', 'Belum ada user di kelas tersebut');
-        // }
-
         $kode = Str::random(30);
         $ujian = [
             'kode' => $kode,
@@ -2961,21 +2691,8 @@ selamat Anda lolos bekerja
             ]);
             $index++;
         }
-        // $email_siswa = '';
-        // $waktu_ujian = [];
-        // foreach ($siswa as $s) {
-        //     $email_siswa .= $s->email . ',';
-        //     array_push($waktu_ujian, [
-        //         'kode' => $kode,
-        //         'auth_id' => $s->id
-        //     ]);
-        // }
 
-        // $email_siswa = Str::replaceLast(',', '', $email_siswa);
-        // $email_siswa = explode(',', $email_siswa);
-        Ujian::insert($ujian);
         DetailUjian::insert($detail_ujian);
-        // WaktuUjian::insert($waktu_ujian);
         return redirect('pg-data-ujian/' . $request->holding)->with('success', 'Ujian berhasil dibuat');
     }
     function ujian_pg_update(Request $request)
@@ -3081,97 +2798,9 @@ selamat Anda lolos bekerja
             ]);
             // dd($t);
         }
-        // if ($request->has('soal')) {
-        //     $detail_ujian = [];
-        //     $index = 0;
-        //     $nama_soal =  $request->soal;
-        //     foreach ($nama_soal as $soal) {
-        //         array_push($detail_ujian, [
-        //             'kode' => $request->kode,
-        //             'soal' => $soal,
-        //         ]);
-        //         $index++;
-        //     }
-        //     // dd($nama_soal);
-        //     DetailEsai::insert($detail_ujian);
-        // }
-        // WaktuUjian::insert($waktu_ujian);
         Ujian::where('id', $request->id_soal)->update($ujian);
         return redirect('pg-data-ujian/' . $request->holding)->with('success', 'Ujian berhasil dibuat');
     }
-
-    function ujian_pg_show(Ujian $ujian)
-    {
-        $holding = request()->segment(count(request()->segments()));
-        return view('admin.recruitment-users.ujian.data_showujian', [
-            'title' => 'Detail Ujian Pilihan Ganda',
-            'menu' => [
-                'menu' => 'ujian',
-                'expanded' => 'ujian'
-            ],
-            'guru' => User::firstWhere('id', Auth::user()->id),
-            'ujian' => $ujian,
-            'holding' => $holding
-        ]);
-    }
-
-    function ujian_pg_destroy(Ujian $ujian)
-    {
-        $data = WaktuUjian::where('kode', $ujian->kode)->delete();
-        if ($ujian->jenis == 0) {
-            $data = DetailUjian::where('kode', $ujian->kode)->delete();
-            $data = PgSiswa::where('kode', $ujian->kode)->delete();
-        } else {
-            $data = DetailEssay::where('kode', $ujian->kode)->delete();
-            $data = EssaySiswa::where('kode', $ujian->kode)->delete();
-        }
-        $data = Ujian::destroy($ujian->id);
-        return redirect()->back()->with('success', 'data berhasil dihapus');
-    }
-
-    function nilai_interview_hrd(Request $request)
-    {
-        // dd($request->all());
-        // dd($request->nilai_leadership + $request->nilai_planning + $request->nilai_problemsolving + $request->nilai_quallity + $request->nilai_creativity + $request->nilai_teamwork);
-        RecruitmentInterview::where('id', $request->recruitment_interview_id1)->update([
-            'nilai_leadership'          => $request->nilai_leadership,
-            'catatan_leadership'        => $request->catatan_leadership,
-            'nilai_planning'            => $request->nilai_planning,
-            'catatan_planning'          => $request->catatan_planning,
-            'nilai_problemsolving'      => $request->nilai_problemsolving,
-            'catatan_problem_solving'   => $request->catatan_problem_solving,
-            'nilai_quallity'            => $request->nilai_quallity,
-            'catatan_quality'           => $request->catatan_quality,
-            'nilai_creativity'          => $request->nilai_creativity,
-            'catatan_creativity'        => $request->catatan_creativity,
-            'nilai_teamwork'            => $request->nilai_teamwork,
-            'catatan_teamwork'          => $request->catatan_teamwork,
-            'total_nilai_interview_hrd' => 4 + ($request->nilai_leadership + $request->nilai_planning + $request->nilai_problemsolving + $request->nilai_quallity + $request->nilai_creativity + $request->nilai_teamwork),
-            'status_interview_manager'  => $request->status_interview_manager
-        ]);
-        ActivityLog::create([
-            'user_id' => $request->user()->id,
-            'activity' => 'create',
-            'description' => 'Menambahkan data Nilai Interview ' . $request->name,
-        ]);
-        return redirect()->back()->with('success', 'data berhasil ditambahkan');
-    }
-
-    function nilai_interview_manager(Request $request)
-    {
-        // dd($request->all());
-        RecruitmentInterview::where('id', $request->recruitment_interview_id2)->update([
-            'nilai_interview_manager'   => $request->nilai_interview_manager,
-            'catatan_interview_manager' => $request->catatan_interview_manager,
-        ]);
-        ActivityLog::create([
-            'user_id' => $request->user()->id,
-            'activity' => 'create',
-            'description' => 'Menambahkan data Nilai Interview ' . $request->name,
-        ]);
-        return redirect()->back()->with('success', 'data berhasil ditambahkan');
-    }
-
     function pg_ranking($holding)
     {
         $holdings = Holding::where('holding_code', $holding)->first();
@@ -3631,37 +3260,28 @@ selamat Anda lolos bekerja
                                 Masukkan&nbspDatabase&nbspKaryawan
                             </button>';
                     } else {
-                        // if ($row->feedback_lanjutan == '2b') {
-                        //     return '<button
-                        //         data-id="' . $row->id . '"
-                        //         type="button" class="btn btn-sm btn-success " id="btn_lolos">
-                        //         <i class="tf-icons mdi mdi-eye-circle-outline me-1"></i>
-                        //         Lolos&nbsp;
-                        //     </button>';
-                        // } else {
-                        //     return '';
-                        // }
+                        return '-';
                     }
                 })
                 ->addColumn('status', function ($row) {
                     if ($row->status_lanjutan == null) {
-                        return '<p class="bg-secondary p-2 text-white">Belum Ditentukan</p>';
+                        return '<span class="badge bg-label-secondary">Belum Ditentukan</span>';
                     } elseif ($row->status_lanjutan == '1b') {
-                        return '<p class="bg-warning p-2 text-white">Interview Manager</p>';
+                        return '<span class="badge bg-label-warning">Interview Manager</span>';
                     } elseif ($row->status_lanjutan == '2b') {
-                        return '<p class="bg-success p-2 text-white">Diterima Bekerja</p>';
+                        return '<span class="badge bg-label-success">Diterima Bekerja</span>';
                     } elseif ($row->status_lanjutan == '3b') {
-                        return '<p class="bg-danger p-2 text-white">Tidak Lolos</p>';
+                        return '<span class="badge bg-label-danger">Tidak Lolos</span>';
                     } elseif ($row->status_lanjutan == '4b') {
-                        return '<p class="bg-warning p-2 text-white">Lolos Interview Manager</p>';
+                        return '<span class="badge bg-label-warning">Lolos Interview Manager</span>';
                     } elseif ($row->status_lanjutan == '5b') {
-                        return '<p class="bg-danger p-2 text-white">Ditolak Manager</p>';
+                        return '<span class="badge bg-label-danger">Ditolak Manager</span>';
                     } elseif ($row->status_lanjutan == '6b') {
-                        return '<p class="bg-warning p-2 text-white">Perubahan Posisi Lowongan</p>';
+                        return '<span class="badge bg-label-warning">Perubahan Posisi Lowongan</span>';
                     } elseif ($row->status_lanjutan == '7b') {
-                        return '<p class="bg-success p-2 text-white">Lolos Posisi Lain</p>';
+                        return '<span class="badge bg-label-success">Lolos Posisi Lain</span>';
                     } elseif ($row->status_lanjutan == '8b') {
-                        return '<p class="bg-info p-2 text-white">Ditetapkan Sebagai Karyawan</p>';
+                        return '<span class="badge bg-label-info">Ditetapkan Sebagai Karyawan</span>';
                     }
                 })
                 ->addColumn('total_koefisien', function ($row) {
@@ -3706,13 +3326,13 @@ selamat Anda lolos bekerja
                     return round($koefisien_esai + $koefisien_pg + $koefisien_interview, 2);
                 })->addColumn('feedback', function ($row) {
                     if ($row->feedback_lanjutan == '1b') {
-                        return '<p class="bg-warning p-2 text-white">Menyanggupi</p>';
+                        return '<span class="badge bg-label-warning">Menyanggupi</span>';
                     } elseif ($row->feedback_lanjutan == '2b') {
-                        return '<p class="bg-success p-2 text-white">Menyanggupi</p>';
+                        return '<span class="badge bg-label-success">Menyanggupi</span>';
                     } elseif ($row->feedback_lanjutan == '3b') {
-                        return '<p class="bg-danger p-2 text-white">Menolak</p>';
+                        return '<span class="badge bg-label-danger">Menolak</span>';
                     } elseif ($row->feedback_lanjutan == '4b') {
-                        return '<p class="bg-warning p-2 text-white">Menerima</p>';
+                        return '<span class="badge bg-label-warning">Menerima</span>';
                     }
                 })
                 ->addColumn('alasan_lanjutan', function ($row) {
@@ -3722,432 +3342,4 @@ selamat Anda lolos bekerja
                 ->make(true);
         }
     }
-
-
-    // function dt_list_ranking($id)
-    // {
-    //     $holding = request()->segment(count(request()->segments()));
-    //     $table =  RecruitmentUser::with([
-    //         'Bagian' =>  function ($query) {
-    //             $query->with([
-    //                 'Divisi' => function ($query) {
-    //                     $query->with([
-    //                         'Departemen' => function ($query) {
-    //                             $query->orderBy('nama_departemen', 'ASC');
-    //                         }
-    //                     ]);
-    //                     $query->orderBy('nama_divisi', 'ASC');
-    //                 }
-    //             ]);
-    //             $query->orderBy('nama_bagian', 'ASC');
-    //         },
-    //         'AuthLogin' => function ($query) {
-    //             $query->orderBy('id', 'ASC');
-    //         },
-    //         'WaktuUjian' => function ($query) {
-    //             $query->orderBy('id', 'ASC');
-    //         },
-    //         'Cv' => function ($query) {
-    //             $query->whereNotNull('users_career_id')->orderBy('id', 'ASC');
-    //         },
-    //         'DataInterview' => function ($query) {
-    //             $query->orderBy('id', 'ASC');
-    //         },
-    //     ])
-    //         ->where('holding', $holding)
-    //         ->where('recruitment_admin_id', $id)
-    //         ->where('status_recruitmentuser', '!=', 0)
-    //         ->where('status_recruitmentuser', '!=', 5)
-    //         ->orderBy('nama_bagian', 'ASC')->get();
-    //     // dd($table);
-    //     // if (request()->ajax()) {
-    //     return DataTables::of($table)
-    //         ->addColumn('nama_pelamar', function ($row) {
-    //             if (($row->Cv->nama_depan != '' && $row->Cv->nama_tengah != '' && $row->Cv->nama_belakang != '')) {
-    //                 $nama_pelamar = $row->Cv->nama_depan . ' ' . $row->Cv->nama_tengah . ' ' . $row->Cv->nama_belakang;
-    //             } elseif ($row->Cv->nama_depan != '' && $row->Cv->nama_tengah != '' && $row->Cv->nama_belakang == '') {
-    //                 $nama_pelamar = $row->Cv->nama_depan . ' ' . $row->Cv->nama_tengah;
-    //             } else {
-    //                 $nama_pelamar = $row->Cv->nama_depan;
-    //             }
-    //             return $nama_pelamar;
-    //         })
-    //         ->addColumn('status_nilai', function ($row) use ($holding) {
-    //             $data1 = (($row->DataInterview->nilai_analogi_antonim +
-    //                 $row->DataInterview->nilai_analogi_sinonim +
-    //                 $row->DataInterview->nilai_penalaran +
-    //                 $row->DataInterview->nilai_aritmatika) * 70) / 100;
-    //             $data2 = (($row->DataInterview->nilai_kehadiran +
-    //                 $row->DataInterview->nilai_leadership +
-    //                 $row->DataInterview->nilai_planning +
-    //                 $row->DataInterview->nilai_problemsolving +
-    //                 $row->DataInterview->nilai_quallity +
-    //                 $row->DataInterview->nilai_creativity +
-    //                 $row->DataInterview->nilai_teamwork) * 30) / 100;
-    //             $return = $data1 + $data2;
-    //             if ($return > 90) {
-    //                 return '<span class="badge bg-label-success rounded-pill">Rekomendasi A+ </span>';
-    //             } elseif ($return < 90 && $return > 75) {
-    //                 return '<span class="badge bg-label-success rounded-pill">Rekomendasi A</span>';
-    //             } elseif ($return < 75 && $return > 61) {
-    //                 return '<span class="badge bg-label-info rounded-pill">Dipertimbangkan</span>';
-    //             } else {
-    //                 return '<span class="badge bg-label-danger rounded-pill">Ditolak</span>';
-    //             }
-    //         })
-    //         ->addColumn('nilai_akhir', function ($row) use ($holding) {
-    //             if (isset($row->DataInterview) && $row->DataInterview !== null) {
-    //                 if ($row->DataInterview->status_interview == 3) {
-    //                     $data1 = (($row->DataInterview->nilai_analogi_antonim +
-    //                         $row->DataInterview->nilai_analogi_sinonim +
-    //                         $row->DataInterview->nilai_penalaran +
-    //                         $row->DataInterview->nilai_aritmatika) * 70) / 100;
-    //                     $data2 = (($row->DataInterview->nilai_kehadiran +
-    //                         $row->DataInterview->nilai_leadership +
-    //                         $row->DataInterview->nilai_planning +
-    //                         $row->DataInterview->nilai_problemsolving +
-    //                         $row->DataInterview->nilai_quallity +
-    //                         $row->DataInterview->nilai_creativity +
-    //                         $row->DataInterview->nilai_teamwork) * 30) / 100;
-    //                     $return = '<span class="badge badge-center rounded-pill bg-success" style="width:35%">&nbsp;' . $data1 + $data2 . '&nbsp;</span>';
-    //                     return $return;
-    //                 } else {
-    //                     $return = '<span class="badge badge-center rounded-pill bg-primary" style="width:35%">&nbsp;0&nbsp;</span>';
-    //                     return $return;
-    //                 }
-    //             } else {
-    //                 $return = '<span class="badge badge-center rounded-pill bg-primary" style="width:35%">&nbsp;0&nbsp;</span>';
-    //                 return $return;
-    //             }
-    //         })
-    //         ->addColumn('detail_cv', function ($row) use ($holding) {
-    //             $btn = '<button id="btn_lihat_cv"
-    //                             data-id="' . $row->id . '"
-    //                             data-nama_pelamar="' . $row->Cv->nama_depan . ' ' . $row->Cv->nama_tengah . ' ' . $row->Cv->nama_belakang . '"
-    //                             data-tempat_lahir="' . $row->Cv->tempat_lahir . '"
-    //                             data-tanggal_lahir="' . $row->Cv->tanggal_lahir . '"
-    //                             data-gender="' . $row->Cv->gender . '"
-    //                             data-status_nikah="' . $row->Cv->status_nikah . '"
-    //                             data-nik="' . $row->Cv->nik . '"
-    //                             data-departemen="' . $row->Bagian->Divisi->Departemen->nama_departemen . '"
-    //                             data-divisi="' . $row->Bagian->Divisi->nama_divisi . '"
-    //                             data-bagian="' . $row->Bagian->nama_bagian . '"
-    //                             data-jabatan="' . $row->Bagian->nama_jabatan . '"
-    //                             data-email="' . $row->Cv->email . '"
-    //                             data-no_hp="' . $row->Cv->no_hp . '"
-    //                             data-alamatktp="' . $row->Cv->detail_alamat . '"
-    //                             data-nama_sdmi="' . $row->Cv->nama_sdmi . '"
-    //                             data-tahun_sdmi="' . $row->Cv->tahun_sdmi . '"
-    //                             data-nama_smpmts="' . $row->Cv->nama_smpmts . '"
-    //                             data-tahun_smpmts="' . $row->Cv->tahun_smpmts . '"
-    //                             data-nama_smamasmk="' . $row->Cv->nama_smamasmk . '"
-    //                             data-tahun_smamasmk="' . $row->Cv->tahun_smamasmk . '"
-    //                             data-nama_universitas="' . $row->Cv->nama_universitas . '"
-    //                             data-tahun_universitas="' . $row->Cv->tahun_universitas . '"
-    //                             data-judul_keterampilan1="' . $row->Cv->judul_keterampilan1 . '"
-    //                             data-ket_keterampilan1="' . $row->Cv->ket_keterampilan1 . '"
-    //                             data-judul_keterampilan2="' . $row->Cv->judul_keterampilan2 . '"
-    //                             data-ket_keterampilan2="' . $row->Cv->ket_keterampilan2 . '"
-    //                             data-judul_keterampilan3="' . $row->Cv->judul_keterampilan3 . '"
-    //                             data-ket_keterampilan3="' . $row->Cv->ket_keterampilan3 . '"
-    //                             data-judul_pengalaman1="' . $row->Cv->judul_pengalaman1 . '"
-    //                             data-lokasi_pengalaman1="' . $row->Cv->lokasi_pengalaman1 . '"
-    //                             data-tahun_pengalaman1="' . $row->Cv->tahun_pengalaman1 . '"
-    //                             data-judul_pengalaman2="' . $row->Cv->judul_pengalaman2 . '"
-    //                             data-lokasi_pengalaman2="' . $row->Cv->lokasi_pengalaman2 . '"
-    //                             data-tahun_pengalaman2="' . $row->Cv->tahun_pengalaman2 . '"
-    //                             data-judul_pengalaman3="' . $row->Cv->judul_pengalaman3 . '"
-    //                             data-lokasi_pengalaman3="' . $row->Cv->lokasi_pengalaman3 . '"
-    //                             data-tahun_pengalaman3="' . $row->Cv->tahun_pengalaman3 . '"
-    //                             data-prestasi1="' . $row->Cv->prestasi1 . '"
-    //                             data-prestasi2="' . $row->Cv->prestasi2 . '"
-    //                             data-prestasi3="' . $row->Cv->prestasi3 . '"
-    //                             data-img_ktp="' . $row->Cv->file_ktp . '"
-    //                             data-img_kk="' . $row->Cv->file_kk . '"
-    //                             data-img_ijazah="' . $row->Cv->file_ijazah . '"
-    //                             data-img_pp="' . $row->Cv->file_pp . '"
-    //                             type="button" class="btn btn-sm" style="background-color:#e9ddff">
-    //                             <i class="tf-icons mdi mdi-eye-circle-outline me-1"></i>
-    //                             Detail&nbsp;CV
-    //                         </button>';
-    //             return $btn;
-    //         })
-    //         ->addColumn('nilai_analogi_antonim', function ($row) {
-    //             if (isset($row->DataInterview) && $row->DataInterview !== null) {
-    //                 if ($row->DataInterview->nilai_analogi_antonim != 0 && $row->DataInterview->status_interview == 3) {
-    //                     if ($row->DataInterview->nilai_analogi_antonim == 0) {
-    //                         $return = '<span class="badge badge-center rounded-pill bg-primary" style="width:35%">&nbsp;0&nbsp;</span>';
-    //                         return $return;
-    //                     } else {
-    //                         $return = '<span class="badge badge-center rounded-pill bg-primary" style="width:35%">&nbsp;' . $row->DataInterview->nilai_analogi_antonim . '&nbsp;</span>';
-    //                         return $return;
-    //                     }
-    //                 } else {
-    //                     $return = '<span class="badge badge-center rounded-pill bg-primary" style="width:35%">&nbsp;0&nbsp;</span>';
-    //                     return $return;
-    //                 }
-    //             } else {
-    //                 $return = '<span class="badge badge-center rounded-pill bg-primary" style="width:35%">&nbsp;0&nbsp;</span>';
-    //                 return $return;
-    //             }
-    //         })
-    //         ->addColumn('nilai_analogi_sinonim', function ($row) {
-    //             if (isset($row->DataInterview) && $row->DataInterview !== null) {
-    //                 if ($row->DataInterview->nilai_analogi_sinonim != 0 && $row->DataInterview->status_interview == 3) {
-    //                     if ($row->DataInterview->nilai_analogi_sinonim == 0) {
-    //                         $return = '<span class="badge badge-center rounded-pill bg-primary" style="width:35%">&nbsp;0&nbsp;</span>';
-    //                         return $return;
-    //                     } else {
-    //                         $return = '<span class="badge badge-center rounded-pill bg-primary" style="width:35%">&nbsp;' . $row->DataInterview->nilai_analogi_sinonim . '&nbsp;</span>';
-    //                         return $return;
-    //                     }
-    //                 } else {
-    //                     $return = '<span class="badge badge-center rounded-pill bg-primary" style="width:35%">&nbsp;0&nbsp;</span>';
-    //                     return $return;
-    //                 }
-    //             } else {
-    //                 $return = '<span class="badge badge-center rounded-pill bg-primary" style="width:35%">&nbsp;0&nbsp;</span>';
-    //                 return $return;
-    //             }
-    //         })
-    //         ->addColumn('nilai_penalaran', function ($row) {
-    //             if (isset($row->DataInterview) && $row->DataInterview !== null) {
-    //                 if ($row->DataInterview->nilai_penalaran != null && $row->DataInterview->status_interview == 3) {
-    //                     if ($row->DataInterview->nilai_penalaran == 0) {
-    //                         $return = '<span class="badge badge-center rounded-pill bg-primary" style="width:35%">&nbsp;0&nbsp;</span>';
-    //                         return $return;
-    //                     } else {
-    //                         $return = '<span class="badge badge-center rounded-pill bg-primary" style="width:35%">&nbsp;' . $row->DataInterview->nilai_penalaran . '&nbsp;</span>';
-    //                         return $return;
-    //                     }
-    //                 } else {
-    //                     $return = '<span class="badge badge-center rounded-pill bg-primary" style="width:35%">&nbsp;0&nbsp;</span>';
-    //                     return $return;
-    //                 }
-    //             } else {
-    //                 $return = '<span class="badge badge-center rounded-pill bg-primary" style="width:35%">&nbsp;0&nbsp;</span>';
-    //                 return $return;
-    //             }
-    //         })
-    //         ->addColumn('nilai_aritmatika', function ($row) {
-    //             if (isset($row->DataInterview) && $row->DataInterview !== null) {
-    //                 if ($row->DataInterview->nilai_aritmatika != null && $row->DataInterview->status_interview == 3) {
-    //                     if ($row->DataInterview->nilai_aritmatika == 0) {
-    //                         $return = '<span class="badge badge-center rounded-pill bg-primary" style="width:35%">&nbsp;0&nbsp;</span>';
-    //                         return $return;
-    //                     } else {
-    //                         $return = '<span class="badge badge-center rounded-pill bg-primary" style="width:35%">&nbsp;' . $row->DataInterview->nilai_aritmatika . '&nbsp;</span>';
-    //                         return $return;
-    //                     }
-    //                 } else {
-    //                     $return = '<span class="badge badge-center rounded-pill bg-primary" style="width:35%">&nbsp;0&nbsp;</span>';
-    //                     return $return;
-    //                 }
-    //             } else {
-    //                 $return = '<span class="badge badge-center rounded-pill bg-primary" style="width:35%">&nbsp;0&nbsp;</span>';
-    //                 return $return;
-    //             }
-    //         })
-    //         ->addColumn('total_nilai_psikotes', function ($row) {
-    //             if (isset($row->DataInterview) && $row->DataInterview !== null) {
-    //                 if ($row->DataInterview->nilai_aritmatika != null && $row->DataInterview->status_interview == 3) {
-    //                     $return = '<span class="badge badge-center rounded-pill bg-success" style="width:35%">&nbsp;' .
-    //                         $row->DataInterview->nilai_aritmatika +
-    //                         $row->DataInterview->nilai_penalaran +
-    //                         $row->DataInterview->nilai_analogi_antonim +
-    //                         $row->DataInterview->nilai_analogi_sinonim
-    //                         . '&nbsp;</span>';
-    //                     return $return;
-    //                 } else {
-    //                     $return = '<span class="badge badge-center rounded-pill bg-success" style="width:35%">&nbsp;0&nbsp;</span>';
-    //                     return $return;
-    //                 }
-    //             } else {
-    //                 $return = '<span class="badge badge-center rounded-pill bg-success" style="width:35%">&nbsp;0&nbsp;</span>';
-    //                 return $return;
-    //             }
-    //         })
-    //         ->addColumn('nilai_kehadiran', function ($row) {
-    //             if (isset($row->DataInterview) && $row->DataInterview !== null) {
-    //                 if ($row->DataInterview->nilai_kehadiran != null && $row->DataInterview->status_interview == 3) {
-    //                     if ($row->DataInterview->nilai_kehadiran == 0) {
-    //                         $return = '<span class="badge badge-center rounded-pill bg-primary" style="width:35%">&nbsp;0&nbsp;</span>';
-    //                         return $return;
-    //                     } else {
-    //                         $return = '<span class="badge badge-center rounded-pill bg-primary" style="width:35%">&nbsp;' . $row->DataInterview->nilai_kehadiran . '&nbsp;</span>';
-    //                         return $return;
-    //                     }
-    //                 } else {
-    //                     $return = '<span class="badge badge-center rounded-pill bg-primary" style="width:35%">&nbsp;0&nbsp;</span>';
-    //                     return $return;
-    //                 }
-    //             } else {
-    //                 $return = '<span class="badge badge-center rounded-pill bg-primary" style="width:35%">&nbsp;0&nbsp;</span>';
-    //                 return $return;
-    //             }
-    //         })
-    //         ->addColumn('nilai_leadership', function ($row) {
-    //             if (isset($row->DataInterview) && $row->DataInterview !== null) {
-    //                 if ($row->DataInterview->nilai_leadership != null && $row->DataInterview->status_interview == 3) {
-    //                     if ($row->DataInterview->nilai_leadership == 0) {
-    //                         $return = '<span class="badge badge-center rounded-pill bg-primary" style="width:35%">&nbsp;0&nbsp;</span>';
-    //                         return $return;
-    //                     } else {
-    //                         $return = '<span class="badge badge-center rounded-pill bg-primary" style="width:35%">&nbsp;' . $row->DataInterview->nilai_leadership . '&nbsp;</span>';
-    //                         return $return;
-    //                     }
-    //                 } else {
-    //                     $return = '<span class="badge badge-center rounded-pill bg-primary" style="width:35%">&nbsp;0&nbsp;</span>';
-    //                     return $return;
-    //                 }
-    //             } else {
-    //                 $return = '<span class="badge badge-center rounded-pill bg-primary" style="width:35%">&nbsp;0&nbsp;</span>';
-    //                 return $return;
-    //             }
-    //         })
-    //         ->addColumn('nilai_planning', function ($row) {
-    //             if (isset($row->DataInterview) && $row->DataInterview !== null) {
-    //                 if ($row->DataInterview->nilai_planning != null && $row->DataInterview->status_interview == 3) {
-    //                     if ($row->DataInterview->nilai_planning == 0) {
-    //                         $return = '<span class="badge badge-center rounded-pill bg-primary" style="width:35%">&nbsp;0&nbsp;</span>';
-    //                         return $return;
-    //                     } else {
-    //                         $return = '<span class="badge badge-center rounded-pill bg-primary" style="width:35%">&nbsp;' . $row->DataInterview->nilai_planning . '&nbsp;</span>';
-    //                         return $return;
-    //                     }
-    //                 } else {
-    //                     $return = '<span class="badge badge-center rounded-pill bg-primary" style="width:35%">&nbsp;0&nbsp;</span>';
-    //                     return $return;
-    //                 }
-    //             } else {
-    //                 $return = '<span class="badge badge-center rounded-pill bg-primary" style="width:35%">&nbsp;0&nbsp;</span>';
-    //                 return $return;
-    //             }
-    //         })
-    //         ->addColumn('nilai_problemsolving', function ($row) {
-    //             if (isset($row->DataInterview) && $row->DataInterview !== null) {
-    //                 if ($row->DataInterview->nilai_problemsolving != null && $row->DataInterview->status_interview == 3) {
-    //                     if ($row->DataInterview->nilai_problemsolving == 0) {
-    //                         $return = '<span class="badge badge-center rounded-pill bg-primary" style="width:35%">&nbsp;0&nbsp;</span>';
-    //                         return $return;
-    //                     } else {
-    //                         $return = '<span class="badge badge-center rounded-pill bg-primary" style="width:35%">&nbsp;' . $row->DataInterview->nilai_problemsolving . '&nbsp;</span>';
-    //                         return $return;
-    //                     }
-    //                 } else {
-    //                     $return = '<span class="badge badge-center rounded-pill bg-primary" style="width:35%">&nbsp;0&nbsp;</span>';
-    //                     return $return;
-    //                 }
-    //             } else {
-    //                 $return = '<span class="badge badge-center rounded-pill bg-primary" style="width:35%">&nbsp;0&nbsp;</span>';
-    //                 return $return;
-    //             }
-    //         })
-    //         ->addColumn('nilai_quallity', function ($row) {
-    //             if (isset($row->DataInterview) && $row->DataInterview !== null) {
-    //                 if ($row->DataInterview->nilai_quallity != null && $row->DataInterview->status_interview == 3) {
-    //                     if ($row->DataInterview->nilai_quallity == 0) {
-    //                         $return = '<span class="badge badge-center rounded-pill bg-primary" style="width:35%">&nbsp;0&nbsp;</span>';
-    //                         return $return;
-    //                     } else {
-    //                         $return = '<span class="badge badge-center rounded-pill bg-primary" style="width:35%">&nbsp;' . $row->DataInterview->nilai_quallity . '&nbsp;</span>';
-    //                         return $return;
-    //                     }
-    //                 } else {
-    //                     $return = '<span class="badge badge-center rounded-pill bg-primary" style="width:35%">&nbsp;0&nbsp;</span>';
-    //                     return $return;
-    //                 }
-    //             } else {
-    //                 $return = '<span class="badge badge-center rounded-pill bg-primary" style="width:35%">&nbsp;0&nbsp;</span>';
-    //                 return $return;
-    //             }
-    //         })
-    //         ->addColumn('nilai_creativity', function ($row) {
-    //             if (isset($row->DataInterview) && $row->DataInterview !== null) {
-    //                 if ($row->DataInterview->nilai_creativity != null && $row->DataInterview->status_interview == 3) {
-    //                     if ($row->DataInterview->nilai_creativity == 0) {
-    //                         $return = '<span class="badge badge-center rounded-pill bg-primary" style="width:35%">&nbsp;0&nbsp;</span>';
-    //                         return $return;
-    //                     } else {
-    //                         $return = '<span class="badge badge-center rounded-pill bg-primary" style="width:35%">&nbsp;' . $row->DataInterview->nilai_creativity . '&nbsp;</span>';
-    //                         return $return;
-    //                     }
-    //                 } else {
-    //                     $return = '<span class="badge badge-center rounded-pill bg-primary" style="width:35%">&nbsp;0&nbsp;</span>';
-    //                     return $return;
-    //                 }
-    //             } else {
-    //                 $return = '<span class="badge badge-center rounded-pill bg-primary" style="width:35%">&nbsp;0&nbsp;</span>';
-    //                 return $return;
-    //             }
-    //         })
-    //         ->addColumn('nilai_teamwork', function ($row) {
-    //             if (isset($row->DataInterview) && $row->DataInterview !== null) {
-    //                 if ($row->DataInterview->nilai_teamwork != null && $row->DataInterview->status_interview == 3) {
-    //                     if ($row->DataInterview->nilai_teamwork == 0) {
-    //                         $return = '<span class="badge badge-center rounded-pill bg-primary" style="width:35%">&nbsp;0&nbsp;</span>';
-    //                         return $return;
-    //                     } else {
-    //                         $return = '<span class="badge badge-center rounded-pill bg-primary" style="width:35%">&nbsp;' . $row->DataInterview->nilai_teamwork . '&nbsp;</span>';
-    //                         return $return;
-    //                     }
-    //                 } else {
-    //                     $return = '<span class="badge badge-center rounded-pill bg-primary" style="width:35%">&nbsp;0&nbsp;</span>';
-    //                     return $return;
-    //                 }
-    //             } else {
-    //                 $return = '<span class="badge badge-center rounded-pill bg-primary" style="width:35%">&nbsp;0&nbsp;</span>';
-    //                 return $return;
-    //             }
-    //         })
-    //         ->addColumn('total_nilai_interview', function ($row) {
-    //             if (isset($row->DataInterview) && $row->DataInterview !== null) {
-    //                 if ($row->DataInterview->nilai_teamwork != null && $row->DataInterview->status_interview == 3) {
-    //                     if ($row->DataInterview->nilai_teamwork == 0) {
-    //                         $return = '<span class="badge badge-center rounded-pill bg-success" style="width:35%">&nbsp;0&nbsp;</span>';
-    //                         return $return;
-    //                     } else {
-    //                         $return = '<span class="badge badge-center rounded-pill bg-success" style="width:35%">&nbsp;' .
-    //                             $row->DataInterview->nilai_kehadiran +
-    //                             $row->DataInterview->nilai_leadership +
-    //                             $row->DataInterview->nilai_planning +
-    //                             $row->DataInterview->nilai_problemsolving +
-    //                             $row->DataInterview->nilai_quallity +
-    //                             $row->DataInterview->nilai_creativity +
-    //                             $row->DataInterview->nilai_teamwork
-    //                             . '&nbsp;</span>';
-    //                         return $return;
-    //                     }
-    //                 } else {
-    //                     $return = '<span class="badge badge-center rounded-pill bg-success" style="width:35%">&nbsp;0&nbsp;</span>';
-    //                     return $return;
-    //                 }
-    //             } else {
-    //                 $return = '<span class="badge badge-center rounded-pill bg-success" style="width:35%">&nbsp;0&nbsp;</span>';
-    //                 return $return;
-    //             }
-    //         })
-    //         ->rawColumns([
-    //             'nama_pelamar',
-    //             'status_nilai',
-    //             'nilai_akhir',
-    //             'detail_cv',
-    //             'nilai_analogi_antonim',
-    //             'nilai_analogi_sinonim',
-    //             'nilai_penalaran',
-    //             'nilai_aritmatika',
-    //             'total_nilai_psikotes',
-    //             'nilai_kehadiran',
-    //             'nilai_leadership',
-    //             'nilai_planning',
-    //             'nilai_problemsolving',
-    //             'nilai_quallity',
-    //             'nilai_creativity',
-    //             'nilai_teamwork',
-    //             'total_nilai_interview',
-
-    //         ])
-    //         ->make(true);
-    //     // }
-    // }
 }

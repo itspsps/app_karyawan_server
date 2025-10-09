@@ -85,7 +85,7 @@
                                 </table>
                             </div>
                             <div class="tab-pane fade" id="navs-pills-justified-profile" role="tabpanel">
-                                <table class="table" id="table_rekapdata1" style="width: 100%;">
+                                <table class="table" id="table_rekapdata1" style="width: 100%; font-size: small;">
                                     <thead class="table-primary">
                                         <tr>
                                             <th rowspan="2" class="text-center">No.</th>

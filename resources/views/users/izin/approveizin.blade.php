@@ -85,7 +85,7 @@
                         @if($data->ttd_pengajuan=='')
                         <h6 class="text-center">kosong</h6>
                         @else
-                        <img src="{{ asset('signature/izin/'.$data->ttd_pengajuan.'.png') }}" style="width: 100%;" alt="">
+                        <img src="{{ asset('signature/izin/'.$data->ttd_pengajuan.'.png') }}" style="width: 100%; font-size: small;" alt="">
                         @endif
                         <p style="text-align: center;font-weight: bold">{{ \Carbon\Carbon::parse($data->waktu_ttd_pengajuan)->isoFormat('D MMMM Y HH:mm')}} WIB</p>
                     </div>

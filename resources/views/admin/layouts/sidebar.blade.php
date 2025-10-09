@@ -430,6 +430,11 @@
                         <div style="font-size: 10pt;" data-i18n="Container"><i class="mdi mdi-file-chart-check-outline"></i>&nbsp;Data&nbsp;Rangking</div>
                     </a>
                 </li>
+                <li class="menu-item {{ Request::is('laporan_recruitment*') ? 'active' : '' }}">
+                    <a href="{{ url('/laporan_recruitment/'.$holding->holding_code) }}" class="menu-link">
+                        <div style="font-size: 10pt;" data-i18n="Container"><i class="mdi mdi-file-chart-check-outline"></i>&nbsp;Laporan&nbsp;Recruitment</div>
+                    </a>
+                </li>
                 <li class="menu-item {{ Request::is('pg-data-ujian*') ? 'active' : '' }}">
                     <a href="{{ url('/pg-data-ujian/'.$holding->holding_code) }}" class=" menu-link">
                         <div style="font-size: 10pt;" data-i18n="Without navbar"><i class="mdi mdi-account-arrow-left"></i>&nbsp;Data&nbsp;Ujian</div>
