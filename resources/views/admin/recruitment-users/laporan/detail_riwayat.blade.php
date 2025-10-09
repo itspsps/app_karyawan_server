@@ -22,8 +22,10 @@
             <div class="card">
                 <div class="card-header">
                     <div class="d-flex align-items-center justify-content-between">
-                        <h5 class="card-title m-0 me-2">{{ $table->Cv->nama_lengkap }} = {{ $table->Jabatan->nama_jabatan }}, {{ $table->Jabatan->Bagian->nama_bagian }},
-                            {{ $table->Jabatan->Bagian->Divisi->nama_divisi }}, {{ $table->Jabatan->Bagian->Divisi->Departemen->nama_departemen }}
+                        <h5 class="card-title m-0 me-2">{{ $table->Cv->nama_lengkap }} =
+                            {{ $table->Jabatan->nama_jabatan }}, {{ $table->Jabatan->Bagian->nama_bagian }},
+                            {{ $table->Jabatan->Bagian->Divisi->nama_divisi }},
+                            {{ $table->Jabatan->Bagian->Divisi->Departemen->nama_departemen }}
                         </h5>
                     </div>
                 </div>
@@ -40,14 +42,22 @@
                         </thead>
                         <tbody class="table-border-bottom-0">
                         </tbody>
-                        <tbody>
-                            <th></th>
-                            <th></th>
-                            <th></th>
-                            <th></th>
-                            <th></th>
-                        </tbody>
                     </table>
+                    <div class="row g-3 my-5">
+                        <div class="col-md-3 col-6">
+                            <div class="d-flex align-items-center">
+                                <div class="avatar">
+                                    <div class="avatar-initial bg-primary rounded shadow">
+                                        <i class="mdi mdi-account-tie mdi-24px"></i>
+                                    </div>
+                                </div>
+                                <div class="ms-3">
+                                    <div class="small mb-1">Total waktu recruitment</div>
+                                    <h5 class="mb-0">{{$total_day}}&nbsp;Hari</h5>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

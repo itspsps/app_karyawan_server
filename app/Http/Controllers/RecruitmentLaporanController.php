@@ -8,7 +8,7 @@ use App\Models\RecruitmentUser;
 use App\Models\RecruitmentUserRecord;
 use Yajra\DataTables\Facades\DataTables;
 use Carbon\Carbon;
-
+use Carbon\CarbonPeriod;
 use Illuminate\Http\Request;
 
 class RecruitmentLaporanController extends Controller
@@ -174,14 +174,28 @@ class RecruitmentLaporanController extends Controller
             'AuthLogin' => function ($query) {
                 $query;
             }
+        ])->with([
+            'recruitmentUserRecord' => function ($query) {
+                $query;
+            }
         ])
             ->where('id', $id)
             ->orderBy('created_at', 'asc')
             ->first();
+        $first_day = RecruitmentUserRecord::where('recruitment_user_id', $id)->orderBy('created_at', 'asc')->first();
+        $last_day = RecruitmentUserRecord::where('recruitment_user_id', $id)->orderBy('created_at', 'desc')->first();
+
+        $first_day_period = Carbon::parse($first_day->created_at);
+        $last_day_period = Carbon::parse($last_day->created_at);
+
+        $total_day = $first_day_period->diffInDays($last_day_period);
+
+        // dd($first_day_period, $last_day_period, $total_day);
         return view('admin.recruitment-users.laporan.detail_riwayat', [
             'holding' => $holdings,
             'id' => $id,
-            'table' => $table
+            'table' => $table,
+            'total_day' => $total_day
         ]);
     }
     public function dt_riwayat_recruitment($id, $holding)
@@ -285,5 +299,12 @@ class RecruitmentLaporanController extends Controller
                 ])
                 ->make(true);
         }
+    }
+    public function report_pelamar($holding)
+    {
+        $holdings = Holding::where('holding_code', $holding)->first();
+        return view('admin.recruitment-users.laporan.report_pelamar', [
+            'holding' => $holdings
+        ]);
     }
 }

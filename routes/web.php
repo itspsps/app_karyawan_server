@@ -951,6 +951,7 @@ Route::post('/ujian/ujian-pg-store', [RecruitmentController::class, 'ujian_pg_st
 Route::post('/ujian/ujian-pg-update', [RecruitmentController::class, 'ujian_pg_update'])->middleware('admin');
 Route::post('/ujian/esai-pg-store', [RecruitmentController::class, 'esai_pg_store'])->middleware('admin');
 Route::post('/ujian/esai-pg-update', [RecruitmentController::class, 'esai_pg_update'])->middleware('admin');
+Route::post('/ujian/esai-pg-update', [RecruitmentController::class, 'esai_pg_update'])->middleware('admin');
 
 // SUMMERNOTE
 Route::post('/summernote/upload', [SummernoteController::class, 'upload'])->name('summernote_upload');
@@ -984,6 +985,7 @@ Route::get('/tes', function () {
 })->name('tes');
 
 //Laporan recruitment
+Route::get('/report_pelamar/{holding}', [RecruitmentLaporanController::class, 'report_pelamar'])->middleware('admin');
 Route::get('/laporan_recruitment/{holding}', [RecruitmentLaporanController::class, 'index'])->middleware('admin');
 Route::get('/detail_riwayat/{id}/{holding}', [RecruitmentLaporanController::class, 'detail_riwayat'])->middleware('admin');
 Route::get('/dt_laporan_recruitment/{holding}', [RecruitmentLaporanController::class, 'dt_laporan_recruitment'])->middleware('admin');
