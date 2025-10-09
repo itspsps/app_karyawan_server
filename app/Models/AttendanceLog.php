@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class AttendanceLog extends Model
 {
@@ -21,4 +22,8 @@ class AttendanceLog extends Model
         'WorkCode',
         'MachineIp'
     ];
+    public function Karyawan(): BelongsTo
+    {
+        return $this->belongsTo(Karyawan::class, 'EnrollNumber', 'nomor_identitas_karyawan');
+    }
 }

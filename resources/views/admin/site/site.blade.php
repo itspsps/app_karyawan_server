@@ -175,7 +175,7 @@
                             <tr>
                                 <th>No.</th>
                                 <th>Nama&nbsp;Site</th>
-                                <th>Nama&nbsp;Holding</th>
+                                <th>Alamat&nbsp;Site</th>
                                 <th>Status</th>
                                 <th>Lokasi&nbsp;Maps</th>
                                 <th>Opsi</th>
@@ -223,8 +223,8 @@
                 name: 'site_name'
             },
             {
-                data: 'holding',
-                name: 'holding'
+                data: 'site_alamat',
+                name: 'site_alamat'
             },
             {
                 data: 'site_status',

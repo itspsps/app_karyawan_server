@@ -136,7 +136,7 @@
                     </div>
                     <div class="modal fade" id="modal_tambah_shift" data-bs-backdrop="static" tabindex="-1">
                         <div class="modal-dialog modal-dialog-scrollable ">
-                            <form method="post" action="@if(Auth::user()->is_admin=='hrd'){{ url('/hrd/karyawan/mapping_shift/prosesAddMappingShift/'.$holding->holding_code) }}@else{{ url('/karyawan/mapping_shift/prosesAddMappingShift/'.$holding->holding_code) }}@endif" class=" modal-content" enctype="multipart/form-data">
+                            <form method="post" id="form_tambah_shift" class=" modal-content" enctype="multipart/form-data">
                                 @csrf
                                 <div class="modal-header">
                                     <h4 class="modal-title" id="backDropModalTitle">Tambah Shift</h4>
@@ -146,7 +146,7 @@
                                     <div class="col-12">
                                         <div class="card mb-4" style="padding: 5px; margin: 2;">
                                             <dl id="getplan" class="dl-horizontal row">
-                                                <label class="col-sm-12">Nama Karyawan</label>
+                                                <label class="col-sm-12">Daftar Karyawan</label>
                                                 <dd class="col-sm-5" style="font-weight: bold;">Nomor&nbsp;ID</dd>
                                                 <dd class="col-sm-7" style="font-weight: bold;">Nama</dd>
                                             </dl>
@@ -155,7 +155,7 @@
                                         </div>
                                         <input type='hidden' name="id_karyawan" id="id_karyawan" value="" />
                                         <div class="form-floating form-floating-outline">
-                                            <select class="form-control select2 @error('shift_id') is-invalid @enderror"
+                                            <select class="form-control @error('shift_id') is-invalid @enderror"
                                                 id="shift_id" name="shift_id">
                                                 <option value="">-- Pilih Shift --</option>
                                                 @foreach ($shift as $s)
@@ -174,19 +174,21 @@
                                         @enderror
                                         <br>
                                         <div class="form-floating form-floating-outline">
-                                            <input type="date" class="form-control @error('tanggal_mulai') is-invalid @enderror" id="tanggal_mulai" name="tanggal_mulai" value="{{ old('tanggal_mulai') }}">
-                                            <label for="tanggal_mulai">Tanggal Mulai</label>
+                                            <div id="filterrange" style="background: #fff; cursor: pointer; width: 100%">
+                                                <button type="button" class="btn btn-sm btn-outline-secondary waves-effect">
+                                                    Tanggal : &nbsp;
+                                                    <i class="mdi mdi-calendar-filter-outline"></i>&nbsp;
+                                                    <span></span> <i class="mdi mdi-menu-down"></i>
+                                                    <input type="date" id="tanggal_mulai" hidden name="tanggal_mulai" class="form-contro @error('tanggal_mulai') is-invalid @enderror" value="{{ old('tanggal_mulai') }}">
+                                                    <input type="date" id="tanggal_akhir" hidden name="tanggal_akhir" class="form-contro @error('tanggal_akhir') is-invalid @enderror" value="{{ old('tanggal_akhir') }}">
+                                                </button>
+                                            </div>
                                         </div>
                                         @error('tanggal_mulai')
                                         <span class="invalid-feedback" role="alert">
                                             <strong>{{ $message }}</strong>
                                         </span>
                                         @enderror
-                                        <br>
-                                        <div class="form-floating form-floating-outline">
-                                            <input type="date" class="form-control @error('tanggal_akhir') is-invalid @enderror" id="tanggal_akhir" name="tanggal_akhir" value="{{ old('tanggal_akhir') }}">
-                                            <label for="tanggal_akhir">Tanggal Akhir</label>
-                                        </div>
                                         @error('tanggal_akhir')
                                         <span class="invalid-feedback" role="alert">
                                             <strong>{{ $message }}</strong>
@@ -211,15 +213,13 @@
                                             <strong>{{ $message }}</strong>
                                         </span>
                                         @enderror
-                                        <input type="hidden" name="tanggal">
-                                        <input type="hidden" name="status_absen">
                                     </div>
                                 </div>
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
                                         Close
                                     </button>
-                                    <button type="submit" class="btn btn-primary">Save</button>
+                                    <button type="button" id="btn_tambah_shift" class="btn btn-primary">Save</button>
                                 </div>
                             </form>
                         </div>
@@ -254,11 +254,36 @@
     <script type="text/javascript" src="{{ asset('assets/assets_users/js/daterangepicker.js') }}"></script>
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     <script>
-        // $('#table_mapping_shift').hide();
-        $('#btn_selected_karyawan').hide();
-        let holding = '{{ $holding->holding_code }}';
-        let holding_id = '{{ $holding->id }}';
         $(document).ready(function() {
+            var start_filter = moment();
+            var end_filter = moment();
+            $('#filterrange').daterangepicker({
+                startDate: start_filter,
+                endDate: end_filter,
+                ranges: {
+                    'Today': [moment(), moment()],
+                    'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+                    'Last 7 Days': [moment().subtract(6, 'days'), moment()],
+                    'Last 30 Days': [moment().subtract(29, 'days'), moment()],
+                    'This Month': [moment().startOf('month'), moment().endOf('month')],
+                    'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+                }
+            }, picker);
+
+            function picker(start, end) {
+                $('#filterrange span').html(start.format('D MMMM YYYY') + ' - ' + end.format('D MMMM YYYY'));
+                let lstart = start.format('YYYY-MM-DD');
+                let lend = end.format('YYYY-MM-DD');
+                $('#tanggal_mulai').val(lstart);
+                $('#tanggal_akhir').val(lend);
+                // console.log(lstart, lend);
+            }
+            // $('#table_mapping_shift').hide();
+            $('#btn_selected_karyawan').hide();
+            let holding = '{{ $holding->holding_code }}';
+            let holding_id = '{{ $holding->id }}';
+
+
 
             $('#departemen_filter').select2({
                 theme: 'bootstrap-5',
@@ -280,16 +305,21 @@
                 placeholder: "Pilih Jabatan",
                 allowClear: true
             });
-        });
+            $('#shift_id').select2({
+                theme: 'bootstrap-5',
+                placeholder: "Pilih Shift",
+                dropdownParent: $('#modal_tambah_shift'),
+                allowClear: true
+            });
 
-        $(document).ready(function() {
+
             $('#departemen_filter').change(function() {
-                departemen_filter_dept = $(this).val();
-                divisi_filter_dept = $('#divisi_filter').val();
-                bagian_filter_dept = $('#bagian_filter').val();
-                jabatan_filter_dept = $('#jabatan_filter').val();
-                start_date = $('#start_date').val();
-                end_date = $('#end_date').val();
+                departemen_filter_dept = $(this).val() || '';
+                divisi_filter_dept = $('#divisi_filter').val() || '';
+                bagian_filter_dept = $('#bagian_filter').val() || '';
+                jabatan_filter_dept = $('#jabatan_filter').val() || '';
+                start_date_dept = $('#start_date').val();
+                end_date_dept = $('#end_date').val();
 
 
                 $('#btn_selected_karyawan').hide();
@@ -300,8 +330,8 @@
                     url: "@if(Auth::user()->is_admin =='hrd'){{url('hrd/mapping_shift/get_divisi')}}@else {{url('mapping_shift/get_divisi')}}@endif",
                     data: {
                         holding: holding_id,
-                        start_date: start_date,
-                        end_date: end_date,
+                        start_date: start_date_dept,
+                        end_date: end_date_dept,
                         departemen_filter: departemen_filter_dept,
                         divisi_filter: divisi_filter_dept,
                         bagian_filter: bagian_filter_dept,
@@ -311,25 +341,60 @@
                     cache: false,
 
                     success: function(msg) {
+                        // console.log(start_date_dept, end_date_dept);
                         // console.log(msg);
                         // $('#id_divisi').html(msg);
-                        $('#divisi_filter').html(msg);
-                        $('#bagian_filter').html('<option selected value="">Pilih Bagian</option>');
-                        $('#jabatan_filter').html('<option selected value="">Pilih Jabatan</option>');
-                        load_data(departemen_filter_dept, divisi_filter_dept, bagian_filter_dept, jabatan_filter_dept, start_date, end_date);
+                        // console.log(departemen_filter_dept, divisi_filter_dept, bagian_filter_dept, jabatan_filter_dept);
+                        $('#divisi_filter').html(msg.select);
+                        $('#bagian_filter').html('<option value="">Pilih Bagian</option>');
+                        $('#jabatan_filter').html('<option value="">Pilih Jabatan</option>');
+                        let isOpen = $('#divisi_filter').data('select2') && $('#divisi_filter').data('select2').isOpen();
+
+                        $('#divisi_filter').select2('destroy').select2({
+                            theme: "bootstrap-5",
+                            placeholder: "Pilih Divisi...",
+                            allowClear: true
+                        });
+                        $('#bagian_filter').select2('destroy').select2({
+                            theme: "bootstrap-5",
+                            placeholder: "Pilih Bagian...",
+                            allowClear: true
+                        });
+                        $('#jabatan_filter').select2('destroy').select2({
+                            theme: "bootstrap-5",
+                            placeholder: "Pilih Jabatan...",
+                            allowClear: true
+                        });
+                        // langsung pilih opsi pertama kalau ada
+                        let firstOpt = $('#divisi_filter option:eq(0)').val();
+                        if (firstOpt) {
+                            $('#divisi_filter').val(firstOpt).trigger('change');
+                        }
+                        if (isOpen) {
+                            $('#divisi_filter').select2('open');
+                        }
+                        cb(moment(start_date_dept), moment(end_date_dept));
                     },
                     error: function(data) {
-                        console.log('error:', data)
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Gagal',
+                            text: data.responseJSON.message,
+                            timer: 4000,
+                            showConfirmButton: false,
+                        })
                     },
 
                 })
             })
+
             $('#divisi_filter').change(function() {
                 divisi_filter = $(this).val();
                 departemen_filter = $('#departemen_filter').val();
                 bagian_filter = $('#bagian_filter').val();
                 jabatan_filter = $('#jabatan_filter').val();
-                filter_month = $('#date_filter').val();
+                start_date_divisi = $('#start_date').val();
+                end_date_divisi = $('#end_date').val();
                 $('#btn_selected_karyawan').hide();
                 // $('#table_mapping_shift').DataTable().destroy();
                 $.ajax({
@@ -339,19 +404,48 @@
                         holding: holding_id,
                         departemen_filter: departemen_filter,
                         divisi_filter: divisi_filter,
-                        filter_month: filter_month,
+                        bagian_filter: bagian_filter,
+                        jabatan_filter: jabatan_filter,
+                        start_date: start_date_divisi,
+                        end_date: end_date_divisi,
                     },
                     cache: false,
 
                     success: function(msg) {
                         // console.log(msg);
                         // $('#id_divisi').html(msg);
-                        $('#bagian_filter').html(msg);
-                        $('#jabatan_filter').html('<option selected value="">Pilih Jabatan..</option>');
-                        load_data(departemen_filter, divisi_filter, bagian_filter, jabatan_filter, filter_month);
+                        $('#bagian_filter').html(msg.select);
+                        $('#jabatan_filter').html('<option value="">Pilih Jabatan..</option>');
+                        let isOpen = $('#bagian_filter').data('select2') && $('#bagian_filter').data('select2').isOpen();
+
+                        $('#bagian_filter').select2('destroy').select2({
+                            theme: "bootstrap-5",
+                            placeholder: "Pilih Bagian...",
+                            allowClear: true
+                        });
+                        $('#jabatan_filter').select2('destroy').select2({
+                            theme: "bootstrap-5",
+                            placeholder: "Pilih Jabatan...",
+                            allowClear: true
+                        });
+                        // langsung pilih opsi pertama kalau ada
+                        let firstOpt = $('#bagian_filter option:eq(0)').val();
+                        if (firstOpt) {
+                            $('#bagian_filter').val(firstOpt).trigger('change');
+                        }
+                        if (isOpen) {
+                            $('#bagian_filter').select2('open');
+                        }
+                        cb(moment(start_date_divisi), moment(end_date_divisi));
                     },
                     error: function(data) {
-                        console.log('error:', data)
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Gagal',
+                            text: data.responseJSON.message,
+                            timer: 4000,
+                            showConfirmButton: false,
+                        })
                     },
 
                 })
@@ -361,7 +455,8 @@
                 departemen_filter = $('#departemen_filter').val();
                 divisi_filter = $('#divisi_filter').val();
                 jabatan_filter = $('#jabatan_filter').val();
-                filter_month = $('#date_filter').val();
+                start_date_bagian = $('#start_date').val();
+                end_date_bagian = $('#end_date').val();
                 $('#btn_selected_karyawan').hide();
                 $.ajax({
                     type: 'GET',
@@ -370,7 +465,8 @@
                         holding: holding_id,
                         departemen_filter: departemen_filter,
                         divisi_filter: divisi_filter,
-                        filter_month: filter_month,
+                        start_date: start_date_bagian,
+                        end_date: end_date_bagian,
                         bagian_filter: bagian_filter
                     },
                     cache: false,
@@ -378,12 +474,31 @@
                     success: function(msg) {
                         // console.log(msg);
                         // $('#id_bagian').html(msg);
-                        $('#jabatan_filter').html(msg);
-                        load_data(departemen_filter, divisi_filter, bagian_filter, jabatan_filter, filter_month);
+                        $('#jabatan_filter').html(msg.select);
+                        $('#jabatan_filter').select2('destroy').select2({
+                            theme: "bootstrap-5",
+                            placeholder: "Pilih Jabatan...",
+                            allowClear: true
+                        });
+                        let isOpen = $('#jabatan_filter').data('select2') && $('#jabatan_filter').data('select2').isOpen();
+                        let firstOpt = $('#jabatan_filter option:eq(0)').val();
+                        if (firstOpt) {
+                            $('#jabatan_filter').val(firstOpt).trigger('change');
+                        }
+                        if (isOpen) {
+                            $('#jabatan_filter').select2('open');
+                        }
+                        cb(moment(start_date_bagian), moment(end_date_bagian));
                         // $('#table_mapping_shift').DataTable().destroy();
                     },
                     error: function(data) {
-                        console.log('error:', data)
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Gagal',
+                            text: data.responseJSON.message,
+                            timer: 4000,
+                            showConfirmButton: false,
+                        })
                     },
 
                 })
@@ -393,10 +508,11 @@
                 departemen_filter = $('#departemen_filter').val();
                 divisi_filter = $('#divisi_filter').val();
                 bagian_filter = $('#bagian_filter').val();
-                filter_month = $('#date_filter').val();
+                start_date_jabatan = $('#start_date').val();
+                end_date_jabatan = $('#end_date').val();
                 $('#btn_selected_karyawan').hide();
                 // $('#table_mapping_shift').DataTable().destroy();
-                load_data(departemen_filter, divisi_filter, bagian_filter, jabatan_filter, filter_month);
+                cb(moment(start_date_jabatan), moment(end_date_jabatan));
             })
             var start = moment().startOf('month');
             var end = moment().endOf('month');
@@ -409,38 +525,21 @@
 
             function cb(start, end) {
                 $('#reportrange span').html(start.format('D MMMM YYYY') + ' - ' + end.format('D MMMM YYYY'));
-                lstart = start.format('YYYY-MM-DD');
-                lend = end.format('YYYY-MM-DD');
-                $('#start_date').val(lstart);
-                $('#end_date').val(lend);
-                // console.log(lstart, lend);
+                let lstart = start.format('YYYY-MM-DD');
+                let lend = end.format('YYYY-MM-DD');
+                start_date = lstart;
+                end_date = lend;
+                $('#start_date').val(start_date);
+                $('#end_date').val(end_date);
+                // console.log(start_date, end_date);
                 // ambil langsung dari form
                 var departemen_filter = $('#departemen_filter').val() || [];
                 var divisi_filter = $('#divisi_filter').val() || [];
                 var bagian_filter = $('#bagian_filter').val() || [];
                 var jabatan_filter = $('#jabatan_filter').val() || [];
 
-
-                load_data(departemen_filter, divisi_filter, bagian_filter, jabatan_filter, lstart, lend);
-
-            }
-            $('#reportrange').daterangepicker({
-                startDate: start,
-                endDate: end,
-                ranges: {
-                    'Today': [moment(), moment()],
-                    'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
-                    'Last 7 Days': [moment().subtract(6, 'days'), moment()],
-                    'Last 30 Days': [moment().subtract(29, 'days'), moment()],
-                    'This Month': [moment().startOf('month'), moment().endOf('month')],
-                    'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
-                }
-            }, cb);
-
-            cb(start, end);
-
-            function load_data(departemen_filter = '', divisi_filter = '', bagian_filter = '', jabatan_filter = '', start_date = '', end_date = '') {
-                // console.log(departemen_filter);
+                //console.log(lstart, lend, departemen_filter, divisi_filter, bagian_filter, jabatan_filter, start, end);
+                $('#btn_selected_karyawan').hide();
                 $('#table_mapping_shift').DataTable().destroy();
                 var table = $('#table_mapping_shift').DataTable({
                     "scrollY": true,
@@ -506,7 +605,24 @@
             } else {
                 $('#btn_selected_karyawan').hide();
                 $('#count_checked').html($(".group_select:checked").length);
+
             }
+            $('#reportrange').daterangepicker({
+                startDate: start,
+                endDate: end,
+                ranges: {
+                    'Today': [moment(), moment()],
+                    'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+                    'Last 7 Days': [moment().subtract(6, 'days'), moment()],
+                    'Last 30 Days': [moment().subtract(29, 'days'), moment()],
+                    'This Month': [moment().startOf('month'), moment().endOf('month')],
+                    'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+                }
+            }, cb);
+
+            cb(start, end);
+
+
             $(document).on("click", ".group_select", function(e) {
                 // console.log($(this).is(':checked'));
                 if ($(this).is(':checked') == true) {
@@ -548,10 +664,11 @@
             })
             $(document).on("click", "#btn_selected_proses", function(e) {
                 var value = [];
+                $('#data_karyawan').empty();
                 $('.group_select:checked').each(function() {
                     value.push($(this).val());
                 });
-                console.log(holding);
+                // console.log(holding);
                 var count = value.length;
                 $.ajax({
                     url: "@if(Auth::user()->is_admin =='hrd'){{ url('hrd/karyawan/get_karyawan_selected')}}@else{{ url('karyawan/get_karyawan_selected')}}@endif" + "/" + holding,
@@ -565,23 +682,60 @@
                             $('#data_karyawan').append("<dd id=" + 'no_id' + " class=" + 'col-sm-4 col-xs-12' + ">" + data[count].nomor_identitas_karyawan + "</dd><dd id=" + 'name' + "  class=" + 'col-sm-8 col-xs-12' + ">" + data[count].name + "</dd>");
                         });
                         $('#id_karyawan').val(value);
-                        // Swal.fire({
-                        //     title: 'Sukses!',
-                        //     text: 'Anda berhasil Kirim Data',
-                        //     icon: 'success',
-                        //     timer: 1500
-                        // })
-                        // $('#datatable').DataTable().ajax.reload();
+                        picker(start_filter, end_filter);
+                        $('#modal_tambah_shift').on('hidden.bs.modal', function(e) {
+                            $('#data_karyawan').empty();
+                        })
+                        $('#modal_tambah_shift').modal('show');
                     },
                     error: function(data) {
                         var errors = data.responseJSON;
                         console.log(errors);
                     }
                 });
-                $('#modal_tambah_shift').on('hidden.bs.modal', function(e) {
-                    $('#data_karyawan').empty();
+            })
+            $(document).on("click", "#btn_tambah_shift", function(e) {
+                var url = "@if(Auth::user()->is_admin=='hrd'){{ url('/hrd/karyawan/mapping_shift/prosesAddMappingShift/'.$holding->holding_code) }}@else{{ url('/karyawan/mapping_shift/prosesAddMappingShift/'.$holding->holding_code) }}@endif";
+                $.ajax({
+                    url: url,
+                    method: "post",
+                    data: $("#form_tambah_shift").serialize(),
+                    success: function(data) {
+                        console.log(data);
+                        if (data.code == 200) {
+                            Swal.fire({
+                                title: 'Sukses!',
+                                text: data.message,
+                                icon: 'success',
+                                timer: 4500
+                            })
+                        } else {
+                            Swal.fire({
+                                title: 'Gagal!',
+                                text: data.message,
+                                icon: 'error',
+                                timer: 4500
+                            })
+                        }
+                        $('#table_mapping_shift').DataTable().ajax.reload();
+                        $('#modal_tambah_shift').modal('hide');
+                        $('#form_tambah_shift').trigger('reset');
+                        $('#shift_id').val(null).trigger('change');
+                        $('#btn_selected_karyawan').hide();
+                    },
+                    error: function(data) {
+                        console.log(data);
+                        $('#table_mapping_shift').DataTable().ajax.reload();
+                        $('#modal_tambah_shift').modal('hide');
+                        $('#form_tambah_shift').trigger('reset');
+                        Swal.fire({
+                            title: 'Gagal!',
+                            text: data.responseJSON.message,
+                            icon: 'error',
+                            timer: 4500
+                        })
+                    }
                 })
-                $('#modal_tambah_shift').modal('show');
             })
 
         });

@@ -232,6 +232,17 @@
             confirmButtonText: 'Yes!',
         }).then((result) => {
             if (result.value) {
+                Swal.fire({
+                    title: 'Loading...',
+                    text: 'Please wait...',
+                    icon: 'info',
+                    showConfirmButton: false,
+                    allowOutsideClick: false,
+                    allowEscapeKey: false,
+                    allowEnterKey: false,
+                    timer: 4500,
+                    timerProgressBar: true,
+                });
                 $.ajax({
                     url: "@if(Auth::user()->is_admin =='hrd'){{ url('hrd/finger/store/'.$holding->holding_code) }}@else {{ url('/finger/store/'.$holding->holding_code) }} @endif",
                     type: 'POST',
@@ -242,7 +253,8 @@
                         _token: '{{ csrf_token() }}',
                     },
                     success: function(data) {
-                        console.log(data);
+                        // console.log(data);
+                        Swal.close();
                         Swal.fire({
                             title: 'Sukses!',
                             text: data.message,
@@ -256,6 +268,7 @@
                         $('#modal_tambah_finger').modal('hide');
                     },
                     error: function(err) {
+                        Swal.close();
                         if (err.status === 422) {
                             let errors = err.responseJSON.errors;
                             let message = "";
@@ -297,6 +310,17 @@
             confirmButtonText: 'Yes!',
         }).then((result) => {
             if (result.value) {
+                Swal.fire({
+                    title: 'Loading...',
+                    text: 'Please wait...',
+                    icon: 'info',
+                    showConfirmButton: false,
+                    allowOutsideClick: false,
+                    allowEscapeKey: false,
+                    allowEnterKey: false,
+                    timer: 4500,
+                    timerProgressBar: true,
+                });
                 $.ajax({
                     url: "@if(Auth::user()->is_admin =='hrd'){{ url('hrd/finger/update/'.$holding->holding_code) }}@else {{ url('/finger/update/'.$holding->holding_code) }} @endif",
                     type: 'POST',
@@ -308,7 +332,8 @@
                         _token: '{{ csrf_token() }}',
                     },
                     success: function(data) {
-                        console.log(data);
+                        Swal.close();
+                        // console.log(data);
                         Swal.fire({
                             title: 'Sukses!',
                             text: data.message,
@@ -322,6 +347,7 @@
                         $('#modal_edit_finger').modal('hide');
                     },
                     error: function(err) {
+                        Swal.close();
                         if (err.status === 422) {
                             let errors = err.responseJSON.errors;
                             let message = "";
@@ -374,6 +400,17 @@
             confirmButtonText: 'Yes!'
         }).then((result) => {
             if (result.value) {
+                Swal.fire({
+                    title: 'Loading...',
+                    text: 'Please wait...',
+                    icon: 'info',
+                    showConfirmButton: false,
+                    allowOutsideClick: false,
+                    allowEscapeKey: false,
+                    allowEnterKey: false,
+                    timer: 4500,
+                    timerProgressBar: true,
+                });
                 $.ajax({
                     url: "@if(Auth::user()->is_admin =='hrd'){{ url('hrd/finger/delete/') }}@else{{ url('/finger/delete/') }}@endif" + '/' + id + '/' + holding,
                     type: "GET",
@@ -386,6 +423,7 @@
                         });
                     },
                     success: function(data) {
+                        Swal.close();
                         if (data.code === 200) {
                             Swal.fire({
                                 title: 'Deleted!',

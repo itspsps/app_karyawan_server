@@ -12,17 +12,18 @@
                             <li class="breadcrumb-item">
                                 <a href="{{ url('dashboard/option/'.$holding->holding_code) }}">DASHBOARD</a>
                             </li>
-                            <li class="breadcrumb-item active">HRD
+                            <li class="breadcrumb-item active">PORTAL KARIR
                             </li>
                         </ol>
                     </nav>
                     <div class="d-flex align-items-center justify-content-between">
-                        <h5 class="card-title m-0 me-2">Karyawan</h5>
+                        <h5 class="card-title m-0 me-2">REKRUTMEN</h5>
 
                     </div>
-                    <p class="mt-3"><span class="fw-medium">Total Karyawan </span> Kontrak Kerja @if($holding=='') @else {{$holding->holding_name}} @endif</p>
+                    <p class="mt-3"><span class="fw-medium">Total Rekrutmen </span> Kontrak Kerja @if($holding=='') @else {{$holding->holding_name}} @endif</p>
                 </div>
                 <div class="card-body">
+
                     <div class="row g-3">
                         <div class="col-md-3 col-6">
                             <div class="d-flex align-items-center">
@@ -33,7 +34,7 @@
                                 </div>
                                 <div class="ms-3">
                                     <div class="small mb-1">Karyawan Laki- Laki</div>
-                                    <h5 class="mb-0" id="karyawan_lakilaki"></h5>
+                                    <h5 class="mb-0">{{$karyawan_laki}}&nbsp;Orang</h5>
                                 </div>
                             </div>
                         </div>
@@ -46,7 +47,7 @@
                                 </div>
                                 <div class="ms-3">
                                     <div class="small mb-1">Karyawan Perempuan</div>
-                                    <h5 class="mb-0" id="karyawan_perempuan"></h5>
+                                    <h5 class="mb-0">{{$karyawan_perempuan}}&nbsp;Orang</h5>
                                 </div>
                             </div>
                         </div>
@@ -59,7 +60,7 @@
                                 </div>
                                 <div class="ms-3">
                                     <div class="small mb-1">Karyawan Bulanan</div>
-                                    <h5 class="mb-0" id="karyawan_office"></h5>
+                                    <h5 class="mb-0">{{$karyawan_office}}&nbsp;Orang</h5>
                                 </div>
                             </div>
                         </div>
@@ -72,7 +73,7 @@
                                 </div>
                                 <div class="ms-3">
                                     <div class="small mb-1">Karyawan Harian</div>
-                                    <h5 class="mb-0" id="karyawan_shift"></h5>
+                                    <h5 class="mb-0">{{$karyawan_shift}}&nbsp;Orang</h5>
                                 </div>
                             </div>
                         </div>
@@ -409,11 +410,11 @@
          * Dashboard Analytics
          */
         $(document).ready(function() {
-            var holding = '{{$holding->holding_code}}';
-            load_graph_Dashboard_All(holding);
-            get_grafik_absensi(holding);
+            load_graph_Dashboard_All();
+            get_grafik_absensi();
 
             function load_graph_Dashboard_All(holding = '') {
+                var holding = '{{$holding->holding_code}}';
                 // console.log(holding)
                 $.ajax({
                     url: "{{ url('/graph_Dashboard_All') }}" + '/' + holding,
@@ -430,10 +431,6 @@
                     },
                     success: function(response) {
                         // console.log(response);
-                        $('#karyawan_lakilaki').html(response.karyawan_laki + ' Orang');
-                        $('#karyawan_perempuan').html(response.karyawan_perempuan + ' Orang');
-                        $('#karyawan_office').html(response.karyawan_office + ' Orang');
-                        $('#karyawan_shift').html(response.karyawan_shift + ' Orang');
                         let cardColor, labelColor, borderColor, chartBgColor, bodyColor;
 
 

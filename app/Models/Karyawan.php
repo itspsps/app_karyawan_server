@@ -67,6 +67,7 @@ class Karyawan extends Model
         'detail_alamat_domisili',
         'alamat_domisili',
         'kategori_jabatan',
+        'shift',
         'dept_id',
         'divisi_id',
         'bagian_id',

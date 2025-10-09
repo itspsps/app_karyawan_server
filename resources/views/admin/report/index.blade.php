@@ -30,8 +30,8 @@
                                     FILTER DATE : &nbsp;
                                     <i class="mdi mdi-calendar-filter-outline"></i>&nbsp;
                                     <span></span> <i class="mdi mdi-menu-down"></i>
-                                    <input type="date" id="start_date" name="start_date" hidden value="">
-                                    <input type="date" id="end_date" name="end_date" hidden value="">
+                                    <input type="date" hidden id="start_date" name="start_date" value="">
+                                    <input type="date" hidden id="end_date" name="end_date" value="">
                                 </button>
                             </div>
 
@@ -63,11 +63,13 @@
                             <div class="tab-pane fade show active" id="navs-pills-justified-home" role="tabpanel">
 
                                 <table class="table" id="table_finger" style="width: 100%; font-size: smaller;">
-                                    <thead>
+                                    <thead style="white-space: nowrap;">
                                         <tr>
                                             <th rowspan="2">No.</th>
                                             <th rowspan="2">ID&nbsp;Karyawan</th>
                                             <th rowspan="2">Nama&nbsp;Karyawan</th>
+                                            <th rowspan="2">Departemen</th>
+                                            <th rowspan="2">Shift</th>
                                             <th rowspan="2">Jumlah&nbsp;Kehadiran</th>
                                             <th rowspan="2" class="text-center">Jumlah&nbsp;Tidak&nbsp;Hadir</th>
                                             <th rowspan="2">Jumlah&nbsp;Libur</th>
@@ -135,7 +137,6 @@
             // console.log(colspan);
 
             var filter_month = $('#filter_month').val();
-            var month_now = "{{date('Y-m')}}";
             var url = "@if(Auth::user()->is_admin=='hrd'){{ url('hrd/report/get_columns') }}@else{{ url('report/get_columns') }}@endif" + "/" + holding;
             // console.log(url);
             var start_date = $('#start_date').val();
@@ -175,6 +176,14 @@
                                 name: 'name'
                             },
                             {
+                                data: 'departemen',
+                                name: 'departemen'
+                            },
+                            {
+                                data: 'shift',
+                                name: 'shift'
+                            },
+                            {
                                 data: 'jumlah_hadir',
                                 name: 'jumlah_hadir'
                             },
@@ -207,7 +216,8 @@
                         });
 
                         // console.log(data_column);
-                        load_data(start_date, end_date, data_column, data.count_period, data.data_columns_header);
+                        // console.log(lstart, lend);
+                        load_data(lstart, lend, data_column, data.count_period, data.data_columns_header);
                     },
                     error: function(data) {
                         var errors = data.responseJSON;

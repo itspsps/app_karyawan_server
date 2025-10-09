@@ -16,4 +16,9 @@ class Holding extends Model
         'holding_name_hint',
         'holding_category'
     ];
+
+    public function Site()
+    {
+        return $this->hasMany(Site::class, 'site_holding_category', 'id');
+    }
 }

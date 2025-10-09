@@ -27,658 +27,323 @@
     <link rel="stylesheet" href="{{ asset('assets/assets_users/vendor/swiper/swiper-bundle.min.css') }}">
 
     <style>
+        /* --- ELEGANT BASE STYLES --- */
+        :root {
+            --primary-purple: #673ab7;
+            /* Your original primary color */
+            --light-purple: #c8b0f4;
+            --text-dark: #343a40;
+            --text-light: #f8f9fa;
+            --card-bg: #ffffff;
+        }
+
+        .page-wraper {
+            min-height: 100vh;
+            background-color: #f0f0f0;
+            /* Light background for the overall page */
+        }
+
+        /* --- ENHANCED BACKGROUND (HEADER) --- */
         .stripe_background {
-            background: rgb(103, 58, 183);
-            background: linear-gradient(0deg, rgba(103, 58, 183, 1) 6%, rgba(200, 176, 244, 1) 100%);
-            /* background: var(--primary); */
-            color: #FFF;
-            padding: 2em;
+            background: linear-gradient(0deg, var(--light-purple) 0%, var(--primary-purple) 100%);
+            color: var(--text-light);
+            padding: 80px 20px 150px 20px;
+            /* More vertical padding */
             position: relative;
-            min-height: 300px;
+            min-height: 40vh;
+            overflow: hidden;
+            border-bottom-left-radius: 50px;
+            border-bottom-right-radius: 50px;
+            z-index: 1;
+            display: flex;
+            /* Use flexbox for easy centering */
+            align-items: center;
+            /* Center vertically */
+            justify-content: center;
+            /* Center horizontally */
+        }
+
+        /* Removing the old ::after for stripe_background as we're rebuilding the wave below */
+        .stripe_background::after {
+            display: none;
+            /* Hide the previous, simpler ::after */
+        }
+
+        /* New: Wavy bottom for the header background */
+        .stripe_background::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 120px;
+            /* Height of the wave */
+            background-color: var(--card-bg);
+            /* Match content background */
+            /* More complex SVG-like wave effect */
+            clip-path: ellipse(150% 100% at 50% 100%);
+            z-index: 2;
+            /* Ensure it overlaps the gradient background */
+        }
+
+        .holding-header-content {
+            /* Renamed from .holding-header for clarity */
+            position: relative;
+            z-index: 3;
+            /* Ensure text is above the wave and other elements */
+            margin-top: -50px;
+            /* Adjust if needed to position title better with the wave */
+            text-align: center;
+            width: 100%;
+            max-width: 800px;
+            /* Limit width for better readability */
+            padding: 20px 30px;
+            border-radius: 15px;
+            /* Subtle frosted glass or soft white background for the title */
+            background: rgba(255, 255, 255, 0.15);
+            /* Slightly transparent white */
+            backdrop-filter: blur(5px);
+            /* Frosted glass effect */
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            /* Soft shadow for depth */
+            animation: fadeIn 1s ease-out forwards;
+            /* Simple animation */
+        }
+
+        .holding-title {
+            font-family: 'Poppins', sans-serif;
+            /* Example: Use a modern font, ensure it's loaded */
+            font-weight: 700;
+            font-size: 3.2rem;
+            /* Larger and bolder */
+            letter-spacing: 2px;
+            text-shadow: 3px 3px 10px rgba(0, 0, 0, 0.3);
+            /* Stronger, softer shadow for text */
+            color: #ffffff;
+            /* Pure white text for contrast */
+            margin: 0;
+            /* Remove default margin */
+            padding: 10px 0;
+            line-height: 1.2;
+        }
+
+        /* --- CARD STYLES (The core "elegance") --- */
+
+        /* Container for the cards to position them over the background */
+        .card-container-row {
+            position: relative;
+            margin-top: -120px;
+            /* Pull the cards up further to align with the wave */
+            z-index: 10;
+        }
+
+        .holding-card-elegant {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border: none;
+            border-radius: 15px;
+            /* Softer rounded corners */
+            background-color: var(--card-bg);
+            /* Subtle, multi-level box shadow for depth */
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1), 0 0 5px rgba(0, 0, 0, 0.05);
+            min-height: 220px;
+            position: relative;
             overflow: hidden;
         }
 
-        .stripe_background::after {
-            content: '';
-            position: absolute;
-            bottom: 10%;
-            left: -40%;
-            right: 5%;
-            border-radius: 20%;
+        .holding-card-elegant a {
+            color: inherit;
+            text-decoration: none;
+            display: block;
             height: 100%;
-            background: #FFF;
-            transform: skew(-20deg, 5deg);
-            /* transform: rotate(-60deg); */
         }
 
-        @media screen and (min-width: 1801px) {
-            .logo_sps {
-                margin-right: 6%;
-                margin-bottom: 1%;
-                width: 95px;
-                bottom: 0;
-                z-index: 1;
-                position: fixed;
-                filter: drop-shadow(2px 2px 5px #222);
-                display: block
-            }
-
-            .text_version_app {
-                /* margin-bottom: 20px; */
-                bottom: -0px;
-                text-align: center;
-                position: fixed;
-                z-index: 1;
-
-            }
-
-            .fixed-content {
-                margin-bottom: 10%;
-                margin-top: 10%;
-                /* margin: 8%; */
-            }
-
-            .logo_sp {
-                width: 110px;
-                margin-bottom: 2%;
-                bottom: 0;
-                z-index: 1;
-                position: fixed;
-                filter: drop-shadow(2px 1px 1px #222);
-                display: block
-            }
-
-            .logo_sip {
-                margin-left: 6%;
-                margin-bottom: 1%;
-                bottom: 0;
-                z-index: 1;
-                width: 95px;
-                position: fixed;
-                filter: drop-shadow(2px 1px 1px #222);
-                display: block
-            }
+        .holding-card-elegant:hover {
+            transform: translateY(-8px) scale(1.02);
+            /* More noticeable lift and subtle growth */
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+            /* Stronger shadow on hover */
         }
 
-
-        @media screen and (min-width: 1500px) and (max-width: 1800px) {
-            .logo_sps {
-                margin-right: 5%;
-                margin-bottom: 1%;
-                width: 90px;
-                z-index: 1;
-                bottom: 0;
-                position: fixed;
-                filter: drop-shadow(2px 2px 5px #222);
-                display: block
-            }
-
-            .text_version_app {
-                /* margin-bottom: 20px; */
-                bottom: 5px;
-                text-align: center;
-                position: fixed;
-                z-index: 1;
-
-            }
-
-            .logo_sp {
-                width: 100px;
-                margin-bottom: 2%;
-                bottom: 0;
-                z-index: 1;
-                position: fixed;
-                filter: drop-shadow(2px 1px 1px #222);
-                display: block
-            }
-
-            .fixed-content {
-                margin-bottom: 10%;
-                margin-top: 10%;
-                /* margin: 8%; */
-            }
-
-
-            .logo_sip {
-                margin-left: 6%;
-                margin-bottom: 1%;
-                bottom: 0;
-                z-index: 1;
-                width: 90px;
-                position: fixed;
-                filter: drop-shadow(2px 1px 1px #222);
-                display: block
-            }
+        .card-title-elegant {
+            font-weight: 600;
+            color: var(--primary-purple);
+            /* Highlight the title with the primary color */
+            margin-bottom: 15px;
+            font-size: 1.5rem;
         }
 
-        @media screen and (min-width: 1300px) and (max-width: 1500px) {
-            .logo_sps {
-                margin-right: 7%;
-                margin-bottom: 2%;
-                width: 90px;
-                z-index: 1;
-                bottom: 0;
-                position: fixed;
-                filter: drop-shadow(2px 2px 5px #222);
-                display: block
-            }
-
-            .text_version_app {
-                /* margin-bottom: 20px; */
-                bottom: 3px;
-                text-align: center;
-                position: fixed;
-                z-index: 1;
-
-            }
-
-            .logo_sp {
-                width: 100px;
-                margin-bottom: 3%;
-                bottom: 0;
-                z-index: 1;
-                position: fixed;
-                filter: drop-shadow(2px 1px 1px #222);
-                display: block
-            }
-
-            .fixed-content {
-                /* margin-bottom: 15%; */
-                margin-top: 5%;
-                /* margin: 8%; */
-            }
-
-            .logo_sip {
-                margin-left: 7%;
-                margin-bottom: 2%;
-                bottom: 0;
-                z-index: 1;
-                width: 90px;
-                position: fixed;
-                filter: drop-shadow(2px 1px 1px #222);
-                display: block
-            }
+        .location-cite {
+            font-size: 0.9rem;
+            color: #6c757d;
+            font-style: normal;
+            margin-top: 10px;
         }
 
-        @media screen and (min-width: 1100px) and (max-width: 1300px) {
-            .logo_sps {
-                margin-right: 8%;
-                margin-bottom: 1%;
-                width: 90px;
-                z-index: 1;
-                bottom: 0;
-                position: fixed;
-                filter: drop-shadow(2px 2px 5px #222);
-                display: block
-            }
-
-            .text_version_app {
-                /* margin-bottom: 20px; */
-                bottom: -1px;
-                text-align: center;
-                position: fixed;
-                z-index: 1;
-
-            }
-
-            .fixed-content {
-                /* margin-bottom: 15%; */
-                margin-top: 5%;
-                /* margin: 8%; */
-            }
-
-            .logo_sp {
-                width: 100px;
-                margin-bottom: 2%;
-                bottom: 0;
-                z-index: 1;
-                position: fixed;
-                filter: drop-shadow(2px 1px 1px #222);
-                display: block
-            }
-
-            .logo_sip {
-                margin-left: 8%;
-                margin-bottom: 1%;
-                bottom: 0;
-                z-index: 1;
-                width: 90px;
-                position: fixed;
-                filter: drop-shadow(2px 1px 1px #222);
-                display: block
-            }
+        .location-text {
+            color: var(--text-dark);
+            font-size: 0.95rem;
+            margin: 5px 0 0 0;
+            display: flex;
+            align-items: flex-start;
         }
 
-
-
-        @media screen and (min-width: 991px) and (max-width: 1100px) {
-            .logo_sps {
-                margin-right: 8%;
-                margin-bottom: 2%;
-                width: 90px;
-                z-index: 1;
-                bottom: 0;
-                position: fixed;
-                filter: drop-shadow(2px 2px 5px #222);
-                display: block
-            }
-
-            .text_version_app {
-                /* margin-bottom: 20px; */
-                bottom: 0px;
-                text-align: center;
-                position: fixed;
-                z-index: 1;
-
-            }
-
-            .fixed-content {
-                /* margin-bottom: 25%; */
-                margin-top: 5%;
-                /* margin: 8%; */
-            }
-
-            .logo_sp {
-                width: 100px;
-                margin-bottom: 3%;
-                bottom: 0;
-                position: fixed;
-                z-index: 1;
-                filter: drop-shadow(2px 1px 1px #222);
-                display: block
-            }
-
-            .logo_sip {
-                margin-left: 9%;
-                margin-bottom: 2%;
-                bottom: 0;
-                z-index: 1;
-                width: 90px;
-                position: fixed;
-                filter: drop-shadow(2px 1px 1px #222);
-                display: block
-            }
+        .location-text i {
+            margin-right: 8px;
+            color: var(--light-purple);
+            /* Icon color matching the header */
+            font-size: 1.1rem;
         }
 
-        @media screen and (min-width: 920px) and (max-width: 990px) {
-            .logo_sps {
-                margin-right: 8%;
-                margin-bottom: 2%;
-                width: 90px;
-                bottom: 0;
-                position: fixed;
-                z-index: 1;
-                filter: drop-shadow(2px 2px 5px #222);
-                display: block
-            }
-
-            .text_version_app {
-                /* margin-bottom: 20px; */
-                bottom: -0px;
-                text-align: center;
-                position: fixed;
-                z-index: 1;
-
-            }
-
-            .logo_sp {
-                width: 100px;
-                z-index: 1;
-                margin-bottom: 3%;
-                bottom: 0;
-                position: fixed;
-                filter: drop-shadow(2px 1px 1px #222);
-                display: block
-            }
-
-            .fixed-content {
-                /* margin-bottom: 25%; */
-                margin-top: 15%;
-                /* margin: 8%; */
-            }
-
-            .logo_sip {
-                margin-left: 9%;
-                margin-bottom: 2%;
-                bottom: 0;
-                z-index: 1;
-                width: 90px;
-                position: fixed;
-                filter: drop-shadow(2px 1px 1px #222);
-                display: block
-            }
+        /* Logo/Image Overlay */
+        .logo-overlay {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            width: 60px;
+            /* Smaller, modern logo placement */
+            height: 60px;
+            opacity: 0.8;
         }
 
-        @media screen and (min-width: 760px) and (max-width: 920px) {
-            .logo_sps {
-                margin-right: 9%;
-                margin-bottom: 2%;
-                width: 90px;
-                z-index: 1;
-                bottom: 0;
-                position: fixed;
-                filter: drop-shadow(2px 2px 5px #222);
-                display: block
-            }
-
-            .text_version_app {
-                /* margin-bottom: 20px; */
-                bottom: -0px;
-                text-align: center;
-                position: fixed;
-                z-index: 1;
-
-            }
-
-            .fixed-content {
-                margin-bottom: 20%;
-                margin-top: 20%;
-                /* margin: 8%; */
-            }
-
-            .logo_sp {
-                width: 100px;
-                margin-bottom: 3%;
-                z-index: 1;
-                bottom: 0;
-                position: fixed;
-                filter: drop-shadow(2px 1px 1px #222);
-                display: block
-            }
-
-            .logo_sip {
-                margin-left: 10%;
-                margin-bottom: 2%;
-                bottom: 0;
-                z-index: 1;
-                width: 90px;
-                position: fixed;
-                filter: drop-shadow(2px 1px 1px #222);
-                display: block
-            }
-
+        .logo-overlay img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
         }
 
-        @media screen and (min-width: 700px) and (max-width: 760px) {
-
-            .logo_sps {
-                margin-right: 12%;
-                margin-bottom: 2%;
-                width: 95px;
-                bottom: 0;
-                z-index: 1;
-                position: fixed;
-                filter: drop-shadow(2px 2px 5px #222);
-                display: block
-            }
-
-            .fixed-content {
-                margin-bottom: 25%;
-                margin-top: 25%;
-                /* margin: 8%; */
-            }
-
-            .text_version_app {
-                /* margin-bottom: 20px; */
-                bottom: -0px;
-                text-align: center;
-                position: fixed;
-                z-index: 1;
-
-            }
-
-            .logo_sp {
-                width: 100px;
-                margin-bottom: 3%;
-                z-index: 1;
-                bottom: 0;
-                position: fixed;
-                filter: drop-shadow(2px 1px 1px #222);
-                display: block
-            }
-
-            .logo_sip {
-                margin-left: 13%;
-                width: 95px;
-                margin-bottom: 2%;
-                z-index: 1;
-                bottom: 0;
-                position: fixed;
-                filter: drop-shadow(2px 1px 1px #222);
-                display: block
-            }
+        .holding-card-elegant:hover .logo-overlay {
+            opacity: 0.4;
+            /* Slightly more visible on hover */
         }
 
-        @media screen and (min-width: 570px) and (max-width: 700px) {
-            .logo_sps {
-                margin-right: 16%;
-                margin-bottom: 2%;
-                z-index: 1;
-                width: 95px;
-                bottom: 0;
-                position: fixed;
-                filter: drop-shadow(2px 2px 5px #222);
-                display: block
-            }
-
-            .text_version_app {
-                /* margin-bottom: 20px; */
-                bottom: -0px;
-                text-align: center;
-                position: fixed;
-                z-index: 1;
-
-            }
-
-            .fixed-content {
-                margin-bottom: 25%;
-                margin-top: 25%;
-                /* margin: 8%; */
-            }
-
-            .logo_sp {
-                width: 100px;
-                margin-bottom: 3%;
-                z-index: 1;
-                bottom: 0;
-                position: fixed;
-                filter: drop-shadow(2px 1px 1px #222);
-                display: block
-            }
-
-            .logo_sip {
-                margin-left: 17%;
-                margin-bottom: 2%;
-                z-index: 1;
-                width: 95px;
-                bottom: 0;
-                position: fixed;
-                filter: drop-shadow(2px 1px 1px #222);
-                display: block
-            }
-        }
-
-        @media screen and (min-width: 400px) and (max-width: 570px) {
-            .logo_sps {
-                margin-right: 20%;
-                margin-bottom: 3%;
-                z-index: 1;
-                width: 90px;
-                bottom: 0;
-                position: fixed;
-                filter: drop-shadow(2px 2px 5px #222);
-                display: block
-            }
-
-            .fixed-content {
-                margin-bottom: 25%;
-                margin-top: 25%;
-                /* margin: 8%; */
-            }
-
-            .text_version_app {
-                /* margin-bottom: 20px; */
-                bottom: -0px;
-                text-align: center;
-                position: fixed;
-                z-index: 1;
-
-            }
-
-            .logo_sp {
-                width: 95px;
-                margin-bottom: 4%;
-                z-index: 1;
-                bottom: 0;
-                position: fixed;
-                filter: drop-shadow(2px 1px 1px #222);
-                display: block
-            }
-
-            .logo_sip {
-                margin-left: 21%;
-                margin-bottom: 3%;
-                z-index: 1;
-                width: 90px;
-                bottom: 0%;
-                position: fixed;
-                filter: drop-shadow(2px 1px 1px #222);
-                display: block
-            }
-        }
-
-        @media screen and (min-width: 200px) and (max-width: 400px) {
-            .logo_sps {
-                margin-right: 23%;
-                margin-bottom: 5%;
-                z-index: 1;
-                width: 90px;
-                bottom: 0;
-                position: fixed;
-                filter: drop-shadow(2px 2px 5px #222);
-                display: block
-            }
-
-            .text_version_app {
-                /* margin-bottom: 20px; */
-                bottom: -0px;
-                text-align: center;
-                position: fixed;
-                z-index: 1;
-
-            }
-
-            .fixed-content {
-                margin-bottom: 25%;
-                margin-top: 25%;
-                /* margin: 8%; */
-            }
-
-            .logo_sp {
-                width: 95px;
-                margin-bottom: 7%;
-                bottom: 0;
-                z-index: 1;
-                position: fixed;
-                filter: drop-shadow(2px 1px 1px #222);
-                display: block
-            }
-
-            .logo_sip {
-                margin-left: 24%;
-                margin-bottom: 5%;
-                width: 90px;
-                z-index: 1;
-                bottom: 0;
-                position: fixed;
-                filter: drop-shadow(2px 1px 1px #222);
-                display: block
-            }
-        }
-
-        .img_beras {
-            bottom: -5%;
+        /* Footer Logos (simplified for all screen sizes) */
+        .footer-logos {
             position: fixed;
-            filter: drop-shadow(2px 5px 5px #222);
-            left: -4%;
-            transform: perspective(400px) rotate3d(1, -180, 0, calc(var(--i, 1) * 8deg));
+            bottom: 10px;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            padding: 0 5%;
+            z-index: 20;
         }
 
-        .img_beras:hover {
-            --i: -1;
+        .footer-logos img {
+            width: 70px;
+            /* Standard size for all small logos */
+            filter: drop-shadow(0 2px 5px rgba(0, 0, 0, 0.4));
         }
 
-        .logo {
-            width: 150px;
-            /* height: 30px; */
+        .text_version_app {
+            position: fixed;
+            bottom: 5px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 0.8rem;
+            color: #6c757d;
+            z-index: 20;
         }
 
-        .location {
-
+        .app-footer {
+            width: 100%;
+            padding: 20px 0;
+            margin-top: 50px;
+            /* Memberi jarak dari cards di atasnya */
+            background-color: #f8f9fa;
+            /* Warna latar belakang abu-abu muda yang bersih */
+            border-top: 1px solid #e9ecef;
+            /* Garis tipis di atas untuk pemisah */
+            text-align: center;
             position: relative;
-            z-index: 1;
+            z-index: 10;
         }
 
-        @media screen and (max-width: 1190px) {
-            .logo {
-                width: 130px;
-            }
-
-            .img_beras {
-                bottom: -5%;
-                position: fixed;
-                filter: drop-shadow(2px 2px 5px #222);
-                left: -5%;
-                transform: perspective(400px) rotate3d(1, -1, 0, calc(var(--i, 1) * 8deg));
-            }
-
-            .img_beras:hover {
-                --i: -1;
-            }
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
         }
 
-        @media screen and (max-width: 990px) {
-            .logo {
-                width: 100px;
-            }
-
-            .img_beras {
-                bottom: -4%;
-                position: fixed;
-                filter: drop-shadow(2px 2px 5px #222);
-                width: 300px;
-                left: -4%;
-                transform: perspective(400px) rotate3d(1, -1, 0, calc(var(--i, 1) * 8deg));
-            }
-
-            .img_beras:hover {
-                --i: -1;
-            }
+        .footer-logo-container {
+            display: flex;
+            gap: 20px;
+            align-items: center;
         }
 
-        @media screen and (max-width: 760px) {
-            .logo {
-                width: 150px;
+        .footer-logo {
+            width: 60px;
+            /* Ukuran logo yang lebih kecil dan konsisten */
+            filter: drop-shadow(0 1px 3px rgba(0, 0, 0, 0.2));
+            transition: transform 0.3s ease;
+        }
+
+        .footer-logo:hover {
+            transform: scale(1.05);
+        }
+
+        .text_version_app {
+            font-size: 0.85rem;
+            color: #6c757d;
+            font-weight: 500;
+        }
+
+        /* Hidden elements for a cleaner look */
+        .img_beras,
+        .scaleX-n1-rtl {
+            display: none !important;
+        }
+
+        /* Animation Keyframes */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
             }
 
-            .img_beras {
-                bottom: -5%;
-                position: fixed;
-                filter: drop-shadow(2px 2px 5px #222);
-                left: -5%;
-                display: none;
-                transform: perspective(400px) rotate3d(1, -1, 0, calc(var(--i, 1) * 8deg));
-            }
-
-            .img_beras:hover {
-                --i: -1;
+            to {
+                opacity: 1;
+                transform: translateY(0);
             }
         }
 
-        .fixed-content:hover {
-            zoom: 1.2;
+        @media (max-width: 991px) {
+            .stripe_background {
+                padding-top: 60px;
+                padding-bottom: 100px;
+            }
+
+            .holding-title {
+                font-size: 2.2rem;
+                letter-spacing: 1px;
+            }
+
+            .holding-header-content {
+                margin-top: -30px;
+                padding: 15px 20px;
+            }
+
+            .card-container-row {
+                margin-top: -80px;
+            }
+
+            .stripe_background::before {
+                height: 80px;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .holding-title {
+                font-size: 1.8rem;
+            }
+
+            .holding-header-content {
+                padding: 10px 15px;
+            }
         }
     </style>
+
 </head>
 
 <body>
@@ -687,127 +352,123 @@
             @include('sweetalert::alert')
             <div class="content-body">
                 <div class="stripe_background">
-                    <div class="col-12" style="margin-top: 10%; height: 77vh !important; justify-content: center;">
-                        <h1 class="text-center" style="position: relative; z-index: 1 !important;">Silahkan Pilih Holding</h1>
-                        <div class="row" style="margin:0px; padding: 0;">
-                            <!-- Congratulations card -->
-                            @foreach($holding as $data)
-                            <div class="col-md-4 col-lg-4">
-                                <a href="@if(Auth::user()->is_admin =='hrd'){{ url('hrd/dashboard/holding/'.$data->holding_code) }}@else {{ url('dashboard/holding/'.$data->holding_code) }} @endif">
-                                    <div class="fixed-content" style="border-radius: 10px; box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19); ">
-                                        <div class="card" style="height: 200px;">
-                                            <div class="card-body">
-                                                <figure>
-                                                    <blockquote class="blockquote">
-                                                        <h4 class="card-title mb-1">{{$data->holding_name}}</h4>
-                                                    </blockquote>
-                                                    <figcaption class="blockquote-footer" style="margin: 0;">
-                                                        Lokasi <cite title="Source Title">Pabrik</cite>
-                                                        @if($data->holding_category=='SP')
-                                                        <p style="margin: 0;"><i class="mdi mdi-google-maps"></i>Kabupaten Kediri, Jawa Timur</p>
-                                                        @elseif($data->holding_category=='SPS')
-                                                        <p style="margin: 0;"><i class="mdi mdi-google-maps"></i>Kabupaten Kediri, Jawa Timur</p>
-                                                        <p style="margin: 0;"><i class="mdi mdi-google-maps"></i>Kabupaten Ngawi, Jawa Timur</p>
-                                                        <p style="margin: 0;"><i class="mdi mdi-google-maps"></i>Kabupaten Subang, Jawa Barat</p>
-                                                        @else
-                                                        <p><i class="mdi mdi-google-maps"></i>Makasar, Sulawesi Utara</p>
-                                                        @endif
-                                                    </figcaption>
-                                                </figure>
-                                            </div>
-                                            <img src="{{asset('admin/assets/img/icons/misc/triangle-light.png')}}" class="scaleX-n1-rtl position-absolute bottom-0 end-0" width="166" alt="triangle background" data-app-light-img="icons/misc/triangle-light.png" data-app-dark-img="icons/misc/triangle-dark.png" />
-                                            <img src="{{ asset('holding/assets/img/'.$data->holding_image) }}" class="logo scaleX-n1-rtl position-absolute bottom-0 end-0 me-4 pb-2" alt="view sales" />
-                                        </div>
-                                    </div>
-                                </a>
-                            </div>
-                            @endforeach
+                    <div class="container d-flex justify-content-center"> {{-- Added d-flex and justify-content-center here --}}
+                        <div class="holding-header-content"> {{-- New wrapper for the title styling --}}
+                            <h1 class="holding-title">SILAHKAN PILIH HOLDING</h1>
                         </div>
                     </div>
-
                 </div>
-                <img src="{{ asset('holding/assets/img/produk_beras.png') }}" width="350" class="img_beras" alt="auth-tree" />
+
+                <div class="container">
+                    <div class="row card-container-row g-4 justify-content-center">
+                        @foreach($holding as $data)
+                        <div class="col-sm-6 col-md-6 col-lg-4">
+                            <a href="@if(Auth::user()->is_admin =='hrd'){{ url('hrd/dashboard/option/'.$data->holding_code) }}@else {{ url('dashboard/option/'.$data->holding_code) }} @endif" class="text-decoration-none">
+                                <div class="card holding-card-elegant">
+                                    <div class="card-body">
+                                        <h4 class="card-title-elegant mb-1">{{$data->holding_name}}</h4>
+                                        <figcaption class="location-cite">
+                                            Lokasi Holding
+                                        </figcaption>
+                                        @foreach($data->Site as $site)
+                                        <p class="location-text">
+                                            <i class="mdi mdi-map-marker-outline"></i>
+                                            <span>{{$site->site_alamat}}</span>
+                                        </p>
+                                        @endforeach
+                                    </div>
+                                    <div class="logo-overlay">
+                                        <img src="{{ asset('holding/assets/img/'.$data->holding_image) }}" alt="{{$data->holding_name}} Logo" />
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                        @endforeach
+                    </div>
+                </div>
+
+                <footer class="app-footer">
+                    <p class="text_version_app">Versi Aplikasi <span style="font-weight: 700;">V1.0.0</span></p>
+                </footer>
             </div>
         </div>
-        <!--**********************************
-    Scripts
-***********************************-->
-        <script src="{{ asset('assets/assets_users/js/jquery.js') }}"></script>
-        <script src="{{ asset('assets/assets_users/vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
-        <script src="{{asset('assets/assets_users/vendor/swiper/swiper-bundle.min.js')}}"></script>
-        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
-        <!-- <script src="{{ asset('/sw.js') }}"></script> -->
-        <script>
-            if ("serviceWorker" in navigator) {
-                // Register a service worker hosted at the root of the
-                // site using the default scope.
-                navigator.serviceWorker.register("/sw.js").then(
-                    (registration) => {
-                        console.log("Service worker registration succeeded:", registration);
-                    },
-                    (error) => {
-                        console.error(`Service worker registration failed: ${error}`);
-                    },
-                );
-            } else {
-                console.error("Service workers are not supported.");
-            }
-        </script>
-        <script>
-            $("document").ready(function() {
-                // console.log('ok');
-                setTimeout(function() {
-                    // console.log('ok1');
-                    $("#alert_logout_success").remove();
-                }, 7000); // 7 secs
+    </div>
+    <script src="{{ asset('assets/assets_users/js/jquery.js') }}"></script>
+    <script src="{{ asset('assets/assets_users/vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+    <script src="{{asset('assets/assets_users/vendor/swiper/swiper-bundle.min.js')}}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+    <!-- <script src="{{ asset('/sw.js') }}"></script> -->
+    <script>
+        if ("serviceWorker" in navigator) {
+            // Register a service worker hosted at the root of the
+            // site using the default scope.
+            navigator.serviceWorker.register("/sw.js").then(
+                (registration) => {
+                    console.log("Service worker registration succeeded:", registration);
+                },
+                (error) => {
+                    console.error(`Service worker registration failed: ${error}`);
+                },
+            );
+        } else {
+            console.error("Service workers are not supported.");
+        }
+    </script>
+    <script>
+        $("document").ready(function() {
+            // console.log('ok');
+            setTimeout(function() {
+                // console.log('ok1');
+                $("#alert_logout_success").remove();
+            }, 7000); // 7 secs
 
-            });
-            $("document").ready(function() {
-                // console.log('ok');
-                setTimeout(function() {
-                    // console.log('ok1');
-                    $("#alert_login_error").remove();
-                }, 7000); // 7 secs
+        });
+        $("document").ready(function() {
+            // console.log('ok');
+            setTimeout(function() {
+                // console.log('ok1');
+                $("#alert_login_error").remove();
+            }, 7000); // 7 secs
 
+        });
+        $(document).on('click', '#btn_login', function(e) {
+            Swal.fire({
+                allowOutsideClick: false,
+                background: 'transparent',
+                html: ' <div class="spinner-grow text-primary spinner-grow-sm me-2" role="status"></div><div class="spinner-grow text-primary spinner-grow-sm me-2" role="status"></div><div class="spinner-grow text-primary spinner-grow-sm me-2" role="status"></div>',
+                showCancelButton: false,
+                showConfirmButton: false,
+                onBeforeOpen: () => {
+                    // Swal.showLoading()
+                },
             });
-            $(document).on('click', '#btn_login', function(e) {
-                Swal.fire({
-                    allowOutsideClick: false,
-                    background: 'transparent',
-                    html: ' <div class="spinner-grow text-primary spinner-grow-sm me-2" role="status"></div><div class="spinner-grow text-primary spinner-grow-sm me-2" role="status"></div><div class="spinner-grow text-primary spinner-grow-sm me-2" role="status"></div>',
-                    showCancelButton: false,
-                    showConfirmButton: false,
-                    onBeforeOpen: () => {
-                        // Swal.showLoading()
-                    },
-                });
+        });
+        window.onbeforeunload = function() {
+            Swal.fire({
+                allowOutsideClick: false,
+                background: 'transparent',
+                html: ' <div class="spinner-grow text-primary spinner-grow-sm me-2" role="status"></div><div class="spinner-grow text-primary spinner-grow-sm me-2" role="status"></div><div class="spinner-grow text-primary spinner-grow-sm me-2" role="status"></div>',
+                showCancelButton: false,
+                showConfirmButton: false,
+                onBeforeOpen: () => {
+                    // Swal.showLoading()
+                },
             });
-            window.onbeforeunload = function() {
-                Swal.fire({
-                    allowOutsideClick: false,
-                    background: 'transparent',
-                    html: ' <div class="spinner-grow text-primary spinner-grow-sm me-2" role="status"></div><div class="spinner-grow text-primary spinner-grow-sm me-2" role="status"></div><div class="spinner-grow text-primary spinner-grow-sm me-2" role="status"></div>',
-                    showCancelButton: false,
-                    showConfirmButton: false,
-                    onBeforeOpen: () => {
-                        // Swal.showLoading()
-                    },
-                });
-            };
+        };
 
-            $("document").ready(function() {
-                $('#password_show').change(function() {
-                    var x = document.getElementById("dz-password");
-                    var ok = $(this).is(':checked');
-                    if (ok == true) {
-                        x.type = "text";
-                    } else {
-                        x.type = "password";
+        $("document").ready(function() {
+            $('#password_show').change(function() {
+                var x = document.getElementById("dz-password");
+                var ok = $(this).is(':checked');
+                if (ok == true) {
+                    x.type = "text";
+                } else {
+                    x.type = "password";
 
-                    }
-                });
+                }
             });
-        </script>
+        });
+    </script>
 </body>
 
 </html>

@@ -23,7 +23,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&ampdisplay=swap" rel="stylesheet" />
 
-    <link rel="preload" href="{{asset('admin/assets/vendor/fonts/materialdesignicons.css')}}" as="style" onload="this.onload=null;this.rel='stylesheet'" />
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/@mdi/font@7.4.47/css/materialdesignicons.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'" />
 
     <!-- Menu waves for no-customizer fix -->
     <link rel="preload" href="{{asset('admin/assets/vendor/libs/node-waves/node-waves.css')}}" as="style" onload="this.onload=null;this.rel='stylesheet'" />

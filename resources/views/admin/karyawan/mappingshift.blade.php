@@ -87,7 +87,7 @@
                                 <td>&nbsp;</td>
                                 <td>:</td>
                                 <td>
-                                    {{$karyawan->penempatan_kerja}}
+                                    {{$karyawan->PenempatanKerja->site_name}}
                                 </td>
                             </tr>
                         </table>
@@ -111,7 +111,7 @@
                                 <td>&nbsp;</td>
                                 <td>:</td>
                                 <td>
-                                    {{$karyawan->penempatan_kerja}}
+                                    {{$karyawan->PenempatanKerja->site_name}}
                                 </td>
                             </tr>
                         </table>
@@ -229,7 +229,7 @@
 <!-- Select2 JS -->
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 <script type="text/javascript">
-    $(doucment).ready(function() {
+    $(document).ready(function() {
 
         var start = moment().startOf('month');
         var end = moment().endOf('month');
@@ -320,10 +320,9 @@
                 },
 
             ],
-            order: [
-                [2, 'ASC'],
-                [0, 'ASC']
-            ]
+            // order: [
+            //     [2, 'ASC'],
+            // ]
         });
     }
 </script>
