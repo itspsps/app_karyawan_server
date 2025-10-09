@@ -442,14 +442,14 @@
                                         Keahlian
                                     </a>
                                 </li>
-                                @if ($data_cv->status != '1')
+                                @if ($data_cv->status != '1' && $data_cv->status != '1a')
                                 <li class="nav-item" role="presentation">
                                     <a class="nav-link" id="icon-tab-5" data-bs-toggle="tab" href="#icon-tabpanel-5"
                                         role="tab" aria-controls="icon-tabpanel-3" aria-selected="false">
                                         Keputusan HRD
                                     </a>
-                                    @endif
                                 </li>
+                                @endif
                             </ul>
                             <div class="tab-content" id="tab-content">
                                 <div class="tab-pane active show" id="icon-tabpanel-0" role="tabpanel"

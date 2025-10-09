@@ -985,7 +985,9 @@ Route::get('/tes', function () {
 
 //Laporan recruitment
 Route::get('/laporan_recruitment/{holding}', [RecruitmentLaporanController::class, 'index'])->middleware('admin');
+Route::get('/detail_riwayat/{id}/{holding}', [RecruitmentLaporanController::class, 'detail_riwayat'])->middleware('admin');
 Route::get('/dt_laporan_recruitment/{holding}', [RecruitmentLaporanController::class, 'dt_laporan_recruitment'])->middleware('admin');
+Route::get('/dt_riwayat_recruitment/{id}/{holding}', [RecruitmentLaporanController::class, 'dt_riwayat_recruitment'])->middleware('admin');
 //laporan recruitment end
 
 
