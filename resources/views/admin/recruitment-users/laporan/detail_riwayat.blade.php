@@ -2,13 +2,13 @@
 @section('css')
 <link rel="stylesheet" href="https://cdn.datatables.net/2.0.5/css/dataTables.bootstrap5.css">
 <style type="text/css">
-    .my-swal {
-        z-index: X;
-    }
+.my-swal {
+    z-index: X;
+}
 
-    .table-tbody {
-        white-space: nowrap;
-    }
+.table-tbody {
+    white-space: nowrap;
+}
 </style>
 <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.css" rel="stylesheet">
 <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.min.css" rel="stylesheet">
@@ -70,44 +70,44 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
 <!-- {{-- start datatable  --}} -->
 <script>
-    let holding = window.location.pathname.split("/").pop();
-    let id = "{{$id}}";
-    var table = $('#table_riwayat').DataTable({
-        "scrollY": true,
-        "scrollX": true,
-        processing: true,
-        serverSide: true,
-        ajax: {
-            url: "{{ url('/dt_riwayat_recruitment') }}" + '/' + id + '/' + holding,
+let holding = window.location.pathname.split("/").pop();
+let id = "{{$id}}";
+var table = $('#table_riwayat').DataTable({
+    "scrollY": true,
+    "scrollX": true,
+    processing: true,
+    serverSide: true,
+    ajax: {
+        url: "{{ url('/dt_riwayat_recruitment') }}" + '/' + id + '/' + holding,
+    },
+    columns: [{
+            data: null,
+            render: function(data, type, row, meta) {
+                return meta.row + 1;
+            },
+            orderable: false,
+            searchable: false
         },
-        columns: [{
-                data: null,
-                render: function(data, type, row, meta) {
-                    return meta.row + 1;
-                },
-                orderable: false,
-                searchable: false
-            },
-            {
-                data: 'waktu',
-                name: 'waktu'
-            },
-            {
-                data: 'status',
-                name: 'status'
-            },
-            {
-                data: 'feedback',
-                name: 'feedback'
-            },
-            {
-                data: 'waktu_feedback',
-                name: 'waktu_feedback'
-            }
-        ],
-        // order: [
-        //     [2, 'desc']
-        // ]
-    });
+        {
+            data: 'waktu',
+            name: 'waktu'
+        },
+        {
+            data: 'status',
+            name: 'status'
+        },
+        {
+            data: 'feedback',
+            name: 'feedback'
+        },
+        {
+            data: 'waktu_feedback',
+            name: 'waktu_feedback'
+        }
+    ],
+    // order: [
+    //     [2, 'desc']
+    // ]
+});
 </script>
 @endsection

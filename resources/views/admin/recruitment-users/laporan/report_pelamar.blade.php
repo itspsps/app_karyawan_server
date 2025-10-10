@@ -26,7 +26,33 @@
                     </div>
                 </div>
                 <div class="card-body">
-                    kkkkk
+                    <form method="post" action="{{ url('/laporan_recruitment/' . $holding) }}" class="modal-content"
+                        enctype="multipart/form-data">
+                        @csrf
+                        <div class="row mt-2 gy-4">
+                            <div class="col-md-6">
+                                <div class="form-floating form-floating-outline">
+                                    <input style="font-size: small;" class="form-control" type="date"
+                                        name="tanggal_awal" />
+                                    <label for="tanggal_awal">Tanggal&nbsp;Awal</label>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-floating form-floating-outline">
+                                    <input style="font-size: small;" type="date" class="form-control"
+                                        name="tanggal_akhir" />
+                                    <label for="tanggal_akhir">Tanggal&nbsp;Akhir</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mt-2 gy-4 justify-content-center py-1">
+                            <div class="col-auto">
+                                <button type="submit" class="btn btn-sm btn-primary waves-effect waves-light mb-3">
+                                    <i class="menu-icon tf-icons mdi mdi-plus"></i> Tambah
+                                </button>
+                            </div>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
