@@ -313,7 +313,8 @@ class RecruitmentController extends Controller
                     'id' => Uuid::uuid4(),
                     'recruitment_user_id' => $ii->id,
                     'status' => '3',
-                    'status_user' => '3'
+                    'status_user' => '3',
+                    'created_at' => date('Y-m-d H:i:s'),
                 ]);
             }
         }
@@ -2819,6 +2820,8 @@ http://192.168.101.241:8001/cpanel/recruitment_detail/$request->id
                     'id' => Uuid::uuid4(),
                     'recruitment_user_id' => $ii->id,
                     'status' => '3b',
+                    'created_at' => date('Y-m-d H:i:s'),
+
                 ]);
             }
         }

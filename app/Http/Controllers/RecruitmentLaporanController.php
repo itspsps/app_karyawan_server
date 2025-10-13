@@ -2,7 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Bagian;
+use App\Models\Departemen;
+use App\Models\Divisi;
 use App\Models\Holding;
+use App\Models\Jabatan;
+use App\Models\Karyawan;
 use App\Models\Recruitment;
 use App\Models\RecruitmentUser;
 use App\Models\RecruitmentUserRecord;
@@ -10,6 +15,7 @@ use Yajra\DataTables\Facades\DataTables;
 use Carbon\Carbon;
 use Carbon\CarbonPeriod;
 use Illuminate\Http\Request;
+use RealRashid\SweetAlert\Facades\Alert;
 
 class RecruitmentLaporanController extends Controller
 {
@@ -44,18 +50,18 @@ class RecruitmentLaporanController extends Controller
                 $query;
             }
         ])->with([
-            'AuthLogin' => function ($query) {
+            'recruitmentAdmin' => function ($query) {
                 $query;
             }
         ])->with([
-            'recruitmentUserRecord' => function ($query) {
-                $query->orderBy('created_at', 'asc');
+            'AuthLogin' => function ($query) {
+                $query;
             }
         ])->get();
         // dd($table);
         if (request()->ajax()) {
             return DataTables::of($table)
-                ->addColumn('waktu_melamar', function ($row) {
+                ->addColumn('tanggal_mulai', function ($row) {
                     return $row->created_at;
                 })
                 ->addColumn('nama_lengkap', function ($row) {
@@ -72,76 +78,58 @@ class RecruitmentLaporanController extends Controller
                             <i class="tf-icons mdi mdi-eye-circle-outline me-1"></i>LIHAT&nbspCV
                             </a>';
                 })
-                ->addColumn('riwayat_lamaran', function ($row) {
-                    foreach ($row->recruitmentUserRecord as $record) {
-                        if ($record->status == '0') {
-                            $items[] = '<li><span>' . Carbon::parse($record->created_at)->isoFormat('DD-MM-YYYY') . '&nbsp;=&nbsp;<span class="badge m-2 bg-label-primary">Review&nbsp;HRD</span></span></li>';
-                        } elseif ($record->status == '1') {
-                            $items[] = '<li>' . Carbon::parse($record->created_at)->isoFormat('DD-MM-YYYY') . ' = <span class="badge m-2 bg-label-warning">Panggilan Wawancara</span></li>';
-                        } elseif ($record->status == '2') {
-                            $items[] = '<li>' . Carbon::parse($record->created_at)->isoFormat('DD-MM-YYYY') . ' = <span class="badge m-2 bg-label-info">Daftar Tunggu</span></li>';
-                        } elseif ($record->status == '3') {
-                            $items[] = '<li>' . Carbon::parse($record->created_at)->isoFormat('DD-MM-YYYY') . ' = <span class="badge m-2 bg-label-danger">Ditolak</span></li>';
-                        } elseif ($record->status == '1a') {
-                            $items[] = '<li>' . Carbon::parse($record->created_at)->isoFormat('DD-MM-YYYY') . ' = <span class="badge m-2 bg-label-success">Hadir Interview</span></li>';
-                        } elseif ($record->status == '2a') {
-                            $items[] = '<li>' . Carbon::parse($record->created_at)->isoFormat('DD-MM-YYYY') . ' = <span class="badge m-2 bg-label-danger">Tidak Hadir Interview</span></li>';
-                        } elseif ($record->status == '1b') {
-                            $items[] = '<li>' . Carbon::parse($record->created_at)->isoFormat('DD-MM-YYYY') . ' = <span class="badge m-2 bg-label-warning">Interview Manager</span></li>';
-                        } elseif ($record->status == '2b') {
-                            $items[] = '<li>' . Carbon::parse($record->created_at)->isoFormat('DD-MM-YYYY') . ' = <span class="badge m-2 bg-label-success">Diterima Bekerja</span></li>';
-                        } elseif ($record->status == '3b') {
-                            $items[] = '<li>' . Carbon::parse($record->created_at)->isoFormat('DD-MM-YYYY') . ' = <span class="badge m-2 bg-label-danger">Tidak Lolos</span></li>';
-                        } elseif ($record->status == '4b') {
-                            $items[] = '<li>' . Carbon::parse($record->created_at)->isoFormat('DD-MM-YYYY') . ' = <span class="badge m-2 bg-label-warning">Lolos Interview Manager</span></li>';
-                        } elseif ($record->status == '5b') {
-                            $items[] = '<li>' . Carbon::parse($record->created_at)->isoFormat('DD-MM-YYYY') . ' = <span class="badge m-2 bg-label-danger">Ditolak Manager</span></li>';
-                        } elseif ($record->status == '6b') {
-                            $items[] = '<li>' . Carbon::parse($record->created_at)->isoFormat('DD-MM-YYYY') . ' = <span class="badge m-2 bg-label-warning">Penawaran Posisi Lain</span></li>';
-                        } elseif ($record->status == '7b') {
-                            $items[] = '<li>' . Carbon::parse($record->created_at)->isoFormat('DD-MM-YYYY') . ' = <span class="badge m-2 bg-label-success">Lolos Posisi Lain</span></li>';
-                        } elseif ($record->status == '8b') {
-                            $items[] = '<li>' . Carbon::parse($record->created_at)->isoFormat('DD-MM-YYYY') . ' = <span class="badge m-2 bg-label-info">Ditetapkan Sebagai Karyawan</span></li>';
-                        } else {
-                            $items[] = $record->status;
-                        }
-                    }
-                    return implode('', $items);
-                })->addColumn('status_detail', function ($row) {
+                ->addColumn('status_detail', function ($row) {
                     $holding = request()->segment(count(request()->segments()));
                     return '<a href="/detail_riwayat/' . $row->id . '/' . $holding . '" class="btn btn-info btn-sm m-1">
                             <i class="tf-icons mdi mdi-eye-circle-outline me-1"></i>DETAIL&nbspRIWAYAT
                             </a>';
                 })
-                ->addColumn('hasil_final', function ($row) {
-                    if ($row->status_lanjutan == null) {
-                        return '<span class="badge bg-label-secondary">Belum Ditentukan</span>';
-                    } elseif ($row->status_lanjutan == '1b') {
+                ->addColumn('tanggal_berakhir', function ($row) {
+                    $akhir = RecruitmentUserRecord::where('recruitment_user_id', $row->id)->orderBy('created_at', 'desc')->limit(1)->first();
+                    return  $akhir->created_at;
+                })
+                ->addColumn('perkembangan_terakhir', function ($row) {
+                    $akhir = RecruitmentUserRecord::where('recruitment_user_id', $row->id)->orderBy('created_at', 'desc')->limit(1)->first();
+                    if ($akhir->status == '0') {
+                        return '<span class="badge bg-label-primary">Review HRD</span>';
+                    } elseif ($akhir->status == '1') {
+                        return '<span class="badge bg-label-warning">Panggilan Wawancara</span>';
+                    } elseif ($akhir->status == '2') {
+                        return '<span class="badge bg-label-info">Lamaran Diterima</span>';
+                    } elseif ($akhir->status == '3') {
+                        return '<span class="badge bg-label-danger">Ditolak</span>';
+                    } elseif ($akhir->status == '1a') {
+                        return '<span class="badge bg-label-success">Hadir Interview</span>';
+                    } elseif ($akhir->status == '2a') {
+                        return '<span class="badge bg-label-danger">Tidak Hadir Interview</span>';
+                    } elseif ($akhir->status == '1b') {
                         return '<span class="badge bg-label-warning">Interview Manager</span>';
-                    } elseif ($row->status_lanjutan == '2b') {
+                    } elseif ($akhir->status == '2b') {
                         return '<span class="badge bg-label-success">Diterima Bekerja</span>';
-                    } elseif ($row->status_lanjutan == '3b') {
+                    } elseif ($akhir->status == '3b') {
                         return '<span class="badge bg-label-danger">Tidak Lolos</span>';
-                    } elseif ($row->status_lanjutan == '4b') {
+                    } elseif ($akhir->status == '4b') {
                         return '<span class="badge bg-label-warning">Lolos Interview Manager</span>';
-                    } elseif ($row->status_lanjutan == '5b') {
+                    } elseif ($akhir->status == '5b') {
                         return '<span class="badge bg-label-danger">Ditolak Manager</span>';
-                    } elseif ($row->status_lanjutan == '6b') {
-                        return '<span class="badge bg-label-warning">Perubahan Posisi Lowongan</span>';
-                    } elseif ($row->status_lanjutan == '7b') {
+                    } elseif ($akhir->status == '6b') {
+                        return '<span class="badge bg-label-warning">Penawaran Posisi Lain</span>';
+                    } elseif ($akhir->status == '7b') {
                         return '<span class="badge bg-label-success">Lolos Posisi Lain</span>';
-                    } elseif ($row->status_lanjutan == '8b') {
+                    } elseif ($akhir->status == '8b') {
                         return '<span class="badge bg-label-info">Ditetapkan Sebagai Karyawan</span>';
+                    } else {
+                        return '-';
                     }
                 })
                 ->rawColumns([
-                    'waktu_melamar',
+                    'tanggal_mulai',
                     'cv',
                     'nama_lengkap',
                     'posisi_yang_dilamar',
                     'status_detail',
-                    'riwayat_lamaran',
-                    'hasil_final',
+                    'tanggal_berakhir',
+                    'perkembangan_terakhir',
                 ])
                 ->make(true);
         }
@@ -303,8 +291,122 @@ class RecruitmentLaporanController extends Controller
     public function report_pelamar($holding)
     {
         $holdings = Holding::where('holding_code', $holding)->first();
+        if ($holdings == '' || $holdings == null) {
+            Alert::error('Error', 'Get Holding Error', 5000);
+            return redirect()->route('dashboard_holding')->with('Error', 'Get Holding Error', 5000);
+        }
+        // dd($holding);
+        date_default_timezone_set('Asia/Jakarta');
+
+        $departemen = Departemen::where('holding', $holdings->id)->orderBy('nama_departemen', 'ASC')->get();
         return view('admin.recruitment-users.laporan.report_pelamar', [
-            'holding' => $holdings
+            'holding' => $holdings,
+            'departemen' => $departemen,
         ]);
+    }
+    public function get_divisi(Request $request)
+    {
+        // dd($request->all());
+        $id_departemen    = $request->departemen_filter ?? [];
+
+        $divisi      = Divisi::with('Departemen')
+            ->whereIn('dept_id', (array)$id_departemen)
+            ->where(
+                'holding',
+                $request->holding
+            )->orderBy('nama_divisi', 'ASC')
+            ->get()
+            ->sortBy(function ($item) {
+                return $item->Departemen->nama_departemen . ' ' . $item->nama_divisi;
+            });
+        // dd($divisi);
+        if ($divisi == NULL || $divisi == '' || count($divisi) == '0') {
+            $select = '<option value="">Pilih Divisi...</option>';
+        } else {
+
+            $select_divisi[] = "<option value=''>Pilih Divisi...</option>";
+            $currentDept = null;
+            foreach ($divisi as $divisi) {
+                if ($currentDept !== $divisi->Departemen->nama_departemen) {
+                    // tutup optgroup sebelumnya
+                    if ($currentDept !== null) {
+                        $select_divisi1[] = "</optgroup>";
+                    }
+
+                    // buka optgroup baru
+                    $currentDept = $divisi->Departemen->nama_departemen;
+                    $select_divisi1[] = "<optgroup label='{$divisi->Departemen->nama_departemen}'>";
+                }
+                $select_divisi1[] = "<option value='$divisi->id'>$divisi->nama_divisi</option>";
+            }
+            // tutup optgroup terakhir
+            if ($currentDept !== null) {
+                $select_divisi1[] = "</optgroup>";
+            }
+            $select = array_merge($select_divisi, $select_divisi1);
+        }
+        // dd($select);
+        return array(
+            'select' => $select,
+        );
+    }
+    public function get_bagian(Request $request)
+    {
+        // dd($request->all());
+        $id_divisi    = $request->divisi_filter;
+        // dd($end_date);
+
+
+        $bagian      = Bagian::with('Divisi')->whereIn('divisi_id', $id_divisi)->where('holding', $request->holding)->orderBy('nama_bagian', 'ASC')->get();
+        if ($bagian == NULL || $bagian == '' || count($bagian) == '0') {
+            $select = "<option value=''>Pilih Bagian...</option>";
+        } else {
+
+            $select_bagian[] = "<option value=''>Pilih Bagian...</option>";
+            $currentBagian = null;
+            foreach ($bagian as $bagian) {
+                if ($currentBagian !== $bagian->Divisi->nama_divisi) {
+                    // tutup optgroup sebelumnya
+                    if ($currentBagian !== null) {
+                        $select_bagian1[] = "</optgroup>";
+                    }
+
+                    // buka optgroup baru
+                    $currentBagian = $bagian->Divisi->nama_divisi;
+                    $select_bagian1[] = "<optgroup label='{$bagian->Divisi->nama_divisi}'>";
+                }
+                $select_bagian1[] = "<option value='$bagian->id'>$bagian->nama_bagian</option>";
+            }
+            // tutup optgroup terakhir
+            if ($currentBagian !== null) {
+                $select_bagian1[] = "</optgroup>";
+            }
+            $select = array_merge($select_bagian, $select_bagian1);
+        }
+        // dd($select_bagian1);
+        return array(
+            'select' => $select,
+        );
+    }
+    public function get_jabatan(Request $request)
+    {
+        $id_bagian    = $request->bagian_filter;
+        // dd($period);
+
+        $jabatan      = Jabatan::where('bagian_id', $id_bagian)->where('holding', $request->holding)->orderBy('nama_jabatan', 'ASC')->get();
+        // dd($jabatan, $id_bagian, $request->all());
+        if ($jabatan == NULL || $jabatan == '' || count($jabatan) == '0') {
+            $select = '<option value="">Pilih Jabatan...</option>';
+        } else {
+            $select_jabatan[] = "<option value=''>Pilih Jabatan...</option>";
+            foreach ($jabatan as $jabatan) {
+                $select_jabatan1[] = "<option value='$jabatan->id'>$jabatan->nama_jabatan</option>";
+            }
+            $select = array_merge($select_jabatan, $select_jabatan1);
+        }
+        // dd($data_columns_header, $data_columns);
+        return array(
+            'select' => $select,
+        );
     }
 }
