@@ -67,6 +67,7 @@ class RecruitmentController extends Controller
     {
         // $holding = request()->segment(count(request()->segments()));
         $holdings = Holding::where('holding_code', $holding)->first();
+        // dd($table);
         return view('admin.recruitment-users.recruitment.index', [
             // return view('karyawan.index', [
             'title'             => 'Data Recruitment',
@@ -104,62 +105,6 @@ class RecruitmentController extends Controller
         // dd($table);
         if (request()->ajax()) {
             return DataTables::of($table)
-                ->addColumn('created_at', function ($row) {
-                    return Carbon::parse($row->created_at)->format('d-m-Y');
-                })
-                ->addColumn('nama_jabatan', function ($row) {
-                    if ($row->Jabatan == NULL) {
-                        $nama_jabatan = 'vv';
-                    } else {
-                        $nama_jabatan = $row->Jabatan->nama_jabatan;
-                    }
-                    return $nama_jabatan;
-                })
-                ->addColumn('nama_bagian', function ($row) {
-                    if ($row->Jabatan == NULL) {
-                        $nama_bagian = 'a';
-                    } else {
-                        $nama_bagian = $row->Jabatan->Bagian->nama_bagian;
-                    }
-                    return $nama_bagian;
-                })
-                ->addColumn('nama_divisi', function ($row) {
-                    if ($row->Jabatan == NULL) {
-                        $nama_divisi = 'v';
-                    } else {
-                        $nama_divisi = $row->Jabatan->Bagian->Divisi->nama_divisi;
-                    }
-                    return $nama_divisi;
-                })
-                ->addColumn('nama_departemen', function ($row) {
-                    if ($row->Jabatan == NULL) {
-                        $nama_departemen = 'vv';
-                    } else {
-                        $nama_departemen = $row->Jabatan->Bagian->Divisi->Departemen->nama_departemen;
-                    }
-                    return $nama_departemen;
-                })
-
-
-                ->addColumn('desc_recruitment', function ($row) {
-
-                    $btn = '<button id="btn_lihat_syarat"
-                                data-id="' . $row->id . '"
-                                data-desc="' . $row->desc_recruitment . '"
-                                type="button" class="btn btn-sm btn-info ">
-                                <i class="tf-icons mdi mdi-eye-circle-outline me-1"></i>
-                                Lihat&nbsp;Syarat
-                            </button>';
-                    return $btn;
-                })
-                ->addColumn('pelamar', function ($row) use ($holding) {
-                    $url = url('/pg/data-list-pelamar/' . $row->id . '/' . $holding);
-                    $btn = '<a href="' . $url . '" class="btn btn-sm btn-info">
-                                <i class="tf-icons mdi mdi-eye-circle-outline me-1"></i>
-                                Lihat&nbsp;Pelamar
-                            </a>';
-                    return $btn;
-                })
                 ->addColumn('status_recruitment', function ($row) use ($holdings) {
                     if ($row->status_recruitment == 0) {
                         $status = '<button id="btn_status_aktif"
@@ -180,17 +125,90 @@ class RecruitmentController extends Controller
                     }
                     return $status;
                 })
+                ->addColumn('pelamar', function ($row) use ($holding) {
+                    $url = url('/pg/data-list-pelamar/' . $row->id . '/' . $holding);
+                    $btn = '<a href="' . $url . '" class="btn btn-sm btn-info">
+                                <i class="tf-icons mdi mdi-eye-circle-outline me-1"></i>
+                                Lihat&nbsp;Pelamar
+                            </a>';
+                    return $btn;
+                })
+                ->addColumn('created_at', function ($row) {
+                    return Carbon::parse($row->created_at)->format('d-m-Y');
+                })
+                ->addColumn('nama_jabatan', function ($row) {
+                    if (!$row->Jabatan) {
+                        $nama_jabatan = 'vv';
+                    } else {
+                        $nama_jabatan = $row->Jabatan->nama_jabatan;
+                    }
+                    return $nama_jabatan;
+                })
+                ->addColumn('nama_bagian', function ($row) {
+                    if (!$row->Jabatan) {
+                        $nama_bagian = 'a';
+                    } else {
+                        $nama_bagian = $row->Jabatan->Bagian->nama_bagian;
+                    }
+                    return $nama_bagian;
+                })
+                ->addColumn('nama_divisi', function ($row) {
+                    if (!$row->Jabatan) {
+                        $nama_divisi = 'v';
+                    } else {
+                        $nama_divisi = $row->Jabatan->Bagian->Divisi->nama_divisi;
+                    }
+                    return $nama_divisi;
+                })
+                ->addColumn('nama_departemen', function ($row) {
+                    if (!$row->Jabatan) {
+                        $nama_departemen = 'vv';
+                    } else {
+                        $nama_departemen = $row->Jabatan->Bagian->Divisi->Departemen->nama_departemen;
+                    }
+                    return $nama_departemen;
+                })
 
+
+                ->addColumn('desc_recruitment', function ($row) {
+
+                    $btn = '<button id="btn_lihat_syarat"
+                                data-id="' . $row->id . '"
+                                data-desc="' . $row->desc_recruitment . '"
+                                type="button" class="btn btn-sm btn-info ">
+                                <i class="tf-icons mdi mdi-eye-circle-outline me-1"></i>
+                                Lihat&nbsp;Syarat
+                            </button>';
+                    return $btn;
+                })
+                ->addColumn('deadline_recruitment', function ($row) {
+                    return $row->deadline_recruitment ?? '-';
+                })
+                ->addColumn('penggantian_penambahan', function ($row) {
+                    if ($row->penggantian_penambahan == '1') {
+                        return '<span class="badge bg-label-success">Penggantian</span>';
+                    } else {
+                        return '<span class="badge bg-label-info">Penambahan</span>';
+                    }
+                })
+                ->addColumn('surat_penambahan', function ($row) {
+                    return $row->surat_penambahan ?? '-';
+                })
+                ->addColumn('kuota', function ($row) {
+                    return $row->kuota ?? '-';
+                })
                 ->addColumn('option', function ($row) use ($holdings) {
                     $btn =
                         '<button id="btn_edit_recruitment"
                             data-id="' . $row->id . '"
+                            data-penggantian_penambahan="' . $row->penggantian_penambahan . '"
                             data-dept="' . $row->nama_dept . '"
                             data-divisi="' . $row->nama_divisi . '"
                             data-bagian="' . $row->nama_bagian . '"
                             data-jabatan="' . $row->nama_jabatan . '"
                             data-tanggal_awal="' . $row->created_recruitment . '"
-                            data-tanggal_akhir="' . $row->deadline_recruitment . '"
+                            data-tanggal_akhir="' . $row->end_recruitment . '"
+                            data-deadline="' . $row->deadline_recruitment . '"
                             data-holding="' . $holdings->id . '"
                             data-desc="' . $row->desc_recruitment . '"
                             type="button"
@@ -206,7 +224,24 @@ class RecruitmentController extends Controller
                         ';
                     return $btn;
                 })
-                ->rawColumns(['created_at', 'nama_departemen', 'nama_divisi', 'nama_bagian', 'nama_jabatan', 'created_recruitment', 'deadline_recruitment', 'desc_recruitment', 'pelamar', 'status_recruitment', 'option'])
+
+                ->rawColumns([
+                    'created_at',
+                    'nama_departemen',
+                    'nama_divisi',
+                    'nama_bagian',
+                    'nama_jabatan',
+                    'created_recruitment',
+                    'end_recruitment',
+                    'desc_recruitment',
+                    'pelamar',
+                    'status_recruitment',
+                    'deadline_recruitment',
+                    'penggantian_penambahan',
+                    'surat_penambahan',
+                    'option',
+                    'kuota'
+                ])
                 ->make(true);
         }
     }
@@ -214,41 +249,81 @@ class RecruitmentController extends Controller
     function create(Request $request)
     {
         // dd($request->all());
-        $validatedData = $request->validate([
-            'penempatan'            => 'required',
-            'nama_dept'             => 'required',
-            'nama_divisi'           => 'required',
-            'nama_bagian'           => 'required|max:255',
-            'nama_jabatan'          => 'required',
-            'created_recruitment'   => 'required',
-            'holding_recruitment'   => 'required',
-            'deadline_recruitment'  => 'required',
-            'desc_recruitment'      => 'required',
-        ]);
-        $holding = request()->segment(count(request()->segments()));
-        // dd($validatedData);
-        $insert = Recruitment::create(
+        if ($request->penggantian_penambahan == 2) {
+            $surat_penambahan = 'required|max:5000';
+        } else {
+            $surat_penambahan = 'nullable';
+        }
+        $rules = [
+            'penempatan'                => 'required',
+            'penggantian_penambahan'    => 'required',
+            'surat_penambahan'          => $surat_penambahan,
+            'kuota'                     => 'required',
+            'nama_dept'                 => 'required',
+            'nama_divisi'               => 'required',
+            'nama_bagian'               => 'required|max:255',
+            'nama_jabatan'              => 'required',
+            'created_recruitment'       => 'required',
+            'holding_recruitment'       => 'required',
+            'end_recruitment'           => 'required',
+            'deadline_recruitment'      => 'required',
+            'desc_recruitment'          => 'required',
+        ];
+        $customessages =
             [
-                'id'                    => Uuid::uuid4(),
-                'holding_recruitment'   => $validatedData['holding_recruitment'],
-                'penempatan'            => $validatedData['penempatan'],
-                'nama_dept'             => $validatedData['nama_dept'],
-                'nama_divisi'           => $validatedData['nama_divisi'],
-                'nama_bagian'           => $validatedData['nama_bagian'],
-                'nama_jabatan'          => $validatedData['nama_jabatan'],
-                'created_recruitment'   => $validatedData['created_recruitment'],
-                'deadline_recruitment'  => $validatedData['deadline_recruitment'],
-                'desc_recruitment'      => $validatedData['desc_recruitment'],
-            ]
-        );
+                'required'             => ':attribute tidak boleh kosong!',
+                'mimes'             => ':attribute harus berupa PDF!',
+            ];
 
-        // Merekam aktivitas pengguna
-        ActivityLog::create([
-            'user_id' => $request->user()->id,
-            'activity' => 'create',
-            'description' => 'Menambahkan data Recruitment baru ' . $request->name,
-        ]);
-        return redirect()->back()->with('success', 'data berhasil ditambahkan');
+
+        try {
+            $validator = Validator::make($request->all(), $rules, $customessages);
+            if ($validator->fails()) {
+                return response()->json([
+                    'code' => 400,
+                    'message' => 'Validasi gagal',
+                    'errors' => $validator->errors()
+                ]);
+            }
+            // $holding = request()->segment(count(request()->segments()));
+            // dd($validatedData);
+            Recruitment::insert(
+                [
+                    'id'                        => Uuid::uuid4(),
+                    'holding_recruitment'       => $request->holding_recruitment,
+                    'penempatan'                => $request->penempatan,
+                    'penggantian_penambahan'    => $request->penggantian_penambahan,
+                    'surat_penambahan'          => $request->surat_penambahan,
+                    'kuota'                     => $request->kuota,
+                    'nama_dept'                 => $request->nama_dept,
+                    'nama_divisi'               => $request->nama_divisi,
+                    'nama_bagian'               => $request->nama_bagian,
+                    'nama_jabatan'              => $request->nama_jabatan,
+                    'created_recruitment'       => $request->created_recruitment,
+                    'end_recruitment'           => $request->end_recruitment,
+                    'deadline_recruitment'      => $request->deadline_recruitment,
+                    'desc_recruitment'          => $request->desc_recruitment,
+                    'created_at'                => date('Y-m-d H:i:s'),
+
+                ]
+            );
+
+            // Merekam aktivitas pengguna
+            ActivityLog::create([
+                'user_id' => $request->user()->id,
+                'activity' => 'create',
+                'description' => 'Menambahkan data Recruitment baru ' . $request->name,
+            ]);
+            return response()->json([
+                'code' => 200,
+                'message' => 'Data Berhasil Disimpan'
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'code' => 500,
+                'error' => $e->getMessage(),
+            ]);
+        }
     }
 
 
@@ -258,7 +333,7 @@ class RecruitmentController extends Controller
         $recruitment = Recruitment::where('id', $request->id_recruitment)->where('holding_recruitment', $holding)->first();
         $data = Recruitment::where('id', $request->id_recruitment)->where('holding_recruitment', $holding)->update([
             'created_recruitment' => $request->created_recruitment_update,
-            'deadline_recruitment' => $request->deadline_recruitment_update,
+            'end_recruitment' => $request->end_recruitment_update,
             'desc_recruitment' => $request->desc_recruitment_update,
         ]);
         if ($data) {
@@ -2938,7 +3013,7 @@ http://192.168.101.241:8001/cpanel/recruitment_detail/$request->id
             },
 
         ])
-            ->where('deadline_recruitment', '>=', $currentDate)
+            ->where('end_recruitment', '>=', $currentDate)
             ->get();
         $holdings = Holding::where('holding_code', $holding)->first();
         // dd($holding);

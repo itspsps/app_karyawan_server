@@ -16,6 +16,9 @@ class Recruitment extends Model
         'id',
         'holding_recruitment',
         'penempatan',
+        'penggantian_penambahan',
+        'surat_penambahan',
+        'kuota',
         'nama_jabatan',
         'nama_dept',
         'nama_divisi',
@@ -23,6 +26,7 @@ class Recruitment extends Model
         'desc_recruitment',
         'status_recruitment',
         'created_recruitment',
+        'end_recruitment',
         'deadline_recruitment',
     ];
 
