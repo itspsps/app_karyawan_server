@@ -23,7 +23,7 @@
                     </div>
                     <div class="card-body">
                         <!-- <hr class="my-5">
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    <hr class="my-5"> -->
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                <hr class="my-5"> -->
                         <button type="button" class="btn btn-sm btn-primary waves-effect waves-light my-3"
                             id="btn_modal_recruitment"><i class="menu-icon tf-icons mdi mdi-plus"></i>Tambah</button>
                         <!-- <button type="button" class="btn btn-sm btn-success waves-effect waves-light mb-3" data-bs-toggle="modal" data-bs-target="#modal_import_inventaris"><i class="menu-icon tf-icons mdi mdi-file-excel"></i>Import</button> -->
@@ -44,7 +44,7 @@
                                                     name="show_desc_recruitment" autofocus value="{{ old('show_desc_recruitment') }}" cols="30" rows="20"
                                                     style="height: auto" disabled></textarea>
                                                 <!-- {{-- <input class="form-control @error('show_desc_recruitment') is-invalid @enderror" id="show_desc_recruitment" name="show_desc_recruitment" autofocus value="{{ old('show_desc_recruitment') }}"> --}}
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        {{-- <input type="text" id="show_desc_recruitment"> --}} -->
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    {{-- <input type="text" id="show_desc_recruitment"> --}} -->
                                                 <label for="show_desc_recruitment">SYARAT KETENTUAN</label>
                                             </div>
                                             @error('show_desc_recruitment')
@@ -71,6 +71,7 @@
                                     <th>Pelamar</th>
                                     <th>Tanggal Awal</th>
                                     <th>Tanggal Akhir</th>
+                                    <th>Penempatan</th>
                                     <th>Departemen</th>
                                     <th>Divisi</th>
                                     <th>Bagian</th>
@@ -339,8 +340,7 @@
     </div>
     <div class="modal fade" id="modal_edit_recruitment" data-bs-backdrop="static" tabindex="-1">
         <div class="modal-dialog modal-dialog-scrollable">
-            <form method="post" action="{{ url('/recruitment/update/' . $holding->holding_code) }}"
-                class="modal-content" enctype="multipart/form-data">
+            <div class="modal-content" enctype="multipart/form-data">
                 @csrf
                 <div class="modal-header">
                     <h4 class="modal-title" id="backDropModalTitle">Edit Recruitment</h4>
@@ -372,7 +372,8 @@
                         <div class="row g-2">
                             <div class="col mb-2">
                                 <div class="form-floating form-floating-outline">
-                                    <input type="file" id="surat_penambahan_add" name="surat_penambahan"
+                                    <input type="text" id="surat_penambahan_update">
+                                    <input type="file" id="surat_penambahan_baru" name="surat_penambahan"
                                         class="form-control @error('surat_penambahan') is-invalid @enderror"
                                         placeholder="Tanggal" value="{{ old('surat_penambahan') }}"
                                         accept="application/pdf" />
@@ -385,8 +386,44 @@
                                 @enderror
                             </div>
                         </div>
-                        <br>
                     </div>
+                    <br>
+                    <div class="row g-2">
+                        <div class="col mb-2">
+                            <div class="form-floating form-floating-outline">
+                                <input type="number" id="kuota_update" name="kuota"
+                                    class="form-control @error('kuota') is-invalid @enderror" placeholder="Kuota"
+                                    value="{{ old('kuota') }}" />
+                                <label for="bagian_recruitment">Kuota</label>
+                            </div>
+                            @error('kuota')
+                                <div class="invalid-feedback">
+                                    {{ $message }}
+                                </div>
+                            @enderror
+                        </div>
+                    </div>
+                    <br>
+                    <div class="row g-2">
+                        <div class="col mb-2">
+                            <div class="form-floating form-floating-outline">
+                                <select class="form-control @error('penempatan') is-invalid @enderror"
+                                    id="penempatan_update" name="penempatan" autofocus value="{{ old('penempatan') }}">
+                                    <option selected disabled value="">Pilih Penempatan</option>
+                                    @foreach ($site as $st)
+                                        <option value="{{ $st->id }}">{{ $st->site_name }}</option>
+                                    @endforeach
+                                </select>
+                                <label for="penempatan">Penempatan</label>
+                            </div>
+                            @error('penempatan')
+                                <div class="invalid-feedback">
+                                    {{ $message }}
+                                </div>
+                            @enderror
+                        </div>
+                    </div>
+                    <br>
                     <div class="row g-2">
                         <div class="col mb-2">
                             <div class="form-floating form-floating-outline">
@@ -544,9 +581,9 @@
                     <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
                         Batal
                     </button>
-                    <button type="submit" class="btn btn-primary">Simpan</button>
+                    <button class="btn btn-primary m-1" id="btn_update_recruitment">Simpan</button>
                 </div>
-            </form>
+            </div>
         </div>
     </div>
 @endsection
@@ -599,6 +636,10 @@
                 {
                     data: 'end_recruitment',
                     name: 'end_recruitment'
+                },
+                {
+                    data: 'penempatan',
+                    name: 'penempatan'
                 },
                 {
                     data: 'nama_departemen',
@@ -872,7 +913,6 @@
                         })
                         //mengosongkan modal dan menyembunyikannya
                         $('#modal_tambah_recruitment').modal('hide');
-                        $('#holding_recruitment_add').val('');
                         $('#penggantian_penambahan_add').val('');
                         $('#surat_penambahan_add').val('');
                         $('#kuota_add').val('');
@@ -1021,47 +1061,12 @@
             });
 
         });
-        // edit data
-        // $(document).on("click", "#btn_edit_recruitment", function() {
-        //     let id = $(this).data('id');
-        //     let penggantian_penambahan = $(this).data('penggantian_penambahan');
-        //     let dept = $(this).data("dept");
-        //     let divisi = $(this).data("divisi");
-        //     let bagian = $(this).data("bagian");
-        //     let jabatan = $(this).data("jabatan");
-        //     let tanggal_awal = $(this).data("tanggal_awal");
-        //     let tanggal_akhir = $(this).data("tanggal_akhir");
-        //     let deadline = $(this).data("deadline");
-        //     let holding = $(this).data("holding");
-        //     let desc = $(this).data("desc");
-        //     $('#id_recruitment').val(id);
-        //     $('#penggantian_penambahan_update').val(penggantian_penambahan);
-        //     $('#nama_departemen_update option').filter(function() {
-        //         return $(this).val().trim() == dept
-        //     }).prop('selected', true)
-        //     $('#nama_divisi_update option').filter(function() {
-        //         return $(this).val().trim() == divisi
-        //     }).prop('selected', true)
-        //     $('#nama_bagian_update').val(bagian);
-        //     $('#nama_jabatan_update').val(jabatan);
-        //     $('#desc_recruitment_update').val(desc);
-        //     $('#created_recruitment_update').val(tanggal_awal);
-        //     $('#end_recruitment_update').val(tanggal_akhir);
-        //     $('#deadline_recruitment_update').val(deadline);
-        //     $('#modal_edit_recruitment').modal('show');
-        //     // console.log(bagian);
-
-        //     if (penggantian_penambahan == 2) {
-        //         $('#penambahan_form_update').show();
-
-        //     } else {
-        //         $('#penambahan_form_update').hide();
-        //     }
-
-        // });
         $(document).on("click", "#btn_edit_recruitment", function() {
             let id = $(this).data('id');
             let penggantian_penambahan = $(this).data('penggantian_penambahan');
+            let penempatan = $(this).data("penempatan");
+            let kuota = $(this).data("kuota");
+            let surat_penambahan = $(this).data("surat_penambahan");
             let dept = $(this).data("dept");
             let divisi = $(this).data("divisi");
             let bagian = $(this).data("bagian");
@@ -1073,6 +1078,9 @@
             let desc = $(this).data("desc");
             $('#id_recruitment').val(id);
             $('#penggantian_penambahan_update').val(penggantian_penambahan);
+            $('#kuota_update').val(kuota);
+            $('#penempatan_update').val(penempatan);
+            $('#surat_penambahan_update').val(surat_penambahan);
             $('#nama_dept_update option').filter(function() {
                 return $(this).val().trim() == dept
             }).prop('selected', true)
@@ -1095,6 +1103,98 @@
                 $('#penambahan_form_update').hide();
             }
 
+        });
+        $('#btn_update_recruitment').on('click', function(e) {
+            e.preventDefault();
+            var formData = new FormData();
+
+            //ambil data dari form
+            formData.append('_token', '{{ csrf_token() }}');
+            formData.append('id', $('#id_recruitment').val());
+            formData.append('holding_recruitment', $('#holding_recruitment_add').val());
+            formData.append('penggantian_penambahan', $('#penggantian_penambahan_update').val());
+            formData.append('surat_penambahan', $('#surat_penambahan_baru').val());
+            formData.append('kuota', $('#kuota_update').val());
+            formData.append('penempatan', $('#penempatan_update').val());
+            formData.append('nama_dept', $('#nama_dept_update').val());
+            formData.append('nama_divisi', $('#nama_divisi_update').val());
+            formData.append('nama_bagian', $('#nama_bagian_update').val());
+            formData.append('nama_jabatan', $('#nama_jabatan_update').val());
+            formData.append('created_recruitment', $('#created_recruitment_update').val());
+            formData.append('end_recruitment', $('#end_recruitment_update').val());
+            formData.append('deadline_recruitment', $('#deadline_recruitment_update').val());
+            formData.append('desc_recruitment', $('#desc_recruitment_update').val());
+
+            // post
+            $.ajax({
+                type: "POST",
+
+                url: "{{ url('/recruitment/update') }}",
+                data: formData,
+                contentType: false,
+                processData: false,
+                error: function() {
+                    alert('Something is wrong!');
+                    // console.log(formData);
+                },
+                success: function(data) {
+                    console.log(data);
+                    if (data.code == 200) {
+                        Swal.fire({
+                            title: 'Berhasil',
+                            text: data.message,
+                            icon: 'success',
+                            timer: 5000
+                        })
+                        //mengosongkan modal dan menyembunyikannya
+                        $('#modal_edit_recruitment').modal('hide');
+                        $('#penggantian_penambahan_update').val('');
+                        $('#surat_penambahan_baru').val('');
+                        $('#kuota_update').val('');
+                        $('#penempatan_update').val('');
+                        $('#nama_dept_update').val('');
+                        $('#nama_divisi_update').val('');
+                        $('#nama_bagian_update').val('');
+                        $('#nama_jabatan_update').val('');
+                        $('#created_recruitment_update').val('');
+                        $('#end_recruitment_update').val('');
+                        $('#deadline_recruitment_update').val('');
+                        $('#desc_recruitment_update').val('');
+                        $('#table_recruitment').DataTable().ajax.reload();
+                    } else if (data.code == 400) {
+                        let errors = data.errors;
+                        // console.log(errors);
+                        let errorMessages = '';
+
+                        Object.keys(errors).forEach(function(key) {
+                            errors[key].forEach(function(message) {
+                                errorMessages += `• ${message}\n`;
+                            });
+                        });
+                        $('#modal_edit_recruitment').modal('hide');
+
+                        Swal.fire({
+                            // title: data.message,
+                            text: errorMessages,
+                            icon: 'warning',
+                            timer: 4500
+                        })
+                        $('#modal_edit_recruitment').modal('hide');
+
+                        $('#table_recruitment').DataTable().ajax.reload();
+
+
+                    } else {
+                        $('#modal_edit_recruitment').modal('hide');
+                        Swal.fire({
+                            title: 'Gagal',
+                            text: data.error,
+                            icon: 'error',
+                            timer: 4500
+                        })
+                    }
+                }
+            });
         });
 
         // delete data

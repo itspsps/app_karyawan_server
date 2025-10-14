@@ -859,7 +859,7 @@ Route::get('/pg-data-recruitment/{holding}', [RecruitmentController::class, 'pg_
 
 Route::post('/recruitment/create', [RecruitmentController::class, 'create'])->middleware('admin');
 
-Route::post('/recruitment/update/{holding}', [RecruitmentController::class, 'update'])->middleware('admin');
+Route::post('/recruitment/update', [RecruitmentController::class, 'update'])->middleware('admin');
 
 Route::get('/recruitment/delete/{id?}/{holding}', [RecruitmentController::class, 'delete'])->middleware('admin');
 

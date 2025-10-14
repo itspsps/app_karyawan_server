@@ -101,6 +101,10 @@ class RecruitmentController extends Controller
                 ]);
                 $query->orderBy('nama_jabatan', 'ASC');
             },
+        ])->with([
+            'Sites' => function ($query) {
+                $query;
+            }
         ])->where('holding_recruitment', $holdings->id)->orderBy('created_at', 'DESC')->get();;
         // dd($table);
         if (request()->ajax()) {
@@ -135,6 +139,9 @@ class RecruitmentController extends Controller
                 })
                 ->addColumn('created_at', function ($row) {
                     return Carbon::parse($row->created_at)->format('d-m-Y');
+                })
+                ->addColumn('penempatan', function ($row) {
+                    return $row->Sites->site_name;
                 })
                 ->addColumn('nama_jabatan', function ($row) {
                     if (!$row->Jabatan) {
@@ -202,6 +209,9 @@ class RecruitmentController extends Controller
                         '<button id="btn_edit_recruitment"
                             data-id="' . $row->id . '"
                             data-penggantian_penambahan="' . $row->penggantian_penambahan . '"
+                            data-surat_penambahan="' . $row->surat_penambahan . '"
+                            data-kuota="' . $row->kuota . '"
+                            data-penempatan="' . $row->penempatan . '"
                             data-dept="' . $row->nama_dept . '"
                             data-divisi="' . $row->nama_divisi . '"
                             data-bagian="' . $row->nama_bagian . '"
@@ -227,6 +237,7 @@ class RecruitmentController extends Controller
 
                 ->rawColumns([
                     'created_at',
+                    'penempatan',
                     'nama_departemen',
                     'nama_divisi',
                     'nama_bagian',
@@ -304,7 +315,6 @@ class RecruitmentController extends Controller
                     'deadline_recruitment'      => $request->deadline_recruitment,
                     'desc_recruitment'          => $request->desc_recruitment,
                     'created_at'                => date('Y-m-d H:i:s'),
-
                 ]
             );
 
@@ -327,24 +337,77 @@ class RecruitmentController extends Controller
     }
 
 
-    function update(Request $request, $holding)
+    function update(Request $request)
     {
-        $holding = Holding::where('holding_code', $holding)->value('id');
-        $recruitment = Recruitment::where('id', $request->id_recruitment)->where('holding_recruitment', $holding)->first();
-        $data = Recruitment::where('id', $request->id_recruitment)->where('holding_recruitment', $holding)->update([
-            'created_recruitment' => $request->created_recruitment_update,
-            'end_recruitment' => $request->end_recruitment_update,
-            'desc_recruitment' => $request->desc_recruitment_update,
-        ]);
-        if ($data) {
-            ActivityLog::create([
-                'user_id' => Auth::user()->id,
-                'activity' => 'update',
-                'description' => 'Update data Recruitment Description' . Auth::user()->name,
-            ]);
-            return redirect()->back()->with('success', 'Data Berhasil di Diupdate');
+        // dd($request->all());
+        if ($request->penggantian_penambahan == 2) {
+            $surat_penambahan = 'required|max:5000';
         } else {
-            return redirect()->back()->with('error', 'Data  Gagal di Diupdate');
+            $surat_penambahan = 'nullable';
+        }
+        $rules = [
+            'penempatan'                => 'required',
+            'penggantian_penambahan'    => 'required',
+            'surat_penambahan'          => $surat_penambahan,
+            'kuota'                     => 'required',
+            'nama_dept'                 => 'required',
+            'nama_divisi'               => 'required',
+            'nama_bagian'               => 'required|max:255',
+            'nama_jabatan'              => 'required',
+            'created_recruitment'       => 'required',
+            'holding_recruitment'       => 'required',
+            'end_recruitment'           => 'required',
+            'deadline_recruitment'      => 'required',
+            'desc_recruitment'          => 'required',
+        ];
+        $customessages =
+            [
+                'required'           => ':attribute tidak boleh kosong!',
+                'mimes'             => ':attribute harus berupa PDF!',
+            ];
+
+        try {
+            $validator = Validator::make($request->all(), $rules, $customessages);
+            if ($validator->fails()) {
+                return response()->json([
+                    'code' => 400,
+                    'message' => 'Validasi gagal',
+                    'errors' => $validator->errors()
+                ]);
+            }
+            $data = Recruitment::where('id', $request->id)->update([
+                'id'                        => Uuid::uuid4(),
+                'holding_recruitment'       => $request->holding_recruitment,
+                'penempatan'                => $request->penempatan,
+                'penggantian_penambahan'    => $request->penggantian_penambahan,
+                'surat_penambahan'          => $request->surat_penambahan,
+                'kuota'                     => $request->kuota,
+                'nama_dept'                 => $request->nama_dept,
+                'nama_divisi'               => $request->nama_divisi,
+                'nama_bagian'               => $request->nama_bagian,
+                'nama_jabatan'              => $request->nama_jabatan,
+                'created_recruitment'       => $request->created_recruitment,
+                'end_recruitment'           => $request->end_recruitment,
+                'deadline_recruitment'      => $request->deadline_recruitment,
+                'desc_recruitment'          => $request->desc_recruitment,
+                'created_at'                => date('Y-m-d H:i:s'),
+            ]);
+            if ($data) {
+                ActivityLog::create([
+                    'user_id' => Auth::user()->id,
+                    'activity' => 'update',
+                    'description' => 'Update data Recruitment Description' . Auth::user()->name,
+                ]);
+            }
+            return response()->json([
+                'code' => 200,
+                'message' => 'Data Berhasil Disimpan'
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'code' => 500,
+                'error' => $e->getMessage(),
+            ]);
         }
     }
 
