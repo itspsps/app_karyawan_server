@@ -23,7 +23,7 @@
                     </div>
                     <div class="card-body">
                         <!-- <hr class="my-5">
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        <hr class="my-5"> -->
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        <hr class="my-5"> -->
                         <button type="button" class="btn btn-sm btn-primary waves-effect waves-light my-3"
                             id="btn_modal_recruitment"><i class="menu-icon tf-icons mdi mdi-plus"></i>Tambah</button>
                         <!-- <button type="button" class="btn btn-sm btn-success waves-effect waves-light mb-3" data-bs-toggle="modal" data-bs-target="#modal_import_inventaris"><i class="menu-icon tf-icons mdi mdi-file-excel"></i>Import</button> -->
@@ -44,7 +44,7 @@
                                                     name="show_desc_recruitment" autofocus value="{{ old('show_desc_recruitment') }}" cols="30" rows="20"
                                                     style="height: auto" disabled></textarea>
                                                 <!-- {{-- <input class="form-control @error('show_desc_recruitment') is-invalid @enderror" id="show_desc_recruitment" name="show_desc_recruitment" autofocus value="{{ old('show_desc_recruitment') }}"> --}}
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            {{-- <input type="text" id="show_desc_recruitment"> --}} -->
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            {{-- <input type="text" id="show_desc_recruitment"> --}} -->
                                                 <label for="show_desc_recruitment">SYARAT KETENTUAN</label>
                                             </div>
                                             @error('show_desc_recruitment')
@@ -375,8 +375,8 @@
                         <div class="row g-2">
                             <div class="col mb-2">
                                 <div class="form-floating form-floating-outline">
-                                    <input type="text" id="surat_penambahan_update">
-                                    <input type="file" id="surat_penambahan_baru" name="surat_penambahan"
+                                    <input type="hidden" id="old_file_update" name="old_file">
+                                    <input type="file" id="surat_penambahan_update" name="surat_penambahan"
                                         class="form-control @error('surat_penambahan') is-invalid @enderror"
                                         placeholder="Tanggal" value="{{ old('surat_penambahan') }}"
                                         accept="application/pdf" />
@@ -1090,7 +1090,7 @@
             $('#penggantian_penambahan_update').val(penggantian_penambahan);
             $('#kuota_update').val(kuota);
             $('#penempatan_update').val(penempatan);
-            $('#surat_penambahan_update').val(surat_penambahan);
+            $('#old_file_update').val(surat_penambahan);
             $('#nama_dept_update option').filter(function() {
                 return $(this).val().trim() == dept
             }).prop('selected', true)
@@ -1123,7 +1123,11 @@
             formData.append('id', $('#id_recruitment').val());
             formData.append('holding_recruitment', $('#holding_recruitment_add').val());
             formData.append('penggantian_penambahan', $('#penggantian_penambahan_update').val());
-            formData.append('surat_penambahan', $('#surat_penambahan_baru').val());
+            formData.append('old_file', $('#old_file_update').val());
+            var fileInput = $('#surat_penambahan_update')[0];
+            if (fileInput.files.length > 0) {
+                formData.append('surat_penambahan', fileInput.files[0]);
+            }
             formData.append('kuota', $('#kuota_update').val());
             formData.append('penempatan', $('#penempatan_update').val());
             formData.append('nama_dept', $('#nama_dept_update').val());
@@ -1159,7 +1163,7 @@
                         //mengosongkan modal dan menyembunyikannya
                         $('#modal_edit_recruitment').modal('hide');
                         $('#penggantian_penambahan_update').val('');
-                        $('#surat_penambahan_baru').val('');
+                        $('#surat_penambahan_update').val('');
                         $('#kuota_update').val('');
                         $('#penempatan_update').val('');
                         $('#nama_dept_update').val('');

@@ -154,18 +154,6 @@
                                 </div>
 
                                 <div class="row gy-4 align-items-end">
-                                    <div class="col-lg-3 col-md-6 col-sm-12">
-                                        <div class="form-floating form-floating-outline">
-                                            <select type="text" class="form-control" name="shift_filter"
-                                                id="shift_filter">
-                                                <option selected disabled value="">~~ Pilih Kategori ~~</option>
-                                                <option value="NON SHIFT">NON SHIFT</option>
-                                                <option value="SHIFT">SHIFT</option>
-                                            </select>
-                                            <label for="shift_filter">Kategori Shift</label>
-                                        </div>
-                                    </div>
-
                                     <div class="col-lg-6 col-md-6col-sm-12">
                                         <div class="form-floating form-floating-outline">
                                             <div id="reportrange" style="white-space: nowrap;">
@@ -198,8 +186,8 @@
                                         <svg width="120" height="120" viewBox="0 0 120 120" fill="none"
                                             xmlns="http://www.w3.org/2000/svg">
 
-                                            <rect x="25" y="25" width="70" height="70" rx="8"
-                                                ry="8" stroke="#CED4DA" stroke-width="2" />
+                                            <rect x="25" y="25" width="70" height="70" rx="8" ry="8"
+                                                stroke="#CED4DA" stroke-width="2" />
 
                                             <path d="M35 35H85" stroke="#E6E8EB" stroke-width="1.5"
                                                 stroke-linecap="round" />

@@ -202,7 +202,11 @@ class RecruitmentController extends Controller
                     }
                 })
                 ->addColumn('surat_penambahan', function ($row) {
-                    return $row->surat_penambahan ?? '-';
+                    if ($row->surat_penambahan != null) {
+                        return '<a type="button" href="' . asset('/storage/surat_penambahan/' . $row->surat_penambahan) . '" class="btn btn-sm btn-danger" target="_blank" id="btn_ktp" accept="application/pdf"><i class="tf-icons mdi mdi-eye-circle-outline me-1"></i>Lihat&nbsp;Surat</button>';
+                    } else {
+                        return '-';
+                    }
                 })
                 ->addColumn('kuota', function ($row) {
                     return $row->kuota ?? '-';
@@ -288,6 +292,7 @@ class RecruitmentController extends Controller
             [
                 'required'             => ':attribute tidak boleh kosong!',
                 'mimes'             => ':attribute harus berupa PDF!',
+                'max'               => ':attribute maksimal 5MB'
             ];
 
 
@@ -356,7 +361,7 @@ class RecruitmentController extends Controller
     {
         // dd($request->all());
         if ($request->penggantian_penambahan == 2) {
-            $surat_penambahan = 'required|max:5000';
+            $surat_penambahan = 'max:5000';
         } else {
             $surat_penambahan = 'nullable';
         }
@@ -379,6 +384,7 @@ class RecruitmentController extends Controller
             [
                 'required'           => ':attribute tidak boleh kosong!',
                 'mimes'             => ':attribute harus berupa PDF!',
+                'max'               => ':attribute maksimal 5MB'
             ];
 
         try {
@@ -390,12 +396,23 @@ class RecruitmentController extends Controller
                     'errors' => $validator->errors()
                 ]);
             }
+            if ($request->surat_penambahan != null) {
+                if ($request->old_file != null) {
+                    if (Storage::disk('surat_penambahan')->exists($request->old_file)) {
+                        Storage::disk('surat_penambahan')->delete($request->old_file);
+                    }
+                }
+                $file = $request->file('surat_penambahan')->store('surat_penambahan');
+                $surat_penambahan = basename($file);
+            } else {
+                $surat_penambahan = $request->old_file;
+            }
             $data = Recruitment::where('id', $request->id)->update([
                 'id'                        => Uuid::uuid4(),
                 'holding_recruitment'       => $request->holding_recruitment,
                 'penempatan'                => $request->penempatan,
                 'penggantian_penambahan'    => $request->penggantian_penambahan,
-                'surat_penambahan'          => $request->surat_penambahan,
+                'surat_penambahan'          => $surat_penambahan,
                 'kuota'                     => $request->kuota,
                 'nama_dept'                 => $request->nama_dept,
                 'nama_divisi'               => $request->nama_divisi,
