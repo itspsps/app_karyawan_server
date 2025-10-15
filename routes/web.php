@@ -857,7 +857,7 @@ require __DIR__ . '/api_hrd.php';
 // RECRUITMENT DASHBOARD ADMIN heheheghe
 Route::get('/pg-data-recruitment/{holding}', [RecruitmentController::class, 'pg_recruitment'])->middleware('admin');
 
-Route::post('/recruitment/create', [RecruitmentController::class, 'create'])->middleware('admin');
+Route::post('/recruitment/create/{holding}', [RecruitmentController::class, 'create'])->middleware('admin');
 
 Route::post('/recruitment/update', [RecruitmentController::class, 'update'])->middleware('admin');
 

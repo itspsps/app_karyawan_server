@@ -109,6 +109,9 @@ class RecruitmentController extends Controller
         // dd($table);
         if (request()->ajax()) {
             return DataTables::of($table)
+                ->addColumn('legal_number', function ($row) {
+                    return $row->legal_number;
+                })
                 ->addColumn('status_recruitment', function ($row) use ($holdings) {
                     if ($row->status_recruitment == 0) {
                         $status = '<button id="btn_status_aktif"
@@ -236,6 +239,7 @@ class RecruitmentController extends Controller
                 })
 
                 ->rawColumns([
+                    'legal_number',
                     'created_at',
                     'penempatan',
                     'nama_departemen',
@@ -257,7 +261,7 @@ class RecruitmentController extends Controller
         }
     }
 
-    function create(Request $request)
+    function create(Request $request, $holding)
     {
         // dd($request->all());
         if ($request->penggantian_penambahan == 2) {
@@ -296,15 +300,26 @@ class RecruitmentController extends Controller
                     'errors' => $validator->errors()
                 ]);
             }
-            // $holding = request()->segment(count(request()->segments()));
-            // dd($validatedData);
+            $tanggal = date('ymd');
+            $st = Holding::where('holding_code', $holding)->first();
+            $no = rand(100, 999);
+            // Surat Penambahan
+            if ($request->surat_penambahan != null) {
+                // dd('o');
+                $file = $request->file('surat_penambahan')->store('surat_penambahan');
+                $file_penambahan = basename($file);
+            } else {
+                $file_penambahan = null;
+            }
+            // Surat Penambahan End
             Recruitment::insert(
                 [
                     'id'                        => Uuid::uuid4(),
+                    'legal_number'              => $st->holding_category . '/REC/' . $st->holding_number . '00' . $tanggal . '/' . $no,
                     'holding_recruitment'       => $request->holding_recruitment,
                     'penempatan'                => $request->penempatan,
                     'penggantian_penambahan'    => $request->penggantian_penambahan,
-                    'surat_penambahan'          => $request->surat_penambahan,
+                    'surat_penambahan'          => $file_penambahan,
                     'kuota'                     => $request->kuota,
                     'nama_dept'                 => $request->nama_dept,
                     'nama_divisi'               => $request->nama_divisi,
@@ -414,10 +429,17 @@ class RecruitmentController extends Controller
     function delete($id)
     {
         // dd($id);
+
         $holding = request()->segment(count(request()->segments()));
         $data = DB::table('recruitment_user')->where('recruitment_admin_id', $id)->first();
         if ($data == null) {
-            $hapus = Recruitment::where('id', $id)->where('holding_recruitment', $holding)->delete();
+            $hapus_first    = Recruitment::where('id', $id)->where('holding_recruitment', $holding)->first();
+            $hapus          = Recruitment::where('id', $id)->where('holding_recruitment', $holding)->delete();
+            if ($hapus_first->surat_penambahan != NULL) {
+
+                Storage::disk('surat_penambahan')->delete($hapus_first->surat_penambahan);
+                return redirect()->back()->with('success', 'data berhasil dihapus');
+            }
             if ($hapus) {
                 ActivityLog::create([
                     'user_id' => Auth::user()->id,
@@ -426,7 +448,7 @@ class RecruitmentController extends Controller
                 ]);
                 return redirect()->back()->with('success', 'data berhasil dihapus');
             } else {
-                return redirect()->back()->with('error', 'Data  Gagal di Hapus');
+                return redirect()->back()->with('error', 'Data  Gagal dihapus');
             }
         } else {
             dd('stop');
@@ -1953,12 +1975,9 @@ http://192.168.101.241:8001/cpanel/recruitment_detail/$request->id
                     $alamatDom  = $get_cv->provinsiNOW->name . ', ' . $get_cv->kabupatenNOW->name . ', ' . $get_cv->desaNOW->name . ', RT. ' . $get_cv->rw_now . ', RW. ' . $get_cv->rw_now;
                     $dom = 'tidak';
                 }
-                // dd($get_cv);
                 // Foto Karyawan
                 $filePP = url_karir() . '/storage/file_pp/' . $get_cv->file_pp;
                 $response_pp = Http::get($filePP);
-                // dd($filePP);
-                // dd($response_pp->body());
                 if ($response_pp->successful()) {
                     Storage::disk('public')->put('foto_karyawan/' . $get_cv->file_pp, $response_pp->body());
                 }

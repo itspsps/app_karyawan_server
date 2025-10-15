@@ -23,7 +23,7 @@
                     </div>
                     <div class="card-body">
                         <!-- <hr class="my-5">
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                <hr class="my-5"> -->
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        <hr class="my-5"> -->
                         <button type="button" class="btn btn-sm btn-primary waves-effect waves-light my-3"
                             id="btn_modal_recruitment"><i class="menu-icon tf-icons mdi mdi-plus"></i>Tambah</button>
                         <!-- <button type="button" class="btn btn-sm btn-success waves-effect waves-light mb-3" data-bs-toggle="modal" data-bs-target="#modal_import_inventaris"><i class="menu-icon tf-icons mdi mdi-file-excel"></i>Import</button> -->
@@ -44,7 +44,7 @@
                                                     name="show_desc_recruitment" autofocus value="{{ old('show_desc_recruitment') }}" cols="30" rows="20"
                                                     style="height: auto" disabled></textarea>
                                                 <!-- {{-- <input class="form-control @error('show_desc_recruitment') is-invalid @enderror" id="show_desc_recruitment" name="show_desc_recruitment" autofocus value="{{ old('show_desc_recruitment') }}"> --}}
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    {{-- <input type="text" id="show_desc_recruitment"> --}} -->
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            {{-- <input type="text" id="show_desc_recruitment"> --}} -->
                                                 <label for="show_desc_recruitment">SYARAT KETENTUAN</label>
                                             </div>
                                             @error('show_desc_recruitment')
@@ -67,6 +67,7 @@
                             <thead class="table-primary">
                                 <tr>
                                     <!-- <th>No.</th> -->
+                                    <th>Legal Number</th>
                                     <th>Status</th>
                                     <th>Pelamar</th>
                                     <th>Tanggal Awal</th>
@@ -102,49 +103,33 @@
                     <h4 class="modal-title" id="backDropModalTitle">Tambah Recruitment</h4>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
+
                 <div class="modal-body">
-                    <div class="row g-2">
-                        <div class="col mb-2">
-                            <div class="form-floating form-floating-outline">
-                                <input type="text" readonly class="form-control"
-                                    placeholder="Masukkan Holding Inventaris" value="{{ $holding->holding_name }}" />
-                                <input type="hidden" id="holding_recruitment_add" name="holding_recruitment"
-                                    class="form-control" value="{{ $holding->id }}" />
-                                <label for="holding_recruitment">Holding Recruitment</label>
-                            </div>
-                        </div>
-                    </div>
-                    <br>
-                    <div class="row g-2">
-                        <div class="col mb-2">
-                            <div class="form-floating form-floating-outline">
-                                <select class="form-control @error('penggantian_penambahan') is-invalid @enderror"
-                                    id="penggantian_penambahan_add" name="penggantian_penambahan" autofocus
-                                    value="{{ old('penggantian_penambahan') }}">
-                                    <option value="1">Penggantian</option>
-                                    <option value="2">Penambahan</option>
-                                </select>
-                                <label for="penggantian_penambahan">Penggantian / Penambahan?</label>
-                            </div>
-                            @error('penggantian_penambahan')
-                                <div class="invalid-feedback">
-                                    {{ $message }}
-                                </div>
-                            @enderror
-                        </div>
-                    </div>
-                    <br>
-                    <div id="penambahan_form">
+                    <form method="post" enctype="multipart/form-data">
                         <div class="row g-2">
                             <div class="col mb-2">
                                 <div class="form-floating form-floating-outline">
-                                    <input type="file" id="surat_penambahan_add" name="surat_penambahan"
-                                        class="form-control @error('surat_penambahan') is-invalid @enderror"
-                                        placeholder="Tanggal" value="{{ old('surat_penambahan') }}"
-                                        accept="application/pdf" />
-                                    <label for="bagian_recruitment">Surat Penambahan (PDF)</label>
+                                    <input type="text" readonly class="form-control"
+                                        placeholder="Masukkan Holding Inventaris" value="{{ $holding->holding_name }}" />
+                                    <input type="hidden" id="holding_recruitment_add" name="holding_recruitment"
+                                        class="form-control" value="{{ $holding->id }}" />
+                                    <label for="holding_recruitment">Holding Recruitment</label>
                                 </div>
-                                @error('surat_penambahan')
+                            </div>
+                        </div>
+                        <br>
+                        <div class="row g-2">
+                            <div class="col mb-2">
+                                <div class="form-floating form-floating-outline">
+                                    <select class="form-control @error('penggantian_penambahan') is-invalid @enderror"
+                                        id="penggantian_penambahan_add" name="penggantian_penambahan" autofocus
+                                        value="{{ old('penggantian_penambahan') }}">
+                                        <option value="1">Penggantian</option>
+                                        <option value="2">Penambahan</option>
+                                    </select>
+                                    <label for="penggantian_penambahan">Penggantian / Penambahan?</label>
+                                </div>
+                                @error('penggantian_penambahan')
                                     <div class="invalid-feedback">
                                         {{ $message }}
                                     </div>
@@ -152,189 +137,207 @@
                             </div>
                         </div>
                         <br>
-                    </div>
-                    <div class="row g-2">
-                        <div class="col mb-2">
-                            <div class="form-floating form-floating-outline">
-                                <input type="number" id="kuota_add" name="kuota"
-                                    class="form-control @error('kuota') is-invalid @enderror" placeholder="Kuota"
-                                    value="{{ old('kuota') }}" />
-                                <label for="bagian_recruitment">Kuota</label>
-                            </div>
-                            @error('kuota')
-                                <div class="invalid-feedback">
-                                    {{ $message }}
+                        <div id="penambahan_form">
+                            <div class="row g-2">
+                                <div class="col mb-2">
+                                    <div class="form-floating form-floating-outline">
+                                        <input type="file" id="surat_penambahan_add" name="surat_penambahan"
+                                            class="form-control @error('surat_penambahan') is-invalid @enderror"
+                                            placeholder="Tanggal" value="{{ old('surat_penambahan') }}"
+                                            accept="application/pdf" />
+                                        <label for="bagian_recruitment">Surat Penambahan (PDF)</label>
+                                    </div>
+                                    @error('surat_penambahan')
+                                        <div class="invalid-feedback">
+                                            {{ $message }}
+                                        </div>
+                                    @enderror
                                 </div>
-                            @enderror
-                        </div>
-                    </div>
-                    <br>
-                    <div class="row g-2">
-                        <div class="col mb-2">
-                            <div class="form-floating form-floating-outline">
-                                <select class="form-control @error('penempatan') is-invalid @enderror" id="penempatan_add"
-                                    name="penempatan" autofocus value="{{ old('penempatan') }}">
-                                    <option selected disabled value="">Pilih Penempatan</option>
-                                    @foreach ($site as $st)
-                                        <option value="{{ $st->id }}">{{ $st->site_name }}</option>
-                                    @endforeach
-                                </select>
-                                <label for="penempatan">Penempatan</label>
                             </div>
-                            @error('penempatan')
-                                <div class="invalid-feedback">
-                                    {{ $message }}
-                                </div>
-                            @enderror
+                            <br>
                         </div>
-                    </div>
-                    <br>
+                        <div class="row g-2">
+                            <div class="col mb-2">
+                                <div class="form-floating form-floating-outline">
+                                    <input type="number" id="kuota_add" name="kuota"
+                                        class="form-control @error('kuota') is-invalid @enderror" placeholder="Kuota"
+                                        value="{{ old('kuota') }}" />
+                                    <label for="bagian_recruitment">Kuota</label>
+                                </div>
+                                @error('kuota')
+                                    <div class="invalid-feedback">
+                                        {{ $message }}
+                                    </div>
+                                @enderror
+                            </div>
+                        </div>
+                        <br>
+                        <div class="row g-2">
+                            <div class="col mb-2">
+                                <div class="form-floating form-floating-outline">
+                                    <select class="form-control @error('penempatan') is-invalid @enderror"
+                                        id="penempatan_add" name="penempatan" autofocus value="{{ old('penempatan') }}">
+                                        <option selected disabled value="">Pilih Penempatan</option>
+                                        @foreach ($site as $st)
+                                            <option value="{{ $st->id }}">{{ $st->site_name }}</option>
+                                        @endforeach
+                                    </select>
+                                    <label for="penempatan">Penempatan</label>
+                                </div>
+                                @error('penempatan')
+                                    <div class="invalid-feedback">
+                                        {{ $message }}
+                                    </div>
+                                @enderror
+                            </div>
+                        </div>
+                        <br>
 
-                    <div class="row g-2">
-                        <div class="col mb-2">
-                            <div class="form-floating form-floating-outline">
-                                <select class="form-control @error('nama_dept') is-invalid @enderror" id="nama_dept_add"
-                                    name="nama_dept" autofocus value="{{ old('nama_dept') }}">
-                                    <option value=""> Pilih Departemen</option>
-                                    @foreach ($data_dept as $data)
-                                        <option value="{{ $data->id }}">{{ $data->nama_departemen }}
-                                        </option>
-                                    @endforeach
-                                </select>
-                                <label for="nama_dept">Nama Departemen </label>
-                            </div>
-                            @error('nama_dept')
-                                <div class="invalid-feedback">
-                                    {{ $message }}
+                        <div class="row g-2">
+                            <div class="col mb-2">
+                                <div class="form-floating form-floating-outline">
+                                    <select class="form-control @error('nama_dept') is-invalid @enderror"
+                                        id="nama_dept_add" name="nama_dept" autofocus value="{{ old('nama_dept') }}">
+                                        <option value=""> Pilih Departemen</option>
+                                        @foreach ($data_dept as $data)
+                                            <option value="{{ $data->id }}">{{ $data->nama_departemen }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                    <label for="nama_dept">Nama Departemen </label>
                                 </div>
-                            @enderror
-                        </div>
-                    </div>
-                    <br>
-                    <div class="row g-2">
-                        <div class="col mb-2">
-                            <div class="form-floating form-floating-outline">
-                                <select class="form-control @error('nama_divisi') is-invalid @enderror"
-                                    id="nama_divisi_add" name="nama_divisi">
-                                    <option value=""> Pilih Divisi</option>
-                                </select>
-                                <label for="form_nama_divisi">Nama Divisi</label>
+                                @error('nama_dept')
+                                    <div class="invalid-feedback">
+                                        {{ $message }}
+                                    </div>
+                                @enderror
                             </div>
-                            @error('nama_divisi')
-                                <div class="invalid-feedback">
-                                    {{ $message }}
+                        </div>
+                        <br>
+                        <div class="row g-2">
+                            <div class="col mb-2">
+                                <div class="form-floating form-floating-outline">
+                                    <select class="form-control @error('nama_divisi') is-invalid @enderror"
+                                        id="nama_divisi_add" name="nama_divisi">
+                                        <option value=""> Pilih Divisi</option>
+                                    </select>
+                                    <label for="form_nama_divisi">Nama Divisi</label>
                                 </div>
-                            @enderror
-                        </div>
-                    </div>
-                    <br>
-                    <div class="row g-2">
-                        <div class="col mb-2">
-                            <div class="form-floating form-floating-outline">
-                                <select class="form-control @error('nama_bagian') is-invalid @enderror"
-                                    id="nama_bagian_add" name="nama_bagian">
-                                    <option value=""> Pilih Bagian</option>
-                                </select>
-                                <label for="form_nama_bagian">Nama Bagian</label>
+                                @error('nama_divisi')
+                                    <div class="invalid-feedback">
+                                        {{ $message }}
+                                    </div>
+                                @enderror
                             </div>
-                            @error('nama_bagian')
-                                <div class="invalid-feedback">
-                                    {{ $message }}
+                        </div>
+                        <br>
+                        <div class="row g-2">
+                            <div class="col mb-2">
+                                <div class="form-floating form-floating-outline">
+                                    <select class="form-control @error('nama_bagian') is-invalid @enderror"
+                                        id="nama_bagian_add" name="nama_bagian">
+                                        <option value=""> Pilih Bagian</option>
+                                    </select>
+                                    <label for="form_nama_bagian">Nama Bagian</label>
                                 </div>
-                            @enderror
-                        </div>
-                    </div>
-                    <br>
-                    <div class="row g-2">
-                        <div class="col mb-2">
-                            <div class="form-floating form-floating-outline">
-                                <select class="form-control @error('nama_jabatan') is-invalid @enderror"
-                                    id="nama_jabatan_add" name="nama_jabatan">
-                                    <option value=""> Pilih Jabatan</option>
-                                </select>
-                                <label for="form_nama_jabatan">Nama Jabatan</label>
+                                @error('nama_bagian')
+                                    <div class="invalid-feedback">
+                                        {{ $message }}
+                                    </div>
+                                @enderror
                             </div>
-                            @error('nama_jabatan')
-                                <div class="invalid-feedback">
-                                    {{ $message }}
+                        </div>
+                        <br>
+                        <div class="row g-2">
+                            <div class="col mb-2">
+                                <div class="form-floating form-floating-outline">
+                                    <select class="form-control @error('nama_jabatan') is-invalid @enderror"
+                                        id="nama_jabatan_add" name="nama_jabatan">
+                                        <option value=""> Pilih Jabatan</option>
+                                    </select>
+                                    <label for="form_nama_jabatan">Nama Jabatan</label>
                                 </div>
-                            @enderror
-                        </div>
-                    </div>
-                    <br>
-                    <div class="row g-2">
-                        <div class="col mb-2">
-                            <div class="form-floating form-floating-outline">
-                                <input type="date" id="created_recruitment_add" name="created_recruitment"
-                                    class="form-control @error('created_recruitment') is-invalid @enderror"
-                                    placeholder="Masukkan Bagian" value="{{ old('created_recruitment') }}" />
-                                <label for="bagian_recruitment">Tanggal Mulai</label>
+                                @error('nama_jabatan')
+                                    <div class="invalid-feedback">
+                                        {{ $message }}
+                                    </div>
+                                @enderror
                             </div>
-                            @error('created_recruitment')
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                            @enderror
                         </div>
-                    </div>
-                    <br>
-                    <div class="row g-2">
-                        <div class="col mb-2">
-                            <div class="form-floating form-floating-outline">
-                                <input type="date" id="end_recruitment_add" name="end_recruitment"
-                                    class="form-control @error('end_recruitment') is-invalid @enderror"
-                                    placeholder="Masukkan Bagian" value="{{ old('end_recruitment') }}" />
-                                <label for="bagian_recruitment">Tanggal Akhir</label>
+                        <br>
+                        <div class="row g-2">
+                            <div class="col mb-2">
+                                <div class="form-floating form-floating-outline">
+                                    <input type="date" id="created_recruitment_add" name="created_recruitment"
+                                        class="form-control @error('created_recruitment') is-invalid @enderror"
+                                        placeholder="Masukkan Bagian" value="{{ old('created_recruitment') }}" />
+                                    <label for="bagian_recruitment">Tanggal Mulai</label>
+                                </div>
+                                @error('created_recruitment')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
                             </div>
-                            @error('end_recruitment')
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                            @enderror
                         </div>
-                    </div>
-                    <br>
-                    <div class="row g-2">
-                        <div class="col mb-2">
-                            <div class="form-floating form-floating-outline">
-                                <input type="date" id="deadline_recruitment_add" name="deadline_recruitment"
-                                    class="form-control @error('deadline_recruitment') is-invalid @enderror"
-                                    placeholder="Masukkan Bagian" value="{{ old('deadline_recruitment') }}" />
-                                <label for="bagian_recruitment">Deadline</label>
+                        <br>
+                        <div class="row g-2">
+                            <div class="col mb-2">
+                                <div class="form-floating form-floating-outline">
+                                    <input type="date" id="end_recruitment_add" name="end_recruitment"
+                                        class="form-control @error('end_recruitment') is-invalid @enderror"
+                                        placeholder="Masukkan Bagian" value="{{ old('end_recruitment') }}" />
+                                    <label for="bagian_recruitment">Tanggal Akhir</label>
+                                </div>
+                                @error('end_recruitment')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
                             </div>
-                            @error('deadline_recruitment')
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                            @enderror
                         </div>
-                    </div>
-                    <br>
-                    <div class="row g-2">
-                        <div class="col mb-2">
-                            <div class="form-floating form-floating-outline">
-                                <textarea class="form-control @error('desc_recruitment') is-invalid @enderror" id="desc_recruitment_add"
-                                    name="desc_recruitment" autofocus value="{{ old('desc_recruitment') }}" id="" cols="30"
-                                    rows="10" style="height: 70%"></textarea>
-                                <label for="desc_recruitment">Syarat Ketentuan</label>
+                        <br>
+                        <div class="row g-2">
+                            <div class="col mb-2">
+                                <div class="form-floating form-floating-outline">
+                                    <input type="date" id="deadline_recruitment_add" name="deadline_recruitment"
+                                        class="form-control @error('deadline_recruitment') is-invalid @enderror"
+                                        placeholder="Masukkan Bagian" value="{{ old('deadline_recruitment') }}" />
+                                    <label for="bagian_recruitment">Deadline</label>
+                                </div>
+                                @error('deadline_recruitment')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
                             </div>
-                            @error('desc_recruitment')
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                            @enderror
                         </div>
-                    </div>
-                    <br>
-                    <br>
-                    <div class="d-flex justify-content-center">
-                        <button type="button" class="btn btn-outline-secondary m-1" data-bs-dismiss="modal">
-                            Tutup
-                        </button>
-                        <button class="btn btn-primary m-1" id="btn_add_recruitment">Simpan</button>
-                    </div>
+                        <br>
+                        <div class="row g-2">
+                            <div class="col mb-2">
+                                <div class="form-floating form-floating-outline">
+                                    <textarea class="form-control @error('desc_recruitment') is-invalid @enderror" id="desc_recruitment_add"
+                                        name="desc_recruitment" autofocus value="{{ old('desc_recruitment') }}" id="" cols="30"
+                                        rows="10" style="height: 70%"></textarea>
+                                    <label for="desc_recruitment">Syarat Ketentuan</label>
+                                </div>
+                                @error('desc_recruitment')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
+                            </div>
+                        </div>
+                        <br>
+                        <br>
+                        <div class="d-flex justify-content-center">
+                            <button type="button" class="btn btn-outline-secondary m-1" data-bs-dismiss="modal">
+                                Tutup
+                            </button>
+                            <button class="btn btn-primary m-1" id="btn_add_recruitment">Simpan</button>
+                        </div>
+                    </form>
                 </div>
-
             </div>
         </div>
     </div>
@@ -622,6 +625,10 @@
                 //     }
                 // },
                 {
+                    data: 'legal_number',
+                    name: 'legal_number'
+                },
+                {
                     data: 'status_recruitment',
                     name: 'status_recruitment'
                 },
@@ -685,18 +692,17 @@
                 },
             ],
             order: [
-                [2, 'desc']
+                [3, 'desc']
             ]
         });
-    </script>
-    {{-- end datatable  --}}
-    <script>
+
         $('#penambahan_form').hide();
         $('#penggantian_penambahan_add').on('change', function() {
             let value = $(this).val();
             if (value == '2') {
                 $('#penambahan_form').show();
             } else {
+                $('#surat_penambahan_add').val('');
                 $('#penambahan_form').hide();
             }
         });
@@ -878,7 +884,11 @@
             formData.append('_token', '{{ csrf_token() }}');
             formData.append('holding_recruitment', $('#holding_recruitment_add').val());
             formData.append('penggantian_penambahan', $('#penggantian_penambahan_add').val());
-            formData.append('surat_penambahan', $('#surat_penambahan_add').val());
+            // formData.append('surat_penambahan', $('#surat_penambahan_add').val());
+            var fileInput = $('#surat_penambahan_add')[0];
+            if (fileInput.files.length > 0) {
+                formData.append('surat_penambahan', fileInput.files[0]);
+            }
             formData.append('kuota', $('#kuota_add').val());
             formData.append('penempatan', $('#penempatan_add').val());
             formData.append('nama_dept', $('#nama_dept_add').val());
@@ -894,7 +904,7 @@
             $.ajax({
                 type: "POST",
 
-                url: "{{ url('/recruitment/create') }}",
+                url: "{{ url('/recruitment/create') }}" + '/' + holding,
                 data: formData,
                 contentType: false,
                 processData: false,
