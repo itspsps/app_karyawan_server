@@ -260,9 +260,7 @@ Route::middleware('admin')->group(function () {
     Route::post('/karyawan/ImportUpdateKaryawan/sp', [karyawanController::class, 'ImportUpdateKaryawan']);
     Route::post('/karyawan/ImportUpdateKaryawan/sps', [karyawanController::class, 'ImportUpdateKaryawan']);
     Route::post('/karyawan/ImportUpdateKaryawan/sip', [karyawanController::class, 'ImportUpdateKaryawan']);
-    Route::get('/karyawan/ExportKaryawan/sp', [karyawanController::class, 'ExportKaryawan']);
-    Route::get('/karyawan/ExportKaryawan/sps', [karyawanController::class, 'ExportKaryawan']);
-    Route::get('/karyawan/ExportKaryawan/sip', [karyawanController::class, 'ExportKaryawan']);
+    Route::get('/karyawan/ExportKaryawan/{holding}', [karyawanController::class, 'ExportKaryawan']);
     Route::get('/karyawan/pdfKaryawan/sps', [karyawanController::class, 'download_pdf_karyawan']);
     Route::get('/karyawan/pdfKaryawan/sp', [karyawanController::class, 'download_pdf_karyawan']);
     Route::get('/karyawan/pdfKaryawan/sip', [karyawanController::class, 'download_pdf_karyawan']);

@@ -481,11 +481,15 @@ class karyawanController extends Controller
             return redirect()->back()->with('error', 'Import Error ' . $th->getMessage() . ' ' . $th->getLine() . ' ' . $th->getFile());
         }
     }
-    public function ExportKaryawan(Request $request)
+    public function ExportKaryawan(Request $request, $holding)
     {
         $date = date('YmdHis');
-        $holding = request()->segment(count(request()->segments()));
-        return Excel::download(new KaryawanExport($holding), 'Data Karyawan_' . $holding . '_' . $date . '.xlsx');
+        $get_holding = Holding::where('holding_code', $holding)->first();
+        if ($get_holding == null) {
+            Alert::error('Error', 'Holding Tidak Ditemukan', 4000);
+            return redirect()->back();
+        }
+        return Excel::download(new KaryawanExport($get_holding), 'Data Karyawan_' . $get_holding->holding_category . '_' . $date . '.xlsx');
     }
     public function download_pdf_karyawan(Request $request)
     {
