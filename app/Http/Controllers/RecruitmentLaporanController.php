@@ -26,9 +26,15 @@ class RecruitmentLaporanController extends Controller
             'holding' => $holdings
         ]);
     }
-    public function dt_laporan_recruitment()
+    public function dt_laporan_recruitment(Request $request, $holding)
     {
-        $table = RecruitmentUser::with([
+        // dd($request->departemen_filter);
+        $holdings = Holding::where('holding_code', $holding)->first();
+        $now = Carbon::parse($request->start_date)->startOfDay();
+        $now1 = Carbon::parse($request->end_date)->endOfDay();
+        // $period = CarbonPeriod::create($now, $now1);
+
+        $query = RecruitmentUser::with([
             'Jabatan' => function ($query) {
                 $query->with([
                     'Bagian' => function ($query) {
@@ -57,8 +63,27 @@ class RecruitmentLaporanController extends Controller
             'AuthLogin' => function ($query) {
                 $query;
             }
-        ])->get();
+        ])
+            ->where('holding', $holdings->id)
+            ->whereBetween('created_at', [$now, $now1]);
+        if (!empty($request->departemen_filter)) {
+            $query->whereIn('nama_dept', (array)$request->departemen_filter ?? []);
+        }
+
+        if (!empty($request->divisi_filter)) {
+            $query->whereIn('nama_divisi', (array)$request->divisi_filter ?? []);
+        }
+
+        if (!empty($request->bagian_filter)) {
+            $query->whereIn('nama_bagian', (array)$request->bagian_filter ?? []);
+        }
+
+        if (!empty($request->jabatan_filter)) {
+            $query->whereIn('nama_jabatan', (array)$request->jabatan_filter ?? []);
+        }
+        $table = $query->get();
         // dd($table);
+        // dd($request->departemen_filter);
         if (request()->ajax()) {
             return DataTables::of($table)
                 ->addColumn('tanggal_mulai', function ($row) {
@@ -409,4 +434,15 @@ class RecruitmentLaporanController extends Controller
             'select' => $select,
         );
     }
+
+    // Laporan Recruitment
+    public function laporan_recruitment($holding)
+    {
+        $holdings = Holding::where('holding_code', $holding)->first();
+        return view('admin.recruitment-users.laporan.index', [
+            'holding' => $holdings
+        ]);
+    }
+    // Laporan Recruitment
+
 }

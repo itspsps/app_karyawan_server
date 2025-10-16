@@ -207,10 +207,24 @@
                                     </div>
                                 </div>
                             </div>
-                            <table class="table table-bordered table-hover" id="table_rekapdata"
-                                style=" width: 100%; font-size: small; ">
-
-                            </table>
+                            <div id="table_recruitment_form">
+                                <table class="table" id="table_recruitment" style="width: 100%; font-size: small;">
+                                    <thead class="table-primary">
+                                        <tr>
+                                            <th>No.</th>
+                                            <th>Tanggal Mulai</th>
+                                            <th>Nama Lengkap</th>
+                                            <th>Posisi yang Dilamar</th>
+                                            <th>CV</th>
+                                            <th>Riwayat&nbsp;Detail</th>
+                                            <th>Tanggal&nbsp;Berakhir</th>
+                                            <th>Perkembangan&nbsp;Terakhir</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="table-border-bottom-0">
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -238,9 +252,10 @@
     <!-- {{-- start datatable  --}} -->
     <script>
         var holding_id = '{{ $holding->id }}';
+        var holding = '{{ $holding->holding_code }}';
         $('#departemen_filter').change(function(e) {
             departemen_filter_dept = $(this).val() || '';
-            // $('#table_rekapdata').DataTable().destroy();
+            // $('#table_recruitment').DataTable().destroy();
             var url =
                 "@if (Auth::user()->is_admin == 'hrd'){{ url('hrd/report_recruitment/get_divisi') }}@else{{ url('report_recruitment/get_divisi') }}@endif" +
                 '/' + holding_id;
@@ -307,7 +322,7 @@
         $('#divisi_filter').change(function() {
             divisi_filter = $(this).val() || '';
 
-            // $('#table_rekapdata').DataTable().destroy();
+            // $('#table_recruitment').DataTable().destroy();
             $.ajax({
                 type: 'GET',
                 url: "@if (Auth::user()->is_admin == 'hrd'){{ url('hrd/report_recruitment/get_bagian') }}@else{{ url('report_recruitment/get_bagian') }}@endif" +
@@ -458,56 +473,86 @@
         }, cb);
 
         cb(start, end);
-        let holding = window.location.pathname.split("/").pop();
-        var table = $('#table_recruitment').DataTable({
-            "scrollY": true,
-            "scrollX": true,
-            processing: true,
-            serverSide: true,
-            ajax: {
-                url: "{{ url('/dt_laporan_recruitment') }}" + '/' + holding,
-            },
-            columns: [{
-                    data: null,
-                    render: function(data, type, row, meta) {
-                        return meta.row + 1;
+
+        $(document).ready(function() {
+            $('#table_recruitment_form').hide();
+            $('#btn_filter').click(function(e) {
+                $('#table_recruitment_form').show();
+                var departemen_filter = $('#departemen_filter').val() || [];
+                var divisi_filter = $('#divisi_filter').val() || [];
+                var bagian_filter = $('#bagian_filter').val() || [];
+                var jabatan_filter = $('#jabatan_filter').val() || [];
+                var start_date = $('#start_date').val() || '';
+                var end_date = $('#end_date').val() || '';
+
+                // console.log(departemen_filter, divisi_filter, bagian_filter, jabatan_filter, start_date, end_date);
+
+                $('#content_null').empty();
+                // $('#table_recruitment').empty();
+                $('#table_recruitment').DataTable().clear().destroy();
+                if ($.fn.DataTable.isDataTable('#table_recruitment')) {
+                    $('#table_recruitment').DataTable().clear().destroy();
+                }
+                var table = $('#table_recruitment').DataTable({
+                    "scrollY": true,
+                    "scrollX": true,
+                    processing: true,
+                    serverSide: true,
+                    ajax: {
+                        url: "{{ url('/dt_laporan_recruitment') }}" + '/' + holding,
+                        data: {
+                            start_date: start_date,
+                            end_date: end_date,
+                            departemen_filter: departemen_filter,
+                            divisi_filter: divisi_filter,
+                            bagian_filter: bagian_filter,
+                            jabatan_filter: jabatan_filter,
+                        }
                     },
-                    orderable: false,
-                    searchable: false
-                },
-                {
-                    data: 'waktu_melamar',
-                    name: 'waktu_melamar'
-                },
-                {
-                    data: 'nama_lengkap',
-                    name: 'nama_lengkap'
-                },
-                {
-                    data: 'posisi_yang_dilamar',
-                    name: 'posisi_yang_dilamar'
-                },
-                {
-                    data: 'cv',
-                    name: 'cv'
-                },
-                {
-                    data: 'riwayat_lamaran',
-                    name: 'riwayat_lamaran',
-                    class: 'table-tbody'
-                },
-                {
-                    data: 'status_detail',
-                    name: 'status_detail'
-                },
-                {
-                    data: 'hasil_final',
-                    name: 'hasil_final'
-                },
-            ],
-            order: [
-                [2, 'desc']
-            ]
+                    columns: [{
+                            data: null,
+                            render: function(data, type, row, meta) {
+                                return meta.row + 1;
+                            },
+                            orderable: false,
+                            searchable: false
+                        },
+                        {
+                            data: 'tanggal_mulai',
+                            name: 'tanggal_mulai',
+                            // class: 'table-tbody'
+                        },
+                        {
+                            data: 'nama_lengkap',
+                            name: 'nama_lengkap'
+                        },
+                        {
+                            data: 'posisi_yang_dilamar',
+                            name: 'posisi_yang_dilamar'
+                        },
+                        {
+                            data: 'cv',
+                            name: 'cv'
+                        },
+                        {
+                            data: 'status_detail',
+                            name: 'status_detail'
+                        },
+                        {
+                            data: 'tanggal_berakhir',
+                            name: 'tanggal_berakhir',
+                            // class: 'table-tbody'
+                        },
+                        {
+                            data: 'perkembangan_terakhir',
+                            name: 'perkembangan_terakhir'
+                        },
+                    ],
+                    order: [
+                        [2, 'desc']
+                    ]
+                });
+            });
         });
     </script>
 @endsection
