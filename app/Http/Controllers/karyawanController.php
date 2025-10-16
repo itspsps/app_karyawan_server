@@ -487,7 +487,7 @@ class karyawanController extends Controller
         $get_holding = Holding::where('holding_code', $holding)->first();
         if ($get_holding == null) {
             Alert::error('Error', 'Holding Tidak Ditemukan', 4000);
-            return redirect()->back();
+            return redirect()->route('dashboard_holding')->with('error', 'Holding Tidak Ditemukan', 4000);
         }
         return Excel::download(new KaryawanExport($get_holding), 'Data Karyawan_' . $get_holding->holding_category . '_' . $date . '.xlsx');
     }
