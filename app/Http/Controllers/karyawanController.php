@@ -64,8 +64,8 @@ class karyawanController extends Controller
         $departemen = Departemen::orderBy('nama_departemen', 'ASC')->where('holding', $getHolding->id)->get();
         $user = Karyawan::where('kontrak_kerja', $getHolding->id)->where('status_aktif', 'AKTIF')->get();
         $jabatan = Jabatan::orderBy('nama_jabatan', 'ASC')->where('holding', $getHolding->id)->get();
-        $karyawan_laki = Karyawan::where('gender', 'Laki-Laki')->where('kontrak_kerja', $getHolding->id)->where('status_aktif', 'AKTIF')->count();
-        $karyawan_perempuan = Karyawan::where('gender', 'Perempuan')->where('kontrak_kerja', $getHolding->id)->where('status_aktif', 'AKTIF')->count();
+        $karyawan_laki = Karyawan::where('gender', '1')->where('kontrak_kerja', $getHolding->id)->where('status_aktif', 'AKTIF')->count();
+        $karyawan_perempuan = Karyawan::where('gender', '2')->where('kontrak_kerja', $getHolding->id)->where('status_aktif', 'AKTIF')->count();
         $karyawan_office = Karyawan::where('kategori', 'Karyawan Bulanan')->where('kontrak_kerja', $getHolding->id)->where('status_aktif', 'AKTIF')->count();
         $karyawan_shift = Karyawan::where('kategori', 'Karyawan Harian')->where('kontrak_kerja', $getHolding->id)->where('status_aktif', 'AKTIF')->count();
         return view('admin.karyawan.index', [

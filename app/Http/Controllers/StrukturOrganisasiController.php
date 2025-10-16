@@ -12,9 +12,6 @@ class StrukturOrganisasiController extends Controller
 {
     public function index()
     {
-        $holding = request()->segment(count(request()->segments()));
-
-        $kontrak = 'SP';
         // syncfusion
         $jabatan = Jabatan::join('divisis', 'divisis.id', '=', 'jabatans.divisi_id')
             ->join('level_jabatans', 'level_jabatans.id', '=', 'jabatans.level_id')
@@ -43,10 +40,6 @@ class StrukturOrganisasiController extends Controller
                     ->where('bagians.nama_bagian', $jabatan["nama_bagian"])
                     ->where('jabatans.nama_jabatan', $jabatan["nama_jabatan"])
                     ->where('karyawans.status_aktif', 'AKTIF')
-                    // ->where('karyawans.site_job', 'ALL SITES (SP, SPS, SIP)')
-                    // ->orWhere('penempatan_kerja', 'ALL SITES (SP)')
-                    // ->orWhere('karyawans.site_job', 'CV. SUMBER PANGAN - KEDIRI')
-                    // ->take('5')
                     ->select('karyawans.name')
                     ->get()
                     ->toArray();
@@ -59,9 +52,6 @@ class StrukturOrganisasiController extends Controller
                     ->where('bagians.nama_bagian', $jabatan["nama_bagian"])
                     ->where('jabatans.nama_jabatan', $jabatan["nama_jabatan"])
                     ->where('karyawans.status_aktif', 'AKTIF')
-                    // ->orWhere('karyawans.site_job', 'CV. SUMBER PANGAN - KEDIRI')
-                    // ->orWhere('penempatan_kerja', 'ALL SITES (SP)')
-                    // ->take('5')
                     ->select('karyawans.name')
                     ->get()
                     ->toArray();
@@ -74,10 +64,6 @@ class StrukturOrganisasiController extends Controller
                     ->where('bagians.nama_bagian', $jabatan["nama_bagian"])
                     ->where('jabatans.nama_jabatan', $jabatan["nama_jabatan"])
                     ->where('karyawans.status_aktif', 'AKTIF')
-                    // ->where('karyawans.site_job', 'ALL SITES (SP, SPS, SIP)')
-                    // ->orWhere('karyawans.site_job', 'CV. SUMBER PANGAN - KEDIRI')
-                    // ->orWhere('penempatan_kerja', 'ALL SITES (SP)')
-                    // ->take('5')
                     ->select('karyawans.name')
                     ->get()
                     ->toArray();
@@ -90,10 +76,6 @@ class StrukturOrganisasiController extends Controller
                     ->where('bagians.nama_bagian', $jabatan["nama_bagian"])
                     ->where('jabatans.nama_jabatan', $jabatan["nama_jabatan"])
                     ->where('karyawans.status_aktif', 'AKTIF')
-                    // ->where('karyawans.site_job', 'ALL SITES (SP, SPS, SIP)')
-                    // ->orWhere('karyawans.site_job', 'CV. SUMBER PANGAN - KEDIRI')
-                    // ->orWhere('penempatan_kerja', 'ALL SITES (SP)')
-                    // ->take('5')
                     ->select('karyawans.name')
                     ->get()
                     ->toArray();
@@ -106,10 +88,6 @@ class StrukturOrganisasiController extends Controller
                     ->where('bagians.nama_bagian', $jabatan["nama_bagian"])
                     ->where('jabatans.nama_jabatan', $jabatan["nama_jabatan"])
                     ->where('karyawans.status_aktif', 'AKTIF')
-                    // ->where('karyawans.site_job', 'ALL SITES (SP, SPS, SIP)')
-                    // ->orWhere('karyawans.site_job', 'CV. SUMBER PANGAN - KEDIRI')
-                    // ->orWhere('penempatan_kerja', 'ALL SITES (SP)')
-                    // ->take('5')
                     ->select('karyawans.name')
                     ->get()
                     ->toArray();

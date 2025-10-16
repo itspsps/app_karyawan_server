@@ -13,6 +13,7 @@ use App\Models\MappingShift;
 use App\Models\Shift;
 use App\Models\User;
 use Carbon\Carbon;
+use Carbon\CarbonPeriod;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -476,6 +477,27 @@ class MappingShiftController extends Controller
         $request->session()->flash('mappingshiftupdatesuccess');
         return redirect('/mapping_shift/dashboard/');
     }
+    public function get_columns(Request $request)
+    {
+        // dd('ok');
+        $start_date = Carbon::parse($request->start_date)->format('Y-m-d');
+        $end_date = Carbon::parse($request->end_date)->format('Y-m-d');
+        // dd($end_date);
+        $period = CarbonPeriod::create($start_date, $end_date);
+        foreach ($period as $date) {
+            $data_columns_header[] = ['header' => Carbon::parse($date)->isoFormat('dd, D/M/YYYY')];
+            $data_columns[] = ['data' => 'tanggal_' . $date->format('dmY'), 'name' => 'tanggal_' . $date->format('dmY')];
+        }
+        $count_period = count($period);
+
+        return array(
+            'data_columns_header' => $data_columns_header,
+            'count_period' => $count_period,
+            'datacolumn' => $data_columns,
+            'start_date' => $request->start_date,
+            'end_date' => $request->end_date
+        );
+    }
     public function mapping_shift_datatable(Request $request)
     {
         $holding = Holding::where('holding_code', $request->holding)->first();
@@ -483,8 +505,9 @@ class MappingShiftController extends Controller
         // dd($request->all(), $request->departemen_filter);
         $start_date = $request->start_date ?? Carbon::now()->startOfMonth()->format('Y-m-d');
         $end_date = $request->end_date ?? Carbon::now()->endOfMonth()->format('Y-m-d');
-        $now = Carbon::parse($start_date)->format('Y-m-d');
-        $now1 = Carbon::parse($end_date)->format('Y-m-d');
+        $now = Carbon::parse($start_date);
+        $now1 = Carbon::parse($end_date);
+        $period = CarbonPeriod::create($now, $now1);
         // dd($request->start_date, $request->end_date);
         $table = Karyawan::with([
             'Departemen',
@@ -497,8 +520,6 @@ class MappingShiftController extends Controller
         ])
             ->where('kontrak_kerja', $holding->id)
             ->where('shift', 'SHIFT')
-            // ->limit(6)
-            // ->where('nomor_identitas_karyawan', '=', '2002305050895')
             ->where('kategori', 'Karyawan Bulanan')
             ->where('status_aktif', 'AKTIF');
 
@@ -517,46 +538,56 @@ class MappingShiftController extends Controller
         $table->orderBy('name', 'ASC');
         $query = $table->get();
         // dd($query);
-        return DataTables::of($query)
-            ->addColumn('jabatan', function ($row) {
-                return $row->Jabatan->nama_jabatan ?? '-';
-            })
-            ->addColumn('mapping_shift', function ($row) use ($holding) {
+        $column = DataTables::of($query);
+        foreach ($period as $date) {
+            $colName = 'tanggal_' . $date->format('dmY');
+            $column->addColumn('tanggal_' . $date->format('dmY'), function ($row) use ($date) {
+                return '-';
+            });
+            $data_tanggal[] = $colName;
+        }
+        $column->addColumn('jabatan', function ($row) {
+            return $row->Jabatan->nama_jabatan ?? '-';
+        });
+        $column->addColumn('departemen', function ($row) {
+            return $row->Departemen->nama_departemen ?? '-';
+        });
+        $column->addColumn('mapping_shift', function ($row) use ($holding) {
 
-                if ($row->MappingShift->count() == 0) {
-                    return '<span class="badge bg-label-danger">Kosong</span>';
-                } else {
+            if ($row->MappingShift->count() == 0) {
+                return '<span class="badge bg-label-danger">Kosong</span>';
+            } else {
 
-                    $first = $row->MappingShift->min('tanggal_masuk');
-                    $last  = $row->MappingShift->max('tanggal_masuk');
+                $first = $row->MappingShift->min('tanggal_masuk');
+                $last  = $row->MappingShift->max('tanggal_masuk');
 
-                    $periode = '<span class="badge bg-label-success">'
-                        . Carbon::parse($first)->isoFormat('DD MMMM YYYY')
-                        . ' - '
-                        . Carbon::parse($last)->isoFormat('DD MMMM YYYY')
-                        . '</span>';
+                $periode = '<span class="badge bg-label-success">'
+                    . Carbon::parse($first)->isoFormat('DD MMMM YYYY')
+                    . ' - '
+                    . Carbon::parse($last)->isoFormat('DD MMMM YYYY')
+                    . '</span>';
 
-                    $items = [];
-                    $slice = $row->MappingShift->take(6);
-                    foreach ($slice as $shift) {
-                        $items[] = '<li>'
-                            . Carbon::parse($shift->tanggal_masuk)->isoFormat('DD-MM-YYYY')
-                            . ' (Jam Kerja : ' . $shift->Shift->jam_kerja . ' - ' . $shift->Shift->jam_keluar . ')</li>';
-                    }
-
-                    if ($row->MappingShift->count() > 1) {
-                        $lastShift = $row->MappingShift->last();
-                        $items[] = '<li>....</li><li>....</li>';
-                        $items[] = '<li>'
-                            . Carbon::parse($lastShift->tanggal_masuk)->isoFormat('DD-MM-YYYY')
-                            . ' (Jam Kerja : ' . $lastShift->Shift->jam_kerja . ' - ' . $lastShift->Shift->jam_keluar . ')</li>';
-                        $items[] = '<li><a href="/karyawan/mapping_shift/' . $row->id . '/' . $holding->holding_code . '"><span class="badge bg-label-info">Lihat Detail..</span></a></li>';
-                    }
-
-                    return $periode . implode('', $items);
+                $items = [];
+                $slice = $row->MappingShift->take(6);
+                foreach ($slice as $shift) {
+                    $items[] = '<li>'
+                        . Carbon::parse($shift->tanggal_masuk)->isoFormat('DD-MM-YYYY')
+                        . ' (Jam Kerja : ' . $shift->Shift->jam_kerja . ' - ' . $shift->Shift->jam_keluar . ')</li>';
                 }
-                // return $first . ' - ' . $last;
-            })
+
+                if ($row->MappingShift->count() > 1) {
+                    $lastShift = $row->MappingShift->last();
+                    $items[] = '<li>....</li><li>....</li>';
+                    $items[] = '<li>'
+                        . Carbon::parse($lastShift->tanggal_masuk)->isoFormat('DD-MM-YYYY')
+                        . ' (Jam Kerja : ' . $lastShift->Shift->jam_kerja . ' - ' . $lastShift->Shift->jam_keluar . ')</li>';
+                    $items[] = '<li><a href="/karyawan/mapping_shift/' . $row->id . '/' . $holding->holding_code . '"><span class="badge bg-label-info">Lihat Detail..</span></a></li>';
+                }
+
+                return $periode . implode('', $items);
+            }
+            // return $first . ' - ' . $last;
+        })
             ->addColumn('select', function ($row) {
                 return '<div class="form-check">
             <input class="group_select form-check-input" type="checkbox"
@@ -565,10 +596,67 @@ class MappingShiftController extends Controller
                 data-id="' . $row->id . '" 
                 value="' . $row->id . '">
         </div>';
-            })
-            ->rawColumns(['jabatan', 'mapping_shift', 'select'])
-            ->make(true);
+            });
+        $rawCols = array_merge([
+            'jabatan',
+            'departemen',
+            'mapping_shift',
+            'select'
+        ], $data_tanggal);
+        $column->rawColumns($rawCols);
+        return $column->make(true);
     }
+
+    public function mapping_calendar($holding, Request $request)
+    {
+        // dd($request->all());
+        try {
+            $holding = Holding::where('holding_code', $holding)->first();
+            $events = [];
+
+            $table = MappingShift::with([
+                'Shift'
+            ])->with(['User'])
+                ->orderBy('tanggal_masuk', 'ASC')
+                ->get();
+            // dd($table);
+            foreach ($table as $row) {
+                $events[] = [
+                    'title' => $row->User->name,
+                    'start' => $row->tanggal_masuk,
+                    'end' => $row->tanggal_keluar,
+                    'color' => '#3788d8',
+                ];
+            }
+            return response()->json($events);
+        } catch (\Exception $e) {
+            // log ke laravel.log biar tahu detail error-nya
+            \Log::error('Error di getEvents: ' . $e->getMessage());
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+    }
+    public function getDetailTanggal($holding, Request $request)
+    {
+        $tanggal = $request->tanggal;
+        // dd($tanggal);
+        $records = MappingShift::with(['User', 'Shift'])
+            ->whereDate('tanggal_masuk', $tanggal)
+            ->get();
+
+        if ($records->isEmpty()) {
+            return response()->json(['html' => '<p>Tidak ada shift di tanggal ini.</p>']);
+        }
+
+        $html = '<table class="table table-sm table-striped mb-0">';
+        $html .= '<thead><tr><th>Nama Karyawan</th><th>Shift</th><th</tr></thead><tbody>';
+        foreach ($records as $r) {
+            $html .= '<tr><td>' . $r->User->name . '</td><td>' . $r->Shift->nama_shift . '</td></tr>';
+        }
+        $html .= '</tbody></table>';
+
+        return response()->json(['html' => $html]);
+    }
+
     public function mapping_shift_detail_datatable($id, $holding, Request $request)
     {
         $holding = Holding::where('holding_code', $holding)->first();
@@ -626,9 +714,13 @@ class MappingShiftController extends Controller
         $holding = Holding::where('holding_code', $holding)->first();
         $nowMonth = Carbon::now()->month;
         $user_check = Karyawan::where('id', $id)->first();
-        if ($user_check->kategori == 'Karyawan Bulanan') {
-            if ($user_check->dept_id == NULL || $user_check->divisi_id == NULL || $user_check->jabatan_id == NULL) {
-                return redirect()->back()->with('error', 'Jabatan Karyawan Kosong');
+        if ($user_check == NULL) {
+            return redirect()->back()->with('error', 'Data Karyawan Tidak Ditemukan');
+        } else {
+            if ($user_check->kategori == 'Karyawan Bulanan') {
+                if ($user_check->dept_id == NULL || $user_check->divisi_id == NULL || $user_check->jabatan_id == NULL) {
+                    return redirect()->back()->with('error', 'Jabatan Karyawan Kosong');
+                }
             }
         }
         // dd($oke);

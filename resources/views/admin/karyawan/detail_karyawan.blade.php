@@ -82,9 +82,9 @@
                                 </li>
                                 <li class="nav-item">
                                     <button type="button" class="nav-link" role="tab" data-bs-toggle="tab"
-                                        data-bs-target="#nav_alamat" aria-controls="nav_alamat" aria-selected="false">
-                                        <i class="tf-icons mdi mdi-home-city me-1"></i>
-                                        ALAMAT
+                                        data-bs-target="#nav_pendidikan" aria-controls="nav_pendidikan" aria-selected="false">
+                                        <i class="tf-icons mdi mdi-account-school-outline me-1"></i>
+                                        PENDIDIKAN
                                     </button>
                                 </li>
                                 <li class="nav-item">
@@ -386,101 +386,298 @@
                                             <p class="alert alert-danger">{{ $message }}</p>
                                             @enderror
                                         </div>
-
-                                    </div>
-                                    <div class="col-md-3 mt-5">
-                                        <span
-                                            class="mdi mdi-account-school-outline badge bg-label-primary">&nbsp;RIWAYAT PENDIDIKAN</span>
-                                    </div>
-                                    <hr class="m-0 mb-3">
-                                    <div class="row mt-2 gy-4">
-                                        <div class="col-md-6 mb-3">
-                                            <div class="form-floating form-floating-outline">
-                                                <input type="text" name="ipk" id="ipk" class="form-control" value="{{ old('ipk', $karyawan->ipk) }}">
-                                                <label for="ipk">IPK</label>
-                                            </div>
+                                        <div class="col-md-3">
+                                            <span class="mdi mdi-card-account-details-outline badge bg-label-info"> KTP</span>
                                         </div>
-                                        <div class="col-md-6 mb-3">
+                                        <hr class="m-0">
+                                        <div class="col-md-3">
                                             <div class="form-floating form-floating-outline">
-                                                <input type="file" hidden name="file_ijazah" id="file_ijazah" class="form-control" accept=".pdf" value="">
-                                                @if($karyawan->ijazah == NULL)
-                                                <button type="button" id="btn_upload_ijazah" class="btn btn-sm"><i class="mdi mdi-upload text-primary"></i> <span class="text-primary">Upload</span></button>
-                                                <label for="file_ijazah">FILE IJAZAH</label>
-                                                @else
-                                                <h5 for="file_ijazah">File Ijazah</h5>
-                                                <input type="hidden" id="file_ijazah_old" name="file_ijazah_old" class="form-control" value="{{ $karyawan->ijazah }}">
-                                                <div class="group-button-ijazah">
-                                                    <a href="{{ asset('storage/ijazah/' . $karyawan->ijazah) }}" target="_blank" type="button" id="btn_lihat_ijazah" class="btn btn-sm bottom-0"><i class="mdi mdi-eye text-primary"></i> <span class="text-primary">&nbsp;Lihat File</span></a>
-                                                    <button id="btn_change_ijazah" type="button" class="btn btn-sm bottom-0"><i class="mdi mdi-pencil text-primary"></i> <span class="text-primary">Ganti</span></button>
-                                                    <button type="button" id="btn_delete_file_ijazah" class="btn btn-sm bottom-0"><i class="mdi mdi-delete text-primary"></i> <span class="text-primary">Hapus</span></button>
-                                                </div>
-                                                @endif
+                                                <select style="font-size: small;"
+                                                    class="form-control @error('provinsi') is-invalid @enderror"
+                                                    id="id_provinsi" name="provinsi">
+                                                    <option value=""> Pilih Provinsi </option>
+                                                    @foreach ($data_provinsi as $data)
+                                                    <option value="{{ $data->code }}"
+                                                        {{ $data->code == old('provinsi', $karyawan->provinsi) ? 'selected' : '' }}>
+                                                        {{ $data->name }}
+                                                    </option>
+                                                    @endforeach
+                                                </select>
+                                                <label for="id_provinsi">Provinsi</label>
                                             </div>
+                                            @error('provinsi')
+                                            <p class="alert alert-danger">{{ $message }}</p>
+                                            @enderror
                                         </div>
-                                    </div>
-                                    <div class="row gy-4">
-                                        <div class="col-md-6 mb-3">
+                                        <div class="col-md-3">
+                                            <?php
+                                            $kab = App\Models\Cities::where('province_code', old('provinsi', $karyawan->provinsi))
+                                                ->orderBy('name', 'ASC')
+                                                ->get();
+                                            $kec = App\Models\District::where('city_code', old('kabupaten', $karyawan->kabupaten))
+                                                ->orderBy('name', 'ASC')
+                                                ->get();
+                                            $desa = App\Models\Village::where('district_code', old('kecamatan', $karyawan->kecamatan))
+                                                ->orderBy('name', 'ASC')
+                                                ->get();
+                                            // echo $kab;
+                                            ?>
                                             <div class="form-floating form-floating-outline">
-                                                <input type="file" hidden name="file_transkrip_nilai" id="file_transkrip_nilai" class="form-control" accept=".pdf" value="">
-                                                @if($karyawan->transkrip_nilai == NULL)
-                                                <button type="button" id="btn_upload_transkrip_nilai" class="btn btn-sm"><i class="mdi mdi-upload text-primary"></i> <span class="text-primary">Upload</span></button>
-                                                <label for="file_transkrip_nilai">FILE TRANSKRIP NILAI</label>
-                                                @else
-                                                <h5 for="transkrip_nilai">File Transkrip Nilai</h5>
-                                                <input type="hidden" id="transkrip_nilai_old" name="transkrip_nilai_old" class="form-control" value="{{ $karyawan->transkrip_nilai }}">
-                                                <div class="group-button-transkrip_nilai">
-                                                    <a href="{{ asset('storage/transkrip_nilai/' . $karyawan->transkrip_nilai) }}" target="_blank" type="button" id="btn_lihat_transkrip_nilai" class="btn btn-sm bottom-0"><i class="mdi mdi-eye text-primary"></i> <span class="text-primary">&nbsp;Lihat File</span></a>
-                                                    <button id="btn_change_transkrip_nilai" type="button" class="btn btn-sm bottom-0"><i class="mdi mdi-pencil text-primary"></i> <span class="text-primary">&nbsp;Ganti</span></button>
-                                                    <button type="button" id="btn_delete_file_transkrip_nilai" class="btn btn-sm bottom-0"><i class="mdi mdi-delete text-primary"></i> <span class="text-primary">&nbsp;Hapus</span></button>
-                                                </div>
-                                                @endif
+                                                <select style="font-size: small;"
+                                                    class="form-control @error('kabupaten') is-invalid @enderror"
+                                                    id="id_kabupaten" name="kabupaten">
+                                                    <option value=""> Pilih Kabupaten / Kota</option>
+                                                    @foreach ($kab as $kabupaten)
+                                                    <option value="{{ $kabupaten->code }}"
+                                                        {{ $kabupaten->code == old('kabupaten', $karyawan->kabupaten) ? 'selected' : '' }}>
+                                                        {{ $kabupaten->name }}
+                                                    </option>
+                                                    @endforeach
+                                                </select>
+                                                <label for="id_kabupaten">Kabupaten</label>
                                             </div>
+                                            @error('kabupaten')
+                                            <p class="alert alert-danger">{{ $message }}</p>
+                                            @enderror
                                         </div>
-                                    </div>
-                                    <div class="row mt-2 gy-4">
+                                        <div class="col-md-3">
+                                            <div class="form-floating form-floating-outline">
+                                                <select style="font-size: small;"
+                                                    class="form-control @error('kecamatan') is-invalid @enderror"
+                                                    id="id_kecamatan" name="kecamatan">
+                                                    <option value=""> Pilih kecamatan</option>
+                                                    @foreach ($kec as $data)
+                                                    <option value="{{ $data->code }}"
+                                                        {{ $data->code == old('kecamatan', $karyawan->kecamatan) ? 'selected' : '' }}>
+                                                        {{ $data->name }}
+                                                    </option>
+                                                    @endforeach
+                                                </select>
+                                                <label for="id_kecamatan">kecamatan</label>
+                                            </div>
+                                            @error('kecamatan')
+                                            <p class="alert alert-danger">{{ $message }}</p>
+                                            @enderror
+                                        </div>
+                                        <div class="col-md-3">
+                                            <div class="form-floating form-floating-outline">
+                                                <select style="font-size: small;"
+                                                    class="form-control @error('desa') is-invalid @enderror"
+                                                    id="id_desa" name="desa">
+                                                    <option value=""> Pilih Desa</option>
+                                                    @foreach ($desa as $data)
+                                                    <option value="{{ $data->code }}"
+                                                        {{ $data->code == old('desa', $karyawan->desa) ? 'selected' : '' }}>
+                                                        {{ $data->name }}
+                                                    </option>
+                                                    @endforeach
+                                                </select>
+                                                <label for="id_desa">Desa</label>
+                                            </div>
+                                            @error('desa')
+                                            <p class="alert alert-danger">{{ $message }}</p>
+                                            @enderror
+                                        </div>
+                                        <div class="col-md-3">
+                                            <div class="form-floating form-floating-outline">
+                                                <input style="font-size: small;" type="number" id="rt"
+                                                    name="rt" class="form-control @error('rt') is-invalid @enderror"
+                                                    placeholder="Masukkan RT" value="{{ old('rt', $karyawan->rt) }}" />
+                                                <label for="rt">RT</label>
+                                            </div>
+                                            @error('rt')
+                                            <p class="alert alert-danger">{{ $message }}</p>
+                                            @enderror
+                                        </div>
+                                        <div class="col-md-3">
+                                            <div class="form-floating form-floating-outline">
+                                                <input style="font-size: small;" type="number" id="rw"
+                                                    name="rw" class="form-control @error('rw') is-invalid @enderror"
+                                                    placeholder="Masukkan RW" value="{{ old('rw', $karyawan->rw) }}" />
+                                                <label for="rw">RW</label>
+                                            </div>
+                                            @error('rw')
+                                            <p class="alert alert-danger">{{ $message }}</p>
+                                            @enderror
+                                        </div>
                                         <div class="col-md-6">
-                                            <button type="button" id="btn_add_pendidikan" class="btn btn-sm btn-primary"><i class="mdi mdi-plus"></i></button>
+                                            <div class="form-floating form-floating-outline">
+                                                <input style="font-size: small;" type="text" id="alamat"
+                                                    name="alamat"
+                                                    class="form-control @error('alamat') is-invalid @enderror"
+                                                    placeholder="Masukkan Alamat"
+                                                    value="{{ old('alamat', $karyawan->detail_alamat) }}" />
+                                                <label for="alamat">Keterangan Alamat(Jalan / Dusun)</label>
+                                            </div>
+                                            @error('alamat')
+                                            <p class="alert alert-danger">{{ $message }}</p>
+                                            @enderror
                                         </div>
-                                        <table class="table table-bordered" id="table_pendidikan" width="100%">
-                                            <thead>
-                                                <tr>
-                                                    <th>Aksi</th>
-                                                    <th>No</th>
-                                                    <th>Nama&nbsp;Instansi</th>
-                                                    <th>Jenjang</th>
-                                                    <th>jurusan</th>
-                                                    <th>Tahun&nbsp;Masuk</th>
-                                                    <th>Tahun&nbsp;Lulus</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
 
-                                            </tbody>
-                                        </table>
+                                        <div class="col-md-12">
+                                            <h6>Apakah Alamat KTP Sama Dengan Alamat Domisili ?</h6>
+                                            <div class="btn-group" role="group"
+                                                aria-label="Basic radio toggle button group">
+                                                <input style="font-size: small;" type="radio"
+                                                    class="btn-check @error('pilihan_alamat_domisili') is-invalid @enderror"
+                                                    name="pilihan_alamat_domisili" value="" checked>
+                                                <input style="font-size: small;" type="radio"
+                                                    class="btn-check @error('pilihan_alamat_domisili') is-invalid @enderror"
+                                                    name="pilihan_alamat_domisili" id="btnradio_ya" value="ya"
+                                                    @if (old('pilihan_alamat_domisili', $karyawan->status_alamat) == 'ya') checked @else @endif>
+                                                <label class="btn btn-sm btn-outline-success waves-effect"
+                                                    for="btnradio_ya">Ya</label>
+                                                <input style="font-size: small;" type="radio"
+                                                    class="btn-check @error('pilihan_alamat_domisili') is-invalid @enderror"
+                                                    name="pilihan_alamat_domisili" id="btnradio_tidak" value="tidak"
+                                                    @if (old('pilihan_alamat_domisili', $karyawan->status_alamat) == 'tidak') checked @else @endif>
+                                                <label class="btn btn-sm btn-outline-primary waves-effect"
+                                                    for="btnradio_tidak">Tidak</label>
+                                                @error('pilihan_alamat_domisili')
+                                                <p class="alert alert-danger">{{ $message }}</p>
+                                                @enderror
+                                            </div>
+                                        </div>
                                     </div>
-                                    <div class="col-md-3 mt-3">
-                                        <span
-                                            class="mdi mdi-account-school-outline badge bg-label-success">&nbsp;KEAHLIAN</span>
-                                    </div>
-                                    <hr class="m-0 mb-3">
-                                    <div class="row mt-2 gy-4">
+                                    <div id="content_alamat_domisili" class="row mt-2 gy-4">
+                                        <div class="col-md-3">
+                                            <span class="mdi mdi-map-marker-check-outline badge bg-label-danger">ALAMAT DOMISILI
+                                                Sekarang</span>
+                                        </div>
+                                        <hr class="m-0">
+                                        <div class="col-md-3">
+                                            <div class="form-floating form-floating-outline">
+                                                <select style="font-size: small;"
+                                                    class="form-control @error('provinsi_domisili') is-invalid @enderror"
+                                                    id="id_provinsi_domisili" name="provinsi_domisili"
+                                                    style="font-size: small;">
+                                                    <option value=""> Pilih Provinsi </option>
+                                                    @foreach ($data_provinsi as $data)
+                                                    <option value="{{ $data->code }}"
+                                                        {{ $data->code == old('provinsi_domisili', $karyawan->provinsi_domisili) ? 'selected' : '' }}>
+                                                        {{ $data->name }}
+                                                    </option>
+                                                    @endforeach
+                                                </select>
+                                                <label for="id_provinsi_domisili">Provinsi</label>
+                                            </div>
+                                            @error('provinsi_domisili')
+                                            <p class="alert alert-danger">{{ $message }}</p>
+                                            @enderror
+                                        </div>
+                                        <div class="col-md-3">
+                                            <?php
+                                            $kab_domisili = App\Models\Cities::Where('province_code', old('provinsi_domisili', $karyawan->provinsi_domisili))
+                                                ->orderBy('name', 'ASC')
+                                                ->get();
+                                            $kec_domisili = App\Models\District::Where('city_code', old('kabupaten_domisili', $karyawan->kabupaten_domisili))
+                                                ->orderBy('name', 'ASC')
+                                                ->get();
+                                            $desa_domisili = App\Models\Village::Where('district_code', old('kecamatan_domisili', $karyawan->kecamatan_domisili))
+                                                ->orderBy('name', 'ASC')
+                                                ->get();
+                                            // echo $kab;
+                                            ?>
+                                            <div class="form-floating form-floating-outline">
+                                                <select style="font-size: small;"
+                                                    class="form-control @error('kabupaten_domisili') is-invalid @enderror"
+                                                    id="id_kabupaten_domisili" name="kabupaten_domisili"
+                                                    style="font-size: small;">
+                                                    <option value=""> Pilih Kabupaten / Kota</option>
+                                                    @foreach ($kab_domisili as $data)
+                                                    <option value="{{ $data->code }}"
+                                                        {{ $data->code == old('kabupaten_domisili', $karyawan->kabupaten_domisili) ? 'selected' : '' }}>
+                                                        {{ $data->name }}
+                                                    </option>
+                                                    @endforeach
+                                                </select>
+                                                <label for="id_kabupaten_domisili">Kabupaten</label>
+                                            </div>
+                                            @error('kabupaten_domisili')
+                                            <p class="alert alert-danger">{{ $message }}</p>
+                                            @enderror
+                                        </div>
+                                        <div class="col-md-3">
+                                            <div class="form-floating form-floating-outline">
+                                                <select style="font-size: small;"
+                                                    class="form-control @error('kecamatan_domisili') is-invalid @enderror"
+                                                    id="id_kecamatan_domisili" name="kecamatan_domisili"
+                                                    style="font-size: small;">
+                                                    <option value=""> Pilih Kecamatan</option>
+                                                    @foreach ($kec_domisili as $data)
+                                                    <option value="{{ $data->code }}"
+                                                        {{ $data->code == old('kecamatan_domisili', $karyawan->kecamatan_domisili) ? 'selected' : '' }}>
+                                                        {{ $data->name }}
+                                                    </option>
+                                                    @endforeach
+                                                </select>
+                                                <label for="id_kecamatan_domisili">kecamatan_domisili</label>
+                                            </div>
+                                            @error('kecamatan_domisili')
+                                            <p class="alert alert-danger">{{ $message }}</p>
+                                            @enderror
+                                        </div>
+                                        <div class="col-md-3">
+                                            <div class="form-floating form-floating-outline">
+                                                <select style="font-size: small;"
+                                                    class="form-control @error('desa_domisili') is-invalid @enderror"
+                                                    id="id_desa_domisili" name="desa_domisili" style="font-size: small;">
+                                                    <option value=""> Pilih Desa</option>
+                                                    @foreach ($desa_domisili as $data)
+                                                    <option value="{{ $data->code }}"
+                                                        {{ $data->code == old('desa_domisili', $karyawan->desa_domisili) ? 'selected' : '' }}>
+                                                        {{ $data->name }}
+                                                    </option>
+                                                    @endforeach
+                                                </select>
+                                                <label for="id_desa_domisili">Desa</label>
+                                            </div>
+                                            @error('desa_domisili')
+                                            <p class="alert alert-danger">{{ $message }}</p>
+                                            @enderror
+                                        </div>
+                                        <div class="col-md-3">
+                                            <div class="form-floating form-floating-outline">
+                                                <input style="font-size: small;" style="font-size: small;" type="number"
+                                                    id="rt_domisili" name="rt_domisili"
+                                                    class="form-control @error('rt_domisili') is-invalid @enderror"
+                                                    placeholder="Masukkan RT"
+                                                    value="{{ old('rt_domisili', $karyawan->rt_domisili) }}" />
+                                                <label for="rt_domisili">RT</label>
+                                            </div>
+                                            @error('rt_domisili')
+                                            <p class="alert alert-danger">{{ $message }}</p>
+                                            @enderror
+                                        </div>
+                                        <div class="col-md-3">
+                                            <div class="form-floating form-floating-outline">
+                                                <input style="font-size: small;" style="font-size: small;" type="number"
+                                                    id="rw_domisili" name="rw_domisili"
+                                                    class="form-control @error('rw_domisili') is-invalid @enderror"
+                                                    placeholder="Masukkan RW"
+                                                    value="{{ old('rw_domisili', $karyawan->rw_domisili) }}" />
+                                                <label for="rw_domisili">RW</label>
+                                            </div>
+                                            @error('rw_domisili')
+                                            <p class="alert alert-danger">{{ $message }}</p>
+                                            @enderror
+                                        </div>
                                         <div class="col-md-6">
-                                            <button type="button" id="btn_add_keahlian" class="btn btn-sm btn-primary"><i class="mdi mdi-plus"></i></button>
+                                            <div class="form-floating form-floating-outline">
+                                                <input style="font-size: small;" style="font-size: small;" type="text"
+                                                    id="alamat_domisili" name="alamat_domisili"
+                                                    class="form-control @error('alamat_domisili') is-invalid @enderror"
+                                                    placeholder="Masukkan Alamat"
+                                                    value="{{ old('alamat_domisili', $karyawan->alamat_domisili) }}" />
+                                                <label for="alamat_domisili">Keterangan Alamat(Jalan / Dusun)</label>
+                                            </div>
+                                            @error('alamat_domisili')
+                                            <p class="alert alert-danger">{{ $message }}</p>
+                                            @enderror
                                         </div>
-                                        <table class="table table-bordered" id="table_keahlian" width="100%">
-                                            <thead>
-                                                <tr>
-                                                    <th>Aksi</th>
-                                                    <th>No</th>
-                                                    <th>Nama&nbsp;Keahlian</th>
-                                                    <th>File</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
 
-                                            </tbody>
-                                        </table>
                                     </div>
+
                                 </div>
                                 <div class="modal fade" id="modal_add_pendidikan" tabindex="-1"
                                     aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -716,299 +913,104 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="tab-pane fade" id="nav_alamat" role="tabpanel">
+                                <div class="tab-pane fade" id="nav_pendidikan" role="tabpanel">
                                     <div class="row gy-4">
-                                        <div class="col-md-3">
-                                            <span class="badge bg-label-info">Alamat Berdasarkan KTP</span>
+                                        <div class="col-md-3 mt-5">
+                                            <span
+                                                class="mdi mdi-account-school-outline badge bg-label-primary">&nbsp;RIWAYAT PENDIDIKAN</span>
                                         </div>
-                                        <hr class="m-0">
-                                        <div class="col-md-3">
-                                            <div class="form-floating form-floating-outline">
-                                                <select style="font-size: small;"
-                                                    class="form-control @error('provinsi') is-invalid @enderror"
-                                                    id="id_provinsi" name="provinsi">
-                                                    <option value=""> Pilih Provinsi </option>
-                                                    @foreach ($data_provinsi as $data)
-                                                    <option value="{{ $data->code }}"
-                                                        {{ $data->code == old('provinsi', $karyawan->provinsi) ? 'selected' : '' }}>
-                                                        {{ $data->name }}
-                                                    </option>
-                                                    @endforeach
-                                                </select>
-                                                <label for="id_provinsi">Provinsi</label>
+                                        <hr class="m-0 mb-3">
+                                        <div class="row mt-2 gy-4">
+                                            <div class="col-md-6 mb-3">
+                                                <div class="form-floating form-floating-outline">
+                                                    <input type="text" name="ipk" id="ipk" class="form-control" value="{{ old('ipk', $karyawan->ipk) }}">
+                                                    <label for="ipk">IPK</label>
+                                                </div>
                                             </div>
-                                            @error('provinsi')
-                                            <p class="alert alert-danger">{{ $message }}</p>
-                                            @enderror
-                                        </div>
-                                        <div class="col-md-3">
-                                            <?php
-                                            $kab = App\Models\Cities::where('province_code', old('provinsi', $karyawan->provinsi))
-                                                ->orderBy('name', 'ASC')
-                                                ->get();
-                                            $kec = App\Models\District::where('city_code', old('kabupaten', $karyawan->kabupaten))
-                                                ->orderBy('name', 'ASC')
-                                                ->get();
-                                            $desa = App\Models\Village::where('district_code', old('kecamatan', $karyawan->kecamatan))
-                                                ->orderBy('name', 'ASC')
-                                                ->get();
-                                            // echo $kab;
-                                            ?>
-                                            <div class="form-floating form-floating-outline">
-                                                <select style="font-size: small;"
-                                                    class="form-control @error('kabupaten') is-invalid @enderror"
-                                                    id="id_kabupaten" name="kabupaten">
-                                                    <option value=""> Pilih Kabupaten / Kota</option>
-                                                    @foreach ($kab as $kabupaten)
-                                                    <option value="{{ $kabupaten->code }}"
-                                                        {{ $kabupaten->code == old('kabupaten', $karyawan->kabupaten) ? 'selected' : '' }}>
-                                                        {{ $kabupaten->name }}
-                                                    </option>
-                                                    @endforeach
-                                                </select>
-                                                <label for="id_kabupaten">Kabupaten</label>
+                                            <div class="col-md-6 mb-3">
+                                                <div class="form-floating form-floating-outline">
+                                                    <input type="file" hidden name="file_ijazah" id="file_ijazah" class="form-control" accept=".pdf" value="">
+                                                    @if($karyawan->ijazah == NULL)
+                                                    <button type="button" id="btn_upload_ijazah" class="btn btn-sm"><i class="mdi mdi-upload text-primary"></i> <span class="text-primary">Upload</span></button>
+                                                    <label for="file_ijazah">FILE IJAZAH</label>
+                                                    @else
+                                                    <h5 for="file_ijazah">File Ijazah</h5>
+                                                    <input type="hidden" id="file_ijazah_old" name="file_ijazah_old" class="form-control" value="{{ $karyawan->ijazah }}">
+                                                    <div class="group-button-ijazah">
+                                                        <a href="{{ asset('storage/ijazah/' . $karyawan->ijazah) }}" target="_blank" type="button" id="btn_lihat_ijazah" class="btn btn-sm bottom-0"><i class="mdi mdi-eye text-primary"></i> <span class="text-primary">&nbsp;Lihat File</span></a>
+                                                        <button id="btn_change_ijazah" type="button" class="btn btn-sm bottom-0"><i class="mdi mdi-pencil text-primary"></i> <span class="text-primary">Ganti</span></button>
+                                                        <button type="button" id="btn_delete_file_ijazah" class="btn btn-sm bottom-0"><i class="mdi mdi-delete text-primary"></i> <span class="text-primary">Hapus</span></button>
+                                                    </div>
+                                                    @endif
+                                                </div>
                                             </div>
-                                            @error('kabupaten')
-                                            <p class="alert alert-danger">{{ $message }}</p>
-                                            @enderror
                                         </div>
-                                        <div class="col-md-3">
-                                            <div class="form-floating form-floating-outline">
-                                                <select style="font-size: small;"
-                                                    class="form-control @error('kecamatan') is-invalid @enderror"
-                                                    id="id_kecamatan" name="kecamatan">
-                                                    <option value=""> Pilih kecamatan</option>
-                                                    @foreach ($kec as $data)
-                                                    <option value="{{ $data->code }}"
-                                                        {{ $data->code == old('kecamatan', $karyawan->kecamatan) ? 'selected' : '' }}>
-                                                        {{ $data->name }}
-                                                    </option>
-                                                    @endforeach
-                                                </select>
-                                                <label for="id_kecamatan">kecamatan</label>
+                                        <div class="row gy-4">
+                                            <div class="col-md-6 mb-3">
+                                                <div class="form-floating form-floating-outline">
+                                                    <input type="file" hidden name="file_transkrip_nilai" id="file_transkrip_nilai" class="form-control" accept=".pdf" value="">
+                                                    @if($karyawan->transkrip_nilai == NULL)
+                                                    <button type="button" id="btn_upload_transkrip_nilai" class="btn btn-sm"><i class="mdi mdi-upload text-primary"></i> <span class="text-primary">Upload</span></button>
+                                                    <label for="file_transkrip_nilai">FILE TRANSKRIP NILAI</label>
+                                                    @else
+                                                    <h5 for="transkrip_nilai">File Transkrip Nilai</h5>
+                                                    <input type="hidden" id="transkrip_nilai_old" name="transkrip_nilai_old" class="form-control" value="{{ $karyawan->transkrip_nilai }}">
+                                                    <div class="group-button-transkrip_nilai">
+                                                        <a href="{{ asset('storage/transkrip_nilai/' . $karyawan->transkrip_nilai) }}" target="_blank" type="button" id="btn_lihat_transkrip_nilai" class="btn btn-sm bottom-0"><i class="mdi mdi-eye text-primary"></i> <span class="text-primary">&nbsp;Lihat File</span></a>
+                                                        <button id="btn_change_transkrip_nilai" type="button" class="btn btn-sm bottom-0"><i class="mdi mdi-pencil text-primary"></i> <span class="text-primary">&nbsp;Ganti</span></button>
+                                                        <button type="button" id="btn_delete_file_transkrip_nilai" class="btn btn-sm bottom-0"><i class="mdi mdi-delete text-primary"></i> <span class="text-primary">&nbsp;Hapus</span></button>
+                                                    </div>
+                                                    @endif
+                                                </div>
                                             </div>
-                                            @error('kecamatan')
-                                            <p class="alert alert-danger">{{ $message }}</p>
-                                            @enderror
                                         </div>
-                                        <div class="col-md-3">
-                                            <div class="form-floating form-floating-outline">
-                                                <select style="font-size: small;"
-                                                    class="form-control @error('desa') is-invalid @enderror"
-                                                    id="id_desa" name="desa">
-                                                    <option value=""> Pilih Desa</option>
-                                                    @foreach ($desa as $data)
-                                                    <option value="{{ $data->code }}"
-                                                        {{ $data->code == old('desa', $karyawan->desa) ? 'selected' : '' }}>
-                                                        {{ $data->name }}
-                                                    </option>
-                                                    @endforeach
-                                                </select>
-                                                <label for="id_desa">Desa</label>
+                                        <div class="row mt-2 gy-4">
+                                            <div class="col-md-6">
+                                                <button type="button" id="btn_add_pendidikan" class="btn btn-sm btn-primary"><i class="mdi mdi-plus"></i></button>
                                             </div>
-                                            @error('desa')
-                                            <p class="alert alert-danger">{{ $message }}</p>
-                                            @enderror
-                                        </div>
-                                        <div class="col-md-3">
-                                            <div class="form-floating form-floating-outline">
-                                                <input style="font-size: small;" type="number" id="rt"
-                                                    name="rt" class="form-control @error('rt') is-invalid @enderror"
-                                                    placeholder="Masukkan RT" value="{{ old('rt', $karyawan->rt) }}" />
-                                                <label for="rt">RT</label>
-                                            </div>
-                                            @error('rt')
-                                            <p class="alert alert-danger">{{ $message }}</p>
-                                            @enderror
-                                        </div>
-                                        <div class="col-md-3">
-                                            <div class="form-floating form-floating-outline">
-                                                <input style="font-size: small;" type="number" id="rw"
-                                                    name="rw" class="form-control @error('rw') is-invalid @enderror"
-                                                    placeholder="Masukkan RW" value="{{ old('rw', $karyawan->rw) }}" />
-                                                <label for="rw">RW</label>
-                                            </div>
-                                            @error('rw')
-                                            <p class="alert alert-danger">{{ $message }}</p>
-                                            @enderror
-                                        </div>
-                                        <div class="col-md-6">
-                                            <div class="form-floating form-floating-outline">
-                                                <input style="font-size: small;" type="text" id="alamat"
-                                                    name="alamat"
-                                                    class="form-control @error('alamat') is-invalid @enderror"
-                                                    placeholder="Masukkan Alamat"
-                                                    value="{{ old('alamat', $karyawan->detail_alamat) }}" />
-                                                <label for="alamat">Keterangan Alamat(Jalan / Dusun)</label>
-                                            </div>
-                                            @error('alamat')
-                                            <p class="alert alert-danger">{{ $message }}</p>
-                                            @enderror
-                                        </div>
+                                            <table class="table table-bordered" id="table_pendidikan" width="100%">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Aksi</th>
+                                                        <th>No</th>
+                                                        <th>Nama&nbsp;Instansi</th>
+                                                        <th>Jenjang</th>
+                                                        <th>jurusan</th>
+                                                        <th>Tahun&nbsp;Masuk</th>
+                                                        <th>Tahun&nbsp;Lulus</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
 
-                                        <div class="col-md-12">
-                                            <h6>Apakah Alamat KTP Sama Dengan Alamat Domisili ?</h6>
-                                            <div class="btn-group" role="group"
-                                                aria-label="Basic radio toggle button group">
-                                                <input style="font-size: small;" type="radio"
-                                                    class="btn-check @error('pilihan_alamat_domisili') is-invalid @enderror"
-                                                    name="pilihan_alamat_domisili" value="" checked>
-                                                <input style="font-size: small;" type="radio"
-                                                    class="btn-check @error('pilihan_alamat_domisili') is-invalid @enderror"
-                                                    name="pilihan_alamat_domisili" id="btnradio_ya" value="ya"
-                                                    @if (old('pilihan_alamat_domisili', $karyawan->status_alamat) == 'ya') checked @else @endif>
-                                                <label class="btn btn-sm btn-outline-success waves-effect"
-                                                    for="btnradio_ya">Ya</label>
-                                                <input style="font-size: small;" type="radio"
-                                                    class="btn-check @error('pilihan_alamat_domisili') is-invalid @enderror"
-                                                    name="pilihan_alamat_domisili" id="btnradio_tidak" value="tidak"
-                                                    @if (old('pilihan_alamat_domisili', $karyawan->status_alamat) == 'tidak') checked @else @endif>
-                                                <label class="btn btn-sm btn-outline-primary waves-effect"
-                                                    for="btnradio_tidak">Tidak</label>
-                                                @error('pilihan_alamat_domisili')
-                                                <p class="alert alert-danger">{{ $message }}</p>
-                                                @enderror
-                                            </div>
+                                                </tbody>
+                                            </table>
                                         </div>
-                                    </div>
-                                    <div id="content_alamat_domisili" class="row mt-2 gy-4">
-                                        <div class="col-md-3">
-                                            <span class="badge bg-label-danger">Alamat Berdasarkan Domisili
-                                                Sekarang</span>
+                                        <div class="col-md-3 mt-3">
+                                            <span
+                                                class="mdi mdi-account-school-outline badge bg-label-success">&nbsp;KEAHLIAN</span>
                                         </div>
-                                        <hr class="m-0">
-                                        <div class="col-md-3">
-                                            <div class="form-floating form-floating-outline">
-                                                <select style="font-size: small;"
-                                                    class="form-control @error('provinsi_domisili') is-invalid @enderror"
-                                                    id="id_provinsi_domisili" name="provinsi_domisili"
-                                                    style="font-size: small;">
-                                                    <option value=""> Pilih Provinsi </option>
-                                                    @foreach ($data_provinsi as $data)
-                                                    <option value="{{ $data->code }}"
-                                                        {{ $data->code == old('provinsi_domisili', $karyawan->provinsi_domisili) ? 'selected' : '' }}>
-                                                        {{ $data->name }}
-                                                    </option>
-                                                    @endforeach
-                                                </select>
-                                                <label for="id_provinsi_domisili">Provinsi</label>
+                                        <hr class="m-0 mb-3">
+                                        <div class="row mt-2 gy-4">
+                                            <div class="col-md-6">
+                                                <button type="button" id="btn_add_keahlian" class="btn btn-sm btn-primary"><i class="mdi mdi-plus"></i></button>
                                             </div>
-                                            @error('provinsi_domisili')
-                                            <p class="alert alert-danger">{{ $message }}</p>
-                                            @enderror
-                                        </div>
-                                        <div class="col-md-3">
-                                            <?php
-                                            $kab_domisili = App\Models\Cities::Where('province_code', old('provinsi_domisili', $karyawan->provinsi_domisili))
-                                                ->orderBy('name', 'ASC')
-                                                ->get();
-                                            $kec_domisili = App\Models\District::Where('city_code', old('kabupaten_domisili', $karyawan->kabupaten_domisili))
-                                                ->orderBy('name', 'ASC')
-                                                ->get();
-                                            $desa_domisili = App\Models\Village::Where('district_code', old('kecamatan_domisili', $karyawan->kecamatan_domisili))
-                                                ->orderBy('name', 'ASC')
-                                                ->get();
-                                            // echo $kab;
-                                            ?>
-                                            <div class="form-floating form-floating-outline">
-                                                <select style="font-size: small;"
-                                                    class="form-control @error('kabupaten_domisili') is-invalid @enderror"
-                                                    id="id_kabupaten_domisili" name="kabupaten_domisili"
-                                                    style="font-size: small;">
-                                                    <option value=""> Pilih Kabupaten / Kota</option>
-                                                    @foreach ($kab_domisili as $data)
-                                                    <option value="{{ $data->code }}"
-                                                        {{ $data->code == old('kabupaten_domisili', $karyawan->kabupaten_domisili) ? 'selected' : '' }}>
-                                                        {{ $data->name }}
-                                                    </option>
-                                                    @endforeach
-                                                </select>
-                                                <label for="id_kabupaten_domisili">Kabupaten</label>
-                                            </div>
-                                            @error('kabupaten_domisili')
-                                            <p class="alert alert-danger">{{ $message }}</p>
-                                            @enderror
-                                        </div>
-                                        <div class="col-md-3">
-                                            <div class="form-floating form-floating-outline">
-                                                <select style="font-size: small;"
-                                                    class="form-control @error('kecamatan_domisili') is-invalid @enderror"
-                                                    id="id_kecamatan_domisili" name="kecamatan_domisili"
-                                                    style="font-size: small;">
-                                                    <option value=""> Pilih Kecamatan</option>
-                                                    @foreach ($kec_domisili as $data)
-                                                    <option value="{{ $data->code }}"
-                                                        {{ $data->code == old('kecamatan_domisili', $karyawan->kecamatan_domisili) ? 'selected' : '' }}>
-                                                        {{ $data->name }}
-                                                    </option>
-                                                    @endforeach
-                                                </select>
-                                                <label for="id_kecamatan_domisili">kecamatan_domisili</label>
-                                            </div>
-                                            @error('kecamatan_domisili')
-                                            <p class="alert alert-danger">{{ $message }}</p>
-                                            @enderror
-                                        </div>
-                                        <div class="col-md-3">
-                                            <div class="form-floating form-floating-outline">
-                                                <select style="font-size: small;"
-                                                    class="form-control @error('desa_domisili') is-invalid @enderror"
-                                                    id="id_desa_domisili" name="desa_domisili" style="font-size: small;">
-                                                    <option value=""> Pilih Desa</option>
-                                                    @foreach ($desa_domisili as $data)
-                                                    <option value="{{ $data->code }}"
-                                                        {{ $data->code == old('desa_domisili', $karyawan->desa_domisili) ? 'selected' : '' }}>
-                                                        {{ $data->name }}
-                                                    </option>
-                                                    @endforeach
-                                                </select>
-                                                <label for="id_desa_domisili">Desa</label>
-                                            </div>
-                                            @error('desa_domisili')
-                                            <p class="alert alert-danger">{{ $message }}</p>
-                                            @enderror
-                                        </div>
-                                        <div class="col-md-3">
-                                            <div class="form-floating form-floating-outline">
-                                                <input style="font-size: small;" style="font-size: small;" type="number"
-                                                    id="rt_domisili" name="rt_domisili"
-                                                    class="form-control @error('rt_domisili') is-invalid @enderror"
-                                                    placeholder="Masukkan RT"
-                                                    value="{{ old('rt_domisili', $karyawan->rt_domisili) }}" />
-                                                <label for="rt_domisili">RT</label>
-                                            </div>
-                                            @error('rt_domisili')
-                                            <p class="alert alert-danger">{{ $message }}</p>
-                                            @enderror
-                                        </div>
-                                        <div class="col-md-3">
-                                            <div class="form-floating form-floating-outline">
-                                                <input style="font-size: small;" style="font-size: small;" type="number"
-                                                    id="rw_domisili" name="rw_domisili"
-                                                    class="form-control @error('rw_domisili') is-invalid @enderror"
-                                                    placeholder="Masukkan RW"
-                                                    value="{{ old('rw_domisili', $karyawan->rw_domisili) }}" />
-                                                <label for="rw_domisili">RW</label>
-                                            </div>
-                                            @error('rw_domisili')
-                                            <p class="alert alert-danger">{{ $message }}</p>
-                                            @enderror
-                                        </div>
-                                        <div class="col-md-6">
-                                            <div class="form-floating form-floating-outline">
-                                                <input style="font-size: small;" style="font-size: small;" type="text"
-                                                    id="alamat_domisili" name="alamat_domisili"
-                                                    class="form-control @error('alamat_domisili') is-invalid @enderror"
-                                                    placeholder="Masukkan Alamat"
-                                                    value="{{ old('alamat_domisili', $karyawan->alamat_domisili) }}" />
-                                                <label for="alamat_domisili">Keterangan Alamat(Jalan / Dusun)</label>
-                                            </div>
-                                            @error('alamat_domisili')
-                                            <p class="alert alert-danger">{{ $message }}</p>
-                                            @enderror
+                                            <table class="table table-bordered" id="table_keahlian" width="100%">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Aksi</th>
+                                                        <th>No</th>
+                                                        <th>Nama&nbsp;Keahlian</th>
+                                                        <th>File</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+
+                                                </tbody>
+                                            </table>
                                         </div>
 
                                     </div>
+
                                 </div>
                                 <div class="tab-pane fade" id="nav_info_hr" role="tabpanel">
                                     <div class="row mt-2 gy-4">
@@ -2081,7 +2083,7 @@
                                 </div>
                                 <div class="mt-4">
                                     <button type="submit" class="btn btn-primary me-2">Simpan</button>
-                                    <a href="@if (Auth::user()->is_admin == 'hrd') {{ url('/hrd/karyawan/' . $holding) }}@else{{ url('/karyawan/' . $holding) }} @endif"
+                                    <a href="@if (Auth::user()->is_admin == 'hrd') {{ url('/hrd/karyawan/' . $holding->holding_code) }}@else{{ url('/karyawan/' . $holding->holding_code) }} @endif"
                                         type="button" class="btn btn-outline-secondary">Kembali</a>
                                 </div>
                             </div>

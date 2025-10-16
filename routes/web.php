@@ -349,6 +349,10 @@ Route::middleware('admin')->group(function () {
     Route::get('/karyawan/mapping_shift_datatable/{holding}', [MappingShiftController::class, 'mapping_shift_datatable']);
     Route::get('/karyawan/mapping_shift_detail_datatable/{id}/{holding}', [MappingShiftController::class, 'mapping_shift_detail_datatable']);
     Route::post('/karyawan/mapping_shift/proses-tambah-shift/{holding}', [MappingShiftController::class, 'prosesTambahDetailShift']);
+    Route::get('/karyawan/mapping_calendar/{holding}', [MappingShiftController::class, 'mapping_calendar']);
+    Route::get('/karyawan/mapping_calendar/getDetailTanggal/{holding}', [MappingShiftController::class, 'getDetailTanggal']);
+    Route::get('/mapping_shift/get_columns/{holding}', [MappingShiftController::class, 'get_columns']);
+
     Route::post('/shift/proses-tambah-shift/sp', [MappingShiftController::class, 'prosesTambahShift']);
     Route::post('/shift/proses-tambah-shift/sps', [MappingShiftController::class, 'prosesTambahShift']);
     Route::post('/shift/proses-tambah-shift/sip', [MappingShiftController::class, 'prosesTambahShift']);
@@ -377,9 +381,7 @@ Route::middleware('admin')->group(function () {
     // Route::get('/karyawan/get_jabatan', [karyawanController::class, 'get_jabatan']);
 
     // STRUKTUR ORGANISASI
-    Route::get('/struktur_organisasi/sp', [StrukturOrganisasiController::class, 'index']);
-    Route::get('/struktur_organisasi/sps', [StrukturOrganisasiController::class, 'index']);
-    Route::get('/struktur_organisasi/sip', [StrukturOrganisasiController::class, 'index']);
+    Route::get('/struktur_organisasi/{holding}', [StrukturOrganisasiController::class, 'index']);
 
     // CUTI
     Route::get('/cuti/sp', [CutiController::class, 'index']);
@@ -508,9 +510,6 @@ Route::middleware('admin')->group(function () {
     Route::get('/rekap-data/sp', [RekapDataController::class, 'index'])->middleware('admin');
     Route::get('/rekap-data/sps', [RekapDataController::class, 'index'])->middleware('admin');
     Route::get('/rekap-data/sip', [RekapDataController::class, 'index'])->middleware('admin');
-    Route::get('/rekap-data/detail/{id}/sp', [RekapDataController::class, 'detail_index'])->middleware('admin');
-    Route::get('/rekap-data/detail/{id}/sps', [RekapDataController::class, 'detail_index'])->middleware('admin');
-    Route::get('/rekap-data/detail/{id}/sip', [RekapDataController::class, 'detail_index'])->middleware('admin');
     Route::get('/rekap-data/ExportAbsensi/sp', [RekapDataController::class, 'ExportAbsensi'])->middleware('admin');
     Route::get('/rekap-data/ExportAbsensi/sps', [RekapDataController::class, 'ExportAbsensi'])->middleware('admin');
     Route::get('/rekap-data/ExportAbsensi/sip', [RekapDataController::class, 'ExportAbsensi'])->middleware('admin');
@@ -653,9 +652,6 @@ Route::middleware('admin')->group(function () {
     Route::get('/rekap-data/sp', [RekapDataController::class, 'index']);
     Route::get('/rekap-data/sps', [RekapDataController::class, 'index']);
     Route::get('/rekap-data/sip', [RekapDataController::class, 'index']);
-    Route::get('/rekap-data/detail/{id}/sp', [RekapDataController::class, 'detail_index']);
-    Route::get('/rekap-data/detail/{id}/sps', [RekapDataController::class, 'detail_index']);
-    Route::get('/rekap-data/detail/{id}/sip', [RekapDataController::class, 'detail_index']);
     Route::get('/rekap-data/ExportAbsensi/sp', [RekapDataController::class, 'ExportAbsensi']);
     Route::get('/rekap-data/ExportAbsensi/sps', [RekapDataController::class, 'ExportAbsensi']);
     Route::get('/rekap-data/ExportAbsensi/sip', [RekapDataController::class, 'ExportAbsensi']);
@@ -705,6 +701,10 @@ Route::middleware('admin')->group(function () {
     Route::get('/report_kedisiplinan/get_jabatan/{holding}', [ReportController::class, 'get_jabatan']);
     Route::get('/report_kedisiplinan/get_columns/{holding}', [ReportController::class, 'get_columns_kedisiplinan']);
     Route::get('/report_kedisiplinan/get_grafik_absensi/{holding}', [ReportController::class, 'get_grafik_absensi']);
+
+    // DETAIL REPORT KEDISIPLINAN 
+    Route::get('/report_kedisiplinan/detail/{id}/{holding}', [ReportController::class, 'detail_index_kedisiplinan']);
+    Route::get('/report_kedisiplinan/detail_datatable/{id}/{holding}', [ReportController::class, 'detail_datatable']);
 
     // Export
     Route::get('/report_kedisiplinan/RekapAbsensiKedisiplinan/{holding}', [ExportController::class, 'RekapAbsensiKedisiplinan']);

@@ -101,11 +101,11 @@
 
         <!-- Preloader -->
         <div class="preloader flex-column justify-content-center align-items-center">
-            @if($holding=='sp')
+            @if($holding->holding_category=='SP')
             <img src="{{ asset('assets/img/logosp.png') }}" alt="SP" height="60" width="60">
-            @elseif($holding=='sps')
+            @elseif($holding->holding_category=='SPS')
             <img src="{{ asset('holding/assets/img/logosps.png') }}" alt="SP" height="60" width="60">
-            @elseif($holding=='sip')
+            @elseif($holding->holding_category=='SIP')
             <img src="{{ asset('holding/assets/img/logosip.png') }}" alt="SP" height="60" width="60">
             @endif
         </div>
