@@ -61,6 +61,10 @@ class karyawanController extends Controller
     public function index($holding)
     {
         $getHolding = Holding::where('holding_code', $holding)->first();
+        if ($getHolding == null) {
+            Alert::error('Error', 'Holding Tidak Ditemukan');
+            return redirect()->route('dashboard/holding');
+        }
         $departemen = Departemen::orderBy('nama_departemen', 'ASC')->where('holding', $getHolding->id)->get();
         $user = Karyawan::where('kontrak_kerja', $getHolding->id)->where('status_aktif', 'AKTIF')->get();
         $jabatan = Jabatan::orderBy('nama_jabatan', 'ASC')->where('holding', $getHolding->id)->get();
