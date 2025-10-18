@@ -27,8 +27,8 @@ class MappingShiftController extends Controller
     {
 
         $holding = Holding::where('holding_code', $holding)->first();
-        date_default_timezone_set('Asia/Jakarta');
         // dd($holding);
+        date_default_timezone_set('Asia/Jakarta');
         // $bulan = date('m');
         // $tahun = date('Y');
         // $hari_per_bulan = cal_days_in_month(CAL_GREGORIAN,$bulan,$tahun);
@@ -58,14 +58,18 @@ class MappingShiftController extends Controller
             'shift' => $shift
         ]);
     }
-    function get_karyawan_selected(Request $request)
+    function get_karyawan_mapping($holding)
     {
-        // dd('ok');
-        $get_value1 = str_replace(['[', ']'], '', json_encode($request->value));
-        $get_value2 = str_replace(['"'], "'", $get_value1);
-        // dd(json_decode($get_value1));
-        $data = Karyawan::whereIn('id', $request->value)->select('id', 'nomor_identitas_karyawan', 'name')->get();
-        // dd($get_value2, $data);
+        $holding = Holding::where('holding_code', $holding)->first();
+        if ($holding == null) {
+            return response()->json([]);
+        }
+        $data = Karyawan::where('shift', 'SHIFT')
+            ->where('status_aktif', 'AKTIF')
+            ->where('kontrak_kerja', $holding->id)
+            ->select('id', 'nomor_identitas_karyawan', 'name')
+            ->orderBy('name', 'ASC')->get();
+        // dd($data);
         return response()->json($data);
     }
     function index()
@@ -219,7 +223,7 @@ class MappingShiftController extends Controller
 
     public function prosesAddMappingShift(Request $request)
     {
-        // dd($request->all());
+        dd($request->all());
         date_default_timezone_set('Asia/Jakarta');
 
         if ($request["tanggal_mulai"] == null) {
@@ -485,7 +489,7 @@ class MappingShiftController extends Controller
         // dd($end_date);
         $period = CarbonPeriod::create($start_date, $end_date);
         foreach ($period as $date) {
-            $data_columns_header[] = ['header' => Carbon::parse($date)->isoFormat('dd, D/M/YYYY')];
+            $data_columns_header[] = ['header' => Carbon::parse($date)->isoFormat('ddd/DD')];
             $data_columns[] = ['data' => 'tanggal_' . $date->format('dmY'), 'name' => 'tanggal_' . $date->format('dmY')];
         }
         $count_period = count($period);
@@ -494,8 +498,8 @@ class MappingShiftController extends Controller
             'data_columns_header' => $data_columns_header,
             'count_period' => $count_period,
             'datacolumn' => $data_columns,
-            'start_date' => $request->start_date,
-            'end_date' => $request->end_date
+            'start_date' => Carbon::parse($request->start_date)->format('d-m-Y'),
+            'end_date' => Carbon::parse($request->end_date)->format('d-m-Y')
         );
     }
     public function mapping_shift_datatable(Request $request)
@@ -542,7 +546,22 @@ class MappingShiftController extends Controller
         foreach ($period as $date) {
             $colName = 'tanggal_' . $date->format('dmY');
             $column->addColumn('tanggal_' . $date->format('dmY'), function ($row) use ($date) {
-                return '-';
+                $shift = $row->MappingShift->where('tanggal_masuk', $date->format('Y-m-d'))->first();
+                if ($shift == NULL) {
+                    return '-';
+                } else {
+                    $backgroundColor = $shift->Shift->kode_warna; // Nilai Hex (misal: #007bff)
+
+                    // Panggil fungsi untuk menentukan class warna teks yang kontras
+                    $textColorClass = getContrastTextColor($backgroundColor);
+                    $shiftName = $shift->Shift->nama_shift;
+
+                    // Menggunakan div dengan style yang memastikan warna mengisi cell
+                    return "<div class='text-center' style='width: 100%; background-color: {$shift->Shift->kode_warna}; height: 100%; display: block; padding: 5px 5px; border-radius: 0; margin: -8px 0 -8px 0; line-height: 2.5;'><span class='{$textColorClass}'>{$shiftName}</span></div>";
+
+                    // ATAU, jika framework CSS Anda sudah menyediakan class full-cell:
+                    // return '<span class="full-cell-success">' . $shift->Shift->nama_shift . '</span>'; 
+                }
             });
             $data_tanggal[] = $colName;
         }

@@ -8,16 +8,27 @@
 <link href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css" rel="stylesheet" />
 
 <style type="text/css">
-    .my-swal {
-        z-index: X;
+    .select2-container,
+    .swal2-container {
+        z-index: 9999 !important;
     }
 
     /* ukuran teks di area pilihan (input select2) */
     .select2-container--bootstrap-5 .select2-selection {
         font-size: 0.875rem !important;
         /* Bootstrap small (14px) */
-        min-height: calc(1.5em + 0.75rem + 2px);
+        min-height: calc(1.5em + 0.75rem + 4px);
         /* biar tinggi konsisten */
+    }
+
+    /* Sesuaikan Select2 agar serasi dengan form-control Bootstrap 5 */
+    .select2-container--bootstrap-5 .select2-selection--single {
+        /* Tinggi total elemen Select2 */
+        height: calc(2.25rem + 2px);
+        /* Biasanya 2.25rem (36px) + 1px border atas + 1px border bawah = 38px */
+        padding: 0.375rem 2.25rem 0.375rem 0.75rem;
+        /* Padding standar Bootstrap 5 */
+        line-height: 1.5;
     }
 
     /* ukuran teks di dropdown list */
@@ -61,6 +72,41 @@
     /* tulisan placeholder / hasil render */
     .select2-container--bootstrap-5 .select2-selection--multiple .select2-selection__rendered {
         font-size: 0.8rem;
+    }
+
+    /* Definisikan ukuran icon MDI yang lebih besar */
+    .icon-karyawan {
+        /* Gunakan ukuran yang Anda inginkan, misalnya 3em atau 48px */
+        font-size: 3.5em;
+        /* 3.5 kali lipat ukuran font default */
+        color: #6c757d;
+        /* Warna default icon (abu-abu) */
+    }
+
+    /* Keterangan: Anda bisa mengganti '3.5em' dengan '48px' atau nilai yang Anda anggap pas. */
+
+    /* (Opsional) CSS interaktivitas yang sudah kita buat sebelumnya */
+    .karyawan-tile {
+        cursor: pointer;
+        transition: all 0.2s ease-in-out;
+        display: block;
+    }
+
+    .karyawan-tile:hover {
+        background-color: #f8f9fa;
+    }
+
+    /* Style saat kotak dipilih */
+    .karyawan-tile:has(input[type="checkbox"]:checked) {
+        background-color: #e6f7ff;
+        border-color: rgba(var(--bs-primary-rgb), 0.1) !important;
+        box-shadow: 0 0 5px rgba(var(--bs-primary-rgb), 0.5);
+    }
+
+    /* Mengubah warna icon saat kotak dipilih (agar lebih menonjol) */
+    .karyawan-tile:has(input[type="checkbox"]:checked) .icon-karyawan {
+        color: var(--bs-primary);
+        /* Warna icon berubah menjadi biru */
     }
 </style>
 @endsection
@@ -145,13 +191,11 @@
                     </div>
                     <div class="content-scroll p-3">
                         <hr class="my-5">
-                        <div id="btn_selected_karyawan">
-                            <button id="btn_selected_proses" class="btn btn-xs btn-primary waves-effect waves-light" type="button">
-                                <i class="menu-icon tf-icons mdi mdi-plus"></i> Tambah&nbsp;Mapping&nbsp;(&nbsp;<span id="count_checked">0</span>&nbsp;Selected)
-                            </button>
-                        </div>
+                        <button id="btn_selected_proses" class="btn btn-xs btn-primary waves-effect waves-light" type="button">
+                            <i class="menu-icon tf-icons mdi mdi-plus"></i> Tambah&nbsp;Mapping&nbsp;(&nbsp;<span id="count_checked">0</span>&nbsp;Selected)
+                        </button>
                         <div class="modal fade" id="modal_tambah_shift" data-bs-backdrop="static" tabindex="-1">
-                            <div class="modal-dialog modal-dialog-scrollable ">
+                            <div class="modal-dialog modal-xl modal-dialog-scrollable ">
                                 <form method="post" id="form_tambah_shift" class=" modal-content" enctype="multipart/form-data">
                                     @csrf
                                     <div class="modal-header">
@@ -159,66 +203,67 @@
                                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                     </div>
                                     <div class="modal-body">
-                                        <div class="col-12">
-                                            <div class="card mb-4" style="padding: 5px; margin: 2;">
-                                                <dl id="getplan" class="dl-horizontal row">
-                                                    <label class="col-sm-12">Daftar Karyawan</label>
-                                                    <dd class="col-sm-5" style="font-weight: bold;">Nomor&nbsp;ID</dd>
-                                                    <dd class="col-sm-7" style="font-weight: bold;">Nama</dd>
-                                                </dl>
-                                                <dl id="data_karyawan" class="dl-horizontal row">
-                                                </dl>
+                                        <div class="card mb-4" style="padding: 5px; margin: 2;">
+                                            <label class="col-sm-12">Pilih Karyawan</label>
+                                            <div class="col-12 mb-3">
+                                                <div class="input-group">
+                                                    <input type="text" class="form-control" id="nama_karyawan" value="" placeholder="Cari Karyawan">
+                                                </div>
                                             </div>
-                                            <input type='hidden' name="id_karyawan" id="id_karyawan" value="" />
-                                            <div class="form-floating form-floating-outline">
-                                                <select class="form-control @error('shift_id') is-invalid @enderror"
-                                                    id="shift_id" name="shift_id">
-                                                    <option value="">-- Pilih Shift --</option>
-                                                    @foreach ($shift as $s)
-                                                    <option value="{{ $s->id }}" {{ old('shift_id') == $s->id ? 'selected' : '' }}>
-                                                        {{ $s->nama_shift . " (" . $s->jam_masuk . " - " . $s->jam_keluar . ") " }}
-                                                    </option>
-                                                    @endforeach
-                                                </select>
-                                                <label for="shift_id">Shift</label>
-                                            </div>
+                                            <div class="row" id="list_karyawan" style="height:300px; overflow-y: scroll;">
 
-                                            @error('shift_id')
-                                            <span class="invalid-feedback" role="alert">
-                                                <strong>{{ $message }}</strong>
-                                            </span>
-                                            @enderror
-                                            <br>
-
-                                            @error('tanggal_mulai')
-                                            <span class="invalid-feedback" role="alert">
-                                                <strong>{{ $message }}</strong>
-                                            </span>
-                                            @enderror
-                                            @error('tanggal_akhir')
-                                            <span class="invalid-feedback" role="alert">
-                                                <strong>{{ $message }}</strong>
-                                            </span>
-                                            @enderror
-                                            <br>
-                                            <div class="form-floating form-floating-outline">
-                                                <select class="form-control @error('libur') is-invalid @enderror" id="libur" name="libur" value="{{ old('libur') }}">
-                                                    <option value="">-- Pilih Hari Libur --</option>
-                                                    <option value="0">Minggu</option>
-                                                    <option value="1">Senin</option>
-                                                    <option value="2">Selasa</option>
-                                                    <option value="3">Rabu</option>
-                                                    <option value="4">Kamis</option>
-                                                    <option value="5">Jumat</option>
-                                                    <option value="6">Sabtu</option>
-                                                </select>
-                                                <label for="libur">Set Libur</label>
                                             </div>
-                                            @error('libur')
-                                            <span class="invalid-feedback" role="alert">
-                                                <strong>{{ $message }}</strong>
-                                            </span>
-                                            @enderror
+                                        </div>
+                                        <div class="card mb-4" style="padding: 5px; margin: 2;">
+                                            <div class="card-body">
+
+                                                <div id="jadwal_container">
+
+                                                    <div class="list_date_jadwal row mb-3">
+                                                        <div class="col-lg-5 col-md-5 col-sm-5">
+                                                            <div class="form-floating form-floating-outline">
+                                                                <select class="select2 form-select @error('shift_id') is-invalid @enderror"
+                                                                    id="shift_id" name="shift_id[]">
+                                                                    <option value="">-- Pilih Shift --</option>
+                                                                    @foreach ($shift as $s)
+                                                                    <option value="{{ $s->id }}" {{ old('shift_id') == $s->id ? 'selected' : '' }}>
+                                                                        {{ $s->nama_shift . " (" . $s->jam_masuk . " - " . $s->jam_keluar . ") " }}
+                                                                    </option>
+                                                                    @endforeach
+                                                                </select>
+                                                            </div>
+                                                            @error('shift_id')
+                                                            <div class="invalid-feedback">{{ $message }}</div>
+                                                            @enderror
+                                                        </div>
+                                                        <div class="col-lg-5 col-md-5 col-sm-5">
+                                                            <div class="form-floating form-floating-outline">
+                                                                <input type="text" class="form-control single-date @error('tanggal') is-invalid @enderror" readonly id="tanggal" name="tanggal[]" value="">
+                                                                <label for="tanggal">Tanggal</label>
+                                                            </div>
+                                                            @error('tanggal')
+                                                            <div class="invalid-feedback">{{ $message }}</div>
+                                                            @enderror
+                                                        </div>
+
+                                                        <div class="col-lg-2 col-md-2 col-sm-2 d-flex align-items-start">
+                                                            <button type="button" class="btn btn-outline-danger btn-hapus-date">
+                                                                <i class="mdi mdi-close"></i>
+                                                            </button>
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+
+                                                <div class="row">
+                                                    <div class="col-12 text-end">
+                                                        <button type="button" class="btn btn-sm btn-outline-primary" id="btn_tambah_date">
+                                                            <i class="mdi mdi-plus me-1"></i> Tambah Jadwal
+                                                        </button>
+                                                    </div>
+                                                </div>
+
+                                            </div>
                                         </div>
                                     </div>
                                     <div class="modal-footer">
@@ -253,7 +298,8 @@
                                 </div>
                             </div>
                         </div>
-                        <table class="table table-bordered" id="table_mapping_shift" style="width: 100%; font-size: small;">
+
+                        <table class="table table-bordered" id="table_mapping_shift" style="width: 100%; font-size: small;text-wrap: nowrap;">
 
                         </table>
                     </div>
@@ -299,6 +345,15 @@
                 'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
             }
         }, picker);
+        $('#tanggal').daterangepicker({
+            singleDatePicker: true,
+            showDropdowns: true,
+            minYear: 1901,
+            maxYear: parseInt(moment().format('YYYY'), 10)
+        }, function(start, end, label) {
+            var years = moment().diff(start, 'years');
+            alert("You are " + years + " years old!");
+        });
 
         function picker(start, end) {
             $('#filterrange span').html(start.format('D MMMM YYYY') + ' - ' + end.format('D MMMM YYYY'));
@@ -308,12 +363,8 @@
             $('#end_date').val(lend);
             // console.log(lstart, lend);
         }
-        // $('#table_mapping_shift').hide();
-        $('#btn_selected_karyawan').hide();
         let holding = '{{ $holding->holding_code }}';
         let holding_id = '{{ $holding->id }}';
-
-
 
         $('#btn_filter').click(function(e) {
             // ambil langsung dari form
@@ -369,7 +420,7 @@
                     // 1. Destroy DataTable dulu kalau sudah ada
                     $('#content_null').empty();
                     $('#table_mapping_shift').empty();
-                    $('#table_mapping_shift').append('<thead><tr><th rowspan="2" class="text-center">No.</th><th colspan="4" class="text-center">Karyawan</th><th id="count_date">JADWAL</th></tr><tr id="date_absensi"></tr></thead><tbody class="table-border-bottom-0"></tbody>');
+                    $('#table_mapping_shift').append('<thead><tr><th rowspan="2" class="text-center">No.</th><th colspan="4" class="text-center">Karyawan</th><th id="count_date" class="text-center">JADWAL SHIFT (' + data.start_date + ' s/d ' + data.end_date + ')</th></tr><tr id="date_absensi"></tr></thead><tbody class="table-border-bottom-0 text-center"></tbody>');
                     if ($.fn.DataTable.isDataTable('#table_mapping_shift')) {
                         $('#table_mapping_shift').DataTable().clear().destroy();
                     }
@@ -591,6 +642,7 @@
             placeholder: "Pilih Shift",
             allowClear: true
         });
+
         var start = moment().startOf('month');
         var end = moment().endOf('month');
         var start_date = $('#start_date').val();
@@ -609,14 +661,7 @@
             // console.log(start, end);
 
         }
-        if ($(".group_select:checked").length > 0) {
-            $('#btn_selected_karyawan').show();
-            $('#count_checked').html($(".group_select:checked").length);
-        } else {
-            $('#btn_selected_karyawan').hide();
-            $('#count_checked').html($(".group_select:checked").length);
 
-        }
         $('#filterrange').daterangepicker({
             startDate: start,
             endDate: end,
@@ -639,7 +684,7 @@
             // $('#table_mapping_shift thead tr:last th').each(function(i, th) {
             //     console.log(i, $(th).text().trim());
             // });
-            var tab = $('#table').DataTable({
+            var tab = $('#table_mapping_shift').DataTable({
                 "scrollY": true,
                 "scrollX": true,
                 processing: true,
@@ -727,78 +772,124 @@
 
             });
         }
-        $(document).on("click", ".group_select", function(e) {
-            // console.log($(this).is(':checked'));
-            if ($(this).is(':checked') == true) {
-                $(this).attr("checked", true);
-            } else {
-                $(this).attr("checked", false);
-            }
-            if ($(".group_select:checked").length > 0) {
-                $('#btn_selected_karyawan').show();
-                $('#count_checked').html($(".group_select:checked").length);
-            } else {
-                $('#btn_selected_karyawan').hide();
-                $('#count_checked').html($(".group_select:checked").length);
-            }
-        })
-        $(document).on("click", "#select_karyawan_all", function(e) {
-            var all = $(this).is(':checked');
-            console.log($(".group_select:checked").length);
-            if ($(this).is(':checked') == true) {
-                $(this).prop("checked", true);
-            } else {
-                $(this).prop("checked", false);
-            }
-            $(".group_select").each(function(all) {
-                // console.log(all);
-                if ($(this).is(':checked') == true && $('#select_karyawan_all').is(':checked') == false) {
-                    $(this).prop("checked", false);
-                } else if ($(this).is(':checked') == false && $('#select_karyawan_all').is(':checked') == true) {
-                    $(this).prop("checked", true);
-                }
-            });
-            if ($(".group_select:checked").length > 0) {
-                $('#btn_selected_karyawan').show();
-                $('#count_checked').html($(".group_select:checked").length);
-            } else {
-                $('#btn_selected_karyawan').hide();
-                $('#count_checked').html($(".group_select:checked").length);
-            }
-        })
-        $(document).on("click", "#btn_selected_proses", function(e) {
-            var value = [];
-            $('#data_karyawan').empty();
-            $('.group_select:checked').each(function() {
-                value.push($(this).val());
-            });
-            // console.log(holding);
-            var count = value.length;
-            $.ajax({
-                url: "@if(Auth::user()->is_admin =='hrd'){{ url('hrd/karyawan/get_karyawan_selected')}}@else{{ url('karyawan/get_karyawan_selected')}}@endif" + "/" + holding,
-                method: "get",
-                data: {
-                    value: value
-                },
-                success: function(data) {
-                    console.log(data, count);
-                    $.each(data, function(count) {
-                        $('#data_karyawan').append("<dd id=" + 'no_id' + " class=" + 'col-sm-4 col-xs-12' + ">" + data[count].nomor_identitas_karyawan + "</dd><dd id=" + 'name' + "  class=" + 'col-sm-8 col-xs-12' + ">" + data[count].name + "</dd>");
-                    });
-                    $('#id_karyawan').val(value);
-                    picker(start_filter, end_filter);
-                    $('#modal_tambah_shift').on('hidden.bs.modal', function(e) {
-                        $('#data_karyawan').empty();
-                    })
-                    $('#modal_tambah_shift').modal('show');
-                },
-                error: function(data) {
-                    var errors = data.responseJSON;
-                    console.log(errors);
-                }
-            });
-        })
 
+
+        $(document).on("click", "#btn_selected_proses", function(e) {
+
+            $.ajax({
+                url: "@if(Auth::user()->is_admin=='hrd'){{ url('hrd/get_karyawan_mapping') }}@else {{ url('karyawan/get_karyawan_mapping') }}@endif" + '/' + holding,
+
+                success: function(data) {
+                    // console.log(data);
+                    $('#modal_tambah_shift').modal('show');
+                    $.each(data, function(key, value) {
+                        $('#list_karyawan').append( // Asumsi: value.name berisi nama karyawan
+                            // Asumsi: Anda telah memuat Material Design Icons CSS
+
+                            '<div class="col-md-3 col-sm-6 mb-3 karyawan-item" data-name="' + value.name + '">' +
+                            '<label class="karyawan-tile p-3 border rounded shadow-sm w-100 text-center">' +
+
+                            // --- Struktur Konten Kotak ---
+
+                            // 1. Icon Orang Besar (menggunakan MDI dan class kustom)
+                            '<i class="mdi mdi-account-outline icon-karyawan d-block mb-0" style="font-size: 40px;"></i>' +
+
+                            // 2. Checkbox disembunyikan
+                            '<input type="checkbox" class="group_select d-none" name="karyawan_id[]" value="' + value.id + '">' +
+
+                            // 3. Nama Karyawan
+                            '<span style="font-size: 10px;">' + value.name + '</span>' +
+
+                            // --- Akhir Struktur Konten ---
+
+                            '</label>' +
+                            '</div>');
+                    });
+                }
+            })
+        })
+        $('#nama_karyawan').on('keyup', function() {
+            var searchValue = $(this).val().toLowerCase();
+            $('.karyawan-item').each(function() {
+                var name = $(this).data('name').toLowerCase();
+                if (name.indexOf(searchValue) > -1) {
+                    console.log($(this));
+                    $(this).show();
+                } else {
+                    $(this).hide();
+                }
+            });
+        });
+        $('#jadwal_container .list_date_jadwal select.select2').select2({
+            placeholder: 'Pilih opsi',
+            theme: 'bootstrap-5',
+            allowClear: true
+        });
+
+        var templateHtml = $('#jadwal_container .list_date_jadwal:first').clone();
+        var $firstRow = $('#jadwal_container .list_date_jadwal:first');
+        var $templateRow = $firstRow.clone();
+
+        $templateRow.find('select').val('');
+        $templateRow.find('input').val('');
+
+        // ===========================================
+        // 2. FUNGSI TAMBAH BARIS
+        // ===========================================
+        $('#btn_tambah_date').on('click', function() {
+            // Clone dari template
+            var $newRow = $templateRow.clone();
+
+            // Pastikan select2 lama tidak ikut ter-clone (hapus container-nya)
+            $newRow.find('.select2').removeClass('select2-hidden-accessible')
+                .next('.select2-container').remove();
+            // Hapus instance daterangepicker lama
+            $newRow.find('.daterangepicker').remove();
+
+            // Kosongkan input dan select
+            $newRow.find('select').val('');
+            $newRow.find('input').val('');
+
+            // Tampilkan tombol hapus (jika ada)
+            $newRow.find('.btn-hapus-date').show();
+
+            // Tambahkan margin
+            $newRow.addClass('mb-3');
+
+            // Tambahkan ke container
+            $('#jadwal_container').append($newRow);
+
+            // RE-INIT Select2 di elemen baru
+            $newRow.find('select2').select2({
+                placeholder: 'Pilih opsi',
+                theme: 'bootstrap-5',
+                allowClear: true
+            });
+            $newRow.find('input.single-date').daterangepicker({
+                singleDatePicker: true,
+                showDropdowns: true,
+                locale: {
+                    format: 'YYYY-MM-DD'
+                }
+            });
+        });
+
+        $('#jadwal_container').on('click', '.btn-hapus-date', function() {
+            // Cek jumlah baris yang ada
+            var rowCount = $('#jadwal_container .list_date_jadwal').length;
+
+            // Hapus parent terdekat dengan class .list_date_jadwal (yaitu baris jadwal)
+            if (rowCount > 1) {
+                $(this).closest('.list_date_jadwal').remove();
+            } else {
+                // Opsional: Jika Anda tidak ingin baris terakhir dihapus (minimal harus ada 1)
+                Swal.fire({
+                    title: 'Minimal harus ada 1 baris jadwal.',
+                    icon: 'error',
+                    timer: 4500
+                });
+            }
+        });
         $(document).on("click", "#btn_tambah_shift", function(e) {
             var url = "@if(Auth::user()->is_admin=='hrd'){{ url('/hrd/karyawan/mapping_shift/prosesAddMappingShift/'.$holding->holding_code) }}@else{{ url('/karyawan/mapping_shift/prosesAddMappingShift/'.$holding->holding_code) }}@endif";
             $.ajax({
@@ -826,7 +917,6 @@
                     $('#modal_tambah_shift').modal('hide');
                     $('#form_tambah_shift').trigger('reset');
                     $('#shift_id').val(null).trigger('change');
-                    $('#btn_selected_karyawan').hide();
                 },
                 error: function(data) {
                     console.log(data);
@@ -842,7 +932,6 @@
                 }
             })
         })
-
     });
 </script>
 @endsection

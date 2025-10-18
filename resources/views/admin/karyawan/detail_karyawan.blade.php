@@ -968,7 +968,7 @@
                                             <div class="col-md-6">
                                                 <button type="button" id="btn_add_pendidikan" class="btn btn-sm btn-primary"><i class="mdi mdi-plus"></i></button>
                                             </div>
-                                            <table class="table table-bordered" id="table_pendidikan" width="100%">
+                                            <table class="table table-bordered" id="table_pendidikan" style="width: 100%;">
                                                 <thead>
                                                     <tr>
                                                         <th>Aksi</th>
@@ -994,21 +994,23 @@
                                             <div class="col-md-6">
                                                 <button type="button" id="btn_add_keahlian" class="btn btn-sm btn-primary"><i class="mdi mdi-plus"></i></button>
                                             </div>
-                                            <table class="table table-bordered" id="table_keahlian" width="100%">
-                                                <thead>
-                                                    <tr>
-                                                        <th>Aksi</th>
-                                                        <th>No</th>
-                                                        <th>Nama&nbsp;Keahlian</th>
-                                                        <th>File</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
+                                            <div class="col-lg-12">
+                                                <table class="table table-bordered" id="table_keahlian" style="width: 100%;">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Aksi</th>
+                                                            <th>No</th>
+                                                            <th>Nama&nbsp;Keahlian</th>
+                                                            <th>File</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
 
-                                                </tbody>
-                                            </table>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+
                                         </div>
-
                                     </div>
 
                                 </div>
