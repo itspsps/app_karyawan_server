@@ -439,9 +439,179 @@ class RecruitmentLaporanController extends Controller
     public function laporan_recruitment($holding)
     {
         $holdings = Holding::where('holding_code', $holding)->first();
-        return view('admin.recruitment-users.laporan.index', [
-            'holding' => $holdings
+        if ($holdings == '' || $holdings == null) {
+            Alert::error('Error', 'Get Holding Error', 5000);
+            return redirect()->route('dashboard_holding')->with('Error', 'Get Holding Error', 5000);
+        }
+        date_default_timezone_set('Asia/Jakarta');
+
+        $departemen = Departemen::where('holding', $holdings->id)->orderBy('nama_departemen', 'ASC')->get();
+        return view('admin.recruitment-users.laporan.report_recruitment', [
+            'holding' => $holdings,
+            'departemen' => $departemen,
         ]);
+    }
+    public function dt_laporan_recruitment2(Request $request, $holding)
+    {
+        // dd($request->departemen_filter);
+        $holdings = Holding::where('holding_code', $holding)->first();
+        $now = Carbon::parse($request->start_date)->startOfDay();
+        $now1 = Carbon::parse($request->end_date)->endOfDay();
+        // $period = CarbonPeriod::create($now, $now1);
+
+        $query = Recruitment::with([
+            'Jabatan' => function ($query) {
+                $query->with([
+                    'Bagian' => function ($query) {
+                        $query->with([
+                            'Divisi' => function ($query) {
+                                $query->with([
+                                    'Departemen' => function ($query) {
+                                        $query->orderBy('nama_departemen', 'ASC');
+                                    }
+                                ]);
+                            }
+                        ]);
+                    }
+                ]);
+                $query->orderBy('nama_jabatan', 'ASC');
+            }
+        ])
+            ->where('holding_recruitment', $holdings->id)
+            ->whereBetween('created_at', [$now, $now1]);
+        if (!empty($request->departemen_filter)) {
+            $query->whereIn('nama_dept', (array)$request->departemen_filter ?? []);
+        }
+
+        if (!empty($request->divisi_filter)) {
+            $query->whereIn('nama_divisi', (array)$request->divisi_filter ?? []);
+        }
+
+        if (!empty($request->bagian_filter)) {
+            $query->whereIn('nama_bagian', (array)$request->bagian_filter ?? []);
+        }
+
+        if (!empty($request->jabatan_filter)) {
+            $query->whereIn('nama_jabatan', (array)$request->jabatan_filter ?? []);
+        }
+        $table = $query->get();
+        // dd($table);
+        // dd($request->departemen_filter);
+        if (request()->ajax()) {
+            return DataTables::of($table)
+                ->addColumn('posisi_kosong', function ($row) {
+                    return $row->Jabatan->nama_jabatan . ', ' . $row->Jabatan->Bagian->nama_bagian . ', ' . $row->Jabatan->Bagian->Divisi->nama_divisi . ', ' . $row->Jabatan->Bagian->Divisi->Departemen->nama_departemen;
+                })
+                ->addColumn('penggantian_penambahan', function ($row) {
+                    if ($row->penggantian_penambahan == '1') {
+                        return '<span class="badge bg-label-success">Penggantian</span>';
+                    } else {
+                        return '<span class="badge bg-label-info">Penambahan</span>';
+                    }
+                })
+                ->addColumn('kuota', function ($row) {
+                    return $row->kuota . ' Orang';
+                })
+                ->addColumn('jumlah_pelamar', function ($row) {
+                    $jumlah = RecruitmentUser::where('recruitment_admin_id', $row->id)->count() ?? 0;
+                    return $jumlah . ' Orang';
+                })
+                ->addColumn('jumlah_diterima', function ($row) {
+                    $jumlah = RecruitmentUser::where('recruitment_admin_id', $row->id)->where('status_lanjutan', '8b')->where('feedback_lanjutan', '2b')->count() ?? 0;
+                    return $jumlah . ' Orang';
+                })
+                ->addColumn('pelamar_terpilih', function ($row) {
+                    $terpilih = RecruitmentUser::where('recruitment_admin_id', $row->id)->where('status_lanjutan', '8b')->where('feedback_lanjutan', '2b')->with([
+                        'Cv' => function ($query) {
+                            $query;
+                        }
+                    ])->get() ?? 0;
+                    $items = [];
+                    foreach ($terpilih as $tp) {
+                        $items[] = '<li>' . $tp->Cv->nama_lengkap . '</li>';
+                    }
+                    return implode('', $items);
+                })
+                ->addColumn('kuota_terpenuhi', function ($row) {
+                    $pelamar = RecruitmentUser::where('recruitment_admin_id', $row->id)->where('status_lanjutan', '8b')->where('feedback_lanjutan', '2b')->count() ?? 0;
+                    $terpenuhi = $row->kuota - $pelamar;
+                    if ($terpenuhi == '0') {
+                        return '<span class="badge bg-label-success">Terpenuhi</span>';
+                    } elseif ($terpenuhi < '0') {
+                        return '<span class="badge bg-label-info">Melebihi Kuota</span>';
+                    } elseif ($terpenuhi > '0') {
+                        return '<span class="badge bg-label-danger">Belum Terpenuhi</span>';
+                    }
+                })
+                ->addColumn('tgl_terpenuhi', function ($row) {
+                    $pelamar_total = RecruitmentUser::where('recruitment_admin_id', $row->id)->where('status_lanjutan', '8b')->where('feedback_lanjutan', '2b')->count() ?? 0;
+                    $pelamar_tgl = RecruitmentUser::where('recruitment_admin_id', $row->id)->where('status_lanjutan', '8b')->where('feedback_lanjutan', '2b')->orderBy('created_at', 'desc')->first();
+                    $terpenuhi = $row->kuota - $pelamar_total;
+                    if ($pelamar_tgl != null) {
+                        if ($terpenuhi == '0') {
+                            return $pelamar_tgl->tanggal_diterima;
+                        } elseif ($terpenuhi < '0') {
+                            return $pelamar_tgl->tanggal_diterima;
+                        } else {
+                            return '-';
+                        }
+                    } else {
+                        return '-';
+                    }
+                })
+                ->addColumn('tanggal_mulai', function ($row) {
+                    return $row->created_recruitment;
+                })
+                ->addColumn('tanggal_mulai', function ($row) {
+                    return $row->created_recruitment;
+                })
+                ->addColumn('tanggal_akhir', function ($row) {
+                    return $row->end_recruitment;
+                })
+                ->addColumn('deadline', function ($row) {
+                    return $row->deadline_recruitment;
+                })
+                ->addColumn('waktu_yg_dibutuhkan', function ($row) {
+                    $pelamar_total = RecruitmentUser::where('recruitment_admin_id', $row->id)->where('status_lanjutan', '8b')->where('feedback_lanjutan', '2b')->count() ?? 0;
+                    $pelamar_tgl = RecruitmentUser::where('recruitment_admin_id', $row->id)->where('status_lanjutan', '8b')->where('feedback_lanjutan', '2b')->orderBy('created_at', 'desc')->first();
+                    $terpenuhi = $row->kuota - $pelamar_total;
+
+
+
+                    if ($pelamar_tgl != null) {
+                        if ($terpenuhi == '0') {
+                            $awal = Carbon::parse($row->created_recruitment);
+                            $akhir = Carbon::parse($pelamar_tgl->tanggal_diterima);
+                            $total_day1 = $awal->diffInDays($akhir);
+                            return $total_day1 . " Hari";
+                        } elseif ($terpenuhi < '0') {
+                            $awal = Carbon::parse($row->created_recruitment);
+                            $akhir = Carbon::parse($pelamar_tgl->tanggal_diterima);
+                            $total_day2 = $awal->diffInDays($akhir);
+                            return $total_day2 . " Hari";
+                        } else {
+                            return '-';
+                        }
+                    } else {
+                        return '-';
+                    }
+                })
+                ->rawColumns([
+                    'posisi_kosong',
+                    'penggantian_penambahan',
+                    'kuota',
+                    'jumlah_pelamar',
+                    'jumlah_diterima',
+                    'pelamar_terpilih',
+                    'kuota_terpenuhi',
+                    'tgl_terpenuhi',
+                    'tanggal_mulai',
+                    'tanggal_akhir',
+                    'deadline',
+                    'waktu_yg_dibutuhkan',
+                ])
+                ->make(true);
+        }
     }
     // Laporan Recruitment
 

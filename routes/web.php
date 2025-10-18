@@ -984,7 +984,7 @@ Route::get('/tes', function () {
     return view('admin.recruitment-users.email.email_interview');
 })->name('tes');
 
-//Laporan recruitment
+//Laporan pelamar
 Route::get('/report_pelamar/{holding}', [RecruitmentLaporanController::class, 'report_pelamar'])->middleware('admin');
 Route::get('/laporan_recruitment/{holding}', [RecruitmentLaporanController::class, 'index'])->middleware('admin');
 Route::get('/detail_riwayat/{id}/{holding}', [RecruitmentLaporanController::class, 'detail_riwayat'])->middleware('admin');
@@ -993,7 +993,9 @@ Route::get('/dt_riwayat_recruitment/{id}/{holding}', [RecruitmentLaporanControll
 Route::get('/report_recruitment/get_divisi/{holding}', [RecruitmentLaporanController::class, 'get_divisi']);
 Route::get('/report_recruitment/get_bagian/{holding}', [RecruitmentLaporanController::class, 'get_bagian']);
 Route::get('/report_recruitment/get_jabatan/{holding}', [RecruitmentLaporanController::class, 'get_jabatan']);
-//laporan recruitment end
+//laporan pelamar end
+Route::get('/report_recruitment/{holding}', [RecruitmentLaporanController::class, 'laporan_recruitment'])->middleware('admin');
+Route::get('/dt_laporan_recruitment2/{holding}', [RecruitmentLaporanController::class, 'dt_laporan_recruitment2'])->middleware('admin');
 
 
 Route::post('/recruitment/insert/sp', [RecruitmentController::class, 'insert'])->middleware('admin');

@@ -76,10 +76,37 @@
                 <div class="card">
                     <div class="card-header">
                         <div class="d-flex align-items-center justify-content-between">
-                            <h5 class="card-title m-0 me-2">REPORT PELAMAR</h5>
+                            <h5 class="card-title m-0 me-2">REPORT RECRUITMENT</h5>
                         </div>
                     </div>
                     <div class="card-body">
+                        {{-- <form method="post" action="{{ url('/laporan_recruitment/' . $holding) }}" class="modal-content"
+                            enctype="multipart/form-data">
+                            @csrf
+                            <div class="row mt-2 gy-4">
+                                <div class="col-md-6">
+                                    <div class="form-floating form-floating-outline">
+                                        <input style="font-size: small;" class="form-control" type="date"
+                                            name="tanggal_awal" />
+                                        <label for="tanggal_awal">Tanggal&nbsp;Awal</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-floating form-floating-outline">
+                                        <input style="font-size: small;" type="date" class="form-control"
+                                            name="tanggal_akhir" />
+                                        <label for="tanggal_akhir">Tanggal&nbsp;Akhir</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mt-2 gy-4 justify-content-center py-1">
+                                <div class="col-auto">
+                                    <button type="submit" class="btn btn-sm btn-primary waves-effect waves-light mb-3">
+                                        <i class="menu-icon tf-icons mdi mdi-plus"></i> Tambah
+                                    </button>
+                                </div>
+                            </div>
+                        </form> --}}
                         <div id="collapseFilterWrapper" class="sticky-top bg-white" style="z-index: 1020;">
                             <div class="card-body">
 
@@ -180,18 +207,23 @@
                                     </div>
                                 </div>
                             </div>
-                            <div id="table_recruitment_form">
-                                <table class="table" id="table_recruitment" style="width: 100%; font-size: small;">
+                            <div id="table_recruitment2_form">
+                                <table class="table" id="table_recruitment2" style="width: 100%; font-size: small;">
                                     <thead class="table-primary">
                                         <tr>
                                             <th>No.</th>
-                                            <th>Tanggal Mulai</th>
-                                            <th>Nama Lengkap</th>
-                                            <th>Posisi yang Dilamar</th>
-                                            <th>CV</th>
-                                            <th>Riwayat&nbsp;Detail</th>
+                                            <th>Posisi&nbsp;Kosong</th>
+                                            <th>Penggantian&nbsp;/&nbsp;Penambahan</th>
+                                            <th>Kuota</th>
+                                            <th>Pelamar</th>
+                                            <th>Diterima</th>
+                                            <th>Kuota&nbsp;Terpenuhi</th>
+                                            <th>Tanggal&nbsp;Terpenuhi</th>
+                                            <th>Pelamar&nbsp;Terpilih</th>
+                                            <th>Tanggal&nbsp;Mulai</th>
                                             <th>Tanggal&nbsp;Berakhir</th>
-                                            <th>Perkembangan&nbsp;Terakhir</th>
+                                            <th>Deadline</th>
+                                            <th>Waktu yg Dibutuhkan</th>
                                         </tr>
                                     </thead>
                                     <tbody class="table-border-bottom-0">
@@ -228,7 +260,7 @@
         var holding = '{{ $holding->holding_code }}';
         $('#departemen_filter').change(function(e) {
             departemen_filter_dept = $(this).val() || '';
-            // $('#table_recruitment').DataTable().destroy();
+            // $('#table_recruitment2').DataTable().destroy();
             var url =
                 "@if (Auth::user()->is_admin == 'hrd'){{ url('hrd/report_recruitment/get_divisi') }}@else{{ url('report_recruitment/get_divisi') }}@endif" +
                 '/' + holding_id;
@@ -295,7 +327,7 @@
         $('#divisi_filter').change(function() {
             divisi_filter = $(this).val() || '';
 
-            // $('#table_recruitment').DataTable().destroy();
+            // $('#table_recruitment2').DataTable().destroy();
             $.ajax({
                 type: 'GET',
                 url: "@if (Auth::user()->is_admin == 'hrd'){{ url('hrd/report_recruitment/get_bagian') }}@else{{ url('report_recruitment/get_bagian') }}@endif" +
@@ -448,9 +480,9 @@
         cb(start, end);
 
         $(document).ready(function() {
-            $('#table_recruitment_form').hide();
+            $('#table_recruitment2_form').hide();
             $('#btn_filter').click(function(e) {
-                $('#table_recruitment_form').show();
+                $('#table_recruitment2_form').show();
                 var departemen_filter = $('#departemen_filter').val() || [];
                 var divisi_filter = $('#divisi_filter').val() || [];
                 var bagian_filter = $('#bagian_filter').val() || [];
@@ -461,18 +493,18 @@
                 // console.log(departemen_filter, divisi_filter, bagian_filter, jabatan_filter, start_date, end_date);
 
                 $('#content_null').empty();
-                // $('#table_recruitment').empty();
-                $('#table_recruitment').DataTable().clear().destroy();
-                if ($.fn.DataTable.isDataTable('#table_recruitment')) {
-                    $('#table_recruitment').DataTable().clear().destroy();
+                // $('#table_recruitment2').empty();
+                $('#table_recruitment2').DataTable().clear().destroy();
+                if ($.fn.DataTable.isDataTable('#table_recruitment2')) {
+                    $('#table_recruitment2').DataTable().clear().destroy();
                 }
-                var table = $('#table_recruitment').DataTable({
+                var table = $('#table_recruitment2').DataTable({
                     "scrollY": true,
                     "scrollX": true,
                     processing: true,
                     serverSide: true,
                     ajax: {
-                        url: "{{ url('/dt_laporan_recruitment') }}" + '/' + holding,
+                        url: "{{ url('/dt_laporan_recruitment2') }}" + '/' + holding,
                         data: {
                             start_date: start_date,
                             end_date: end_date,
@@ -491,34 +523,54 @@
                             searchable: false
                         },
                         {
+                            data: 'posisi_kosong',
+                            name: 'posisi_kosong'
+                        },
+                        {
+                            data: 'penggantian_penambahan',
+                            name: 'penggantian_penambahan'
+                        },
+                        {
+                            data: 'kuota',
+                            name: 'kuota'
+                        },
+
+                        {
+                            data: 'jumlah_pelamar',
+                            name: 'jumlah_pelamar'
+                        },
+                        {
+                            data: 'jumlah_diterima',
+                            name: 'jumlah_diterima'
+                        },
+                        {
+                            data: 'kuota_terpenuhi',
+                            name: 'kuota_terpenuhi'
+                        },
+                        {
+                            data: 'tgl_terpenuhi',
+                            name: 'tgl_terpenuhi'
+                        },
+                        {
+                            data: 'pelamar_terpilih',
+                            name: 'pelamar_terpilih'
+                        },
+
+                        {
                             data: 'tanggal_mulai',
-                            name: 'tanggal_mulai',
-                            // class: 'table-tbody'
+                            name: 'tanggal_mulai'
                         },
                         {
-                            data: 'nama_lengkap',
-                            name: 'nama_lengkap'
+                            data: 'tanggal_akhir',
+                            name: 'tanggal_akhir'
                         },
                         {
-                            data: 'posisi_yang_dilamar',
-                            name: 'posisi_yang_dilamar'
+                            data: 'deadline',
+                            name: 'deadline'
                         },
                         {
-                            data: 'cv',
-                            name: 'cv'
-                        },
-                        {
-                            data: 'status_detail',
-                            name: 'status_detail'
-                        },
-                        {
-                            data: 'tanggal_berakhir',
-                            name: 'tanggal_berakhir',
-                            // class: 'table-tbody'
-                        },
-                        {
-                            data: 'perkembangan_terakhir',
-                            name: 'perkembangan_terakhir'
+                            data: 'waktu_yg_dibutuhkan',
+                            name: 'waktu_yg_dibutuhkan'
                         },
                     ],
                     order: [
