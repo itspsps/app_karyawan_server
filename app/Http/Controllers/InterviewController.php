@@ -128,7 +128,7 @@ class InterviewController extends Controller
 
             ])
             ->where('feedback_lanjutan', '1b')
-            ->whereIn('nama_dept', $departemen)
+            // ->whereIn('nama_dept', $departemen)
             ->get();
 
 

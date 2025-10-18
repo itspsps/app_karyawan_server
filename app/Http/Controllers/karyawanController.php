@@ -1474,7 +1474,6 @@ class karyawanController extends Controller
         ]);
         return redirect()->back()->with('success', 'data berhasil ditambahkan');
     }
-
     public function detail($id, $holding)
     {
         $getHolding = Holding::where('holding_code', $holding)->first();

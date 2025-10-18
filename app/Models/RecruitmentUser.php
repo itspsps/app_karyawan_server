@@ -95,9 +95,9 @@ class RecruitmentUser extends Model
     {
         return $this->hasMany(RecruitmentUserRecord::class, 'recruitment_user_id', 'id');
     }
-    public function recruitmentUserRecord2(): HasMany
-    {
-        return $this->hasMany(RecruitmentUserRecord::class, 'recruitment_user_id', 'id');
-    }
+    // public function recruitmentUserRecord2(): HasMany
+    // {
+    //     return $this->hasMany(RecruitmentUserRecord::class, 'recruitment_user_id', 'id');
+    // }
     // End Alamat User
 }

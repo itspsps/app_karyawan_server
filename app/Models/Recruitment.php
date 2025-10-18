@@ -14,8 +14,12 @@ class Recruitment extends Model
     public $incrementing = false;
     protected $fillable = [
         'id',
+        'legal_number',
         'holding_recruitment',
         'penempatan',
+        'penggantian_penambahan',
+        'surat_penambahan',
+        'kuota',
         'nama_jabatan',
         'nama_dept',
         'nama_divisi',
@@ -23,6 +27,7 @@ class Recruitment extends Model
         'desc_recruitment',
         'status_recruitment',
         'created_recruitment',
+        'end_recruitment',
         'deadline_recruitment',
     ];
 

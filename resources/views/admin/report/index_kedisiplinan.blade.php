@@ -2,17 +2,14 @@
 @section('css')
 <link rel="stylesheet" href="https://cdn.datatables.net/2.0.5/css/dataTables.bootstrap5.css">
 <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
-<!-- DataTables Bootstrap 5 -->
-<link rel="stylesheet" href="https://cdn.datatables.net/2.0.5/css/dataTables.bootstrap5.css">
-
-<!-- DataTables Buttons Bootstrap 5 -->
-<link rel="stylesheet" href="https://cdn.datatables.net/buttons/3.1.2/css/buttons.bootstrap5.css">
-
-<link rel="preload" href="{{asset('admin/assets/vendor/libs/apex-charts/apex-charts.css')}}" as="style" onload="this.onload=null;this.rel='stylesheet'" />
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/3.1.2/css/buttons.dataTables.css" />
+<link rel="preload" href="{{ asset('admin/assets/vendor/libs/apex-charts/apex-charts.css') }}" as="style"
+    onload="this.onload=null;this.rel='stylesheet'" />
 <!-- Select2 CSS -->
 <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 
-<link href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css" rel="stylesheet" />
+<link href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css"
+    rel="stylesheet" />
 <style type="text/css">
     .my-swal {
         z-index: X;
@@ -88,13 +85,15 @@
                     <div id="collapseFilterWrapper" class="sticky-top bg-white" style="z-index: 1020;">
                         <div class="card-body">
 
-                            <div class="row gy-4 mb-4">
+                            <div class="row gy-4 mb-2">
                                 <div class="col-lg-3 col-md-6 col-sm-6">
                                     <div class="form-floating form-floating-outline">
-                                        <select type="text" class="form-control" name="departemen_filter[]" id="departemen_filter" multiple>
+                                        <select type="text" class="form-control" name="departemen_filter[]"
+                                            id="departemen_filter" multiple>
                                             <option disabled value="">-Pilih Departemen-</option>
-                                            @foreach($departemen as $dept)
-                                            <option value="{{$dept->id}}">{{$dept->nama_departemen}}</option>
+                                            @foreach ($departemen as $dept)
+                                            <option value="{{ $dept->id }}">{{ $dept->nama_departemen }}
+                                            </option>
                                             @endforeach
                                         </select>
                                         <label for="departemen_filter">Departemen</label>
@@ -102,7 +101,8 @@
                                 </div>
                                 <div class="col-lg-3 col-md-6 col-sm-6">
                                     <div class="form-floating form-floating-outline">
-                                        <select type="text" class="form-control" name="divisi_filter[]" id="divisi_filter" multiple>
+                                        <select type="text" class="form-control" name="divisi_filter[]"
+                                            id="divisi_filter" multiple>
                                             <option selected disabled value="">-- Pilih Divisi --</option>
                                         </select>
                                         <label for="divisi_filter">Divisi</label>
@@ -110,7 +110,8 @@
                                 </div>
                                 <div class="col-lg-3 col-md-6 col-sm-6">
                                     <div class="form-floating form-floating-outline">
-                                        <select type="text" class="form-control" name="bagian_filter[]" id="bagian_filter" multiple>
+                                        <select type="text" class="form-control" name="bagian_filter[]"
+                                            id="bagian_filter" multiple>
                                             <option selected disabled value="">-- Pilih Bagian --</option>
                                         </select>
                                         <label for="bagian_filter">Bagian</label>
@@ -118,72 +119,74 @@
                                 </div>
                                 <div class="col-lg-3 col-md-6 col-sm-6">
                                     <div class="form-floating form-floating-outline">
-                                        <select type="text" class="form-control" name="jabatan_filter[]" id="jabatan_filter" multiple>
+                                        <select type="text" class="form-control" name="jabatan_filter[]"
+                                            id="jabatan_filter" multiple>
                                             <option selected disabled value="">-- Pilih Jabatan --</option>
                                         </select>
                                         <label for="jabatan_filter">Jabatan</label>
                                     </div>
                                 </div>
                             </div>
-
-                            <div class="row gy-4 align-items-end">
-                                <div class="col-lg-3 col-md-6 col-sm-12">
+                            <div class="row gy-4">
+                                <div class="col-lg-3 col-md-6 col-sm-6">
                                     <div class="form-floating form-floating-outline">
-                                        <select type="text" class="form-control" name="shift_filter" id="shift_filter">
-                                            <option selected disabled value="">~~ Pilih Kategori ~~</option>
-                                            <option value="NON SHIFT">NON SHIFT</option>
+                                        <select type="text" class="form-control" name="shift_filter[]"
+                                            id="shift_filter" multiple>
+                                            <option disabled value="">-Pilih Shift-</option>
                                             <option value="SHIFT">SHIFT</option>
+                                            <option value="NON SHIFT">NON SHIFT</option>
                                         </select>
-                                        <label for="shift_filter">Kategori Shift</label>
+                                        <label for="shift_filter">Shift</label>
                                     </div>
                                 </div>
-
                                 <div class="col-lg-6 col-md-6col-sm-12">
                                     <div class="form-floating form-floating-outline">
                                         <div id="reportrange" style="white-space: nowrap;">
                                             <button class="btn btn-outline-secondary w-100 ">
                                                 <span class="fw-bold">FILTER&nbsp;DATE&nbsp;:&nbsp;</span>
                                                 <span class="date_daterange"></span>
-                                                <input type="date" id="start_date" name="start_date" hidden value="">
-                                                <input type="date" id="end_date" name="end_date" hidden value="">
+                                                <input type="date" id="start_date" name="start_date" hidden
+                                                    value="">
+                                                <input type="date" id="end_date" name="end_date" hidden
+                                                    value="">
                                             </button>
                                         </div>
                                     </div>
                                 </div>
-
                                 <div class="col-lg-2 col-md-12 col-sm-12 d-flex justify-content-end">
                                     <button type="button" class="btn btn-block w-100" id="btn_filter">
                                         <i class="mdi mdi-filter-outline text-primary"></i><span class="text-primary">&nbsp;Filter</span>
                                     </button>
                                 </div>
                             </div>
-
                         </div>
+
                     </div>
+
 
                     <!-- Konten yang bisa discroll -->
                     <div class="content-scroll p-3">
                         <!-- <div class="row gy-4">
-                            <div class="col-xl-12">
-                                <div class="card">
-                                    <div class="card-header d-flex justify-content-between align-items-center">
-                                        <h6 class="mb-1">Grafik Absensi Karyawan Kontrak Kerja {{ $holding->holding_name }}</h6>
-                                        <button id="toggleBtnGrafik" class="btn btn-sm btn-outline-primary" type="button"
-                                            data-bs-toggle="collapse"
-                                            data-bs-target="#collapseGrafik"
-                                            aria-expanded="false"
-                                            aria-controls="collapseGrafik">
-                                            Buka
-                                        </button>
-                                    </div>
-                                    <div id="collapseGrafik" class="collapse">
-                                        <div class="card-body">
-                                            <div id="grafik_absensi"></div>
-                                        </div>
+                        <div class="col-xl-12">
+                            <div class="card">
+                                <div class="card-header d-flex justify-content-between align-items-center">
+                                    <h6 class="mb-1">Grafik Absensi Karyawan Kontrak Kerja {{ $holding->holding_name }}</h6>
+                                    <button id="toggleBtnGrafik" class="btn btn-sm btn-outline-primary" type="button"
+                                        data-bs-toggle="collapse"
+                                        data-bs-target="#collapseGrafik"
+                                        aria-expanded="false"
+                                        aria-controls="collapseGrafik">
+                                        Buka
+                                    </button>
+                                </div>
+                                <div id="collapseGrafik" class="collapse">
+                                    <div class="card-body">
+                                        <div id="grafik_absensi"></div>
                                     </div>
                                 </div>
                             </div>
-                        </div> -->
+                        </div>
+                    </div> -->
 
                         <!-- Table rekap -->
                         <div class="mt-4">
@@ -192,14 +195,20 @@
                                     <div class="alert-content text-center">
                                         <svg width="120" height="120" class="text-center" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
 
-                                            <rect x="25" y="25" width="70" height="70" rx="8" ry="8" stroke="#CED4DA" stroke-width="2" />
+                                            <rect x="25" y="25" width="70" height="70" rx="8"
+                                                ry="8" stroke="#CED4DA" stroke-width="2" />
 
-                                            <path d="M35 35H85" stroke="#E6E8EB" stroke-width="1.5" stroke-linecap="round" />
-                                            <path d="M35 45H75" stroke="#E6E8EB" stroke-width="1.5" stroke-linecap="round" />
-                                            <path d="M35 55H85" stroke="#E6E8EB" stroke-width="1.5" stroke-linecap="round" />
+                                            <path d="M35 35H85" stroke="#E6E8EB" stroke-width="1.5"
+                                                stroke-linecap="round" />
+                                            <path d="M35 45H75" stroke="#E6E8EB" stroke-width="1.5"
+                                                stroke-linecap="round" />
+                                            <path d="M35 55H85" stroke="#E6E8EB" stroke-width="1.5"
+                                                stroke-linecap="round" />
 
-                                            <path d="M40 70L80 70" stroke="#7E8A9A" stroke-width="2" stroke-dasharray="4 4" stroke-linecap="round" />
-                                            <path d="M40 80L70 80" stroke="#7E8A9A" stroke-width="2" stroke-dasharray="4 4" stroke-linecap="round" />
+                                            <path d="M40 70L80 70" stroke="#7E8A9A" stroke-width="2"
+                                                stroke-dasharray="4 4" stroke-linecap="round" />
+                                            <path d="M40 80L70 80" stroke="#7E8A9A" stroke-width="2"
+                                                stroke-dasharray="4 4" stroke-linecap="round" />
 
                                         </svg>
                                         <h4 class="alert-heading text-center">Tidak Ada Data</h4>
@@ -207,10 +216,10 @@
                                     </div>
                                 </div>
                             </div>
-                            <table class="table table-bordered table-hover table-striped" id="table_rekapdata" style=" width: 100%; font-size: small; ">
-
-                            </table>
                         </div>
+                        <table class="table table-bordered table-hover table-striped" id="table_rekapdata" style=" width: 100%; font-size: small; ">
+
+                        </table>
                     </div>
                 </div>
             </div>
