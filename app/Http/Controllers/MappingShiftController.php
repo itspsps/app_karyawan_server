@@ -223,30 +223,35 @@ class MappingShiftController extends Controller
 
     public function prosesAddMappingShift(Request $request)
     {
-        dd($request->all());
+        // dd($request->all());
         date_default_timezone_set('Asia/Jakarta');
 
-        if ($request["tanggal_mulai"] == null) {
-            $request["tanggal_mulai"] = $request["tanggal_akhir"];
+        if (empty($request["karyawan_id"])) {
+            return response()->json([
+                'code' => 500,
+                'status' => 'warning',
+                'message' => 'Karyawan belum dipilih'
+            ]);
         } else {
-            $request["tanggal_mulai"] = $request["tanggal_mulai"];
+            if ($request["shift_id"] == null) {
+                return response()->json([
+                    'code' => 500,
+                    'status' => 'warning',
+                    'message' => 'Shift belum dipilih'
+                ]);
+            }
         }
 
-        if ($request["tanggal_akhir"] == null) {
-            $request["tanggal_akhir"] = $request["tanggal_mulai"];
-        } else {
-            $request["tanggal_akhir"] = $request["tanggal_akhir"];
-        }
+
         $rules = [
-            'id_karyawan' => 'required',
+            'karyawan_id' => 'required|array|min:1|max:255',
+            'karyawan_id.*' => 'required|max:255',
+            'shift_id' => 'required|array|min:1',
+            'shift_id.*' => 'required',
             'max:255',
-            'shift_id' => 'required',
-            'max:255',
-            'tanggal_mulai' => 'required',
+            'tanggal' => 'required|array|min:1',
+            'tanggal.*' => 'required',
             'max:16',
-            'tanggal_akhir' => 'required',
-            'max:16',
-            'libur' => 'nullable'
         ];
         $customMessages = [
             'required' => ':attribute tidak boleh kosong.',
@@ -268,88 +273,66 @@ class MappingShiftController extends Controller
                 'message' => $errors
             ]);
         }
+
         // dd($request->all());
-        // dd('p');
-        // dd($request->all());
-        $array_karyawan = explode(',', $request->id_karyawan);
-        // dd($array_karyawan);
-        $begin = new \DateTime($request["tanggal_mulai"]);
-        $end = new \DateTime($request["tanggal_akhir"]);
-        $end = $end->modify('+1 day');
-
-        $interval = new \DateInterval('P1D'); //referensi : https://en.wikipedia.org/wiki/ISO_8601#Durations
-        $daterange = new \DatePeriod($begin, $interval, $end);
-
-
-        foreach ($array_karyawan as $karyawan) {
-            $karyawan_id = $karyawan;
-            $request["id_karyawan"] = $karyawan_id;
-
-            $validatedData1 = $request->validate([
-                'id_karyawan' => 'required',
-            ]);
-            foreach ($daterange as $date) {
-                // dd($validatedData1['id_karyawan']);
-                $tanggal_masuk = $date->format("Y-m-d");
-                $tanggal_pulang = $date->format("Y-m-d");
-                // pakai clone biar $date tidak berubah
-                $malam = (clone $date)->modify('+1 day');
-                $tanggal_pulang_malam = $malam->format("Y-m-d");
-
-                $cek_date_same = MappingShift::where('tanggal_masuk', $tanggal_masuk)->where('tanggal_pulang', $tanggal_pulang)->where('karyawan_id', $validatedData1['id_karyawan'])->where('shift_id', $request->shift_id)->count();
-                if ($cek_date_same != 0) {
-                    return response()->json([
-                        'code' => 500,
-                        'status' => 'warning',
-                        'message' => 'Data ada yang sama'
-                    ]);
+        try {
+            $countInsert = 0;
+            foreach ($request['karyawan_id'] as $karyawanId) {
+                for ($i = 0; $i < count($request->tanggal); $i++) {
+                    $tanggal = $request->tanggal[$i];
+                    $shiftId = $request->shift_id[$i];
+                    $shift = Shift::where('id', $shiftId)->first();
+                    if ($shift) {
+                        if ($shift->tgl_pulang_besok == 1) {
+                            $tanggal_pulang =  Carbon::parse($tanggal)->addDay('1')->format('Y-m-d');
+                        } else {
+                            $tanggal_pulang = Carbon::parse($tanggal)->format('Y-m-d');
+                        }
+                        $namaShift = $shiftId;
+                    } else {
+                        $namaShift = NULL;
+                    }
+                    // Cek apakah sudah ada jadwal untuk tanggal tsb
+                    $exists = MappingShift::where('tanggal_masuk', $tanggal)
+                        ->where('karyawan_id', $karyawanId)
+                        ->exists();
+                    if (!$exists) {
+                        $insert = MappingShift::insert([
+                            'karyawan_id' => $karyawanId,
+                            'tanggal_masuk' => $tanggal,
+                            'tanggal_pulang' => $tanggal_pulang,
+                            'shift_id' => $namaShift,
+                            'nama_shift' => Shift::where('id', $namaShift)->value('nama_shift'),
+                            'nik_karyawan' => Karyawan::where('id', $karyawanId)->value('nomor_identitas_karyawan'),
+                            'nama_karyawan' => Karyawan::where('id', $karyawanId)->value('name'),
+                        ]);
+                        $countInsert++;
+                    } else {
+                        $update = MappingShift::where('tanggal_masuk', $tanggal)->where('karyawan_id', $karyawanId)->update([
+                            'karyawan_id' => $karyawanId,
+                            'tanggal_masuk' => $tanggal,
+                            'tanggal_pulang' => $tanggal_pulang,
+                            'shift_id' => $namaShift,
+                            'nama_shift' => Shift::where('id', $namaShift)->value('nama_shift'),
+                            'nik_karyawan' => Karyawan::where('id', $karyawanId)->value('nomor_identitas_karyawan'),
+                            'nama_karyawan' => Karyawan::where('id', $karyawanId)->value('name'),
+                        ]);
+                        $countInsert++;
+                    }
                 }
-                $nama_shift = Shift::where('id', $request['shift_id'])->first();
-                $jamMasuk  = Carbon::parse($nama_shift->jam_masuk);
-                $jamKeluar = Carbon::parse($nama_shift->jam_keluar);
-                if ($jamMasuk->lessThanOrEqualTo($jamKeluar)) {
-                    $request["tanggal_pulang"] = $tanggal_pulang;
-                } else {
-                    $request["tanggal_pulang"] = $tanggal_pulang_malam;
-                }
-
-                $week = Carbon::parse($date)->dayOfWeek;
-                if ($week == $request->libur) {
-                    $request["status_absen"] = "LIBUR";
-                    $request["nama_shift"] = "LIBUR";
-                    $request["tanggal_masuk"] = $tanggal_masuk;
-                    $request["tanggal_pulang"] = $tanggal_pulang;
-                } else {
-                    $request["status_absen"] = 'TIDAK HADIR KERJA';
-                    $request["tanggal_masuk"] = $tanggal_masuk;
-                    $request["nama_shift"] = $nama_shift->nama_shift;
-                }
-                // dd($request['tanggal_pulang'], $nama_shift->jam_masuk, $nama_shift->jam_keluar);
-                $validatedData = $request->validate([
-                    'shift_id' => 'required',
-                    'tanggal_masuk' => 'required',
-                    'nama_shift' => 'required',
-                    'tanggal_pulang' => 'required',
-                ]);
-                $karyawan = Karyawan::where('id', $validatedData1['id_karyawan'])->first();
-                $insert = new MappingShift();
-                $insert->karyawan_id = $karyawan->id;
-                $insert->nik_karyawan = $karyawan->nomor_identitas_karyawan;
-                $insert->nama_karyawan = $karyawan->name;
-                $insert->shift_id = $validatedData['shift_id'];
-                $insert->nama_shift = $validatedData['nama_shift'];
-                $insert->tanggal_masuk = $validatedData['tanggal_masuk'];
-                $insert->tanggal_pulang = $validatedData['tanggal_pulang'];
-                $insert->status_absen = $request['status_absen'];
-                $insert->kelengkapan_absensi = 'BELUM ABSENSI';
-                $insert->save();
             }
+            return response()->json([
+                'code' => 200,
+                'status' => 'success',
+                'message' => 'data berhasil ditambahkan'
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'code' => 500,
+                'status' => 'Gagal menyimpan jadwal',
+                'message' => $e->getMessage()
+            ]);
         }
-        return response()->json([
-            'code' => 200,
-            'status' => 'success',
-            'message' => 'data berhasil ditambahkan'
-        ]);
     }
     public function prosesTambahDetailShift(Request $request)
     {

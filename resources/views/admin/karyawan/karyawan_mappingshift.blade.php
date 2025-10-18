@@ -135,7 +135,6 @@
                                             <option value="{{$dept->id}}">{{$dept->nama_departemen}}</option>
                                             @endforeach
                                         </select>
-                                        <label for="departemen_filter">Departemen</label>
                                     </div>
                                 </div>
                                 <div class="col-lg-3 col-md-6 col-sm-6">
@@ -143,7 +142,6 @@
                                         <select type="text" class="form-control" name="divisi_filter[]" id="divisi_filter" multiple>
                                             <option selected disabled value="">-- Pilih Divisi --</option>
                                         </select>
-                                        <label for="divisi_filter">Divisi</label>
                                     </div>
                                 </div>
                                 <div class="col-lg-3 col-md-6 col-sm-6">
@@ -151,7 +149,6 @@
                                         <select type="text" class="form-control" name="bagian_filter[]" id="bagian_filter" multiple>
                                             <option selected disabled value="">-- Pilih Bagian --</option>
                                         </select>
-                                        <label for="bagian_filter">Bagian</label>
                                     </div>
                                 </div>
                                 <div class="col-lg-3 col-md-6 col-sm-6">
@@ -159,15 +156,21 @@
                                         <select type="text" class="form-control" name="jabatan_filter[]" id="jabatan_filter" multiple>
                                             <option selected disabled value="">-- Pilih Jabatan --</option>
                                         </select>
-                                        <label for="jabatan_filter">Jabatan</label>
                                     </div>
                                 </div>
                             </div>
 
                             <div class="row gy-4 align-items-end">
-
-
-                                <div class="col-lg-6 col-md-6col-sm-12">
+                                <div class="col-lg-3 col-md-3 col-sm-3">
+                                    <div class="form-floating form-floating-outline">
+                                        <select type="text" class="form-control" name="shift_filter" id="shift_filter" multiple>
+                                            <option disabled value="">-- Pilih Shift --</option>
+                                            <option value="NON SHIFT">NON SHIFT</option>
+                                            <option value="SHIFT">SHIFT</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6 col-md-6col-sm-6">
                                     <div class="form-floating form-floating-outline">
                                         <div id="filterrange" style="white-space: nowrap;">
                                             <button class="btn btn-outline-secondary w-100 ">
@@ -180,7 +183,7 @@
                                     </div>
                                 </div>
 
-                                <div class="col-lg-2 col-md-12 col-sm-12 d-flex justify-content-end">
+                                <div class="col-lg-3 col-md-3 col-sm-3 d-flex justify-content-end">
                                     <button type="button" class="btn btn-block w-100" id="btn_filter">
                                         <i class="mdi mdi-filter-outline text-primary"></i><span class="text-primary">&nbsp;Filter</span>
                                     </button>
@@ -190,9 +193,9 @@
                         </div>
                     </div>
                     <div class="content-scroll p-3">
-                        <hr class="my-5">
+                        <hr class="my-1">
                         <button id="btn_selected_proses" class="btn btn-xs btn-primary waves-effect waves-light" type="button">
-                            <i class="menu-icon tf-icons mdi mdi-plus"></i> Tambah&nbsp;Mapping&nbsp;(&nbsp;<span id="count_checked">0</span>&nbsp;Selected)
+                            <i class="menu-icon tf-icons mdi mdi-plus"></i> Tambah&nbsp;Mapping
                         </button>
                         <div class="modal fade" id="modal_tambah_shift" data-bs-backdrop="static" tabindex="-1">
                             <div class="modal-dialog modal-xl modal-dialog-scrollable ">
@@ -222,7 +225,7 @@
                                                     <div class="list_date_jadwal row mb-3">
                                                         <div class="col-lg-5 col-md-5 col-sm-5">
                                                             <div class="form-floating form-floating-outline">
-                                                                <select class="select2 form-select @error('shift_id') is-invalid @enderror"
+                                                                <select class="form-control @error('shift_id') is-invalid @enderror"
                                                                     id="shift_id" name="shift_id[]">
                                                                     <option value="">-- Pilih Shift --</option>
                                                                     @foreach ($shift as $s)
@@ -349,7 +352,10 @@
             singleDatePicker: true,
             showDropdowns: true,
             minYear: 1901,
-            maxYear: parseInt(moment().format('YYYY'), 10)
+            maxYear: parseInt(moment().format('YYYY'), 10),
+            locale: {
+                format: 'YYYY-MM-DD' // 👈 Format tanggal yang diinginkan
+            }
         }, function(start, end, label) {
             var years = moment().diff(start, 'years');
             alert("You are " + years + " years old!");
@@ -678,12 +684,7 @@
         cb(start, end);
 
         function load_data(departemen_filter = '', divisi_filter = '', bagian_filter = '', jabatan_filter = '', shift_filter = '', start_date = '', end_date = '', data_column = '') {
-            // console.log("Jumlah TH terakhir:", $('#table_mapping_shift thead tr:last th').length);
-            // console.log("Jumlah column DataTable:", data_column.length);
 
-            // $('#table_mapping_shift thead tr:last th').each(function(i, th) {
-            //     console.log(i, $(th).text().trim());
-            // });
             var tab = $('#table_mapping_shift').DataTable({
                 "scrollY": true,
                 "scrollX": true,
@@ -820,11 +821,6 @@
                 }
             });
         });
-        $('#jadwal_container .list_date_jadwal select.select2').select2({
-            placeholder: 'Pilih opsi',
-            theme: 'bootstrap-5',
-            allowClear: true
-        });
 
         var templateHtml = $('#jadwal_container .list_date_jadwal:first').clone();
         var $firstRow = $('#jadwal_container .list_date_jadwal:first');
@@ -839,10 +835,6 @@
         $('#btn_tambah_date').on('click', function() {
             // Clone dari template
             var $newRow = $templateRow.clone();
-
-            // Pastikan select2 lama tidak ikut ter-clone (hapus container-nya)
-            $newRow.find('.select2').removeClass('select2-hidden-accessible')
-                .next('.select2-container').remove();
             // Hapus instance daterangepicker lama
             $newRow.find('.daterangepicker').remove();
 
@@ -859,12 +851,6 @@
             // Tambahkan ke container
             $('#jadwal_container').append($newRow);
 
-            // RE-INIT Select2 di elemen baru
-            $newRow.find('select2').select2({
-                placeholder: 'Pilih opsi',
-                theme: 'bootstrap-5',
-                allowClear: true
-            });
             $newRow.find('input.single-date').daterangepicker({
                 singleDatePicker: true,
                 showDropdowns: true,
@@ -892,13 +878,25 @@
         });
         $(document).on("click", "#btn_tambah_shift", function(e) {
             var url = "@if(Auth::user()->is_admin=='hrd'){{ url('/hrd/karyawan/mapping_shift/prosesAddMappingShift/'.$holding->holding_code) }}@else{{ url('/karyawan/mapping_shift/prosesAddMappingShift/'.$holding->holding_code) }}@endif";
+            Swal.fire({
+                title: 'Memproses...',
+                html: 'Mohon menunggu.',
+                allowOutsideClick: false,
+                didOpen: () => {
+                    Swal.showLoading()
+                }
+            });
             $.ajax({
                 url: url,
                 method: "post",
                 data: $("#form_tambah_shift").serialize(),
                 success: function(data) {
-                    console.log(data);
+                    // console.log(data);
+                    Swal.close();
                     if (data.code == 200) {
+                        $('#modal_tambah_shift').modal('hide');
+                        $('#form_tambah_shift').trigger('reset');
+                        $('#shift_id').val(null).trigger('change');
                         Swal.fire({
                             title: 'Sukses!',
                             text: data.message,
@@ -913,13 +911,10 @@
                             timer: 4500
                         })
                     }
-                    $('#table_mapping_shift').DataTable().ajax.reload();
-                    $('#modal_tambah_shift').modal('hide');
-                    $('#form_tambah_shift').trigger('reset');
-                    $('#shift_id').val(null).trigger('change');
                 },
                 error: function(data) {
-                    console.log(data);
+                    Swal.close();
+                    // console.log(data);
                     $('#table_mapping_shift').DataTable().ajax.reload();
                     $('#modal_tambah_shift').modal('hide');
                     $('#form_tambah_shift').trigger('reset');

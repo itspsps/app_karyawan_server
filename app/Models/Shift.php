@@ -19,7 +19,8 @@ class Shift extends Model
         'jam_pulang_cepat',
         'jam_keluar',
         'hari_libur',
-        'kode_warna'
+        'kode_warna',
+        'tgl_pulang_besok'
     ];
 
     public function MappingShift()
