@@ -219,7 +219,9 @@
                                         </div>
                                         <div class="card mb-4" style="padding: 5px; margin: 2;">
                                             <div class="card-body">
-
+                                                <div class="mb-3">
+                                                    <span id="count_karyawan" class="font-weight-bold">Karyawan Selected : 0 Karyawan<< /span>
+                                                </div>
                                                 <div id="jadwal_container">
 
                                                     <div class="list_date_jadwal row mb-3">
@@ -306,15 +308,57 @@
 
                         </table>
                     </div>
-                    <div class="modal fade" id="modalDetailTanggal" tabindex="-1">
-                        <div class="modal-dialog modal-dialog-centered modal-lg">
+                    <div class="modal fade" id="modalDetailTanggal" tabindex="-1" aria-labelledby="modalDetailKaryawanLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered modal-xl">
                             <div class="modal-content">
-                                <div class="modal-header bg-primary text-white">
-                                    <h5 class="modal-title">Detail Shift Tanggal <span id="modalTanggal"></span></h5>
-                                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                <div class="modal-header ">
+                                    <h5 class="modal-title" id="modalDetailKaryawanLabel">Detail Profil & Shift Karyawan: <span id="namaKaryawanModal"></span></h5>
+                                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                                 </div>
                                 <div class="modal-body">
-                                    <div id="modalKaryawanList">Memuat data...</div>
+                                    <div class="row">
+                                        <div class="col-md-5 border-end">
+                                            <h6 class="text-primary mb-3">Informasi Profil</h6>
+                                            <div class="mb-3">
+                                                <label class="form-label fw-bold">ID Karyawan:</label>
+                                                <p id="idKaryawanDetail" class="form-control-static"></p>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label class="form-label fw-bold">Jabatan:</label>
+                                                <p id="jabatanDetail" class="form-control-static"></p>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label class="form-label fw-bold">Departemen:</label>
+                                                <p id="departemenDetail" class="form-control-static"></p>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-7">
+                                            <h6 class="text-primary mb-3">Detail & Edit Shift</h6>
+                                            <form id="formEditShift" method="POST">
+                                                @csrf
+                                                <div class="mb-3">
+                                                    <input type="text" class="form-control" id="idMappingShift" name="idMappingShift" value="" hidden>
+                                                    <label for="tanggalShift" class="form-label fw-bold">Tanggal Shift Aktif</label>
+                                                    <input type="text" class="form-control" id="tanggalShift" name="tanggalShift" value="" readonly>
+                                                    <input type="text" class="form-control" id="tanggalMasukShift" name="tanggalMasukShift" value="" hidden>
+                                                    <div class="form-text">Tanggal shift yang ditampilkan.</div>
+                                                </div>
+
+                                                <div class="mb-3">
+                                                    <label for="shiftSaatIni" class="form-label fw-bold">Shift Saat Ini</label>
+                                                    <select class="form-select" id="shiftSaatIni" name="shiftSaatIni" required>
+                                                        <option value="">Pilih Shift Baru</option>
+                                                        @foreach ($shift as $a)
+                                                        <option value="{{ $a->id }}"> {{ $a->nama_shift . " (" . $a->jam_masuk . " - " . $a->jam_keluar . ") " }}</option>
+                                                        @endforeach
+                                                    </select>
+                                                    <div class="form-text">Pilih shift baru untuk karyawan ini.</div>
+                                                </div>
+                                                <button type="butotn" id="btn_change_shift" class="btn btn-sm btn-success float-end">Simpan Perubahan Shift&nbsp;<i class="mdi mdi-content-save-move"></i></button>
+                                            </form>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -397,7 +441,7 @@
                     shift_filter: shift_filter,
                 },
                 success: function(data) {
-                    console.log(data);
+                    // console.log(data);
                     datacolumn = [{
                             data: 'no',
                             render: function(data, type, row, meta) {
@@ -768,7 +812,7 @@
                 },
                 columns: data_column,
                 order: [
-                    [3, 'asc']
+                    [2, 'asc']
                 ]
 
             });
@@ -776,12 +820,22 @@
 
 
         $(document).on("click", "#btn_selected_proses", function(e) {
-
+            Swal.fire({
+                title: 'Memproses...',
+                html: 'Mohon menunggu.',
+                allowOutsideClick: false,
+                didOpen: () => {
+                    Swal.showLoading()
+                }
+            });
             $.ajax({
                 url: "@if(Auth::user()->is_admin=='hrd'){{ url('hrd/get_karyawan_mapping') }}@else {{ url('karyawan/get_karyawan_mapping') }}@endif" + '/' + holding,
 
                 success: function(data) {
                     // console.log(data);
+                    $('#list_karyawan').empty();
+                    $('#count_karyawan').text('Karyawan Selected : 0 Karyawan');
+                    Swal.close();
                     $('#modal_tambah_shift').modal('show');
                     $.each(data, function(key, value) {
                         $('#list_karyawan').append( // Asumsi: value.name berisi nama karyawan
@@ -806,15 +860,37 @@
                             '</label>' +
                             '</div>');
                     });
+                },
+                error: function(data) {
+                    Swal.close();
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Gagal',
+                        text: data.responseJSON.message,
+                        timer: 4200,
+                        showConfirmButton: false,
+                    })
                 }
             })
         })
+        $(document).on('click', '.karyawan-tile', function() {
+            let checkbox = $(this).find('.group_select');
+            checkbox.prop('checked', !checkbox.prop('checked')); // toggle
+            $(this).toggleClass('selected', checkbox.prop('checked')); // optional styling
+            updateCheckedCount();
+        });
+
+        // Fungsi untuk menghitung jumlah checkbox yang dicentang
+        function updateCheckedCount() {
+            let totalChecked = $('.group_select:checked').length;
+            $('#count_karyawan').text('Karyawan Selected : ' + totalChecked + ' Karyawan'); // tampilkan ke elemen tertentu
+        }
         $('#nama_karyawan').on('keyup', function() {
             var searchValue = $(this).val().toLowerCase();
             $('.karyawan-item').each(function() {
                 var name = $(this).data('name').toLowerCase();
                 if (name.indexOf(searchValue) > -1) {
-                    console.log($(this));
+                    // console.log($(this));
                     $(this).show();
                 } else {
                     $(this).hide();
@@ -833,24 +909,36 @@
         // 2. FUNGSI TAMBAH BARIS
         // ===========================================
         $('#btn_tambah_date').on('click', function() {
-            // Clone dari template
-            var $newRow = $templateRow.clone();
+            // Ambil baris terakhir
+            var $lastRow = $('.list_date_jadwal').last();
+
+            // Clone baris terakhir sebagai template
+            var $newRow = $lastRow.clone();
+
             // Hapus instance daterangepicker lama
             $newRow.find('.daterangepicker').remove();
 
-            // Kosongkan input dan select
-            $newRow.find('select').val('');
-            $newRow.find('input').val('');
+            // Ambil nilai shift & tanggal dari baris terakhir
+            var lastShift = $lastRow.find('select[name="shift_id[]"]').val();
+            var lastDateStr = $lastRow.find('input[name="tanggal[]"]').val();
 
-            // Tampilkan tombol hapus (jika ada)
-            $newRow.find('.btn-hapus-date').show();
+            // === Set nilai awal di baris baru ===
+            if (lastDateStr) {
+                // Tambah 1 hari dari tanggal sebelumnya
+                var nextDate = moment(lastDateStr, 'YYYY-MM-DD').add(1, 'days').format('YYYY-MM-DD');
+                $newRow.find('input[name="tanggal[]"]').val(nextDate);
+            } else {
+                // Kosongkan jika belum ada
+                $newRow.find('input[name="tanggal[]"]').val('');
+            }
 
-            // Tambahkan margin
-            $newRow.addClass('mb-3');
+            // Samakan shift
+            $newRow.find('select[name="shift_id[]"]').val(lastShift);
 
             // Tambahkan ke container
             $('#jadwal_container').append($newRow);
 
+            // Re-init Daterangepicker untuk input baru
             $newRow.find('input.single-date').daterangepicker({
                 singleDatePicker: true,
                 showDropdowns: true,
@@ -858,7 +946,13 @@
                     format: 'YYYY-MM-DD'
                 }
             });
+
+            // Tampilkan tombol hapus
+            $newRow.find('.btn-hapus-date').show();
         });
+
+
+
 
         $('#jadwal_container').on('click', '.btn-hapus-date', function() {
             // Cek jumlah baris yang ada
@@ -875,6 +969,81 @@
                     timer: 4500
                 });
             }
+        });
+        $(document).on("click", "#detail_shift", function(e) {
+            e.preventDefault();
+            var tanggal = $(this).data('tanggal');
+            var tanggal_masuk = $(this).data('tanggal_masuk');
+            var shift = $(this).data('shift');
+            var nip = $(this).data('nip');
+            var departemen = $(this).data('departemen');
+            var jabatan = $(this).data('jabatan') + ' ' + $(this).data('bagian');
+            var nama = $(this).data('nama');
+            var idmapping = $(this).data('idmapping');
+            $('#namaKaryawanModal').text(nama);
+            // console.log(tanggal, tanggal_masuk, nip);
+            $('#tanggalShift').val(tanggal);
+            $('#tanggalMasukShift').val(tanggal_masuk);
+            $('#idKaryawanDetail').text(nip);
+            $('#departemenDetail').text(departemen);
+            $('#jabatanDetail').text(jabatan);
+            $('#idMappingShift').val(idmapping);
+            $('#shiftSaatIni').val(shift).trigger('change');
+
+            $('#modalDetailTanggal').modal('show'); // #modalDetailTanggal
+
+        });
+        $(document).on("click", "#btn_change_shift", function(e) {
+            e.preventDefault();
+            var url = "@if(Auth::user()->is_admin=='hrd'){{ url('/hrd/karyawan/mapping_shift/prosesEditMappingShift/'.$holding->holding_code) }}@else{{ url('/karyawan/mapping_shift/prosesEditMappingShift/'.$holding->holding_code) }}@endif";
+            Swal.fire({
+                title: 'Memproses...',
+                html: 'Mohon menunggu.',
+                allowOutsideClick: false,
+                didOpen: () => {
+                    Swal.showLoading()
+                }
+            });
+            $.ajax({
+                url: url,
+                method: "post",
+                data: $("#formEditShift").serialize(),
+                success: function(data) {
+                    // console.log(data);
+                    Swal.close();
+                    $('#modalDetailTanggal').modal('hide');
+                    $('#formEditShift').trigger('reset');
+                    $('#table_mapping_shift').DataTable().ajax.reload();
+                    if (data.code == 200) {
+                        Swal.fire({
+                            title: 'Sukses!',
+                            text: data.message,
+                            icon: 'success',
+                            timer: 4500
+                        })
+                    } else {
+                        Swal.fire({
+                            title: 'Gagal!',
+                            text: data.message,
+                            icon: 'error',
+                            timer: 4500
+                        })
+                    }
+                },
+                error: function(data) {
+                    Swal.close();
+                    // console.log(data);
+                    $('#table_mapping_shift').DataTable().ajax.reload();
+                    $('#modalDetailTanggal').modal('hide');
+                    $('#formEditShift').trigger('reset');
+                    Swal.fire({
+                        title: 'Gagal!',
+                        text: data.responseJSON.message,
+                        icon: 'error',
+                        timer: 4500
+                    })
+                }
+            })
         });
         $(document).on("click", "#btn_tambah_shift", function(e) {
             var url = "@if(Auth::user()->is_admin=='hrd'){{ url('/hrd/karyawan/mapping_shift/prosesAddMappingShift/'.$holding->holding_code) }}@else{{ url('/karyawan/mapping_shift/prosesAddMappingShift/'.$holding->holding_code) }}@endif";
@@ -897,6 +1066,7 @@
                         $('#modal_tambah_shift').modal('hide');
                         $('#form_tambah_shift').trigger('reset');
                         $('#shift_id').val(null).trigger('change');
+                        $('#table_mapping_shift').DataTable().ajax.reload();
                         Swal.fire({
                             title: 'Sukses!',
                             text: data.message,

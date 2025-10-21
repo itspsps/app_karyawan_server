@@ -343,7 +343,7 @@ Route::middleware('admin')->group(function () {
 
     // mapping shift NEW
     Route::get('/karyawan/mapping_shift/{holding}', [MappingShiftController::class, 'mapping_shift_index']);
-    Route::get('/karyawan/mapping_shift/{id}/{holding}', [MappingShiftController::class, 'mapping_shift_detail_index']);
+    Route::get('/karyawan/mapping_shift/detail/{id}/{holding}', [MappingShiftController::class, 'mapping_shift_detail_index']);
     Route::get('/karyawan/get_karyawan_mapping/{holding}', [MappingShiftController::class, 'get_karyawan_mapping']);
     Route::get('/karyawan/mapping_shift_datatable/{holding}', [MappingShiftController::class, 'mapping_shift_datatable']);
     Route::get('/karyawan/mapping_shift_detail_datatable/{id}/{holding}', [MappingShiftController::class, 'mapping_shift_detail_datatable']);
@@ -369,7 +369,7 @@ Route::middleware('admin')->group(function () {
 
     Route::get('mapping_shift/dashboard/', [MappingShiftController::class, 'index']);
     Route::post('/karyawan/mapping_shift/prosesAddMappingShift/{holding}', [MappingShiftController::class, 'prosesAddMappingShift']);
-    Route::post('/karyawan/mapping_shift/prosesEditMappingShift', [MappingShiftController::class, 'prosesEditMappingShift']);
+    Route::post('/karyawan/mapping_shift/prosesEditMappingShift/{holding}', [MappingShiftController::class, 'prosesEditMappingShift']);
 
 
     //
