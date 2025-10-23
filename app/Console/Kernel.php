@@ -19,7 +19,7 @@ class Kernel extends ConsoleKernel
         $schedule->command('kirim:email2')->weekly()->mondays()->at('05:00')->timezone('Asia/Jakarta');
         $schedule->command('reset:cuti')->dailyAt('05:34')->timezone('Asia/Jakarta');
         // Jalankan setiap 5 menit
-        $schedule->command('finger:sync')->everyFiveMinutes();
+        $schedule->command('finger:sync')->everyFiveMinutes()->appendOutputTo(storage_path('logs/finger_sync.log'));
     }
 
     /**
