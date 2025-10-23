@@ -26,13 +26,13 @@ class SyncFingerLogs extends Command
         $machines = FingerMachine::all();
 
         foreach ($machines as $machine) {
-            $this->info("Sync dari {$machine->ip}:{$machine->port}");
+            $this->info("Sync dari {$machine->Ip}:{$machine->Port}");
 
             try {
                 $response = Http::timeout(30)->get('http://localhost:5257/api/ZK/logs', [
-                    'ip' => $machine->ip,
-                    'port' => $machine->port,
-                    'dateFrom' => now()->subMinutes(10)->toDateTimeString(),
+                    'ip' => $machine->Ip,
+                    'port' => $machine->Port,
+                    'dateFrom' => now()->subHour(1)->toDateTimeString(),
                     'dateTo' => now()->toDateTimeString(),
                 ]);
 
@@ -42,7 +42,7 @@ class SyncFingerLogs extends Command
                     foreach ($logs as $log) {
                         AttendanceLog::insertOrIgnore(
                             [
-                                'machine_ip' => $machine->ip,
+                                'machine_ip' => $machine->Ip,
                                 'pin' => $log['EnrollNumber'],
                                 'timestamp' => $log['LogTime'],
                             ],
@@ -55,12 +55,12 @@ class SyncFingerLogs extends Command
                         );
                     }
 
-                    $this->info("✅ Berhasil sync dari {$machine->ip}");
+                    $this->info("✅ Berhasil sync dari {$machine->Ip} dengan " . count($logs) . " log baru.");
                 } else {
                     $this->error("❌ Gagal: " . $response->status());
                 }
             } catch (\Exception $e) {
-                $this->error("⚠️ Error dari {$machine->ip}: " . $e->getMessage());
+                $this->error("⚠️ Error dari {$machine->Ip}: " . $e->getMessage());
             }
         }
 
