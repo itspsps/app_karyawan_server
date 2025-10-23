@@ -7,6 +7,7 @@ use App\Models\FingerMachine;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Http\Client\Pool;
 
 class SyncFingerLogs extends Command
 {
@@ -24,25 +25,30 @@ class SyncFingerLogs extends Command
 
         $this->info('🔄 Mulai sync dari ' . $machines->count() . ' mesin fingerprint...');
 
-        // buat semua request paralel
-        $requests = [];
-        foreach ($machines as $machine) {
-            $key = "{$machine->Ip}:{$machine->Port}";
-            $requests[$key] = fn() =>
-            Http::timeout(60)->get('http://localhost:5257/api/ZK/logs', [
-                'ip' => $machine->Ip,
-                'port' => $machine->Port,
-                'dateFrom' => now()->subHour(1)->toDateTimeString(),
-                'dateTo' => now()->toDateTimeString(),
-            ]);
-        }
-
         // kirim semua request bersamaan (paralel)
-        $responses = Http::pool($requests);
+        $responses = Http::pool(function (Pool $pool) use ($machines) {
+            $requests = [];
 
-        // proses semua hasilnya
+            foreach ($machines as $machine) {
+                $requests["{$machine->Ip}:{$machine->Port}"] = $pool
+                    ->timeout(60)
+                    ->get('http://localhost:5257/api/ZK/logs', [
+                        'ip' => $machine->Ip,
+                        'port' => $machine->Port,
+                        'dateFrom' => now()->subHour(1)->toDateTimeString(),
+                        'dateTo' => now()->toDateTimeString(),
+                    ]);
+            }
+
+            return $requests;
+        });
+
+        // proses hasilnya
         foreach ($responses as $key => $response) {
-            [$ip, $port] = explode(':', $key);
+            // key bisa integer, jadi kita ambil ip:port dari $machines
+            $machine = $machines[$key];
+            $ip = $machine->Ip;
+            $port = $machine->Port;
 
             if ($response->successful()) {
                 $logs = $response->json();
@@ -52,7 +58,6 @@ class SyncFingerLogs extends Command
                     continue;
                 }
 
-                // batch insert agar lebih cepat
                 $insertData = [];
                 foreach ($logs as $log) {
                     $insertData[] = [
@@ -66,12 +71,11 @@ class SyncFingerLogs extends Command
                     ];
                 }
 
-                // insert sekaligus (abaikan duplikat)
                 DB::table('attendance_logs')->insertOrIgnore($insertData);
 
                 $this->info("✅ {$ip}: berhasil sync " . count($logs) . " log baru.");
             } else {
-                $this->error("❌ {$ip}: Gagal diakses, status {$response->status()}");
+                $this->error("❌ {$ip}: gagal, status {$response->status()}");
             }
         }
 
