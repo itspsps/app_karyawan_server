@@ -35,6 +35,7 @@ use App\Models\RecruitmentKesehatanKecelakaan;
 use App\Models\RecruitmentKesehatanPengobatan;
 use App\Models\RecruitmentKesehatanRS;
 use App\Models\RecruitmentPendidikan;
+use App\Models\RecruitmentReferensi;
 use App\Models\RecruitmentRiwayat;
 use App\Models\RecruitmentUserRecord;
 use App\Models\Site;
@@ -144,7 +145,7 @@ class RecruitmentController extends Controller
                     return Carbon::parse($row->created_at)->format('d-m-Y');
                 })
                 ->addColumn('penempatan', function ($row) {
-                    return $row->Sites->site_name;
+                    return $row->Sites->site_name ?? '-';
                 })
                 ->addColumn('nama_jabatan', function ($row) {
                     if (!$row->Jabatan) {
@@ -756,6 +757,7 @@ class RecruitmentController extends Controller
         $pekerjaan_count = RecruitmentRiwayat::where('id_user', $data_cv->AuthLogin->id)->orderBy('tanggal_keluar', 'DESC')->count();
         $keahlian_count = RecruitmentKeahlian::where('id_user', $data_cv->AuthLogin->id)->count();
         $keahlian = RecruitmentKeahlian::where('id_user', $data_cv->AuthLogin->id)->get();
+        $site = Site::get();
         // dd($pekerjaan);
         // dd($pendidikan);
         return view('admin.recruitment-users.recruitment.user_detail', [
@@ -771,7 +773,8 @@ class RecruitmentController extends Controller
             'kesehatan',
             'kesehatan_pengobatan',
             'kesehatan_rs',
-            'kesehatan_kecelakaan'
+            'kesehatan_kecelakaan',
+            'site',
         ));
     }
     function pelamar_detail_pdf($id)
@@ -944,6 +947,7 @@ class RecruitmentController extends Controller
         $recruitment_admin_id = RecruitmentUser::where('id', $request->recruitment_user_id)->first();
         $tanggal_wawancara = Carbon::parse($request->tanggal_wawancara);
         $hari = $tanggal_wawancara->translatedFormat('l, j F Y');
+        $site = Site::where('id', $request->tempat_wawancara)->first();
         // dd($request->nomor_whatsapp);
         // dd($recruitment_admin_id);
         if ($request->status == '1') {
@@ -990,7 +994,7 @@ class RecruitmentController extends Controller
             return redirect()->back();
         }
         if ($request->online == '1') {
-            $tempat_wawancara = $request->tempat_wawancara;
+            $tempat_wawancara = $site->site_name;
         } elseif ($request->online == '2') {
             $tempat_wawancara = $request->link_wawancara;
         }
@@ -1019,9 +1023,9 @@ Terima kasih telah melamar di $holdings->holding_name. Setelah proses seleksi ad
 
 📅 Hari/Tanggal : $hari
 🕒 Pukul : $request->waktu_wawancara WIB
-📍 Lokasi/Link Zoom : $tempat_wawancara
+📍 Lokasi/Link Zoom : $tempat_wawancara, $site->gm_link
 
-Mohon konfirmasi kehadiran Anda pada link di bawah ini :
+Mohon konfirmasi kehadiran Anda pada link di bawah ini (Max. 24 Jam):
 
 http://192.168.101.241:8001/cpanel/recruitment_detail/$request->recruitment_user_id
 ",
@@ -1051,7 +1055,7 @@ http://192.168.101.241:8001/cpanel/recruitment_detail/$request->recruitment_user
                 'status'             => $request->status,
                 'status_user'        => $request->status,
                 'tanggal_wawancara'  => $request->tanggal_wawancara,
-                'tanggal_konfirmasi' => date('Y-m-d H:i:s', strtotime('+1 days')),
+                'tanggal_konfirmasi' => date('Y-m-d H:i:s', strtotime('+2 days')),
                 'tempat_wawancara'   => $tempat_wawancara,
                 'waktu_wawancara'    => $request->waktu_wawancara,
                 'updated_at' => date('Y-m-d H:i:s')
@@ -1388,6 +1392,7 @@ http://192.168.101.241:8001/cpanel/recruitment_detail/$request->recruitment_user
     }
     public function ranking_update_status(Request $request)
     {
+        // dd($request->all());  
         try {
             $get_recruitment_admin = RecruitmentUser::with([
                 'recruitmentAdmin' => function ($query) {
@@ -1431,9 +1436,20 @@ http://192.168.101.241:8001/cpanel/recruitment_detail/$request->recruitment_user
                 if ($request->online == 1) {
                     $link_wawancara = 'nullable';
                     $tempat_wawancara = 'required';
+                    $site = Site::where('id', $request->tempat_wawancara)->first();
+                    if ($site == null) {
+                        return response()->json([
+                            'code' => 500,
+                            'error' => 'Site Wawancara Kosong',
+                        ]);
+                    }
+                    $tempat = $site->site_name;
+                    $map = $site->gm_link;
                 } elseif ($request->online == 2) {
                     $link_wawancara = 'required';
                     $tempat_wawancara = 'nullable';
+                    $tempat = $request->link_wawancara;
+                    $map = null;
                 }
                 $validator = Validator::make(
                     $request->all(),
@@ -1454,20 +1470,15 @@ http://192.168.101.241:8001/cpanel/recruitment_detail/$request->recruitment_user
                         'errors' => $validator->errors()
                     ]);
                 }
-                if ($request->online == 1) {
-                    $tempat = $request->tempat_wawancara;
-                } elseif ($request->online == 2) {
-                    $tempat = $request->link_wawancara;
-                }
                 // dd($request->all());
                 RecruitmentUser::where('id', $request->id)->update(
 
                     [
-                        'tanggal_wawancara_manager'             => $request->tanggal_wawancara,
+                        'tanggal_wawancara_manager'     => $request->tanggal_wawancara,
                         'tempat_wawancara'              => $tempat,
-                        'waktu_wawancara'       => $request->waktu_wawancara,
+                        'waktu_wawancara'               => $request->waktu_wawancara,
                         'status_lanjutan'               => $request->status,
-                        'tanggal_konfirmasi_manager'    => date('Y-m-d H:i:s', strtotime('+1 days')),
+                        'tanggal_konfirmasi_manager'    => date('Y-m-d H:i:s', strtotime('+2 days')),
                         'updated_at'                    => date('Y-m-d H:i:s'),
                     ]
                 );
@@ -1499,9 +1510,9 @@ http://192.168.101.241:8001/cpanel/recruitment_detail/$request->recruitment_user
 Selamat, Anda lolos tahap wawancara awal. Kami mengundang Anda untuk melanjutkan ke wawancara bersama Manager pada:
 📅 Hari/Tanggal : $hari
 🕒 Pukul : $request->waktu_wawancara WIB
-📍 Lokasi/Link Zoom : $tempat
+📍 Lokasi/Link Zoom : $tempat, $map
 
-Mohon konfirmasi kehadiran Anda pada link di bawah ini :
+Mohon konfirmasi kehadiran Anda pada link di bawah ini (Max. 24 Jam):
 http://192.168.101.241:8001/cpanel/recruitment_detail/$request->id
 
 ",
@@ -1523,6 +1534,13 @@ http://192.168.101.241:8001/cpanel/recruitment_detail/$request->id
                 }
             } elseif ($request->status == '2b') {
                 // dd($request->all);
+                $site_krj = Site::where('id', $request->tempat_bekerja)->first();
+                if ($site_krj == null) {
+                    return response()->json([
+                        'code' => 500,
+                        'error' => 'Site Wawancara Kosong',
+                    ]);
+                }
                 $validator = Validator::make(
                     $request->all(),
                     [
@@ -1545,10 +1563,11 @@ http://192.168.101.241:8001/cpanel/recruitment_detail/$request->id
 
                     [
                         'status_lanjutan'       => $request->status,
-                        'tempat_bekerja'        => $request->tempat_bekerja,
+                        'tempat_bekerja'        => $site_krj->site_name,
                         'tanggal_diterima'      => $request->tanggal_diterima,
+                        'gaji'                  => $request->gaji,
                         'notes'                 => $request->notes_langsung,
-                        'konfirmasi_diterima'   => date('Y-m-d H:i:s', strtotime('+1 days')),
+                        'konfirmasi_diterima'   => date('Y-m-d H:i:s', strtotime('+2 days')),
                         'updated_at'            => date('Y-m-d H:i:s'),
                     ]
                 );
@@ -1582,16 +1601,17 @@ http://192.168.101.241:8001/cpanel/recruitment_detail/$request->id
                         "Halo " . $get_wa->Cv->nama_lengkap . ",
 
 Selamat! Anda telah dinyatakan diterima sebagai " . $get_recruitment_admin->recruitmentAdmin->Jabatan->nama_jabatan . "
-Bagian " . $get_recruitment_admin->recruitmentAdmin->Jabatan->Bagian->nama_bagian . " Divisi " . $get_recruitment_admin->recruitmentAdmin->Jabatan->Bagian->Divisi->nama_divisi . "
-di $holdings->holding_name. 🎉
+" . $get_recruitment_admin->recruitmentAdmin->Jabatan->Bagian->Divisi->nama_divisi . "
+di $holdings->holding_name. dengan benefit gaji Rp. $request->gaji🎉
 
 Kami mengundang Anda untuk hadir pada:
 📅 Hari/Tanggal : $hari
 🕒 Pukul : $request->waktu_bekerja
-📍 Lokasi : $request->tempat_bekerja
+📍 Lokasi : $site_krj->site_name, $site_krj->gm_link
 Untuk penjelasan lebih lanjut terkait administrasi dan training karyawan baru. Harap membawa dokumen yang diperlukan sesuai instruksi yang akan kami kirimkan.
+Catatan : $request->notes_langsung
 
-Mohon konfirmasi kehadiran Anda pada link di bawah ini :
+Mohon konfirmasi kehadiran Anda pada link di bawah ini (Max. 24 Jam):
 http://192.168.101.241:8001/cpanel/recruitment_detail/$request->id
 
 ",
@@ -1667,9 +1687,20 @@ Kami sangat menghargai waktu dan usaha Anda, serta akan menyimpan data Anda untu
                 if ($request->online == 1) {
                     $link_wawancara = 'nullable';
                     $tempat_wawancara = 'required';
+                    $site = Site::where('id', $request->tempat_wawancara)->first();
+                    if ($site == null) {
+                        return response()->json([
+                            'code' => 500,
+                            'error' => 'Site Wawancara Kosong',
+                        ]);
+                    }
+                    $tempat = $site->site_name;
+                    $map = $site->gm_link;
                 } elseif ($request->online == 2) {
                     $link_wawancara = 'required';
                     $tempat_wawancara = 'nullable';
+                    $tempat = $request->link_wawancara;
+                    $map = null;
                 }
                 $validator = Validator::make(
                     $request->all(),
@@ -1691,11 +1722,6 @@ Kami sangat menghargai waktu dan usaha Anda, serta akan menyimpan data Anda untu
                         'errors' => $validator->errors()
                     ]);
                 }
-                if ($request->online == 1) {
-                    $tempat = $request->tempat_wawancara;
-                } elseif ($request->online == 2) {
-                    $tempat = $request->link_wawancara;
-                }
                 // dd($request->all());
                 RecruitmentUser::where('id', $request->id)->update(
 
@@ -1705,18 +1731,18 @@ Kami sangat menghargai waktu dan usaha Anda, serta akan menyimpan data Anda untu
                         'waktu_wawancara'               => $request->waktu_wawancara,
                         'status_lanjutan'               => $request->status,
                         'feedback_lanjutan'             => null,
-                        'tanggal_konfirmasi_manager'    => date('Y-m-d H:i:s', strtotime('+1 days')),
+                        'tanggal_konfirmasi_manager'    => date('Y-m-d H:i:s', strtotime('+2 days')),
                         'updated_at'                    => date('Y-m-d H:i:s'),
                     ]
                 );
                 RecruitmentUserRecord::insert(
                     [
-                        'id'                        => Uuid::uuid4(),
-                        'lowongan_baru'             => $request->lowongan_baru,
-                        'lowongan_lama'             => $request->lowongan_lama,
-                        'recruitment_user_id'       => $request->id,
-                        'status'                    => $request->status,
-                        'created_at'                => date('Y-m-d H:i:s'),
+                        'id'                     => Uuid::uuid4(),
+                        'lowongan_baru'          => $request->lowongan_baru,
+                        'lowongan_lama'          => $request->lowongan_lama,
+                        'recruitment_user_id'    => $request->id,
+                        'status'                 => $request->status,
+                        'created_at'             => date('Y-m-d H:i:s'),
                     ]
                 );
                 // dd($get_wa);
@@ -1756,18 +1782,15 @@ Kami sangat menghargai waktu dan usaha Anda, serta akan menyimpan data Anda untu
                         'message' =>
                         "Halo " . $get_wa->Cv->nama_lengkap . ",
 Terima kasih telah mengikuti proses seleksi di $holdings->holding_name. Setelah mempertimbangkan kualifikasi Anda,
-kami melihat potensi Anda lebih sesuai dengan posisi
-Jabatan : " . $get_posisi_baru->Jabatan->nama_jabatan . ".
-Bagian : " . $get_posisi_baru->Jabatan->Bagian->nama_bagian . ".
-Divisi : " . $get_posisi_baru->Jabatan->Bagian->Divisi->nama_divisi . ".
-Departemen : " . $get_posisi_baru->Jabatan->Bagian->Divisi->Departemen->nama_departemen . ".
+kami melihat potensi Anda lebih sesuai dengan posisi " . $get_posisi_baru->Jabatan->nama_jabatan . ".
+" . $get_posisi_baru->Jabatan->Bagian->Divisi->nama_divisi . ".
 
-Kami mengundang Anda untuk melanjutkan ke wawancara bersama Manager " . $get_posisi_baru->Jabatan->Bagian->Divisi->Departemen->nama_departemen . " pada:
+Kami mengundang Anda untuk melanjutkan ke wawancara bersama Manager pada:
 📅 Hari/Tanggal : $hari
 🕒 Pukul : $request->waktu_wawancara WIB
-📍 Lokasi/Link Zoom : $tempat
+📍 Lokasi/Link Zoom : $tempat, $map
 
-Mohon konfirmasi kehadiran Anda pada link di bawah ini :
+Mohon konfirmasi kehadiran Anda pada link di bawah ini (Max. 24 Jam):
 http://192.168.101.241:8001/cpanel/recruitment_detail/$request->id
 ",
                         'countryCode' => '62', //optional
@@ -1787,6 +1810,13 @@ http://192.168.101.241:8001/cpanel/recruitment_detail/$request->id
                     echo $error_msg;
                 }
             } elseif ($request->status == '7b') {
+                $site_krj = Site::where('id', $request->tempat_bekerja)->first();
+                if ($site_krj == null) {
+                    return response()->json([
+                        'code' => 500,
+                        'error' => 'Site Wawancara Kosong',
+                    ]);
+                }
                 // dd($request->all);
                 $validator = Validator::make(
                     $request->all(),
@@ -1812,10 +1842,11 @@ http://192.168.101.241:8001/cpanel/recruitment_detail/$request->id
                     [
                         'status_lanjutan'       => $request->status,
                         'feedback_lanjutan'     => null,
-                        'tempat_bekerja'        => $request->tempat_bekerja,
+                        'tempat_bekerja'        => $site_krj->site_name,
                         'tanggal_diterima'      => $request->tanggal_diterima,
+                        'gaji'                  => $request->gaji,
                         'notes'                 => $request->notes_langsung,
-                        'konfirmasi_diterima'   => date('Y-m-d H:i:s', strtotime('+1 days')),
+                        'konfirmasi_diterima'   => date('Y-m-d H:i:s', strtotime('+2 days')),
                         'updated_at'            => date('Y-m-d H:i:s'),
                     ]
                 );
@@ -1871,19 +1902,16 @@ http://192.168.101.241:8001/cpanel/recruitment_detail/$request->id
                         'message' =>
                         "Halo " . $get_wa->Cv->nama_lengkap . ",
 Terima kasih telah mengikuti proses seleksi di $holdings->holding_name. Setelah mempertimbangkan kualifikasi Anda,
-kami melihat potensi Anda lebih sesuai dengan posisi
-Jabatan : " . $get_posisi_baru->Jabatan->nama_jabatan . ".
-Bagian : " . $get_posisi_baru->Jabatan->Bagian->nama_bagian . ".
-Divisi : " . $get_posisi_baru->Jabatan->Bagian->Divisi->nama_divisi . ".
-Departemen : " . $get_posisi_baru->Jabatan->Bagian->Divisi->Departemen->nama_departemen . ".
+kami melihat potensi Anda lebih sesuai dengan posisi " . $get_posisi_baru->Jabatan->nama_jabatan . ".
+" . $get_posisi_baru->Jabatan->Bagian->Divisi->nama_divisi . ". dengan benefit gaji Rp. $request->gaji🎉
 
 Kami mengundang Anda untuk hadir pada:
 📅 Hari/Tanggal : $hari
 🕒 Pukul : $request->waktu_bekerja
-📍 Lokasi : $request->tempat_bekerja
+📍 Lokasi : $site_krj->site_name, $site_krj->gm_link
 Untuk penjelasan lebih lanjut terkait administrasi dan training karyawan baru. Harap membawa dokumen yang diperlukan sesuai instruksi yang akan kami kirimkan.
 
-Mohon konfirmasi kehadiran Anda pada link di bawah ini :
+Mohon konfirmasi kehadiran Anda pada link di bawah ini (Max. 24 Jam):
 http://192.168.101.241:8001/cpanel/recruitment_detail/$request->id
 ",
                         'countryCode' => '62', //optional
@@ -2976,6 +3004,135 @@ http://192.168.101.241:8001/cpanel/recruitment_detail/$request->id
         Ujian::where('id', $request->id_soal)->update($ujian);
         return redirect('pg-data-ujian/' . $request->holding)->with('success', 'Ujian berhasil dibuat');
     }
+    public function dt_referensi()
+    {
+        $data = RecruitmentReferensi::get();
+        if (request()->ajax()) {
+            return DataTables::of($data)
+                ->addColumn('alamat', function ($row) {
+                    return $row->alamat;
+                })
+                ->addColumn('tempat_link', function ($row) {
+                    return $row->tempat_link;
+                })
+                ->addColumn('option', function ($row) {
+                    return $btn =
+                        '<button type="button" id="btn_edit_referensi"
+                            data-id_referensi="' . $row->id . '"
+                            data-alamat="' . $row->alamat . '"
+                            data-tempat_link="' . $row->tempat_link . '"
+                            class="btn btn-icon btn-info waves-effect waves-light">
+                           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
+                            <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
+                            <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"/>
+                            </svg>
+                        </button>
+                        <button type="button" id="btn_delete_referensi"
+                            data-id_referensi="' . $row->id . '"
+                            class="btn btn-icon btn-danger waves-effect waves-light">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash3-fill" viewBox="0 0 16 16">
+                            <path d="M11 1.5v1h3.5a.5.5 0 0 1 0 1h-.538l-.853 10.66A2 2 0 0 1 11.115 16h-6.23a2 2 0 0 1-1.994-1.84L2.038 3.5H1.5a.5.5 0 0 1 0-1H5v-1A1.5 1.5 0 0 1 6.5 0h3A1.5 1.5 0 0 1 11 1.5m-5 0v1h4v-1a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5M4.5 5.029l.5 8.5a.5.5 0 1 0 .998-.06l-.5-8.5a.5.5 0 1 0-.998.06m6.53-.528a.5.5 0 0 0-.528.47l-.5 8.5a.5.5 0 0 0 .998.058l.5-8.5a.5.5 0 0 0-.47-.528M8 4.5a.5.5 0 0 0-.5.5v8.5a.5.5 0 0 0 1 0V5a.5.5 0 0 0-.5-.5"/>
+                            </svg>
+                        </button>
+                        ';
+                    return $btn;;
+                })
+                ->rawColumns(['asal', 'tempat_link', 'option'])
+                ->make(true);
+        }
+    }
+    public function referensi_add(Request $request)
+    {
+        $validator = Validator::make(
+            $request->all(),
+            [
+                'alamat' => 'required',
+            ],
+            [
+                'required' => ':attribute tidak boleh kosong'
+            ]
+        );
+        if ($validator->fails()) {
+            return response()->json([
+                'code' => 400,
+                'message' => 'Validasi gagal',
+                'errors' => $validator->errors()
+            ]);
+        }
+        try {
+            RecruitmentReferensi::create([
+                'id' => Uuid::uuid4(),
+                'alamat' => $request->alamat,
+                'tempat_link' => $request->tempat_link,
+                'created_at'    => date('Y-m-d H:i:s'),
+
+            ]);
+            return response()->json([
+                'code' => 200,
+                // 'data' => $get_data,
+                // 'data_keahlian' => $data_keahlian,
+                // 'message' => 'Data Berhasil Diupdate'
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'code' => 500,
+                'error' => $e->getMessage(),
+            ]);
+        }
+    }
+    public function referensi_update(Request $request)
+    {
+        $validator = Validator::make(
+            $request->all(),
+            [
+                'alamat' => 'required',
+            ],
+            [
+                'required' => ':attribute tidak boleh kosong'
+            ]
+        );
+        if ($validator->fails()) {
+            return response()->json([
+                'code' => 400,
+                'message' => 'Validasi gagal',
+                'errors' => $validator->errors()
+            ]);
+        }
+        try {
+            RecruitmentReferensi::where('id', $request->id_referensi)->update([
+                'alamat' => $request->alamat,
+                'tempat_link' => $request->tempat_link,
+                'created_at'    => date('Y-m-d H:i:s'),
+
+            ]);
+            return response()->json([
+                'code' => 200,
+                // 'data' => $get_data,
+                // 'data_keahlian' => $data_keahlian,
+                // 'message' => 'Data Berhasil Diupdate'
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'code' => 500,
+                'error' => $e->getMessage(),
+            ]);
+        }
+    }
+    public function delete_referensi(Request $request)
+    {
+        try {
+            RecruitmentReferensi::where('id', $request->id)->delete();
+            return response()->json([
+                'code' => 200,
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'code' => 500,
+                'error' => $e->getMessage(),
+            ]);
+        }
+    }
+
     function pg_ranking($holding)
     {
         $holdings = Holding::where('holding_code', $holding)->first();
@@ -3115,18 +3272,19 @@ http://192.168.101.241:8001/cpanel/recruitment_detail/$request->id
             ->where('end_recruitment', '>=', $currentDate)
             ->get();
         $holdings = Holding::where('holding_code', $holding)->first();
-        // dd($holding);
         $holding = request()->segment(count(request()->segments()));
+        $site = Site::get();
+        // dd($site);
         return view('admin.recruitment-users.ranking.data_listranking', [
-            'title' => 'Data Recruitment',
-            'holding'   => $holdings,
-            'recruitment_admin'   => $recruitment_admin,
+            'title'                 => 'Data Recruitment',
+            'holding'               => $holdings,
+            'recruitment_admin'     => $recruitment_admin,
             'id_recruitment'        => $id,
-            'data_departemen' => Departemen::all(),
-            'data_bagian' => Bagian::with('Divisi')->where('holding', $holding)->get(),
-            'data_dept' => Departemen::orderBy('nama_departemen', 'asc')->where('holding', $holding)->get(),
-            'data_divisi' => Divisi::orderBy('nama_divisi', 'asc')->where('holding', $holding)->get()
-        ]);
+            'data_departemen'       => Departemen::all(),
+            'data_bagian'           => Bagian::with('Divisi')->where('holding', $holding)->get(),
+            'data_dept'             => Departemen::orderBy('nama_departemen', 'asc')->where('holding', $holding)->get(),
+            'data_divisi'           => Divisi::orderBy('nama_divisi', 'asc')->where('holding', $holding)->get()
+        ], compact('site'));
     }
     function dt_list_ranking($id)
     {

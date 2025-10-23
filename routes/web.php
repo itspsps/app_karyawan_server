@@ -929,6 +929,13 @@ Route::get('/dt-data-list-ujian_kategori/{holding}', [RecruitmentController::cla
 
 Route::get('/dt-data-list-interview_admin/{holding}', [RecruitmentController::class, 'dt_interview_admin'])->middleware('admin');
 
+Route::get('/dt_referensi', [RecruitmentController::class, 'dt_referensi'])->middleware('admin');
+Route::post('/referensi_add', [RecruitmentController::class, 'referensi_add'])->middleware('admin');
+Route::post('/delete_referensi', [RecruitmentController::class, 'delete_referensi'])->middleware('admin');
+Route::post('/referensi_update', [RecruitmentController::class, 'referensi_update'])->middleware('admin');
+
+
+
 Route::post('ujian_kategori_post', [RecruitmentController::class, 'ujian_kategori_post'])->middleware('admin');
 Route::post('delete_ujian_kategori', [RecruitmentController::class, 'delete_ujian_kategori'])->middleware('admin');
 Route::post('ujian_kategori_update', [RecruitmentController::class, 'ujian_kategori_update'])->middleware('admin');

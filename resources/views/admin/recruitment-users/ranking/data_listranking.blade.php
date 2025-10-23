@@ -1,6 +1,10 @@
 @extends('admin.layouts.dashboard')
 @section('css')
     <link rel="stylesheet" href="https://cdn.datatables.net/2.0.5/css/dataTables.bootstrap5.css">
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+
+    <link href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css"
+        rel="stylesheet" />
     <style type="text/css">
         .swal2-container {
             z-index: 9999 !important;
@@ -10,379 +14,36 @@
             text-align: center;
         }
     </style>
-    <style type="text/css">
-        .left-profile-card .user-profile {
-            width: 100px;
-            height: 100px;
-            border-radius: 50%;
-            margin: auto;
-            margin-bottom: 20px;
+    <style>
+        /* ukuran teks di area pilihan (input select2) */
+        .select2-container--bootstrap-5 .select2-selection {
+            font-size: 0.875rem !important;
+            /* Bootstrap small (14px) */
+            min-height: calc(1.5em + 0.75rem + 2px);
+            /* biar tinggi konsisten */
         }
 
-        .left-profile-card h3 {
-            font-size: 18px;
-            margin-bottom: 0;
-            font-weight: 700;
+        /* ukuran teks di dropdown list */
+        .select2-container--bootstrap-5 .select2-results__option {
+            font-size: 0.875rem !important;
         }
 
-        .left-profile-card p {
-            margin-bottom: 5px;
+        /* Fokus warna primary */
+        .select2-container--bootstrap-5.select2-container--focus .select2-selection {
+            border-color: var(--bs-primary) !important;
+            box-shadow: 0 0 0 0.25rem rgba(var(--bs-primary-rgb), 0.25) !important;
         }
 
-        .left-profile-card .progress-bar {
-            /* background-color: var(--main-color); */
+        /* Background dan teks saat option terpilih */
+        .select2-container--bootstrap-5 .select2-results__option--selected {
+            background-color: var(--bs-primary) !important;
+            color: #fff !important;
         }
 
-        .personal-info {
-            margin-bottom: 30px;
-        }
-
-        .personal-info .personal-list {
-            list-style-type: none;
-            margin: 0;
-            padding: 0;
-        }
-
-        .personal-list li {
-            margin-bottom: 5px;
-        }
-
-        .personal-info h3 {
-            margin-bottom: 10px;
-        }
-
-        .personal-info p {
-            margin-bottom: 5px;
-            font-size: 14px;
-        }
-
-        .personal-info i {
-            font-size: 15px;
-            color: var(--main-color);
-            ;
-            margin-right: 15px;
-            width: 18px;
-        }
-
-        .skill {
-            margin-bottom: 30px;
-        }
-
-        .skill h3 {
-            margin-bottom: 15px;
-        }
-
-        .skill p {
-            margin-bottom: 5px;
-        }
-
-
-        .right-profile-card .nav-pills .nav-link.active,
-        .nav-pills .show>.nav-link {
-            color: #fff;
-            /* background-color: var(--main-color); */
-        }
-
-        .right-profile-card .nav>li {
-            float: left;
-            margin-right: 10px;
-        }
-
-        .right-profile-card .nav-pills .nav-link {
-            border-radius: 26px;
-        }
-
-        .right-profile-card h3 {
-            font-size: 18px;
-            font-weight: 700;
-            margin-bottom: 15px;
-        }
-
-        .right-profile-card h4 {
-            font-size: 16px;
-            margin-bottom: 15px;
-        }
-
-        .right-profile-card i {
-            font-size: 15px;
-            margin-right: 10px;
-        }
-
-        .right-profile-card .work-container {
-            /* border-bottom: 1px solid #eee; */
-            margin-bottom: 20px;
-            padding: 10px;
-        }
-
-
-        /*timeline*/
-
-        .img-circle {
-            border-radius: 50%;
-        }
-
-        .timeline-centered {
-            position: relative;
-            margin-bottom: 30px;
-        }
-
-        .timeline-centered:before,
-        .timeline-centered:after {
-            content: " ";
-            display: table;
-        }
-
-        .timeline-centered:after {
-            clear: both;
-        }
-
-        .timeline-centered:before,
-        .timeline-centered:after {
-            content: " ";
-            display: table;
-        }
-
-        .timeline-centered:after {
-            clear: both;
-        }
-
-        .timeline-centered:before {
-            content: '';
-            position: absolute;
-            display: block;
-            width: 4px;
-            /* background: #f5f5f6; */
-            /*left: 50%;*/
-            top: 20px;
-            bottom: 20px;
-            margin-left: 30px;
-        }
-
-        .timeline-centered .timeline-entry {
-            position: relative;
-            /*width: 50%;
-                                                                                                                                                                                                                                                                                                <<<<<<< HEAD
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        float: right;*/
-            =======float: right;
-            */>>>>>>>35c7aa3d6b16d59fd98c381919fe2f71c0ddf2f9 margin-top: 5px;
-            margin-left: 30px;
-            margin-bottom: 10px;
-            clear: both;
-        }
-
-        .timeline-centered .timeline-entry:before,
-        .timeline-centered .timeline-entry:after {
-            content: " ";
-            display: table;
-        }
-
-        .timeline-centered .timeline-entry:after {
-            clear: both;
-        }
-
-        .timeline-centered .timeline-entry:before,
-        .timeline-centered .timeline-entry:after {
-            content: " ";
-            display: table;
-        }
-
-        .timeline-centered .timeline-entry:after {
-            clear: both;
-        }
-
-        .timeline-centered .timeline-entry.begin {
-            margin-bottom: 0;
-        }
-
-        .timeline-centered .timeline-entry.left-aligned {
-            float: left;
-        }
-
-        .timeline-centered .timeline-entry.left-aligned .timeline-entry-inner {
-            margin-left: 0;
-            margin-right: -18px;
-        }
-
-        .timeline-centered .timeline-entry.left-aligned .timeline-entry-inner .timeline-time {
-            left: auto;
-            right: -100px;
-            text-align: left;
-        }
-
-        .timeline-centered .timeline-entry.left-aligned .timeline-entry-inner .timeline-icon {
-            float: right;
-        }
-
-        .timeline-centered .timeline-entry.left-aligned .timeline-entry-inner .timeline-label {
-            margin-left: 0;
-            margin-right: 70px;
-        }
-
-        .timeline-centered .timeline-entry.left-aligned .timeline-entry-inner .timeline-label:after {
-            left: auto;
-            right: 0;
-            margin-left: 0;
-            margin-right: -9px;
-            -moz-transform: rotate(180deg);
-            -o-transform: rotate(180deg);
-            -webkit-transform: rotate(180deg);
-            -ms-transform: rotate(180deg);
-            transform: rotate(180deg);
-        }
-
-        .timeline-centered .timeline-entry .timeline-entry-inner {
-            position: relative;
-            margin-left: -20px;
-        }
-
-        .timeline-centered .timeline-entry .timeline-entry-inner:before,
-        .timeline-centered .timeline-entry .timeline-entry-inner:after {
-            content: " ";
-            display: table;
-        }
-
-        .timeline-centered .timeline-entry .timeline-entry-inner:after {
-            clear: both;
-        }
-
-        .timeline-centered .timeline-entry .timeline-entry-inner:before,
-        .timeline-centered .timeline-entry .timeline-entry-inner:after {
-            content: " ";
-            display: table;
-        }
-
-        .timeline-centered .timeline-entry .timeline-entry-inner:after {
-            clear: both;
-        }
-
-        .timeline-centered .timeline-entry .timeline-entry-inner .timeline-time {
-            position: absolute;
-            left: -100px;
-            text-align: right;
-            padding: 10px;
-            -webkit-box-sizing: border-box;
-            -moz-box-sizing: border-box;
-            box-sizing: border-box;
-        }
-
-        .timeline-centered .timeline-entry .timeline-entry-inner .timeline-time>span {
-            display: block;
-        }
-
-        .timeline-centered .timeline-entry .timeline-entry-inner .timeline-time>span:first-child {
-            font-size: 15px;
-            font-weight: bold;
-        }
-
-        .timeline-centered .timeline-entry .timeline-entry-inner .timeline-time>span:last-child {
-            font-size: 12px;
-        }
-
-        .timeline-centered .timeline-entry .timeline-entry-inner .timeline-icon {
-            /* background: #fff; */
-            color: #737881;
-            display: block;
-            width: 40px;
-            height: 40px;
-            -webkit-background-clip: padding-box;
-            -moz-background-clip: padding;
-            background-clip: padding-box;
-            -webkit-border-radius: 20px;
-            -moz-border-radius: 20px;
-            border-radius: 20px;
-            text-align: center;
-            -moz-box-shadow: 0 0 0 5px #f5f5f6;
-            -webkit-box-shadow: 0 0 0 5px #f5f5f6;
-            box-shadow: 0 0 0 5px #f5f5f6;
-            line-height: 40px;
-            font-size: 15px;
-            float: left;
-        }
-
-        .timeline-centered .timeline-entry .timeline-entry-inner .timeline-icon.bg-primary {
-            background-color: #303641;
-            color: #fff;
-        }
-
-        .timeline-centered .timeline-entry .timeline-entry-inner .timeline-icon.bg-secondary {
-            background-color: #ee4749;
-            color: #fff;
-        }
-
-        .timeline-centered .timeline-entry .timeline-entry-inner .timeline-icon.bg-success {
-            background-color: #00a651;
-            color: #fff;
-        }
-
-        .timeline-centered .timeline-entry .timeline-entry-inner .timeline-icon.bg-info {
-            background-color: #21a9e1;
-            color: #fff;
-        }
-
-        .timeline-centered .timeline-entry .timeline-entry-inner .timeline-icon.bg-warning {
-            background-color: #fad839;
-            color: #fff;
-        }
-
-        .timeline-centered .timeline-entry .timeline-entry-inner .timeline-icon.bg-danger {
-            background-color: #cc2424;
-            color: #fff;
-        }
-
-        .timeline-centered .timeline-entry .timeline-entry-inner .timeline-label {
-            position: relative;
-            background: #f5f5f6;
-            padding: 1em;
-            margin-left: 60px;
-            -webkit-background-clip: padding-box;
-            -moz-background-clip: padding;
-            background-clip: padding-box;
-            -webkit-border-radius: 3px;
-            -moz-border-radius: 3px;
-            border-radius: 3px;
-        }
-
-        .timeline-centered .timeline-entry .timeline-entry-inner .timeline-label:after {
-            content: '';
-            display: block;
-            position: absolute;
-            width: 0;
-            height: 0;
-            border-style: solid;
-            border-width: 9px 9px 9px 0;
-            border-color: transparent #f5f5f6 transparent transparent;
-            left: 0;
-            top: 10px;
-            margin-left: -9px;
-        }
-
-        .timeline-centered .timeline-entry .timeline-entry-inner .timeline-label h2,
-        .timeline-centered .timeline-entry .timeline-entry-inner .timeline-label p {
-            color: #737881;
-            font-size: 12px;
-            margin: 0;
-            line-height: 1.428571429;
-        }
-
-        .timeline-centered .timeline-entry .timeline-entry-inner .timeline-label p+p {
-            margin-top: 15px;
-        }
-
-        .timeline-centered .timeline-entry .timeline-entry-inner .timeline-label h2 {
-            font-size: 16px;
-            margin-bottom: 10px;
-        }
-
-        .timeline-centered .timeline-entry .timeline-entry-inner .timeline-label h2 a {
-            color: #303641;
-        }
-
-        .timeline-centered .timeline-entry .timeline-entry-inner .timeline-label h2 span {
-            -webkit-opacity: .6;
-            -moz-opacity: .6;
-            opacity: .6;
-            -ms-filter: alpha(opacity=60);
-            filter: alpha(opacity=60);
+        /* Hover option */
+        .select2-container--bootstrap-5 .select2-results__option--highlighted {
+            background-color: rgba(var(--bs-primary-rgb), 0.1) !important;
+            color: var(--bs-primary) !important;
         }
     </style>
 
@@ -461,9 +122,12 @@
             </div>
             <!--/ Transactions -->
             <!--/ Data Tables -->
+            {{-- @foreach ($site as $ss)
+                {{ $ss->sitename }}
+            @endforeach --}}
         </div>
     </div>
-    <div class="modal fade" id="modal_status" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal fade" id="modal_status" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
             <div class="modal-content">
                 <div class="modal-header">
@@ -473,7 +137,6 @@
                 <div class="modal-body">
                     <input type="hidden" id="id_update" name="id">
                     <div class="form-floating form-floating-outline py-3">
-
                         <select class="form-select" id="status_update" name="status">
                             <label for="bagian_recruitment">PILIH STATUS</label>
                             <option value="1b" selected>LOLOS INTERVIEW MANAGER</option>
@@ -489,8 +152,8 @@
                             <label for="bagian_recruitment">TANGGAL WAWANCARA</label>
                         </div>
                         <div class="form-floating form-floating-outline py-3">
-                            <select class="form-select @error('online') is-invalid @enderror" id="online_add" name="online"
-                                autofocus value="{{ old('online') }}">
+                            <select class="form-select @error('online') is-invalid @enderror" id="online_add"
+                                name="online" autofocus value="{{ old('online') }}">
                                 <option value="1" selected>OFFLINE</option>
                                 <option value="2">ONLINE</option>
                             </select>
@@ -506,14 +169,21 @@
                                 <strong>{{ $message }}</strong>
                             </span>
                         @enderror
+
                         <div id="tempat_wawancara_form">
                             <label for="bagian_recruitment px-2"><small>TEMPAT
                                     WAWANCARA</small></label>
                             <div class="form-floating form-floating-outline mb-2">
-
-                                <input type="text" id="tempat_wawancara" name="tempat_wawancara"
-                                    class="form-control @error('tempat_wawancara') is-invalid @enderror"
-                                    value="{{ old('tempat_wawancara') }}" />
+                                <select class="form-select" id="tempat_wawancara" name="tempat_wawancara">
+                                    <option value="" selected disabled>
+                                        Pilih Tempat
+                                    </option>
+                                    @foreach ($site as $st)
+                                        <option value="{{ $st->id }}">
+                                            {{ $st->site_name }}
+                                        </option>
+                                    @endforeach
+                                </select>
                             </div>
                         </div>
                         <div id="link_wawancara_form">
@@ -553,25 +223,32 @@
                                 value="{{ old('tanggal_diterima') }}" />
                             <label for="bagian_recruitment">TANGGAL MASUK KERJA</label>
                         </div>
-                        {{-- <label for="bagian_recruitment px-2"><small>GAJI (Rp)</small></label> --}}
-                        {{-- <div class="form-floating form-floating-outline mb-2">
+                        <label for="bagian_recruitment px-2"><small>TEMPAT
+                                BEKERJA</small></label>
+                        <div class="form-floating form-floating-outline mb-2">
+                            <select class="form-select" id="tempat_bekerja_update" name="tempat_bekerja">
+                                <option value="" selected disabled>
+                                    Pilih Tempat
+                                </option>
+                                @foreach ($site as $st)
+                                    <option value="{{ $st->id }}">
+                                        {{ $st->site_name }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <label for="bagian_recruitment px-2"><small>GAJI (Rp)</small></label>
+                        <div class="form-floating form-floating-outline mb-2">
 
                             <input type="text" id="gaji_update" name="gaji"
                                 class="form-control @error('gaji') is-invalid @enderror" value="{{ old('gaji') }}" />
-                </div> --}}
-                        <label for="bagian_recruitment px-2"><small>TEMPAT BEKERJA</small></label>
-                        <div class="form-floating form-floating-outline mb-2">
-
-                            <input type="text" id="tempat_bekerja_update" name="tempat_bekerja"
-                                class="form-control @error('tempat_bekerja') is-invalid @enderror"
-                                value="{{ old('tempat_bekerja') }}" />
                         </div>
                         <label for="bagian_recruitment px-2"><small>WAKTU BEKERJA</small></label>
                         <div class="form-floating form-floating-outline mb-2">
 
                             <input type="time" id="waktu_bekerja_update" name="WAKTU_bekerja"
-                                class="form-control @error('WAKTU_bekerja') is-invalid @enderror"
-                                value="{{ old('WAKTU_bekerja') }}" />
+                                class="form-control @error('waktu_bekerja') is-invalid @enderror"
+                                value="{{ old('waktu_bekerja') }}" />
                         </div>
                         <label for="bagian_recruitment px-2"><small>NOTES</small></label>
                         <div class="form-floating form-floating-outline mb-2">
@@ -605,18 +282,11 @@
                             value="{{ old('tanggal_diterima') }}" />
                         <label for="bagian_recruitment">TANGGAL MASUK KERJA</label>
                     </div>
-                    {{-- <label for="bagian_recruitment px-2"><small>GAJI (Rp)</small></label>
+                    <label for="bagian_recruitment px-2"><small>GAJI (Rp)</small></label>
                     <div class="form-floating form-floating-outline mb-2">
 
                         <input type="text" id="gaji_lolos" name="gaji"
                             class="form-control @error('gaji') is-invalid @enderror" value="{{ old('gaji') }}" />
-            </div> --}}
-                    <label for="bagian_recruitment px-2"><small>TEMPAT BEKERJA</small></label>
-                    <div class="form-floating form-floating-outline mb-2">
-
-                        <input type="text" id="tempat_bekerja_lolos" name="tempat_bekerja"
-                            class="form-control @error('tempat_bekerja') is-invalid @enderror"
-                            value="{{ old('tempat_bekerja') }}" />
                     </div>
                     <label for="bagian_recruitment px-2"><small>WAKTU BEKERJA</small></label>
                     <div class="form-floating form-floating-outline mb-2">
@@ -625,12 +295,19 @@
                             class="form-control @error('waktu_bekerja') is-invalid @enderror"
                             value="{{ old('waktu_bekerja') }}" />
                     </div>
-                    <label for="bagian_recruitment px-2"><small>TEMPAT BEKERJA</small></label>
+                    <label for="bagian_recruitment px-2"><small>TEMPAT
+                            BEKERJA</small></label>
                     <div class="form-floating form-floating-outline mb-2">
-
-                        <input type="text" id="tempat_bekerja_lolos" name="tempat_bekerja"
-                            class="form-control @error('tempat_bekerja') is-invalid @enderror"
-                            value="{{ old('tempat_bekerja') }}" />
+                        <select class="form-select" id="tempat_bekerja_lolos" name="tempat_bekerja">
+                            <option selected disabled>
+                                Pilih Tempat
+                            </option>
+                            @foreach ($site as $st)
+                                <option value="{{ $st->id }}">
+                                    {{ $st->site_name }}
+                                </option>
+                            @endforeach
+                        </select>
                     </div>
                     <label for="bagian_recruitment px-2"><small>NOTES</small></label>
                     <div class="form-floating form-floating-outline mb-2">
@@ -706,10 +383,16 @@
                             <label for="bagian_recruitment px-2"><small>TEMPAT
                                     WAWANCARA</small></label>
                             <div class="form-floating form-floating-outline mb-2">
-
-                                <input type="text" id="tempat_wawancara2" name="tempat_wawancara"
-                                    class="form-control @error('tempat_wawancara2') is-invalid @enderror"
-                                    value="{{ old('tempat_wawancara2') }}" />
+                                <select class="form-select" id="tempat_wawancara2" name="tempat_wawancara">
+                                    <option value="" selected disabled>
+                                        Pilih Tempat
+                                    </option>
+                                    @foreach ($site as $st)
+                                        <option value="{{ $st->id }}">
+                                            {{ $st->site_name }}
+                                        </option>
+                                    @endforeach
+                                </select>
                             </div>
                         </div>
                         <div id="link_wawancara_form2">
@@ -748,11 +431,11 @@
                                 placeholder="Tanggal" value="{{ old('tanggal_diterima') }}" />
                             <label for="bagian_recruitment">TANGGAL MASUK KERJA</label>
                         </div>
-                        {{-- <label for="bagian_recruitment px-2"><small>GAJI (Rp)</small></label>
+                        <label for="bagian_recruitment px-2"><small>GAJI (Rp)</small></label>
                         <div class="form-floating form-floating-outline mb-2">
                             <input type="text" id="gaji_pindah" name="gaji"
                                 class="form-control @error('gaji') is-invalid @enderror" value="{{ old('gaji') }}" />
-                </div> --}}
+                        </div>
                         <label for="bagian_recruitment px-2"><small>WAKTU BEKERJA</small></label>
                         <div class="form-floating form-floating-outline mb-2">
 
@@ -760,12 +443,19 @@
                                 class="form-control @error('waktu_bekerja') is-invalid @enderror"
                                 value="{{ old('waktu_bekerja') }}" />
                         </div>
-                        <label for="bagian_recruitment px-2"><small>TEMPAT BEKERJA</small></label>
+                        <label for="bagian_recruitment px-2"><small>TEMPAT
+                                BEKERJA</small></label>
                         <div class="form-floating form-floating-outline mb-2">
-
-                            <input type="text" id="tempat_bekerja_pindah" name="tempat_bekerja"
-                                class="form-control @error('tempat_bekerja') is-invalid @enderror"
-                                value="{{ old('tempat_bekerja') }}" />
+                            <select class="form-select" id="tempat_bekerja_pindah" name="tempat_bekerja">
+                                <option selected disabled>
+                                    Pilih Tempat
+                                </option>
+                                @foreach ($site as $st)
+                                    <option value="{{ $st->id }}">
+                                        {{ $st->site_name }}
+                                    </option>
+                                @endforeach
+                            </select>
                         </div>
                         <label for="bagian_recruitment px-2"><small>NOTES</small></label>
                         <div class="form-floating form-floating-outline mb-2">
@@ -805,37 +495,80 @@
     </div>
 @endsection
 @section('js')
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.datatables.net/2.0.5/js/dataTables.js"></script>
     <script src="https://cdn.datatables.net/2.0.5/js/dataTables.bootstrap5.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
 
     <script>
+        $('#tempat_wawancara').select2({
+            dropdownParent: $('#modal_status'),
+            theme: 'bootstrap-5',
+            placeholder: "Tempat Wawancara",
+            allowClear: true
+        });
+        $('#tempat_wawancara2').select2({
+            dropdownParent: $('#modal_pindah'),
+            theme: 'bootstrap-5',
+            placeholder: "Tempat Wawancara",
+            allowClear: true
+        });
+        $('#tempat_bekerja_update').select2({
+            dropdownParent: $('#modal_status'),
+            theme: 'bootstrap-5',
+            placeholder: "Tempat Wawancara",
+            allowClear: true
+        });
+        $('#tempat_bekerja_lolos').select2({
+            dropdownParent: $('#modal_lolos'),
+            theme: 'bootstrap-5',
+            placeholder: "Tempat Wawancara",
+            allowClear: true
+        });
+        $('#tempat_bekerja_pindah').select2({
+            dropdownParent: $('#modal_pindah'),
+            theme: 'bootstrap-5',
+            placeholder: "Tempat Wawancara",
+            allowClear: true
+        });
         let holding = window.location.pathname.split("/").pop();
-        // $(document).on('keyup', '#gaji_update', function(e) {
-        //     var data = $(this).val();
-        //     var hasil = formatRupiah(data, "Rp. ");
-        //     $(this).val(hasil);
-        // });
+        $(document).on('keyup', '#gaji_update', function(e) {
+            var data = $(this).val();
+            var hasil = formatRupiah(data, "Rp. ");
+            $(this).val(hasil);
+        });
+        $(document).on('keyup', '#gaji_lolos', function(e) {
+            var data = $(this).val();
+            var hasil = formatRupiah(data, "Rp. ");
+            $(this).val(hasil);
+        });
+        $(document).on('keyup', '#gaji_pindah', function(e) {
+            var data = $(this).val();
+            var hasil = formatRupiah(data, "Rp. ");
+            $(this).val(hasil);
+        });
 
-        // function formatRupiah(angka, prefix) {
-        //     var number_string = angka.replace(/[^,\d]/g, '').toString(),
-        //         split = number_string.split(','),
-        //         sisa = split[0].length % 3,
-        //         rupiah = split[0].substr(0, sisa),
-        //         ribuan = split[0].substr(sisa).match(/\d{3}/gi);
-        //     if (ribuan) {
-        //         separator = sisa ? '.' : '';
-        //         rupiah += separator + ribuan.join('.');
-        //     }
+        function formatRupiah(angka, prefix) {
+            var number_string = angka.replace(/[^,\d]/g, '').toString(),
+                split = number_string.split(','),
+                sisa = split[0].length % 3,
+                rupiah = split[0].substr(0, sisa),
+                ribuan = split[0].substr(sisa).match(/\d{3}/gi);
+            if (ribuan) {
+                separator = sisa ? '.' : '';
+                rupiah += separator + ribuan.join('.');
+            }
 
-        //     rupiah = split[1] != undefined ? rupiah + ',' + split[1] : rupiah;
-        //     return prefix == undefined ? rupiah : (rupiah ? '' + rupiah : '');
-        // }
+            rupiah = split[1] != undefined ? rupiah + ',' + split[1] : rupiah;
+            return prefix == undefined ? rupiah : (rupiah ? '' + rupiah : '');
+        }
 
-        // function replace_titik(x) {
-        //     return ((x.replace('.', '')).replace('.', '')).replace('.', '');
-        // }
+        function replace_titik(x) {
+            return ((x.replace('.', '')).replace('.', '')).replace('.', '');
+        }
         let id = @json($id_recruitment);
         console.log(id);
         var table = $('#tabel_ranking').DataTable({
@@ -974,16 +707,17 @@
         $('#btn_save_status').on('click', function(e) {
             e.preventDefault();
             var formData = new FormData();
-
+            // console.log($('#tempat_wawancara').val());
             formData.append('_token', '{{ csrf_token() }}');
             formData.append('id', $('#id_update').val());
             formData.append('status', $('#status_update').val());
-            formData.append('tempat_bekerja', $('#tempat_bekerja_update').val());
+            formData.append('tempat_bekerja', $('#tempat_bekerja_update').val() ?? null);
             formData.append('waktu_bekerja', $('#waktu_bekerja_update').val());
             formData.append('tanggal_diterima', $('#tanggal_diterima_update').val());
             formData.append('tanggal_wawancara', $('#tanggal_wawancara').val());
             formData.append('online', $('#online_add').val());
-            formData.append('tempat_wawancara', $('#tempat_wawancara').val());
+            formData.append('tempat_wawancara', $('#tempat_wawancara').val() ?? null);
+            formData.append('gaji', $('#gaji_update').val());
             formData.append('link_wawancara', $('#link_wawancara').val());
             formData.append('waktu_wawancara', $('#waktu_wawancara').val());
             formData.append('notes_langsung', $('#notes_langsung_update').val());
@@ -1017,6 +751,7 @@
                         $('#tempat_wawancara').val('');
                         $('#link_wawancara').val('');
                         $('#waktu_wawancara').val('');
+                        $('#gaji_update').val('');
                         $('#tabel_progres').DataTable().ajax.reload();
                     } else if (data.code == 400) {
                         let errors = data.errors;
@@ -1058,6 +793,7 @@
             formData.append('tempat_bekerja', $('#tempat_bekerja_lolos').val());
             formData.append('waktu_bekerja', $('#waktu_bekerja_lolos').val());
             formData.append('tanggal_diterima', $('#tanggal_diterima_lolos').val());
+            formData.append('gaji', $('#gaji_lolos').val());
             formData.append('notes_langsung', $('#notes_langsung_lolos').val());
             formData.append('holding', holding);
             $.ajax({
@@ -1083,6 +819,7 @@
                         $('#tanggal_diterima_lolos').val('');
                         $('#notes_langsung_lolos').val('');
                         $('#tempat_bekerja_lolos').val('');
+                        $('#gaji_lolos').val('');
                         $('#waktu_bekerja_lolos').val('');
                         $('#tabel_progres').DataTable().ajax.reload();
                     } else if (data.code == 400) {
@@ -1132,6 +869,7 @@
             formData.append('link_wawancara', $('#link_wawancara2').val());
             formData.append('tanggal_diterima', $('#tanggal_diterima_pindah').val());
             formData.append('waktu_wawancara', $('#waktu_wawancara_pindah').val());
+            formData.append('gaji', $('#gaji_pindah').val());
             formData.append('notes_pindah', $('#notes_langsung_pindah').val());
             formData.append('holding', holding);
 
@@ -1166,6 +904,7 @@
                         $('#waktu_bekerja_pindah').val('');
                         $('#tanggal_diterima_pindah').val('');
                         $('#waktu_wawancara_pindah').val('');
+                        $('#gaji_pindah').val('');
                         $('#notes_langsung_pindah').val('');
                     } else if (data.code == 400) {
                         let errors = data.errors;
