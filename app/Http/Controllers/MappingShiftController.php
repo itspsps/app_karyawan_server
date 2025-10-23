@@ -61,19 +61,47 @@ class MappingShiftController extends Controller
             'shift' => $shift
         ]);
     }
-    function get_karyawan_mapping($holding)
+    function get_karyawan_mapping(Request $request, $holding)
     {
+        // dd($request->all());
         $holding = Holding::where('holding_code', $holding)->first();
         if ($holding == null) {
-            return response()->json([]);
+            return response()->json([
+                'code' => 500,
+                'status' => 'Holding tidak ditemukan',
+            ]);
         }
-        $data = Karyawan::where('shift', 'SHIFT')
-            ->where('status_aktif', 'AKTIF')
-            ->where('kontrak_kerja', $holding->id)
-            ->select('id', 'nomor_identitas_karyawan', 'name')
-            ->orderBy('name', 'ASC')->get();
-        // dd($data);
-        return response()->json($data);
+        try {
+            $query = Karyawan::where('shift', 'SHIFT')
+                ->where('status_aktif', 'AKTIF')
+                ->where('kontrak_kerja', $holding->id);
+
+
+            if (!empty($request->departemen_filter)) {
+                $query->whereIn('dept_id', (array)$request->departemen_filter);
+            }
+            if (!empty($request->divisi_filter)) {
+                $query->whereIn('divisi_id', (array)$request->divisi_filter);
+            }
+            if (!empty($request->bagian_filter)) {
+                $query->whereIn('bagian_id', (array)$request->bagian_filter);
+            }
+            if (!empty($request->jabatan_filter)) {
+                $query->whereIn('jabatan_id', (array)$request->jabatan_filter);
+            }
+            $data = $query->select('id', 'nomor_identitas_karyawan', 'name')->orderBy('name', 'ASC')->get();
+            // dd($data);
+            return response()->json([
+                'code' => 200,
+                'data' => $data
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'code' => 500,
+                'status' => 'Gagal mengambil data karyawan',
+                'message' => $e->getMessage()
+            ]);
+        }
     }
     function index()
     {

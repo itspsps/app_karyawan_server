@@ -685,6 +685,9 @@ class ReportController extends Controller
     {
         date_default_timezone_set('Asia/Jakarta');
         $holding = Holding::where('holding_code', $holding)->first();
+        if ($holding == NULL) {
+            $holding = Holding::where('holding_code', request()->segment(count(request()->segments())))->first();
+        }
         // dd($request->all());
         $now = Carbon::parse($request->start_date)->startOfDay();
         $now1 = Carbon::parse($request->end_date)->endOfDay();

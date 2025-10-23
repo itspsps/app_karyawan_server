@@ -161,15 +161,6 @@
                             </div>
 
                             <div class="row gy-4 align-items-end">
-                                <div class="col-lg-3 col-md-3 col-sm-3">
-                                    <div class="form-floating form-floating-outline">
-                                        <select type="text" class="form-control" name="shift_filter" id="shift_filter" multiple>
-                                            <option disabled value="">-- Pilih Shift --</option>
-                                            <option value="NON SHIFT">NON SHIFT</option>
-                                            <option value="SHIFT">SHIFT</option>
-                                        </select>
-                                    </div>
-                                </div>
                                 <div class="col-lg-6 col-md-6col-sm-6">
                                     <div class="form-floating form-floating-outline">
                                         <div id="filterrange" style="white-space: nowrap;">
@@ -419,11 +410,9 @@
         $('#btn_filter').click(function(e) {
             // ambil langsung dari form
             var departemen_filter = $('#departemen_filter').val() || [];
-            var departemen_filter = $('#departemen_filter').val() || [];
             var divisi_filter = $('#divisi_filter').val() || [];
             var bagian_filter = $('#bagian_filter').val() || [];
             var jabatan_filter = $('#jabatan_filter').val() || [];
-            var shift_filter = $('#shift_filter').val() || [];
             var start_date = $('#start_date').val() || '';
             var end_date = $('#end_date').val() || '';
             // console.log(start_date, end_date);
@@ -438,7 +427,6 @@
                     divisi_filter: divisi_filter,
                     bagian_filter: bagian_filter,
                     jabatan_filter: jabatan_filter,
-                    shift_filter: shift_filter,
                 },
                 success: function(data) {
                     // console.log(data);
@@ -486,9 +474,7 @@
                         $('#date_absensi').append('<th class="text-center">' + col.header + '</th>');
                     });
 
-
-                    // console.log(departemen_filter, divisi_filter, bagian_filter, jabatan_filter, shift_filter, start_date, end_date, data_column);
-                    load_data(departemen_filter, divisi_filter, bagian_filter, jabatan_filter, shift_filter, start_date, end_date, data_column);
+                    load_data(departemen_filter, divisi_filter, bagian_filter, jabatan_filter, start_date, end_date, data_column);
                 },
                 error: function(data) {
                     var errors = data.errors();
@@ -687,11 +673,7 @@
             placeholder: "Pilih Jabatan",
             allowClear: true
         });
-        $('#shift_filter').select2({
-            theme: 'bootstrap-5',
-            placeholder: "Pilih Shift",
-            allowClear: true
-        });
+
 
         var start = moment().startOf('month');
         var end = moment().endOf('month');
@@ -727,7 +709,7 @@
 
         cb(start, end);
 
-        function load_data(departemen_filter = '', divisi_filter = '', bagian_filter = '', jabatan_filter = '', shift_filter = '', start_date = '', end_date = '', data_column = '') {
+        function load_data(departemen_filter = '', divisi_filter = '', bagian_filter = '', jabatan_filter = '', start_date = '', end_date = '', data_column = '') {
 
             var tab = $('#table_mapping_shift').DataTable({
                 "scrollY": true,
@@ -807,7 +789,6 @@
                         divisi_filter: divisi_filter,
                         bagian_filter: bagian_filter,
                         jabatan_filter: jabatan_filter,
-                        shift_filter: shift_filter,
                     }
                 },
                 columns: data_column,
@@ -820,6 +801,12 @@
 
 
         $(document).on("click", "#btn_selected_proses", function(e) {
+            e.preventDefault();
+            // ambil langsung dari form
+            var departemen_filter = $('#departemen_filter').val() || [];
+            var divisi_filter = $('#divisi_filter').val() || [];
+            var bagian_filter = $('#bagian_filter').val() || [];
+            var jabatan_filter = $('#jabatan_filter').val() || [];
             Swal.fire({
                 title: 'Memproses...',
                 html: 'Mohon menunggu.',
@@ -830,36 +817,38 @@
             });
             $.ajax({
                 url: "@if(Auth::user()->is_admin=='hrd'){{ url('hrd/get_karyawan_mapping') }}@else {{ url('karyawan/get_karyawan_mapping') }}@endif" + '/' + holding,
-
+                method: "get",
+                data: {
+                    departemen_filter: departemen_filter,
+                    divisi_filter: divisi_filter,
+                    bagian_filter: bagian_filter,
+                    jabatan_filter: jabatan_filter,
+                    holding: holding,
+                },
                 success: function(data) {
                     // console.log(data);
                     $('#list_karyawan').empty();
                     $('#count_karyawan').text('Karyawan Selected : 0 Karyawan');
                     Swal.close();
                     $('#modal_tambah_shift').modal('show');
-                    $.each(data, function(key, value) {
-                        $('#list_karyawan').append( // Asumsi: value.name berisi nama karyawan
-                            // Asumsi: Anda telah memuat Material Design Icons CSS
-
-                            '<div class="col-md-3 col-sm-6 mb-3 karyawan-item" data-name="' + value.name + '">' +
-                            '<label class="karyawan-tile p-3 border rounded shadow-sm w-100 text-center">' +
-
-                            // --- Struktur Konten Kotak ---
-
-                            // 1. Icon Orang Besar (menggunakan MDI dan class kustom)
-                            '<i class="mdi mdi-account-outline icon-karyawan d-block mb-0" style="font-size: 40px;"></i>' +
-
-                            // 2. Checkbox disembunyikan
-                            '<input type="checkbox" class="group_select d-none" name="karyawan_id[]" value="' + value.id + '">' +
-
-                            // 3. Nama Karyawan
-                            '<span style="font-size: 10px;">' + value.name + '</span>' +
-
-                            // --- Akhir Struktur Konten ---
-
-                            '</label>' +
-                            '</div>');
-                    });
+                    if (data.code == 200) {
+                        if (data.data.length > 0) {
+                            $.each(data.data, function(key, value) {
+                                $('#list_karyawan').append(
+                                    '<div class="col-md-3 col-sm-6 mb-3 karyawan-item" data-name="' + value.name + '">' +
+                                    '<label class="karyawan-tile p-3 border rounded shadow-sm w-100 text-center">' +
+                                    '<i class="mdi mdi-account-outline icon-karyawan d-block mb-0" style="font-size: 40px;"></i>' +
+                                    '<input type="checkbox" class="group_select d-none" name="karyawan_id[]" value="' + value.id + '">' +
+                                    '<span style="font-size: 10px;">' + value.name + '</span>' +
+                                    '</label>' +
+                                    '</div>');
+                            });
+                        } else {
+                            $('#list_karyawan').append('<div class="col-12"><p class="text-center">Tidak ada karyawan sesuai filter.</p></div>');
+                        }
+                    } else {
+                        $('#list_karyawan').append('<div class="col-12"><p class="text-center">Tidak ada karyawan sesuai filter.</p></div>');
+                    }
                 },
                 error: function(data) {
                     Swal.close();
