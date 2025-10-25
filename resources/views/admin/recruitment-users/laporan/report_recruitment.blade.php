@@ -76,7 +76,7 @@
                 <div class="card">
                     <div class="card-header">
                         <div class="d-flex align-items-center justify-content-between">
-                            <h5 class="card-title m-0 me-2">REPORT RECRUITMENT</h5>
+                            <h5 class="card-title m-0 me-2">REPORT REKRUTMEN</h5>
                         </div>
                     </div>
                     <div class="card-body">
@@ -521,7 +521,7 @@
                             className: 'btn btn-sm btn-success',
                             text: '<i class="menu-icon tf-icons mdi mdi-file-excel"></i>Excel',
                             titleAttr: 'Excel',
-                            title: 'LAPORAN RECRUITMENT',
+                            title: 'LAPORAN REKRUTMEN',
                             messageTop: 'Bulan : '.start_date + ' s/d ' + end_date,
                             exportOptions: {
                                 columns: ':not(:first-child)',
@@ -532,7 +532,7 @@
                                     .getDate();
                                 var n = d.getHours() + ':' + d.getMinutes() + ':' + d
                                     .getSeconds();
-                                return 'LAPORAN_RECRUITMENT_{{ $holding->holding_name }}_' +
+                                return 'LAPORAN_REKRUTMEN_{{ $holding->holding_name }}_' +
                                     l + ' ' + n;
                             },
                         },
@@ -542,7 +542,7 @@
                             className: 'btn btn-sm btn-danger',
                             text: '<i class="menu-icon tf-icons mdi mdi-file-pdf-box"></i>PDF',
                             titleAttr: 'PDF',
-                            title: 'LAPORAN RECRUITMENT',
+                            title: 'LAPORAN REKRUTMEN',
                             orientation: 'potrait',
                             pageSize: 'LEGAL',
                             exportOptions: {
@@ -554,18 +554,18 @@
                                     .getDate();
                                 var n = d.getHours() + ":" + d.getMinutes() + ":" + d
                                     .getSeconds();
-                                return 'LAPORAN_RECRUITMENT_{{ $holding->holding_name }}_' +
+                                return 'LAPORAN_REKRUTMEN_{{ $holding->holding_name }}_' +
                                     l + ' ' + n;
                             },
                         }, {
                             extend: 'print',
                             className: 'btn btn-sm btn-info',
-                            title: 'LAPORAN RECRUITMENT',
+                            title: 'LAPORAN REKRUTMEN',
                             text: '<i class="menu-icon tf-icons mdi mdi-printer-pos-check-outline"></i>PRINT',
                             titleAttr: 'PRINT',
                         }, {
                             extend: 'copy',
-                            title: 'LAPORAN RECRUITMENT',
+                            title: 'LAPORAN REKRUTMEN',
                             className: 'btn btn-sm btn-secondary',
                             text: '<i class="menu-icon tf-icons mdi mdi-content-copy"></i>COPY',
                             titleAttr: 'COPY',
