@@ -996,6 +996,7 @@ Route::get('/report_pelamar/{holding}', [RecruitmentLaporanController::class, 'r
 Route::get('/laporan_recruitment/{holding}', [RecruitmentLaporanController::class, 'index'])->middleware('admin');
 Route::get('/detail_riwayat/{id}/{holding}', [RecruitmentLaporanController::class, 'detail_riwayat'])->middleware('admin');
 Route::get('/dt_laporan_recruitment/{holding}', [RecruitmentLaporanController::class, 'dt_laporan_recruitment'])->middleware('admin');
+Route::get('/dt_laporan_recruitment_print/{holding}', [RecruitmentLaporanController::class, 'dt_laporan_recruitment_print'])->middleware('admin');
 Route::get('/dt_riwayat_recruitment/{id}/{holding}', [RecruitmentLaporanController::class, 'dt_riwayat_recruitment'])->middleware('admin');
 Route::get('/report_recruitment/get_divisi/{holding}', [RecruitmentLaporanController::class, 'get_divisi']);
 Route::get('/report_recruitment/get_bagian/{holding}', [RecruitmentLaporanController::class, 'get_bagian']);
@@ -1004,6 +1005,9 @@ Route::get('/report_recruitment/get_jabatan/{holding}', [RecruitmentLaporanContr
 Route::get('/report_recruitment/{holding}', [RecruitmentLaporanController::class, 'laporan_recruitment'])->middleware('admin');
 Route::get('/dt_laporan_recruitment2/{holding}', [RecruitmentLaporanController::class, 'dt_laporan_recruitment2'])->middleware('admin');
 
+Route::get('/report_per_divisi/{holding}', [RecruitmentLaporanController::class, 'report_per_divisi'])->middleware('admin');
+Route::get('/detail_per_divisi/{id}/{holding}', [RecruitmentLaporanController::class, 'detail_per_divisi'])->middleware('admin');
+Route::get('/dt_per_divisi/{holding}', [RecruitmentLaporanController::class, 'dt_per_divisi'])->middleware('admin');
 
 Route::post('/recruitment/insert/sp', [RecruitmentController::class, 'insert'])->middleware('admin');
 Route::post('/recruitment/insert/sps', [RecruitmentController::class, 'insert'])->middleware('admin');

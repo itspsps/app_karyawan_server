@@ -484,7 +484,7 @@
                     class="menu-item {{ Request::is('report_pelamar*') ? 'active open' : '' }} {{ Request::is('report_recruitment*') ? 'active open' : '' }}">
                     <a href="javascript:void(0);" class="menu-link menu-toggle">
                         <i class="menu-icon tf-icons mdi mdi-table-account"></i>
-                        <div style="font-size: 10pt;" data-i18n="Data Master">Recruitment</div>
+                        <div style="font-size: 10pt;" data-i18n="Data Master">Rekrutmen</div>
                     </a>
                     <ul class="menu-sub">
                         <li class="menu-item {{ Request::is('report_pelamar*') ? 'active' : '' }}">
@@ -501,11 +501,12 @@
                                         class="mdi mdi-file-chart-check-outline"></i>&nbsp;Data&nbsp;Rekrutmen</div>
                             </a>
                         </li>
-                        <li class="menu-item {{ Request::is('report_recruitment*') ? 'active' : '' }}">
-                            <a href="@if (Auth::user()->is_admin == 'hrd') {{ url('hrd//report_recruitment/' . $holding->holding_code) }}@else{{ url('/report_recruitment/' . $holding->holding_code) }} @endif"
+                        <li class="menu-item {{ Request::is('report_per_divisi*') ? 'active' : '' }}">
+                            <a href="@if (Auth::user()->is_admin == 'hrd') {{ url('hrd//report_per_divisi/' . $holding->holding_code) }}@else{{ url('/report_per_divisi/' . $holding->holding_code) }} @endif"
                                 class="menu-link">
                                 <div style="font-size: 10pt;" data-i18n="Container"><i
-                                        class="mdi mdi-file-chart-check-outline"></i>&nbsp;Data&nbsp;Rekrutmen</div>
+                                        class="mdi mdi-file-chart-check-outline"></i>&nbsp;Rekrutmen&nbsp;Per&nbsp;Divisi
+                                </div>
                             </a>
                         </li>
                     </ul>

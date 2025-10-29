@@ -308,7 +308,17 @@ class RecruitmentController extends Controller
             }
             $tanggal = date('ymd');
             $st = Holding::where('holding_code', $holding)->first();
-            $no = rand(100, 999);
+            //mencari nomor terakhir
+            $today = date('Y-m-d');
+            $no_terakhir = Recruitment::where('created_at', $today)->orderBy('created_at', 'desc')->first();
+            if ($no_terakhir == null) {
+                $no = '001';
+            } else {
+                $legal_terakhir = substr($no_terakhir->legal_number, -3);
+                $hasil = $legal_terakhir + 1;
+                $no = str_pad($hasil, 3, '0', STR_PAD_LEFT);
+            }
+            //mencari nomor terakhir end
             // Surat Penambahan
             if ($request->surat_penambahan != null) {
                 // dd('o');

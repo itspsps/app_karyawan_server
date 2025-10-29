@@ -364,7 +364,6 @@
                     if (isOpen) {
                         $('#bagian_filter').select2('open');
                     }
-
                 },
                 error: function(data) {
                     Swal.close();
@@ -536,40 +535,40 @@
                                     l + ' ' + n;
                             },
                         },
-                        {
+                        // {
 
-                            extend: 'pdf',
-                            className: 'btn btn-sm btn-danger',
-                            text: '<i class="menu-icon tf-icons mdi mdi-file-pdf-box"></i>PDF',
-                            titleAttr: 'PDF',
-                            title: 'LAPORAN REKRUTMEN',
-                            orientation: 'potrait',
-                            pageSize: 'LEGAL',
-                            exportOptions: {
-                                columns: ':not(:first-child)',
-                            },
-                            filename: function() {
-                                var d = new Date();
-                                var l = d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d
-                                    .getDate();
-                                var n = d.getHours() + ":" + d.getMinutes() + ":" + d
-                                    .getSeconds();
-                                return 'LAPORAN_REKRUTMEN_{{ $holding->holding_name }}_' +
-                                    l + ' ' + n;
-                            },
-                        }, {
-                            extend: 'print',
-                            className: 'btn btn-sm btn-info',
-                            title: 'LAPORAN REKRUTMEN',
-                            text: '<i class="menu-icon tf-icons mdi mdi-printer-pos-check-outline"></i>PRINT',
-                            titleAttr: 'PRINT',
-                        }, {
-                            extend: 'copy',
-                            title: 'LAPORAN REKRUTMEN',
-                            className: 'btn btn-sm btn-secondary',
-                            text: '<i class="menu-icon tf-icons mdi mdi-content-copy"></i>COPY',
-                            titleAttr: 'COPY',
-                        }
+                        //     extend: 'pdf',
+                        //     className: 'btn btn-sm btn-danger',
+                        //     text: '<i class="menu-icon tf-icons mdi mdi-file-pdf-box"></i>PDF',
+                        //     titleAttr: 'PDF',
+                        //     title: 'LAPORAN REKRUTMEN',
+                        //     orientation: 'potrait',
+                        //     pageSize: 'LEGAL',
+                        //     exportOptions: {
+                        //         columns: ':not(:first-child)',
+                        //     },
+                        //     filename: function() {
+                        //         var d = new Date();
+                        //         var l = d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d
+                        //             .getDate();
+                        //         var n = d.getHours() + ":" + d.getMinutes() + ":" + d
+                        //             .getSeconds();
+                        //         return 'LAPORAN_REKRUTMEN_{{ $holding->holding_name }}_' +
+                        //             l + ' ' + n;
+                        //     },
+                        // }, {
+                        //     extend: 'print',
+                        //     className: 'btn btn-sm btn-info',
+                        //     title: 'LAPORAN REKRUTMEN',
+                        //     text: '<i class="menu-icon tf-icons mdi mdi-printer-pos-check-outline"></i>PRINT',
+                        //     titleAttr: 'PRINT',
+                        // }, {
+                        //     extend: 'copy',
+                        //     title: 'LAPORAN REKRUTMEN',
+                        //     className: 'btn btn-sm btn-secondary',
+                        //     text: '<i class="menu-icon tf-icons mdi mdi-content-copy"></i>COPY',
+                        //     titleAttr: 'COPY',
+                        // }
                     ],
                     columns: [{
                             data: null,

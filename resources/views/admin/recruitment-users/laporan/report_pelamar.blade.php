@@ -181,6 +181,23 @@
                                 </div>
                             </div>
                             <div id="table_recruitment_form">
+                                <table class="table" id="table_recruitment_print"
+                                    style="width: 100%; font-size: small;">
+                                    <thead class="table-primary" hidden>
+                                        <tr>
+                                            <th>No.</th>
+                                            <th>Tanggal Mulai</th>
+                                            <th>Nama Lengkap</th>
+                                            <th>Posisi yang Dilamar</th>
+                                            <th>CV</th>
+                                            <th>Riwayat&nbsp;Detail</th>
+                                            <th>Tanggal&nbsp;Berakhir</th>
+                                            <th>Perkembangan&nbsp;Terakhir</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="table-border-bottom-0" hidden>
+                                    </tbody>
+                                </table>
                                 <table class="table" id="table_recruitment" style="width: 100%; font-size: small;">
                                     <thead class="table-primary">
                                         <tr>
@@ -466,14 +483,17 @@
                 if ($.fn.DataTable.isDataTable('#table_recruitment')) {
                     $('#table_recruitment').DataTable().clear().destroy();
                 }
-                var table = $('#table_recruitment').DataTable({
+                var table2 = $('#table_recruitment_print').DataTable({
                     "scrollY": true,
                     "scrollX": true,
                     processing: true,
                     serverSide: true,
+                    paging: false,
+                    searching: false,
+                    info: false,
                     dom: 'Bfrtip',
                     ajax: {
-                        url: "{{ url('/dt_laporan_recruitment') }}" + '/' + holding,
+                        url: "{{ url('/dt_laporan_recruitment_print') }}" + '/' + holding,
                         data: {
                             start_date: start_date,
                             end_date: end_date,
@@ -503,41 +523,42 @@
                                 return 'LAPORAN_DATA_PELAMAR_{{ $holding->holding_name }}_' +
                                     l + ' ' + n;
                             },
-                        },
-                        {
 
-                            extend: 'pdf',
-                            className: 'btn btn-sm btn-danger',
-                            text: '<i class="menu-icon tf-icons mdi mdi-file-pdf-box"></i>PDF',
-                            titleAttr: 'PDF',
-                            title: 'LAPORAN DATA PELAMAR',
-                            orientation: 'potrait',
-                            pageSize: 'LEGAL',
-                            exportOptions: {
-                                columns: ':not(:first-child)',
-                            },
-                            filename: function() {
-                                var d = new Date();
-                                var l = d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d
-                                    .getDate();
-                                var n = d.getHours() + ":" + d.getMinutes() + ":" + d
-                                    .getSeconds();
-                                return 'LAPORAN_DATA_PELAMAR_{{ $holding->holding_name }}_' +
-                                    l + ' ' + n;
-                            },
-                        }, {
-                            extend: 'print',
-                            className: 'btn btn-sm btn-info',
-                            title: 'LAPORAN DATA PELAMAR',
-                            text: '<i class="menu-icon tf-icons mdi mdi-printer-pos-check-outline"></i>PRINT',
-                            titleAttr: 'PRINT',
-                        }, {
-                            extend: 'copy',
-                            title: 'LAPORAN DATA PELAMAR',
-                            className: 'btn btn-sm btn-secondary',
-                            text: '<i class="menu-icon tf-icons mdi mdi-content-copy"></i>COPY',
-                            titleAttr: 'COPY',
-                        }
+                        },
+                        // {
+
+                        //     extend: 'pdf',
+                        //     className: 'btn btn-sm btn-danger',
+                        //     text: '<i class="menu-icon tf-icons mdi mdi-file-pdf-box"></i>PDF',
+                        //     titleAttr: 'PDF',
+                        //     title: 'LAPORAN DATA PELAMAR',
+                        //     orientation: 'potrait',
+                        //     pageSize: 'LEGAL',
+                        //     exportOptions: {
+                        //         columns: ':not(:first-child)',
+                        //     },
+                        //     filename: function() {
+                        //         var d = new Date();
+                        //         var l = d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d
+                        //             .getDate();
+                        //         var n = d.getHours() + ":" + d.getMinutes() + ":" + d
+                        //             .getSeconds();
+                        //         return 'LAPORAN_DATA_PELAMAR_{{ $holding->holding_name }}_' +
+                        //             l + ' ' + n;
+                        //     },
+                        // }, {
+                        //     extend: 'print',
+                        //     className: 'btn btn-sm btn-info',
+                        //     title: 'LAPORAN DATA PELAMAR',
+                        //     text: '<i class="menu-icon tf-icons mdi mdi-printer-pos-check-outline"></i>PRINT',
+                        //     titleAttr: 'PRINT',
+                        // }, {
+                        //     extend: 'copy',
+                        //     title: 'LAPORAN DATA PELAMAR',
+                        //     className: 'btn btn-sm btn-secondary',
+                        //     text: '<i class="menu-icon tf-icons mdi mdi-content-copy"></i>COPY',
+                        //     titleAttr: 'COPY',
+                        // }
                     ],
                     columns: [{
                             data: null,
@@ -582,6 +603,67 @@
                         [2, 'desc']
                     ]
                 });
+                var table = $('#table_recruitment').DataTable({
+                    "scrollY": true,
+                    "scrollX": true,
+                    processing: true,
+                    serverSide: true,
+                    ajax: {
+                        url: "{{ url('/dt_laporan_recruitment') }}" + '/' + holding,
+                        data: {
+                            start_date: start_date,
+                            end_date: end_date,
+                            departemen_filter: departemen_filter,
+                            divisi_filter: divisi_filter,
+                            bagian_filter: bagian_filter,
+                            jabatan_filter: jabatan_filter,
+                        }
+                    },
+
+                    columns: [{
+                            data: null,
+                            render: function(data, type, row, meta) {
+                                return meta.row + 1;
+                            },
+                            orderable: false,
+                            searchable: false
+                        },
+                        {
+                            data: 'tanggal_mulai',
+                            name: 'tanggal_mulai',
+                            // class: 'table-tbody'
+                        },
+                        {
+                            data: 'nama_lengkap',
+                            name: 'nama_lengkap'
+                        },
+                        {
+                            data: 'posisi_yang_dilamar',
+                            name: 'posisi_yang_dilamar'
+                        },
+                        {
+                            data: 'cv',
+                            name: 'cv'
+                        },
+                        {
+                            data: 'status_detail',
+                            name: 'status_detail'
+                        },
+                        {
+                            data: 'tanggal_berakhir',
+                            name: 'tanggal_berakhir',
+                            // class: 'table-tbody'
+                        },
+                        {
+                            data: 'perkembangan_terakhir',
+                            name: 'perkembangan_terakhir'
+                        },
+                    ],
+                    order: [
+                        [2, 'desc']
+                    ]
+                });
+
             });
         });
     </script>
