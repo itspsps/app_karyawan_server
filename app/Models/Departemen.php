@@ -31,4 +31,8 @@ class Departemen extends Model
     {
         return $this->belongsTo(Holding::class, 'holding', 'id');
     }
+    public function Karyawan()
+    {
+        return $this->hasMany(Karyawan::class, 'dept_id', 'id');
+    }
 }

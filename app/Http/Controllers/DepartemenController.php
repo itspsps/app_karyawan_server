@@ -42,7 +42,11 @@ class DepartemenController extends Controller
     public function datatable(Request $request, $holding)
     {
         $holding  = Holding::where('holding_code', $holding)->first();
-        $table = Departemen::where('holding', $holding->id)->orderBy('nama_departemen', 'ASC')->get();
+        $table = Departemen::with(['Karyawan' => function ($query) use ($holding) {
+            $query->where('status_aktif', 'AKTIF')
+                ->where('kontrak_kerja', $holding->id);
+        }])->where('holding', $holding->id)
+            ->orderBy('nama_departemen', 'ASC')->get();
         if (request()->ajax()) {
             return DataTables::of($table)
                 ->addColumn('jumlah_divisi', function ($row) use ($holding) {
@@ -57,10 +61,7 @@ class DepartemenController extends Controller
                     return $jumlah_divisi;
                 })
                 ->addColumn('jumlah_karyawan', function ($row) use ($holding) {
-                    $cek_karyawan = Karyawan::where('dept_id', $row->id)
-                        ->where('kontrak_kerja', $holding->id)
-                        ->where('status_aktif', 'AKTIF')
-                        ->count();
+                    $cek_karyawan = $row->Karyawan->count();
                     if ($cek_karyawan == 0) {
                         $jumlah_karyawan = $cek_karyawan;
                     } else {
@@ -71,7 +72,7 @@ class DepartemenController extends Controller
                     return $jumlah_karyawan;
                 })
                 ->addColumn('option', function ($row) use ($holding) {
-                    $user_count = Karyawan::where('dept_id', $row->id)->where('status_aktif', 'AKTIF')->count();
+                    $user_count = $row->Karyawan->count();
                     $btn = '<button id="btn_edit_dept" data-id="' . $row->id . '" data-dept="' . $row->nama_departemen . '" data-holding="' . $holding->holding_code . '" type="button" class="btn btn-icon btn-warning waves-effect waves-light"><span class="tf-icons mdi mdi-pencil-outline"></span></button>';
                     $btn = $btn . '<button type="button" id="btn_delete_dept" data-usercount="' . $user_count . '" data-id="' . $row->id . '" data-holding="' . $holding->holding_code . '" class="btn btn-icon btn-danger waves-effect waves-light"><span class="tf-icons mdi mdi-delete-outline"></span></button>';
                     return $btn;
@@ -84,23 +85,16 @@ class DepartemenController extends Controller
     {
         // dd($holding);
         $holding = Holding::where('holding_code', $holding)->first();
-        $table =  Divisi::where('dept_id', $id)
+        $table =  Divisi::with(['Karyawan' => function ($query) use ($holding) {
+            $query->where('status_aktif', 'AKTIF')->where('kontrak_kerja', $holding->id);
+        }])->where('dept_id', $id)
             ->where('holding', $holding->id)
             ->get();
         // dd($table);
         if (request()->ajax()) {
             return DataTables::of($table)
                 ->addColumn('jumlah_karyawan', function ($row) {
-                    $karyawan = Karyawan::where('divisi_id', $row->id)
-                        ->leftJoin('users as b', 'b.karyawan_id', 'karyawans.id')
-                        ->where('status_aktif', 'AKTIF')
-                        ->orWhere('divisi1_id', $row->id)
-                        ->orWhere('divisi2_id', $row->id)
-                        ->orWhere('divisi3_id', $row->id)
-                        ->orWhere('divisi4_id', $row->id)
-                        ->where('b.is_admin', 'user')
-                        ->where('karyawans.status_aktif', 'AKTIF')
-                        ->count();
+                    $karyawan = $row->Karyawan->count();
                     return $karyawan;
                 })
                 ->rawColumns(['jumlah_karyawan',])

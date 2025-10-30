@@ -52,6 +52,9 @@ class DivisiController extends Controller
             ->with(['Karyawan' => function ($query) {
                 $query->where('status_aktif', 'AKTIF');
             }])
+            ->with(['Bagian' => function ($query) use ($holding) {
+                $query->where('holding', $holding->id);
+            }])
             ->where('holding', $holding->id)
             ->orderBy('nama_divisi', 'ASC')
             ->get();
@@ -62,7 +65,7 @@ class DivisiController extends Controller
                     return $nama_departemen;
                 })
                 ->addColumn('jumlah_bagian', function ($row) use ($holding) {
-                    $cek_bagian = Bagian::where('divisi_id', $row->id)->where('holding', $holding->id)->count();
+                    $cek_bagian = $row->Bagian->count();
                     if ($cek_bagian == 0) {
                         $jumlah_bagian = $cek_bagian;
                     } else {
@@ -95,23 +98,18 @@ class DivisiController extends Controller
     public function bagian_datatable($id, $holding)
     {
         $holding = Holding::where('holding_code', $holding)->first();
-        $table =  Bagian::where('divisi_id', $id)
+        $table =  Bagian::with(['Karyawan' => function ($query) use ($holding) {
+            $query->where('status_aktif', 'AKTIF')
+                ->where('kontrak_kerja', $holding->id);
+        }])
+            ->where('divisi_id', $id)
             ->where('holding', $holding->id)
             ->get();
         // dd($table);
         if (request()->ajax()) {
             return DataTables::of($table)
                 ->addColumn('jumlah_karyawan', function ($row) use ($holding) {
-                    $karyawan = Karyawan::where('bagian_id', $row->id)
-                        ->leftJoin('users as b', 'b.karyawan_id', 'karyawans.id')
-                        ->orWhere('bagian1_id', $row->id)
-                        ->orWhere('bagian2_id', $row->id)
-                        ->orWhere('bagian3_id', $row->id)
-                        ->orWhere('bagian4_id', $row->id)
-                        ->where('kontrak_kerja', $holding)
-                        ->where('status_aktif', 'AKTIF')
-                        ->where('b.is_admin', 'user')
-                        ->count();
+                    $karyawan = $row->Karyawan->count();
                     return $karyawan;
                 })
                 ->rawColumns(['jumlah_karyawan'])
