@@ -779,23 +779,62 @@ class RecruitmentLaporanController extends Controller
                     return $row->Jabatan->Bagian->Divisi->nama_divisi;
                 })
                 ->addColumn('total_waktu', function ($row) {
-                    return '-';
+                    $tanggal_awal = RecruitmentUserRecord::selectRaw(
+                        '
+                        recruitment_user_id,
+                        MIN(created_at) AS tanggal_awal,
+                        MAX(created_at) AS tanggal_akhir,
+                        DATEDIFF(MAX(created_at), MIN(created_at)) as total_hari'
+                    )
+                        ->with([
+                            'recruitmentUser' => function ($query) {
+                                $query;
+                            }
+                        ])
+                        ->whereHas('recruitmentUser', function ($query) use ($row) {
+                            $query->where('nama_divisi', $row->nama_divisi);
+                        })
+                        ->orderBy('recruitment_user_id')
+                        ->groupBy('recruitment_user_id')
+                        ->get();
+
+                    $total_hari = $tanggal_awal->sum('total_hari');
+                    return $total_hari . ' Hari';
                 })
                 ->addColumn('jumlah_rekrutmen', function ($row) {
                     $jml_rec = Recruitment::where('nama_divisi', $row->nama_divisi)->count();
                     return $jml_rec;
                 })
+                ->addColumn('jumlah_pelamar', function ($row) {
+                    $pelamar = RecruitmentUser::where('nama_divisi', $row->nama_divisi)->count() ?? 0;
+                    return $pelamar;
+                })
                 ->addColumn('rata_rata', function ($row) {
-                    // $id_awal = RecruitmentUser::where('nama_divisi', $row->nama_divisi)->orderBy('created_at', 'asc')->first();
-                    // $id_akhir = RecruitmentUser::where('nama_divisi', $row->nama_divisi)->orderBy('created_at', 'desc')->first();
-                    // $record_awal = RecruitmentUserRecord::where('recruitment_user_id', $id_awal)->orderBy('creatrd_at', 'asc')->first();
-                    // $record_akhir = RecruitmentUserRecord::where('recruitment_user_id', $id_akhir)->orderBy('creatrd_at', 'desc')->first();
+                    $tanggal_awal = RecruitmentUserRecord::selectRaw(
+                        '
+                        recruitment_user_id,
+                        MIN(created_at) AS tanggal_awal,
+                        MAX(created_at) AS tanggal_akhir,
+                        DATEDIFF(MAX(created_at), MIN(created_at)) as total_hari'
+                    )
+                        ->with([
+                            'recruitmentUser' => function ($query) {
+                                $query;
+                            }
+                        ])
+                        ->whereHas('recruitmentUser', function ($query) use ($row) {
+                            $query->where('nama_divisi', $row->nama_divisi);
+                        })
+                        ->orderBy('recruitment_user_id')
+                        ->groupBy('recruitment_user_id')
+                        ->get();
 
-                    // $awal = Carbon::parse($row->created_recruitment) ?? 0;
-                    // $akhir = Carbon::parse($pelamar_tgl->tanggal_diterima) ?? 0;
-                    // $total_day1 = $awal->diffInDays($akhir);
-                    // return $total_day1 . " Hari";
-                    return '-';
+                    $total_hari = $tanggal_awal->sum('total_hari');
+                    $pelamar = RecruitmentUser::where('nama_divisi', $row->nama_divisi)->count();
+
+                    $rata_rata = $pelamar > 0 ? $total_hari / $pelamar : 0;
+
+                    return round($rata_rata, 2) . ' Hari';
                 })
                 ->addColumn('detail', function ($row) {
                     $holding = request()->segment(count(request()->segments()));
@@ -806,6 +845,8 @@ class RecruitmentLaporanController extends Controller
                 ->rawColumns([
                     'divisi',
                     'total_waktu',
+                    'jumlah_rekrutmen',
+                    'jumlah_peserta',
                     'rata_rata',
                     'detail',
                 ])
@@ -845,12 +886,61 @@ class RecruitmentLaporanController extends Controller
             ])
             ->where('holding', $holdings->id)
             ->get();
+
+        foreach ($divisi as $dd) {
+            $record = $dd->recruitmentUserRecord;
+            if ($record->isNotEmpty()) {
+                $awal = $record->sortBy('created_at')->first();
+                $akhir = $record->sortByDesc('created_at')->first();
+                $tgl_awal = Carbon::parse($awal->created_at) ?? 0;
+                $tgl_akhir = Carbon::parse($akhir->created_at) ?? 0;
+                $total = $tgl_awal->diffInDays($tgl_akhir);
+            } else {
+                $total = 0;
+            }
+        }
         $nama_divisi = Divisi::where('id', $id)->first();
-        // dd($divisi);
+        // $pembagian = $waktu->groupBy('recruitment_user_id');
+
+        $tanggal_awal = RecruitmentUserRecord::selectRaw(
+            '
+        recruitment_user_id,
+        MIN(created_at) AS tanggal_awal,
+        MAX(created_at) AS tanggal_akhir,
+        DATEDIFF(MAX(created_at), MIN(created_at)) as total_hari,
+        status,
+        created_at,
+        updated_at'
+        )
+            ->with([
+                'recruitmentUser' => function ($query) {
+                    $query;
+                }
+            ])
+            ->whereHas('recruitmentUser', function ($query) use ($id) {
+                $query->with([
+                    'Cv' => function ($query) {
+                        $query;
+                    }
+                ])->where('nama_divisi', $id);
+            })
+            ->orderBy('recruitment_user_id')
+            ->groupBy('recruitment_user_id')
+            ->get();
+
+        $total_hari = $tanggal_awal->sum('total_hari');
+        $pelamar = RecruitmentUser::where('nama_divisi', $id)->count();
+
+        $rata_rata = $pelamar > 0 ? $total_hari / $pelamar : 0;
+
+        // dd($tanggal_awal);
+
+
         return view('admin.recruitment-users.laporan.detail_per_divisi', [
             'holding' => $holdings,
             'divisi' => $divisi,
-            'nama_divisi' => $nama_divisi
+            'nama_divisi' => $nama_divisi,
+            'rata_rata' => $rata_rata,
         ]);
     }
     // Laporan Recruitment Per Divisi End
