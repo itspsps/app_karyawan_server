@@ -21,14 +21,19 @@ class DivisiController extends Controller
 {
     public function index($holding)
     {
-        $holding = Holding::where('holding_code', $holding)->first();
+        $get_holding = Holding::where('holding_code', $holding)->first();
+        // dd($get_holding);
+        if ($get_holding == null) {
+            Alert::error('Error', 'Holding Tidak Ditemukan', 3000);
+            return redirect()->route('dashboard_holding')->with('error', 'Holding Tidak Ditemukan');
+        }
         // $get = Divisi::with('Departemen')->get();
         // dd($get);
         return view('admin.divisi.index', [
             'title' => 'Master Divisi',
-            'holding' => $holding,
-            'data_divisi' => Divisi::with('Departemen')->where('holding', $holding->id)->get(),
-            'data_departemen' => Departemen::orderBy('nama_departemen', 'asc')->where('holding', $holding->id)->get()
+            'holding' => $get_holding,
+            'data_divisi' => Divisi::with('Departemen')->where('holding', $get_holding->id)->get(),
+            'data_departemen' => Departemen::orderBy('nama_departemen', 'asc')->where('holding', $get_holding->id)->get()
         ]);
     }
     public function ImportDivisi(Request $request, $holding)
@@ -43,7 +48,13 @@ class DivisiController extends Controller
         $holding = Holding::where('holding_code', $holding)->first();
         $table =  Divisi::with(['Departemen' => function ($query) {
             $query->orderBy('nama_departemen', 'ASC');
-        }])->where('holding', $holding->id)->orderBy('nama_divisi', 'ASC')->get();
+        }])
+            ->with(['Karyawan' => function ($query) {
+                $query->where('status_aktif', 'AKTIF');
+            }])
+            ->where('holding', $holding->id)
+            ->orderBy('nama_divisi', 'ASC')
+            ->get();
         if (request()->ajax()) {
             return DataTables::of($table)
                 ->addColumn('nama_departemen', function ($row) {
@@ -62,14 +73,7 @@ class DivisiController extends Controller
                     return $jumlah_bagian;
                 })
                 ->addColumn('jumlah_karyawan', function ($row) use ($holding) {
-                    $cek_karyawan = Karyawan::where('kontrak_kerja', $holding->id)
-                        ->where('status_aktif', 'AKTIF')
-                        ->where('divisi_id', $row->id)
-                        ->orWhere('divisi1_id', $row->id)
-                        ->orWhere('divisi2_id', $row->id)
-                        ->orWhere('divisi3_id', $row->id)
-                        ->orWhere('divisi4_id', $row->id)
-                        ->count();
+                    $cek_karyawan = $row->Karyawan->count();
                     if ($cek_karyawan == 0) {
                         $jumlah_karyawan = $cek_karyawan;
                     } else {

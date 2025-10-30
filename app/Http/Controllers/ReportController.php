@@ -94,6 +94,7 @@ class ReportController extends Controller
         $departemen = Departemen::where('holding', $holding->id)->orderBy('nama_departemen', 'ASC')->get();
         // dd($holding->id);
         // dd(Carbon::createFromFormat('H:i:s', '17:12:00'));
+        session(['url.intended' => url()->previous()]);
         return view('admin.report.index_kedisiplinan', [
             'title' => $title,
             'data_user' => $user,

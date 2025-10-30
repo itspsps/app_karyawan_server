@@ -14,6 +14,7 @@ use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
 use Ramsey\Uuid\Uuid;
+use RealRashid\SweetAlert\Facades\Alert;
 use Yajra\DataTables\Facades\DataTables;
 
 class DepartemenController extends Controller
@@ -21,6 +22,10 @@ class DepartemenController extends Controller
     public function index($holding)
     {
         $getHolding = Holding::where('holding_code', $holding)->first();
+        if ($getHolding == null) {
+            Alert::error('Error', 'Holding Tidak Ditemukan', 3000);
+            return redirect()->route('dashboard_holding')->with('error', 'Holding Tidak Ditemukan');
+        }
         return view('admin.departemen.index', [
             'title' => 'Master Departemen',
             'holding' => $getHolding,
