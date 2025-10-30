@@ -176,6 +176,8 @@
                                         $tgl_awal = \Carbon\Carbon::parse($awal->created_at) ?? 0;
                                         $tgl_akhir = \Carbon\Carbon::parse($akhir->created_at) ?? 0;
                                         $total = $tgl_awal->diffInDays($tgl_akhir);
+
+                                        // $hasil->push(['total_hari' => $total]);
                                     } else {
                                         $total = 0;
                                     }
@@ -199,7 +201,6 @@
                                                 <i class="mdi mdi-account-tie mdi-24px"></i>
                                             </div>
                                         </div>
-
                                     </div>
                                 </div>
                             </div>
@@ -207,9 +208,16 @@
                     </div>
                 </div>
             @endforeach
-            <div class="ms-3">
-                <div class="small mb-1">Total waktu recruitment</div>
-                <h5 class="mb-0">{{ sum($total) }}</h5>
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="d-flex align-items-center justify-content-between">
+                            <h5 class="card-title m-0 me-2">
+                                RATA-RATA WAKTU : {{ $rata_rata }} Hari
+                            </h5>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

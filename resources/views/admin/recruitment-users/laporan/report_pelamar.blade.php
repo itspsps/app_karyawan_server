@@ -483,126 +483,129 @@
                 if ($.fn.DataTable.isDataTable('#table_recruitment')) {
                     $('#table_recruitment').DataTable().clear().destroy();
                 }
-                var table2 = $('#table_recruitment_print').DataTable({
-                    "scrollY": true,
-                    "scrollX": true,
-                    processing: true,
-                    serverSide: true,
-                    paging: false,
-                    searching: false,
-                    info: false,
-                    dom: 'Bfrtip',
-                    ajax: {
-                        url: "{{ url('/dt_laporan_recruitment_print') }}" + '/' + holding,
-                        data: {
-                            start_date: start_date,
-                            end_date: end_date,
-                            departemen_filter: departemen_filter,
-                            divisi_filter: divisi_filter,
-                            bagian_filter: bagian_filter,
-                            jabatan_filter: jabatan_filter,
-                        }
-                    },
-                    buttons: [{
+                if (!$.fn.dataTable.isDataTable('#example')) {
+                    var table2 = $('#table_recruitment_print').DataTable({
+                        "scrollY": true,
+                        "scrollX": true,
+                        processing: true,
+                        serverSide: true,
+                        paging: false,
+                        searching: false,
+                        info: false,
+                        dom: 'Bfrtip',
+                        ajax: {
+                            url: "{{ url('/dt_laporan_recruitment_print') }}" + '/' + holding,
+                            data: {
+                                start_date: start_date,
+                                end_date: end_date,
+                                departemen_filter: departemen_filter,
+                                divisi_filter: divisi_filter,
+                                bagian_filter: bagian_filter,
+                                jabatan_filter: jabatan_filter,
+                            }
+                        },
+                        buttons: [{
 
-                            extend: 'excelHtml5',
-                            className: 'btn btn-sm btn-success',
-                            text: '<i class="menu-icon tf-icons mdi mdi-file-excel"></i>Excel',
-                            titleAttr: 'Excel',
-                            title: 'LAPORAN DATA PELAMAR',
-                            messageTop: 'Bulan : '.start_date + ' s/d ' + end_date,
-                            exportOptions: {
-                                columns: ':not(:first-child)',
-                            },
-                            filename: function() {
-                                var d = new Date();
-                                var l = d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d
-                                    .getDate();
-                                var n = d.getHours() + ':' + d.getMinutes() + ':' + d
-                                    .getSeconds();
-                                return 'LAPORAN_DATA_PELAMAR_{{ $holding->holding_name }}_' +
-                                    l + ' ' + n;
-                            },
+                                extend: 'excelHtml5',
+                                className: 'btn btn-sm btn-success',
+                                text: '<i class="menu-icon tf-icons mdi mdi-file-excel"></i>Excel',
+                                titleAttr: 'Excel',
+                                title: 'LAPORAN DATA PELAMAR',
+                                messageTop: 'Bulan : '.start_date + ' s/d ' + end_date,
+                                exportOptions: {
+                                    columns: ':not(:first-child)',
+                                },
+                                filename: function() {
+                                    var d = new Date();
+                                    var l = d.getFullYear() + '-' + (d.getMonth() + 1) +
+                                        '-' + d
+                                        .getDate();
+                                    var n = d.getHours() + ':' + d.getMinutes() + ':' + d
+                                        .getSeconds();
+                                    return 'LAPORAN_DATA_PELAMAR_{{ $holding->holding_name }}_' +
+                                        l + ' ' + n;
+                                },
 
-                        },
-                        // {
-
-                        //     extend: 'pdf',
-                        //     className: 'btn btn-sm btn-danger',
-                        //     text: '<i class="menu-icon tf-icons mdi mdi-file-pdf-box"></i>PDF',
-                        //     titleAttr: 'PDF',
-                        //     title: 'LAPORAN DATA PELAMAR',
-                        //     orientation: 'potrait',
-                        //     pageSize: 'LEGAL',
-                        //     exportOptions: {
-                        //         columns: ':not(:first-child)',
-                        //     },
-                        //     filename: function() {
-                        //         var d = new Date();
-                        //         var l = d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d
-                        //             .getDate();
-                        //         var n = d.getHours() + ":" + d.getMinutes() + ":" + d
-                        //             .getSeconds();
-                        //         return 'LAPORAN_DATA_PELAMAR_{{ $holding->holding_name }}_' +
-                        //             l + ' ' + n;
-                        //     },
-                        // }, {
-                        //     extend: 'print',
-                        //     className: 'btn btn-sm btn-info',
-                        //     title: 'LAPORAN DATA PELAMAR',
-                        //     text: '<i class="menu-icon tf-icons mdi mdi-printer-pos-check-outline"></i>PRINT',
-                        //     titleAttr: 'PRINT',
-                        // }, {
-                        //     extend: 'copy',
-                        //     title: 'LAPORAN DATA PELAMAR',
-                        //     className: 'btn btn-sm btn-secondary',
-                        //     text: '<i class="menu-icon tf-icons mdi mdi-content-copy"></i>COPY',
-                        //     titleAttr: 'COPY',
-                        // }
-                    ],
-                    columns: [{
-                            data: null,
-                            render: function(data, type, row, meta) {
-                                return meta.row + 1;
                             },
-                            orderable: false,
-                            searchable: false
-                        },
-                        {
-                            data: 'tanggal_mulai',
-                            name: 'tanggal_mulai',
-                            // class: 'table-tbody'
-                        },
-                        {
-                            data: 'nama_lengkap',
-                            name: 'nama_lengkap'
-                        },
-                        {
-                            data: 'posisi_yang_dilamar',
-                            name: 'posisi_yang_dilamar'
-                        },
-                        {
-                            data: 'cv',
-                            name: 'cv'
-                        },
-                        {
-                            data: 'status_detail',
-                            name: 'status_detail'
-                        },
-                        {
-                            data: 'tanggal_berakhir',
-                            name: 'tanggal_berakhir',
-                            // class: 'table-tbody'
-                        },
-                        {
-                            data: 'perkembangan_terakhir',
-                            name: 'perkembangan_terakhir'
-                        },
-                    ],
-                    order: [
-                        [2, 'desc']
-                    ]
-                });
+                            // {
+
+                            //     extend: 'pdf',
+                            //     className: 'btn btn-sm btn-danger',
+                            //     text: '<i class="menu-icon tf-icons mdi mdi-file-pdf-box"></i>PDF',
+                            //     titleAttr: 'PDF',
+                            //     title: 'LAPORAN DATA PELAMAR',
+                            //     orientation: 'potrait',
+                            //     pageSize: 'LEGAL',
+                            //     exportOptions: {
+                            //         columns: ':not(:first-child)',
+                            //     },
+                            //     filename: function() {
+                            //         var d = new Date();
+                            //         var l = d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d
+                            //             .getDate();
+                            //         var n = d.getHours() + ":" + d.getMinutes() + ":" + d
+                            //             .getSeconds();
+                            //         return 'LAPORAN_DATA_PELAMAR_{{ $holding->holding_name }}_' +
+                            //             l + ' ' + n;
+                            //     },
+                            // }, {
+                            //     extend: 'print',
+                            //     className: 'btn btn-sm btn-info',
+                            //     title: 'LAPORAN DATA PELAMAR',
+                            //     text: '<i class="menu-icon tf-icons mdi mdi-printer-pos-check-outline"></i>PRINT',
+                            //     titleAttr: 'PRINT',
+                            // }, {
+                            //     extend: 'copy',
+                            //     title: 'LAPORAN DATA PELAMAR',
+                            //     className: 'btn btn-sm btn-secondary',
+                            //     text: '<i class="menu-icon tf-icons mdi mdi-content-copy"></i>COPY',
+                            //     titleAttr: 'COPY',
+                            // }
+                        ],
+                        columns: [{
+                                data: null,
+                                render: function(data, type, row, meta) {
+                                    return meta.row + 1;
+                                },
+                                orderable: false,
+                                searchable: false
+                            },
+                            {
+                                data: 'tanggal_mulai',
+                                name: 'tanggal_mulai',
+                                // class: 'table-tbody'
+                            },
+                            {
+                                data: 'nama_lengkap',
+                                name: 'nama_lengkap'
+                            },
+                            {
+                                data: 'posisi_yang_dilamar',
+                                name: 'posisi_yang_dilamar'
+                            },
+                            {
+                                data: 'cv',
+                                name: 'cv'
+                            },
+                            {
+                                data: 'status_detail',
+                                name: 'status_detail'
+                            },
+                            {
+                                data: 'tanggal_berakhir',
+                                name: 'tanggal_berakhir',
+                                // class: 'table-tbody'
+                            },
+                            {
+                                data: 'perkembangan_terakhir',
+                                name: 'perkembangan_terakhir'
+                            },
+                        ],
+                        order: [
+                            [2, 'desc']
+                        ]
+                    });
+                }
                 var table = $('#table_recruitment').DataTable({
                     "scrollY": true,
                     "scrollX": true,

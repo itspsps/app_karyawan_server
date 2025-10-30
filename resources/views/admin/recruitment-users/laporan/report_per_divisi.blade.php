@@ -88,6 +88,7 @@
                                         <th>Divisi</th>
                                         <th>Total&nbsp;Waktu</th>
                                         <th>Jumlah&nbsp;Rekrutmen</th>
+                                        <th>Jumlah&nbsp;Pelamar</th>
                                         <th>Rata-rata&nbsp;Waktu</th>
                                         <th>Detail</th>
                                     </tr>
@@ -146,15 +147,21 @@
                 },
                 {
                     data: 'total_waktu',
-                    name: 'total_waktu'
+                    name: 'total_waktu',
+                    className: 'text-end'
                 },
                 {
                     data: 'jumlah_rekrutmen',
                     name: 'jumlah_rekrutmen'
                 },
                 {
+                    data: 'jumlah_pelamar',
+                    name: 'jumlah_pelamar'
+                },
+                {
                     data: 'rata_rata',
-                    name: 'rata_rata'
+                    name: 'rata_rata',
+                    className: 'text-end'
                 },
                 {
                     data: 'detail',
