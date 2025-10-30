@@ -92,12 +92,12 @@ class authController extends Controller
                 $request->session()->flash('user_nonaktif');
                 return redirect('/');
             } else {
-                $holding = Holding::get();
-                foreach ($holding as $data) {
-                    $update_holding = Holding::where('id', $data->id)->first();
-                    $update_holding->holding_code = $data->holding_category . 'Code_' . Uuid::uuid4();
-                    $update_holding->save();
-                }
+                // $holding = Holding::get();
+                // foreach ($holding as $data) {
+                //     $update_holding = Holding::where('id', $data->id)->first();
+                //     $update_holding->holding_code = $data->holding_category . 'Code_' . Uuid::uuid4();
+                //     $update_holding->save();
+                // }
                 return redirect()->route('dashboard_holding');
             }
         } else if (Auth::guard('web')->attempt(array($fieldType => $credentials['username'], 'password' => $credentials['password'], 'is_admin' => 'hrd'), $remember)) {

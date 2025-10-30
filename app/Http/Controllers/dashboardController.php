@@ -24,6 +24,7 @@ class dashboardController extends Controller
     public function dashboard_option($holding)
     {
         $getHolding = Holding::where('holding_code', $holding)->first();
+        // dd($holding, $getHolding);
         $getHoldingAll = Holding::all();
 
 

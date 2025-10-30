@@ -118,16 +118,8 @@ class KaryawanExport implements FromCollection, WithEvents, WithHeadings, WithTi
             ->leftJoin('divisis as h', 'h.id', 'karyawans.divisi2_id')
             ->leftJoin('bagians as i', 'i.id', 'karyawans.bagian2_id')
             ->leftJoin('jabatans as j', 'j.id', 'karyawans.jabatan2_id')
-            ->leftJoin('divisis as k', 'k.id', 'karyawans.divisi3_id')
-            ->leftJoin('bagians as l', 'l.id', 'karyawans.bagian3_id')
-            ->leftJoin('jabatans as m', 'm.id', 'karyawans.jabatan3_id')
-            ->leftJoin('divisis as n', 'n.id', 'karyawans.divisi4_id')
-            ->leftJoin('bagians as o', 'o.id', 'karyawans.bagian4_id')
-            ->leftJoin('jabatans as p', 'p.id', 'karyawans.jabatan4_id')
             ->leftJoin('departemens as u', 'u.id', 'karyawans.dept1_id')
             ->leftJoin('departemens as v', 'v.id', 'karyawans.dept2_id')
-            ->leftJoin('departemens as w', 'w.id', 'karyawans.dept3_id')
-            ->leftJoin('departemens as x', 'x.id', 'karyawans.dept4_id')
             ->leftJoin('indonesia_provinces as q', 'q.code', 'karyawans.provinsi')
             ->leftJoin('indonesia_cities as r', 'r.code', 'karyawans.kabupaten')
             ->leftJoin('indonesia_districts as s', 's.code', 'karyawans.kecamatan')
@@ -137,7 +129,7 @@ class KaryawanExport implements FromCollection, WithEvents, WithHeadings, WithTi
             ->leftJoin('indonesia_districts as ac', 'ac.code', 'karyawans.kecamatan_domisili')
             ->leftJoin('indonesia_villages as ad', 'ad.code', 'karyawans.desa_domisili')
             ->leftJoin('users as y', 'y.karyawan_id', 'karyawans.id')
-            ->where('karyawans.kontrak_kerja', $this->holding)
+            ->where('karyawans.kontrak_kerja', $this->holding->id)
             ->where('y.is_admin', 'user')
             // ->where('karyawans.status_aktif', 'AKTIF')
             ->select(
@@ -145,17 +137,12 @@ class KaryawanExport implements FromCollection, WithEvents, WithHeadings, WithTi
                 'karyawans.name', //2
                 'nik', //3
                 'agama', //4
-                'golongan_darah', //5
                 'email', //6
                 'telepon', //7
                 'nomor_wa', //8
                 'tempat_lahir', //9
                 'tgl_lahir', //10
                 'gender', //11
-                'status_nikah', //12
-                'strata_pendidikan', //12
-                'instansi_pendidikan', //12
-                'jurusan_akademik', //12
                 'status_nikah', //12
                 'q.name as nama_provinsi', //13
                 'r.name as nama_kabupaten', //14
@@ -179,7 +166,6 @@ class KaryawanExport implements FromCollection, WithEvents, WithHeadings, WithTi
                 'tgl_selesai_kontrak', //32
                 'kontrak_kerja', //33
                 'penempatan_kerja', //34
-                'site_job', //35
                 'nama_bank', //36
                 'nama_pemilik_rekening', //37
                 'nomor_rekening', //38
@@ -196,14 +182,6 @@ class KaryawanExport implements FromCollection, WithEvents, WithHeadings, WithTi
                 'h.nama_divisi as nama_divisi2', //49
                 'i.nama_bagian as nama_bagian2', //50
                 'j.nama_jabatan as nama_jabatan2', //51
-                'w.nama_departemen as nama_departemen3', //52
-                'k.nama_divisi as nama_divisi3', //53
-                'l.nama_bagian as nama_bagian3', //54
-                'm.nama_jabatan as nama_jabatan3', //55
-                'x.nama_departemen as nama_departemen4', //56
-                'n.nama_divisi as nama_divisi4', //57
-                'o.nama_bagian as nama_bagian4', //58
-                'p.nama_jabatan as nama_jabatan4', //59
                 'karyawans.ptkp', //60
                 'nama_pemilik_npwp', //61
                 'npwp', //62
@@ -219,13 +197,9 @@ class KaryawanExport implements FromCollection, WithEvents, WithHeadings, WithTi
     }
     public function registerEvents(): array
     {
-        if ($this->holding == 'sp') {
-            $holding = 'CV. SUMBER PANGAN';
-        } else if ($this->holding == 'sps') {
-            $holding = 'PT. SURYA PANGAN SEMESTA';
-        } else {
-            $holding = 'CV. SURYA INTI PANGAN';
-        }
+
+        $holding = $this->holding->holding_name;
+
         return [
             AfterSheet::class    => function (AfterSheet $event) use ($holding) {
                 $event->sheet

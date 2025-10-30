@@ -160,7 +160,7 @@
                                         <div class="col mb-2">
                                             <div class="form-floating form-floating-outline">
                                                 <h6>Download File Excel Data Karyawan</h6>
-                                                <a href="@if(Auth::user()->is_admin=='hrd'){{url('/hrd/karyawan/ExportKaryawan/'.$holding)}}@else{{url('karyawan/ExportKaryawan/'.$holding)}}@endif" type="button" class="btn btn-xs btn-success"> <i class="menu-icon tf-icons mdi mdi-file-excel-outline"></i> Download Excel</a>
+                                                <a href="@if(Auth::user()->is_admin=='hrd'){{url('/hrd/karyawan/ExportKaryawan/'.$holding->holding_code)}}@else{{url('karyawan/ExportKaryawan/'.$holding->holding_code)}}@endif" type="button" class="btn btn-xs btn-success"> <i class="menu-icon tf-icons mdi mdi-file-excel-outline"></i> Download Excel</a>
                                             </div>
                                         </div>
                                     </div>

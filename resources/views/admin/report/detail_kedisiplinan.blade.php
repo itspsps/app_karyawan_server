@@ -1,10 +1,13 @@
 @extends('admin.layouts.dashboard')
 @section('css')
+<!-- CSS -->
 <link rel="stylesheet" href="https://cdn.datatables.net/2.0.5/css/dataTables.bootstrap5.css">
-<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/3.1.2/css/buttons.dataTables.css" />
+<link rel="stylesheet" href="https://cdn.datatables.net/buttons/3.1.2/css/buttons.bootstrap5.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@mdi/font@7.4.47/css/materialdesignicons.min.css">
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
 <style type="text/css">
     .my-swal {
-        z-index: X;
+        z-index: 9999;
     }
 </style>
 @endsection
@@ -21,31 +24,22 @@
                     </div>
                 </div>
                 <div class="card-body">
-                    <hr class="my-5">
-                    <form action="{{ url('/rekap-data/'.$holding) }}">
-                        <div class="row g-3 text-center">
-                            <div class="col-3">
-                                <div class="form-floating form-floating-outline">
-                                    <input type="month" class="form-control" name="month_filter" placeholder="Filter By Month:" id="month_filter" value="{{ date('Y-m') }}">
-                                    <label for="month_filter">Filter By Month:</label>
-                                </div>
-                            </div>
-
-                            <!-- <div class="col-6">
-                                <button class="btn btn-sm btn-success waves-effect waves-light dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                    <i class="menu-icon tf-icons mdi mdi-file-excel"></i> Excel
+                    <hr class="my-2">
+                    <div class="col-lg-6 col-md-6 col-sm-12">
+                        <div class="form-floating form-floating-outline">
+                            <div id="reportrange" style="white-space: nowrap;">
+                                <button class="btn btn-outline-secondary w-100 ">
+                                    <span class="fw-bold">FILTER&nbsp;DATE&nbsp;:&nbsp;</span>
+                                    <span class="date_daterange"></span>
+                                    <input type="date" id="start_date" name="start_date" hidden value="">
+                                    <input type="date" id="end_date" name="end_date" hidden value="">
                                 </button>
-                                <ul class="dropdown-menu">
-                                    <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#modal_import_absensi" href="">Import Excel</a></li>
-                                    <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#modal_export_absensi" href="#">Eksport Excel</a></li>
-                                </ul>
-                                <button type="button" class="btn btn-sm btn-primary waves-effect waves-light"><i class="menu-icon tf-icons mdi mdi-printer"></i>cetak</button>
-                            </div> -->
+                            </div>
                         </div>
-                    </form>
-                    <hr class="my-5">
+                    </div>
+                    <hr class="my-3">
                     <div class="nav-align-top">
-                        <table class="table" id="table_rekapdata_detail" style="width: 100%; font-size: small;">
+                        <table class="table table-hover table-striped" id="table_rekapdata_detail" style="width: 100%; font-size: small;">
                             <thead class="table-primary">
                                 <tr>
                                     <th rowspan="2" class="text-center">No.</th>
@@ -53,14 +47,9 @@
                                     <th rowspan="2" class="text-center">Nama&nbsp;Karyawan</th>
                                     <th colspan="2" class="text-center">&nbsp;Shift&nbsp;</th>
                                     <th colspan="10" class="text-center">Absensi</th>
-                                    <th colspan="2" class="text-center">Foto&nbsp;Absen</th>
-                                    <th rowspan="2" class="text-center">Total&nbsp;Jam&nbsp;Kerja</th>
-                                    <th rowspan="2" class="text-center">Status&nbsp;Absen</th>
-                                    <th rowspan="2" class="text-center">Keterangan&nbsp;Absen</th>
                                     <th rowspan="2" class="text-center">Keterangan&nbsp;Izin</th>
                                     <th rowspan="2" class="text-center">Keterangan&nbsp;Cuti</th>
                                     <th rowspan="2" class="text-center">Keterangan&nbsp;Penugasan</th>
-                                    <th rowspan="2" class="text-center">File&nbsp;Form</th>
                                 </tr>
                                 <tr>
                                     <th>Nama&nbsp;Shift</th>
@@ -75,11 +64,9 @@
                                     <th>Keterangan&nbsp;Absen&nbsp;Pulang</th>
                                     <th>Lokasi&nbsp;Absen</th>
                                     <th>Pulang&nbsp;Cepat</th>
-                                    <th>Absen&nbsp;Masuk</th>
-                                    <th>Absen&nbsp;Pulang</th>
                                 </tr>
                             </thead>
-                            <tbody class="table-border-bottom-0">
+                            <tbody class="table-border-bottom-0 text-center">
                             </tbody>
                         </table>
                     </div>
@@ -89,29 +76,65 @@
     </div>
     @endsection
     @section('js')
+    <!-- JS -->
     <script src="https://cdn.datatables.net/2.0.5/js/dataTables.js"></script>
     <script src="https://cdn.datatables.net/2.0.5/js/dataTables.bootstrap5.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+
     <script src="https://cdn.datatables.net/buttons/3.1.2/js/dataTables.buttons.js"></script>
     <script src="https://cdn.datatables.net/buttons/3.1.2/js/buttons.dataTables.js"></script>
+    <script src="https://cdn.datatables.net/buttons/3.1.2/js/buttons.bootstrap5.min.js"></script>
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
+
     <script src="https://cdn.datatables.net/buttons/3.1.2/js/buttons.html5.min.js"></script>
     <script src="https://cdn.datatables.net/buttons/3.1.2/js/buttons.print.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.js"></script>
     <script>
-        let id = '{{$data_user->id}}';
-        console.log(id);
-        let holding = window.location.pathname.split("/").pop();
         $(document).ready(function() {
-            $('#month_filter').change(function() {
-                filter_month = $(this).val();
-                $('#table_rekapdata_detail').DataTable().destroy();
-                load_data(filter_month);
+            let id = '{{$data_user->nomor_identitas_karyawan}}';
+            var holding = '{{$holding->holding_code}}';
+            var holding_id = '{{$holding->id}}';
+            var chart_absensi_masuk;
+            var data_column;
 
+            // var start = moment().startOf('month');
+            // var end = moment().endOf('month');
+            var start = moment('2025-07-21');
+            var end = moment('2025-08-20');
+            var lstart, lend;
 
-            })
-            load_data();
+            function cb(start, end) {
+                $('#reportrange .date_daterange').html(start.format('D MMMM YYYY') + ' - ' + end.format('D MMMM YYYY'));
+                lstart = start.format('YYYY-MM-DD');
+                lend = end.format('YYYY-MM-DD');
+                $('#start_date').val(lstart);
+                $('#end_date').val(lend);
+                if ($.fn.DataTable.isDataTable('#table_rekapdata_detail')) {
+                    $('#table_rekapdata_detail').DataTable().clear().destroy();
+                }
+                load_data(lstart, lend);
+                // console.log(start, end);
+
+            }
+
+            $('#reportrange').daterangepicker({
+                startDate: start,
+                endDate: end,
+                ranges: {
+                    'Today': [moment(), moment()],
+                    'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+                    'Last 7 Days': [moment().subtract(6, 'days'), moment()],
+                    'Last 30 Days': [moment().subtract(29, 'days'), moment()],
+                    'This Month': [moment().startOf('month'), moment().endOf('month')],
+                    'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+                }
+            }, cb);
+
+            cb(start, end);
 
             function newexportaction(e, dt, button, config) {
                 var self = this;
@@ -155,7 +178,7 @@
                 dt.ajax.reload();
             }
 
-            function load_data(filter_month = '') {
+            function load_data(start_date = '', end_date = '') {
                 // console.log(filter_month);
                 var table = $('#table_rekapdata_detail').DataTable({
                     pageLength: 50,
@@ -164,62 +187,65 @@
                     processing: true,
                     serverSide: true,
                     ajax: {
-                        url: "{{ url('rekapdata-detail_datatable') }}" + '/' + id + '/' + holding,
+                        url: "{{ url('report_kedisiplinan/detail_datatable') }}" + '/' + id + '/' + holding,
                         data: {
-                            filter_month: filter_month,
+                            start_date: start_date,
+                            end_date: end_date,
                         },
                     },
-                    dom: 'Blfrtip',
+                    dom: "<'row mb-2'<'col-sm-12 col-md-6'B><'col-sm-12 col-md-6'f>>" +
+                        "<'row'<'col-sm-12'tr>>" +
+                        "<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>",
                     buttons: [{
-
                             extend: 'excelHtml5',
-                            className: 'btn btn-sm btn-success',
-                            text: '<i class="menu-icon tf-icons mdi mdi-file-excel"></i>Excel',
-                            titleAttr: 'Excel',
-                            title: 'DATA ABSENSI KARYAWAN {{$data_user->name}}',
-                            messageTop: 'Bulan : '.filter_month,
-                            action: newexportaction,
+                            className: 'btn btn-sm btn-outline-light',
+                            text: '<i class="mdi mdi-file-excel text-success"></i><span class="text-success">&nbsp;Excel</span>',
+                            titleAttr: 'Export ke Excel',
+                            title: 'DATA ABSENSI & KEDISIPLINAN KARYAWAN',
+                            messageTop: function() {
+                                return 'Periode: ' + start_date + ' s/d ' + end_date;
+                            },
                             exportOptions: {
-                                columns: ':not(:first-child)',
-                                columns: ':not(:last-child)',
+                                columns: ':not(:first-child)'
                             },
                             filename: function() {
                                 var d = new Date();
-                                var l = d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate();
-                                var n = d.getHours() + ':' + d.getMinutes() + ':' + d.getSeconds();
-                                return 'REKAP_DATA_ABSENSI_KARYAWAN_{{$data_user->name}}_' + l + ' ' + n;
-                            },
+                                var date = d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate();
+                                var time = d.getHours() + '-' + d.getMinutes() + '-' + d.getSeconds();
+                                return 'LAPORAN_ABSENSI_&_KEDISIPLINAN_KARYAWAN_{{$holding->holding_name}}_' + date + '_' + time;
+                            }
                         },
                         {
-
-                            extend: 'pdf',
-                            className: 'btn btn-sm btn-danger',
-                            text: '<i class="menu-icon tf-icons mdi mdi-file-pdf-box"></i>PDF',
-                            titleAttr: 'PDF',
-                            title: 'DATA ABSENSI KARYAWAN {{$data_user->name}}',
-                            orientation: 'potrait',
+                            extend: 'pdfHtml5',
+                            className: 'btn btn-outline-light btn-sm',
+                            text: '<i class="mdi mdi-file-pdf-box text-danger"></i><span class="text-danger">&nbsp;PDF</span>',
+                            titleAttr: 'Export ke PDF',
+                            title: 'DATA ABSENSI & KEDISIPLINAN KARYAWAN',
+                            orientation: 'landscape',
                             pageSize: 'LEGAL',
                             exportOptions: {
-                                columns: ':not(:first-child)',
+                                columns: ':not(:first-child)'
                             },
                             filename: function() {
                                 var d = new Date();
-                                var l = d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate();
-                                var n = d.getHours() + ":" + d.getMinutes() + ":" + d.getSeconds();
-                                return 'REKAP_DATA_ABSENSI_KARYAWAN_{{$data_user->name}}_' + l + ' ' + n;
-                            },
-                        }, {
+                                var date = d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate();
+                                var time = d.getHours() + '-' + d.getMinutes() + '-' + d.getSeconds();
+                                return 'LAPORAN_ABSENSI_&_KEDISIPLINAN_KARYAWAN_{{$holding->holding_name}}_' + date + '_' + time;
+                            }
+                        },
+                        {
                             extend: 'print',
-                            className: 'btn btn-sm btn-info',
-                            title: 'DATA ABSENSI KARYAWAN {{$data_user->name}}',
-                            text: '<i class="menu-icon tf-icons mdi mdi-printer-pos-check-outline"></i>PRINT',
-                            titleAttr: 'PRINT',
-                        }, {
-                            extend: 'copy',
-                            title: 'DATA ABSENSI KARYAWAN {{$data_user->name}}',
-                            className: 'btn btn-sm btn-secondary',
-                            text: '<i class="menu-icon tf-icons mdi mdi-content-copy"></i>COPY',
-                            titleAttr: 'COPY',
+                            className: 'btn btn-outline-light btn-sm',
+                            text: '<i class="mdi mdi-printer text-info"></i><span class="text-info">&nbsp;Print</span>',
+                            titleAttr: 'Cetak Data',
+                            title: 'DATA ABSENSI & KEDISIPLINAN KARYAWAN'
+                        },
+                        {
+                            extend: 'copyHtml5',
+                            className: 'btn btn-outline-light btn-sm',
+                            text: '<i class="mdi mdi-content-copy text-secondary"></i><span class="text-secondary">&nbsp;Copy</span>',
+                            titleAttr: 'Salin ke Clipboard',
+                            title: 'DATA ABSENSI & KEDISIPLINAN KARYAWAN'
                         }
                     ],
                     columns: [{
@@ -230,8 +256,8 @@
                             }
                         },
                         {
-                            data: 'nik_karyawan',
-                            name: 'nik_karyawan'
+                            data: 'nomor_identitas_karyawan',
+                            name: 'nomor_identitas_karyawan'
                         },
                         {
                             data: 'nama_karyawan',
@@ -250,16 +276,16 @@
                             name: 'tanggal_masuk'
                         },
                         {
-                            data: 'jam_absen',
-                            name: 'jam_absen'
+                            data: 'jam_absen_masuk',
+                            name: 'jam_absen_masuk'
                         },
                         {
                             data: 'keterangan_absensi',
                             name: 'keterangan_absensi'
                         },
                         {
-                            data: 'lokasi_absen',
-                            name: 'lokasi_absen'
+                            data: 'lokasi_absen_masuk',
+                            name: 'lokasi_absen_masuk'
                         },
                         {
                             data: 'telat',
@@ -270,8 +296,8 @@
                             name: 'tanggal_pulang'
                         },
                         {
-                            data: 'jam_pulang',
-                            name: 'jam_pulang'
+                            data: 'jam_absen_pulang',
+                            name: 'jam_absen_pulang'
                         },
                         {
                             data: 'keterangan_absensi_pulang',
@@ -285,26 +311,7 @@
                             data: 'pulang_cepat',
                             name: 'pulang_cepat'
                         },
-                        {
-                            data: 'foto_jam_absen',
-                            name: 'foto_jam_absen'
-                        },
-                        {
-                            data: 'foto_jam_pulang',
-                            name: 'foto_jam_pulang'
-                        },
-                        {
-                            data: 'total_jam_kerja',
-                            name: 'total_jam_kerja'
-                        },
-                        {
-                            data: 'status_absen',
-                            name: 'status_absen'
-                        },
-                        {
-                            data: 'kelengkapan_absensi',
-                            name: 'kelengkapan_absensi'
-                        },
+
                         {
                             data: 'keterangan_izin',
                             name: 'keterangan_izin'
@@ -316,10 +323,6 @@
                         {
                             data: 'keterangan_dinas',
                             name: 'keterangan_dinas'
-                        },
-                        {
-                            data: 'file_form',
-                            name: 'file_form'
                         },
 
                     ],

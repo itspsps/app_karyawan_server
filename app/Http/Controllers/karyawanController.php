@@ -61,11 +61,15 @@ class karyawanController extends Controller
     public function index($holding)
     {
         $getHolding = Holding::where('holding_code', $holding)->first();
+        if ($getHolding == null) {
+            Alert::error('Error', 'Holding Tidak Ditemukan');
+            return redirect()->route('dashboard/holding');
+        }
         $departemen = Departemen::orderBy('nama_departemen', 'ASC')->where('holding', $getHolding->id)->get();
         $user = Karyawan::where('kontrak_kerja', $getHolding->id)->where('status_aktif', 'AKTIF')->get();
         $jabatan = Jabatan::orderBy('nama_jabatan', 'ASC')->where('holding', $getHolding->id)->get();
-        $karyawan_laki = Karyawan::where('gender', 'Laki-Laki')->where('kontrak_kerja', $getHolding->id)->where('status_aktif', 'AKTIF')->count();
-        $karyawan_perempuan = Karyawan::where('gender', 'Perempuan')->where('kontrak_kerja', $getHolding->id)->where('status_aktif', 'AKTIF')->count();
+        $karyawan_laki = Karyawan::where('gender', '1')->where('kontrak_kerja', $getHolding->id)->where('status_aktif', 'AKTIF')->count();
+        $karyawan_perempuan = Karyawan::where('gender', '2')->where('kontrak_kerja', $getHolding->id)->where('status_aktif', 'AKTIF')->count();
         $karyawan_office = Karyawan::where('kategori', 'Karyawan Bulanan')->where('kontrak_kerja', $getHolding->id)->where('status_aktif', 'AKTIF')->count();
         $karyawan_shift = Karyawan::where('kategori', 'Karyawan Harian')->where('kontrak_kerja', $getHolding->id)->where('status_aktif', 'AKTIF')->count();
         return view('admin.karyawan.index', [
@@ -477,11 +481,15 @@ class karyawanController extends Controller
             return redirect()->back()->with('error', 'Import Error ' . $th->getMessage() . ' ' . $th->getLine() . ' ' . $th->getFile());
         }
     }
-    public function ExportKaryawan(Request $request)
+    public function ExportKaryawan(Request $request, $holding)
     {
         $date = date('YmdHis');
-        $holding = request()->segment(count(request()->segments()));
-        return Excel::download(new KaryawanExport($holding), 'Data Karyawan_' . $holding . '_' . $date . '.xlsx');
+        $get_holding = Holding::where('holding_code', $holding)->first();
+        if ($get_holding == null) {
+            Alert::error('Error', 'Holding Tidak Ditemukan', 4000);
+            return redirect()->route('dashboard_holding')->with('error', 'Holding Tidak Ditemukan', 4000);
+        }
+        return Excel::download(new KaryawanExport($get_holding), 'Data Karyawan_' . $get_holding->holding_category . '_' . $date . '.xlsx');
     }
     public function download_pdf_karyawan(Request $request)
     {
