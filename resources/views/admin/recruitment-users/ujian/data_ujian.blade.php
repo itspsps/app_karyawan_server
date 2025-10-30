@@ -49,6 +49,12 @@
                                 Pembobotan
                             </a>
                         </li>
+                        <li class="nav-item" role="presentation">
+                            <a class="nav-link" id="icon-tab-5" data-bs-toggle="tab" href="#icon-tabpanel-5" role="tab"
+                                aria-controls="icon-tabpanel-0" aria-selected="true">
+                                Referensi
+                            </a>
+                        </li>
                     </ul>
                     <div class="tab-content" id="tab-content">
                         <div class="tab-pane active show" id="icon-tabpanel-0" role="tabpanel" aria-labelledby="icon-tab-0">
@@ -150,6 +156,25 @@
                                         <th class="text-start">interview</th>
                                         <th class="text-start">interview user</th>
                                         <th class="text-start">option</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="table-border-bottom-0">
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="tab-pane" id="icon-tabpanel-5" role="tabpanel" aria-labelledby="icon-tab-4">
+                            <div class="d-">
+                                <h5 class="card-title m-0 me-2">REFERENSI PELAMAR</h5>
+                            </div>
+                            <button type="button" class="btn btn-sm btn-primary waves-effect waves-light my-3"
+                                id="btn_modal_referensi"><i class="menu-icon tf-icons mdi mdi-plus"></i>Tambah</button>
+                            <table class="table" id="tabel_referensi" style="width: 100%; font-size: small;">
+                                <thead class="table-primary">
+                                    <tr>
+                                        <th class="text-start">No.</th>
+                                        <th class="text-start">Asal Lowongan</th>
+                                        <th class="text-start">TEMPAT / Link</th>
+                                        <th class="text-start">Option</th>
                                     </tr>
                                 </thead>
                                 <tbody class="table-border-bottom-0">
@@ -353,6 +378,66 @@
         </div>
     </div>
     {{-- end modal update interview --}}
+    {{-- modal referensi Pelamar --}}
+    <div class="modal fade" id="modal_referensi" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">TAMBAH SOAL INTERVIEW</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form method="post" enctype="multipart/form-data">
+                        <div class="mb-3">
+                            <label>ASAL LOWONGAN</label>
+                            {{-- <input type="hidden" id="id_update" name="id"> --}}
+                            <input type="text" class="form-control" id="alamat_add" name="alamat" required />
+                        </div>
+                        <div class="mb-3">
+                            <label>TEMPAT / LINK</label>
+                            <textarea type="text" class="form-control" id="tempat_link_add" name="tempat_link"></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                    <button type="button" class="btn btn-primary" id="btn_add_referensi">Tambah</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    {{-- end modal referensi Pelamar --}}
+    {{-- modal edit referensi Pelamar --}}
+    <div class="modal fade" id="modal_update_referensi" tabindex="-1" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">TAMBAH SOAL INTERVIEW</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form method="post" enctype="multipart/form-data">
+                        <div class="mb-3">
+                            <label>ASAL LOWONGAN</label>
+                            <input type="hidden" id="id_referensi" name="id">
+                            <input type="text" class="form-control" id="alamat_update" name="alamat" required />
+                        </div>
+                        <div class="mb-3">
+                            <label>TEMPAT / LINK</label>
+                            <textarea type="text" class="form-control" id="tempat_link_update" name="tempat_link"></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                    <button type="button" class="btn btn-primary" id="btn_update_referensi">Tambah</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    {{-- end modal edit referensi Pelamar --}}
+
 
     {!! session('pesan') !!}
 @endsection
@@ -555,6 +640,41 @@
 
         $('#icon-tab-4').on('shown.bs.tab', function(e) {
             table4.columns.adjust().draw().responsive.recalc();
+            // table.draw();
+        });
+        var table5 = $('#tabel_referensi').DataTable({
+            "scrollY": true,
+            "scrollX": true,
+            processing: true,
+            serverSide: true,
+            ajax: {
+                url: "{{ url('/dt_referensi') }}"
+            },
+            columns: [{
+                    data: null,
+                    render: function(data, type, row, meta) {
+                        return meta.row + 1;
+                    },
+                    orderable: false,
+                    searchable: false
+                },
+                {
+                    data: 'alamat',
+                    name: 'alamat',
+                },
+                {
+                    data: 'tempat_link',
+                    name: 'tempat_link',
+                },
+                {
+                    data: 'option',
+                    name: 'option',
+                },
+            ]
+        });
+
+        $('#icon-tab-5').on('shown.bs.tab', function(e) {
+            table5.columns.adjust().draw().responsive.recalc();
             // table.draw();
         });
         $('#btn_modal_kategori').click(function() {
@@ -1061,8 +1181,8 @@
                             timer: 5000
                         })
                         //mengosongkan modal dan menyembunyikannya
-                        $('#nama_pemanasan_update').val('');
-                        $('#nama_kategori_update').val('');
+                        $('#parameter_update').val('');
+                        $('#deskripsi_update').val('');
                         $('#modal_update_interview').modal('hide');
                         $('#tabel_interview').DataTable().ajax.reload();
                     } else if (data.code == 400) {
@@ -1097,5 +1217,216 @@
             });
         });
         // interview end
+        // Referensi
+        $('#btn_modal_referensi').click(function() {
+            console.log('asoy');
+            $('#modal_referensi').modal('show');
+        });
+        $(document).on('click', '#btn_edit_referensi', function() {
+            var id_referensi = $(this).data('id_referensi');
+            var alamat = $(this).data('alamat');
+            var tempat_link = $(this).data('tempat_link');
+            $('#id_referensi').val(id_referensi);
+            $('#alamat_update').val(alamat);
+            $('#tempat_link_update').val(tempat_link);
+            $('#modal_update_referensi').modal('show');
+
+        });
+        $('#btn_add_referensi').on('click', function(e) {
+            e.preventDefault();
+            var formData = new FormData();
+
+            formData.append('_token', '{{ csrf_token() }}');
+            formData.append('alamat', $('#alamat_add').val());
+            formData.append('tempat_link', $('#tempat_link_add').val());
+            $.ajax({
+                type: "POST",
+
+                url: "{{ url('/referensi_add') }}",
+                data: formData,
+                contentType: false,
+                processData: false,
+                error: function() {
+                    alert('Something is wrong');
+                    // console.log(formData);
+                },
+                success: function(data) {
+                    if (data.code == 200) {
+                        Swal.fire({
+                            title: 'Berhasil',
+                            text: data.message,
+                            icon: 'success',
+                            timer: 5000
+                        })
+                        //mengosongkan modal dan menyembunyikannya
+                        $('#alamat_add').val('');
+                        $('#tempat_link_add').val('');
+                        $('#modal_referensi').modal('hide');
+                        $('#tabel_referensi').DataTable().ajax.reload();
+                    } else if (data.code == 400) {
+                        let errors = data.errors;
+                        // console.log(errors);
+                        let errorMessages = '';
+
+                        Object.keys(errors).forEach(function(key) {
+                            errors[key].forEach(function(message) {
+                                errorMessages += `• ${message}\n`;
+                            });
+                        });
+                        Swal.fire({
+                            // title: data.message,
+                            text: errorMessages,
+                            icon: 'warning',
+                            timer: 4500
+                        })
+                        $('#modal_referensi').modal('hide');
+
+                    } else {
+                        Swal.fire({
+                            title: 'Gagal',
+                            text: data.error,
+                            icon: 'error',
+                            timer: 10000
+                        })
+
+                    }
+                }
+
+            });
+        });
+        $('#btn_update_referensi').on('click', function(e) {
+            e.preventDefault();
+            var formData = new FormData();
+
+            formData.append('_token', '{{ csrf_token() }}');
+            formData.append('alamat', $('#alamat_update').val());
+            formData.append('tempat_link', $('#tempat_link_update').val());
+            formData.append('id_referensi', $('#id_referensi').val());
+            $.ajax({
+                type: "POST",
+
+                url: "{{ url('/referensi_update') }}",
+                data: formData,
+                contentType: false,
+                processData: false,
+                error: function() {
+                    alert('Something is wrong');
+                    // console.log(formData);
+                },
+                success: function(data) {
+                    if (data.code == 200) {
+                        Swal.fire({
+                            title: 'Berhasil',
+                            text: data.message,
+                            icon: 'success',
+                            timer: 5000
+                        })
+                        //mengosongkan modal dan menyembunyikannya
+                        $('#modal_update_referensi').modal('hide');
+                        $('#tabel_referensi').DataTable().ajax.reload();
+                    } else if (data.code == 400) {
+                        let errors = data.errors;
+                        // console.log(errors);
+                        let errorMessages = '';
+
+                        Object.keys(errors).forEach(function(key) {
+                            errors[key].forEach(function(message) {
+                                errorMessages += `• ${message}\n`;
+                            });
+                        });
+                        Swal.fire({
+                            // title: data.message,
+                            text: errorMessages,
+                            icon: 'warning',
+                            timer: 4500
+                        })
+                        $('#modal_update_referensi').modal('hide');
+
+                    } else {
+                        Swal.fire({
+                            title: 'Gagal',
+                            text: data.error,
+                            icon: 'error',
+                            timer: 10000
+                        })
+
+                    }
+                }
+
+            });
+        });
+        $(document).on('click', '#btn_delete_referensi', function() {
+            // $('#modal_delete_riwayat').modal('show');
+            var id = $(this).data('id_referensi');
+            // console.log(id);
+            Swal.fire({
+                title: 'Konfirmasi',
+                icon: 'warning',
+                text: "Apakah benar-benar ingin menghapus data ini?",
+                showCancelButton: true,
+                inputValue: 0,
+                confirmButtonText: 'Yes',
+            }).then(function(result) {
+                if (result.value) {
+                    // console.log(id);
+                    Swal.fire({
+                        title: 'Harap Tuggu Sebentar!',
+                        html: 'Proses Menghapus Data...', // add html attribute if you want or remove
+                        allowOutsideClick: false,
+                        onBeforeOpen: () => {
+                            Swal.showLoading()
+                            $.ajax({
+                                data: {
+                                    "_token": "{{ csrf_token() }}",
+                                    id: id,
+                                },
+                                url: "{{ url('/delete_referensi') }}",
+                                type: "POST",
+                                dataType: 'json',
+                                success: function(data) {
+                                    if (data.code == 200) {
+                                        $('#tabel_referensi').DataTable().ajax
+                                            .reload();
+                                        Swal.fire({
+                                            title: 'success',
+                                            text: 'Data Berhasil dihapus',
+                                            icon: 'success',
+                                            timer: 1500
+                                        })
+                                    } else {
+                                        $('#tabel_referensi').DataTable().ajax
+                                            .reload();
+                                        Swal.fire({
+                                            title: 'error',
+                                            text: 'Data gagal dihapus',
+                                            icon: 'success',
+                                            timer: 1500
+                                        })
+                                    }
+                                },
+                                error: function(data) {
+                                    Swal.fire({
+                                        title: 'Gagal',
+                                        text: 'Data Gagal dihapus',
+                                        icon: 'error',
+                                        timer: 1500
+                                    })
+                                }
+                            });
+                        },
+                    });
+
+                } else {
+                    Swal.fire({
+                        title: 'Gagal !',
+                        text: 'Data gagal dihapus',
+                        icon: 'warning',
+                        timer: 1500
+                    })
+                }
+
+            });
+        });
+        // Referensi End
     </script>
 @endsection
