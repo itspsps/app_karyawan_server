@@ -81,13 +81,24 @@
                     </div>
                     <div class="card-body">
                         <div id="table_divisi_form">
+                            <table class="table" id="table_divisi_print" style="width: 100%; font-size: small;">
+                                <thead class="table-primary" hidden>
+                                    <tr>
+                                        <th>No.</th>
+                                        <th>Divisi</th>
+                                        <th>Jumlah&nbsp;Pelamar</th>
+                                        <th>Rata-rata&nbsp;Waktu</th>
+                                        <th>Detail</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="table-border-bottom-0" hidden>
+                                </tbody>
+                            </table>
                             <table class="table" id="table_divisi" style="width: 100%; font-size: small;">
                                 <thead class="table-primary">
                                     <tr>
                                         <th>No.</th>
                                         <th>Divisi</th>
-                                        <th>Total&nbsp;Waktu</th>
-                                        <th>Jumlah&nbsp;Rekrutmen</th>
                                         <th>Jumlah&nbsp;Pelamar</th>
                                         <th>Rata-rata&nbsp;Waktu</th>
                                         <th>Detail</th>
@@ -97,6 +108,7 @@
                                 </tbody>
                             </table>
                         </div>
+
                     </div>
                 </div>
             </div>
@@ -125,6 +137,75 @@
         var holding_id = '{{ $holding->id }}';
         var holding = '{{ $holding->holding_code }}';
 
+        if (!$.fn.dataTable.isDataTable('#table_divisi_print')) {
+
+            var table2 = $('#table_divisi_print').DataTable({
+                "scrollY": true,
+                "scrollX": true,
+                processing: true,
+                serverSide: true,
+                paging: false,
+                searching: false,
+                info: false,
+                dom: 'Bfrtip',
+                ajax: {
+                    url: "{{ url('/dt_per_divisi_print') }}" + '/' + holding,
+                },
+                buttons: [{
+
+                    extend: 'excelHtml5',
+                    className: 'btn btn-sm btn-success',
+                    text: '<i class="menu-icon tf-icons mdi mdi-file-excel"></i>Excel',
+                    titleAttr: 'Excel',
+                    title: 'RATA-RATA LOWONGAN KERJA PER DIVISI',
+                    // messageTop: 'Bulan : '.start_date + ' s/d ' + end_date,
+                    exportOptions: {
+                        columns: ':not(:first-child)',
+                    },
+                    filename: function() {
+                        var d = new Date();
+                        var l = d.getFullYear() + '-' + (d.getMonth() + 1) +
+                            '-' + d
+                            .getDate();
+                        var n = d.getHours() + ':' + d.getMinutes() + ':' + d
+                            .getSeconds();
+                        return 'RATA_RATA_LOWONGAN_KERJA_PER_DIVISI_{{ $holding->holding_name }}_' +
+                            l + ' ' + n;
+                    },
+
+                }, ],
+                columns: [{
+                        data: null,
+                        render: function(data, type, row, meta) {
+                            return meta.row + 1;
+                        },
+                        orderable: false,
+                        searchable: false
+                    },
+                    {
+                        data: 'divisi',
+                        name: 'divisi',
+                    },
+                    {
+                        data: 'jumlah_pelamar',
+                        name: 'jumlah_pelamar'
+                    },
+                    {
+                        data: 'rata_rata',
+                        name: 'rata_rata',
+                        className: 'text-end'
+                    },
+                    {
+                        data: 'detail',
+                        name: 'detail'
+                    },
+                ],
+                order: [
+                    [1, 'asc']
+                ]
+            });
+
+        }
         var table = $('#table_divisi').DataTable({
             "scrollY": true,
             "scrollX": true,
@@ -146,15 +227,6 @@
                     name: 'divisi',
                 },
                 {
-                    data: 'total_waktu',
-                    name: 'total_waktu',
-                    className: 'text-end'
-                },
-                {
-                    data: 'jumlah_rekrutmen',
-                    name: 'jumlah_rekrutmen'
-                },
-                {
                     data: 'jumlah_pelamar',
                     name: 'jumlah_pelamar'
                 },
@@ -169,7 +241,7 @@
                 },
             ],
             order: [
-                [0, 'desc']
+                [1, 'asc']
             ]
         });
     </script>

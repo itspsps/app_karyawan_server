@@ -1006,6 +1006,7 @@ Route::get('/dt_laporan_recruitment2/{holding}', [RecruitmentLaporanController::
 Route::get('/report_per_divisi/{holding}', [RecruitmentLaporanController::class, 'report_per_divisi'])->middleware('admin');
 Route::get('/detail_per_divisi/{id}/{holding}', [RecruitmentLaporanController::class, 'detail_per_divisi'])->middleware('admin');
 Route::get('/dt_per_divisi/{holding}', [RecruitmentLaporanController::class, 'dt_per_divisi'])->middleware('admin');
+Route::get('/dt_per_divisi_print/{holding}', [RecruitmentLaporanController::class, 'dt_per_divisi_print'])->middleware('admin');
 
 Route::post('/recruitment/insert/sp', [RecruitmentController::class, 'insert'])->middleware('admin');
 Route::post('/recruitment/insert/sps', [RecruitmentController::class, 'insert'])->middleware('admin');

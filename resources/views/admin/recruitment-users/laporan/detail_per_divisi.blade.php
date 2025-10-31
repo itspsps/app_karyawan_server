@@ -171,10 +171,10 @@
                                 @php
                                     $record = $div->recruitmentUserRecord;
                                     if ($record != null) {
-                                        $awal = $record->sortBy('created_at')->first();
-                                        $akhir = $record->sortByDesc('created_at')->first();
-                                        $tgl_awal = \Carbon\Carbon::parse($awal->created_at) ?? 0;
-                                        $tgl_akhir = \Carbon\Carbon::parse($akhir->created_at) ?? 0;
+                                        $tgl_awal =
+                                            \Carbon\Carbon::parse($record->min('created_at'))->startOfDay() ?? 0;
+                                        $tgl_akhir =
+                                            \Carbon\Carbon::parse($record->max('created_at'))->startOfDay() ?? 0;
                                         $total = $tgl_awal->diffInDays($tgl_akhir);
 
                                         // $hasil->push(['total_hari' => $total]);

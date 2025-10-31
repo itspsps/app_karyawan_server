@@ -341,6 +341,7 @@ class RecruitmentController extends Controller
                     'nama_divisi'               => $request->nama_divisi,
                     'nama_bagian'               => $request->nama_bagian,
                     'nama_jabatan'              => $request->nama_jabatan,
+                    'status_recruitment'        => '0',
                     'created_recruitment'       => $request->created_recruitment,
                     'end_recruitment'           => $request->end_recruitment,
                     'deadline_recruitment'      => $request->deadline_recruitment,
@@ -2905,6 +2906,7 @@ http://192.168.101.241:8001/cpanel/recruitment_detail/$request->id
             $index++;
         }
 
+        Ujian::insert($ujian);
         DetailUjian::insert($detail_ujian);
         return redirect('pg-data-ujian/' . $request->holding)->with('success', 'Ujian berhasil dibuat');
     }
