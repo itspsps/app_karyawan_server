@@ -12,8 +12,6 @@ use App\Models\User;
 use App\Models\Recruitment;
 use App\Models\RecruitmentUser;
 use App\Models\RecruitmentInterview;
-use App\Models\Gurumapel;
-use App\Models\Gurukelas;
 use App\Models\UserCareer;
 use App\Models\Ujian;
 use App\Models\DetailUjian;
@@ -546,7 +544,7 @@ class RecruitmentController extends Controller
             ->addColumn('status', function ($row) {
                 // dd($row->status);
                 if ($row->status == '0') {
-                    return '<div class="bg-primary text-white p-1">Belum Dilihat</div>';
+                    return '<span class="badge bg-label-primary">Belum Dilihat</span>';
                 } else {
                     return 'Status Tidak Dikenal';
                 }
@@ -1004,10 +1002,12 @@ class RecruitmentController extends Controller
             Alert::error('Gagal', $error);
             return redirect()->back();
         }
-        if ($request->online == '1') {
-            $tempat_wawancara = $site->site_name;
-        } elseif ($request->online == '2') {
-            $tempat_wawancara = $request->link_wawancara;
+        if ($request->status == '1') {
+            if ($request->online == '1') {
+                $tempat_wawancara = $site->site_name;
+            } elseif ($request->online == '2') {
+                $tempat_wawancara = $request->link_wawancara;
+            }
         }
         if ($request->status == '1') {
             // mencari nama PT
@@ -2868,6 +2868,7 @@ http://192.168.101.241:8001/cpanel/recruitment_detail/$request->id
 
     function ujian_pg_store(Request $request)
     {
+        // dd($request->all());
         $kode = Str::random(30);
         $ujian = [
             'kode' => $kode,
@@ -2905,8 +2906,8 @@ http://192.168.101.241:8001/cpanel/recruitment_detail/$request->id
             ]);
             $index++;
         }
-
-        Ujian::insert($ujian);
+        // dd($ujian);
+        Ujian::create($ujian);
         DetailUjian::insert($detail_ujian);
         return redirect('pg-data-ujian/' . $request->holding)->with('success', 'Ujian berhasil dibuat');
     }

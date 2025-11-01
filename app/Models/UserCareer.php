@@ -27,8 +27,6 @@ class UserCareer extends Authenticatable
         'password',
     ];
 
-    protected $with = ['kelas'];
-
     protected $hidden = [
         'password',
         'remember_token',
@@ -42,12 +40,6 @@ class UserCareer extends Authenticatable
     {
         return $this->hasOne(RecruitmentCV::class, 'users_career_id', 'id');
     }
-
-    public function kelas()
-    {
-        return $this->belongsTo(Kelas::class);
-    }
-
     public function waktuujian()
     {
         return $this->belongsTo(WaktuUjian::class, 'id', 'auth_id');
