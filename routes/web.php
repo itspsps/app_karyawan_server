@@ -627,18 +627,10 @@ Route::middleware('admin')->group(function () {
     Route::post('/inventaris/proses-edit/sip', [InventarisController::class, 'editInventarisProses']);
 
     // ACCESS
-    Route::get('/access/sp', [AccessController::class, 'index']);
-    Route::get('/access-datatable/sp', [AccessController::class, 'datatable']);
-    Route::get('/access/sps', [AccessController::class, 'index']);
-    Route::get('/access-datatable/sps', [AccessController::class, 'datatable']);
-    Route::get('/access/sip', [AccessController::class, 'index']);
-    Route::get('/access-datatable/sip', [AccessController::class, 'datatable']);
-    Route::get('/access/add_access/{id}/sp', [AccessController::class, 'add_access']);
-    Route::post('/access/access_save_add/sp', [AccessController::class, 'access_save_add']);
-    Route::get('/access/add_access/{id}/sps', [AccessController::class, 'add_access']);
-    Route::post('/access/access_save_add/sps', [AccessController::class, 'access_save_add']);
-    Route::get('/access/add_access/{id}/sip', [AccessController::class, 'add_access']);
-    Route::post('/access/access_save_add/sip', [AccessController::class, 'access_save_add']);
+    Route::get('/access/{holding}', [AccessController::class, 'index']);
+    Route::get('/access-datatable/{holding}', [AccessController::class, 'datatable']);
+    Route::get('/access/add_access/{id}/{holding}', [AccessController::class, 'add_access']);
+    Route::post('/access/access_save_add/{holding}', [AccessController::class, 'access_save_add']);
     Route::get('/data-absen', [AbsenController::class, 'dataAbsen']);
     Route::get('/data-absen/{id}/edit-masuk', [AbsenController::class, 'editMasuk']);
     Route::put('/data-absen/{id}/proses-edit-masuk', [AbsenController::class, 'prosesEditMasuk']);

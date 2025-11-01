@@ -18,4 +18,8 @@ class Bagian extends Model
     {
         return $this->belongsTo(Divisi::class, 'divisi_id', 'id');
     }
+    public function Karyawan()
+    {
+        return $this->hasMany(Karyawan::class, 'bagian_id', 'id');
+    }
 }

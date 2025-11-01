@@ -16,9 +16,11 @@ use App\Models\Divisi;
 use App\Models\Izin;
 use App\Models\Jabatan;
 use App\Models\Karyawan;
+use App\Models\AttendanceLog;
 use App\Models\LevelJabatan;
 use App\Models\Penugasan;
 use App\Models\Site;
+use App\Models\Shift;
 use App\Models\Titik;
 use App\Notifications\TestPusherNotification;
 use Carbon\Carbon;
@@ -40,183 +42,139 @@ class HomeUserController extends Controller
         } else if (auth()->user()->is_admin == 'hrd') {
             return redirect('/dashboard/holding');
         } else {
-            $user_karyawan = Karyawan::where('id', Auth::user()->karyawan_id)->first();
+            $user_karyawan = Karyawan::with('MappingShift', 'PenempatanKerja')->where('id', Auth::user()->karyawan_id)->first();
 
             date_default_timezone_set('Asia/Jakarta');
             $user_login = $user_karyawan->id;
             // dd($user_login);
-            $lokasi_kantor = $user_karyawan->penempatan_kerja;
-            // dd($user_karyawan);
-            $tanggal = "";
-            // $dateweek = \Carbon\Carbon::today();
-            // dd($dateweek);
+            if ($user_karyawan->PenempatanKerja != NULL) {
+                $lokasi_kantor = $user_karyawan->PenempatanKerja->site_name;
+            } else {
+                $lokasi_kantor = "";
+            }
             $tglskrg = date('Y-m-d');
+            $startDate = Carbon::now()->startOfDay()->toDateTimeString();
+            $endDate = Carbon::now()->endOfDay()->toDateTimeString();
             $blnskrg = date('m');
             $thnskrg = date('Y');
             // dd($blnskrg);
             $tglkmrn            = date('Y-m-d', strtotime('-1 days'));
-            $mapping_shift      = MappingShift::where('karyawan_id', $user_login)->where('tanggal_masuk', $tglkmrn)->first();
-            $count_absen_hadir  = MappingShift::where('karyawan_id', $user_login)->where('status_absen', 'HADIR KERJA')->whereMonth('tanggal_masuk', $blnskrg)
-                ->count();
-            $count_absen_sakit  = MappingShift::where('karyawan_id', $user_login)->where('status_absen', 'Sakit')->where('tanggal_masuk', '<=', $tglskrg)
-                ->whereMonth('tanggal_masuk', $blnskrg)
-                ->count();
-            $count_absen_izin  = MappingShift::where('karyawan_id', $user_login)->where('status_absen', 'Izin')->where('tanggal_masuk', '<=', $tglskrg)
-                ->whereMonth('tanggal_masuk', $blnskrg)
-                ->count();
-            $count_absen_telat  = MappingShift::where('karyawan_id', $user_login)->where('status_absen', 'HADIR KERJA')->where('keterangan_absensi', 'TELAT HADIR')->where('tanggal_masuk', '<=', $tglskrg)
-                ->whereMonth('tanggal_masuk', $blnskrg)
-                ->count();
-            $user           = $user_karyawan->id;
-            $dataizin       = Izin::with('User')->where('id_approve_atasan', $user)
-                ->whereNotNull('ttd_pengajuan')
-                ->where('status_izin', 1);
-            // dd($dataizin);
-            // get atasan tingkat
-            $datacuti_tingkat1       = Cuti::with('KategoriCuti')
-                ->where('status_cuti', 1)
-                ->join('karyawans', 'karyawans.id', '=', 'cutis.user_id')
-                ->where('id_user_atasan', $user)
-                ->whereNotNull('ttd_user')
-                ->select('cutis.*', 'karyawans.name', 'karyawans.foto_karyawan');
-            // dd($dataizin);
-            // dd($datacuti_tingkat1);
-            $datacuti_tingkat2       = Cuti::with('KategoriCuti')
-                ->where('status_cuti', 2)
-                ->join('karyawans', 'karyawans.id', '=', 'cutis.user_id')
-                ->where('id_user_atasan2', $user)
-                ->whereNotNull('ttd_user')
-                ->select('cutis.*', 'karyawans.name', 'karyawans.foto_karyawan');
-            $datapenugasan  = Penugasan::with('User')
-                ->where('status_penugasan', '>', 1)
-                ->where('status_penugasan', '<', 5)
-                ->where(function ($query) use ($user) {
-                    $query->where('id_diminta_oleh', '=', $user)
-                        ->orWhere('id_disahkan_oleh', '=', $user)
-                        ->orWhere('id_user_hrd', '=', $user)
-                        ->orWhere('id_user_finance', '=', $user);
-                });
-            // dd($datapenugasan);
-            $data_user_penugasaan  = Penugasan::with('User')
-                ->where('id_user', $user)
-                ->where('penugasans.status_penugasan', '5')
-                // ->select('penugasans.*', 'karyawans.name')
-                ->get();
-            // dd($dataizin, $datacuti_tingkat1, $datacuti_tingkat2, $datapenugasan);
-            if (count($data_user_penugasaan) != 0) {
-                foreach ($data_user_penugasaan as $user_penugasan) {
-                    if ($user_penugasan->wilayah_penugasan == 'Diluar Kantor') {
-                        $kantor_penugasan = NULL;
-                        $cek_absensi      = MappingShift::where('karyawan_id', $user_login)
-                            ->where('status_absen', 'NULL')
-                            ->whereBetween('tanggal_masuk', [$user_penugasan->tanggal_kunjungan, $user_penugasan->selesai_kunjungan])
-                            ->update([
-                                'jam_absen' => '07:45:00',
-                                'telat' => '0',
-                                'jam_pulang' => '17:00:00',
-                                'lembur' => '0',
-                                'pulang_cepat' => '0',
-                                'keterangan_absensi' => 'ABSENSI PENUGASAN DILUAR WILAYAH KANTOR',
-                                'status_absen' => 'Masuk',
-                            ]);
-                    } else if ($user_penugasan->wilayah_penugasan == 'Wilayah Kantor') {
-                        $kantor_penugasan = $user_penugasan->alamat_dikunjungi;
-                        $cek_absensi      = MappingShift::where('karyawan_id', $user_login)
-                            ->where('status_absen', 'NULL')
-                            ->whereBetween('tanggal_masuk', [$user_penugasan->tanggal_kunjungan, $user_penugasan->selesai_kunjungan])
-                            ->update([
-                                'keterangan_absensi' => 'ABSENSI PENUGASAN WILAYAH KANTOR',
-                            ]);
-                    }
-                }
-            } else {
-                $kantor_penugasan = NULL;
-            }
-            $faceid = Karyawan::where('id', $user_login)->value('face_id');
-            if ($mapping_shift == '' || $mapping_shift == NULL) {
-                $jam_absen = null;
-                $jam_pulang = null;
-                $status_absen_skrg = MappingShift::where('karyawan_id', $user_login)->where('tanggal_masuk', $tglskrg)->orderBy('tanggal_masuk', 'DESC')->first();
-                $jam_kerja = MappingShift::with('Shift')->where('karyawan_id', $user_login)->where('tanggal_masuk', $tglskrg)->orderBy('tanggal_masuk', 'DESC')->first();
-                // dd($jam_kerja->status_absensi);
-
-                return view('users.home.index', [
-                    'title'             => 'Absen',
-                    'jam_kerja'         => $jam_kerja,
-                    'user_karyawan'     => $user_karyawan,
-                    'shift_karyawan'    => MappingShift::where('karyawan_id', $user_login)->where('tanggal_masuk', $tglskrg)->first(),
-                    'count_absen_hadir' => $count_absen_hadir,
-                    'thnskrg'           => $thnskrg,
-                    'lokasi_kantor'     => $lokasi_kantor,
-                    'status_absen_skrg' => $status_absen_skrg,
-                    'faceid'            => $faceid,
-                    'dataizin'          => $dataizin->take(5)->get(),
-                    'data_count_all'    => $dataizin->count() + $datacuti_tingkat1->count() + $datacuti_tingkat2->count() + $datapenugasan->count(),
-                    'data_count'        => $dataizin->take(5)->count() + $datacuti_tingkat1->take(2)->count() + $datacuti_tingkat2->take(2)->count() + $datapenugasan->take(2)->count(),
-                    'datacuti_tingkat1' => $datacuti_tingkat1->take(2)->get(),
-                    'datacuti_tingkat2' => $datacuti_tingkat2->take(2)->get(),
-                    'datapenugasan'     => $datapenugasan->take(2)->get(),
-                    // 'data_notif'     => $data_notif,
-                    'count_absen_izin'  => $count_absen_izin,
-                    'count_absen_sakit' => $count_absen_sakit,
-                    'count_absen_telat' => $count_absen_telat,
-                    'kantor_penugasan'  => $kantor_penugasan,
-                    'location'          => Titik::all(),
-                ]);
-            } else {
-                $jam_absen = $mapping_shift->jam_absen;
-                $jam_pulang = $mapping_shift->jam_pulang;
-                $status_absen_skrg = $mapping_shift->shift->nama_shift;
-
-                $hours_1_masuk = Carbon::parse($mapping_shift->shift->jam_masuk)->subHour(1)->format('H:i:s');
-                $hours_1_pulang = Carbon::parse($mapping_shift->shift->jam_keluar)->subHour(-1)->format('H:i:s');
-                $timenow = Carbon::now()->format('H:i:s');
-                // dd($status_absen_skrg);
-                if ($status_absen_skrg == 'Malam') {
-                    if ($jam_absen != null && $jam_pulang == null) {
-                        if ($hours_1_pulang > $timenow) {
-                            $status_absen_skrg = MappingShift::where('karyawan_id', $user_login)->where('tanggal_masuk', $tglkmrn)->orderBy('tanggal_masuk', 'DESC')->first();
+            $jam_kerja = '';
+            if ($user_karyawan != null) {
+                if ($user_karyawan->shift == "SHIFT") {
+                    $mapping_shift      = MappingShift::where('karyawan_id', $user_login)->where('tanggal_masuk', $tglkmrn)->first();
+                    $get_jam_kerja = MappingShift::with('Shift')->where('karyawan_id', $user_login)->where('tanggal_masuk', $tglkmrn)->first();
+                    if ($get_jam_kerja != null) {
+                        if ($get_jam_kerja->status_absen == 'LIBUR') {
+                            $jam_kerja = 'LIBUR';
                         } else {
-                            $status_absen_skrg = MappingShift::where('karyawan_id', $user_login)->where('tanggal_masuk', $tglskrg)->orderBy('tanggal_masuk', 'DESC')->first();
+                            $jam_kerja = $get_jam_kerja->Shift->jam_masuk . ' - ' . $get_jam_kerja->Shift->jam_keluar;
                         }
                     } else {
+                        $jam_kerja = null;
+                    }
+                    $count_absen_hadir  = MappingShift::where('karyawan_id', $user_login)->where('status_absen', 'HADIR KERJA')->whereMonth('tanggal_masuk', $blnskrg)
+                        ->count();
+                    $count_absen_sakit  = MappingShift::where('karyawan_id', $user_login)->where('status_absen', 'Sakit')->where('tanggal_masuk', '<=', $tglskrg)
+                        ->whereMonth('tanggal_masuk', $blnskrg)
+                        ->count();
+                    $count_absen_izin  = MappingShift::where('karyawan_id', $user_login)->where('status_absen', 'Izin')->where('tanggal_masuk', '<=', $tglskrg)
+                        ->whereMonth('tanggal_masuk', $blnskrg)
+                        ->count();
+                    $count_absen_telat  = MappingShift::where('karyawan_id', $user_login)->where('status_absen', 'HADIR KERJA')->where('keterangan_absensi', 'TELAT HADIR')->where('tanggal_masuk', '<=', $tglskrg)
+                        ->whereMonth('tanggal_masuk', $blnskrg)
+                        ->count();
+                    if ($mapping_shift == '' || $mapping_shift == NULL) {
+                        $jam_absen = null;
+                        $jam_pulang = null;
+                        // dd($jam_kerja->status_absensi);
+                    } else {
                         $status_absen_skrg = MappingShift::where('karyawan_id', $user_login)->where('tanggal_masuk', $tglskrg)->orderBy('tanggal_masuk', 'DESC')->first();
+                        $jam_kerja = MappingShift::with('Shift')->where('karyawan_id', $user_login)->where('tanggal_masuk', $tglskrg)->orderBy('tanggal_masuk', 'DESC')->first();
                     }
                 } else {
-                    $status_absen_skrg = MappingShift::where('karyawan_id', $user_login)->where('tanggal_masuk', $tglskrg)->orderBy('tanggal_masuk', 'DESC')->first();
+                    $get_jam_kerja = Shift::where('nama_shift', 'NON SHIFT')->first();
+                    $status_absen_skrg = AttendanceLog::where('EnrollNumber', $user_karyawan->nomor_identitas_karyawan)
+                        ->whereBetween('LogTime', [$startDate, $endDate])
+                        ->orderBy('LogTime', 'ASC')
+                        ->get();
+                    $logs_absensi_masuk = $status_absen_skrg->filter(function ($log) use ($get_jam_kerja, $tglskrg) {
+                        $getcheckIn = Carbon::parse($log->LogTime);
+                        $start = Carbon::parse($tglskrg . ' ' . $get_jam_kerja->jam_min_masuk)->format('Y-m-d H:i:59');
+                        $end = Carbon::parse($tglskrg . ' ' . $get_jam_kerja->jam_terlambat)->addHours(3)->addMinutes(10)->format('Y-m-d H:i:59');
+                        return $getcheckIn->between($start, $end);
+                    });
+                    if ($logs_absensi_masuk->isNotEmpty()) {
+                        $checkIn  = Carbon::parse($logs_absensi_masuk->min('LogTime'))->format('H:i');
+                        if ($checkIn > $get_jam_kerja->jam_terlambat) {
+                            $checkIn = ' <span class="badge light badge-sm badge-warning absen_masuk_text">' . $checkIn . ' WIB</span>';
+                        } else {
+                            $checkIn = '<span class="badge light badge-sm badge-success absen_masuk_text">' . $checkIn . ' WIB</span>';
+                        }
+                    } else {
+                        $checkIn = null;
+                    }
+                    $logs_absensi_pulang = $status_absen_skrg->filter(function ($log) use ($tglskrg, $get_jam_kerja) {
+                        $getcheckOut = Carbon::parse($log->LogTime);
+                        $start = Carbon::parse($tglskrg . ' ' . $get_jam_kerja->jam_pulang_cepat)->format('Y-m-d H:i:59');
+                        $end = Carbon::parse($tglskrg . ' ' . $get_jam_kerja->jam_keluar)->addHours(5)->format('Y-m-d H:i:59');
+                        return $getcheckOut->between($start, $end);
+                    });
+                    // return $logs_absensi_pulang;
+                    if ($logs_absensi_pulang->isNotEmpty()) {
+                        $checkOut  = Carbon::parse($logs_absensi_pulang->min('LogTime'))->format('H:i');
+                        if ($checkOut < $get_jam_kerja->jam_keluar) {
+                            $checkOut = '<span style="color:rgba(var(--bs-danger-rgb));">' . $checkOut . ' WIB</span>';
+                        } else {
+                            $checkOut = '<span style="color:rgba(var(--bs-success-rgb));">' . $checkOut . ' WIB</span>';
+                        }
+                    } else {
+                        $checkOut = null;
+                    }
+                    if ($get_jam_kerja != null) {
+                        if ($get_jam_kerja->status_absen == 'LIBUR') {
+                            $jam_kerja = 'LIBUR';
+                        } else {
+                            $jam_kerja = $get_jam_kerja->jam_masuk . ' - ' . $get_jam_kerja->jam_keluar;
+                        }
+                    } else {
+                        $jam_kerja = null;
+                    }
+                    $count_absen_hadir = AttendanceLog::where('EnrollNumber', $user_karyawan->nomor_identitas_karyawan)
+                        ->whereMonth('LogTime', $blnskrg)
+                        ->distinct('LogTime')
+                        ->count('LogTime');
                 }
-                $jam_kerja = MappingShift::with('Shift')->where('karyawan_id', $user_login)->where('tanggal_masuk', $tglskrg)->orderBy('tanggal_masuk', 'DESC')->first();
-                // $hours_1 = Carbon::parse($status_absen_skrg->shift->jam_masuk)->subHour(-1)->format('H:i:s');
-                // dd($hours_1);
-                // dd($faceid);
-                // dd($status_absen_skrg);
-                // dd($dataizin);
-
-                return view('users.home.index', [
-                    'title'             => 'Absen',
-                    'shift_karyawan'    => MappingShift::where('karyawan_id', $user_login)->where('tanggal_masuk', $tglskrg)->first(),
-                    'count_absen_hadir' => $count_absen_hadir,
-                    'user_karyawan'     => $user_karyawan,
-                    'thnskrg'           => $thnskrg,
-                    'get_shift'         => $status_absen_skrg,
-                    'lokasi_kantor'     => $lokasi_kantor,
-                    'jam_kerja'         => $jam_kerja,
-                    'status_absen_skrg' => $status_absen_skrg,
-                    'faceid'            => $faceid,
-                    'dataizin'          => $dataizin->take(5)->get(),
-                    'data_count_all'    => $dataizin->count() + $datacuti_tingkat1->count() + $datacuti_tingkat2->count() + $datapenugasan->count(),
-                    'data_count'        => $dataizin->take(5)->count() + $datacuti_tingkat1->take(2)->count() + $datacuti_tingkat2->take(2)->count() + $datapenugasan->take(2)->count(),
-                    'datacuti_tingkat1' => $datacuti_tingkat1->take(2)->get(),
-                    'datacuti_tingkat2' => $datacuti_tingkat2->take(2)->get(),
-                    'datapenugasan'     => $datapenugasan->take(2)->get(),
-                    'count_absen_izin'     => $count_absen_izin,
-                    'count_absen_sakit'     => $count_absen_sakit,
-                    'count_absen_telat'     => $count_absen_telat,
-                    'kantor_penugasan'     => $kantor_penugasan,
-                    'location'     => Site::all(),
-
-                ]);
+            } else {
+                'ok';
             }
+            $user           = $user_karyawan->id;
+            // dd($status_absen_skrg, $startDate, $endDate);
+            return view('users.home.index', [
+                'title'             => 'Absen',
+                'shift_karyawan'    => MappingShift::where('karyawan_id', $user_login)->where('tanggal_masuk', $tglskrg)->first(),
+                'count_absen_hadir' => $count_absen_hadir,
+                'user_karyawan'     => $user_karyawan,
+                'thnskrg'           => $thnskrg,
+                'get_shift'         => $status_absen_skrg,
+                'lokasi_kantor'     => $lokasi_kantor,
+                'jam_kerja'         => $jam_kerja,
+                'status_absen_skrg' => $status_absen_skrg,
+                'checkIn'          => $checkIn,
+                'checkOut' => $checkOut,
+                'dataizin'          => '',
+                'data_count_all'    => 0,
+                'data_count'        => 0,
+                'datacuti_tingkat1' => collect(),
+                'datacuti_tingkat2' => collect(),
+                'datapenugasan'     => collect(),
+                'count_absen_izin'     => 0,
+                'count_absen_sakit'     => 0,
+                'count_absen_telat'     => 0,
+                'kantor_penugasan'     => '',
+                'location'     => Site::all(),
+
+            ]);
         }
     }
     public function create_face_id()

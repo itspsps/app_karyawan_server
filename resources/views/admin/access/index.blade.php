@@ -160,7 +160,7 @@
 <script src="https://cdn.datatables.net/2.0.5/js/dataTables.bootstrap5.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
 <script>
-    let holding = window.location.pathname.split("/").pop();
+    let holding = "{{ $holding->holding_code }}";
     var table = $('#table_access_karyawan').DataTable({
         pageLength: 50,
         "scrollY": true,

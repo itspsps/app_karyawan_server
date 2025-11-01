@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Departemen;
 use App\Models\Divisi;
+use App\Models\Holding;
 use App\Models\Jabatan;
 use App\Models\Karyawan;
 use App\Models\Lokasi;
@@ -16,35 +17,28 @@ use Yajra\DataTables\Facades\DataTables;
 
 class AccessController extends Controller
 {
-    public function index()
+    public function index($holding)
     {
+        $get_holding = Holding::where('holding_code', $holding)->first();
 
-        $holding = request()->segment(count(request()->segments()));
-        if ($holding == 'sp') {
-            $kontrak_kerja = 'SP';
-        } else if ($holding == 'sps') {
-            $kontrak_kerja = 'SPS';
-        } else if ($holding == 'sip') {
-            $kontrak_kerja = 'SIP';
-        }
         return view('admin.access.index', [
             // return view('karyawan.index', [
             'title' => 'Karyawan',
             "data_departemen" => Departemen::all(),
-            'holding' => $holding,
-            'data_user' => Karyawan::where('kontrak_kerja', $kontrak_kerja)->get(),
+            'holding' => $get_holding,
+            'data_user' => Karyawan::where('kontrak_kerja', $get_holding->id)->get(),
             "data_departemen" => Departemen::all(),
             "data_jabatan" => Jabatan::all(),
-            "karyawan_laki" => Karyawan::where('gender', "1")->where('kontrak_kerja', $holding)->count(),
-            "karyawan_perempuan" => Karyawan::where('gender', "2")->where('kontrak_kerja', $holding)->count(),
-            "karyawan_office" => Karyawan::where('gender', "1")->where('kontrak_kerja', $holding)->count(),
-            "karyawan_shift" => Karyawan::where('gender', "2")->where('kontrak_kerja', $holding)->count(),
+            "karyawan_laki" => Karyawan::where('gender', "1")->where('kontrak_kerja', $get_holding->id)->count(),
+            "karyawan_perempuan" => Karyawan::where('gender', "2")->where('kontrak_kerja', $get_holding->id)->count(),
+            "karyawan_office" => Karyawan::where('gender', "1")->where('kontrak_kerja', $get_holding->id)->count(),
+            "karyawan_shift" => Karyawan::where('gender', "2")->where('kontrak_kerja', $get_holding->id)->count(),
         ]);
     }
-    public function datatable(Request $request)
+    public function datatable(Request $request, $holding)
     {
-        $holding = request()->segment(count(request()->segments()));
-        $table = Karyawan::where('kontrak_kerja', $holding)->get();
+        $holding = Holding::where('holding_code', $holding)->first();
+        $table = Karyawan::where('kontrak_kerja', $holding->id)->get();
         if (request()->ajax()) {
             return DataTables::of($table)
                 ->addColumn('departemen', function ($row) use ($holding) {
