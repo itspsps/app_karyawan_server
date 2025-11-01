@@ -24,7 +24,6 @@
                                             <th>Jumlah Soal</th>
                                             <th>: Soal</th>
                                         </tr>
-
                                     </table>
                                 </div>
                             </div>

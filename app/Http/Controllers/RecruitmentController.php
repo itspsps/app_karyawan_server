@@ -939,13 +939,63 @@ class RecruitmentController extends Controller
                 },
 
             ])
-            ->where('recruitment_admin_id', $id)
-            ->get();
+            ->where('id', $id)
+            ->first();
+        // dd($table);
+        $esai_total = $table ? $table->ujianEsaiJawab->sum('nilai') : 0;
+        $pg_total = $table ? $table->waktuujian->sum('nilai') : 0;
+        $get_jabatan = $table ? $table->Jabatan->LevelJabatan->level_jabatan : 0;
+        if ($get_jabatan == 0) {
+            $esai_count = Ujian::where('esai', 1)->where('nol', '1')->count();
+            $pg_count = Ujian::where('esai', 0)->where('nol', '1')->count();
+        } elseif ($get_jabatan == 1) {
+            $esai_count = Ujian::where('esai', 1)->where('satu', '1')->count();
+            $pg_count = Ujian::where('esai', 0)->where('satu', '1')->count();
+        } elseif ($get_jabatan == 2) {
+            $esai_count = Ujian::where('esai', 1)->where('dua', '1')->count();
+            $pg_count = Ujian::where('esai', 0)->where('dua', '1')->count();
+        } elseif ($get_jabatan == 3) {
+            $esai_count = Ujian::where('esai', 1)->where('tiga', '1')->count();
+            $pg_count = Ujian::where('esai', 0)->where('tiga', '1')->count();
+        } elseif ($get_jabatan == 4) {
+            $esai_count = Ujian::where('esai', 1)->where('empat', '1')->count();
+            $pg_count = Ujian::where('esai', 0)->where('empat', '1')->count();
+        } elseif ($get_jabatan == 5) {
+            $esai_count = Ujian::where('esai', 1)->where('lima', '1')->count();
+            $pg_count = Ujian::where('esai', 0)->where('lima', '1')->count();
+        } elseif ($get_jabatan == 6) {
+            $esai_count = Ujian::where('esai', 1)->where('enam', '1')->count();
+            $pg_count = Ujian::where('esai', 0)->where('enam', '1')->count();
+        }
+        $interview_user = $table ? $table->interviewUser->sum('nilai') : 0;
+        $interview_admin = InterviewUser::where('recruitment_user_id', $id)->count() ?? 0;
+        $hitung_interview = $interview_user / $interview_admin;
+        $hasil_interview = round($hitung_interview * 10, 2);
+        $get_bobot = Pembobotan::first();
+        try {
+            $koefisien_esai = ($esai_total / $esai_count) * ($get_bobot->esai / 100);
+            $koefisien_pg = ($pg_total / $pg_count) * ($get_bobot->pilihan_ganda / 100);
+            $koefisien_interview = ($interview_user / $interview_admin * 10) * ($get_bobot->interview / 100);
+        } catch (DivisionByZeroError $e) {
+            $koefisien_esai = 0;
+            $koefisien_pg = 0;
+            $koefisien_interview = 0;
+        }
 
+
+        $koefisien_total = round($koefisien_esai + $koefisien_pg + $koefisien_interview, 2);
+        $pembobotan = Pembobotan::first();
         $pdf = Pdf::loadView('admin.recruitment-users.recruitment.user_nilai_pdf', [
-            'ti$pekerjaan_counttle' => 'Data Recruitment',
+            '$pekerjaan_counttle' => 'Data Recruitment',
         ], compact(
-            'table',
+            'pembobotan',
+            'esai_total',
+            'pg_total',
+            'hasil_interview',
+            'koefisien_pg',
+            'koefisien_esai',
+            'koefisien_interview',
+            'koefisien_total',
         ));
         return $pdf->stream('admin.recruitment-users.recruitment.user_nilai_pdf');
     }

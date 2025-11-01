@@ -94,9 +94,6 @@
                             </div>
                         </div>
                         <div class="tab-pane" id="icon-tabpanel-2" role="tabpanel" aria-labelledby="icon-tab-2">
-                            <button type="button" class="btn btn-sm btn-primary waves-effect waves-light mb-3"
-                                id="btn_tambah_catatan"><i class="menu-icon tf-icons mdi mdi-plus"></i>Tambah
-                                Catatan</button>
                             <div class="table-responsive">
                                 <table class="table" id="tabel_interview" style="width: 100%; font-size: small;">
                                     <thead class="table-primary">
@@ -111,6 +108,9 @@
                                     </tbody>
                                 </table>
                             </div>
+                            <button type="button" class="btn btn-sm btn-primary waves-effect waves-light my-3"
+                                id="btn_tambah_catatan"><i class="menu-icon tf-icons mdi mdi-plus"></i>Tambah
+                                Catatan</button>
                             <div class="table-responsive">
                                 <table class="table" id="tabel_catatan" style="width: 100%; font-size: small;">
                                     <thead class="table-primary" style="width: 100%; font-size: small;">
