@@ -73,7 +73,12 @@
                             aria-labelledby="progres-tab" tabindex="0">
                             <div class="card-header">
                                 <div class="d-flex align-items-center justify-content-between">
-                                    <h5 class="card-title m-0 me-2">DATA PROGRES RECRUITMENT</h5>
+                                    <h5 class="card-title m-0 me-2">DATA PROGRES
+                                        RECRUITMENT
+                                        {{ $kuota->Jabatan->nama_jabatan }}
+                                        {{ $kuota->Jabatan->Bagian->Divisi->nama_divisi }}
+                                        (KUOTA : {{ $kuota->kuota }})
+                                    </h5>
                                 </div>
                             </div>
                             <table class="table" id="tabel_progres" style="width: 100%; font-size: small;">
@@ -96,7 +101,10 @@
                             tabindex="0">
                             <div class="card-header">
                                 <div class="d-flex align-items-center justify-content-between">
-                                    <h5 class="card-title m-0 me-2">DATA RANKING RECRUITMENT</h5>
+                                    <h5 class="card-title m-0 me-2">DATA RANKING RECRUITMENT
+                                        {{ $kuota->Jabatan->nama_jabatan }}
+                                        {{ $kuota->Jabatan->Bagian->Divisi->nama_divisi }}
+                                        (KUOTA : {{ $kuota->kuota }})</h5>
                                 </div>
                             </div>
                             <table class="table" id="tabel_ranking" style="width: 100%; font-size: small;">

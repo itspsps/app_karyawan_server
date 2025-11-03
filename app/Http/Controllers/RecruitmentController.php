@@ -869,7 +869,7 @@ class RecruitmentController extends Controller
             'kesehatan_rs',
             'kesehatan_kecelakaan'
         ));
-        return $pdf->stream('admin.recruitment-users.recruitment.user_detail_pdf');
+        return $pdf->stream($data_cv->Authlogin->recruitmentCV->nama_lengkap . ' CV.pdf');
     }
     function pelamar_nilai_pdf($id)
     {
@@ -985,6 +985,9 @@ class RecruitmentController extends Controller
 
         $koefisien_total = round($koefisien_esai + $koefisien_pg + $koefisien_interview, 2);
         $pembobotan = Pembobotan::first();
+
+        $ctn = RecruitmentInterview::where('recruitment_user_id', $id)->first();
+        // dd($ctn);
         $pdf = Pdf::loadView('admin.recruitment-users.recruitment.user_nilai_pdf', [
             '$pekerjaan_counttle' => 'Data Recruitment',
         ], compact(
@@ -996,8 +999,9 @@ class RecruitmentController extends Controller
             'koefisien_esai',
             'koefisien_interview',
             'koefisien_total',
+            'ctn',
         ));
-        return $pdf->stream('admin.recruitment-users.recruitment.user_nilai_pdf');
+        return $pdf->stream($table->Cv->nama_lengkap . ' NILAI.pdf');
     }
     public function pelamar_detail_ubah(Request $request, $holding)
     {
@@ -1024,16 +1028,18 @@ class RecruitmentController extends Controller
         if ($request->status == '1' && $request->online == '1') {
             $tempat_wawancara = 'required';
             $link_wawancara = 'nullable';
+            $map = $site->gm_link;
         } elseif ($request->status == '1' && $request->online == '2') {
             $tempat_wawancara = 'nullable';
             $link_wawancara = 'required';
+            $map = null;
         }
         $rules =
             [
                 'status'             => 'required',
                 'tanggal_wawancara'  => $tanggal_wawancara,
                 'tempat_wawancara'   => $tempat_wawancara,
-                'link_wawancara'   => $link_wawancara,
+                'link_wawancara'     => $link_wawancara,
                 'waktu_wawancara'    => $waktu_wawancara
             ];
         $customessages =
@@ -1084,7 +1090,7 @@ Terima kasih telah melamar di $holdings->holding_name. Setelah proses seleksi ad
 
 📅 Hari/Tanggal : $hari
 🕒 Pukul : $request->waktu_wawancara WIB
-📍 Lokasi/Link Zoom : $tempat_wawancara, $site->gm_link
+📍 Lokasi/Link Zoom : $tempat_wawancara, $map
 
 Mohon konfirmasi kehadiran Anda pada link di bawah ini (Max. 24 Jam):
 
@@ -1202,6 +1208,7 @@ http://192.168.101.241:8001/cpanel/recruitment_detail/$request->recruitment_user
             return DataTables::of($table)
                 ->addColumn('tanggal_wawancara', function ($row) {
                     return Carbon::parse($row->recruitmentUser->tanggal_wawancara)->format('d-m-Y');
+                    // return '-';
                 })
                 ->addColumn('presensi', function ($row) {
                     if ($row->recruitmentUser->status == '1a') {
@@ -1385,6 +1392,62 @@ http://192.168.101.241:8001/cpanel/recruitment_detail/$request->recruitment_user
                 ->make(true);
         }
     }
+    function dt_data_interview3($holding)
+    {
+        $holdings = Holding::where('holding_code', $holding)->first();
+        $table = RecruitmentUser::with([
+
+            'Bagian' =>  function ($query) {
+                $query->with([
+                    'Divisi' => function ($query) {
+                        $query->with([
+                            'Departemen' => function ($query) {
+                                $query->orderBy('nama_departemen', 'ASC');
+                            }
+                        ]);
+                        $query->orderBy('nama_divisi', 'ASC');
+                    }
+                ]);
+                $query->orderBy('nama_bagian', 'ASC');
+            }
+        ])->with([
+            'Cv' => function ($query) {
+                $query;
+            }
+        ])
+            ->where('holding', $holdings->id)
+            ->whereDate('tanggal_wawancara', '>', date('Y-m-d'))
+            ->where('status', '1')
+            ->orderBy('created_at', 'DESC')
+            ->get();
+        // dd($table);
+        if (request()->ajax()) {
+            return DataTables::of($table)
+                ->addColumn('tanggal_wawancara', function ($row) {
+                    return $row->tanggal_wawancara;
+                })
+                ->addColumn('presensi', function ($row) {
+                    if ($row->status == '1') {
+                        $btn = '<span class="badge bg-label-info">Belum Jadwalnya</span>';
+                    }
+                    return $btn;
+                })
+                ->addColumn('nama_lengkap', function ($row) {
+                    return $row->Cv->nama_lengkap;
+                })
+                ->addColumn('nama_bagian', function ($row) {
+                    return $row->Bagian->nama_bagian;
+                })
+                ->addColumn('nama_divisi', function ($row) {
+                    return $row->Bagian->Divisi->nama_divisi;
+                })
+                ->addColumn('nama_departemen', function ($row) {
+                    return $row->Bagian->Divisi->Departemen->nama_departemen;
+                })
+                ->rawColumns(['tanggal_wawancara', 'presensi', 'nama_lengkap', 'nama_bagian', 'nama_departemen', 'nama_divisi', 'nama_departemen'])
+                ->make(true);
+        }
+    }
     public function data_ujian_user($id, $holding)
     {
         $holdings = Holding::where('holding_code', $holding)->first();
@@ -1453,7 +1516,7 @@ http://192.168.101.241:8001/cpanel/recruitment_detail/$request->recruitment_user
     }
     public function ranking_update_status(Request $request)
     {
-        // dd($request->all());  
+        // dd($request->all());
         try {
             $get_recruitment_admin = RecruitmentUser::with([
                 'recruitmentAdmin' => function ($query) {
@@ -1482,8 +1545,7 @@ http://192.168.101.241:8001/cpanel/recruitment_detail/$request->recruitment_user
             // dd($request->all());
             $holding = $request->holding;
             $holdings = Holding::where('holding_code', $holding)->first();
-            $tanggal_wawancara = Carbon::parse($request->tanggal_wawancara);
-            $hari = $tanggal_wawancara->translatedFormat('l, j F Y');
+
             $get_wa = RecruitmentUser::with([
                 'AuthLogin' => function ($query) {
                     $query;
@@ -1494,6 +1556,8 @@ http://192.168.101.241:8001/cpanel/recruitment_detail/$request->recruitment_user
                 }
             ])->where('id', $request->id)->first();
             if ($request->status == '1b') {
+                $tanggal_wawancara = Carbon::parse($request->tanggal_wawancara);
+                $hari = $tanggal_wawancara->translatedFormat('l, j F Y');
                 if ($request->online == 1) {
                     $link_wawancara = 'nullable';
                     $tempat_wawancara = 'required';
@@ -1640,6 +1704,8 @@ http://192.168.101.241:8001/cpanel/recruitment_detail/$request->id
                         'created_at'                => date('Y-m-d H:i:s'),
                     ]
                 );
+                $tanggal_diterima = Carbon::parse($request->tanggal_diterima);
+                $hari_diterima = $tanggal_diterima->translatedFormat('l, j F Y');
                 $get_wa = RecruitmentUser::with([
                     'AuthLogin' => function ($query) {
                         $query;
@@ -1663,11 +1729,11 @@ http://192.168.101.241:8001/cpanel/recruitment_detail/$request->id
 
 Selamat! Anda telah dinyatakan diterima sebagai " . $get_recruitment_admin->recruitmentAdmin->Jabatan->nama_jabatan . "
 " . $get_recruitment_admin->recruitmentAdmin->Jabatan->Bagian->Divisi->nama_divisi . "
-di $holdings->holding_name. dengan benefit gaji Rp. $request->gaji🎉
+di $holdings->holding_name. dengan benefit gaji Rp. $request->gaji 🎉
 
 Kami mengundang Anda untuk hadir pada:
-📅 Hari/Tanggal : $hari
-🕒 Pukul : $request->waktu_bekerja
+📅 Hari/Tanggal : $hari_diterima 
+🕒 Pukul : $request->waktu_diterima
 📍 Lokasi : $site_krj->site_name, $site_krj->gm_link
 Untuk penjelasan lebih lanjut terkait administrasi dan training karyawan baru. Harap membawa dokumen yang diperlukan sesuai instruksi yang akan kami kirimkan.
 Catatan : $request->notes_langsung
@@ -1745,6 +1811,8 @@ Kami sangat menghargai waktu dan usaha Anda, serta akan menyimpan data Anda untu
                 }
             } elseif ($request->status == '6b') {
                 // dd($request->all());
+                $tanggal_wawancara = Carbon::parse($request->tanggal_wawancara);
+                $hari = $tanggal_wawancara->translatedFormat('l, j F Y');
                 if ($request->online == 1) {
                     $link_wawancara = 'nullable';
                     $tempat_wawancara = 'required';
@@ -1948,6 +2016,8 @@ http://192.168.101.241:8001/cpanel/recruitment_detail/$request->id
                 ])
                     ->where('id', $request->lowongan_baru)
                     ->first();
+                $tanggal_diterima = Carbon::parse($request->tanggal_diterima);
+                $hari_diterima2 = $tanggal_diterima->translatedFormat('l, j F Y');
                 $curl = curl_init();
                 curl_setopt_array($curl, array(
                     CURLOPT_URL => 'https://api.fonnte.com/send',
@@ -1964,11 +2034,11 @@ http://192.168.101.241:8001/cpanel/recruitment_detail/$request->id
                         "Halo " . $get_wa->Cv->nama_lengkap . ",
 Terima kasih telah mengikuti proses seleksi di $holdings->holding_name. Setelah mempertimbangkan kualifikasi Anda,
 kami melihat potensi Anda lebih sesuai dengan posisi " . $get_posisi_baru->Jabatan->nama_jabatan . ".
-" . $get_posisi_baru->Jabatan->Bagian->Divisi->nama_divisi . ". dengan benefit gaji Rp. $request->gaji🎉
+" . $get_posisi_baru->Jabatan->Bagian->Divisi->nama_divisi . ". dengan benefit gaji Rp. $request->gaji 🎉
 
 Kami mengundang Anda untuk hadir pada:
-📅 Hari/Tanggal : $hari
-🕒 Pukul : $request->waktu_bekerja
+📅 Hari/Tanggal : $hari_diterima2
+🕒 Pukul : $request->waktu_diterima
 📍 Lokasi : $site_krj->site_name, $site_krj->gm_link
 Untuk penjelasan lebih lanjut terkait administrasi dan training karyawan baru. Harap membawa dokumen yang diperlukan sesuai instruksi yang akan kami kirimkan.
 
@@ -3334,15 +3404,35 @@ http://192.168.101.241:8001/cpanel/recruitment_detail/$request->id
         ])
             ->where('end_recruitment', '>=', $currentDate)
             ->get();
+        $kuota = Recruitment::where('id', $id)->with([
+            'Jabatan' => function ($query) {
+                $query->with([
+                    'Bagian' =>  function ($query) {
+                        $query->with([
+                            'Divisi' => function ($query) {
+                                $query->with([
+                                    'Departemen' => function ($query) {
+                                        $query->orderBy('nama_departemen', 'ASC');
+                                    }
+                                ]);
+                                $query->orderBy('nama_divisi', 'ASC');
+                            },
+                        ]);
+                    },
+                ]);
+            },
+
+        ])->first();
         $holdings = Holding::where('holding_code', $holding)->first();
         $holding = request()->segment(count(request()->segments()));
         $site = Site::get();
-        // dd($site);
+        // dd($kuota);
         return view('admin.recruitment-users.ranking.data_listranking', [
             'title'                 => 'Data Recruitment',
             'holding'               => $holdings,
             'recruitment_admin'     => $recruitment_admin,
             'id_recruitment'        => $id,
+            'kuota'                 => $kuota,
             'data_departemen'       => Departemen::all(),
             'data_bagian'           => Bagian::with('Divisi')->where('holding', $holding)->get(),
             'data_dept'             => Departemen::orderBy('nama_departemen', 'asc')->where('holding', $holding)->get(),

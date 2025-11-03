@@ -879,13 +879,10 @@ Route::post('/pg/pelamar-detail-ubah/{holding}', [RecruitmentController::class, 
 
 
 Route::get('/pg-data-interview/{holding}', [RecruitmentController::class, 'pg_data_interview'])->middleware('admin');
-
 Route::get('/dt/data-interview/{holding}', [RecruitmentController::class, 'dt_data_interview'])->middleware('admin');
-
 Route::get('/dt/data-interview1/{holding}', [RecruitmentController::class, 'dt_data_interview1'])->middleware('admin');
-
 Route::get('/dt/data-interview2/{holding}', [RecruitmentController::class, 'dt_data_interview2'])->middleware('admin');
-
+Route::get('/dt/data-interview3/{holding}', [RecruitmentController::class, 'dt_data_interview3'])->middleware('admin');
 Route::get('/dt/data-data_ujian_user/{id}/{holding}', [RecruitmentController::class, 'data_ujian_user'])->middleware('admin');
 
 Route::get('/dt/data-get_data_esai/{id}/{holding}', [UjianUserController::class, 'dt_ujian_esai'])->middleware('admin');

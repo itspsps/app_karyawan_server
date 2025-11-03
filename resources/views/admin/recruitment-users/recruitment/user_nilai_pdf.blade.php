@@ -88,6 +88,21 @@
             </thead>
         </table>
     </div>
+    <div class="table table-striped">
+        <table border="1" class="table" id="table_pelamar3" style="width: 100%; font-size: small;">
+            <thead class="table-primary">
+                <tr>
+                    <th class="fw-bold">CATATAN HRD</th>
+                </tr>
+
+            </thead>
+            <tbody class="table-border-bottom-0">
+                <tr>
+                    <td class=""><small>{{ $ctn->catatan }}</small></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
 </body>
 
 </html>
