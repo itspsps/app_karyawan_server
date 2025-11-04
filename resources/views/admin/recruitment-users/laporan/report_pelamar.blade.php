@@ -193,6 +193,7 @@
                                             <th>Riwayat&nbsp;Detail</th>
                                             <th>Tanggal&nbsp;Berakhir</th>
                                             <th>Perkembangan&nbsp;Terakhir</th>
+                                            <th>Feedback&nbsp;Pelamar</th>
                                         </tr>
                                     </thead>
                                     <tbody class="table-border-bottom-0" hidden>
@@ -209,6 +210,7 @@
                                             <th>Riwayat&nbsp;Detail</th>
                                             <th>Tanggal&nbsp;Berakhir</th>
                                             <th>Perkembangan&nbsp;Terakhir</th>
+                                            <th>Feedback&nbsp;Pelamar</th>
                                         </tr>
                                     </thead>
                                     <tbody class="table-border-bottom-0">
@@ -600,6 +602,10 @@
                                 data: 'perkembangan_terakhir',
                                 name: 'perkembangan_terakhir'
                             },
+                            {
+                                data: 'feedback',
+                                name: 'feedback'
+                            },
                         ],
                         order: [
                             [2, 'desc']
@@ -660,6 +666,10 @@
                         {
                             data: 'perkembangan_terakhir',
                             name: 'perkembangan_terakhir'
+                        },
+                        {
+                            data: 'feedback',
+                            name: 'feedback'
                         },
                     ],
                     order: [

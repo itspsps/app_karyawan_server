@@ -60,6 +60,10 @@ class RecruitmentLaporanController extends Controller
                 $query;
             }
         ])->with([
+            'recruitmentUserRecord' => function ($query) {
+                $query;
+            }
+        ])->with([
             'AuthLogin' => function ($query) {
                 $query;
             }
@@ -147,6 +151,22 @@ class RecruitmentLaporanController extends Controller
                         return '-';
                     }
                 })
+                ->addColumn('feedback', function ($row) {
+                    $akhir = RecruitmentUserRecord::where('recruitment_user_id', $row->id)->orderBy('created_at', 'desc')->limit(1)->first();
+                    if ($akhir->feedback == null) {
+                        return '-';
+                    } elseif ($akhir->feedback == '1') {
+                        return '<span class="badge bg-label-warning">Menyanggupi</span>';
+                    } elseif ($akhir->feedback == '1b') {
+                        return '<span class="badge bg-label-warning">Menyanggupi</span>';
+                    } elseif ($akhir->feedback == '2b') {
+                        return '<span class="badge bg-label-success">Menerima</span>';
+                    } elseif ($akhir->feedback == '3') {
+                        return '<span class="badge bg-label-danger">Tidak Hadir</span>';
+                    } elseif ($akhir->feedback == '3b') {
+                        return '<span class="badge bg-label-danger">Tidak Hadir</span>';
+                    }
+                })
                 ->rawColumns([
                     'tanggal_mulai',
                     'cv',
@@ -155,6 +175,7 @@ class RecruitmentLaporanController extends Controller
                     'status_detail',
                     'tanggal_berakhir',
                     'perkembangan_terakhir',
+                    'feedback',
                 ])
                 ->make(true);
         }
@@ -276,6 +297,22 @@ class RecruitmentLaporanController extends Controller
                         return '-';
                     }
                 })
+                ->addColumn('feedback', function ($row) {
+                    $akhir = RecruitmentUserRecord::where('recruitment_user_id', $row->id)->orderBy('created_at', 'desc')->limit(1)->first();
+                    if ($akhir->feedback == null) {
+                        return '-';
+                    } elseif ($akhir->feedback == '1') {
+                        return '<span class="badge bg-label-warning">Menyanggupi</span>';
+                    } elseif ($akhir->feedback == '1b') {
+                        return '<span class="badge bg-label-warning">Menyanggupi</span>';
+                    } elseif ($akhir->feedback == '2b') {
+                        return '<span class="badge bg-label-success">Menerima</span>';
+                    } elseif ($akhir->feedback == '3') {
+                        return '<span class="badge bg-label-danger">Tidak Hadir</span>';
+                    } elseif ($akhir->feedback == '3b') {
+                        return '<span class="badge bg-label-danger">Tidak Hadir</span>';
+                    }
+                })
                 ->rawColumns([
                     'tanggal_mulai',
                     'cv',
@@ -284,6 +321,7 @@ class RecruitmentLaporanController extends Controller
                     'status_detail',
                     'tanggal_berakhir',
                     'perkembangan_terakhir',
+                    'feedback',
                 ])
                 ->make(true);
         }
@@ -314,10 +352,6 @@ class RecruitmentLaporanController extends Controller
             }
         ])->with([
             'AuthLogin' => function ($query) {
-                $query;
-            }
-        ])->with([
-            'recruitmentUserRecord' => function ($query) {
                 $query;
             }
         ])

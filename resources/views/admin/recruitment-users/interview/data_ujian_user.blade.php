@@ -175,7 +175,7 @@
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
                         <button type="button" class="btn btn-primary" id="btn_update_catatan">Masukkan
-                            Nilai</button>
+                            CATATAN</button>
                     </div>
                 </div>
             </div>
