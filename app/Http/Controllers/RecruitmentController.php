@@ -180,10 +180,10 @@ class RecruitmentController extends Controller
 
 
                 ->addColumn('desc_recruitment', function ($row) {
-
+                    $desc = htmlspecialchars($row->desc_recruitment, ENT_QUOTES, 'UTF-8');
                     $btn = '<button id="btn_lihat_syarat"
                                 data-id="' . $row->id . '"
-                                data-desc="' . $row->desc_recruitment . '"
+                                data-desc="' . $desc . '" 
                                 type="button" class="btn btn-sm btn-info ">
                                 <i class="tf-icons mdi mdi-eye-circle-outline me-1"></i>
                                 Lihat&nbsp;Syarat

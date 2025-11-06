@@ -60,7 +60,7 @@ class RecruitmentLaporanController extends Controller
                 $query;
             }
         ])->with([
-            'recruitmentUserRecord' => function ($query) {
+            'lastUserRecord' => function ($query) {
                 $query;
             }
         ])->with([
@@ -70,6 +70,9 @@ class RecruitmentLaporanController extends Controller
         ])
             ->where('holding', $holdings->id)
             ->whereBetween('created_at', [$now, $now1]);
+        // ->whereHas('lastUserRecord', function ($query) {
+        //     $query->orderBy('created_at', 'desc');
+        // });
         if (!empty($request->departemen_filter)) {
             $query->whereIn('nama_dept', (array)$request->departemen_filter ?? []);
         }
@@ -84,6 +87,11 @@ class RecruitmentLaporanController extends Controller
 
         if (!empty($request->jabatan_filter)) {
             $query->whereIn('nama_jabatan', (array)$request->jabatan_filter ?? []);
+        }
+        if (!empty($request->status_filter)) {
+            $query->whereHas('lastUserRecord', function ($query) use ($request) {
+                $query->whereIn('status', (array)$request->status_filter ?? []);
+            });
         }
         $table = $query->get();
         // dd($table);
@@ -182,7 +190,7 @@ class RecruitmentLaporanController extends Controller
     }
     public function dt_laporan_recruitment_print(Request $request, $holding)
     {
-        // dd($request->departemen_filter);
+        // dd($request->status_filter);
         $holdings = Holding::where('holding_code', $holding)->first();
         $now = Carbon::parse($request->start_date)->startOfDay();
         $now1 = Carbon::parse($request->end_date)->endOfDay();
@@ -214,6 +222,10 @@ class RecruitmentLaporanController extends Controller
                 $query;
             }
         ])->with([
+            'lastUserRecord' => function ($query) {
+                $query;
+            }
+        ])->with([
             'AuthLogin' => function ($query) {
                 $query;
             }
@@ -234,6 +246,11 @@ class RecruitmentLaporanController extends Controller
 
         if (!empty($request->jabatan_filter)) {
             $query->whereIn('nama_jabatan', (array)$request->jabatan_filter ?? []);
+        }
+        if (!empty($request->status_filter)) {
+            $query->whereHas('lastUserRecord', function ($query) use ($request) {
+                $query->whereIn('status', (array)$request->status_filter ?? []);
+            });
         }
         $table = $query->get();
         // dd($table);

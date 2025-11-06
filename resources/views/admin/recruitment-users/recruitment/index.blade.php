@@ -23,7 +23,7 @@
                     </div>
                     <div class="card-body">
                         <!-- <hr class="my-5">
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        <hr class="my-5"> -->
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    <hr class="my-5"> -->
                         <button type="button" class="btn btn-sm btn-primary waves-effect waves-light my-3"
                             id="btn_modal_recruitment"><i class="menu-icon tf-icons mdi mdi-plus"></i>Tambah</button>
                         <!-- <button type="button" class="btn btn-sm btn-success waves-effect waves-light mb-3" data-bs-toggle="modal" data-bs-target="#modal_import_inventaris"><i class="menu-icon tf-icons mdi mdi-file-excel"></i>Import</button> -->
@@ -32,19 +32,12 @@
                             <div class="modal-dialog modal-lg modal-dialog-scrollable">
                                 <div class=" modal-content">
 
-                                    <div class="modal-header">
-                                        <h4 class="modal-title" id="backDropModalTitle"> Syarat Ketentuan</h4>
-                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                            aria-label="Close"></button>
-                                    </div>
                                     <div class="modal-body">
                                         <div class="col-lg-12">
                                             <div class="form-floating form-floating-outline">
-                                                <textarea class="form-control @error('show_desc_recruitment') is-invalid @enderror" id="desc_recruitment"
-                                                    name="show_desc_recruitment" autofocus value="{{ old('show_desc_recruitment') }}" cols="30" rows="20"
-                                                    style="height: auto" disabled></textarea>
+                                                <div id="show_desc_recruitment" style="height:auto;"></div>
                                                 <!-- {{-- <input class="form-control @error('show_desc_recruitment') is-invalid @enderror" id="show_desc_recruitment" name="show_desc_recruitment" autofocus value="{{ old('show_desc_recruitment') }}"> --}}
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            {{-- <input type="text" id="show_desc_recruitment"> --}} -->
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        {{-- <input type="text" id="show_desc_recruitment"> --}} -->
                                                 <label for="show_desc_recruitment">SYARAT KETENTUAN</label>
                                             </div>
                                             @error('show_desc_recruitment')
@@ -313,13 +306,15 @@
                             </div>
                         </div>
                         <br>
+                        <div class="d-flex align-items-center justify-content-between">
+                            <h6 class="card-title m-0 me-2">SYARAT DAN KETENTUAN</h6>
+                        </div>
                         <div class="row g-2">
                             <div class="col mb-2">
                                 <div class="form-floating form-floating-outline">
-                                    <textarea class="form-control @error('desc_recruitment') is-invalid @enderror" id="desc_recruitment_add"
+                                    <textarea class="form-control @error('desc_recruitment') is-invalid @enderror summernote" id="desc_recruitment_add"
                                         name="desc_recruitment" autofocus value="{{ old('desc_recruitment') }}" id="" cols="30"
                                         rows="10" style="height: 70%"></textarea>
-                                    <label for="desc_recruitment">Syarat Ketentuan</label>
                                 </div>
                                 @error('desc_recruitment')
                                     <span class="invalid-feedback" role="alert">
@@ -342,7 +337,7 @@
         </div>
     </div>
     <div class="modal fade" id="modal_edit_recruitment" data-bs-backdrop="static" tabindex="-1">
-        <div class="modal-dialog modal-dialog-scrollable">
+        <div class="modal-dialog modal-dialog-scrollable modal-lg">
             <div class="modal-content" enctype="multipart/form-data">
                 @csrf
                 <div class="modal-header">
@@ -565,12 +560,14 @@
                     </div>
                     <br>
                     <div class="row g-2">
+                        <div class="d-flex align-items-center justify-content-between">
+                            <h5 class="card-title m-0 me-2">SYARAT DAN KETENTUAN</h5>
+                        </div>
                         <div class="col mb-2">
                             <div class="form-floating form-floating-outline">
-                                <textarea class="form-control @error('desc_recruitment_update') is-invalid @enderror" id="desc_recruitment_update"
-                                    name="desc_recruitment_update" autofocus value="{{ old('desc_recruitment_update') }}" id=""
-                                    cols="30" rows="10" style="height: 50%"></textarea>
-                                <label for="desc_recruitment_update">Syarat Ketentuan</label>
+                                <textarea class="form-control @error('desc_recruitment_update') is-invalid @enderror summernote"
+                                    id="desc_recruitment_update" name="desc_recruitment_update" autofocus
+                                    value="{{ old('desc_recruitment_update') }}" id="" cols="30" rows="10" style="height: 50%"></textarea>
                             </div>
                             @error('desc_recruitment_update')
                                 <span class="invalid-feedback" role="alert">
@@ -594,15 +591,37 @@
     <script src="https://cdn.datatables.net/2.0.5/js/dataTables.js"></script>
     <script src="https://cdn.datatables.net/2.0.5/js/dataTables.bootstrap5.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
-    {{-- <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.min.js"></script> --}}
-    {{-- <script>
-    $(document).ready(function() {
-        $("#desc_recruitment").summernote();
-        // $("#show_desc_recruitment").summernote();
-        $("#desc_recruitment_update").summernote();
-        $('.dropdown-toggle').dropdown();
-    });
-</script> --}}
+    <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $("#desc_recruitment_add").summernote();
+            // $("#show_desc_recruitment").summernote();
+            $("#desc_recruitment_update").summernote();
+            $('.dropdown-toggle').dropdown();
+        });
+        $(".summernote").summernote({
+            placeholder: "Masukkan Syarat dan Ketentuan",
+            tabsize: 2,
+            height: 120,
+            toolbar: [
+                ["style", ["style"]],
+                ["font", ["bold", "underline", "clear"]],
+                ["color", ["color"]],
+                ["para", ["ul", "ol", "paragraph"]],
+                ["table", ["table"]],
+                ["insert", ["link", "picture", "video"]],
+                ["view", ["fullscreen", "help"]]
+            ],
+            callbacks: {
+                onImageUpload: function(e, o = this) {
+                    uploadImage(e[0], o)
+                },
+                onMediaDelete: function(e) {
+                    deleteImage(e[0].src)
+                }
+            }
+        })
+    </script>
     {{-- start datatable  --}}
     <script>
         let holding = window.location.pathname.split("/").pop();
@@ -978,7 +997,7 @@
             let desc = $(this).data('desc');
             console.log(desc);
             let holding = $(this).data("holding");
-            $('#show_desc_recruitment').val(desc);
+            $('#show_desc_recruitment').html(desc);
             // $('#show_desc_recruitment').summernote('disable');
             // let url = "{{ url('recruitment/show/') }}" + '/' + id + '/' + holding;
             $('#modal_lihat_syarat').modal('show');
@@ -1099,7 +1118,7 @@
             }).prop('selected', true)
             $('#nama_bagian_update').val(bagian);
             $('#nama_jabatan_update').val(jabatan);
-            $('#desc_recruitment_update').val(desc);
+            $('#desc_recruitment_update').summernote('code', desc);
             $('#created_recruitment_update').val(tanggal_awal);
             $('#end_recruitment_update').val(tanggal_akhir);
             $('#deadline_recruitment_update').val(deadline);

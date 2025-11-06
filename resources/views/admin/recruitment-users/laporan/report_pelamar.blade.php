@@ -127,6 +127,29 @@
                                 </div>
 
                                 <div class="row gy-4 align-items-end">
+                                    <div class="col-lg-3 col-md-6 col-sm-6">
+                                        <div class="form-floating form-floating-outline">
+                                            <select type="text" class="form-control" name="status[]" id="status_filter"
+                                                multiple>
+                                                <option selected disabled value="">-- Pilih Status --</option>
+                                                <option value="0">Review HRD</option>
+                                                <option value="1">Panggilan Wawancara</option>
+                                                <option value="2">Lamaran Diterima</option>
+                                                <option value="3">Ditolak</option>
+                                                <option value="1a">Hadir Interview</option>
+                                                <option value="2a">Tidak Hadir Interview</option>
+                                                <option value="1b">Interview Manager</option>
+                                                <option value="2b">Diterima Bekerja</option>
+                                                <option value="3b">Tidak Lolos</option>
+                                                <option value="4b">Lolos Interview Manager</option>
+                                                <option value="5b">Ditolak Manager</option>
+                                                <option value="6b">Penawaran Posisi Lain</option>
+                                                <option value="7b">Lolos Posisi Lain</option>
+                                                <option value="8b">Ditetapkan Karyawan</option>
+                                            </select>
+                                            <label for="status">Status</label>
+                                        </div>
+                                    </div>
                                     <div class="col-lg-6 col-md-6col-sm-12">
                                         <div class="form-floating form-floating-outline">
                                             <div id="reportrange" style="white-space: nowrap;">
@@ -159,8 +182,8 @@
                                         <svg width="120" height="120" viewBox="0 0 120 120" fill="none"
                                             xmlns="http://www.w3.org/2000/svg">
 
-                                            <rect x="25" y="25" width="70" height="70" rx="8" ry="8"
-                                                stroke="#CED4DA" stroke-width="2" />
+                                            <rect x="25" y="25" width="70" height="70" rx="8"
+                                                ry="8" stroke="#CED4DA" stroke-width="2" />
 
                                             <path d="M35 35H85" stroke="#E6E8EB" stroke-width="1.5"
                                                 stroke-linecap="round" />
@@ -433,6 +456,11 @@
             placeholder: "Pilih Jabatan",
             allowClear: true
         });
+        $('#status_filter').select2({
+            theme: 'bootstrap-5',
+            placeholder: "Pilih Status",
+            allowClear: true
+        });
         var start = moment().startOf('month');
         var end = moment().endOf('month');
         // var start = moment('2025-07-21');
@@ -474,143 +502,20 @@
                 var divisi_filter = $('#divisi_filter').val() || [];
                 var bagian_filter = $('#bagian_filter').val() || [];
                 var jabatan_filter = $('#jabatan_filter').val() || [];
+                var status_filter = $('#status_filter').val() || [];
                 var start_date = $('#start_date').val() || '';
                 var end_date = $('#end_date').val() || '';
 
-                // console.log(departemen_filter, divisi_filter, bagian_filter, jabatan_filter, start_date, end_date);
+                // console.log(departemen_filter, divisi_filter, bagian_filter, jabatan_filter, start_date,
+                //     end_date, status_filter);
 
                 $('#content_null').empty();
                 // $('#table_recruitment').empty();
-                $('#table_recruitment').DataTable().clear().destroy();
                 if ($.fn.DataTable.isDataTable('#table_recruitment')) {
                     $('#table_recruitment').DataTable().clear().destroy();
                 }
-                if (!$.fn.dataTable.isDataTable('#example')) {
-                    var table2 = $('#table_recruitment_print').DataTable({
-                        "scrollY": true,
-                        "scrollX": true,
-                        processing: true,
-                        serverSide: true,
-                        paging: false,
-                        searching: false,
-                        info: false,
-                        dom: 'Bfrtip',
-                        ajax: {
-                            url: "{{ url('/dt_laporan_recruitment_print') }}" + '/' + holding,
-                            data: {
-                                start_date: start_date,
-                                end_date: end_date,
-                                departemen_filter: departemen_filter,
-                                divisi_filter: divisi_filter,
-                                bagian_filter: bagian_filter,
-                                jabatan_filter: jabatan_filter,
-                            }
-                        },
-                        buttons: [{
-
-                                extend: 'excelHtml5',
-                                className: 'btn btn-sm btn-success',
-                                text: '<i class="menu-icon tf-icons mdi mdi-file-excel"></i>Excel',
-                                titleAttr: 'Excel',
-                                title: 'LAPORAN DATA PELAMAR',
-                                messageTop: 'Bulan : '.start_date + ' s/d ' + end_date,
-                                exportOptions: {
-                                    columns: ':not(:first-child)',
-                                },
-                                filename: function() {
-                                    var d = new Date();
-                                    var l = d.getFullYear() + '-' + (d.getMonth() + 1) +
-                                        '-' + d
-                                        .getDate();
-                                    var n = d.getHours() + ':' + d.getMinutes() + ':' + d
-                                        .getSeconds();
-                                    return 'LAPORAN_DATA_PELAMAR_{{ $holding->holding_name }}_' +
-                                        l + ' ' + n;
-                                },
-
-                            },
-                            // {
-
-                            //     extend: 'pdf',
-                            //     className: 'btn btn-sm btn-danger',
-                            //     text: '<i class="menu-icon tf-icons mdi mdi-file-pdf-box"></i>PDF',
-                            //     titleAttr: 'PDF',
-                            //     title: 'LAPORAN DATA PELAMAR',
-                            //     orientation: 'potrait',
-                            //     pageSize: 'LEGAL',
-                            //     exportOptions: {
-                            //         columns: ':not(:first-child)',
-                            //     },
-                            //     filename: function() {
-                            //         var d = new Date();
-                            //         var l = d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d
-                            //             .getDate();
-                            //         var n = d.getHours() + ":" + d.getMinutes() + ":" + d
-                            //             .getSeconds();
-                            //         return 'LAPORAN_DATA_PELAMAR_{{ $holding->holding_name }}_' +
-                            //             l + ' ' + n;
-                            //     },
-                            // }, {
-                            //     extend: 'print',
-                            //     className: 'btn btn-sm btn-info',
-                            //     title: 'LAPORAN DATA PELAMAR',
-                            //     text: '<i class="menu-icon tf-icons mdi mdi-printer-pos-check-outline"></i>PRINT',
-                            //     titleAttr: 'PRINT',
-                            // }, {
-                            //     extend: 'copy',
-                            //     title: 'LAPORAN DATA PELAMAR',
-                            //     className: 'btn btn-sm btn-secondary',
-                            //     text: '<i class="menu-icon tf-icons mdi mdi-content-copy"></i>COPY',
-                            //     titleAttr: 'COPY',
-                            // }
-                        ],
-                        columns: [{
-                                data: null,
-                                render: function(data, type, row, meta) {
-                                    return meta.row + 1;
-                                },
-                                orderable: false,
-                                searchable: false
-                            },
-                            {
-                                data: 'tanggal_mulai',
-                                name: 'tanggal_mulai',
-                                // class: 'table-tbody'
-                            },
-                            {
-                                data: 'nama_lengkap',
-                                name: 'nama_lengkap'
-                            },
-                            {
-                                data: 'posisi_yang_dilamar',
-                                name: 'posisi_yang_dilamar'
-                            },
-                            {
-                                data: 'cv',
-                                name: 'cv'
-                            },
-                            {
-                                data: 'status_detail',
-                                name: 'status_detail'
-                            },
-                            {
-                                data: 'tanggal_berakhir',
-                                name: 'tanggal_berakhir',
-                                // class: 'table-tbody'
-                            },
-                            {
-                                data: 'perkembangan_terakhir',
-                                name: 'perkembangan_terakhir'
-                            },
-                            {
-                                data: 'feedback',
-                                name: 'feedback'
-                            },
-                        ],
-                        order: [
-                            [2, 'desc']
-                        ]
-                    });
+                if ($.fn.DataTable.isDataTable('#table_recruitment_print')) {
+                    $('#table_recruitment_print').DataTable().clear().destroy();
                 }
                 var table = $('#table_recruitment').DataTable({
                     "scrollY": true,
@@ -626,6 +531,7 @@
                             divisi_filter: divisi_filter,
                             bagian_filter: bagian_filter,
                             jabatan_filter: jabatan_filter,
+                            status_filter: status_filter,
                         }
                     },
 
@@ -676,6 +582,133 @@
                         [2, 'desc']
                     ]
                 });
+                var table2 = $('#table_recruitment_print').DataTable({
+                    "scrollY": true,
+                    "scrollX": true,
+                    processing: true,
+                    serverSide: true,
+                    paging: false,
+                    searching: false,
+                    info: false,
+                    dom: 'Bfrtip',
+                    ajax: {
+                        url: "{{ url('/dt_laporan_recruitment_print') }}" + '/' + holding,
+                        data: {
+                            start_date: start_date,
+                            end_date: end_date,
+                            departemen_filter: departemen_filter,
+                            divisi_filter: divisi_filter,
+                            bagian_filter: bagian_filter,
+                            jabatan_filter: jabatan_filter,
+                            status_filter: status_filter,
+                        }
+                    },
+                    buttons: [{
+
+                            extend: 'excelHtml5',
+                            className: 'btn btn-sm btn-success',
+                            text: '<i class="menu-icon tf-icons mdi mdi-file-excel"></i>Excel',
+                            titleAttr: 'Excel',
+                            title: 'LAPORAN DATA PELAMAR',
+                            messageTop: 'Bulan : '.start_date + ' s/d ' + end_date,
+                            exportOptions: {
+                                columns: ':not(:first-child)',
+                            },
+                            filename: function() {
+                                var d = new Date();
+                                var l = d.getFullYear() + '-' + (d.getMonth() + 1) +
+                                    '-' + d
+                                    .getDate();
+                                var n = d.getHours() + ':' + d.getMinutes() + ':' + d
+                                    .getSeconds();
+                                return 'LAPORAN_DATA_PELAMAR_{{ $holding->holding_name }}_' +
+                                    l + ' ' + n;
+                            },
+
+                        },
+                        // {
+
+                        //     extend: 'pdf',
+                        //     className: 'btn btn-sm btn-danger',
+                        //     text: '<i class="menu-icon tf-icons mdi mdi-file-pdf-box"></i>PDF',
+                        //     titleAttr: 'PDF',
+                        //     title: 'LAPORAN DATA PELAMAR',
+                        //     orientation: 'potrait',
+                        //     pageSize: 'LEGAL',
+                        //     exportOptions: {
+                        //         columns: ':not(:first-child)',
+                        //     },
+                        //     filename: function() {
+                        //         var d = new Date();
+                        //         var l = d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d
+                        //             .getDate();
+                        //         var n = d.getHours() + ":" + d.getMinutes() + ":" + d
+                        //             .getSeconds();
+                        //         return 'LAPORAN_DATA_PELAMAR_{{ $holding->holding_name }}_' +
+                        //             l + ' ' + n;
+                        //     },
+                        // }, {
+                        //     extend: 'print',
+                        //     className: 'btn btn-sm btn-info',
+                        //     title: 'LAPORAN DATA PELAMAR',
+                        //     text: '<i class="menu-icon tf-icons mdi mdi-printer-pos-check-outline"></i>PRINT',
+                        //     titleAttr: 'PRINT',
+                        // }, {
+                        //     extend: 'copy',
+                        //     title: 'LAPORAN DATA PELAMAR',
+                        //     className: 'btn btn-sm btn-secondary',
+                        //     text: '<i class="menu-icon tf-icons mdi mdi-content-copy"></i>COPY',
+                        //     titleAttr: 'COPY',
+                        // }
+                    ],
+                    columns: [{
+                            data: null,
+                            render: function(data, type, row, meta) {
+                                return meta.row + 1;
+                            },
+                            orderable: false,
+                            searchable: false
+                        },
+                        {
+                            data: 'tanggal_mulai',
+                            name: 'tanggal_mulai',
+                            // class: 'table-tbody'
+                        },
+                        {
+                            data: 'nama_lengkap',
+                            name: 'nama_lengkap'
+                        },
+                        {
+                            data: 'posisi_yang_dilamar',
+                            name: 'posisi_yang_dilamar'
+                        },
+                        {
+                            data: 'cv',
+                            name: 'cv'
+                        },
+                        {
+                            data: 'status_detail',
+                            name: 'status_detail'
+                        },
+                        {
+                            data: 'tanggal_berakhir',
+                            name: 'tanggal_berakhir',
+                            // class: 'table-tbody'
+                        },
+                        {
+                            data: 'perkembangan_terakhir',
+                            name: 'perkembangan_terakhir'
+                        },
+                        {
+                            data: 'feedback',
+                            name: 'feedback'
+                        },
+                    ],
+                    order: [
+                        [2, 'desc']
+                    ]
+                });
+
 
             });
         });
