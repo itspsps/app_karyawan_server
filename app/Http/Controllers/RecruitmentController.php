@@ -289,7 +289,7 @@ class RecruitmentController extends Controller
         ];
         $customessages =
             [
-                'required'             => ':attribute tidak boleh kosong!',
+                'required'          => ':attribute tidak boleh kosong!',
                 'mimes'             => ':attribute harus berupa PDF!',
                 'max'               => ':attribute maksimal 5MB'
             ];
@@ -1210,6 +1210,10 @@ http://192.168.101.241:8001/cpanel/recruitment_detail/$request->recruitment_user
                     return Carbon::parse($row->recruitmentUser->tanggal_wawancara)->format('d-m-Y');
                     // return '-';
                 })
+
+                ->addColumn('waktu_wawancara', function ($row) {
+                    return $row->recruitmentUser->waktu_wawancara;
+                })
                 ->addColumn('presensi', function ($row) {
                     if ($row->recruitmentUser->status == '1a') {
                         $btn = '<span class="badge bg-label-success">Hadir</span>';
@@ -1222,6 +1226,16 @@ http://192.168.101.241:8001/cpanel/recruitment_detail/$request->recruitment_user
                                 <i class="tf-icons mdi mdi-account-search"> </i>
                                  &nbsp;Presensi
                             </button>';
+                    }
+                    return $btn;
+                })
+                ->addColumn('terlambat', function ($row) {
+                    if ($row->terlambat == '1') {
+                        $btn = '<span class="badge bg-label-success">Tepat Waktu</span>';
+                    } elseif ($row->terlambat == '2') {
+                        $btn = '<span class="badge bg-label-warning">Terlambat</span>';
+                    } else {
+                        $btn = '-';
                     }
                     return $btn;
                 })
@@ -1241,7 +1255,18 @@ http://192.168.101.241:8001/cpanel/recruitment_detail/$request->recruitment_user
                 ->addColumn('nama_departemen', function ($row) {
                     return $row->recruitmentUser->Bagian->Divisi->Departemen->nama_departemen;
                 })
-                ->rawColumns(['tanggal_wawancara', 'presensi', 'ujian', 'nama_lengkap', 'nama_bagian', 'nama_departemen', 'nama_divisi', 'nama_departemen'])
+                ->rawColumns([
+                    'tanggal_wawancara',
+                    'waktu_wawancara',
+                    'presensi',
+                    'terlambat',
+                    'ujian',
+                    'nama_lengkap',
+                    'nama_bagian',
+                    'nama_departemen',
+                    'nama_divisi',
+                    'nama_departemen'
+                ])
                 ->make(true);
         }
     }
@@ -1286,6 +1311,9 @@ http://192.168.101.241:8001/cpanel/recruitment_detail/$request->recruitment_user
                 ->addColumn('tanggal_wawancara', function ($row) {
                     return $row->recruitmentUser->tanggal_wawancara;
                 })
+                ->addColumn('waktu_wawancara', function ($row) {
+                    return $row->recruitmentUser->waktu_wawancara;
+                })
                 ->addColumn('presensi', function ($row) {
                     if ($row->recruitmentUser->status == '1a') {
                         $btn = '<span class="badge bg-label-success">Hadir</span>';
@@ -1298,6 +1326,16 @@ http://192.168.101.241:8001/cpanel/recruitment_detail/$request->recruitment_user
                                 <i class="tf-icons mdi mdi-account-search"> </i>
                                  &nbsp;Presensi
                             </button>';
+                    }
+                    return $btn;
+                })
+                ->addColumn('terlambat', function ($row) {
+                    if ($row->terlambat == '1') {
+                        $btn = '<span class="badge bg-label-success">Tepat Waktu</span>';
+                    } elseif ($row->terlambat == '2') {
+                        $btn = '<span class="badge bg-label-warning">Terlambat</span>';
+                    } else {
+                        $btn = '-';
                     }
                     return $btn;
                 })
@@ -1317,7 +1355,18 @@ http://192.168.101.241:8001/cpanel/recruitment_detail/$request->recruitment_user
                 ->addColumn('nama_departemen', function ($row) {
                     return $row->recruitmentUser->Bagian->Divisi->Departemen->nama_departemen;
                 })
-                ->rawColumns(['tanggal_wawancara', 'presensi', 'nama_lengkap', 'ujian', 'nama_bagian', 'nama_departemen', 'nama_divisi', 'nama_departemen'])
+                ->rawColumns([
+                    'tanggal_wawancara',
+                    'waktu_wawancara',
+                    'presensi',
+                    'terlambat',
+                    'nama_lengkap',
+                    'ujian',
+                    'nama_bagian',
+                    'nama_departemen',
+                    'nama_divisi',
+                    'nama_departemen'
+                ])
                 ->make(true);
         }
     }
@@ -1388,7 +1437,15 @@ http://192.168.101.241:8001/cpanel/recruitment_detail/$request->recruitment_user
                 ->addColumn('nama_departemen', function ($row) {
                     return $row->recruitmentUser->Bagian->Divisi->Departemen->nama_departemen;
                 })
-                ->rawColumns(['tanggal_wawancara', 'presensi', 'nama_lengkap', 'nama_bagian', 'nama_departemen', 'nama_divisi', 'nama_departemen'])
+                ->rawColumns([
+                    'tanggal_wawancara',
+                    'presensi',
+                    'nama_lengkap',
+                    'nama_bagian',
+                    'nama_departemen',
+                    'nama_divisi',
+                    'nama_departemen'
+                ])
                 ->make(true);
         }
     }
@@ -1469,6 +1526,7 @@ http://192.168.101.241:8001/cpanel/recruitment_detail/$request->recruitment_user
     public function presensi_recruitment_update(Request $request)
     {
 
+        // dd($request->all());
         try {
             $konfirmasi = RecruitmentInterview::where('id', $request->id)->first();
             // dd($konfirmasi);
@@ -1490,6 +1548,12 @@ http://192.168.101.241:8001/cpanel/recruitment_detail/$request->recruitment_user
                 ]
             );
             if ($request->status == '1a') {
+                RecruitmentInterview::where('id', $request->id)->update(
+                    [
+                        'terlambat'             => $request->terlambat,
+                        'updated_at'            => date('Y-m-d H:i:s'),
+                    ]
+                );
                 $get_interview_user = InterviewUser::where('recruitment_user_id', $konfirmasi->recruitment_user_id)->first();
                 if ($get_interview_user == null) {
                     $interview_admin  = InterviewAdmin::get();
@@ -1733,7 +1797,7 @@ di $holdings->holding_name. dengan benefit gaji Rp. $request->gaji 🎉
 
 Kami mengundang Anda untuk hadir pada:
 📅 Hari/Tanggal : $hari_diterima 
-🕒 Pukul : $request->waktu_diterima
+🕒 Pukul : $request->waktu_bekerja
 📍 Lokasi : $site_krj->site_name, $site_krj->gm_link
 Untuk penjelasan lebih lanjut terkait administrasi dan training karyawan baru. Harap membawa dokumen yang diperlukan sesuai instruksi yang akan kami kirimkan.
 Catatan : $request->notes_langsung
@@ -2038,7 +2102,7 @@ kami melihat potensi Anda lebih sesuai dengan posisi " . $get_posisi_baru->Jabat
 
 Kami mengundang Anda untuk hadir pada:
 📅 Hari/Tanggal : $hari_diterima2
-🕒 Pukul : $request->waktu_diterima
+🕒 Pukul : $request->waktu_bekerja
 📍 Lokasi : $site_krj->site_name, $site_krj->gm_link
 Untuk penjelasan lebih lanjut terkait administrasi dan training karyawan baru. Harap membawa dokumen yang diperlukan sesuai instruksi yang akan kami kirimkan.
 

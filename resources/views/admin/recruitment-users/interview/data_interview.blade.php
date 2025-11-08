@@ -55,8 +55,10 @@
                                 <thead class="table-primary">
                                     <tr>
                                         <th>Tanggal&nbsp;Wawancara</th>
+                                        <th>Waktu&nbsp;Wawancara</th>
                                         <th>Nama&nbsp;Lengkap</th>
                                         <th>Presensi&nbsp;Kehadiran</th>
+                                        <th>Kedisiplinan</th>
                                         <th>Ujian</th>
                                         <th>Nama&nbsp;Bagian</th>
                                         <th>Nama&nbsp;Divisi</th>
@@ -74,8 +76,10 @@
                                     <thead class="table-primary">
                                         <tr>
                                             <th>Tanggal&nbsp;Wawancara</th>
+                                            <th>Waktu&nbsp;Wawancara</th>
                                             <th>Nama&nbsp;Lengkap</th>
                                             <th>Presensi&nbsp;Kehadiran</th>
+                                            <th>Kedisiplinan</th>
                                             <th>Ujian</th>
                                             <th>Nama&nbsp;Bagian</th>
                                             <th>Nama&nbsp;Divisi</th>
@@ -145,7 +149,14 @@
                         <option value="1a" selected>HADIR</option>
                         <option value="2a">TIDAK HADIR</option>
                     </select>
+                    <div id="terlambat_form" class="mt-3">
+                        <select class="form-select" id="terlambat_add" name="terlambat">
+                            <option value="1" selected>TEPAT WAKTU</option>
+                            <option value="2">TERLAMBAT</option>
+                        </select>
+                    </div>
                 </div>
+
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
                     <button type="button" class="btn btn-primary" id="btn_save_presensi">submit</button>
@@ -184,12 +195,20 @@
                     name: 'tanggal_wawancara',
                 },
                 {
+                    data: 'waktu_wawancara',
+                    name: 'waktu_wawancara',
+                },
+                {
                     data: 'nama_lengkap',
                     name: 'nama_lengkap'
                 },
                 {
                     data: 'presensi',
                     name: 'presensi',
+                },
+                {
+                    data: 'terlambat',
+                    name: 'terlambat',
                 },
                 {
                     data: 'ujian',
@@ -230,12 +249,20 @@
                     name: 'tanggal_wawancara',
                 },
                 {
+                    data: 'waktu_wawancara',
+                    name: 'waktu_wawancara',
+                },
+                {
                     data: 'nama_lengkap',
                     name: 'nama_lengkap'
                 },
                 {
                     data: 'presensi',
                     name: 'presensi',
+                },
+                {
+                    data: 'terlambat',
+                    name: 'terlambat',
                 },
                 {
                     data: 'ujian',
@@ -345,6 +372,14 @@
             $('#modal_presensi').modal('show');
 
         });
+        $(document).on('change', '#status_add', function() {
+            let value = $(this).val();
+            if (value == '1a') {
+                $('#terlambat_form').show();
+            } else if (value == '2a') {
+                $('#terlambat_form').hide();
+            }
+        });
         $('#btn_save_presensi').on('click', function(e) {
             e.preventDefault();
             var formData = new FormData();
@@ -352,6 +387,7 @@
             formData.append('_token', '{{ csrf_token() }}');
             formData.append('id', $('#id_add').val());
             formData.append('status', $('#status_add').val());
+            formData.append('terlambat', $('#terlambat_add').val());
             $.ajax({
                 type: "POST",
 
