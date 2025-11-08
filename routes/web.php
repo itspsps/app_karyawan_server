@@ -50,6 +50,7 @@ use App\Http\Controllers\ReportController;
 use App\Http\Controllers\UserKaryawanController;
 use App\Http\Controllers\RecruitmentUserController;
 use App\Http\Controllers\SitesController;
+use App\Http\Controllers\SummernoteController;
 use App\Http\Controllers\UjianUserController;
 use App\Models\Jabatan;
 use App\Models\FingerUser;
