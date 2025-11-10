@@ -5,6 +5,8 @@
 
     <link href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css"
         rel="stylesheet" />
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.14.1/themes/base/jquery-ui.css">
+    <link rel="stylesheet" href="/resources/demos/style.css">
     <style type="text/css">
         .swal2-container {
             z-index: 9999 !important;
@@ -154,9 +156,9 @@
                     </div>
                     <div id="lolos_manager">
                         <div class="form-floating form-floating-outline py-3">
-                            <input type="date" id="tanggal_wawancara" name="tanggal_wawancara"
-                                class="form-control @error('tanggal_wawancara') is-invalid @enderror" placeholder="Tanggal"
-                                value="{{ old('tanggal_wawancara') }}" />
+                            <input type="text" id="tanggal_wawancara" name="tanggal_wawancara"
+                                class="form-control @error('tanggal_wawancara') is-invalid @enderror datepicker"
+                                placeholder="Tanggal" value="{{ old('tanggal_wawancara') }}" readonly />
                             <label for="bagian_recruitment">TANGGAL WAWANCARA</label>
                         </div>
                         <div class="form-floating form-floating-outline py-3">
@@ -226,9 +228,9 @@
                     </div>
                     <div id="lolos_langsung">
                         <div class="form-floating form-floating-outline py-3">
-                            <input type="date" id="tanggal_diterima_update" name="tanggal_diterima"
-                                class="form-control @error('tanggal_diterima') is-invalid @enderror" placeholder="Tanggal"
-                                value="{{ old('tanggal_diterima') }}" />
+                            <input type="text" id="tanggal_diterima_update" name="tanggal_diterima"
+                                class="form-control @error('tanggal_diterima') is-invalid @enderror datepicker"
+                                placeholder="Tanggal" value="{{ old('tanggal_diterima') }}" readonly />
                             <label for="bagian_recruitment">TANGGAL MASUK KERJA</label>
                         </div>
                         <label for="bagian_recruitment px-2"><small>TEMPAT
@@ -285,9 +287,9 @@
                         <input type="hidden" value="2b" name="status" id="status_lolos">
                     </div>
                     <div class="form-floating form-floating-outline py-3">
-                        <input type="date" id="tanggal_diterima_lolos" name="tanggal_diterima"
-                            class="form-control @error('tanggal_diterima') is-invalid @enderror" placeholder="Tanggal"
-                            value="{{ old('tanggal_diterima') }}" />
+                        <input type="text" id="tanggal_diterima_lolos" name="tanggal_diterima"
+                            class="form-control @error('tanggal_diterima') is-invalid @enderror datepicker"
+                            placeholder="Tanggal" value="{{ old('tanggal_diterima') }}" readonly />
                         <label for="bagian_recruitment">TANGGAL MASUK KERJA</label>
                     </div>
                     <label for="bagian_recruitment px-2"><small>GAJI (Rp)</small></label>
@@ -364,9 +366,9 @@
                     </div>
                     <div id="pindah_manager">
                         <div class="form-floating form-floating-outline py-3">
-                            <input type="date" id="tanggal_wawancara_pindah" name="tanggal_wawancara"
-                                class="form-control @error('tanggal_wawancara') is-invalid @enderror"
-                                placeholder="Tanggal" value="{{ old('tanggal_wawancara') }}" />
+                            <input type="text" id="tanggal_wawancara_pindah" name="tanggal_wawancara"
+                                class="form-control @error('tanggal_wawancara') is-invalid @enderror datepicker"
+                                placeholder="Tanggal" value="{{ old('tanggal_wawancara') }}" readonly />
                             <label for="bagian_recruitment">TANGGAL WAWANCARA</label>
                         </div>
                         <div class="form-floating form-floating-outline py-3">
@@ -434,9 +436,9 @@
                     </div>
                     <div id="pindah_langsung">
                         <div class="form-floating form-floating-outline py-3">
-                            <input type="date" id="tanggal_diterima_pindah" name="tanggal_diterima"
-                                class="form-control @error('tanggal_diterima') is-invalid @enderror"
-                                placeholder="Tanggal" value="{{ old('tanggal_diterima') }}" />
+                            <input type="text" id="tanggal_diterima_pindah" name="tanggal_diterima"
+                                class="form-control @error('tanggal_diterima') is-invalid @enderror datepicker"
+                                placeholder="Tanggal" value="{{ old('tanggal_diterima') }}" readonly />
                             <label for="bagian_recruitment">TANGGAL MASUK KERJA</label>
                         </div>
                         <label for="bagian_recruitment px-2"><small>GAJI (Rp)</small></label>
@@ -509,9 +511,16 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
-
+    <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.14.1/jquery-ui.js"></script>
 
     <script>
+        $(function() {
+            $('.datepicker').datepicker({
+                dateFormat: 'yy-mm-dd',
+                minDate: 0
+            });
+        });
         $('#tempat_wawancara').select2({
             dropdownParent: $('#modal_status'),
             theme: 'bootstrap-5',
