@@ -8,6 +8,8 @@
     </style>
     <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.14.1/themes/base/jquery-ui.css">
+    <link rel="stylesheet" href="/resources/demos/style.css">
 @endsection
 @section('isi')
     @include('sweetalert::alert')
@@ -23,7 +25,7 @@
                     </div>
                     <div class="card-body">
                         <!-- <hr class="my-5">
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    <hr class="my-5"> -->
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        <hr class="my-5"> -->
                         <button type="button" class="btn btn-sm btn-primary waves-effect waves-light my-3"
                             id="btn_modal_recruitment"><i class="menu-icon tf-icons mdi mdi-plus"></i>Tambah</button>
                         <!-- <button type="button" class="btn btn-sm btn-success waves-effect waves-light mb-3" data-bs-toggle="modal" data-bs-target="#modal_import_inventaris"><i class="menu-icon tf-icons mdi mdi-file-excel"></i>Import</button> -->
@@ -37,7 +39,7 @@
                                             <div class="form-floating form-floating-outline">
                                                 <div id="show_desc_recruitment" style="height:auto;"></div>
                                                 <!-- {{-- <input class="form-control @error('show_desc_recruitment') is-invalid @enderror" id="show_desc_recruitment" name="show_desc_recruitment" autofocus value="{{ old('show_desc_recruitment') }}"> --}}
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        {{-- <input type="text" id="show_desc_recruitment"> --}} -->
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            {{-- <input type="text" id="show_desc_recruitment"> --}} -->
                                                 <label for="show_desc_recruitment">SYARAT KETENTUAN</label>
                                             </div>
                                             @error('show_desc_recruitment')
@@ -261,9 +263,10 @@
                         <div class="row g-2">
                             <div class="col mb-2">
                                 <div class="form-floating form-floating-outline">
-                                    <input type="date" id="created_recruitment_add" name="created_recruitment"
-                                        class="form-control @error('created_recruitment') is-invalid @enderror"
-                                        placeholder="Masukkan Bagian" value="{{ old('created_recruitment') }}" />
+                                    <input type="text" id="created_recruitment_add" name="created_recruitment"
+                                        class="form-control @error('created_recruitment') is-invalid @enderror datepicker"
+                                        placeholder="Masukkan Bagian" value="{{ old('created_recruitment') }}"
+                                        readonly />
                                     <label for="bagian_recruitment">Tanggal Mulai</label>
                                 </div>
                                 @error('created_recruitment')
@@ -277,10 +280,10 @@
                         <div class="row g-2">
                             <div class="col mb-2">
                                 <div class="form-floating form-floating-outline">
-                                    <input type="date" id="end_recruitment_add" name="end_recruitment"
-                                        class="form-control @error('end_recruitment') is-invalid @enderror"
+                                    <input type="text" id="end_recruitment_add" name="end_recruitment"
+                                        class="form-control @error('end_recruitment') is-invalid @enderror datepicker"
                                         placeholder="Masukkan Bagian" value="{{ old('end_recruitment') }}" />
-                                    <label for="bagian_recruitment">Tanggal Akhir</label>
+                                    <label for="bagian_recruitment" readonly>Tanggal Akhir</label>
                                 </div>
                                 @error('end_recruitment')
                                     <span class="invalid-feedback" role="alert">
@@ -293,9 +296,10 @@
                         <div class="row g-2">
                             <div class="col mb-2">
                                 <div class="form-floating form-floating-outline">
-                                    <input type="date" id="deadline_recruitment_add" name="deadline_recruitment"
-                                        class="form-control @error('deadline_recruitment') is-invalid @enderror"
-                                        placeholder="Masukkan Bagian" value="{{ old('deadline_recruitment') }}" />
+                                    <input type="text" id="deadline_recruitment_add" name="deadline_recruitment"
+                                        class="form-control @error('deadline_recruitment') is-invalid @enderror datepicker"
+                                        placeholder="Masukkan Bagian" value="{{ old('deadline_recruitment') }}"
+                                        readonly />
                                     <label for="bagian_recruitment">Deadline</label>
                                 </div>
                                 @error('deadline_recruitment')
@@ -514,9 +518,9 @@
                     <div class="row g-2">
                         <div class="col mb-2">
                             <div class="form-floating form-floating-outline">
-                                <input type="date" id="created_recruitment_update" name="created_recruitment_update"
-                                    class="form-control @error('created_recruitment_update') is-invalid @enderror"
-                                    placeholder="Tanggal" value="{{ old('created_recruitment_update') }}" />
+                                <input type="text" id="created_recruitment_update" name="created_recruitment_update"
+                                    class="form-control @error('created_recruitment_update') is-invalid @enderror datepicker"
+                                    placeholder="Tanggal" value="{{ old('created_recruitment_update') }}" readonly />
                                 <label for="bagian_recruitment">Tanggal Awal</label>
                             </div>
                             @error('created_recruitment_update')
@@ -530,9 +534,9 @@
                     <div class="row g-2">
                         <div class="col mb-2">
                             <div class="form-floating form-floating-outline">
-                                <input type="date" id="end_recruitment_update" name="end_recruitment_update"
-                                    class="form-control @error('end_recruitment_update') is-invalid @enderror"
-                                    placeholder="Tanggal" value="{{ old('end_recruitment_update') }}" />
+                                <input type="text" id="end_recruitment_update" name="end_recruitment_update"
+                                    class="form-control @error('end_recruitment_update') is-invalid @enderror datepicker"
+                                    placeholder="Tanggal" value="{{ old('end_recruitment_update') }}" readonly />
                                 <label for="bagian_recruitment">Tanggal Akhir</label>
                             </div>
                             @error('end_recruitment_update')
@@ -546,9 +550,9 @@
                     <div class="row g-2">
                         <div class="col mb-2">
                             <div class="form-floating form-floating-outline">
-                                <input type="date" id="deadline_recruitment_update" name="deadline_recruitment_update"
-                                    class="form-control @error('deadline_recruitment_update') is-invalid @enderror"
-                                    placeholder="Tanggal" value="{{ old('deadline_recruitment_update') }}" />
+                                <input type="text" id="deadline_recruitment_update" name="deadline_recruitment_update"
+                                    class="form-control @error('deadline_recruitment_update') is-invalid @enderror datepicker"
+                                    placeholder="Tanggal" value="{{ old('deadline_recruitment_update') }}" readonly />
                                 <label for="bagian_recruitment">Deadline</label>
                             </div>
                             @error('deadline_recruitment_update')
@@ -592,6 +596,7 @@
     <script src="https://cdn.datatables.net/2.0.5/js/dataTables.bootstrap5.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
     <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.14.1/jquery-ui.js"></script>
     <script>
         $(document).ready(function() {
             $("#desc_recruitment_add").summernote();
@@ -624,6 +629,12 @@
     </script>
     {{-- start datatable  --}}
     <script>
+        $(function() {
+            $('.datepicker').datepicker({
+                dateFormat: 'yy-mm-dd',
+                minDate: 0
+            });
+        });
         let holding = window.location.pathname.split("/").pop();
         var table = $('#table_recruitment').DataTable({
             "scrollY": true,
