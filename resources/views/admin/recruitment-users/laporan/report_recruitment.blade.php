@@ -451,13 +451,13 @@
         // var end = moment('2025-08-21');
         var lstart, lend;
 
-        $('#reportrange .date_daterange').html(start.format('D MMMM YYYY') + ' - ' + end.format('D MMMM YYYY'));
 
         function cb(start, end) {
             lstart = start.format('YYYY-MM-DD');
             lend = end.format('YYYY-MM-DD');
             $('#start_date').val(lstart);
             $('#end_date').val(lend);
+            $('#reportrange .date_daterange').html(start.format('D MMMM YYYY') + ' - ' + end.format('D MMMM YYYY'));
             console.log(start, end);
 
         }

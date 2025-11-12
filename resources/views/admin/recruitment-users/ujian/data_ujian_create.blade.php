@@ -281,12 +281,13 @@
     <script>
         $(document).ready(function() {
             function uploadImage(e, o) {
+                // console.log('hehe');
                 var a = new FormData;
                 a.append("image", e), $.ajax({
                     headers: {
                         "X-CSRF-TOKEN": "{{ csrf_token() }}"
                     },
-                    url: "{{ url('summernote_upload') }}",
+                    url: "{{ route('summernote_upload') }}",
                     cache: !1,
                     contentType: !1,
                     processData: !1,
