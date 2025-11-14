@@ -496,7 +496,50 @@
 
         $(document).ready(function() {
             $('#table_recruitment_form').hide();
+            $('#table_recruitment').on('preXhr.dt', function(e, settings, data) {
+                if (data.search && data.search.value) {
+                    // kalau ada search value, biarkan loading default datatable
+                    return;
+                }
+                Swal.fire({
+                    title: 'Memuat Data...',
+                    html: 'Mohon tunggu sebentar',
+                    allowOutsideClick: false,
+                    allowEscapeKey: false,
+                    didOpen: () => {
+                        Swal.showLoading();
+                    }
+                });
+            });
+            $('#table_recruitment').on('xhr.dt', function(e, settings, json, xhr) {
+                // tutup swal hanya kalau sebelumnya kita buka (bukan saat search)
+                if (!settings.oPreviousSearch.sSearch) {
+                    Swal.close();
+                }
+            });
+            $('#table_recruitment_print').on('preXhr.dt', function(e, settings, data) {
+                if (data.search && data.search.value) {
+                    // kalau ada search value, biarkan loading default datatable
+                    return;
+                }
+                Swal.fire({
+                    title: 'Memuat Data...',
+                    html: 'Mohon tunggu sebentar',
+                    allowOutsideClick: false,
+                    allowEscapeKey: false,
+                    didOpen: () => {
+                        Swal.showLoading();
+                    }
+                });
+            });
+            $('#table_recruitment_print').on('xhr.dt', function(e, settings, json, xhr) {
+                // tutup swal hanya kalau sebelumnya kita buka (bukan saat search)
+                if (!settings.oPreviousSearch.sSearch) {
+                    Swal.close();
+                }
+            });
             $('#btn_filter').click(function(e) {
+
                 $('#table_recruitment_form').show();
                 var departemen_filter = $('#departemen_filter').val() || [];
                 var divisi_filter = $('#divisi_filter').val() || [];
@@ -522,6 +565,7 @@
                     "scrollX": true,
                     processing: true,
                     serverSide: true,
+
                     ajax: {
                         url: "{{ url('/dt_laporan_recruitment') }}" + '/' + holding,
                         data: {
@@ -582,6 +626,7 @@
                         [2, 'desc']
                     ]
                 });
+
                 var table2 = $('#table_recruitment_print').DataTable({
                     "scrollY": true,
                     "scrollX": true,
@@ -708,6 +753,7 @@
                         [2, 'desc']
                     ]
                 });
+
 
 
             });

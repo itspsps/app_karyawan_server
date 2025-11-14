@@ -136,7 +136,48 @@
     <script>
         var holding_id = '{{ $holding->id }}';
         var holding = '{{ $holding->holding_code }}';
-
+        $('#table_divisi_print').on('preXhr.dt', function(e, settings, data) {
+            if (data.search && data.search.value) {
+                // kalau ada search value, biarkan loading default datatable
+                return;
+            }
+            Swal.fire({
+                title: 'Memuat Data...',
+                html: 'Mohon tunggu sebentar',
+                allowOutsideClick: false,
+                allowEscapeKey: false,
+                didOpen: () => {
+                    Swal.showLoading();
+                }
+            });
+        });
+        $('#table_divisi_print').on('xhr.dt', function(e, settings, json, xhr) {
+            // tutup swal hanya kalau sebelumnya kita buka (bukan saat search)
+            if (!settings.oPreviousSearch.sSearch) {
+                Swal.close();
+            }
+        });
+        $('#table_divisi').on('preXhr.dt', function(e, settings, data) {
+            if (data.search && data.search.value) {
+                // kalau ada search value, biarkan loading default datatable
+                return;
+            }
+            Swal.fire({
+                title: 'Memuat Data...',
+                html: 'Mohon tunggu sebentar',
+                allowOutsideClick: false,
+                allowEscapeKey: false,
+                didOpen: () => {
+                    Swal.showLoading();
+                }
+            });
+        });
+        $('#table_divisi').on('xhr.dt', function(e, settings, json, xhr) {
+            // tutup swal hanya kalau sebelumnya kita buka (bukan saat search)
+            if (!settings.oPreviousSearch.sSearch) {
+                Swal.close();
+            }
+        });
         if (!$.fn.dataTable.isDataTable('#table_divisi_print')) {
 
             var table2 = $('#table_divisi_print').DataTable({
