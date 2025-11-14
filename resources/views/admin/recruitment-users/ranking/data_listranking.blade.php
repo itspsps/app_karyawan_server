@@ -8,15 +8,18 @@
     <link rel="stylesheet" href="https://code.jquery.com/ui/1.14.1/themes/base/jquery-ui.css">
     <link rel="stylesheet" href="/resources/demos/style.css">
     <style type="text/css">
+        .my-swal {
+            z-index: X;
+        }
+
         .swal2-container {
-            z-index: 9999 !important;
+            z-index: 9999;
         }
 
         .text-center {
             text-align: center;
         }
-    </style>
-    <style>
+
         /* ukuran teks di area pilihan (input select2) */
         .select2-container--bootstrap-5 .select2-selection {
             font-size: 0.875rem !important;
@@ -509,7 +512,7 @@
     <script src="https://cdn.datatables.net/2.0.5/js/dataTables.js"></script>
     <script src="https://cdn.datatables.net/2.0.5/js/dataTables.bootstrap5.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.min.js"></script>
     <script src="https://code.jquery.com/ui/1.14.1/jquery-ui.js"></script>
@@ -746,11 +749,23 @@
                 data: formData,
                 contentType: false,
                 processData: false,
+                beforeSend: function() {
+                    Swal.fire({
+                        title: 'Memuat Data...',
+                        html: 'Mohon tunggu sebentar',
+                        allowOutsideClick: false,
+                        allowEscapeKey: false,
+                        didOpen: () => {
+                            Swal.showLoading();
+                        }
+                    });
+                },
                 error: function() {
                     alert('Something is wrong');
                     // console.log(formData);
                 },
                 success: function(data) {
+                    Swal.close();
                     if (data.code == 200) {
                         Swal.fire({
                             title: 'Berhasil',
@@ -819,11 +834,23 @@
                 data: formData,
                 contentType: false,
                 processData: false,
+                beforeSend: function() {
+                    Swal.fire({
+                        title: 'Memuat Data...',
+                        html: 'Mohon tunggu sebentar',
+                        allowOutsideClick: false,
+                        allowEscapeKey: false,
+                        didOpen: () => {
+                            Swal.showLoading();
+                        }
+                    });
+                },
                 error: function() {
                     alert('Something is wrong');
                     // console.log(formData);
                 },
                 success: function(data) {
+                    Swal.close();
                     if (data.code == 200) {
                         Swal.fire({
                             title: 'Berhasil',
@@ -898,11 +925,23 @@
                 data: formData,
                 contentType: false,
                 processData: false,
+                beforeSend: function() {
+                    Swal.fire({
+                        title: 'Memuat Data...',
+                        html: 'Mohon tunggu sebentar',
+                        allowOutsideClick: false,
+                        allowEscapeKey: false,
+                        didOpen: () => {
+                            Swal.showLoading();
+                        }
+                    });
+                },
                 error: function() {
                     alert('Something is wrong');
                     // console.log(formData);
                 },
                 success: function(data) {
+                    Swal.close();
                     if (data.code == 200) {
                         Swal.fire({
                             title: 'Berhasil',
@@ -966,11 +1005,23 @@
                 data: formData,
                 contentType: false,
                 processData: false,
+                beforeSend: function() {
+                    Swal.fire({
+                        title: 'Memuat Data...',
+                        html: 'Mohon tunggu sebentar',
+                        allowOutsideClick: false,
+                        allowEscapeKey: false,
+                        didOpen: () => {
+                            Swal.showLoading();
+                        }
+                    });
+                },
                 error: function() {
                     alert('Something is wrong');
                     // console.log(formData);
                 },
                 success: function(data) {
+                    Swal.close();
                     if (data.code == 200) {
                         Swal.fire({
                             title: 'Berhasil',

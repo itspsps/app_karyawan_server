@@ -17,6 +17,10 @@
             z-index: X;
         }
 
+        .swal2-container {
+            z-index: 9999;
+        }
+
         /* ukuran teks di area pilihan (input select2) */
         .select2-container--bootstrap-5 .select2-selection {
             font-size: 0.875rem !important;
@@ -80,6 +84,8 @@
                         <div class="d-flex align-items-center justify-content-between">
                             <h5 class="card-title m-0 me-2">DATA RECRUITMENT</h5>
                         </div>
+                        <button type="button" class="btn btn-sm btn-primary waves-effect waves-light my-3"
+                            id="btn_modal_recruitment"><i class="menu-icon tf-icons mdi mdi-plus"></i>Tambah</button>
                     </div>
                     <div id="collapseFilterWrapper" class="sticky-top bg-white" style="z-index: 1020;">
                         <div class="card-body">
@@ -153,9 +159,8 @@
                     </div>
                     <div class="card-body">
                         <!-- <hr class="my-5">
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            <hr class="my-5"> -->
-                        <button type="button" class="btn btn-sm btn-primary waves-effect waves-light my-3"
-                            id="btn_modal_recruitment"><i class="menu-icon tf-icons mdi mdi-plus"></i>Tambah</button>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    <hr class="my-5"> -->
+
                         <!-- <button type="button" class="btn btn-sm btn-success waves-effect waves-light mb-3" data-bs-toggle="modal" data-bs-target="#modal_import_inventaris"><i class="menu-icon tf-icons mdi mdi-file-excel"></i>Import</button> -->
 
                         <div class="modal fade" id="modal_lihat_syarat" data-bs-backdrop="static" tabindex="-1">
@@ -167,7 +172,7 @@
                                             <div class="form-floating form-floating-outline">
                                                 <div id="show_desc_recruitment" style="height:auto;"></div>
                                                 <!-- {{-- <input class="form-control @error('show_desc_recruitment') is-invalid @enderror" id="show_desc_recruitment" name="show_desc_recruitment" autofocus value="{{ old('show_desc_recruitment') }}"> --}}
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                {{-- <input type="text" id="show_desc_recruitment"> --}} -->
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        {{-- <input type="text" id="show_desc_recruitment"> --}} -->
                                                 {{-- <label for="show_desc_recruitment">SYARAT KETENTUAN</label> --}}
                                             </div>
                                             @error('show_desc_recruitment')
@@ -724,7 +729,7 @@
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
     <script type="text/javascript" src="{{ asset('assets/assets_users/js/daterangepicker.js') }}"></script>
     <script src="https://cdn.datatables.net/2.0.5/js/dataTables.bootstrap5.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.min.js"></script>
     <script src="https://code.jquery.com/ui/1.14.1/jquery-ui.js"></script>
     <!-- Select2 JS -->
@@ -1317,12 +1322,23 @@
                 data: formData,
                 contentType: false,
                 processData: false,
+                beforeSend: function() {
+                    Swal.fire({
+                        title: 'Memuat Data...',
+                        html: 'Mohon tunggu sebentar',
+                        allowOutsideClick: false,
+                        allowEscapeKey: false,
+                        didOpen: () => {
+                            Swal.showLoading();
+                        }
+                    });
+                },
                 error: function() {
                     alert('Something is wrong!');
                     // console.log(formData);
                 },
                 success: function(data) {
-                    console.log(data);
+                    Swal.close();
                     if (data.code == 200) {
                         Swal.fire({
                             title: 'Berhasil',
@@ -1412,10 +1428,23 @@
                         url: "{{ url('/recruitment/update/status-recruitment/') }}" + '/' + id +
                             '/' + holding,
                         type: "GET",
+                        beforeSend: function() {
+                            Swal.fire({
+                                title: 'Memuat Data...',
+                                html: 'Mohon tunggu sebentar',
+                                allowOutsideClick: false,
+                                allowEscapeKey: false,
+                                didOpen: () => {
+                                    Swal.showLoading();
+                                }
+                            });
+                        },
                         error: function() {
                             alert('Something is wrong');
                         },
                         success: function(data) {
+                            Swal.close();
+
                             Swal.fire({
                                 title: 'Terupdate!',
                                 text: 'Data anda berhasil di update.',
@@ -1455,10 +1484,23 @@
                         url: "{{ url('/recruitment/update/status-recruitment/') }}" + '/' + id +
                             '/' + holding,
                         type: "GET",
+                        beforeSend: function() {
+                            Swal.fire({
+                                title: 'Memuat Data...',
+                                html: 'Mohon tunggu sebentar',
+                                allowOutsideClick: false,
+                                allowEscapeKey: false,
+                                didOpen: () => {
+                                    Swal.showLoading();
+                                }
+                            });
+                        },
                         error: function() {
+                            Swal.close();
                             alert('Something is wrong');
                         },
                         success: function(data) {
+                            Swal.close();
                             Swal.fire({
                                 title: 'Terupdate!',
                                 text: 'Data anda berhasil di update.',
@@ -1555,11 +1597,23 @@
                 data: formData,
                 contentType: false,
                 processData: false,
+                beforeSend: function() {
+                    Swal.fire({
+                        title: 'Memuat Data...',
+                        html: 'Mohon tunggu sebentar',
+                        allowOutsideClick: false,
+                        allowEscapeKey: false,
+                        didOpen: () => {
+                            Swal.showLoading();
+                        }
+                    });
+                },
                 error: function() {
                     alert('Something is wrong!');
                     // console.log(formData);
                 },
                 success: function(data) {
+                    Swal.close();
                     console.log(data);
                     if (data.code == 200) {
                         Swal.fire({
@@ -1584,6 +1638,7 @@
                         $('#desc_recruitment_update').val('');
                         $('#table_recruitment').DataTable().ajax.reload();
                     } else if (data.code == 400) {
+                        Swal.close();
                         let errors = data.errors;
                         // console.log(errors);
                         let errorMessages = '';
@@ -1607,6 +1662,7 @@
 
 
                     } else {
+                        Swal.close();
                         $('#modal_edit_recruitment').modal('hide');
                         Swal.fire({
                             title: 'Gagal',
@@ -1637,7 +1693,19 @@
                     $.ajax({
                         url: "{{ url('/recruitment/delete/') }}" + '/' + id + '/' + holding,
                         type: "GET",
+                        beforeSend: function() {
+                            Swal.fire({
+                                title: 'Memuat Data...',
+                                html: 'Mohon tunggu sebentar',
+                                allowOutsideClick: false,
+                                allowEscapeKey: false,
+                                didOpen: () => {
+                                    Swal.showLoading();
+                                }
+                            });
+                        },
                         error: function(data) {
+                            Swal.close();
                             Swal.fire({
                                 title: 'Gagal!',
                                 text: 'Terdapat data tidak dapat dihapus.',
@@ -1646,6 +1714,7 @@
                             });
                         },
                         success: function(data) {
+                            Swal.close();
                             Swal.fire({
                                 title: 'Terhapus!',
                                 text: 'Data anda berhasil di hapus.',

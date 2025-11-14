@@ -112,7 +112,7 @@ class RecruitmentController extends Controller
             }
         ])->where('holding_recruitment', $holdings->id)
             // ->whereBetween('created_at', [$now, $now1])
-            ->whereBetween('created_at', [$now, $now1])
+            ->whereBetween('created_recruitment', [$now, $now1])
             ->orderBy('created_at', 'DESC');
         if (!empty($request->departemen_filter)) {
             $query->whereIn('nama_dept', (array)$request->departemen_filter ?? []);
@@ -505,6 +505,28 @@ class RecruitmentController extends Controller
         } else {
             dd('stop');
         }
+    }
+    function update_status($id, $holding)
+    {
+        // dd($id);
+        $holdings = Holding::where('holding_code', $holding)->first();
+
+        $recruitment = Recruitment::where('id', $id)->where('holding_recruitment', $holdings->id)->first();
+        if ($recruitment->status_recruitment == 0) {
+            Recruitment::where('id', $id)->where('holding_recruitment', $holdings->id)->update([
+                'status_recruitment' => 1,
+            ]);
+        } else {
+            Recruitment::where('id', $id)->where('holding_recruitment', $holdings->id)->update([
+                'status_recruitment' => 0,
+            ]);
+        }
+        ActivityLog::create([
+            'user_id' => Auth::user()->id,
+            'activity' => 'update',
+            'description' => 'Update data Recruitment Status Close ' . Auth::user()->name,
+        ]);
+        return redirect()->back()->with('success', 'Data Berhasil di Diupdate');
     }
 
     function pg_list_pelamar($id, $holding)
@@ -1035,6 +1057,7 @@ class RecruitmentController extends Controller
         $recruitment_admin_id = RecruitmentUser::where('id', $request->recruitment_user_id)->first();
         $tanggal_wawancara = Carbon::parse($request->tanggal_wawancara);
         $hari = $tanggal_wawancara->translatedFormat('l, j F Y');
+
         $site = Site::where('id', $request->tempat_wawancara)->first();
         // dd($request->nomor_whatsapp);
         // dd($recruitment_admin_id);
@@ -1053,7 +1076,9 @@ class RecruitmentController extends Controller
         if ($request->status == '1' && $request->online == '1') {
             $tempat_wawancara = 'required';
             $link_wawancara = 'nullable';
-            $map = $site->gm_link;
+            if (!empty($request->tempat_wawancara)) {
+                $map = $site->gm_link;
+            }
         } elseif ($request->status == '1' && $request->online == '2') {
             $tempat_wawancara = 'nullable';
             $link_wawancara = 'required';
@@ -1186,12 +1211,15 @@ http://192.168.101.241:8001/cpanel/recruitment_detail/$request->recruitment_user
             ]);
         }
 
+        $departemen = Departemen::where('holding', $holdings->id)->orderBy('nama_departemen', 'ASC')->get();
+
         // end Hapus pelamar kadaluar
         $holding = request()->segment(count(request()->segments()));
         return view('admin.recruitment-users.interview.data_interview', [
             // return view('karyawan.index', [
-            'title' => 'Data Interview',
-            'holding'   => $holdings,
+            'title'        => 'Data Interview',
+            'holding'      => $holdings,
+            'departemen'   => $departemen,
         ]);
     }
     function dt_data_interview($holding)
@@ -1295,24 +1323,30 @@ http://192.168.101.241:8001/cpanel/recruitment_detail/$request->recruitment_user
                 ->make(true);
         }
     }
-    function dt_data_interview1($holding)
+    function dt_data_interview1(Request $request, $holding)
     {
+        // dd($request->all());
         $holdings = Holding::where('holding_code', $holding)->first();
-        $table = RecruitmentInterview::with([
+        $now = Carbon::parse($request->start_date)->startOfDay();
+        $now1 = Carbon::parse($request->end_date)->endOfDay();
+        $query_get = RecruitmentInterview::with([
             'recruitmentUser' => function ($query) use ($holdings) {
                 $query->where('holding', $holdings->id)->where('status', '1a')->with([
-                    'Bagian' =>  function ($query) {
+                    'Jabatan' => function ($query) {
                         $query->with([
-                            'Divisi' => function ($query) {
+                            'Bagian' => function ($query) {
                                 $query->with([
-                                    'Departemen' => function ($query) {
-                                        $query->orderBy('nama_departemen', 'ASC');
+                                    'Divisi' => function ($query) {
+                                        $query->with([
+                                            'Departemen' => function ($query) {
+                                                $query->orderBy('nama_departemen', 'ASC');
+                                            }
+                                        ]);
                                     }
                                 ]);
-                                $query->orderBy('nama_divisi', 'ASC');
                             }
                         ]);
-                        $query->orderBy('nama_bagian', 'ASC');
+                        $query->orderBy('nama_jabatan', 'ASC');
                     }
                 ])->with([
                     'Cv' => function ($query) {
@@ -1327,8 +1361,39 @@ http://192.168.101.241:8001/cpanel/recruitment_detail/$request->recruitment_user
             ->whereHas('recruitmentUser', function ($query) use ($holdings) {
                 $query->where('holding', $holdings->id);
             })
-            ->orderBy('created_at', 'DESC')
-            ->get();
+            ->whereHas('recruitmentUser', function ($query) use ($now, $now1) {
+                $query->whereBetween('tanggal_wawancara', [$now, $now1]);
+            })
+            ->orderBy('created_at', 'DESC');
+
+        if (!empty($request->departemen_filter)) {
+            $query_get->whereHas('recruitmentUser', function ($query) use ($request) {
+                $query->whereIn('nama_dept', (array)$request->departemen_filter ?? []);
+            });
+        }
+
+        if (!empty($request->divisi_filter)) {
+            $query_get->whereHas('recruitmentUser', function ($query) use ($request) {
+                $query->whereIn('nama_dept', (array)$request->divisi_filter ?? []);
+            });
+        }
+
+        if (!empty($request->bagian_filter)) {
+            $query_get->whereHas('recruitmentUser', function ($query) use ($request) {
+                $query->whereIn('nama_dept', (array)$request->bagian_filter ?? []);
+            });
+        }
+
+        if (!empty($request->jabatan_filter)) {
+            $query_get->whereHas('recruitmentUser', function ($query) use ($request) {
+                $query->whereIn('nama_dept', (array)$request->jabatan_filter ?? []);
+            });
+        }
+        if (!empty($request->jumlah_filter)) {
+            $query_get->limit($request->jumlah_filter);
+        }
+
+        $table = $query_get->get();
         // dd($table);
         if (request()->ajax()) {
 
@@ -1371,14 +1436,17 @@ http://192.168.101.241:8001/cpanel/recruitment_detail/$request->recruitment_user
                     $holding = request()->segment(count(request()->segments()));
                     return '<a href="' . url("/dt/data-data_ujian_user/$row->recruitment_user_id/$holding") . '" type="button" class="btn btn-info"><small>Lihat</small></a>';
                 })
+                ->addColumn('nama_jabatan', function ($row) {
+                    return $row->recruitmentUser->Jabatan->nama_jabatan;
+                })
                 ->addColumn('nama_bagian', function ($row) {
-                    return $row->recruitmentUser->Bagian->nama_bagian;
+                    return $row->recruitmentUser->Jabatan->Bagian->nama_bagian;
                 })
                 ->addColumn('nama_divisi', function ($row) {
-                    return $row->recruitmentUser->Bagian->Divisi->nama_divisi;
+                    return $row->recruitmentUser->Jabatan->Bagian->Divisi->nama_divisi;
                 })
                 ->addColumn('nama_departemen', function ($row) {
-                    return $row->recruitmentUser->Bagian->Divisi->Departemen->nama_departemen;
+                    return $row->recruitmentUser->Jabatan->Bagian->Divisi->Departemen->nama_departemen;
                 })
                 ->rawColumns([
                     'tanggal_wawancara',
@@ -1387,6 +1455,7 @@ http://192.168.101.241:8001/cpanel/recruitment_detail/$request->recruitment_user
                     'terlambat',
                     'nama_lengkap',
                     'ujian',
+                    'nama_jabatan',
                     'nama_bagian',
                     'nama_departemen',
                     'nama_divisi',
@@ -1395,24 +1464,29 @@ http://192.168.101.241:8001/cpanel/recruitment_detail/$request->recruitment_user
                 ->make(true);
         }
     }
-    function dt_data_interview2($holding)
+    function dt_data_interview2(Request $request, $holding)
     {
         $holdings = Holding::where('holding_code', $holding)->first();
-        $table = RecruitmentInterview::with([
+        $now = Carbon::parse($request->start_date)->startOfDay();
+        $now1 = Carbon::parse($request->end_date)->endOfDay();
+        $query_get = RecruitmentInterview::with([
             'recruitmentUser' => function ($query) use ($holdings) {
-                $query->where('holding', $holdings->id)->where('status', '2a')->with([
-                    'Bagian' =>  function ($query) {
+                $query->where('holding', $holdings->id)->where('status', '1a')->with([
+                    'Jabatan' => function ($query) {
                         $query->with([
-                            'Divisi' => function ($query) {
+                            'Bagian' => function ($query) {
                                 $query->with([
-                                    'Departemen' => function ($query) {
-                                        $query->orderBy('nama_departemen', 'ASC');
+                                    'Divisi' => function ($query) {
+                                        $query->with([
+                                            'Departemen' => function ($query) {
+                                                $query->orderBy('nama_departemen', 'ASC');
+                                            }
+                                        ]);
                                     }
                                 ]);
-                                $query->orderBy('nama_divisi', 'ASC');
                             }
                         ]);
-                        $query->orderBy('nama_bagian', 'ASC');
+                        $query->orderBy('nama_jabatan', 'ASC');
                     }
                 ])->with([
                     'Cv' => function ($query) {
@@ -1427,8 +1501,39 @@ http://192.168.101.241:8001/cpanel/recruitment_detail/$request->recruitment_user
             ->whereHas('recruitmentUser', function ($query) {
                 $query->where('status', '2a');
             })
-            ->orderBy('created_at', 'DESC')
-            ->get();
+            ->whereHas('recruitmentUser', function ($query) use ($now, $now1) {
+                $query->whereBetween('tanggal_wawancara', [$now, $now1]);
+            })
+            ->orderBy('created_at', 'DESC');
+        if (!empty($request->departemen_filter)) {
+            $query_get->whereHas('recruitmentUser', function ($query) use ($request) {
+                $query->whereIn('nama_dept', (array)$request->departemen_filter ?? []);
+            });
+        }
+
+        if (!empty($request->divisi_filter)) {
+            $query_get->whereHas('recruitmentUser', function ($query) use ($request) {
+                $query->whereIn('nama_dept', (array)$request->divisi_filter ?? []);
+            });
+        }
+
+        if (!empty($request->bagian_filter)) {
+            $query_get->whereHas('recruitmentUser', function ($query) use ($request) {
+                $query->whereIn('nama_dept', (array)$request->bagian_filter ?? []);
+            });
+        }
+
+        if (!empty($request->jabatan_filter)) {
+            $query_get->whereHas('recruitmentUser', function ($query) use ($request) {
+                $query->whereIn('nama_dept', (array)$request->jabatan_filter ?? []);
+            });
+        }
+        if (!empty($request->jumlah_filter)) {
+            $query_get->limit($request->jumlah_filter);
+        }
+
+        $table = $query_get->get();
+
         // dd($table);
         if (request()->ajax()) {
             return DataTables::of($table)
@@ -1450,22 +1555,26 @@ http://192.168.101.241:8001/cpanel/recruitment_detail/$request->recruitment_user
                     }
                     return $btn;
                 })
-                ->addColumn('nama_lengkap', function ($row) {
-                    return $row->recruitmentUser->Cv->nama_lengkap;
+                ->addColumn('nama_jabatan', function ($row) {
+                    return $row->recruitmentUser->Jabatan->nama_jabatan;
                 })
                 ->addColumn('nama_bagian', function ($row) {
-                    return $row->recruitmentUser->Bagian->nama_bagian;
+                    return $row->recruitmentUser->Jabatan->Bagian->nama_bagian;
                 })
                 ->addColumn('nama_divisi', function ($row) {
-                    return $row->recruitmentUser->Bagian->Divisi->nama_divisi;
+                    return $row->recruitmentUser->Jabatan->Bagian->Divisi->nama_divisi;
                 })
                 ->addColumn('nama_departemen', function ($row) {
-                    return $row->recruitmentUser->Bagian->Divisi->Departemen->nama_departemen;
+                    return $row->recruitmentUser->Jabatan->Bagian->Divisi->Departemen->nama_departemen;
                 })
                 ->rawColumns([
                     'tanggal_wawancara',
+                    'waktu_wawancara',
                     'presensi',
+                    'terlambat',
                     'nama_lengkap',
+                    'ujian',
+                    'nama_jabatan',
                     'nama_bagian',
                     'nama_departemen',
                     'nama_divisi',
@@ -3431,7 +3540,7 @@ http://192.168.101.241:8001/cpanel/recruitment_detail/$request->id
             },
         ])
             ->where('holding_recruitment', $holdings->id)
-            ->whereBetween('created_at', [$now, $now1]);
+            ->whereBetween('created_recruitment', [$now, $now1]);
         if (!empty($request->departemen_filter)) {
             $query->whereIn('nama_dept', (array)$request->departemen_filter ?? []);
         }
@@ -3456,7 +3565,7 @@ http://192.168.101.241:8001/cpanel/recruitment_detail/$request->id
         if (request()->ajax()) {
             return DataTables::of($table)
                 ->addColumn('created_at', function ($row) {
-                    return Carbon::parse($row->created_at)->format('d-m-Y');
+                    return Carbon::parse($row->created_recruitment)->format('d-m-Y');
                 })
                 ->addColumn('legal_number', function ($row) {
                     if ($row->Jabatan == NULL) {
@@ -3522,8 +3631,6 @@ http://192.168.101.241:8001/cpanel/recruitment_detail/$request->id
     function pg_list_ranking($id, $holding)
     {
         $currentDate = date('Y-m-d');
-        $now = Carbon::parse($request->start_date)->startOfDay();
-        $now1 = Carbon::parse($request->end_date)->endOfDay();
         $recruitment_admin = Recruitment::with([
             'Jabatan' => function ($query) {
                 $query->with([

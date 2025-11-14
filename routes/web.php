@@ -863,6 +863,7 @@ Route::post('/recruitment/update', [RecruitmentController::class, 'update'])->mi
 Route::get('/recruitment/delete/{id?}/{holding}', [RecruitmentController::class, 'delete'])->middleware('admin');
 
 Route::get('/dt/data-recruitment/{holding}', [RecruitmentController::class, 'dt_recruitment'])->middleware('admin');
+Route::get('/recruitment/update/status-recruitment/{id?}/{holding}', [RecruitmentController::class, 'update_status'])->middleware('admin');
 
 Route::get('/pg/data-list-pelamar/{id?}/{holding}', [RecruitmentController::class, 'pg_list_pelamar'])->middleware('admin');
 Route::get('/pg/data-list-user_meta/{id?}/{holding}', [RecruitmentController::class, 'user_meta'])->middleware('admin');

@@ -6,6 +6,10 @@
             z-index: X;
         }
 
+        .swal2-container {
+            z-index: 9999;
+        }
+
         .nowrap {
             white-space: nowrap;
         }
@@ -444,7 +448,7 @@
 @section('js')
     <script src="https://cdn.datatables.net/2.0.5/js/dataTables.js"></script>
     <script src="https://cdn.datatables.net/2.0.5/js/dataTables.bootstrap5.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
         $("input[type=text]").keyup(function() {
             $(this).val($(this).val().toUpperCase());
@@ -703,11 +707,24 @@
                 data: formData,
                 contentType: false,
                 processData: false,
+                beforeSend: function() {
+                    Swal.fire({
+                        title: 'Memuat Data...',
+                        html: 'Mohon tunggu sebentar',
+                        allowOutsideClick: false,
+                        allowEscapeKey: false,
+                        didOpen: () => {
+                            Swal.showLoading();
+                        }
+                    });
+                },
                 error: function() {
+                    Swal.close();
                     alert('Something is wrong!');
                     // console.log(formData);
                 },
                 success: function(data) {
+                    Swal.close();
                     if (data.code == 200) {
                         Swal.fire({
                             title: 'Berhasil',
@@ -762,7 +779,19 @@
                 showCancelButton: true,
                 inputValue: 0,
                 confirmButtonText: 'Yes',
+                beforeSend: function() {
+                    Swal.fire({
+                        title: 'Memuat Data...',
+                        html: 'Mohon tunggu sebentar',
+                        allowOutsideClick: false,
+                        allowEscapeKey: false,
+                        didOpen: () => {
+                            Swal.showLoading();
+                        }
+                    });
+                },
             }).then(function(result) {
+                Swal.close();
                 if (result.value) {
                     // console.log(id);
                     Swal.fire({
@@ -779,7 +808,19 @@
                                 url: "{{ url('/delete_ujian_kategori') }}",
                                 type: "POST",
                                 dataType: 'json',
+                                beforeSend: function() {
+                                    Swal.fire({
+                                        title: 'Memuat Data...',
+                                        html: 'Mohon tunggu sebentar',
+                                        allowOutsideClick: false,
+                                        allowEscapeKey: false,
+                                        didOpen: () => {
+                                            Swal.showLoading();
+                                        }
+                                    });
+                                },
                                 success: function(data) {
+                                    Swal.close();
                                     if (data.code == 200) {
                                         $('#tabel_ujian_kategori').DataTable().ajax
                                             .reload();
@@ -801,6 +842,7 @@
                                     }
                                 },
                                 error: function(data) {
+                                    Swal.close();
                                     Swal.fire({
                                         title: 'Gagal',
                                         text: 'Data Gagal dihapus',
@@ -846,11 +888,24 @@
                 data: formData,
                 contentType: false,
                 processData: false,
+                beforeSend: function() {
+                    Swal.fire({
+                        title: 'Memuat Data...',
+                        html: 'Mohon tunggu sebentar',
+                        allowOutsideClick: false,
+                        allowEscapeKey: false,
+                        didOpen: () => {
+                            Swal.showLoading();
+                        }
+                    });
+                },
                 error: function() {
+                    Swal.close();
                     alert('Something is wrong');
                     // console.log(formData);
                 },
                 success: function(data) {
+                    Swal.close();
                     if (data.code == 200) {
                         Swal.fire({
                             title: 'Berhasil',
@@ -947,11 +1002,24 @@
                 data: formData,
                 contentType: false,
                 processData: false,
+                beforeSend: function() {
+                    Swal.fire({
+                        title: 'Memuat Data...',
+                        html: 'Mohon tunggu sebentar',
+                        allowOutsideClick: false,
+                        allowEscapeKey: false,
+                        didOpen: () => {
+                            Swal.showLoading();
+                        }
+                    });
+                },
                 error: function() {
+                    Swal.close();
                     alert('Something is wrong');
                     // console.log(formData);
                 },
                 success: function(data) {
+                    Swal.close();
                     if (data.code == 200) {
                         Swal.fire({
                             title: 'Berhasil',
@@ -1020,11 +1088,24 @@
                 data: formData,
                 contentType: false,
                 processData: false,
+                beforeSend: function() {
+                    Swal.fire({
+                        title: 'Memuat Data...',
+                        html: 'Mohon tunggu sebentar',
+                        allowOutsideClick: false,
+                        allowEscapeKey: false,
+                        didOpen: () => {
+                            Swal.showLoading();
+                        }
+                    });
+                },
                 error: function() {
+                    Swal.close()
                     alert('Something is wrong!');
                     // console.log(formData);
                 },
                 success: function(data) {
+                    Swal.close();
                     if (data.code == 200) {
                         Swal.fire({
                             title: 'Berhasil',
@@ -1099,7 +1180,19 @@
                                 url: "{{ url('/interview_admin_delete') }}",
                                 type: "POST",
                                 dataType: 'json',
+                                beforeSend: function() {
+                                    Swal.fire({
+                                        title: 'Memuat Data...',
+                                        html: 'Mohon tunggu sebentar',
+                                        allowOutsideClick: false,
+                                        allowEscapeKey: false,
+                                        didOpen: () => {
+                                            Swal.showLoading();
+                                        }
+                                    });
+                                },
                                 success: function(data) {
+                                    Swal.close();
                                     if (data.code == 200) {
                                         $('#tabel_interview').DataTable().ajax
                                             .reload();
@@ -1121,6 +1214,7 @@
                                     }
                                 },
                                 error: function(data) {
+                                    Swal.close();
                                     Swal.fire({
                                         title: 'Gagal',
                                         text: 'Data Gagal dihapus',
@@ -1168,11 +1262,24 @@
                 data: formData,
                 contentType: false,
                 processData: false,
+                beforeSend: function() {
+                    Swal.fire({
+                        title: 'Memuat Data...',
+                        html: 'Mohon tunggu sebentar',
+                        allowOutsideClick: false,
+                        allowEscapeKey: false,
+                        didOpen: () => {
+                            Swal.showLoading();
+                        }
+                    });
+                },
                 error: function() {
+                    Swal.close();
                     alert('Something is wrong');
                     // console.log(formData);
                 },
                 success: function(data) {
+                    Swal.close();
                     if (data.code == 200) {
                         Swal.fire({
                             title: 'Berhasil',
@@ -1246,11 +1353,24 @@
                 data: formData,
                 contentType: false,
                 processData: false,
+                beforeSend: function() {
+                    Swal.fire({
+                        title: 'Memuat Data...',
+                        html: 'Mohon tunggu sebentar',
+                        allowOutsideClick: false,
+                        allowEscapeKey: false,
+                        didOpen: () => {
+                            Swal.showLoading();
+                        }
+                    });
+                },
                 error: function() {
+                    Swal.close();
                     alert('Something is wrong');
                     // console.log(formData);
                 },
                 success: function(data) {
+                    Swal.close();
                     if (data.code == 200) {
                         Swal.fire({
                             title: 'Berhasil',
@@ -1309,11 +1429,24 @@
                 data: formData,
                 contentType: false,
                 processData: false,
+                beforeSend: function() {
+                    Swal.fire({
+                        title: 'Memuat Data...',
+                        html: 'Mohon tunggu sebentar',
+                        allowOutsideClick: false,
+                        allowEscapeKey: false,
+                        didOpen: () => {
+                            Swal.showLoading();
+                        }
+                    });
+                },
                 error: function() {
+                    Swal.close();
                     alert('Something is wrong');
                     // console.log(formData);
                 },
                 success: function(data) {
+                    Swal.close();
                     if (data.code == 200) {
                         Swal.fire({
                             title: 'Berhasil',
@@ -1383,7 +1516,19 @@
                                 url: "{{ url('/delete_referensi') }}",
                                 type: "POST",
                                 dataType: 'json',
+                                beforeSend: function() {
+                                    Swal.fire({
+                                        title: 'Memuat Data...',
+                                        html: 'Mohon tunggu sebentar',
+                                        allowOutsideClick: false,
+                                        allowEscapeKey: false,
+                                        didOpen: () => {
+                                            Swal.showLoading();
+                                        }
+                                    });
+                                },
                                 success: function(data) {
+                                    Swal.close();
                                     if (data.code == 200) {
                                         $('#tabel_referensi').DataTable().ajax
                                             .reload();
@@ -1405,6 +1550,7 @@
                                     }
                                 },
                                 error: function(data) {
+                                    Swal.close();
                                     Swal.fire({
                                         title: 'Gagal',
                                         text: 'Data Gagal dihapus',

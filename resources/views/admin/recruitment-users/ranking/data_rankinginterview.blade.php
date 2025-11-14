@@ -469,58 +469,6 @@
 
             load_data(departemen_filter, divisi_filter, bagian_filter, jabatan_filter, start_date, end_date);
         });
-        // start add departemen
-        $('#nama_dept').on('change', function() {
-            let id_dept = $(this).val();
-            let url = "{{ url('/bagian/get_divisi') }}" + "/" + id_dept;
-            console.log(id_dept);
-            console.log(url);
-            $.ajax({
-                url: url,
-                method: 'GET',
-                contentType: false,
-                cache: false,
-                processData: false,
-                // data: {
-                //     id_dept: id_dept
-                // },
-                success: function(response) {
-                    // console.log(response);
-                    $('#nama_divisi').html(response);
-                },
-                error: function(data) {
-                    console.log('error:', data)
-                },
-
-            })
-        })
-        // end add departemen
-
-        // start add divisi
-        $('#nama_divisi').on('change', function() {
-            let id_divisi = $(this).val();
-            let url = "{{ url('/bagian/get_bagian') }}" + "/" + id_divisi;
-            console.log(id_divisi);
-            console.log(url);
-            $.ajax({
-                url: url,
-                method: 'GET',
-                contentType: false,
-                cache: false,
-                processData: false,
-                // data: {
-                //     id_dept: id_dept
-                // },
-                success: function(response) {
-                    // console.log(response);
-                    $('#nama_bagian').html(response);
-                },
-                error: function(data) {
-                    console.log('error:', data)
-                },
-
-            })
-        })
         // show modal syarat
         $(document).on('click', '#btn_lihat_syarat', function() {
             let id = $(this).data('id');

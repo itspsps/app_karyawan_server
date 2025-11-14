@@ -2,9 +2,10 @@
 @section('css')
     <link rel="stylesheet" href="https://cdn.datatables.net/2.0.5/css/dataTables.bootstrap5.css">
     <style type="text/css">
-        .my-swal {
-            z-index: X;
+        .swal2-container {
+            z-index: 9999;
         }
+
 
         .nowrap {
             white-space: nowrap;
@@ -187,7 +188,7 @@
 @section('js')
     <script src="https://cdn.datatables.net/2.0.5/js/dataTables.js"></script>
     <script src="https://cdn.datatables.net/2.0.5/js/dataTables.bootstrap5.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.min.js"></script>
     <script>
         $(document).ready(function() {
@@ -345,11 +346,24 @@
                 data: formData,
                 contentType: false,
                 processData: false,
+                beforeSend: function() {
+                    Swal.fire({
+                        title: 'Memuat Data...',
+                        html: 'Mohon tunggu sebentar',
+                        allowOutsideClick: false,
+                        allowEscapeKey: false,
+                        didOpen: () => {
+                            Swal.showLoading();
+                        }
+                    });
+                },
                 error: function() {
+                    Swal.close();
                     alert('Something is wrong!');
                     // console.log(formData);
                 },
                 success: function(data) {
+                    Swal.close();
                     if (data.code == 200) {
                         Swal.fire({
                             title: 'Berhasil',
@@ -401,7 +415,19 @@
             $.ajax({
                 type: "GET",
                 url: "{{ url('/dt/get_catatan_interview') }}" + '/' + id,
+                beforeSend: function() {
+                    Swal.fire({
+                        title: 'Memuat Data...',
+                        html: 'Mohon tunggu sebentar',
+                        allowOutsideClick: false,
+                        allowEscapeKey: false,
+                        didOpen: () => {
+                            Swal.showLoading();
+                        }
+                    });
+                },
                 error: function(error) {
+                    Swal.close();
                     Swal.fire({
                         title: 'error',
                         text: error.responseJSON.message,
@@ -411,6 +437,7 @@
 
                 },
                 success: function(data) {
+                    Swal.close();
                     // console.log(data);
                     if (data.code == 200) {
                         $('#catatan_update').val(data.data.catatan);
@@ -438,11 +465,24 @@
                 data: formData,
                 contentType: false,
                 processData: false,
+                beforeSend: function() {
+                    Swal.fire({
+                        title: 'Memuat Data...',
+                        html: 'Mohon tunggu sebentar',
+                        allowOutsideClick: false,
+                        allowEscapeKey: false,
+                        didOpen: () => {
+                            Swal.showLoading();
+                        }
+                    });
+                },
                 error: function() {
+                    Swal.close();
                     alert('Something is wrong!');
                     // console.log(formData);
                 },
                 success: function(data) {
+                    Swal.close();
                     if (data.code == 200) {
                         Swal.fire({
                             title: 'Berhasil',
