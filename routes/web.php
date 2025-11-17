@@ -42,6 +42,7 @@ use App\Http\Controllers\HoldingController;
 use App\Http\Controllers\InterviewController;
 use App\Http\Controllers\IzinController;
 use App\Http\Controllers\MappingShiftController;
+use App\Http\Controllers\MenuController;
 use App\Http\Controllers\PenugasanController;
 use App\Http\Controllers\PenugasanUserController;
 use App\Http\Controllers\StrukturOrganisasiController;
@@ -630,6 +631,9 @@ Route::middleware('admin')->group(function () {
     Route::put('/data-absen/{id}/proses-edit-pulang', [AbsenController::class, 'prosesEditPulang']);
     Route::delete('/data-absen/{id}/delete', [AbsenController::class, 'deleteAdmin']);
     Route::get('/data-lembur', [LemburController::class, 'dataLembur']);
+
+    // MASTER MENU
+    Route::get('/menu/{holding}', [MenuController::class, 'index']);
 
     // ROLE
     Route::get('/role/{holding}', [RoleController::class, 'index']);

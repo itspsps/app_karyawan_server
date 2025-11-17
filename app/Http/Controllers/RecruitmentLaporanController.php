@@ -8,6 +8,7 @@ use App\Models\Divisi;
 use App\Models\Holding;
 use App\Models\Jabatan;
 use App\Models\Karyawan;
+use App\Models\Menu;
 use App\Models\Recruitment;
 use App\Models\RecruitmentUser;
 use App\Models\RecruitmentUserRecord;
@@ -15,15 +16,28 @@ use Yajra\DataTables\Facades\DataTables;
 use Carbon\Carbon;
 use Carbon\CarbonPeriod;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use RealRashid\SweetAlert\Facades\Alert;
 
 class RecruitmentLaporanController extends Controller
 {
     public function index($holding)
     {
+        $roleId = Auth::user();
+        $menus = Menu::whereIn('id', function ($query) use ($roleId) {
+            $query->select('menu_id')
+                ->from('role_menus')
+                ->where('role_id', $roleId->role);
+        })
+            ->whereNull('parent_id') // menu utama
+            ->with('children')
+            ->where('kategori', 'web')      // load submenunya
+            ->orderBy('sort_order')
+            ->get();
         $holdings = Holding::where('holding_code', $holding)->first();
         return view('admin.recruitment-users.laporan.index', [
-            'holding' => $holdings
+            'holding' => $holdings,
+            'menus' => $menus
         ]);
     }
     public function dt_laporan_recruitment(Request $request, $holding)
@@ -382,9 +396,20 @@ class RecruitmentLaporanController extends Controller
         $last_day_period = Carbon::parse($last_day->created_at);
 
         $total_day = $first_day_period->diffInDays($last_day_period);
-
+        $roleId = Auth::user();
+        $menus = Menu::whereIn('id', function ($query) use ($roleId) {
+            $query->select('menu_id')
+                ->from('role_menus')
+                ->where('role_id', $roleId->role);
+        })
+            ->whereNull('parent_id') // menu utama
+            ->with('children')
+            ->where('kategori', 'web')      // load submenunya
+            ->orderBy('sort_order')
+            ->get();
         // dd($first_day_period, $last_day_period, $total_day);
         return view('admin.recruitment-users.laporan.detail_riwayat', [
+            'menus' => $menus,
             'holding' => $holdings,
             'id' => $id,
             'table' => $table,
@@ -502,10 +527,21 @@ class RecruitmentLaporanController extends Controller
         }
         // dd($holding);
         date_default_timezone_set('Asia/Jakarta');
-
+        $roleId = Auth::user();
+        $menus = Menu::whereIn('id', function ($query) use ($roleId) {
+            $query->select('menu_id')
+                ->from('role_menus')
+                ->where('role_id', $roleId->role);
+        })
+            ->whereNull('parent_id') // menu utama
+            ->with('children')
+            ->where('kategori', 'web')      // load submenunya
+            ->orderBy('sort_order')
+            ->get();
         $departemen = Departemen::where('holding', $holdings->id)->orderBy('nama_departemen', 'ASC')->get();
         return view('admin.recruitment-users.laporan.report_pelamar', [
             'holding' => $holdings,
+            'menus' => $menus,
             'departemen' => $departemen,
         ]);
     }
@@ -624,11 +660,22 @@ class RecruitmentLaporanController extends Controller
             return redirect()->route('dashboard_holding')->with('Error', 'Get Holding Error', 5000);
         }
         date_default_timezone_set('Asia/Jakarta');
-
+        $roleId = Auth::user();
+        $menus = Menu::whereIn('id', function ($query) use ($roleId) {
+            $query->select('menu_id')
+                ->from('role_menus')
+                ->where('role_id', $roleId->role);
+        })
+            ->whereNull('parent_id') // menu utama
+            ->with('children')
+            ->where('kategori', 'web')      // load submenunya
+            ->orderBy('sort_order')
+            ->get();
         $departemen = Departemen::where('holding', $holdings->id)->orderBy('nama_departemen', 'ASC')->get();
         return view('admin.recruitment-users.laporan.report_recruitment', [
             'holding' => $holdings,
             'departemen' => $departemen,
+            'menus' => $menus
         ]);
     }
     public function dt_laporan_recruitment2(Request $request, $holding)
@@ -794,9 +841,21 @@ class RecruitmentLaporanController extends Controller
     // Laporan Recruitment Per Divisi
     public function report_per_divisi($holding)
     {
+        $roleId = Auth::user();
+        $menus = Menu::whereIn('id', function ($query) use ($roleId) {
+            $query->select('menu_id')
+                ->from('role_menus')
+                ->where('role_id', $roleId->role);
+        })
+            ->whereNull('parent_id') // menu utama
+            ->with('children')
+            ->where('kategori', 'web')      // load submenunya
+            ->orderBy('sort_order')
+            ->get();
         $holdings = Holding::where('holding_code', $holding)->first();
         return view('admin.recruitment-users.laporan.report_per_divisi', [
-            'holding' => $holdings
+            'holding' => $holdings,
+            'menus' => $menus
         ]);
     }
     public function dt_per_divisi(Request $request, $holding)
@@ -1039,12 +1098,23 @@ class RecruitmentLaporanController extends Controller
 
         // dd($tanggal_awal);
 
-
+        $roleId = Auth::user();
+        $menus = Menu::whereIn('id', function ($query) use ($roleId) {
+            $query->select('menu_id')
+                ->from('role_menus')
+                ->where('role_id', $roleId->role);
+        })
+            ->whereNull('parent_id') // menu utama
+            ->with('children')
+            ->where('kategori', 'web')      // load submenunya
+            ->orderBy('sort_order')
+            ->get();
         return view('admin.recruitment-users.laporan.detail_per_divisi', [
             'holding' => $holdings,
             'divisi' => $divisi,
             'nama_divisi' => $nama_divisi,
             'rata_rata' => $rata_rata,
+            'menus' => $menus
         ]);
     }
     // Laporan Recruitment Per Divisi End

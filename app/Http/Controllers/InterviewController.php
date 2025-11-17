@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Departemen;
 use App\Models\Karyawan;
+use App\Models\Menu;
 use App\Models\RecruitmentInterview;
 use App\Models\RecruitmentKeahlian;
 use App\Models\RecruitmentKesehatan;
@@ -23,6 +24,17 @@ class InterviewController extends Controller
 {
     public function index()
     {
+        $roleId = Auth::user();
+        $menus = Menu::whereIn('id', function ($query) use ($roleId) {
+            $query->select('menu_id')
+                ->from('role_menus')
+                ->where('role_id', $roleId->role);
+        })
+            ->whereNull('parent_id') // menu utama
+            ->with('children')
+            ->where('kategori', 'web')      // load submenunya
+            ->orderBy('sort_order')
+            ->get();
         $user_karyawan  = Karyawan::where('id', Auth::user()->karyawan_id)
             ->with([
                 'Jabatan' => function ($query) {
@@ -140,6 +152,7 @@ class InterviewController extends Controller
         return view(
             'users.interview.index',
             [
+                'menus' => $menus,
                 'table'     => $table,
                 'user_karyawan' => $user_karyawan
             ]
@@ -217,10 +230,22 @@ class InterviewController extends Controller
             ])
             ->where('id', $id)
             ->first();
+        $roleId = Auth::user();
+        $menus = Menu::whereIn('id', function ($query) use ($roleId) {
+            $query->select('menu_id')
+                ->from('role_menus')
+                ->where('role_id', $roleId->role);
+        })
+            ->whereNull('parent_id') // menu utama
+            ->with('children')
+            ->where('kategori', 'web')      // load submenunya
+            ->orderBy('sort_order')
+            ->get();
         // dd($table);
         return view(
             'users.interview.detail',
             [
+                'menus' => $menus,
                 'table'     => $table,
                 'user_karyawan' => $user_karyawan
             ]

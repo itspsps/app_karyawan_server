@@ -25,6 +25,7 @@ use App\Models\InterviewUser;
 use App\Models\Karyawan;
 use App\Models\KaryawanKeahlian;
 use App\Models\KaryawanPendidikan;
+use App\Models\Menu;
 use App\Models\Pembobotan;
 use App\Models\RecruitmentCV;
 use App\Models\RecruitmentKeahlian;
@@ -64,12 +65,24 @@ class RecruitmentController extends Controller
 {
     public function pg_recruitment($holding)
     {
+        $roleId = Auth::user();
+        $menus = Menu::whereIn('id', function ($query) use ($roleId) {
+            $query->select('menu_id')
+                ->from('role_menus')
+                ->where('role_id', $roleId->role);
+        })
+            ->whereNull('parent_id') // menu utama
+            ->with('children')
+            ->where('kategori', 'web')      // load submenunya
+            ->orderBy('sort_order')
+            ->get();
         // $holding = request()->segment(count(request()->segments()));
         $holdings = Holding::where('holding_code', $holding)->first();
         // dd($table);
         return view('admin.recruitment-users.recruitment.index', [
             // return view('karyawan.index', [
             'title'             => 'Data Recruitment',
+            'menus'             => $menus,
             'holding'           => $holdings,
             'site'              => Site::where('site_holding_category', $holdings->id)->get(),
             'departemen'        => Departemen::where('holding', $holdings->id)->orderBy('nama_departemen', 'ASC')->get(),
@@ -554,11 +567,22 @@ class RecruitmentController extends Controller
         }
         // end Hapus pelamar kadaluarsa
 
-
+        $roleId = Auth::user();
+        $menus = Menu::whereIn('id', function ($query) use ($roleId) {
+            $query->select('menu_id')
+                ->from('role_menus')
+                ->where('role_id', $roleId->role);
+        })
+            ->whereNull('parent_id') // menu utama
+            ->with('children')
+            ->where('kategori', 'web')      // load submenunya
+            ->orderBy('sort_order')
+            ->get();
 
         // $recruitment_user_id = RecruitmentUser::where('recruitment_admin_id', $id)->first();
         return view('admin.recruitment-users.recruitment.list_pelamar', [
             'title' => 'Data Recruitment',
+            'menus' => $menus,
             'holding'   => $holdings,
             'recruitment_admin_id'   => $id,
         ]);
@@ -816,12 +840,24 @@ class RecruitmentController extends Controller
         $site = Site::get();
         // dd($pekerjaan);
         // dd($pendidikan);
+        $roleId = Auth::user();
+        $menus = Menu::whereIn('id', function ($query) use ($roleId) {
+            $query->select('menu_id')
+                ->from('role_menus')
+                ->where('role_id', $roleId->role);
+        })
+            ->whereNull('parent_id') // menu utama
+            ->with('children')
+            ->where('kategori', 'web')      // load submenunya
+            ->orderBy('sort_order')
+            ->get();
         return view('admin.recruitment-users.recruitment.user_detail', [
             'ti$pekerjaan_counttle' => 'Data Recruitment',
             'holding'   => $holdings,
         ], compact(
             'data_cv',
             'pendidikan',
+            'menus',
             'pekerjaan',
             'pekerjaan_count',
             'keahlian_count',
@@ -1212,11 +1248,22 @@ http://192.168.101.241:8001/cpanel/recruitment_detail/$request->recruitment_user
         }
 
         $departemen = Departemen::where('holding', $holdings->id)->orderBy('nama_departemen', 'ASC')->get();
-
+        $roleId = Auth::user();
+        $menus = Menu::whereIn('id', function ($query) use ($roleId) {
+            $query->select('menu_id')
+                ->from('role_menus')
+                ->where('role_id', $roleId->role);
+        })
+            ->whereNull('parent_id') // menu utama
+            ->with('children')
+            ->where('kategori', 'web')      // load submenunya
+            ->orderBy('sort_order')
+            ->get();
         // end Hapus pelamar kadaluar
         $holding = request()->segment(count(request()->segments()));
         return view('admin.recruitment-users.interview.data_interview', [
             // return view('karyawan.index', [
+            'menus'        => $menus,
             'title'        => 'Data Interview',
             'holding'      => $holdings,
             'departemen'   => $departemen,
@@ -1651,10 +1698,23 @@ http://192.168.101.241:8001/cpanel/recruitment_detail/$request->recruitment_user
                 $query;
             }
         ])->first();
+        $roleId = Auth::user();
+        $menus = Menu::whereIn('id', function ($query) use ($roleId) {
+            $query->select('menu_id')
+                ->from('role_menus')
+                ->where('role_id', $roleId->role);
+        })
+            ->whereNull('parent_id') // menu utama
+            ->with('children')
+            ->where('kategori', 'web')      // load submenunya
+            ->orderBy('sort_order')
+            ->get();
+
         $user_interview = RecruitmentInterview::where('recruitment_user_id', $id)->first();
         return view('admin.recruitment-users.interview.data_ujian_user', [
             // return view('karyawan.index', [
             'holding'   => $holdings,
+            'menus' => $menus,
             'recruitment_user_id' => $id,
             'user_recruitment'   => $user_recruitment,
             'user_interview'   => $user_interview,
@@ -2527,8 +2587,20 @@ http://192.168.101.241:8001/cpanel/recruitment_detail/$request->id
     {
         $holdings = Holding::where('holding_code', $holding)->first();
         $pembobotan = Pembobotan::first();
+        $roleId = Auth::user();
+        $menus = Menu::whereIn('id', function ($query) use ($roleId) {
+            $query->select('menu_id')
+                ->from('role_menus')
+                ->where('role_id', $roleId->role);
+        })
+            ->whereNull('parent_id') // menu utama
+            ->with('children')
+            ->where('kategori', 'web')      // load submenunya
+            ->orderBy('sort_order')
+            ->get();
         return view('admin.recruitment-users.ujian.data_ujian', [
             'holding' => $holdings,
+            'menus' => $menus,
             'title' => 'Data Ujian',
             'plugin' => '
                 <link rel="stylesheet" type="text/css" href="' . url("/public/assets/cbt-malela/plugins/table/datatable/datatables.css") . '">
@@ -3079,7 +3151,17 @@ http://192.168.101.241:8001/cpanel/recruitment_detail/$request->id
             }
         ])->first();
         $detail_ujian = DetailUjian::where('kode', $kode)->get();
-
+        $roleId = Auth::user();
+        $menus = Menu::whereIn('id', function ($query) use ($roleId) {
+            $query->select('menu_id')
+                ->from('role_menus')
+                ->where('role_id', $roleId->role);
+        })
+            ->whereNull('parent_id') // menu utama
+            ->with('children')
+            ->where('kategori', 'web')      // load submenunya
+            ->orderBy('sort_order')
+            ->get();
         return view('admin.recruitment-users.ujian.data_ujian_edit', [
             'title' => 'Detail Ujian Pilihan Ganda',
             'plugin' => '
@@ -3091,6 +3173,7 @@ http://192.168.101.241:8001/cpanel/recruitment_detail/$request->id
                 'expanded' => 'ujian'
             ],
             'ujian' => $ujian,
+            'menus' => $menus,
             'detail_ujian' => $detail_ujian,
             'holding' => $holdings,
             'kategori' =>  UjianKategori::get(),
@@ -3101,7 +3184,17 @@ http://192.168.101.241:8001/cpanel/recruitment_detail/$request->id
     {
         // dd($ujian);
         $holdings = Holding::where('holding_code', $holding)->first();
-
+        $roleId = Auth::user();
+        $menus = Menu::whereIn('id', function ($query) use ($roleId) {
+            $query->select('menu_id')
+                ->from('role_menus')
+                ->where('role_id', $roleId->role);
+        })
+            ->whereNull('parent_id') // menu utama
+            ->with('children')
+            ->where('kategori', 'web')      // load submenunya
+            ->orderBy('sort_order')
+            ->get();
         return view('admin.recruitment-users.ujian.data_show_esai', [
             'title' => 'Detail Ujian Pilihan Ganda',
             'plugin' => '
@@ -3113,6 +3206,7 @@ http://192.168.101.241:8001/cpanel/recruitment_detail/$request->id
                 'expanded' => 'ujian'
             ],
             'ujian' => $ujian,
+            'menus' => $menus,
             'holding' => $holdings
         ]);
     }
@@ -3128,7 +3222,17 @@ http://192.168.101.241:8001/cpanel/recruitment_detail/$request->id
         ])->first();
         $detail_esai = DetailEsai::where('kode', $kode)->get();
         // dd($detail_esai);
-
+        $roleId = Auth::user();
+        $menus = Menu::whereIn('id', function ($query) use ($roleId) {
+            $query->select('menu_id')
+                ->from('role_menus')
+                ->where('role_id', $roleId->role);
+        })
+            ->whereNull('parent_id') // menu utama
+            ->with('children')
+            ->where('kategori', 'web')      // load submenunya
+            ->orderBy('sort_order')
+            ->get();
         return view('admin.recruitment-users.ujian.data_esai_edit', [
             'title' => 'Detail Ujian Pilihan Ganda',
             'plugin' => '
@@ -3140,6 +3244,7 @@ http://192.168.101.241:8001/cpanel/recruitment_detail/$request->id
                 'expanded' => 'ujian'
             ],
             'ujian' => $ujian,
+            'menus' => $menus,
             'detail_esai' => $detail_esai,
             'holding' => $holdings,
             'kategori' =>  UjianKategori::get(),
@@ -3150,6 +3255,17 @@ http://192.168.101.241:8001/cpanel/recruitment_detail/$request->id
     function pg_ujian_pg($holding)
     {
         $holdings = Holding::where('holding_code', $holding)->first();
+        $roleId = Auth::user();
+        $menus = Menu::whereIn('id', function ($query) use ($roleId) {
+            $query->select('menu_id')
+                ->from('role_menus')
+                ->where('role_id', $roleId->role);
+        })
+            ->whereNull('parent_id') // menu utama
+            ->with('children')
+            ->where('kategori', 'web')      // load submenunya
+            ->orderBy('sort_order')
+            ->get();
         return view('admin.recruitment-users.ujian.data_ujian_create', [
             'holding'   => $holdings,
             'title' => 'Tambah Ujian Pilihan Ganda',
@@ -3163,6 +3279,7 @@ http://192.168.101.241:8001/cpanel/recruitment_detail/$request->id
                 'menu' => 'ujian',
                 'expanded' => 'ujian'
             ],
+            'menus' => $menus,
             'kategori' =>  UjianKategori::get(),
             'pembobotan' =>  Pembobotan::first()
         ]);
@@ -3170,6 +3287,17 @@ http://192.168.101.241:8001/cpanel/recruitment_detail/$request->id
     function pg_esai_pg($holding)
     {
         $holdings = Holding::where('holding_code', $holding)->first();
+        $roleId = Auth::user();
+        $menus = Menu::whereIn('id', function ($query) use ($roleId) {
+            $query->select('menu_id')
+                ->from('role_menus')
+                ->where('role_id', $roleId->role);
+        })
+            ->whereNull('parent_id') // menu utama
+            ->with('children')
+            ->where('kategori', 'web')      // load submenunya
+            ->orderBy('sort_order')
+            ->get();
         return view('admin.recruitment-users.ujian.data_esai_create', [
             'holding'   => $holdings,
             'title' => 'Tambah Ujian Pilihan Ganda',
@@ -3183,6 +3311,7 @@ http://192.168.101.241:8001/cpanel/recruitment_detail/$request->id
                 'menu' => 'ujian',
                 'expanded' => 'ujian'
             ],
+            'menus' => $menus,
             'kategori' =>  UjianKategori::get(),
             'pembobotan' =>  Pembobotan::first()
         ]);
@@ -3512,10 +3641,21 @@ http://192.168.101.241:8001/cpanel/recruitment_detail/$request->id
         $departemen = Departemen::where('holding', $holdings->id)->orderBy('nama_departemen', 'ASC')->get();
         // dd($get_recruitment_user_id1, $get_recruitment_user_id2);
         //kadaluarsa diterima wawancara manager end
-
+        $roleId = Auth::user();
+        $menus = Menu::whereIn('id', function ($query) use ($roleId) {
+            $query->select('menu_id')
+                ->from('role_menus')
+                ->where('role_id', $roleId->role);
+        })
+            ->whereNull('parent_id') // menu utama
+            ->with('children')
+            ->where('kategori', 'web')      // load submenunya
+            ->orderBy('sort_order')
+            ->get();
         return view('admin.recruitment-users.ranking.data_rankinginterview', [
             // return view('karyawan.index', [
             'title'         => 'Data Ranking',
+            'menus'         => $menus,
             'holding'       => $holdings,
             'departemen'    => $departemen
         ]);
@@ -3679,12 +3819,24 @@ http://192.168.101.241:8001/cpanel/recruitment_detail/$request->id
         $holding = request()->segment(count(request()->segments()));
         $site = Site::get();
         // dd($kuota);
+        $roleId = Auth::user();
+        $menus = Menu::whereIn('id', function ($query) use ($roleId) {
+            $query->select('menu_id')
+                ->from('role_menus')
+                ->where('role_id', $roleId->role);
+        })
+            ->whereNull('parent_id') // menu utama
+            ->with('children')
+            ->where('kategori', 'web')      // load submenunya
+            ->orderBy('sort_order')
+            ->get();
         return view('admin.recruitment-users.ranking.data_listranking', [
             'title'                 => 'Data Recruitment',
             'holding'               => $holdings,
             'recruitment_admin'     => $recruitment_admin,
             'id_recruitment'        => $id,
             'kuota'                 => $kuota,
+            'menus'                 => $menus,
             'data_departemen'       => Departemen::all(),
             'data_bagian'           => Bagian::with('Divisi')->where('holding', $holding)->get(),
             'data_dept'             => Departemen::orderBy('nama_departemen', 'asc')->where('holding', $holding)->get(),
