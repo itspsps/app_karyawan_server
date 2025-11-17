@@ -3,18 +3,32 @@
 namespace App\Http\Controllers;
 
 use App\Models\Holding;
+use App\Models\Menu;
 use App\Models\Site;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Yajra\DataTables\Facades\DataTables;
 
 class SitesController extends Controller
 {
     public function index($holding)
     {
+        $roleId = Auth::user();
+        $menus = Menu::whereIn('id', function ($query) use ($roleId) {
+            $query->select('menu_id')
+                ->from('role_menus')
+                ->where('role_id', $roleId->role);
+        })
+            ->whereNull('parent_id') // menu utama
+            ->with('children')
+            ->where('kategori', 'web')      // load submenunya
+            ->orderBy('sort_order')
+            ->get();
         $holding = Holding::where('holding_code', $holding)->first();
         return view('admin.site.site', [
             'title' => 'Master Sites',
             'holding' => $holding,
+            'menus' => $menus,
             'master_site' => Site::all()
         ]);
     }

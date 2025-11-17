@@ -1264,7 +1264,7 @@ APPS | KARYAWAN - SP
     <div class="offcanvas-body text-center small">
         <h5 class="title">KONFIRMASI LOGOUT APP</h5>
         <p>Apakah Anda Ingin Keluar Dari Aplikasi Ini ?</p>
-        <a id="btn_klik" href="{{ url('/logout') }}" class="btn btn-sm btn-danger light pwa-btn">
+        <a href="{{ url('/logout') }}" class="btn_klik btn btn-sm btn-danger light pwa-btn">
             <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
                 fill="none">
                 <path
@@ -1294,7 +1294,7 @@ APPS | KARYAWAN - SP
     </div>
     <ul class="d-flex align-items-center">
         <li class="text-center">
-            <a id="btn_klik" class="nav-link " href="{{ url('/home/absen') }}">
+            <a class="btn_klik nav-link " href="{{ url('/home/absen') }}">
                 <span class="dz-icon bg-green light"
                     style="height: 50px; width: 50px; box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.2), 0 3px 10px 0 rgba(0, 0, 0, 0.1);">
                     <svg xmlns="http://www.w3.org/2000/svg" style="height: 30px; width: 30px;" viewBox="0 0 24 24"
@@ -1312,7 +1312,7 @@ APPS | KARYAWAN - SP
             <span>Absen</span>
         </li>
         <li class="text-center">
-            <a class="nav-link" id="btn_klik" href="{{ url('/izin/dashboard/') }}">
+            <a class="nav-link btn_klik" href="{{ url('/izin/dashboard/') }}">
                 <span class="dz-icon bg-skyblue light"
                     style="height: 50px; width: 50px; box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.2), 0 3px 10px 0 rgba(0, 0, 0, 0.1);">
                     <span id="notif_izin" class="badge badge-danger light"
@@ -1341,7 +1341,7 @@ APPS | KARYAWAN - SP
             <span>Izin</span>
         </li>
         <li class="text-center">
-            <a class="nav-link" id="btn_klik" href="{{ url('/cuti/dashboard/') }}">
+            <a class="nav-link btn_klik" href="{{ url('/cuti/dashboard/') }}">
                 <span class="dz-icon bg-orange light"
                     style="height: 50px; width: 50px;box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.2), 0 3px 10px 0 rgba(0, 0, 0, 0.1);">
                     <span id="notif_cuti" class="badge badge-danger light"
@@ -1397,7 +1397,7 @@ APPS | KARYAWAN - SP
             <span>Cuti</span>
         </li>
         <li class="text-center">
-            <a class="nav-link " id="btn_klik" href="{{ url('/penugasan/dashboard/') }}">
+            <a class="nav-link btn_klik" href="{{ url('/penugasan/dashboard/') }}">
                 <span class="dz-icon bg-red light"
                     style="height: 50px; width: 50px; box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.2), 0 3px 10px 0 rgba(0, 0, 0, 0.1);">
                     <span id="notif_penugasan" class="badge badge-danger light"
@@ -1444,7 +1444,7 @@ APPS | KARYAWAN - SP
                     @foreach ($dataizin as $a)
                     <div class="swiper-slide swiper-slide-prev" role="group" aria-label="1 / 4"
                         style="margin-right: 10px;">
-                        <a id="btn_klik" href="{{ url('/izin/approve/' . $a->id) }}">
+                        <a class="btn_klik" href="{{ url('/izin/approve/' . $a->id) }}">
                             <div class="card job-post"
                                 style="box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.2), 0 3px 10px 0 rgba(0, 0, 0, 0.1);">
                                 <div class="card-body" style="padding: 6px;">
@@ -1555,7 +1555,7 @@ APPS | KARYAWAN - SP
                     @foreach ($datacuti_tingkat1 as $a)
                     <div class="swiper-slide swiper-slide-prev" role="group" aria-label="1 / 4"
                         style="margin-right: 10px;">
-                        <a id="btn_klik" href="{{ url('/cuti/approve/' . $a->id) }}">
+                        <a class="btn_klik" href="{{ url('/cuti/approve/' . $a->id) }}">
                             <div class="card job-post"
                                 style="box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.2), 0 3px 10px 0 rgba(0, 0, 0, 0.1);">
                                 <div class="card-body" style="padding: 6x;">
@@ -1666,7 +1666,7 @@ APPS | KARYAWAN - SP
                     @foreach ($datacuti_tingkat2 as $a)
                     <div class="swiper-slide swiper-slide-prev" role="group" aria-label="1 / 4"
                         style="margin-right: 10px;">
-                        <a id="btn_klik" href="{{ url('/cuti/approve/' . $a->id) }}">
+                        <a class="btn_klik" href="{{ url('/cuti/approve/' . $a->id) }}">
                             <div class="card job-post"
                                 style="box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.2), 0 3px 10px 0 rgba(0, 0, 0, 0.1);">
                                 <div class="card-body" style="padding: 6x;">
@@ -1780,7 +1780,7 @@ APPS | KARYAWAN - SP
                     @if ($datapenugasan->ttd_id_diminta_oleh == null)
                     <div class="swiper-slide swiper-slide-prev" role="group"
                         aria-label="1 / 4" style="margin-right: 10px;">
-                        <a id="btn_klik"
+                        <a class="btn_klik"
                             href="{{ url('/penugasan/approve/diminta/show/' . $datapenugasan->id) }}">
                             <div class="card job-post"
                                 style="box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.2), 0 3px 10px 0 rgba(0, 0, 0, 0.1);">
@@ -1901,7 +1901,7 @@ APPS | KARYAWAN - SP
                     @if ($datapenugasan->ttd_id_disahkan_oleh == null)
                     <div class="swiper-slide swiper-slide-prev" role="group"
                         aria-label="1 / 4" style="margin-right: 10px;">
-                        <a id="btn_klik"
+                        <a class="btn_klik"
                             href="{{ url('/penugasan/approve/diminta/show/' . $datapenugasan->id) }}">
                             <div class="card job-post"
                                 style="box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.2), 0 3px 10px 0 rgba(0, 0, 0, 0.1);">
@@ -2022,8 +2022,7 @@ APPS | KARYAWAN - SP
                     @if ($datapenugasan->ttd_proses_hrd == null)
                     <div class="swiper-slide swiper-slide-prev" role="group"
                         aria-label="1 / 4" style="margin-right: 10px;">
-                        <a id="btn_klik"
-                            href="{{ url('/penugasan/approve/diminta/show/' . $datapenugasan->id) }}">
+                        <a class="btn_klik" href="{{ url('/penugasan/approve/diminta/show/' . $datapenugasan->id) }}">
                             <div class="card job-post"
                                 style="box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.2), 0 3px 10px 0 rgba(0, 0, 0, 0.1);">
                                 <div class="card-body" style="padding: 6px;">
@@ -2143,8 +2142,7 @@ APPS | KARYAWAN - SP
                     @if ($datapenugasan->ttd_proses_finance == null)
                     <div class="swiper-slide swiper-slide-prev" role="group"
                         aria-label="1 / 4" style="margin-right: 10px;">
-                        <a id="btn_klik"
-                            href="{{ url('/penugasan/approve/diminta/show/' . $datapenugasan->id) }}">
+                        <a class="btn_klik" href="{{ url('/penugasan/approve/diminta/show/' . $datapenugasan->id) }}">
                             <div class="card job-post"
                                 style="box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.2), 0 3px 10px 0 rgba(0, 0, 0, 0.1);">
                                 <div class="card-body" style="padding: 6px;">
@@ -2581,13 +2579,12 @@ APPS | KARYAWAN - SP
 <!-- Categorie End -->
 @endsection
 @section('js')
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
-<script src="https://unpkg.com/leaflet@1.8.0/dist/leaflet.js"
-    integrity="sha512-BB3hKbKWOc9Ez/TAwyWxNXeoV9c1v6FIeYiBieIWkpLjauysF18NzgR1MBNBXf8/KABdlkX68nAhlwcDFLGPCQ=="
-    crossorigin=""></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 
 <script type="text/javascript">
     $(document).ready(function() {
+        // Swal.close();
         load_data();
         load_absensi();
 
@@ -2657,890 +2654,28 @@ APPS | KARYAWAN - SP
 
 
         })
-    });
-</script>
-<script>
-    var offcanvasEl = document.getElementById('home_index')
-    oke();
+        var offcanvasEl = document.getElementById('home_index')
+        oke();
 
-    function oke() {
-        // e.preventDefault();
-        // console.log($('#home_index').val());
-        if ($('#home_index').val() == '1') {
-            console.log('hidden')
-            window.scrollTo(0, 50);
-        }
-    }
-    // offcanvasEl.show()
-</script>
-<script>
-    getLocation();
-
-    function getLocation() {
-        if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(showPosition);
-            navigator.geolocation.getCurrentPosition(showPosition1);
-        } else {
-            x.innerHTML = "Geolocation is not supported by this browser.";
-        }
-    }
-
-    function showPosition(position) {
-        //   x.innerHTML = "Latitude: " + position.coords.latitude +
-        //   "<br>Longitude: " + position.coords.longitude;
-        var lat_saya = position.coords.latitude;
-        var long_saya = position.coords.longitude;
-        var lokasi_kantor = '{{ $user_karyawan->penempatan_kerja }}';
-        var nama_saya = '{{ $user_karyawan->name }}';
-        // console.log(lat_saya, long_saya);
-        // console.log(lokasi_kantor);
-
-        var map = L.map('maps').setView([lat_saya, long_saya], 16);
-
-        L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            maxZoom: 25,
-            attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-        }).addTo(map);
-        const popupContent =
-            '<p style="font-size:9pt;">' +
-            nama_saya +
-            '</p>';
-
-        if (lokasi_kantor == 'CV. SUMBER PANGAN - KEDIRI') {
-            var latlngs = [
-                [-7.757852, 112.093890],
-                [-7.756964, 112.094195],
-                [-7.757866, 112.096507],
-                [-7.758657, 112.095336]
-            ];
-            var polygon = L.polygon(latlngs, {
-                color: 'red'
-            }).addTo(map);
-            var label = new L.Label()
-            label.setContent("CV. SUMBER PANGAN - KEDIRI")
-            label.setLatLng(polygon.getBounds().getCenter())
-            mymap.showLabel(label);
-        } else if (lokasi_kantor == 'CV. SUMBER PANGAN - TUBAN') {
-            var latlngs = [
-                [-6.991758822037412, 112.12048943252134],
-                [-6.992285922956118, 112.12087444394012],
-                [-6.991649636772762, 112.12126324857486],
-                [-6.9918209446766015, 112.12162739730593],
-                [-6.99158186659566, 112.12182464453525],
-                [-6.991630811724543, 112.12207689339583],
-                [-6.988976733872493, 112.12301030070874],
-                [-6.988841110863623, 112.1225521606721],
-                [-6.988496578083082, 112.12262012506571],
-                [-6.988366830934185, 112.12224502050286],
-                [-6.988087592439392, 112.12137545996293],
-                [-6.98793810105542, 112.1214266105829],
-                [-6.987859124455924, 112.12116801578183],
-                [-6.988502219235255, 112.1209008958774],
-                [-6.988694019261298, 112.12132146764182],
-                [-6.989663035162432, 112.12098199978163],
-                [-6.9897194468028525, 112.12109850952719],
-                [-6.990145354468302, 112.12087117343832],
-                [-6.989959196198711, 112.12060689523501],
-                [-6.990190483734605, 112.12045628507613],
-                [-6.990653058462982, 112.12096779127609]
-            ];
-            var polygon = L.polygon(latlngs, {
-                color: 'red'
-            }).addTo(map);
-        } else if (lokasi_kantor == 'ALL SITES (SP)') {
-            var latlngs = [
-                [-7.757852, 112.093890],
-                [-7.756964, 112.094195],
-                [-7.757866, 112.096507],
-                [-7.758657, 112.095336]
-            ];
-            var latlngs1 = [
-                [-6.991185, 112.120763],
-                [-6.989174, 112.121394],
-                [-6.989563, 112.122751],
-                [-6.991437, 112.122061]
-            ];
-            var polygon = L.polygon(latlngs, {
-                color: 'red'
-            }).addTo(map);
-            var polygon1 = L.polygon(latlngs1, {
-                color: 'red'
-            }).addTo(map);
-        } else if (lokasi_kantor == 'PT. SURYA PANGAN SEMESTA - KEDIRI') {
-            var latlngs = [
-                [-7.811054254338505, 112.07984213086016],
-                [-7.810839096224432, 112.08081884380057],
-                [-7.808489981554889, 112.08161649876598],
-                [-7.808405068773745, 112.08133682173685],
-                [-7.810097668835231, 112.08055007648335],
-                [-7.810057948477162, 112.08030628208806]
-            ];
-            var polygon = L.polygon(latlngs, {
-                color: 'red'
-            }).addTo(map);
-        } else if (lokasi_kantor == 'PT. SURYA PANGAN SEMESTA - NGAWI') {
-            var latlngs = [
-                [-7.503903124866787, 111.42901333909559],
-                [-7.503780799880943, 111.42583760362271],
-                [-7.505630060242543, 111.4257993236654],
-                [-7.505712281925328, 111.4285105703631],
-                [-7.504871090128984, 111.4285169497671],
-                [-7.504637074058243, 111.42896350806065]
-            ];
-            var polygon = L.polygon(latlngs, {
-                color: 'red'
-            }).addTo(map);
-        } else if (lokasi_kantor == 'PT. SURYA PANGAN SEMESTA - SUBANG') {
-            var latlngs = [
-                [-6.29533870949617, 107.90681938912391],
-                [-6.295727870479563, 107.90769375045888],
-                [-6.293953207394033, 107.9077779126219],
-                [-6.293911897422521, 107.9069474641808]
-            ];
-            var polygon = L.polygon(latlngs, {
-                color: 'red'
-            }).addTo(map);
-        } else if (lokasi_kantor == 'ALL SITES (SPS)') {
-            // sps kediri
-            var latlngs = [
-                [-7.811054254338505, 112.07984213086016],
-                [-7.810839096224432, 112.08081884380057],
-                [-7.808489981554889, 112.08161649876598],
-                [-7.808405068773745, 112.08133682173685],
-                [-7.810097668835231, 112.08055007648335],
-                [-7.810057948477162, 112.08030628208806]
-            ];
-            var polygon = L.polygon(latlngs, {
-                color: 'red'
-            }).addTo(map);
-            // sps ngawi
-            var latlngs1 = [
-                [-7.503903124866787, 111.42901333909559],
-                [-7.503780799880943, 111.42583760362271],
-                [-7.505630060242543, 111.4257993236654],
-                [-7.505712281925328, 111.4285105703631],
-                [-7.504871090128984, 111.4285169497671],
-                [-7.504637074058243, 111.42896350806065]
-            ];
-            var polygon1 = L.polygon(latlngs1, {
-                color: 'red'
-            }).addTo(map);
-            // sps subang
-            var latlngs2 = [
-                [-6.29533870949617, 107.90681938912391],
-                [-6.295727870479563, 107.90769375045888],
-                [-6.293953207394033, 107.9077779126219],
-                [-6.293911897422521, 107.9069474641808]
-            ];
-            var polygon2 = L.polygon(latlngs2, {
-                color: 'red'
-            }).addTo(map);
-        } else if (lokasi_kantor == 'ALL SITES (SP, SPS, SIP)') {
-            //    SP KEDIRI
-            var latlngs = [
-                [-7.757852, 112.093890],
-                [-7.756964, 112.094195],
-                [-7.757866, 112.096507],
-                [-7.758657, 112.095336]
-            ];
-            var polygon = L.polygon(latlngs, {
-                color: 'red'
-            }).addTo(map).bindTooltip("CV. SUMBER PANGAN - KEDIRI", {
-                permanent: true,
-                direction: "above"
-            }).openTooltip();
-
-            // SP TUBAN
-            var latlngs1 = [
-                [-6.991185, 112.120763],
-                [-6.989174, 112.121394],
-                [-6.989563, 112.122751],
-                [-6.991437, 112.122061]
-            ];
-            var polygon1 = L.polygon(latlngs1, {
-                color: 'red'
-            }).addTo(map);
-
-            // sps kediri
-            var latlngs2 = [
-                [-7.811054254338505, 112.07984213086016],
-                [-7.810839096224432, 112.08081884380057],
-                [-7.808489981554889, 112.08161649876598],
-                [-7.808405068773745, 112.08133682173685],
-                [-7.810097668835231, 112.08055007648335],
-                [-7.810057948477162, 112.08030628208806]
-            ];
-            var polygon2 = L.polygon(latlngs2, {
-                color: 'red'
-            }).addTo(map);
-            // sps ngawi
-            var latlngs3 = [
-                [-7.503903124866787, 111.42901333909559],
-                [-7.503780799880943, 111.42583760362271],
-                [-7.505630060242543, 111.4257993236654],
-                [-7.505712281925328, 111.4285105703631],
-                [-7.504871090128984, 111.4285169497671],
-                [-7.504637074058243, 111.42896350806065]
-            ];
-            var polygon3 = L.polygon(latlngs3, {
-                color: 'red'
-            }).addTo(map);
-            // sps subang
-            var latlngs4 = [
-                [-6.29533870949617, 107.90681938912391],
-                [-6.295727870479563, 107.90769375045888],
-                [-6.293953207394033, 107.9077779126219],
-                [-6.293911897422521, 107.9069474641808]
-            ];
-            var polygon4 = L.polygon(latlngs4, {
-                color: 'red'
-            }).addTo(map);
-
-            // DEPO SIDOARJO
-            var latlngs5 = [
-                [-7.361735, 112.784873],
-                [-7.361757, 112.785147],
-                [-7.362231, 112.785102],
-                [-7.362195, 112.784741]
-            ];
-            var polygon5 = L.polygon(latlngs5, {
-                color: 'red'
-            }).addTo(map);
-
-            // DEPO SAMARINDA
-            var latlngs6 = [
-                [-0.46124004439708466, 117.1890440835615],
-                [-0.4612392469974343, 117.18918363302389],
-                [-0.46134587505367874, 117.18918108680002],
-                [-0.4613312150395592, 117.18903673736563]
-            ];
-            var polygon6 = L.polygon(latlngs6, {
-                color: 'red'
-            }).addTo(map);
-
-            // DEPO DENPASAR
-            var latlngs7 = [
-                [-8.652895481207116, 115.20293696056507],
-                [-8.652912717125513, 115.2030294967747],
-                [-8.652755926596885, 115.20305008509402],
-                [-8.652733064463064, 115.2029671528421]
-            ];
-            var polygon7 = L.polygon(latlngs7, {
-                color: 'red'
-            }).addTo(map);
-
-            // DEPO MALANG
-            var latlngs8 = [
-                [-7.967760845267797, 112.65873922458452],
-                [-7.967798033683292, 112.65879957428648],
-                [-7.967823932756354, 112.65878616324159],
-                [-7.967790064737394, 112.65872983685311]
-            ];
-            var polygon8 = L.polygon(latlngs8, {
-                color: 'red'
-            }).addTo(map);
-            // DEPO PALANGKARAYA
-            var latlngs9 = [
-                [-2.1739101807413506, 113.864207945572],
-                [-2.1737446735313326, 113.86422269772137],
-                [-2.173735292555323, 113.86412814985499],
-                [-2.1739061603235093, 113.86411876212357]
-            ];
-            var polygon9 = L.polygon(latlngs9, {
-                color: 'red'
-            }).addTo(map);
-            // DEPO SEMARANG
-            var latlngs10 = [
-                [-6.99848157965858, 110.46462216952277],
-                [-6.998261280500614, 110.4646979419191],
-                [-6.998228668229718, 110.46460071185301],
-                [-6.998402378462714, 110.46454237381336]
-            ];
-            var polygon10 = L.polygon(latlngs10, {
-                color: 'red'
-            }).addTo(map);
-            // DEPO BANDUNG
-            var latlngs11 = [
-                [-6.887528841438018, 107.60032030611694],
-                [-6.887538161422427, 107.60048257975994],
-                [-6.887629364117361, 107.60047855644646],
-                [-6.887622041273895, 107.60032164722143]
-            ];
-            var polygon11 = L.polygon(latlngs11, {
-                color: 'red'
-            }).addTo(map);
-            // DEPO SPS CIPINANG (JAKARTA)
-            var latlngs12 = [
-                [-6.21311187156196, 106.88544203302257],
-                [-6.2120446956529545, 106.88543065337363],
-                [-6.212025840935464, 106.88472511513999],
-                [-6.213168435595694, 106.88476684051939]
-            ];
-            var latlngs13 = [
-                [-6.211847347299506, 106.8808114012799],
-                [-6.211852680220818, 106.88181991185459],
-                [-6.212351308125068, 106.88182795848152],
-                [-6.212327310001449, 106.88079799023502]
-            ];
-            var polygon12 = L.polygon(latlngs12, {
-                color: 'red'
-            }).addTo(map);
-            var polygon13 = L.polygon(latlngs13, {
-                color: 'red'
-            }).addTo(map);
-        } else if (lokasi_kantor == 'DEPO SP SIDOARJO') {
-            var latlngs = [
-                [-7.361735, 112.784873],
-                [-7.361757, 112.785147],
-                [-7.362231, 112.785102],
-                [-7.362195, 112.784741]
-            ];
-            var polygon = L.polygon(latlngs, {
-                color: 'red'
-            }).addTo(map);
-        } else if (lokasi_kantor == 'DEPO SP SAMARINDA') {
-            var latlngs = [
-                [-0.46124004439708466, 117.1890440835615],
-                [-0.4612392469974343, 117.18918363302389],
-                [-0.46134587505367874, 117.18918108680002],
-                [-0.4613312150395592, 117.18903673736563]
-            ];
-            var polygon = L.polygon(latlngs, {
-                color: 'red'
-            }).addTo(map);
-        } else if (lokasi_kantor == 'DEPO SP DENPASAR') {
-            var latlngs = [
-                [-8.652895481207116, 115.20293696056507],
-                [-8.652912717125513, 115.2030294967747],
-                [-8.652755926596885, 115.20305008509402],
-                [-8.652733064463064, 115.2029671528421]
-            ];
-            var polygon = L.polygon(latlngs, {
-                color: 'red'
-            }).addTo(map);
-        } else if (lokasi_kantor == 'DEPO SP MALANG') {
-            var latlngs = [
-                [-7.967760845267797, 112.65873922458452],
-                [-7.967798033683292, 112.65879957428648],
-                [-7.967823932756354, 112.65878616324159],
-                [-7.967790064737394, 112.65872983685311]
-            ];
-            var polygon = L.polygon(latlngs, {
-                color: 'red'
-            }).addTo(map);
-        } else if (lokasi_kantor == 'DEPO SP PALANGKARAYA') {
-            var latlngs = [
-                [-2.1739101807413506, 113.864207945572],
-                [-2.1737446735313326, 113.86422269772137],
-                [-2.173735292555323, 113.86412814985499],
-                [-2.1739061603235093, 113.86411876212357]
-            ];
-            var polygon = L.polygon(latlngs, {
-                color: 'red'
-            }).addTo(map);
-        } else if (lokasi_kantor == 'DEPO SP SEMARANG') {
-            var latlngs = [
-                [-6.99848157965858, 110.46462216952277],
-                [-6.998261280500614, 110.4646979419191],
-                [-6.998228668229718, 110.46460071185301],
-                [-6.998402378462714, 110.46454237381336]
-            ];
-            // SPS
-            var polygon = L.polygon(latlngs, {
-                color: 'red'
-            }).addTo(map);
-        } else if (lokasi_kantor == 'DEPO SPS BANDUNG') {
-            var latlngs = [
-                [-6.887528841438018, 107.60032030611694],
-                [-6.887538161422427, 107.60048257975994],
-                [-6.887629364117361, 107.60047855644646],
-                [-6.887622041273895, 107.60032164722143]
-            ];
-            var polygon = L.polygon(latlngs, {
-                color: 'red'
-            }).addTo(map);
-        } else if (lokasi_kantor == 'DEPO SPS CIPINANG (JAKARTA)') {
-            var latlngs = [
-                [-6.21311187156196, 106.88544203302257],
-                [-6.2120446956529545, 106.88543065337363],
-                [-6.212025840935464, 106.88472511513999],
-                [-6.213168435595694, 106.88476684051939]
-            ];
-            var latlngs1 = [
-                [-6.211847347299506, 106.8808114012799],
-                [-6.211852680220818, 106.88181991185459],
-                [-6.212351308125068, 106.88182795848152],
-                [-6.212327310001449, 106.88079799023502]
-            ];
-            var polygon = L.polygon(latlngs, {
-                color: 'red'
-            }).addTo(map);
-            var polygon1 = L.polygon(latlngs1, {
-                color: 'red'
-            }).addTo(map);
-
-        }
-        var location = <?php echo json_encode($location); ?>;
-        // console.log(location);
-        // console.log(location[1].nama_titik);
-        location.forEach(function(obj) {
-            radius = obj.radius_titik;
-            var m = L.circle([obj.lat_titik, obj.long_titik], {
-                    color: 'purple',
-                    fillColor: 'purple',
-                    fillOpacity: 0.5,
-                    radius: radius
-                }).addTo(map),
-                p = new L.Popup({
-                    autoClose: false,
-                    closeOnClick: false
-                })
-                .setContent(obj.nama_titik)
-                .setLatLng([obj.lat_titik, obj.long_titik]);
-            m.bindPopup(p).openPopup();
-        });
-        var marker = L.marker([lat_saya, long_saya]).addTo(map)
-            .bindPopup(popupContent).openPopup();
-
-
-    }
-
-    function showPosition1(position) {
-        //   x.innerHTML = "Latitude: " + position.coords.latitude +
-        //   "<br>Longitude: " + position.coords.longitude;
-
-        var lat_saya1 = position.coords.latitude;
-        var long_saya1 = position.coords.longitude;
-        var lokasi_kantor1 = '{{ $user_karyawan->penempatan_kerja }}';
-        var nama_saya1 = '{{ $user_karyawan->name }}';
-        // console.log(lat_saya1, long_saya1);
-        // console.log(lokasi_kantor1);
-
-        var map1 = L.map('maps_pulang').setView([lat_saya1, long_saya1], 16);
-
-        L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            maxZoom: 25,
-            attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-        }).addTo(map1);
-        const popupContent_pulang =
-            '<p style="font-size:9pt;">' +
-            nama_saya1 +
-            '</p>';
-
-        if (lokasi_kantor1 == 'CV. SUMBER PANGAN - KEDIRI') {
-            var latlngs_pulang = [
-                [-7.757852, 112.093890],
-                [-7.756964, 112.094195],
-                [-7.757866, 112.096507],
-                [-7.758657, 112.095336]
-            ];
-            var polygon_pulang = L.polygon(latlngs_pulang, {
-                color: 'red'
-            }).addTo(map1);
-        } else if (lokasi_kantor1 == 'CV. SUMBER PANGAN - TUBAN') {
-            var latlngs_pulang = [
-                [-6.991185, 112.120763],
-                [-6.989174, 112.121394],
-                [-6.989563, 112.122751],
-                [-6.991437, 112.122061]
-            ];
-            var polygon_pulang = L.polygon(latlngs_pulang, {
-                color: 'red'
-            }).addTo(map1);
-        } else if (lokasi_kantor1 == 'ALL SITES (SP)') {
-            var latlngs_pulang = [
-                [-7.757852, 112.093890],
-                [-7.756964, 112.094195],
-                [-7.757866, 112.096507],
-                [-7.758657, 112.095336]
-            ];
-            var latlngs_pulang1 = [
-                [-6.991185, 112.120763],
-                [-6.989174, 112.121394],
-                [-6.989563, 112.122751],
-                [-6.991437, 112.122061]
-            ];
-            var polygon_pulang = L.polygon(latlngs_pulang, {
-                color: 'red'
-            }).addTo(map1);
-            var polygon_pulang1 = L.polygon(latlngs_pulang1, {
-                color: 'red'
-            }).addTo(map1);
-        } else if (lokasi_kantor1 == 'PT. SURYA PANGAN SEMESTA - KEDIRI') {
-            var latlngs_pulang = [
-                [-7.811054254338505, 112.07984213086016],
-                [-7.810839096224432, 112.08081884380057],
-                [-7.808489981554889, 112.08161649876598],
-                [-7.808405068773745, 112.08133682173685],
-                [-7.810097668835231, 112.08055007648335],
-                [-7.810057948477162, 112.08030628208806]
-            ];
-            var polygon_pulang = L.polygon(latlngs_pulang, {
-                color: 'red'
-            }).addTo(map1);
-        } else if (lokasi_kantor1 == 'PT. SURYA PANGAN SEMESTA - NGAWI') {
-            var latlngs_pulang = [
-                [-7.503903124866787, 111.42901333909559],
-                [-7.503780799880943, 111.42583760362271],
-                [-7.505630060242543, 111.4257993236654],
-                [-7.505712281925328, 111.4285105703631],
-                [-7.504871090128984, 111.4285169497671],
-                [-7.504637074058243, 111.42896350806065]
-            ];
-            var polygon_pulang = L.polygon(latlngs_pulang, {
-                color: 'red'
-            }).addTo(map1);
-        } else if (lokasi_kantor1 == 'PT. SURYA PANGAN SEMESTA - SUBANG') {
-            var latlngs_pulang = [
-                [-6.29533870949617, 107.90681938912391],
-                [-6.295727870479563, 107.90769375045888],
-                [-6.293953207394033, 107.9077779126219],
-                [-6.293911897422521, 107.9069474641808]
-            ];
-            var polygon_pulang = L.polygon(latlngs_pulang, {
-                color: 'red'
-            }).addTo(map1);
-        } else if (lokasi_kantor1 == 'ALL SITES (SPS)') {
-            // sps kediri
-            var latlngs_pulang = [
-                [-7.811054254338505, 112.07984213086016],
-                [-7.810839096224432, 112.08081884380057],
-                [-7.808489981554889, 112.08161649876598],
-                [-7.808405068773745, 112.08133682173685],
-                [-7.810097668835231, 112.08055007648335],
-                [-7.810057948477162, 112.08030628208806]
-            ];
-            var polygon_pulang = L.polygon(latlngs_pulang, {
-                color: 'red'
-            }).addTo(map1);
-            // sps ngawi
-            var latlngs_pulang1 = [
-                [-7.503903124866787, 111.42901333909559],
-                [-7.503780799880943, 111.42583760362271],
-                [-7.505630060242543, 111.4257993236654],
-                [-7.505712281925328, 111.4285105703631],
-                [-7.504871090128984, 111.4285169497671],
-                [-7.504637074058243, 111.42896350806065]
-            ];
-            var polygon_pulang1 = L.polygon(latlngs_pulang1, {
-                color: 'red'
-            }).addTo(map1);
-            // sps subang
-            var latlngs_pulang2 = [
-                [-6.29533870949617, 107.90681938912391],
-                [-6.295727870479563, 107.90769375045888],
-                [-6.293953207394033, 107.9077779126219],
-                [-6.293911897422521, 107.9069474641808]
-            ];
-            var polygon_pulang2 = L.polygon(latlngs_pulang2, {
-                color: 'red'
-            }).addTo(map1);
-        } else if (lokasi_kantor1 == 'ALL SITES (SP, SPS, SIP)') {
-            //    SP KEDIRI
-            var latlngs_pulang = [
-                [-7.757852, 112.093890],
-                [-7.756964, 112.094195],
-                [-7.757866, 112.096507],
-                [-7.758657, 112.095336]
-            ];
-            var polygon_pulang = L.polygon(latlngs_pulang, {
-                color: 'red'
-            }).addTo(map1);
-            // SP TUBAN
-            var latlngs_pulang1 = [
-                [-6.991185, 112.120763],
-                [-6.989174, 112.121394],
-                [-6.989563, 112.122751],
-                [-6.991437, 112.122061]
-            ];
-            var polygon_pulang1 = L.polygon(latlngs_pulang1, {
-                color: 'red'
-            }).addTo(map1);
-
-            // sps kediri
-            var latlngs_pulang2 = [
-                [-7.811054254338505, 112.07984213086016],
-                [-7.810839096224432, 112.08081884380057],
-                [-7.808489981554889, 112.08161649876598],
-                [-7.808405068773745, 112.08133682173685],
-                [-7.810097668835231, 112.08055007648335],
-                [-7.810057948477162, 112.08030628208806]
-            ];
-            var polygon_pulang2 = L.polygon(latlngs_pulang2, {
-                color: 'red'
-            }).addTo(map1);
-            // sps ngawi
-            var latlngs_pulang3 = [
-                [-7.503903124866787, 111.42901333909559],
-                [-7.503780799880943, 111.42583760362271],
-                [-7.505630060242543, 111.4257993236654],
-                [-7.505712281925328, 111.4285105703631],
-                [-7.504871090128984, 111.4285169497671],
-                [-7.504637074058243, 111.42896350806065]
-            ];
-            var polygon_pulang3 = L.polygon(latlngs_pulang3, {
-                color: 'red'
-            }).addTo(map1);
-            // sps subang
-            var latlngs_pulang4 = [
-                [-6.29533870949617, 107.90681938912391],
-                [-6.295727870479563, 107.90769375045888],
-                [-6.293953207394033, 107.9077779126219],
-                [-6.293911897422521, 107.9069474641808]
-            ];
-            var polygon_pulang4 = L.polygon(latlngs_pulang4, {
-                color: 'red'
-            }).addTo(map1);
-
-            // DEPO SIDOARJO
-            var latlngs_pulang5 = [
-                [-7.361735, 112.784873],
-                [-7.361757, 112.785147],
-                [-7.362231, 112.785102],
-                [-7.362195, 112.784741]
-            ];
-            var polygon_pulang5 = L.polygon(latlngs_pulang5, {
-                color: 'red'
-            }).addTo(map1);
-
-            // DEPO SAMARINDA
-            var latlngs_pulang6 = [
-                [-0.46124004439708466, 117.1890440835615],
-                [-0.4612392469974343, 117.18918363302389],
-                [-0.46134587505367874, 117.18918108680002],
-                [-0.4613312150395592, 117.18903673736563]
-            ];
-            var polygon_pulang6 = L.polygon(latlngs_pulang6, {
-                color: 'red'
-            }).addTo(map1);
-
-            // DEPO DENPASAR
-            var latlngs_pulang7 = [
-                [-8.652895481207116, 115.20293696056507],
-                [-8.652912717125513, 115.2030294967747],
-                [-8.652755926596885, 115.20305008509402],
-                [-8.652733064463064, 115.2029671528421]
-            ];
-            var polygon_pulang7 = L.polygon(latlngs_pulang7, {
-                color: 'red'
-            }).addTo(map1);
-
-            // DEPO MALANG
-            var latlngs_pulang8 = [
-                [-7.967760845267797, 112.65873922458452],
-                [-7.967798033683292, 112.65879957428648],
-                [-7.967823932756354, 112.65878616324159],
-                [-7.967790064737394, 112.65872983685311]
-            ];
-            var polygon_pulang8 = L.polygon(latlngs_pulang8, {
-                color: 'red'
-            }).addTo(map1);
-            // DEPO PALANGKARAYA
-            var latlngs_pulang9 = [
-                [-2.1739101807413506, 113.864207945572],
-                [-2.1737446735313326, 113.86422269772137],
-                [-2.173735292555323, 113.86412814985499],
-                [-2.1739061603235093, 113.86411876212357]
-            ];
-            var polygon_pulang9 = L.polygon(latlngs_pulang9, {
-                color: 'red'
-            }).addTo(map1);
-            // DEPO SEMARANG
-            var latlngs_pulang10 = [
-                [-6.99848157965858, 110.46462216952277],
-                [-6.998261280500614, 110.4646979419191],
-                [-6.998228668229718, 110.46460071185301],
-                [-6.998402378462714, 110.46454237381336]
-            ];
-            var polygon_pulang10 = L.polygon(latlngs_pulang10, {
-                color: 'red'
-            }).addTo(map1);
-            // DEPO BANDUNG
-            var latlngs_pulang11 = [
-                [-6.887528841438018, 107.60032030611694],
-                [-6.887538161422427, 107.60048257975994],
-                [-6.887629364117361, 107.60047855644646],
-                [-6.887622041273895, 107.60032164722143]
-            ];
-            var polygon_pulang11 = L.polygon(latlngs_pulang11, {
-                color: 'red'
-            }).addTo(map1);
-            // DEPO SPS CIPINANG (JAKARTA)
-            var latlngs_pulang12 = [
-                [-6.21311187156196, 106.88544203302257],
-                [-6.2120446956529545, 106.88543065337363],
-                [-6.212025840935464, 106.88472511513999],
-                [-6.213168435595694, 106.88476684051939]
-            ];
-            var latlngs_pulang13 = [
-                [-6.211847347299506, 106.8808114012799],
-                [-6.211852680220818, 106.88181991185459],
-                [-6.212351308125068, 106.88182795848152],
-                [-6.212327310001449, 106.88079799023502]
-            ];
-            var polygon_pulang12 = L.polygon(latlngs_pulang12, {
-                color: 'red'
-            }).addTo(map1);
-            var polygon_pulang13 = L.polygon(latlngs_pulang13, {
-                color: 'red'
-            }).addTo(map1);
-        } else if (lokasi_kantor1 == 'DEPO SP SIDOARJO') {
-            var latlngs_pulang = [
-                [-7.361735, 112.784873],
-                [-7.361757, 112.785147],
-                [-7.362231, 112.785102],
-                [-7.362195, 112.784741]
-            ];
-            var polygon_pulang = L.polygon(latlngs_pulang, {
-                color: 'red'
-            }).addTo(map1);
-        } else if (lokasi_kantor1 == 'DEPO SP SAMARINDA') {
-            var latlngs_pulang = [
-                [-0.46124004439708466, 117.1890440835615],
-                [-0.4612392469974343, 117.18918363302389],
-                [-0.46134587505367874, 117.18918108680002],
-                [-0.4613312150395592, 117.18903673736563]
-            ];
-            var polygon_pulang = L.polygon(latlngs_pulang, {
-                color: 'red'
-            }).addTo(map1);
-        } else if (lokasi_kantor1 == 'DEPO SP DENPASAR') {
-            var latlngs_pulang = [
-                [-8.652895481207116, 115.20293696056507],
-                [-8.652912717125513, 115.2030294967747],
-                [-8.652755926596885, 115.20305008509402],
-                [-8.652733064463064, 115.2029671528421]
-            ];
-            var polygon_pulang = L.polygon(latlngs_pulang, {
-                color: 'red'
-            }).addTo(map1);
-        } else if (lokasi_kantor1 == 'DEPO SP MALANG') {
-            var latlngs_pulang = [
-                [-7.967760845267797, 112.65873922458452],
-                [-7.967798033683292, 112.65879957428648],
-                [-7.967823932756354, 112.65878616324159],
-                [-7.967790064737394, 112.65872983685311]
-            ];
-            var polygon_pulang = L.polygon(latlngs_pulang, {
-                color: 'red'
-            }).addTo(map1);
-        } else if (lokasi_kantor1 == 'DEPO SP PALANGKARAYA') {
-            var latlngs_pulang = [
-                [-2.1739101807413506, 113.864207945572],
-                [-2.1737446735313326, 113.86422269772137],
-                [-2.173735292555323, 113.86412814985499],
-                [-2.1739061603235093, 113.86411876212357]
-            ];
-            var polygon_pulang = L.polygon(latlngs_pulang, {
-                color: 'red'
-            }).addTo(map1);
-        } else if (lokasi_kantor1 == 'DEPO SP SEMARANG') {
-            var latlngs_pulang = [
-                [-6.99848157965858, 110.46462216952277],
-                [-6.998261280500614, 110.4646979419191],
-                [-6.998228668229718, 110.46460071185301],
-                [-6.998402378462714, 110.46454237381336]
-            ];
-            // SPS
-            var polygon_pulang = L.polygon(latlngs_pulang, {
-                color: 'red'
-            }).addTo(map1);
-        } else if (lokasi_kantor1 == 'DEPO SPS BANDUNG') {
-            var latlngs_pulang = [
-                [-6.887528841438018, 107.60032030611694],
-                [-6.887538161422427, 107.60048257975994],
-                [-6.887629364117361, 107.60047855644646],
-                [-6.887622041273895, 107.60032164722143]
-            ];
-            var polygon_pulang = L.polygon(latlngs_pulang, {
-                color: 'red'
-            }).addTo(map1);
-        } else if (lokasi_kantor1 == 'DEPO SPS CIPINANG (JAKARTA)') {
-            var latlngs_pulang = [
-                [-6.21311187156196, 106.88544203302257],
-                [-6.2120446956529545, 106.88543065337363],
-                [-6.212025840935464, 106.88472511513999],
-                [-6.213168435595694, 106.88476684051939]
-            ];
-            var latlngs_pulang1 = [
-                [-6.211847347299506, 106.8808114012799],
-                [-6.211852680220818, 106.88181991185459],
-                [-6.212351308125068, 106.88182795848152],
-                [-6.212327310001449, 106.88079799023502]
-            ];
-            var polygon_pulang = L.polygon(latlngs_pulang, {
-                color: 'red'
-            }).addTo(map1);
-            var polygon_pulang1 = L.polygon(latlngs_pulang1, {
-                color: 'red'
-            }).addTo(map1);
-        } else if (lokasi_kantor == 'BULOG PARON - KEDIRI') {
-            var latlngs = [
-                [-7.813968757527632, 112.05662997145677],
-                [-7.81236784846995, 112.05722929959332],
-                [-7.813095022711804, 112.05940470904986],
-                [-7.815163768273714, 112.0587276399426]
-            ];
-            var polygon = L.polygon(latlngs, {
-                color: 'red'
-            }).addTo(map);
-        }
-        var location1 = <?php echo json_encode($location); ?>;
-        // console.log(location);
-        // console.log(location[1].nama_titik);
-        location1.forEach(function(obj) {
-            radius_pulang = obj.radius_titik;
-            var m_pulang = L.circle([obj.lat_titik, obj.long_titik], {
-                    color: 'purple',
-                    fillColor: 'purple',
-                    fillOpacity: 0.5,
-                    radius: radius_pulang
-                }).addTo(map1),
-                p_pulang = new L.Popup({
-                    autoClose: false,
-                    closeOnClick: false
-                })
-                .setContent(obj.nama_titik)
-                .setLatLng([obj.lat_titik, obj.long_titik]);
-            m_pulang.bindPopup(p_pulang).openPopup();
-        });
-        var marker_pulang = L.marker([lat_saya1, long_saya1]).addTo(map1)
-            .bindPopup(popupContent_pulang).openPopup();
-
-
-    }
-</script>
-<script>
-    $(document).on('click', '#btn_klik', function(e) {
-        Swal.fire({
-            allowOutsideClick: false,
-            background: 'transparent',
-            html: ' <div class="spinner-grow text-primary spinner-grow-sm me-2" role="status"></div><div class="spinner-grow text-primary spinner-grow-sm me-2" role="status"></div><div class="spinner-grow text-primary spinner-grow-sm me-2" role="status"></div>',
-            showCancelButton: false,
-            showConfirmButton: false,
-            onBeforeOpen: () => {
-                // Swal.showLoading()
-            },
-            onAfterClose() {
-                Swal.close()
+        function oke() {
+            // e.preventDefault();
+            // console.log($('#home_index').val());
+            if ($('#home_index').val() == '1') {
+                console.log('hidden')
+                window.scrollTo(0, 50);
             }
+        }
+        $(document).on('click', '.btn_klik', function(e) {
+            console.log('oke');
+            Swal.fire({
+                allowOutsideClick: false,
+                background: 'transparent',
+                html: ' <div class="spinner-grow text-primary spinner-grow-sm me-2" role="status"></div><div class="spinner-grow text-primary spinner-grow-sm me-2" role="status"></div><div class="spinner-grow text-primary spinner-grow-sm me-2" role="status"></div>',
+                showCancelButton: false,
+                showConfirmButton: false,
+            });
         });
-    });
-    window.onbeforeunload = function() {
-        Swal.fire({
-            allowOutsideClick: false,
-            background: 'transparent',
-            html: ' <div class="spinner-grow text-primary spinner-grow-sm me-2" role="status"></div><div class="spinner-grow text-primary spinner-grow-sm me-2" role="status"></div><div class="spinner-grow text-primary spinner-grow-sm me-2" role="status"></div>',
-            showCancelButton: false,
-            showConfirmButton: false,
-            onBeforeOpen: () => {
-                // Swal.showLoading()
-            },
-        });
-    };
-</script>
-<script>
-    $("document").ready(function() {
+
         // console.log('ok');
         setTimeout(function() {
             // console.log('ok1');
@@ -3567,35 +2702,36 @@ APPS | KARYAWAN - SP
             $("#alert_simpanface_success").remove();
         }, 7000); // 7 secs
 
+        function get_notif() {
+            $.ajax({
+                type: "GET",
+                url: "{{ url('home/get_notif') }}",
+                success: function(data) {
+                    $("#notif_izin").empty();
+                    $("#notif_cuti").empty();
+                    $("#notif_penugasan").empty();
+                    if (data.count_izin == 0) {
+                        $("#notif_izin").empty();
+                    } else {
+                        $("#notif_izin").html(data.count_izin);
+                    }
+                    if (data.count_cuti == 0) {
+                        $("#notif_izin").empty();
+                    } else {
+                        $("#notif_izin").html(data.count_cuti);
+                    }
+                    if (data.count_penugasan == 0) {
+                        $("#notif_izin").empty();
+                    } else {
+                        $("#notif_izin").html(data.count_penugasan);
+                    }
+                }
+            });
+        }
+        setInterval(get_notif, 2000);
     });
-</script>
-<script>
-    function get_notif() {
-        $.ajax({
-            type: "GET",
-            url: "{{ url('home/get_notif') }}",
-            success: function(data) {
-                $("#notif_izin").empty();
-                $("#notif_cuti").empty();
-                $("#notif_penugasan").empty();
-                if (data.count_izin == 0) {
-                    $("#notif_izin").empty();
-                } else {
-                    $("#notif_izin").html(data.count_izin);
-                }
-                if (data.count_cuti == 0) {
-                    $("#notif_izin").empty();
-                } else {
-                    $("#notif_izin").html(data.count_cuti);
-                }
-                if (data.count_penugasan == 0) {
-                    $("#notif_izin").empty();
-                } else {
-                    $("#notif_izin").html(data.count_penugasan);
-                }
-            }
-        });
-    }
-    setInterval(get_notif, 2000);
+    // window.addEventListener("beforeunload", function() {
+    //     Swal.close();
+    // });
 </script>
 @endsection

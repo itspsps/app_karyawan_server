@@ -39,355 +39,63 @@
         <li class="menu-header fw-medium mt-4">
             <span class="menu-header-text">MAIN MENU</span>
         </li>
-        <!-- DATA MASTER -->
-        <li
-            class="menu-item
-            @if (Auth::user()->is_admin == 'hrd') ||
-                {{ Request::is('hrd/reset-cuti*') ||
-                Request::is('hrd/departemen*') ||
-                Request::is('hrd/divisi*') ||
-                Request::is('hrd/bagian*') ||
-                Request::is('hrd/jabatan*') ||
-                Request::is('hrd/karyawan/shift/*') ||
-                Request::is('hrd/shift*') ||
-                Request::is('hrd/detail_jabatan*') ||
-                Request::is('hrd/holding*') ||
-                Request::is('hrd/site*') ||
-                Request::is('hrd/shift*') ||
-                Request::is('hrd/lokasi*') ||
-                Request::is('hrd/lokasi-kantor*')
-                    ? 'active open'
-                    : '' }}
-                @else
-                {{ Request::is('reset-cuti*') ||
-                Request::is('departemen*') ||
-                Request::is('divisi*') ||
-                Request::is('bagian*') ||
-                Request::is('jabatan*') ||
-                Request::is('detail_jabatan*') ||
-                Request::is('holding*') ||
-                Request::is('shift*') ||
-                Request::is('site*') ||
-                Request::is('lokasi*') ||
-                Request::is('karyawan/shift/*')
-                    ? 'active open'
-                    : '' }} @endif
-         ">
+        @foreach($menus as $menu)
+        <li class="menu-item  @foreach($menu->children as $child) {{ Request::is(($child->url ?? '') . '*') ? 'active open' : '' }} @endforeach">
+            @if($menu->children->count() > 0)
             <a href="javascript:void(0);" class="menu-link menu-toggle">
-                <i class="menu-icon tf-icons mdi mdi-database-outline"></i>
-                <div style="font-size: 10pt;" data-i18n="Data Master">Data&nbsp;Master</div>
+                <i class="menu-icon tf-icons mdi {{ $menu->icon }}"></i>
+                <div style="font-size: 10pt;">&nbsp;{{ $menu->name }}</div>
             </a>
 
             <ul class="menu-sub">
-                <li
-                    class="menu-item
-                    @if (Auth::user()->is_admin == 'hrd') {{ Request::is('hrd/departemen*') ? 'active' : '' }}
-                    @else
-                    {{ Request::is('departemen*') ? 'active' : '' }} @endif
-                 ">
-                    <a href="@if (Auth::user()->is_admin == 'hrd') {{ url('hrd/departemen/' . $holding->holding_code) }}
-                    @else
-                    {{ url('/departemen/' . $holding->holding_code) }} @endif"
-                        class="menu-link">
-                        <i class="menu-icon tf-icons mdi mdi-database-cog-outline"></i>
-                        <div style="font-size: 10pt;" data-i18n="Blank">&nbsp;Master&nbsp;Departemen</div>
-                    </a>
-                </li>
-                <li
-                    class="menu-item
-                    @if (Auth::user()->is_admin == 'hrd') {{ Request::is('hrd/divisi*') ? 'active' : '' }}
-                    @else
-                    {{ Request::is('divisi*') ? 'active' : '' }} @endif
-                 ">
-                    <a href="@if (Auth::user()->is_admin == 'hrd') {{ url('/hrd/divisi/' . $holding->holding_code) }}
-                    @else
-                    {{ url('/divisi/' . $holding->holding_code) }} @endif"
-                        class="menu-link">
-                        <i class="menu-icon tf-icons mdi mdi-database-cog-outline"></i>
-                        <div style="font-size: 10pt;" data-i18n="Blank">&nbsp;Master&nbsp;Divisi</div>
-                    </a>
-                </li>
-                <li
-                    class="menu-item
-                    @if (Auth::user()->is_admin == 'hrd') {{ Request::is('hrd/bagian*') ? 'active' : '' }}
-                    @else
-                    {{ Request::is('bagian*') ? 'active' : '' }} @endif
-                 ">
-                    <a href="@if (Auth::user()->is_admin == 'hrd') {{ url('/hrd/bagian/' . $holding->holding_code) }}
-                    @else
-                    {{ url('/bagian/' . $holding->holding_code) }} @endif"
-                        class="menu-link">
-                        <i class="menu-icon tf-icons mdi mdi-database-cog-outline"></i>
-                        <div style="font-size: 10pt;" data-i18n="Blank">&nbsp;Master&nbsp;Bagian</div>
-                    </a>
-                </li>
-                <li
-                    class="menu-item
-                    @if (Auth::user()->is_admin == 'hrd') {{ Request::is('hrd/jabatan*') ? 'active' : '' }}
-                    {{ Request::is('hrd/detail_jabatan*') ? 'active' : '' }}
-                    @else
-                    {{ Request::is('jabatan*') ? 'active' : '' }}
-                    {{ Request::is('detail_jabatan*') ? 'active' : '' }} @endif
-                 ">
-                    <a href="@if (Auth::user()->is_admin == 'hrd') {{ url('/hrd/jabatan/' . $holding->holding_code) }}
-                    @else
-                    {{ url('/jabatan/' . $holding->holding_code) }} @endif"
-                        class="menu-link">
-                        <i class="menu-icon tf-icons mdi mdi-database-cog-outline"></i>
-                        <div style="font-size: 10pt;" data-i18n="Blank">&nbsp;Master&nbsp;Jabatan</div>
-                    </a>
-                </li>
-                <li
-                    class="menu-item
-                @if (Auth::user()->is_admin == 'hrd') {{ Request::is('hrd/holding*') ? 'active' : '' }}
-                @else
-                    {{ Request::is('holding*') ? 'active' : '' }} @endif
-                ">
-                    <a href=" @if (Auth::user()->is_admin == 'hrd') {{ url('hrd/holding/' . $holding->holding_code) }}@else {{ url('/holding/' . $holding->holding_code) }} @endif"
-                        class=" menu-link">
-                        <div style="font-size: 10pt;" data-i18n="Without navbar"><i
-                                class="mdi mdi-office-building-cog-outline"></i>&nbsp;Master Holding</div>
-                    </a>
-                </li>
-                <li
-                    class="menu-item
-                 @if (Auth::user()->is_admin == 'hrd') {{ Request::is('hrd/site*') ? 'active' : '' }}
-                 @else
-                 {{ Request::is('site*') ? 'active' : '' }} @endif
-                 ">
-                    <a href="@if (Auth::user()->is_admin == 'hrd') {{ url('/hrd/site/' . $holding->holding_code) }} @else {{ url('/site/' . $holding->holding_code) }} @endif"
-                        class="menu-link">
-                        <i class="menu-icon tf-icons mdi mdi-office-building-marker"></i>
-                        <div style="font-size: 10pt;" data-i18n="Fluid">&nbsp;Master&nbsp;Site</div>
-                    </a>
-                </li>
-                <li
-                    class="menu-item
-                 @if (Auth::user()->is_admin == 'hrd') {{ Request::is('hrd/lokasi*') ? 'active' : '' }}
-                 @else
-                 {{ Request::is('lokasi*') ? 'active' : '' }} @endif
-                 ">
-                    <a href="@if (Auth::user()->is_admin == 'hrd') {{ url('/hrd/lokasi/' . $holding->holding_code) }} @else {{ url('/lokasi/' . $holding->holding_code) }} @endif"
-                        class="menu-link">
-                        <i class="menu-icon tf-icons mdi mdi-office-building-marker"></i>
-                        <div style="font-size: 10pt;" data-i18n="Fluid">&nbsp;Master&nbsp;Lokasi</div>
-                    </a>
-                </li>
-                <li
-                    class="menu-item
-                    @if (Auth::user()->is_admin == 'hrd') {{ Request::is('hrd/shift*') ? 'active' : '' }}
-                    @else
-                    {{ Request::is('shift*') ? 'active' : '' }} @endif
-                ">
-                    <a href=" @if (Auth::user()->is_admin == 'hrd') {{ url('hrd/shift/' . $holding->holding_code) }}@else {{ url('/shift/' . $holding->holding_code) }} @endif"
-                        class=" menu-link">
-                        <div style="font-size: 10pt;" data-i18n="Without navbar"><i
-                                class="mdi mdi-timetable"></i>&nbsp;Master Shift</div>
-                    </a>
-                </li>
-                <li
-                    class="menu-item
-                    @if (Auth::user()->is_admin == 'hrd') {{ Request::is('hrd/finger*') ? 'active' : '' }}
-                    @else
-                    {{ Request::is('finger*') ? 'active' : '' }} @endif
-                ">
-                    <a href=" @if (Auth::user()->is_admin == 'hrd') {{ url('hrd/finger/' . $holding->holding_code) }}@else {{ url('/finger/' . $holding->holding_code) }} @endif"
-                        class=" menu-link">
-                        <div style="font-size: 10pt;" data-i18n="Without navbar"><i
-                                class="mdi mdi-fingerprint"></i>&nbsp;Master Finger</div>
-                    </a>
-                </li>
-            </ul>
-        </li>
-        <!-- END DATA MASTER -->
-        <!-- DATA KARYAWAN -->
-        <li
-            class="menu-item
-                    @if (Auth::user()->is_admin == 'hrd') {{ Request::is('hrd/struktur_organisasi*') ? 'active open' : '' }}
-                    @else
-                    {{ Request::is('struktur_organisasi*') ? 'active open' : '' }} @endif
-                    @if (Auth::user()->is_admin == 'hrd') {{ Request::is('hrd/karyawan/tambah-karyawan*') ? 'active open' : '' }}
-                    @else
-                    {{ Request::is('karyawan/tambah-karyawan*') ? 'active open' : '' }} @endif
-                    @if (Auth::user()->is_admin == 'hrd') {{ Request::is('hrd/karyawan/detail*') ? 'active open' : '' }}
-                    @else
-                    {{ Request::is('karyawan/detail*') ? 'active open' : '' }} @endif
-                    @if (Auth::user()->is_admin == 'hrd') {{ Request::is('hrd/karyawan/karyawan_masa_tenggang_kontrak/' . $holding->holding_code) ? 'active open' : '' }}
-                    @else
-                    {{ Request::is('karyawan/karyawan_masa_tenggang_kontrak/' . $holding->holding_code) ? 'active open' : '' }} @endif
-                    @if (Auth::user()->is_admin == 'hrd') {{ Request::is('hrd/karyawan_ingin_bergabung/' . $holding->holding_code) ? 'active open' : '' }}
-                    @else
-                    {{ Request::is('hrd/karyawan_ingin_bergabung/' . $holding->holding_code) ? 'active open' : '' }} @endif
-                    @if (Auth::user()->is_admin == 'hrd') {{ Request::is('hrd/karyawan/' . $holding->holding_code) ? 'active open' : '' }}
-                    @else
-                    {{ Request::is('karyawan/' . $holding->holding_code) ? 'active open' : '' }} @endif
-                    @if (Auth::user()->is_admin == 'hrd') {{ Request::is('hrd/karyawan/edit-password/*') ? 'active' : '' }}
-                    @else
-                    {{ Request::is('karyawan/edit-password/*') ? 'active' : '' }} @endif
-                    @if (Auth::user()->is_admin == 'hrd') {{ Request::is('hrd/users*') ? 'active open' : '' }}
-                    @else
-                    {{ Request::is('users*') ? 'active open' : '' }} @endif
-                    @if (Auth::user()->is_admin == 'hrd') {{ Request::is('hrd/karyawan_non_aktif*') ? 'active open' : '' }}
-                    @else
-                    {{ Request::is('karyawan_non_aktif*') ? 'active open' : '' }} @endif
-                    @if (Auth::user()->is_admin == 'hrd') {{ Request::is('hrd/karyawan/shift/*') ? 'active open' : '' }}
-                    @else
-                    {{ Request::is('karyawan/shift/*') ? 'active open' : '' }} @endif
-                 ">
-            <a href="javascript:void(0);" class="menu-link menu-toggle">
-                <i class="menu-icon tf-icons mdi mdi-account-group-outline"></i>
-                <div style="font-size: 10pt;" data-i18n="Data Master">Data&nbsp;Karyawan</div>
-            </a>
-            <ul class="menu-sub">
-                <li
-                    class="menu-item
-                        @if (Auth::user()->is_admin == 'hrd') {{ Request::is('hrd/karyawan/' . $holding->holding_code) ? 'active' : '' }}
-                        {{ Request::is('hrd/karyawan/tambah-karyawan/' . $holding->holding_code) ? 'active' : '' }}
-                        {{ Request::is('hrd/karyawan/detail*') ? 'active' : '' }}
-                        {{ Request::is('hrd/karyawan/shift*') ? 'active' : '' }}
-                        @else
-                        {{ Request::is('karyawan/' . $holding->holding_code) ? 'active' : '' }}
-                        {{ Request::is('karyawan/tambah-karyawan/' . $holding->holding_code) ? 'active' : '' }}
-                        {{ Request::is('karyawan/detail*') ? 'active' : '' }}
-                        {{ Request::is('karyawan/shift*') ? 'active' : '' }} @endif
-                         ">
-                    <a href="@if (Auth::user()->is_admin == 'hrd') {{ url('/hrd/karyawan/' . $holding->holding_code) }}
-                            @else
-                            {{ url('/karyawan/' . $holding->holding_code) }} @endif
-                            "
-                        class="menu-link">
-                        <i class="menu-icon tf-icons mdi mdi-database-outline"></i>
-                        <div style="font-size: 10pt;" data-i18n="Data Karyawan">&nbsp;Database&nbsp;Karyawan</div>
-                    </a>
-                </li>
-                <li
-                    class="menu-item
-                    @if (Auth::user()->is_admin == 'hrd') {{ Request::is('hrd/struktur_organisasi*') ? 'active' : '' }}
-                    @else
-                    {{ Request::is('struktur_organisasi*') ? 'active' : '' }} @endif
-                 ">
-                    <a href="@if (Auth::user()->is_admin == 'hrd') {{ url('/hrd/struktur_organisasi/' . $holding->holding_code) }}
-                    @else
-                    {{ url('/struktur_organisasi/' . $holding->holding_code) }} @endif"
-                        class="menu-link">
-                        <i class="menu-icon tf-icons mdi mdi-family-tree"></i>
-                        <div style="font-size: 10pt;" data-i18n="Struktur Organisasi">&nbsp;Struktur&nbsp;Organisasi
-                        </div>
-                    </a>
-                </li>
-
-                <li
-                    class="menu-item
-                        @if (Auth::user()->is_admin == 'hrd') {{ Request::is('hrd/users*') ? 'active open' : '' }}
-                        {{ Request::is('hrd/karyawan/edit-password/*') ? 'active open' : '' }}
-                        @else
-                        {{ Request::is('users*') ? 'active open' : '' }}
-                        {{ Request::is('karyawan/edit-password/*') ? 'active open' : '' }} @endif
-                    ">
+                @foreach($menu->children as $child)
+                <li class="menu-item {{ Request::is(($child->url ?? '') . '/'.$holding->holding_code) ? 'active open' : '' }}">
+                    @if($child->subchildren->count() > 0)
                     <a href="javascript:void(0);" class="menu-link menu-toggle">
-                        <i class="menu-icon tf-icons mdi mdi-table-account"></i>
-                        <div style="font-size: 10pt;" data-i18n="Data Master">User&nbsp;Karyawan</div>
+                        <i class="menu-icon tf-icons mdi {{ $child->icon }}"></i>
+                        <div style="font-size: 10pt;">&nbsp;{{ $child->name }}</div>
                     </a>
-                    <ul class="menu-sub">
 
-                        <li
-                            class="menu-item @if (Auth::user()->is_admin == 'hrd') {{ Request::is('hrd/users/*') ? 'active' : '' }}@else {{ Request::is('users/*') ? 'active' : '' }} @endif">
-                            <a href="@if (Auth::user()->is_admin == 'hrd') {{ url('/hrd/users/' . $holding->holding_code) }}
-                            @else
-                            {{ url('/users/' . $holding->holding_code) }} @endif"
-                                class=" menu-link">
-                                <div style="font-size: 10pt;" data-i18n="Without navbar"><i
-                                        class="mdi mdi-account-clock-outline"></i>&nbsp;Akun&nbsp;Apps</div>
+                    <ul class="menu-sub">
+                        @foreach($child->subchildren as $subchild)
+                        <li class="menu-item {{ Request::is(($subchild->url ?? '') . '/'.$holding->holding_code) ? 'active' : '' }}">
+                            <a href="{{ $subchild->url ? url($subchild->url, $holding->holding_code) : '#' }}"
+                                class="menu-link">
+                                <i class="menu-icon tf-icons mdi {{ $subchild->icon }}"></i>
+                                <div style="font-size: 10pt;">&nbsp;{{ $subchild->name }}</div>
                             </a>
-                        </li>
-                        <li
-                            class="menu-item @if (Auth::user()->is_admin == 'hrd') {{ Request::is('hrd/users_finger*') ? 'active' : '' }}@else {{ Request::is('users_finger*') ? 'active' : '' }} @endif">
-                            <a href="@if (Auth::user()->is_admin == 'hrd') {{ url('hrd/users_finger/' . $holding->holding_code) }}@else  {{ url('/users_finger/' . $holding->holding_code) }} @endif"
-                                class=" menu-link">
-                                <div style="font-size: 10pt;" data-i18n="Without navbar"><i
-                                        class="mdi mdi-account-clock-outline"></i>&nbsp;Akun&nbsp;Finger</div>
-                            </a>
+                            @endforeach
                         </li>
                     </ul>
-                </li>
-                <li
-                    class="menu-item
-                        @if (Auth::user()->is_admin == 'hrd') {{ Request::is('hrd/karyawan_ingin_bergabung*') ? 'active' : '' }}
-                         @else
-                         {{ Request::is('karyawan_ingin_bergabung*') ? 'active' : '' }} @endif
-                        ">
-                    <a href="@if (Auth::user()->is_admin == 'hrd') {{ url('/hrd/karyawan_ingin_bergabung/' . $holding->holding_code) }}
-                            @else
-                            {{ url('/karyawan_ingin_bergabung/' . $holding->holding_code) }} @endif
-                            "
+                    @else
+                    <a href="{{ $child->url ? url($child->url, $holding->holding_code) : '#' }}"
                         class="menu-link" data-bs-toggle="tooltip" data-bs-placement="right"
-                        title="Karyawan Yang Ingin Bergabung">
-                        <i class="menu-icon tf-icons mdi mdi-account-clock-outline"></i>
-                        <div style="font-size: 10pt;" data-i18n="Karyawan Non Aktif">
-                            &nbsp;Karyawan&nbsp;Yang&nbsp;Ingin&nbsp;Bergabung</div>
+                        title="{{$child->name}}">
+                        <i class="menu-icon tf-icons mdi {{ $child->icon }}"></i>
+                        <div style="font-size: 10pt;" data-i18n="{{ $child->name }}">
+                            &nbsp;{{ $child->name }}
+                        </div>
                     </a>
-                </li>
-                <li
-                    class="menu-item
-                        @if (Auth::user()->is_admin == 'hrd') {{ Request::is('hrd/karyawan/karyawan_masa_tenggang_kontrak*') ? 'active' : '' }}
-                        @else
-                        {{ Request::is('karyawan/karyawan_masa_tenggang_kontrak*') ? 'active' : '' }} @endif
-                         ">
-                    <a href="@if (Auth::user()->is_admin == 'hrd') {{ url('/hrd/karyawan/karyawan_masa_tenggang_kontrak/' . $holding->holding_code) }}
-                            @else
-                            {{ url('/karyawan/karyawan_masa_tenggang_kontrak/' . $holding->holding_code) }} @endif"
-                        class="menu-link" data-bs-toggle="tooltip" data-bs-placement="right"
-                        title="Karyawan Masa Tenggang Kontrak">
-                        <i class="menu-icon tf-icons mdi mdi-account-alert"></i>
-                        <div style="font-size: 10pt;" data-i18n="Karyawan Masa Tenggang Kontrak">
-                            &nbsp;Karyawan&nbsp;Masa&nbsp;Tenggang&nbsp;Kontrak</div>
-                    </a>
-                </li>
-                <li
-                    class="menu-item
-                        @if (Auth::user()->is_admin == 'hrd') {{ Request::is('hrd/karyawan_non_aktif*') ? 'active' : '' }}
-                        @else
-                        {{ Request::is('karyawan_non_aktif*') ? 'active' : '' }} @endif
-                        ">
-                    <a href="@if (Auth::user()->is_admin == 'hrd') {{ url('/hrd/karyawan_non_aktif/' . $holding->holding_code) }}
-                            @else
-                            {{ url('/karyawan_non_aktif/' . $holding->holding_code) }} @endif"
-                        class="menu-link" data-bs-toggle="tooltip" data-bs-placement="right"
-                        title="Karyawan Non Aktif">
-                        <i class="menu-icon tf-icons mdi mdi-account-multiple-remove-outline"></i>
-                        <div style="font-size: 10pt;" data-i18n="Karyawan Non Aktif">
-                            &nbsp;Karyawan&nbsp;Non&nbsp;Aktif</div>
-                    </a>
-                </li>
-            </ul>
-        </li>
-        <!-- END DATA KARYAWAN -->
-        <!-- ABSENSI KARYAWAN -->
-        <li
-            class="menu-item
-            @if (Auth::user()->is_admin == 'hrd') {{ Request::is('hrd/karyawan/mapping_shift*') ? 'active open' : '' }}
-            @else
-            {{ Request::is('shift*') ? 'active open' : '' }}
-            {{ Request::is('lokasi-kantor*') ? 'active open' : '' }}
-            {{ Request::is('karyawan/mapping_shift*') ? 'active open' : '' }} @endif
-         ">
-            <a href="javascript:void(0);" class="menu-link menu-toggle">
-                <i class="menu-icon tf-icons mdi mdi-table-account"></i>
-                <div style="font-size: 10pt;" data-i18n="Data Master">Mapping&nbsp;Karyawan</div>
-            </a>
-            <ul class="menu-sub">
+                    @endif
 
-                <li
-                    class="menu-item @if (Auth::user()->is_admin == 'hrd') {{ Request::is('hrd/karyawan/mapping_shift*') ? 'active' : '' }}@else {{ Request::is('karyawan/mapping_shift*') ? 'active' : '' }} @endif">
-                    <a href="@if (Auth::user()->is_admin == 'hrd') {{ url('hrd/karyawan/mapping_shift/' . $holding->holding_code) }}@else {{ url('karyawan/mapping_shift/' . $holding->holding_code) }} @endif"
-                        class=" menu-link">
-                        <div style="font-size: 10pt;" data-i18n="Without navbar"><i
-                                class="mdi mdi-account-clock-outline"></i>&nbsp;Mapping&nbsp;Shift</div>
-                    </a>
                 </li>
+                @endforeach
             </ul>
+            @else
+            {{-- Menu tanpa submenu --}}
+            <a href="{{ $menu->url ? url($menu->url, $holding->holding_code) : '#' }}"
+                class="menu-link" data-bs-toggle="tooltip" data-bs-placement="right"
+                title="{{ $menu->name }}">
+                <i class="menu-icon tf-icons mdi {{ $menu->icon }}"></i>
+                <div style="font-size: 10pt;" data-i18n="{{ $menu->name }}">
+                    {{ $menu->name }}
+                </div>
+            </a>
+            @endif
         </li>
-        <!-- END ABSENSI KARYAWAN -->
+        @endforeach
+        <!-- ABSENSI KARYAWAN -->
+
         <li
             class="menu-item {{ Request::is('pg-data-recruitment*') ? 'active open' : '' }}{{ Request::is('pg-data-interview*') ? 'active open' : '' }} {{ Request::is('pg-data-ranking*') ? 'active open' : '' }} {{ Request::is('pg-data-ujian*') ? 'active open' : '' }}">
             <a href="javascript:void(0);" class="menu-link menu-toggle">

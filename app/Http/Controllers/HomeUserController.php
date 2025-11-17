@@ -18,7 +18,10 @@ use App\Models\Jabatan;
 use App\Models\Karyawan;
 use App\Models\AttendanceLog;
 use App\Models\LevelJabatan;
+use App\Models\Menu;
 use App\Models\Penugasan;
+use App\Models\RoleMenu;
+use App\Models\RoleUsers;
 use App\Models\Site;
 use App\Models\Shift;
 use App\Models\Titik;
@@ -149,6 +152,26 @@ class HomeUserController extends Controller
                 'ok';
             }
             $user           = $user_karyawan->id;
+            $get_role = RoleUsers::where('role_user_id', Auth::user()->id)->pluck('role_menu_id')->toArray();
+            if (count($get_role) == 0) {
+                $roleId = null;
+            } else {
+                $roleId = $get_role;
+            }
+            if ($roleId == null) {
+                $all_menu = collect();
+            } else {
+
+                $all_menu  = RoleMenu::with(['Menu' => function ($query) {
+                    $query->where('kategori', 'mobile');
+                }])
+                    ->whereHas('Menu', function ($query) {
+                        $query->where('kategori', 'mobile');
+                    })
+                    ->whereIn('role_id', $get_role)->get();
+            }
+            // dd($all_menu);
+            // $all_menu = Menu::where('kategori', 'mobile')->orderBy('sort_order', 'ASC')->get();
             // dd($status_absen_skrg, $startDate, $endDate);
             return view('users.home.index', [
                 'title'             => 'Absen',
@@ -172,6 +195,7 @@ class HomeUserController extends Controller
                 'count_absen_sakit'     => 0,
                 'count_absen_telat'     => 0,
                 'kantor_penugasan'     => '',
+                'all_menus'         => $all_menu,
                 'location'     => Site::all(),
 
             ]);
@@ -187,6 +211,9 @@ class HomeUserController extends Controller
             'karyawan' => $karyawan,
         ]);
     }
+
+
+
     public function get_notif()
     {
         $user_karyawan = Karyawan::where('id', Auth::user()->karyawan_id)->first();

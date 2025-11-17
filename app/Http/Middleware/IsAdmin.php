@@ -22,11 +22,11 @@ class IsAdmin
             // dd('ok');
             return redirect('/');
         }
-        if (Auth::user()->is_admin != 'admin') {
-            // dd(Auth::user());
-            Alert::warning('warning', 'Auth Access User Anda Diabatasi');
-            return redirect()->back()->with('warning', 'Auth Access User Anda Diabatasi');
-        }
+        // if (Auth::user()->is_admin != 'admin') {
+        //     // dd(Auth::user());
+        //     Alert::warning('warning', 'Auth Access User Anda Diabatasi');
+        //     return redirect()->back()->with('warning', 'Auth Access User Anda Diabatasi');
+        // }
 
         return $next($request);
     }

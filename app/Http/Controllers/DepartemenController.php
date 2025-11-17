@@ -9,9 +9,11 @@ use App\Models\Divisi;
 use App\Models\Holding;
 use App\Models\Jabatan;
 use App\Models\Karyawan;
+use App\Models\Menu;
 use App\Models\User;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Maatwebsite\Excel\Facades\Excel;
 use Ramsey\Uuid\Uuid;
 use RealRashid\SweetAlert\Facades\Alert;
@@ -21,6 +23,17 @@ class DepartemenController extends Controller
 {
     public function index($holding)
     {
+        $roleId = Auth::user();
+        $menus = Menu::whereIn('id', function ($query) use ($roleId) {
+            $query->select('menu_id')
+                ->from('role_menus')
+                ->where('role_id', $roleId->role);
+        })
+            ->whereNull('parent_id') // menu utama
+            ->with('children')
+            ->where('kategori', 'web')      // load submenunya
+            ->orderBy('sort_order')
+            ->get();
         $getHolding = Holding::where('holding_code', $holding)->first();
         if ($getHolding == null) {
             Alert::error('Error', 'Holding Tidak Ditemukan', 3000);
@@ -29,6 +42,7 @@ class DepartemenController extends Controller
         return view('admin.departemen.index', [
             'title' => 'Master Departemen',
             'holding' => $getHolding,
+            'menus' => $menus,
             'data_departemen' => Departemen::all()
         ]);
     }

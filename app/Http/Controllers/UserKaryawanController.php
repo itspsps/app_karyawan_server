@@ -13,6 +13,7 @@ use App\Models\Holding;
 use App\Models\Jabatan;
 use App\Models\Karyawan;
 use App\Models\Lokasi;
+use App\Models\Menu;
 use App\Models\User;
 use App\Models\UserNonActive;
 use PDF;
@@ -34,10 +35,17 @@ class UserKaryawanController extends Controller
             ->where('karyawans.kontrak_kerja', $holding->holding_name)
             ->orderBy('karyawans.name', 'ASC')
             ->get();
+        $menus = Menu::with(['children' => function ($query) {
+            $query->with('subchildren');
+        }])
+            ->whereNull('parent_id')
+            ->orderBy('sort_order')
+            ->get();
         $data_user = User::Join('karyawans', 'users.karyawan_id', 'karyawans.id')->where('kontrak_kerja', $holding)->where('user_aktif', 'AKTIF')->get();
         return view('admin.karyawan.index_users', [
             // return view('karyawan.index', [
             'title' => 'Karyawan',
+            'menus' => $menus,
             "data_departemen" => Departemen::orderBy('nama_departemen', 'ASC')->where('holding', $holding->id)->get(),
             'holding' => $holding,
             'karyawan' => $karyawan,
@@ -59,12 +67,19 @@ class UserKaryawanController extends Controller
             ->where('karyawans.kontrak_kerja', $holding->holding_name)
             ->orderBy('karyawans.name', 'ASC')
             ->get();
+        $menus = Menu::with(['children' => function ($query) {
+            $query->with('subchildren');
+        }])
+            ->whereNull('parent_id')
+            ->orderBy('sort_order')
+            ->get();
         $data_user = User::Join('karyawans', 'users.karyawan_id', 'karyawans.id')->where('kontrak_kerja', $holding)->where('user_aktif', 'AKTIF')->get();
         return view('admin.karyawan.index_finger', [
             // return view('karyawan.index', [
             'title' => 'Karyawan',
             "data_departemen" => Departemen::orderBy('nama_departemen', 'ASC')->where('holding', $holding->id)->get(),
             'holding' => $holding,
+            'menus' => $menus,
             'karyawan' => $karyawan,
             'data_user' => $data_user,
             "data_jabatan" => Jabatan::orderBy('nama_jabatan', 'ASC')->where('holding', $holding)->get(),
@@ -121,12 +136,12 @@ class UserKaryawanController extends Controller
             $query->with('Jabatan');
             $query->where('kontrak_kerja', $holding->id);
             $query->where('kategori', 'Karyawan Bulanan');
-        }])->Join('karyawans', 'karyawans.id', 'users.karyawan_id')
+        }])->with('Role')->Join('karyawans', 'karyawans.id', 'users.karyawan_id')
             ->where('karyawans.kategori', 'Karyawan Bulanan')
             ->where('karyawans.kontrak_kerja', $holding->id)
             ->select('users.*')
             ->orderBy('id', 'DESC')
-            // ->limit(2)
+            // ->where('username', 'cerdasbadrus')
             ->get();
         // dd($table, $holding->holding_name);
         if (request()->ajax()) {

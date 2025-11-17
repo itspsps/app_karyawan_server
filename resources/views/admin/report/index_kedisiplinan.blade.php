@@ -1,6 +1,6 @@
 @extends('admin.layouts.dashboard')
 @section('css')
-<link rel="stylesheet" href="https://cdn.datatables.net/2.0.5/css/dataTables.bootstrap5.css">
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css">
 <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/3.1.2/css/buttons.dataTables.css" />
 <link rel="preload" href="{{ asset('admin/assets/vendor/libs/apex-charts/apex-charts.css') }}" as="style"
@@ -10,6 +10,9 @@
 
 <link href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css"
     rel="stylesheet" />
+<!-- FixedColumns extension -->
+<link rel="stylesheet" href="https://cdn.datatables.net/fixedcolumns/4.3.0/css/fixedColumns.dataTables.min.css">
+
 <style type="text/css">
     .my-swal {
         z-index: X;
@@ -80,7 +83,8 @@
                     </div>
                 </div>
 
-                <div class="card-body p-0" style="height: calc(1000vh - 60px); overflow-y: auto;">
+                <div class="card-body card-body-table-report p-0" style="height: calc(1000vh - 60px); overflow-y: auto; position: relative;">
+                    <!-- <div class="card-body p-0" style="height: calc(1000vh - 60px); overflow-y: auto;"> -->
                     <!-- Filter selalu di atas -->
                     <div id="collapseFilterWrapper" class="sticky-top bg-white" style="z-index: 1020;">
                         <div class="card-body">
@@ -217,7 +221,7 @@
                                 </div>
                             </div>
                         </div>
-                        <table class="table table-bordered table-hover table-striped" id="table_rekapdata" style=" width: 100%; font-size: small; ">
+                        <table class="table table-bordered table-hover table-striped nowrap" id="table_rekapdata" style=" width: 100%; font-size: small; ">
 
                         </table>
                     </div>
@@ -229,12 +233,14 @@
 @endsection
 @section('js')
 <!-- JS -->
-<script src="https://cdn.datatables.net/2.0.5/js/dataTables.js"></script>
-<script src="https://cdn.datatables.net/2.0.5/js/dataTables.bootstrap5.js"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
 
-<script src="https://cdn.datatables.net/buttons/3.1.2/js/dataTables.buttons.js"></script>
-<script src="https://cdn.datatables.net/buttons/3.1.2/js/buttons.dataTables.js"></script>
-<script src="https://cdn.datatables.net/buttons/3.1.2/js/buttons.bootstrap5.min.js"></script>
+<!-- Buttons -->
+<script src="https://cdn.datatables.net/buttons/2.4.2/js/dataTables.buttons.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.bootstrap5.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.html5.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.print.min.js"></script>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
@@ -249,6 +255,7 @@
 <script src="{{asset('admin/assets/vendor/libs/apex-charts/apexcharts.js')}}"></script>
 <!-- Select2 JS -->
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+<script src="https://cdn.datatables.net/fixedcolumns/4.3.0/js/dataTables.fixedColumns.min.js"></script>
 
 <script>
     $(document).ready(function() {
@@ -316,7 +323,7 @@
                 success: function(data) {
                     // console.log(data);
                     datacolumn = [{
-                            data: 'no',
+                            data: 'id',
                             render: function(data, type, row, meta) {
                                 return meta.row + meta.settings._iDisplayStart + 1;
                             }
@@ -326,12 +333,12 @@
                             name: 'btn_detail'
                         },
                         {
-                            data: 'nomor_identitas_karyawan',
-                            name: 'nomor_identitas_karyawan'
-                        },
-                        {
                             data: 'name',
                             name: 'name'
+                        },
+                        {
+                            data: 'nomor_identitas_karyawan',
+                            name: 'nomor_identitas_karyawan'
                         },
                         {
                             data: 'departemen',
@@ -403,7 +410,7 @@
                     // 1. Destroy DataTable dulu kalau sudah ada
                     $('#content_null').empty();
                     $('#table_rekapdata').empty();
-                    $('#table_rekapdata').append('<thead class="text-center  align-middle" style="font-weight: bold; white-space: nowrap;"><tr><th rowspan="3" class="text-center">No.</th><th rowspan="3" class="text-center">Action</th><th rowspan="3" class="text-center">ID&nbsp;Karyawan</th><th rowspan="3" class="text-center">Nama&nbsp;Karyawan</th><th rowspan="3" clas="text-center">Departemen</th><th rowspan="3" class="text-center">Shift</th><th colspan="14" class="text-center">&nbsp;ABSENSI&nbsp;</th><th class="text-center th_count_date1">Detail&nbsp;Per&nbsp;Tanggal</th></tr><tr><th colspan="4" class="text-center">Masuk</th><th colspan="2" class="text-center">Pulang</th><th rowspan="2">Total&nbsp;Hadir</th><th colspan="3" class="text-center">Keterangan</th><th rowspan="2">Libur</th><th rowspan="2">Tidak&nbsp;Hadir</th><th rowspan="2">Net&nbsp;Hadir&nbsp;Kerja</th><th rowspan="2">Total&nbsp;Hari</th><th class="text-center th_count_date2">Tanggal</th></tr><tr id="date_absensi"></tr></thead><tbody class="text-center align-middle"></tbody>');
+                    $('#table_rekapdata').append('<thead class="text-center  align-middle" style="font-weight: bold; white-space: nowrap;"><tr><th rowspan="3" class="text-center">No.</th><th rowspan="3" class="text-center">Action</th><th rowspan="3" class="text-center">Nama&nbsp;Karyawan</th><th rowspan="3" class="text-center">ID&nbsp;Karyawan</th><th rowspan="3" clas="text-center">Departemen</th><th rowspan="3" class="text-center">Shift</th><th colspan="14" class="text-center">&nbsp;ABSENSI&nbsp;</th><th class="text-center th_count_date1">Detail&nbsp;Per&nbsp;Tanggal</th></tr><tr><th colspan="4" class="text-center">Masuk</th><th colspan="2" class="text-center">Pulang</th><th rowspan="2">Total&nbsp;Hadir</th><th colspan="3" class="text-center">Keterangan</th><th rowspan="2">Libur</th><th rowspan="2">Tidak&nbsp;Hadir</th><th rowspan="2">Net&nbsp;Hadir&nbsp;Kerja</th><th rowspan="2">Total&nbsp;Hari</th><th class="text-center th_count_date2">Tanggal</th></tr><tr id="date_absensi"></tr></thead><tbody class="text-center align-middle"></tbody>');
                     if ($.fn.DataTable.isDataTable('#table_rekapdata')) {
                         $('#table_rekapdata').DataTable().clear().destroy();
                     }
@@ -652,6 +659,15 @@
                 serverSide: true,
                 deferRender: true,
                 pageLength: -1,
+                scrollCollapse: true,
+                scrollX: true,
+                fixedColumns: {
+                    leftColumns: 3
+                },
+                fixedHeader: {
+                    header: true,
+                    headerContainer: '.card-body-table-report' // opsional, bantu sinkronisasi
+                },
                 lengthMenu: [
                     [10, 25, 50, 100, -1],
                     [10, 25, 50, 100, "All"]
@@ -774,12 +790,12 @@
                     }
                 },
                 {
-                    data: 'nomor_identitas_karyawan',
-                    name: 'nomor_identitas_karyawan'
-                },
-                {
                     data: 'name',
                     name: 'name'
+                },
+                {
+                    data: 'nomor_identitas_karyawan',
+                    name: 'nomor_identitas_karyawan'
                 },
                 {
                     data: 'total_hadir_tepat_waktu',

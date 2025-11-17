@@ -12,12 +12,14 @@ use App\Models\Holding;
 use App\Models\Jabatan;
 use App\Models\Karyawan;
 use App\Models\MappingShift;
+use App\Models\Menu;
 use App\Models\Shift;
 use App\Models\SolutionUser;
 use App\Models\User;
 use Carbon\Carbon;
 use Carbon\CarbonPeriod;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Facades\Excel;
 use ParagonIE\Sodium\Core\Curve25519\H;
@@ -46,12 +48,18 @@ class ReportController extends Controller
         $data_columns3 = str_replace(["'data'"], 'data', $data_columns2);
         $data_columns4 = str_replace(["'name'"], 'name', $data_columns3);
         $datacolumn = str_replace(["'searchable'"], 'searchable', $data_columns4);
-
-        // $header1 = str_replace(['["', '"]','","'], '', json_encode($header));
-        // $data_columns_header = str_replace(['\/'], "/", $header1);
-
-        // $datacolumn = [];
-        // dd($datacolumn);
+        $roleId = Auth::user();
+        // dd($roleId);
+        $menus = Menu::whereIn('id', function ($query) use ($roleId) {
+            $query->select('menu_id')
+                ->from('role_menus')
+                ->where('role_id', $roleId->role);
+        })
+            ->whereNull('parent_id') // menu utama
+            ->with('children')
+            ->where('kategori', 'web')      // load submenunya
+            ->orderBy('sort_order')
+            ->get();
         return view('admin.report.index', [
             'holding' => $holding,
             // 'data_finger' => $data_finger,
@@ -60,6 +68,7 @@ class ReportController extends Controller
             'start_date' => $start_date,
             'datacolumn' => $datacolumn,
             'end_date' => $end_date,
+            'menus' => $menus,
             'data_columns_header' => $data_columns_header,
             'count_period' => $count_period,
         ]);
@@ -92,12 +101,23 @@ class ReportController extends Controller
             $title = "Rekap Data Absensi Tanggal " . $tanggal_mulai . " s/d " . $tanggal_akhir;
         }
         $departemen = Departemen::where('holding', $holding->id)->orderBy('nama_departemen', 'ASC')->get();
-        // dd($holding->id);
-        // dd(Carbon::createFromFormat('H:i:s', '17:12:00'));
+        $roleId = Auth::user();
+        // dd($roleId);
+        $menus = Menu::whereIn('id', function ($query) use ($roleId) {
+            $query->select('menu_id')
+                ->from('role_menus')
+                ->where('role_id', $roleId->role);
+        })
+            ->whereNull('parent_id') // menu utama
+            ->with('children')
+            ->where('kategori', 'web')      // load submenunya
+            ->orderBy('sort_order')
+            ->get();
         session(['url.intended' => url()->previous()]);
         return view('admin.report.index_kedisiplinan', [
             'title' => $title,
             'data_user' => $user,
+            'menus' => $menus,
             'tanggal_mulai' => $tanggal_mulai,
             'departemen' => $departemen,
             'holding' => $holding,
@@ -130,9 +150,16 @@ class ReportController extends Controller
             $title = "Rekap Data Absensi Tanggal " . $tanggal_mulai . " s/d " . $tanggal_akhir;
         }
         // dd(Carbon::createFromFormat('H:i:s', '17:12:00'));
+        $menus = Menu::with(['children' => function ($query) {
+            $query->with('subchildren');
+        }])
+            ->whereNull('parent_id')
+            ->orderBy('sort_order')
+            ->get();
         return view('admin.report.detail_kedisiplinan', [
             'title' => $title,
             'data_user' => $user,
+            'menus' => $menus,
             'tanggal_mulai' => $tanggal_mulai,
             'holding' => $holding,
             'tanggal_akhir' => $tanggal_akhir

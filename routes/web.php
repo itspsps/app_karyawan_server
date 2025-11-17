@@ -28,6 +28,7 @@ use App\Http\Controllers\ProfileUserController;
 use App\Http\Controllers\AbsenUserController;
 use App\Http\Controllers\AccessController;
 use App\Http\Controllers\ActivityLogController;
+use App\Http\Controllers\ApiController;
 use App\Http\Controllers\ApprovalController;
 use App\Http\Controllers\BagianController;
 use App\Http\Controllers\InventarisController;
@@ -49,6 +50,7 @@ use App\Http\Controllers\RecruitmentLaporanController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\UserKaryawanController;
 use App\Http\Controllers\RecruitmentUserController;
+use App\Http\Controllers\RoleController;
 use App\Http\Controllers\SitesController;
 use App\Http\Controllers\UjianUserController;
 use App\Models\Jabatan;
@@ -261,9 +263,7 @@ Route::middleware('admin')->group(function () {
     Route::post('/karyawan/ImportUpdateKaryawan/sps', [karyawanController::class, 'ImportUpdateKaryawan']);
     Route::post('/karyawan/ImportUpdateKaryawan/sip', [karyawanController::class, 'ImportUpdateKaryawan']);
     Route::get('/karyawan/ExportKaryawan/{holding}', [karyawanController::class, 'ExportKaryawan']);
-    Route::get('/karyawan/pdfKaryawan/sps', [karyawanController::class, 'download_pdf_karyawan']);
-    Route::get('/karyawan/pdfKaryawan/sp', [karyawanController::class, 'download_pdf_karyawan']);
-    Route::get('/karyawan/pdfKaryawan/sip', [karyawanController::class, 'download_pdf_karyawan']);
+    Route::get('/karyawan/pdfKaryawan/{holding}', [karyawanController::class, 'download_pdf_karyawan']);
 
     // PENDIDIKAN KARYAWAN
     Route::get('/karyawan/pendidikan/{id}', [karyawanController::class, 'pendidikan_datatable']);
@@ -366,18 +366,21 @@ Route::middleware('admin')->group(function () {
     Route::get('/mapping_shift/get_bagian', [MappingShiftController::class, 'get_bagian']);
     Route::get('/mapping_shift/get_jabatan', [MappingShiftController::class, 'get_jabatan']);
 
-
+    // Mapping User
     Route::get('mapping_shift/dashboard/', [MappingShiftController::class, 'index']);
-    Route::post('/karyawan/mapping_shift/prosesAddMappingShift/{holding}', [MappingShiftController::class, 'prosesAddMappingShift']);
+    Route::get('mapping_shift/tambah_mapping/', [MappingShiftController::class, 'tambah_mapping']);
+    Route::get('mapping_shift/get_shiftData/', [MappingShiftController::class, 'getShiftData']);
+    Route::get('mapping_shift/getKaryawanMappingShift', [MappingShiftController::class, 'getKaryawanMappingShift']);
+    Route::post('/mapping_shift/addMappingShift', [MappingShiftController::class, 'addMappingShift']);
+    Route::post('/mapping_shift/update_mapping_shift', [MappingShiftController::class, 'update_mapping_shift']);
+    Route::post('/mapping_shift/delete_mapping_shift', [MappingShiftController::class, 'delete_mapping_shift']);
+
+    Route::post('/mapping_shift/prosesAddMappingShift/{holding}', [MappingShiftController::class, 'prosesAddMappingShift']);
     Route::post('/karyawan/mapping_shift/prosesEditMappingShift/{holding}', [MappingShiftController::class, 'prosesEditMappingShift']);
 
 
-    //
-    // Route::get('/karyawan/get_departemen', [karyawanController::class, 'get_departemen']);
-    // Route::get('/karyawan/get_divisi', [karyawanController::class, 'get_divisi']);
-    // Route::get('/karyawan/get_bagian', [karyawanController::class, 'get_bagian']);
-    // Route::get('/karyawan/get_jabatan', [karyawanController::class, 'get_jabatan']);
-
+    //APPROVAL
+    Route::get('/approval/mapping_shift', [ApprovalController::class, 'mapping_shift']);
     // STRUKTUR ORGANISASI
     Route::get('/struktur_organisasi/{holding}', [StrukturOrganisasiController::class, 'index']);
 
@@ -473,19 +476,6 @@ Route::middleware('admin')->group(function () {
     Route::post('/inventaris/proses-edit/sps', [InventarisController::class, 'editInventarisProses'])->middleware('admin');
     Route::post('/inventaris/proses-edit/sip', [InventarisController::class, 'editInventarisProses'])->middleware('admin');
 
-    // ACCESS
-    Route::get('/access/sp', [AccessController::class, 'index'])->middleware('admin');
-    Route::get('/access-datatable/sp', [AccessController::class, 'datatable'])->middleware('admin');
-    Route::get('/access/sps', [AccessController::class, 'index'])->middleware('admin');
-    Route::get('/access-datatable/sps', [AccessController::class, 'datatable'])->middleware('admin');
-    Route::get('/access/sip', [AccessController::class, 'index'])->middleware('admin');
-    Route::get('/access-datatable/sip', [AccessController::class, 'datatable'])->middleware('admin');
-    Route::get('/access/add_access/{id}/sp', [AccessController::class, 'add_access'])->middleware('admin');
-    Route::post('/access/access_save_add/sp', [AccessController::class, 'access_save_add'])->middleware('admin');
-    Route::get('/access/add_access/{id}/sps', [AccessController::class, 'add_access'])->middleware('admin');
-    Route::post('/access/access_save_add/sps', [AccessController::class, 'access_save_add'])->middleware('admin');
-    Route::get('/access/add_access/{id}/sip', [AccessController::class, 'add_access'])->middleware('admin');
-    Route::post('/access/access_save_add/sip', [AccessController::class, 'access_save_add'])->middleware('admin');
 
     // Route::put('/karyawan/proses-edit-shift/{id}', [karyawanController::class, 'prosesEditShift'])->middleware('auth');
     // Route::get('/absen', [AbsenController::class, 'index'])->middleware('auth');
@@ -629,6 +619,7 @@ Route::middleware('admin')->group(function () {
     // ACCESS
     Route::get('/access/{holding}', [AccessController::class, 'index']);
     Route::get('/access-datatable/{holding}', [AccessController::class, 'datatable']);
+    Route::get('/access/role_access_datatable/{id}/{holding}', [AccessController::class, 'role_access_datatable']);
     Route::get('/access/add_access/{id}/{holding}', [AccessController::class, 'add_access']);
     Route::post('/access/access_save_add/{holding}', [AccessController::class, 'access_save_add']);
     Route::get('/data-absen', [AbsenController::class, 'dataAbsen']);
@@ -638,6 +629,14 @@ Route::middleware('admin')->group(function () {
     Route::put('/data-absen/{id}/proses-edit-pulang', [AbsenController::class, 'prosesEditPulang']);
     Route::delete('/data-absen/{id}/delete', [AbsenController::class, 'deleteAdmin']);
     Route::get('/data-lembur', [LemburController::class, 'dataLembur']);
+
+    // ROLE
+    Route::get('/role/{holding}', [RoleController::class, 'index']);
+    Route::get('/role-datatable/{holding}', [RoleController::class, 'datatable']);
+    Route::get('/menu-datatable/{holding}', [RoleController::class, 'datatable_menu']);
+    Route::get('/role/add_role/{id}/{holding}', [RoleController::class, 'add_role']);
+    Route::post('/role/role_save_add/{holding}', [RoleController::class, 'role_save_add']);
+
 
     Route::get('/rekap-data/sp', [RekapDataController::class, 'index']);
     Route::get('/rekap-data/sps', [RekapDataController::class, 'index']);
@@ -1017,6 +1016,10 @@ Route::get('/recruitment-user', [RecruitmentController::class, 'recruitment_user
 Route::get('/recruitment-user/add/{id}', [RecruitmentController::class, 'recruitment_user_add']);
 Route::post('/recruitment-user/add-proccess/{id}', [RecruitmentController::class, 'recruitment_user_add_proccess']);
 
+Route::middleware('auth:web', 'log.activity')->group(function () {
+    Route::get('api/get_home', [ApiController::class, 'get_home']);
+    // API
+});
 
 Route::get('optimize', function () {
     Artisan::call('cache:clear');

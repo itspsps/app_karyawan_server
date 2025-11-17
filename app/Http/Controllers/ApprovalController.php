@@ -5,7 +5,10 @@ namespace App\Http\Controllers;
 use App\Models\Cuti;
 use App\Models\Izin;
 use App\Models\Karyawan;
+use App\Models\MappingShift;
 use App\Models\Penugasan;
+use App\Models\RoleMenu;
+use App\Models\RoleUsers;
 use Doctrine\DBAL\Schema\Index;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -60,5 +63,29 @@ class ApprovalController extends Controller
                 'datapenugasan'     => $datapenugasan,
             ]
         );
+    }
+    public function mapping_shift()
+    {
+        $get_role = RoleUsers::where('role_user_id', Auth::user()->id)->pluck('role_menu_id')->toArray();
+        if (count($get_role) == 0) {
+            $roleId = null;
+        } else {
+            $roleId = $get_role;
+        }
+        if ($roleId == null) {
+            $all_menus = collect();
+        } else {
+
+            $all_menus  = RoleMenu::with(['Menu' => function ($query) {
+                $query->where('kategori', 'mobile');
+            }])
+                ->whereHas('Menu', function ($query) {
+                    $query->where('kategori', 'mobile');
+                })
+                ->whereIn('role_id', $get_role)->get();
+        }
+        $user_karyawan  = Karyawan::where('id', Auth::user()->karyawan_id)->first();
+        $mapping_shift = MappingShift::where('approve_by', Auth::user()->id)->where('status_approved', 0)->get();
+        return view('users.approval.mapping_shift', compact('mapping_shift', 'user_karyawan', 'all_menus'));
     }
 }

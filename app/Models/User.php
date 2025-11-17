@@ -6,6 +6,7 @@ use App\Traits\UuidTrait;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
@@ -34,6 +35,7 @@ class User extends Authenticatable implements JWTSubject
         'access_1',
         'access_2',
         'access_3',
+        'role',
         'user_aktif',
         'alasan',
     ];
@@ -69,5 +71,9 @@ class User extends Authenticatable implements JWTSubject
     public function Karyawan(): BelongsTo
     {
         return $this->belongsTo(Karyawan::class, 'karyawan_id', 'id');
+    }
+    public function roleUsers(): HasMany
+    {
+        return $this->hasMany(RoleUsers::class, 'role_user_id', 'id');
     }
 }

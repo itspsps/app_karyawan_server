@@ -2,7 +2,8 @@
 
 namespace App\Helpers;
 
-class ApiFormatter{
+class ApiFormatter
+{
     protected static $response = [
         'code' => null,
         'message' => null,

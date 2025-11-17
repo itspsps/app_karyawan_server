@@ -44,6 +44,10 @@
             overflow-y: auto;
             /* aktifkan scroll vertikal */
         }
+
+        .dz-icon i {
+            font-size: 30px !important;
+        }
     </style>
 </head>
 
@@ -181,9 +185,6 @@
         @include('users.layouts.menubar')
         <!-- Menubar -->
 
-
-        <!-- PWA Offcanvas -->
-        <!-- PWA Offcanvas End -->
 
     </div>
     <!--**********************************

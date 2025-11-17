@@ -167,9 +167,9 @@ Route::middleware('hrd')->group(function () {
         Route::get('/karyawan/edit-shift/{id}/sip', [karyawanController::class, 'editShift']);
 
         // mapping shift NEW
-        Route::get('/karyawan/mapping_shift/sp', [MappingShiftController::class, 'mapping_shift_index']);
-        Route::get('/karyawan/mapping_shift/sps', [MappingShiftController::class, 'mapping_shift_index']);
-        Route::get('/karyawan/mapping_shift/sip', [MappingShiftController::class, 'mapping_shift_index']);
+        // Route::get('/karyawan/mapping_shift/sp', [MappingShiftController::class, 'mapping_shift_index']);
+        // Route::get('/karyawan/mapping_shift/sps', [MappingShiftController::class, 'mapping_shift_index']);
+        // Route::get('/karyawan/mapping_shift/sip', [MappingShiftController::class, 'mapping_shift_index']);
         Route::get('/mapping_shift_datatable/sp', [MappingShiftController::class, 'mapping_shift_datatable']);
         Route::get('/mapping_shift_datatable/sps', [MappingShiftController::class, 'mapping_shift_datatable']);
         Route::get('/mapping_shift_datatable/sip', [MappingShiftController::class, 'mapping_shift_datatable']);

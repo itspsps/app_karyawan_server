@@ -25,7 +25,10 @@ class RedirectIfAuthenticated
             if (Auth::guard($guard)->check()) {
 
                 if ($guard === 'web') {
-                    return redirect()->route('login');
+                    return response()->json([
+                        'message' => 'Already authenticated',
+                        'code' => 500
+                    ]);
                 }
 
                 // return redirect()->route('login');

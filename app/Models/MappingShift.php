@@ -13,11 +13,14 @@ class MappingShift extends Model
     public $incrementing = true;
     protected $fillable = [
         'karyawan_id',
+        'input_by',
+        'legal_number_mapping',
         'nik_karyawan',
         'nama_karyawan',
         'shift_id',
         'nama_shift',
-        'koordinator_id',
+        'approve_by',
+        'status_approved',
         'lokasi_bekerja',
         'tanggal_masuk',
         'jam_absen',

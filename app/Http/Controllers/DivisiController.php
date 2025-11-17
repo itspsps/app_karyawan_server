@@ -9,9 +9,11 @@ use App\Models\Divisi;
 use App\Models\Holding;
 use App\Models\Jabatan;
 use App\Models\Karyawan;
+use App\Models\Menu;
 use App\Models\User;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Maatwebsite\Excel\Facades\Excel;
 use Ramsey\Uuid\Uuid;
 use RealRashid\SweetAlert\Facades\Alert;
@@ -23,6 +25,17 @@ class DivisiController extends Controller
     {
         $get_holding = Holding::where('holding_code', $holding)->first();
         // dd($get_holding);
+        $roleId = Auth::user();
+        $menus = Menu::whereIn('id', function ($query) use ($roleId) {
+            $query->select('menu_id')
+                ->from('role_menus')
+                ->where('role_id', $roleId->role);
+        })
+            ->whereNull('parent_id') // menu utama
+            ->with('children')
+            ->where('kategori', 'web')      // load submenunya
+            ->orderBy('sort_order')
+            ->get();
         if ($get_holding == null) {
             Alert::error('Error', 'Holding Tidak Ditemukan', 3000);
             return redirect()->route('dashboard_holding')->with('error', 'Holding Tidak Ditemukan');
@@ -32,6 +45,7 @@ class DivisiController extends Controller
         return view('admin.divisi.index', [
             'title' => 'Master Divisi',
             'holding' => $get_holding,
+            'menus' => $menus,
             'data_divisi' => Divisi::with('Departemen')->where('holding', $get_holding->id)->get(),
             'data_departemen' => Departemen::orderBy('nama_departemen', 'asc')->where('holding', $get_holding->id)->get()
         ]);

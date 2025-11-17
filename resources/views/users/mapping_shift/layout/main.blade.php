@@ -55,24 +55,12 @@
         <div class="page-content bottom-content">
 
             <!-- Banner -->
-            <div class="head-details">
+            <div class="head-details" style="background:var(--gradient) ">
                 <div class=" container">
-                    <div class="dz-info">
-                        <span class="location d-block">Form Izin&nbsp;
-                            @if($user->kontrak_kerja == 'SP')
-                            CV. SUMBER PANGAN
-                            @elseif($user->kontrak_kerja == 'SPS')
-                            PT. SURYA PANGAN SEMESTA
-                            @elseif($user->kontrak_kerja == 'SIP')
-                            CV. SURYA INTI PANGAN
-                            @endif
+                    <div class="col-12 text-center">
+                        <span class="location d-block">Mapping Shift&nbsp;
                         </span>
-                        {{-- @foreach ($user  as $dep) --}}
-                        <h5 class="title">Department of "{{ $user->nama_departemen }}"</h5>
-                        {{-- @endforeach --}}
-                    </div>
-                    <div class="dz-media media-65">
-                        <img src="assets/images/logo/logo.svg" alt="">
+                        <h5 class="title">DEPARTEMEN "{{ $departemen }}"</h5>
                     </div>
                 </div>
             </div>

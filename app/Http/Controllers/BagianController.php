@@ -9,9 +9,11 @@ use App\Models\Divisi;
 use App\Models\Holding;
 use App\Models\Jabatan;
 use App\Models\Karyawan;
+use App\Models\Menu;
 use App\Models\User;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Maatwebsite\Excel\Facades\Excel;
 use Ramsey\Uuid\Uuid;
 use RealRashid\SweetAlert\Facades\Alert;
@@ -24,9 +26,21 @@ class BagianController extends Controller
         $holding = Holding::where('holding_code', $holding)->first();
         // $get = Bagian::with('Divisi')->get();
         // dd($get);
+        $roleId = Auth::user();
+        $menus = Menu::whereIn('id', function ($query) use ($roleId) {
+            $query->select('menu_id')
+                ->from('role_menus')
+                ->where('role_id', $roleId->role);
+        })
+            ->whereNull('parent_id') // menu utama
+            ->with('children')
+            ->where('kategori', 'web')      // load submenunya
+            ->orderBy('sort_order')
+            ->get();
         return view('admin.bagian.index', [
             'title' => 'Master Divisi',
             'holding' => $holding,
+            'menus' => $menus,
             'data_bagian' => Bagian::with('Divisi')->where('holding', $holding->id)->get(),
             'data_dept' => Departemen::orderBy('nama_departemen', 'asc')->where('holding', $holding->id)->get(),
             'data_divisi' => Divisi::orderBy('nama_divisi', 'asc')->where('holding', $holding->id)->get()

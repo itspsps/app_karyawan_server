@@ -32,6 +32,7 @@ use App\Models\KaryawanKeahlian;
 use App\Models\KaryawanNonActive;
 use App\Models\KaryawanPendidikan;
 use App\Models\Lokasi;
+use App\Models\Menu;
 use Illuminate\Support\Facades\Auth;
 use Ramsey\Uuid\Uuid;
 use Illuminate\Support\Str;
@@ -60,11 +61,24 @@ class karyawanController extends Controller
 {
     public function index($holding)
     {
+
         $getHolding = Holding::where('holding_code', $holding)->first();
         if ($getHolding == null) {
             Alert::error('Error', 'Holding Tidak Ditemukan');
             return redirect()->route('dashboard/holding');
         }
+        $roleId = Auth::user();
+        // dd($roleId);
+        $menus = Menu::whereIn('id', function ($query) use ($roleId) {
+            $query->select('menu_id')
+                ->from('role_menus')
+                ->where('role_id', $roleId->role);
+        })
+            ->whereNull('parent_id') // menu utama
+            ->with('children')
+            ->where('kategori', 'web')      // load submenunya
+            ->orderBy('sort_order')
+            ->get();
         $departemen = Departemen::orderBy('nama_departemen', 'ASC')->where('holding', $getHolding->id)->get();
         $user = Karyawan::where('kontrak_kerja', $getHolding->id)->where('status_aktif', 'AKTIF')->get();
         $jabatan = Jabatan::orderBy('nama_jabatan', 'ASC')->where('holding', $getHolding->id)->get();
@@ -83,6 +97,7 @@ class karyawanController extends Controller
             "karyawan_perempuan" => $karyawan_perempuan,
             "karyawan_office" => $karyawan_office,
             "karyawan_shift" => $karyawan_shift,
+            'menus' => $menus
         ]);
     }
 
@@ -1479,6 +1494,18 @@ class karyawanController extends Controller
         $getHolding = Holding::where('holding_code', $holding)->first();
 
         $getHoldingall = Holding::get();
+        $roleId = Auth::user();
+        // dd($roleId);
+        $menus = Menu::whereIn('id', function ($query) use ($roleId) {
+            $query->select('menu_id')
+                ->from('role_menus')
+                ->where('role_id', $roleId->role);
+        })
+            ->whereNull('parent_id') // menu utama
+            ->with('children')
+            ->where('kategori', 'web')      // load submenunya
+            ->orderBy('sort_order')
+            ->get();
         $karyawan = Karyawan::with('KontrakKerja')->find($id);
         if ($karyawan == NULL) {
             return redirect()->back()->with('error', 'Karyawan Tidak Ada', 1500);
@@ -1487,6 +1514,7 @@ class karyawanController extends Controller
                 // return view('karyawan.editkaryawan', [
                 'title' => 'Detail Karyawan',
                 'holding' => $getHolding,
+                'menus' => $menus,
                 'holdingAll' => $getHoldingall,
                 'karyawan' => $karyawan,
                 "data_lokasi" => Site::whereNotIn('site_status', ['DEPO'])->orderBy('site_name', 'ASC')->get(),

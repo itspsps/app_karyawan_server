@@ -2,12 +2,8 @@
 @section('css')
 <link rel="stylesheet" href="https://cdn.datatables.net/2.0.5/css/dataTables.bootstrap5.css">
 <style type="text/css">
-    .swal2-container {
-        z-index: 9999 !important;
-    }
-
-    .dataTables_wrapper {
-        width: 100% !important;
+    .my-swal {
+        z-index: X;
     }
 </style>
 @endsection
@@ -20,74 +16,42 @@
             <div class="card">
                 <div class="card-header">
                     <div class="d-flex align-items-center justify-content-between">
-                        <h5 class="card-title m-0 me-2">DATA ACCESS KARYAWAN</h5>
+                        <h5 class="card-title m-0 me-2">MASTER ROLE ACCESS</h5>
                     </div>
                 </div>
                 <div class="card-body">
-                    <div class="modal fade" id="modal_tambah_access_karyawan" data-bs-backdrop="static" tabindex="-1">
+                    <button id="btn_add_role" class="btn btn-sm btn-primary mb-3">Tambah Role</button>
+                    <div class="modal fade" id="modal_add_role" data-bs-backdrop="static" tabindex="-1">
                         <div class="modal-dialog modal-dialog-scrollable modal-lg">
-                            <form method="post" id="form_add_access_karyawan" class="modal-content" enctype="multipart/form-data">
+                            <form method="post" action="{{url('/role/role_save_add/'.$holding->holding_code)}}" class="modal-content" enctype="multipart/form-data">
                                 @csrf
-                                <input type="hidden" value="" id="id" name="id">
-                                <input type="hidden" name="id_karyawan" id="id_karyawan" value="">
                                 <div class="modal-header">
-                                    <h4 class="modal-title" id="backDropModalTitle">Tambah Access Karyawan</h4>
+                                    <h4 class="modal-title" id="backDropModalTitle">Tambah Role</h4>
                                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                 </div>
                                 <div class="modal-body">
                                     <div class="col-md-12">
                                         <div class="card mb-4">
-                                            <h4 class="card-header">&nbsp;Profil</h4>
-                                            <!-- Account -->
                                             <div class="card-body">
-                                                <div class="d-flex align-items-start align-items-sm-center gap-4">
-
-                                                    <img src="{{asset('admin/assets/img/avatars/1.png')}}" alt="user-avatar" class="d-block w-px-120 h-px-120 rounded" id="template_foto_karyawan" />
-
-                                                    <table>
-                                                        <tr>
-                                                            <th>Nama</th>
-                                                            <td>&nbsp;</td>
-                                                            <td>:</td>
-                                                            <td id="td_name"></td>
-                                                        </tr>
-                                                        <tr>
-                                                            <th>Departemen</th>
-                                                            <td>&nbsp;</td>
-                                                            <td>:</td>
-                                                            <td id="td_departemen"> </td>
-                                                        </tr>
-                                                        <tr>
-                                                            <th>Divisi</th>
-                                                            <td>&nbsp;</td>
-                                                            <td>:</td>
-                                                            <td id="td_divisi"> </td>
-                                                        </tr>
-                                                        <tr>
-                                                            <th>Jabatan</th>
-                                                            <td>&nbsp;</td>
-                                                            <td>:</td>
-                                                            <td id="td_jabatan"></td>
-                                                        <tr>
-                                                            <th>Kontrak Kerja</th>
-                                                            <td>&nbsp;</td>
-                                                            <td>:</td>
-                                                            <td id="td_kontrak_kerja"> </td>
-                                                        </tr>
-                                                    </table>
+                                                <div class="form-group mb-3">
+                                                    <label for="role_name">Nama Role</label>
+                                                    <input type="text" name="role_name" id="role_name" class="form-control" placeholder="Nama Role">
+                                                </div>
+                                                <div class="form-group mb-3">
+                                                    <label for="role_description">Deskripsi Role</label>
+                                                    <textarea name="role_description" id="role_description" class="form-control" placeholder="Deskripsi Role"></textarea>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                     <br>
-                                    <table class="table table-hover w-100" id="table-roles">
-                                        <thead>
+                                    <table class="table" id="table_menu" style=" font-size: small;" width="100%">
+                                        <thead class="table-primary w-100">
                                             <tr>
                                                 <th>No.</th>
-                                                <th>Hak&nbsp;Akses</th>
-                                                <th>Deskripsi</th>
-                                                <th>List&nbsp;Menu</th>
-                                                <th>Opsi</th>
+                                                <th>Nama&nbsp;Menu&nbsp;Access</th>
+                                                <th>kategori</th>
+                                                <th>Pilihan</th>
                                             </tr>
                                         </thead>
                                         <tbody class="table-border-bottom-0">
@@ -99,20 +63,18 @@
                                     <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
                                         Close
                                     </button>
-                                    <button type="button" id="btn_save_add_access" class="btn btn-primary">Save</button>
+                                    <button type="submit" class="btn btn-primary">Save</button>
                                 </div>
                             </form>
                         </div>
                     </div>
-                    <table class="table" id="table_access_karyawan" style="width: 100%; font-size: small;">
+                    <table class="table" id="table_role" style="width: 100%; font-size: small;">
                         <thead class="table-primary">
                             <tr>
                                 <th>No.</th>
-                                <th>Nama</th>
-                                <th>Departemen</th>
-                                <th>divisi</th>
-                                <th>jabatan</th>
-                                <th>Access</th>
+                                <th>Nama Role</th>
+                                <th>Deskripsi Role</th>
+                                <th>List Menu Access</th>
                                 <th>Opsi</th>
                             </tr>
                         </thead>
@@ -133,14 +95,15 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
 <script>
     let holding = "{{ $holding->holding_code }}";
-    var table = $('#table_access_karyawan').DataTable({
+    console.log(holding);
+    var table = $('#table_role').DataTable({
         pageLength: 50,
         "scrollY": true,
         "scrollX": true,
         processing: true,
         serverSide: true,
         ajax: {
-            url: "{{ url('access-datatable') }}" + '/' + holding,
+            url: "{{ url('role-datatable') }}" + '/' + holding,
         },
         columns: [{
                 data: "id",
@@ -150,32 +113,52 @@
                 }
             },
             {
-                data: 'name',
-                name: 'name'
+                data: 'role_name',
+                name: 'role_name'
             },
             {
-                data: 'departemen',
-                name: 'departemen'
+                data: 'description',
+                name: 'description'
             },
             {
-                data: 'divisi',
-                name: 'divisi'
+                data: 'list_menu',
+                name: 'list_menu'
+            }, {
+                data: 'action',
+                name: 'action'
+            },
+        ]
+    });
+    var table1 = $('#table_menu').DataTable({
+        pageLength: 10,
+        "scrollY": true,
+        "scrollX": true,
+        processing: true,
+        serverSide: true,
+        responsive: true,
+        ajax: {
+            url: "{{ url('menu-datatable') }}" + '/' + holding,
+        },
+        columns: [{
+                data: "id",
+
+                render: function(data, type, row, meta) {
+                    return meta.row + meta.settings._iDisplayStart + 1;
+                }
             },
             {
-                data: 'jabatan',
-                name: 'jabatan'
+                data: 'nama_menu',
+                name: 'nama_menu'
             },
             {
-                data: 'access',
-                name: 'access'
+                data: 'kategori',
+                name: 'kategori'
             },
+
             {
                 data: 'option',
                 name: 'option'
             },
-        ],
-        order: [
-            [1, 'asc']
         ]
     });
 </script>
@@ -358,72 +341,8 @@
     })
 </script>
 <script>
-    $(document).on("click", "#btn_add_access_karyawan", function() {
-        let id = $(this).data('id');
-        let idkaryawan = $(this).data('idkaryawan');
-        let holding = $(this).data("holding");
-        let name = $(this).data("name");
-        let jabatan = $(this).data("jabatan");
-        let divisi = $(this).data("divisi");
-        let departemen = $(this).data("departemen");
-        let kontrak_kerja = $(this).data("kontrak");
-
-        $('#table-roles').DataTable().destroy();
-        var table1 = $('#table-roles').DataTable({
-            pageLength: 50,
-            "scrollY": true,
-            "scrollX": true,
-            "autoWidth": false,
-            processing: true,
-            serverSide: true,
-            ajax: {
-                url: "{{ url('access/role_access_datatable') }}" + '/' + id + '/' + holding,
-            },
-            columns: [{
-                    data: "id",
-
-                    render: function(data, type, row, meta) {
-                        return meta.row + meta.settings._iDisplayStart + 1;
-                    }
-                },
-                {
-                    data: 'nama_akses',
-                    name: 'nama_akses'
-                },
-                {
-                    data: 'deskripsi',
-                    name: 'deskripsi'
-                },
-                {
-                    data: 'list_menu',
-                    name: 'list_menu'
-                },
-                {
-                    data: 'option',
-                    name: 'option'
-                },
-            ]
-        });
-        setTimeout(function() {
-            table1.columns.adjust().draw();
-        }, 50);
-
-        // console.log(id, idkaryawan, holding, name, jabatan, divisi, departemen, kontrak_kerja);
-        $('#modal_tambah_access_karyawan').modal('show');
-
-
-        $('#td_name').text(name);
-        $('#td_departemen').text(departemen);
-        $('#td_jabatan').html(jabatan);
-        $('#td_divisi').html(divisi);
-        if (kontrak_kerja == null) {
-            $('#td_kontrak_kerja').text('-');
-        } else {
-            $('#td_kontrak_kerja').text(kontrak_kerja);
-        }
-
-        $('#id_karyawan').val(idkaryawan);
-        $('#id').val(id);
+    $(document).on("click", "#btn_add_role", function() {
+        $('#modal_add_role').modal('show');
 
     });
     $('#foto_karyawan').change(function() {
@@ -479,43 +398,5 @@
         });
 
     });
-    $(document).on('click', '#btn_save_add_access', function() {
-        var get_holding = '{{ $holding->holding_code }}';
-        var id_user = $('#id').val();
-        var id_karyawan = $('#id_karyawan').val();
-        var menu = [];
-        $('input[name="menu_id[]"]:checked').each(function() {
-            menu.push($(this).val());
-        });
-        var url = "{{ url('access/access_save_add') }}/" + get_holding;
-        // console.log(url);
-        $.ajax({
-            url: url,
-            type: 'POST',
-            data: {
-                '_token': "{{ csrf_token() }}",
-                'id': id_user,
-                'id_karyawan': id_karyawan,
-                'menu': menu
-            },
-            beforeSend: function() {
-                Swal.fire({
-                    title: 'Mohon tunggu...',
-                    text: 'Sedang memproses data',
-                    allowOutsideClick: false,
-                    didOpen: () => {
-                        Swal.showLoading();
-                    }
-                });
-            },
-            success: function(data) {
-                // console.log(data);
-                $('#table_access_karyawan').DataTable().ajax.reload();
-                $('#form_add_access_karyawan')[0].reset();
-                $('#modal_tambah_access_karyawan').modal('hide');
-                Swal.close();
-            }
-        })
-    })
 </script>
 @endsection

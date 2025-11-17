@@ -9,9 +9,11 @@ use App\Models\Holding;
 use App\Models\Jabatan;
 use App\Models\Karyawan;
 use App\Models\LevelJabatan;
+use App\Models\Menu;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Auth;
 use Maatwebsite\Excel\Facades\Excel;
 use Yajra\DataTables\Facades\DataTables;
 
@@ -20,6 +22,17 @@ class jabatanController extends Controller
     public function index($holding)
     {
         $holding = Holding::where('holding_code', $holding)->first();
+        $roleId = Auth::user();
+        $menus = Menu::whereIn('id', function ($query) use ($roleId) {
+            $query->select('menu_id')
+                ->from('role_menus')
+                ->where('role_id', $roleId->role);
+        })
+            ->whereNull('parent_id') // menu utama
+            ->with('children')
+            ->where('kategori', 'web')      // load submenunya
+            ->orderBy('sort_order')
+            ->get();
         $data_divisi = Divisi::with(['Departemen' => function ($query) {
             $query->orderBy('nama_departemen', 'ASC');
         }])->with(['Jabatan' => function ($query) use ($holding) {
@@ -40,6 +53,7 @@ class jabatanController extends Controller
         return view('admin.jabatan.index', [
             'title' => 'Master Jabatan',
             'holding' => $holding,
+            'menus' => $menus,
             'data_jabatan' => $data_jabatan,
             'data_divisi' => $data_divisi,
             'data_bagian' => $data_bagian,
