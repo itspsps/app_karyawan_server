@@ -24,11 +24,6 @@ class Ujian extends Model
         return $this->belongsTo(UjianKategori::class, 'kategori_id', 'id');
     }
 
-    // relasi Ke kelas
-    public function kelas()
-    {
-        return $this->belongsTo(Kelas::class);
-    }
 
     // relasi Ke WaktuUjian
     public function waktuujian()

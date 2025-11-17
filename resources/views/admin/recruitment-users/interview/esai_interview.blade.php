@@ -65,7 +65,7 @@
                                         </div>
                                     @endforeach
                                     <label>
-                                        Total Nilai (Max 100)
+                                        Total Nilai (1-100)
                                     </label>
                                     <div class="row">
                                         <div class="col-lg">

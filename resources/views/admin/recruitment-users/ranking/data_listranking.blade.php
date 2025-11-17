@@ -5,16 +5,21 @@
 
     <link href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css"
         rel="stylesheet" />
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.14.1/themes/base/jquery-ui.css">
+    <link rel="stylesheet" href="/resources/demos/style.css">
     <style type="text/css">
+        .my-swal {
+            z-index: X;
+        }
+
         .swal2-container {
-            z-index: 9999 !important;
+            z-index: 9999;
         }
 
         .text-center {
             text-align: center;
         }
-    </style>
-    <style>
+
         /* ukuran teks di area pilihan (input select2) */
         .select2-container--bootstrap-5 .select2-selection {
             font-size: 0.875rem !important;
@@ -73,7 +78,12 @@
                             aria-labelledby="progres-tab" tabindex="0">
                             <div class="card-header">
                                 <div class="d-flex align-items-center justify-content-between">
-                                    <h5 class="card-title m-0 me-2">DATA PROGRES RECRUITMENT</h5>
+                                    <h5 class="card-title m-0 me-2">DATA PROGRES
+                                        RECRUITMENT
+                                        {{ $kuota->Jabatan->nama_jabatan }}
+                                        {{ $kuota->Jabatan->Bagian->Divisi->nama_divisi }}
+                                        (KUOTA : {{ $kuota->kuota }})
+                                    </h5>
                                 </div>
                             </div>
                             <table class="table" id="tabel_progres" style="width: 100%; font-size: small;">
@@ -96,7 +106,10 @@
                             tabindex="0">
                             <div class="card-header">
                                 <div class="d-flex align-items-center justify-content-between">
-                                    <h5 class="card-title m-0 me-2">DATA RANKING RECRUITMENT</h5>
+                                    <h5 class="card-title m-0 me-2">DATA RANKING RECRUITMENT
+                                        {{ $kuota->Jabatan->nama_jabatan }}
+                                        {{ $kuota->Jabatan->Bagian->Divisi->nama_divisi }}
+                                        (KUOTA : {{ $kuota->kuota }})</h5>
                                 </div>
                             </div>
                             <table class="table" id="tabel_ranking" style="width: 100%; font-size: small;">
@@ -146,9 +159,9 @@
                     </div>
                     <div id="lolos_manager">
                         <div class="form-floating form-floating-outline py-3">
-                            <input type="date" id="tanggal_wawancara" name="tanggal_wawancara"
-                                class="form-control @error('tanggal_wawancara') is-invalid @enderror" placeholder="Tanggal"
-                                value="{{ old('tanggal_wawancara') }}" />
+                            <input type="text" id="tanggal_wawancara" name="tanggal_wawancara"
+                                class="form-control @error('tanggal_wawancara') is-invalid @enderror datepicker"
+                                placeholder="Tanggal" value="{{ old('tanggal_wawancara') }}" readonly />
                             <label for="bagian_recruitment">TANGGAL WAWANCARA</label>
                         </div>
                         <div class="form-floating form-floating-outline py-3">
@@ -218,9 +231,9 @@
                     </div>
                     <div id="lolos_langsung">
                         <div class="form-floating form-floating-outline py-3">
-                            <input type="date" id="tanggal_diterima_update" name="tanggal_diterima"
-                                class="form-control @error('tanggal_diterima') is-invalid @enderror" placeholder="Tanggal"
-                                value="{{ old('tanggal_diterima') }}" />
+                            <input type="text" id="tanggal_diterima_update" name="tanggal_diterima"
+                                class="form-control @error('tanggal_diterima') is-invalid @enderror datepicker"
+                                placeholder="Tanggal" value="{{ old('tanggal_diterima') }}" readonly />
                             <label for="bagian_recruitment">TANGGAL MASUK KERJA</label>
                         </div>
                         <label for="bagian_recruitment px-2"><small>TEMPAT
@@ -277,9 +290,9 @@
                         <input type="hidden" value="2b" name="status" id="status_lolos">
                     </div>
                     <div class="form-floating form-floating-outline py-3">
-                        <input type="date" id="tanggal_diterima_lolos" name="tanggal_diterima"
-                            class="form-control @error('tanggal_diterima') is-invalid @enderror" placeholder="Tanggal"
-                            value="{{ old('tanggal_diterima') }}" />
+                        <input type="text" id="tanggal_diterima_lolos" name="tanggal_diterima"
+                            class="form-control @error('tanggal_diterima') is-invalid @enderror datepicker"
+                            placeholder="Tanggal" value="{{ old('tanggal_diterima') }}" readonly />
                         <label for="bagian_recruitment">TANGGAL MASUK KERJA</label>
                     </div>
                     <label for="bagian_recruitment px-2"><small>GAJI (Rp)</small></label>
@@ -356,9 +369,9 @@
                     </div>
                     <div id="pindah_manager">
                         <div class="form-floating form-floating-outline py-3">
-                            <input type="date" id="tanggal_wawancara_pindah" name="tanggal_wawancara"
-                                class="form-control @error('tanggal_wawancara') is-invalid @enderror"
-                                placeholder="Tanggal" value="{{ old('tanggal_wawancara') }}" />
+                            <input type="text" id="tanggal_wawancara_pindah" name="tanggal_wawancara"
+                                class="form-control @error('tanggal_wawancara') is-invalid @enderror datepicker"
+                                placeholder="Tanggal" value="{{ old('tanggal_wawancara') }}" readonly />
                             <label for="bagian_recruitment">TANGGAL WAWANCARA</label>
                         </div>
                         <div class="form-floating form-floating-outline py-3">
@@ -426,9 +439,9 @@
                     </div>
                     <div id="pindah_langsung">
                         <div class="form-floating form-floating-outline py-3">
-                            <input type="date" id="tanggal_diterima_pindah" name="tanggal_diterima"
-                                class="form-control @error('tanggal_diterima') is-invalid @enderror"
-                                placeholder="Tanggal" value="{{ old('tanggal_diterima') }}" />
+                            <input type="text" id="tanggal_diterima_pindah" name="tanggal_diterima"
+                                class="form-control @error('tanggal_diterima') is-invalid @enderror datepicker"
+                                placeholder="Tanggal" value="{{ old('tanggal_diterima') }}" readonly />
                             <label for="bagian_recruitment">TANGGAL MASUK KERJA</label>
                         </div>
                         <label for="bagian_recruitment px-2"><small>GAJI (Rp)</small></label>
@@ -499,11 +512,18 @@
     <script src="https://cdn.datatables.net/2.0.5/js/dataTables.js"></script>
     <script src="https://cdn.datatables.net/2.0.5/js/dataTables.bootstrap5.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
-
+    <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.14.1/jquery-ui.js"></script>
 
     <script>
+        $(function() {
+            $('.datepicker').datepicker({
+                dateFormat: 'yy-mm-dd',
+                minDate: 0
+            });
+        });
         $('#tempat_wawancara').select2({
             dropdownParent: $('#modal_status'),
             theme: 'bootstrap-5',
@@ -729,11 +749,23 @@
                 data: formData,
                 contentType: false,
                 processData: false,
+                beforeSend: function() {
+                    Swal.fire({
+                        title: 'Memuat Data...',
+                        html: 'Mohon tunggu sebentar',
+                        allowOutsideClick: false,
+                        allowEscapeKey: false,
+                        didOpen: () => {
+                            Swal.showLoading();
+                        }
+                    });
+                },
                 error: function() {
                     alert('Something is wrong');
                     // console.log(formData);
                 },
                 success: function(data) {
+                    Swal.close();
                     if (data.code == 200) {
                         Swal.fire({
                             title: 'Berhasil',
@@ -802,11 +834,23 @@
                 data: formData,
                 contentType: false,
                 processData: false,
+                beforeSend: function() {
+                    Swal.fire({
+                        title: 'Memuat Data...',
+                        html: 'Mohon tunggu sebentar',
+                        allowOutsideClick: false,
+                        allowEscapeKey: false,
+                        didOpen: () => {
+                            Swal.showLoading();
+                        }
+                    });
+                },
                 error: function() {
                     alert('Something is wrong');
                     // console.log(formData);
                 },
                 success: function(data) {
+                    Swal.close();
                     if (data.code == 200) {
                         Swal.fire({
                             title: 'Berhasil',
@@ -881,11 +925,23 @@
                 data: formData,
                 contentType: false,
                 processData: false,
+                beforeSend: function() {
+                    Swal.fire({
+                        title: 'Memuat Data...',
+                        html: 'Mohon tunggu sebentar',
+                        allowOutsideClick: false,
+                        allowEscapeKey: false,
+                        didOpen: () => {
+                            Swal.showLoading();
+                        }
+                    });
+                },
                 error: function() {
                     alert('Something is wrong');
                     // console.log(formData);
                 },
                 success: function(data) {
+                    Swal.close();
                     if (data.code == 200) {
                         Swal.fire({
                             title: 'Berhasil',
@@ -949,11 +1005,23 @@
                 data: formData,
                 contentType: false,
                 processData: false,
+                beforeSend: function() {
+                    Swal.fire({
+                        title: 'Memuat Data...',
+                        html: 'Mohon tunggu sebentar',
+                        allowOutsideClick: false,
+                        allowEscapeKey: false,
+                        didOpen: () => {
+                            Swal.showLoading();
+                        }
+                    });
+                },
                 error: function() {
                     alert('Something is wrong');
                     // console.log(formData);
                 },
                 success: function(data) {
+                    Swal.close();
                     if (data.code == 200) {
                         Swal.fire({
                             title: 'Berhasil',

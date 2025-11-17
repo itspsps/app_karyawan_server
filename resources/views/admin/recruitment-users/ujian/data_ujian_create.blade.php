@@ -262,92 +262,6 @@
             </div>
         </div>
     </form>
-
-
-    <!-- Modal Tambah -->
-    {{-- <div class="modal fade" id="excel_ujian" tabindex="-1" role="dialog" aria-labelledby="excel_ujianLabel"
-        aria-hidden="true">
-        <div class="modal-dialog modal-lg" role="document">
-            <form action="{{ url('/guru/pg_excel') }}" method="POST" enctype="multipart/form-data">
-                @csrf
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="excel_ujianLabel">Import Soal via Excel</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            x
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        <div class="row mt-2">
-                            <div class="col-lg-4">
-                                <div class="form-group">
-                                    <label for="">Nama Ujian / Quiz</label>
-                                    <input type="text" name="e_nama_ujian" class="form-control" required>
-                                </div>
-                            </div>
-                            <div class="col-lg-4">
-                                <div class="form-group">
-                                    <label for="">Mapel</label>
-                                    <select class="form-control" name="e_mapel" id="e_mapel" required>
-                                        <option value="">Pilih</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="col-lg-4">
-                                <div class="form-group">
-                                    <label for="">Kelas</label>
-                                    <select class="form-control" name="e_kelas" id="e_kelas" required>
-                                        <option value="">Pilih</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="col-lg-6">
-                                <div class="form-group">
-                                    <label for="">Waktu Jam</label>
-                                    <input type="number" name="e_jam" class="form-control" value="0" required>
-                                </div>
-                            </div>
-                            <div class="col-lg-6">
-                                <div class="form-group">
-                                    <label for="">Waktu Menit</label>
-                                    <input type="number" name="e_menit" class="form-control" value="0" required>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row mt-2">
-                            <div class="col-lg-12">
-                                <div class="custom-control custom-checkbox">
-                                    <input type="checkbox" class="custom-control-input" id="acak" name="e_acak"
-                                        value="1">
-                                    <label class="custom-control-label" for="acak">Acak Soal Siswa</label>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row mt-2">
-                            <div class="col-lg-6">
-                                <div class="form-group">
-                                    <label for="">File Excel</label><br>
-                                    <input type="file" name="excel" accept=".xls, .xlsx">
-                                </div>
-                            </div>
-                            <div class="col-lg-6">
-                                <label for="">Template</label><br>
-                                <a href="{{ url('/summernote/unduh') }}/template-pg-excel.xlsx" class="btn btn-success"
-                                    target="_blank">Download Template</a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="reset" value="reset" class="btn" data-dismiss="modal"><i
-                                class="flaticon-cancel-12"></i> Cancel</button>
-                        <button type="submit" class="btn btn-primary">Save</button>
-                    </div>
-                </div>
-            </form>
-        </div>
-    </div> --}}
-
-
     {!! session('pesan') !!}
 @endsection
 @section('js')
@@ -367,12 +281,13 @@
     <script>
         $(document).ready(function() {
             function uploadImage(e, o) {
+                // console.log('hehe');
                 var a = new FormData;
                 a.append("image", e), $.ajax({
                     headers: {
                         "X-CSRF-TOKEN": "{{ csrf_token() }}"
                     },
-                    url: "{{ url('summernote_upload') }}",
+                    url: "{{ route('summernote_upload') }}",
                     cache: !1,
                     contentType: !1,
                     processData: !1,

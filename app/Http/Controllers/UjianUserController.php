@@ -345,11 +345,12 @@ class UjianUserController extends Controller
         $validator = Validator::make(
             $request->all(),
             [
-                'nilai' => 'required|numeric|max:10',
+                'nilai' => 'required|numeric|min:1|max:10',
             ],
             [
                 'required' => ':attribute tidak boleh kosong',
-                'max' => ':attribute melebihi yang ditentukan'
+                'max' => ':attribute melebihi yang ditentukan',
+                'min' => ':attribute kurang dari yang ditentukan'
             ]
         );
         if ($validator->fails()) {
@@ -487,12 +488,13 @@ class UjianUserController extends Controller
         // dd($request->recruitment_user_id);
         $rules =
             [
-                'nilai'             => 'required|numeric|max:100',
+                'nilai'             => 'required|numeric|min:1|max:100',
             ];
         $customessages =
             [
                 'required'             => ':attribute tidak boleh kosong!',
                 'max'                  => ':attribute tidak boleh lebih dari 100!',
+                'min'                  => ':attribute tidak boleh kurang dari 1!',
             ];
         $validasi = Validator::make(
             $request->all(),

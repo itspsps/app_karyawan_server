@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class RecruitmentUser extends Model
 {
@@ -94,6 +95,10 @@ class RecruitmentUser extends Model
     public function recruitmentUserRecord(): HasMany
     {
         return $this->hasMany(RecruitmentUserRecord::class, 'recruitment_user_id', 'id');
+    }
+    public function lastUserRecord(): HasOne
+    {
+        return $this->hasOne(RecruitmentUserRecord::class, 'recruitment_user_id', 'id')->latestOfMany('created_at');
     }
     // public function recruitmentUserRecord2(): HasMany
     // {

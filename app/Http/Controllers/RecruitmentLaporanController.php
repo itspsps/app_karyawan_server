@@ -60,12 +60,19 @@ class RecruitmentLaporanController extends Controller
                 $query;
             }
         ])->with([
+            'lastUserRecord' => function ($query) {
+                $query;
+            }
+        ])->with([
             'AuthLogin' => function ($query) {
                 $query;
             }
         ])
             ->where('holding', $holdings->id)
             ->whereBetween('created_at', [$now, $now1]);
+        // ->whereHas('lastUserRecord', function ($query) {
+        //     $query->orderBy('created_at', 'desc');
+        // });
         if (!empty($request->departemen_filter)) {
             $query->whereIn('nama_dept', (array)$request->departemen_filter ?? []);
         }
@@ -80,6 +87,11 @@ class RecruitmentLaporanController extends Controller
 
         if (!empty($request->jabatan_filter)) {
             $query->whereIn('nama_jabatan', (array)$request->jabatan_filter ?? []);
+        }
+        if (!empty($request->status_filter)) {
+            $query->whereHas('lastUserRecord', function ($query) use ($request) {
+                $query->whereIn('status', (array)$request->status_filter ?? []);
+            });
         }
         $table = $query->get();
         // dd($table);
@@ -147,6 +159,22 @@ class RecruitmentLaporanController extends Controller
                         return '-';
                     }
                 })
+                ->addColumn('feedback', function ($row) {
+                    $akhir = RecruitmentUserRecord::where('recruitment_user_id', $row->id)->orderBy('created_at', 'desc')->limit(1)->first();
+                    if ($akhir->feedback == null) {
+                        return '-';
+                    } elseif ($akhir->feedback == '1') {
+                        return '<span class="badge bg-label-warning">Menyanggupi</span>';
+                    } elseif ($akhir->feedback == '1b') {
+                        return '<span class="badge bg-label-warning">Menyanggupi</span>';
+                    } elseif ($akhir->feedback == '2b') {
+                        return '<span class="badge bg-label-success">Menerima</span>';
+                    } elseif ($akhir->feedback == '3') {
+                        return '<span class="badge bg-label-danger">Tidak Hadir</span>';
+                    } elseif ($akhir->feedback == '3b') {
+                        return '<span class="badge bg-label-danger">Tidak Hadir</span>';
+                    }
+                })
                 ->rawColumns([
                     'tanggal_mulai',
                     'cv',
@@ -155,13 +183,14 @@ class RecruitmentLaporanController extends Controller
                     'status_detail',
                     'tanggal_berakhir',
                     'perkembangan_terakhir',
+                    'feedback',
                 ])
                 ->make(true);
         }
     }
     public function dt_laporan_recruitment_print(Request $request, $holding)
     {
-        // dd($request->departemen_filter);
+        // dd($request->status_filter);
         $holdings = Holding::where('holding_code', $holding)->first();
         $now = Carbon::parse($request->start_date)->startOfDay();
         $now1 = Carbon::parse($request->end_date)->endOfDay();
@@ -193,6 +222,10 @@ class RecruitmentLaporanController extends Controller
                 $query;
             }
         ])->with([
+            'lastUserRecord' => function ($query) {
+                $query;
+            }
+        ])->with([
             'AuthLogin' => function ($query) {
                 $query;
             }
@@ -213,6 +246,11 @@ class RecruitmentLaporanController extends Controller
 
         if (!empty($request->jabatan_filter)) {
             $query->whereIn('nama_jabatan', (array)$request->jabatan_filter ?? []);
+        }
+        if (!empty($request->status_filter)) {
+            $query->whereHas('lastUserRecord', function ($query) use ($request) {
+                $query->whereIn('status', (array)$request->status_filter ?? []);
+            });
         }
         $table = $query->get();
         // dd($table);
@@ -276,6 +314,22 @@ class RecruitmentLaporanController extends Controller
                         return '-';
                     }
                 })
+                ->addColumn('feedback', function ($row) {
+                    $akhir = RecruitmentUserRecord::where('recruitment_user_id', $row->id)->orderBy('created_at', 'desc')->limit(1)->first();
+                    if ($akhir->feedback == null) {
+                        return '-';
+                    } elseif ($akhir->feedback == '1') {
+                        return '<span class="badge bg-label-warning">Menyanggupi</span>';
+                    } elseif ($akhir->feedback == '1b') {
+                        return '<span class="badge bg-label-warning">Menyanggupi</span>';
+                    } elseif ($akhir->feedback == '2b') {
+                        return '<span class="badge bg-label-success">Menerima</span>';
+                    } elseif ($akhir->feedback == '3') {
+                        return '<span class="badge bg-label-danger">Tidak Hadir</span>';
+                    } elseif ($akhir->feedback == '3b') {
+                        return '<span class="badge bg-label-danger">Tidak Hadir</span>';
+                    }
+                })
                 ->rawColumns([
                     'tanggal_mulai',
                     'cv',
@@ -284,6 +338,7 @@ class RecruitmentLaporanController extends Controller
                     'status_detail',
                     'tanggal_berakhir',
                     'perkembangan_terakhir',
+                    'feedback',
                 ])
                 ->make(true);
         }
@@ -314,10 +369,6 @@ class RecruitmentLaporanController extends Controller
             }
         ])->with([
             'AuthLogin' => function ($query) {
-                $query;
-            }
-        ])->with([
-            'recruitmentUserRecord' => function ($query) {
                 $query;
             }
         ])
@@ -778,29 +829,6 @@ class RecruitmentLaporanController extends Controller
                 ->addColumn('divisi', function ($row) {
                     return $row->Jabatan->Bagian->Divisi->nama_divisi;
                 })
-                ->addColumn('total_waktu', function ($row) {
-                    $tanggal_awal = RecruitmentUserRecord::selectRaw(
-                        '
-                        recruitment_user_id,
-                        MIN(created_at) AS tanggal_awal,
-                        MAX(created_at) AS tanggal_akhir,
-                        DATEDIFF(MAX(created_at), MIN(created_at)) as total_hari'
-                    )
-                        ->with([
-                            'recruitmentUser' => function ($query) {
-                                $query;
-                            }
-                        ])
-                        ->whereHas('recruitmentUser', function ($query) use ($row) {
-                            $query->where('nama_divisi', $row->nama_divisi);
-                        })
-                        ->orderBy('recruitment_user_id')
-                        ->groupBy('recruitment_user_id')
-                        ->get();
-
-                    $total_hari = $tanggal_awal->sum('total_hari');
-                    return $total_hari . ' Hari';
-                })
                 ->addColumn('jumlah_rekrutmen', function ($row) {
                     $jml_rec = Recruitment::where('nama_divisi', $row->nama_divisi)->count();
                     return $jml_rec;
@@ -844,8 +872,84 @@ class RecruitmentLaporanController extends Controller
                 })
                 ->rawColumns([
                     'divisi',
-                    'total_waktu',
-                    'jumlah_rekrutmen',
+                    'jumlah_peserta',
+                    'rata_rata',
+                    'detail',
+                ])
+                ->make(true);
+        }
+    }
+    public function dt_per_divisi_print(Request $request, $holding)
+    {
+        $holdings = Holding::where('holding_code', $holding)->first();
+        $table = Recruitment::with([
+            'Jabatan' => function ($query) {
+                $query->with([
+                    'Bagian' => function ($query) {
+                        $query->with([
+                            'Divisi' => function ($query) {
+                                $query->with([
+                                    'Departemen' => function ($query) {
+                                        $query->orderBy('nama_departemen', 'ASC');
+                                    }
+                                ]);
+                            }
+                        ]);
+                    }
+                ]);
+                $query->orderBy('nama_jabatan', 'ASC');
+            }
+        ])
+            ->where('holding_recruitment', $holdings->id)
+            ->groupBy('nama_divisi')
+            ->orderBy('nama_divisi', 'asc')
+            ->get();
+        if (request()->ajax()) {
+            return DataTables::of($table)
+                ->addColumn('divisi', function ($row) {
+                    return $row->Jabatan->Bagian->Divisi->nama_divisi;
+                })
+                ->addColumn('jumlah_rekrutmen', function ($row) {
+                    $jml_rec = Recruitment::where('nama_divisi', $row->nama_divisi)->count();
+                    return $jml_rec;
+                })
+                ->addColumn('jumlah_pelamar', function ($row) {
+                    $pelamar = RecruitmentUser::where('nama_divisi', $row->nama_divisi)->count() ?? 0;
+                    return $pelamar;
+                })
+                ->addColumn('rata_rata', function ($row) {
+                    $tanggal_awal = RecruitmentUserRecord::selectRaw(
+                        '
+                        recruitment_user_id,
+                        MIN(created_at) AS tanggal_awal,
+                        MAX(created_at) AS tanggal_akhir,
+                        DATEDIFF(MAX(created_at), MIN(created_at)) as total_hari'
+                    )
+                        ->with([
+                            'recruitmentUser' => function ($query) {
+                                $query;
+                            }
+                        ])
+                        ->whereHas('recruitmentUser', function ($query) use ($row) {
+                            $query->where('nama_divisi', $row->nama_divisi);
+                        })
+                        ->orderBy('recruitment_user_id')
+                        ->groupBy('recruitment_user_id')
+                        ->get();
+
+                    $total_hari = $tanggal_awal->sum('total_hari');
+                    $pelamar = RecruitmentUser::where('nama_divisi', $row->nama_divisi)->count();
+
+                    $rata_rata = $pelamar > 0 ? $total_hari / $pelamar : 0;
+
+                    return round($rata_rata, 2) . ' Hari';
+                })
+                ->addColumn('detail', function ($row) {
+                    $holding = request()->segment(count(request()->segments()));
+                    return url('/detail_per_divisi/' . $row->nama_divisi . '/' . $holding);
+                })
+                ->rawColumns([
+                    'divisi',
                     'jumlah_peserta',
                     'rata_rata',
                     'detail',

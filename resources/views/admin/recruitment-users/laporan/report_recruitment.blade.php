@@ -451,13 +451,13 @@
         // var end = moment('2025-08-21');
         var lstart, lend;
 
-        $('#reportrange .date_daterange').html(start.format('D MMMM YYYY') + ' - ' + end.format('D MMMM YYYY'));
 
         function cb(start, end) {
             lstart = start.format('YYYY-MM-DD');
             lend = end.format('YYYY-MM-DD');
             $('#start_date').val(lstart);
             $('#end_date').val(lend);
+            $('#reportrange .date_daterange').html(start.format('D MMMM YYYY') + ' - ' + end.format('D MMMM YYYY'));
             console.log(start, end);
 
         }
@@ -480,6 +480,27 @@
 
         $(document).ready(function() {
             $('#table_recruitment2_form').hide();
+            $('#table_recruitment2').on('preXhr.dt', function(e, settings, data) {
+                if (data.search && data.search.value) {
+                    // kalau ada search value, biarkan loading default datatable
+                    return;
+                }
+                Swal.fire({
+                    title: 'Memuat Data...',
+                    html: 'Mohon tunggu sebentar',
+                    allowOutsideClick: false,
+                    allowEscapeKey: false,
+                    didOpen: () => {
+                        Swal.showLoading();
+                    }
+                });
+            });
+            $('#table_recruitment2').on('xhr.dt', function(e, settings, json, xhr) {
+                // tutup swal hanya kalau sebelumnya kita buka (bukan saat search)
+                if (!settings.oPreviousSearch.sSearch) {
+                    Swal.close();
+                }
+            });
             $('#btn_filter').click(function(e) {
                 $('#table_recruitment2_form').show();
                 var departemen_filter = $('#departemen_filter').val() || [];

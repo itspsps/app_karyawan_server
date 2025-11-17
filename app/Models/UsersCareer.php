@@ -15,7 +15,6 @@ class UsersCareer extends Model
         'nama',
         'email',
         'nomor_whatsapp',
-        'kelas_id',
         'password',
         'is_active'
     ];

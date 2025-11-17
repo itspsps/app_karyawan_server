@@ -47,4 +47,8 @@ class Recruitment extends Model
     {
         return $this->belongsTo(Holding::class, 'holding_recruitment', 'id');
     }
+    public function recruitmentUser(): BelongsTo
+    {
+        return $this->belongsTo(RecruitmentUser::class, 'id', 'recruitment_admin_id');
+    }
 }

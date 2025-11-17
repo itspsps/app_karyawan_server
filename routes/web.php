@@ -52,6 +52,7 @@ use App\Http\Controllers\UserKaryawanController;
 use App\Http\Controllers\RecruitmentUserController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\SitesController;
+use App\Http\Controllers\SummernoteController;
 use App\Http\Controllers\UjianUserController;
 use App\Models\Jabatan;
 use App\Models\FingerUser;
@@ -853,6 +854,7 @@ Route::post('/recruitment/update', [RecruitmentController::class, 'update'])->mi
 Route::get('/recruitment/delete/{id?}/{holding}', [RecruitmentController::class, 'delete'])->middleware('admin');
 
 Route::get('/dt/data-recruitment/{holding}', [RecruitmentController::class, 'dt_recruitment'])->middleware('admin');
+Route::get('/recruitment/update/status-recruitment/{id?}/{holding}', [RecruitmentController::class, 'update_status'])->middleware('admin');
 
 Route::get('/pg/data-list-pelamar/{id?}/{holding}', [RecruitmentController::class, 'pg_list_pelamar'])->middleware('admin');
 Route::get('/pg/data-list-user_meta/{id?}/{holding}', [RecruitmentController::class, 'user_meta'])->middleware('admin');
@@ -863,20 +865,17 @@ Route::get('/pg/data-list-user_reject/{id?}/{holding}', [RecruitmentController::
 
 Route::get('/pg/pelamar-detail/{id?}/{holding}', [RecruitmentController::class, 'pelamar_detail'])->middleware('admin');
 
-Route::get('/pg/pelamar-detail_pdf/{id?}', [RecruitmentController::class, 'pelamar_detail_pdf'])->middleware('admin');
+Route::get('/pg/pelamar-detail_pdf/{id?}/{holding}', [RecruitmentController::class, 'pelamar_detail_pdf'])->middleware('admin');
 Route::get('/pg/pelamar-nilai_pdf/{id?}', [RecruitmentController::class, 'pelamar_nilai_pdf'])->middleware('admin');
 
 Route::post('/pg/pelamar-detail-ubah/{holding}', [RecruitmentController::class, 'pelamar_detail_ubah'])->middleware('admin');
 
 
 Route::get('/pg-data-interview/{holding}', [RecruitmentController::class, 'pg_data_interview'])->middleware('admin');
-
 Route::get('/dt/data-interview/{holding}', [RecruitmentController::class, 'dt_data_interview'])->middleware('admin');
-
 Route::get('/dt/data-interview1/{holding}', [RecruitmentController::class, 'dt_data_interview1'])->middleware('admin');
-
 Route::get('/dt/data-interview2/{holding}', [RecruitmentController::class, 'dt_data_interview2'])->middleware('admin');
-
+Route::get('/dt/data-interview3/{holding}', [RecruitmentController::class, 'dt_data_interview3'])->middleware('admin');
 Route::get('/dt/data-data_ujian_user/{id}/{holding}', [RecruitmentController::class, 'data_ujian_user'])->middleware('admin');
 
 Route::get('/dt/data-get_data_esai/{id}/{holding}', [UjianUserController::class, 'dt_ujian_esai'])->middleware('admin');
@@ -997,6 +996,7 @@ Route::get('/dt_laporan_recruitment2/{holding}', [RecruitmentLaporanController::
 Route::get('/report_per_divisi/{holding}', [RecruitmentLaporanController::class, 'report_per_divisi'])->middleware('admin');
 Route::get('/detail_per_divisi/{id}/{holding}', [RecruitmentLaporanController::class, 'detail_per_divisi'])->middleware('admin');
 Route::get('/dt_per_divisi/{holding}', [RecruitmentLaporanController::class, 'dt_per_divisi'])->middleware('admin');
+Route::get('/dt_per_divisi_print/{holding}', [RecruitmentLaporanController::class, 'dt_per_divisi_print'])->middleware('admin');
 
 Route::post('/recruitment/insert/sp', [RecruitmentController::class, 'insert'])->middleware('admin');
 Route::post('/recruitment/insert/sps', [RecruitmentController::class, 'insert'])->middleware('admin');
