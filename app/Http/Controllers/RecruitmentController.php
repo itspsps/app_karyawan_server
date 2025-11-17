@@ -174,7 +174,7 @@ class RecruitmentController extends Controller
                     if (!$row->Jabatan) {
                         $nama_jabatan = 'vv';
                     } else {
-                        $nama_jabatan = $row->Jabatan->nama_jabatan;
+                        $nama_jabatan = $row->Jabatan->nama_jabatan ?? '-';
                     }
                     return $nama_jabatan;
                 })
@@ -182,7 +182,7 @@ class RecruitmentController extends Controller
                     if (!$row->Jabatan) {
                         $nama_bagian = 'a';
                     } else {
-                        $nama_bagian = $row->Jabatan->Bagian->nama_bagian;
+                        $nama_bagian = $row->Jabatan->Bagian->nama_bagian ?? '-';
                     }
                     return $nama_bagian;
                 })
@@ -190,7 +190,7 @@ class RecruitmentController extends Controller
                     if (!$row->Jabatan) {
                         $nama_divisi = 'v';
                     } else {
-                        $nama_divisi = $row->Jabatan->Bagian->Divisi->nama_divisi;
+                        $nama_divisi = $row->Jabatan->Bagian->Divisi->nama_divisi ?? '-';
                     }
                     return $nama_divisi;
                 })
@@ -198,7 +198,7 @@ class RecruitmentController extends Controller
                     if (!$row->Jabatan) {
                         $nama_departemen = 'vv';
                     } else {
-                        $nama_departemen = $row->Jabatan->Bagian->Divisi->Departemen->nama_departemen;
+                        $nama_departemen = $row->Jabatan->Bagian->Divisi->Departemen->nama_departemen ?? '-';
                     }
                     return $nama_departemen;
                 })
@@ -1471,7 +1471,7 @@ http://192.168.101.241:8001/cpanel/recruitment_detail/$request->recruitment_user
         $now1 = Carbon::parse($request->end_date)->endOfDay();
         $query_get = RecruitmentInterview::with([
             'recruitmentUser' => function ($query) use ($holdings) {
-                $query->where('holding', $holdings->id)->where('status', '1a')->with([
+                $query->where('holding', $holdings->id)->where('status', '2a')->with([
                     'Jabatan' => function ($query) {
                         $query->with([
                             'Bagian' => function ($query) {
@@ -1554,6 +1554,10 @@ http://192.168.101.241:8001/cpanel/recruitment_detail/$request->recruitment_user
                             </button>';
                     }
                     return $btn;
+                })
+
+                ->addColumn('nama_lengkap', function ($row) {
+                    return $row->recruitmentUser->Cv->nama_lengkap;
                 })
                 ->addColumn('nama_jabatan', function ($row) {
                     return $row->recruitmentUser->Jabatan->nama_jabatan;

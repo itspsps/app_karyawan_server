@@ -91,7 +91,7 @@
                         <li class="nav-item" role="presentation">
                             <a class="nav-link" id="icon-tab-1" data-bs-toggle="tab" href="#icon-tabpanel-1" role="tab"
                                 aria-controls="icon-tabpanel-0" aria-selected="true">
-                                hadir Keseluruhan
+                                Keseluruhan
                             </a>
                         </li>
 
@@ -767,6 +767,9 @@
                 ]
             });
             $('#icon-tab-b').on('shown.bs.tab', function(e) {
+                table2.columns.adjust().draw().responsive.recalc();
+            });
+            $('#icon-tab-1').on('shown.bs.tab', function(e) {
                 table2.columns.adjust().draw().responsive.recalc();
             });
         }
