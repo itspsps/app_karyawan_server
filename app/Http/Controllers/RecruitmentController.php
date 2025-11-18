@@ -24,7 +24,12 @@ use App\Models\InterviewAdmin;
 use App\Models\InterviewUser;
 use App\Models\Karyawan;
 use App\Models\KaryawanKeahlian;
+use App\Models\KaryawanKesehatan;
+use App\Models\KaryawanKesehatanKecelakaan;
+use App\Models\KaryawanKesehatanPengobatan;
+use App\Models\KaryawanKesehatanRS;
 use App\Models\KaryawanPendidikan;
+use App\Models\KaryawanRiwayat;
 use App\Models\Menu;
 use App\Models\Pembobotan;
 use App\Models\RecruitmentCV;
@@ -2532,23 +2537,136 @@ http://192.168.101.241:8001/cpanel/recruitment_detail/$request->id
                     );
                 }
                 $keahlian = RecruitmentKeahlian::where('id_user', $get_user->id)->get();
-                foreach ($keahlian as $kk) {
-                    $fileKeahlian = url_karir() . '/storage/file_keahlian/' . $kk->file_keahlian;
-                    $response = Http::get($fileKeahlian);
+                if (!empty($keahlian)) {
+                    foreach ($keahlian as $kk) {
+                        $fileKeahlian = url_karir() . '/storage/file_keahlian/' . $kk->file_keahlian;
+                        if (!empty($fileKeahlian)) {
 
-                    if ($response->successful()) {
-                        Storage::disk('public')->put('file_keahlian/' . $kk->file_keahlian, $response->body());
+                            $response = Http::get($fileKeahlian);
+
+                            if ($response->successful()) {
+                                Storage::disk('public')->put('file_keahlian/' . $kk->file_keahlian, $response->body());
+                            }
+                        }
+                        KaryawanKeahlian::insert(
+                            [
+                                'id_keahlian'           => Uuid::uuid4(),
+                                'id_karyawan'           => $id_karyawan,
+                                'keahlian'              => $kk->keahlian,
+                                'file_keahlian'         => $kk->file_keahlian,
+                                'created_at'            => date('Y-m-d H:i:s'),
+                            ]
+                        );
                     }
-                    KaryawanKeahlian::insert(
-                        [
-                            'id_keahlian'           => Uuid::uuid4(),
-                            'id_karyawan'           => $id_karyawan,
-                            'keahlian'              => $kk->keahlian,
-                            'file_keahlian'         => $kk->file_keahlian,
-                            'created_at'            => date('Y-m-d H:i:s'),
-                        ]
-                    );
                 }
+                // insert kesehatan
+                $kesehatan = RecruitmentKesehatan::where('id_user', $get_user->id)->first();
+                KaryawanKesehatan::insert(
+                    [
+                        'id_kesehatan'                      => Uuid::uuid4(),
+                        'id_karyawan'                       => $id_karyawan,
+                        'perokok'                           => $kesehatan->perokok,
+                        'alkohol'                           => $kesehatan->alkohol,
+                        'alergi'                            => $kesehatan->alergi,
+                        'sebutkan_alergi'                   => $kesehatan->sebutkan_alergi,
+                        'pengobatan_rutin'                  => $kesehatan->pengobatan_rutin,
+                        'asma'                              => $kesehatan->asma,
+                        'hipertensi'                        => $kesehatan->hipertensi,
+                        'jantung'                           => $kesehatan->jantung,
+                        'tbc'                               => $kesehatan->tbc,
+                        'hepatitis'                         => $kesehatan->hepatitis,
+                        'epilepsi'                          => $kesehatan->epilepsi,
+                        'gangguan_mental'                   => $kesehatan->gangguan_mental,
+                        'gangguan_pengelihatan'             => $kesehatan->gangguan_pengelihatan,
+                        'gangguan_lainnya'                  => $kesehatan->gangguan_lainnya,
+                        'pernah_dirawat_rs'                 => $kesehatan->pernah_dirawat_rs,
+                        'kecelakaan_serius'                 => $kesehatan->kecelakaan_serius,
+                        'keterbatasan_fisik'                => $kesehatan->keterbatasan_fisik,
+                        'mampu_shift'                       => $kesehatan->mampu_shift,
+                        'pemeriksaan_kerja_sebelumnya'      => $kesehatan->pemeriksaan_kerja_sebelumnya,
+                        'covid'                             => $kesehatan->covid,
+                        'tetanus'                           => $kesehatan->tetanus,
+                        'vaksin_lainnya'                    => $kesehatan->vaksin_lainnya,
+                        'persetujuan_kesehatan'             => $kesehatan->persetujuan_kesehatan,
+                        'created_at'                        => date('Y-m-d H:i:s'),
+
+                    ]
+                );
+                $kesehatan_kecelakaan = RecruitmentKesehatanKecelakaan::where('id_user', $get_user->id)->get();
+                if (!empty($kesehatan_kecelakaan)) {
+                    foreach ($kesehatan_kecelakaan as $kecelakaan) {
+                        KaryawanKesehatanKecelakaan::insert([
+                            'id_kecelakaan'         => Uuid::uuid4(),
+                            'id_karyawan'           => $id_karyawan,
+                            'tahun_kecelakaan'      => $kecelakaan->tahun_kecelakaan,
+                            'penyebab_kecelakaan'   => $kecelakaan->penyebab_kecelakaan,
+                            'created_at'            => date('Y-m-d H:i:s'),
+                        ]);
+                    }
+                }
+                $pengobatan = RecruitmentKesehatanPengobatan::where('id_user', $get_user->id)->get();
+                if (!empty($pengobatan)) {
+                    foreach ($pengobatan as $obat) {
+                        KaryawanKesehatanPengobatan::insert(
+                            [
+                                'id_pengobatan'         => Uuid::uuid4(),
+                                'id_karyawan'           => $id_karyawan,
+                                'obat'                  => $obat->obat,
+                                'alasan'                => $obat->alasan,
+                                'created_at'            => date('Y-m-d H:i:s'),
+                            ]
+                        );
+                    }
+                }
+                $rumah_sakit = RecruitmentKesehatanRS::where('id_user', $get_user->id)->get();
+                if (!empty($rumah_sakit)) {
+                    foreach ($rumah_sakit as $rs) {
+                        KaryawanKesehatanRS::insert([
+                            'id_kesehatan_rs'   => Uuid::uuid4(),
+                            'id_karyawan'       => $id_karyawan,
+                            'tahun_rs'          => $rs->tahun_rs,
+                            'penyebab_rs'       => $rs->penyebab_rs,
+                            'created_at'            => date('Y-m-d H:i:s'),
+
+                        ]);
+                    }
+                }
+                // end insert kesehatan
+                // Riwayat Pekerjaan
+                $riwayat = RecruitmentRiwayat::where('id_user', $get_user->id)->get();
+                if (!empty($riwayat)) {
+                    foreach ($riwayat as $rw) {
+                        if ($rw->surat_keterangan != null) {
+
+                            $fileKeterangan = url_karir() . '/storage/surat_keterangan/' . $rw->surat_keterangan;
+                            if (!empty($fileKeterangan)) {
+                                $response = Http::get($fileKeterangan);
+                                if ($response->successful()) {
+                                    Storage::disk('public')->put('surat_keterangan/' . $rw->surat_keterangan, $response->body());
+                                }
+                            } else {
+                                // return response()->json([
+                                //     'code' => 500,
+                                //     'message' =>  $fileKeterangan
+                                // ]);
+                            }
+                        }
+                        KaryawanRiwayat::insert([
+                            'id_riwayat'            => Uuid::uuid4(),
+                            'id_karyawan'           => $id_karyawan,
+                            'nama_perusahaan'       => $rw->nama_perusahaan,
+                            'alamat_perusahaan'     => $rw->alamat_perusahaan,
+                            'posisi'                => $rw->posisi,
+                            'tanggal_masuk'         => $rw->tanggal_masuk,
+                            'tanggal_keluar'        => $rw->tanggal_keluar,
+                            'surat_keterangan'      => $rw->surat_keterangan,
+                            'nomor_referensi'       => $rw->nomor_referensi,
+                            'jabatan_referensi'     => $rw->jabatan_referensi,
+                            'created_at'            => date('Y-m-d H:i:s'),
+                        ]);
+                    }
+                }
+                // End Riwayat Pekerjaan
                 RecruitmentUserRecord::insert(
                     [
                         'id'                        => Uuid::uuid4(),
@@ -2570,7 +2688,6 @@ http://192.168.101.241:8001/cpanel/recruitment_detail/$request->id
                     ]
                 );
             }
-
             return response()->json([
                 'code' => 200,
                 'message' => 'Data Berhasil Diupdate'
