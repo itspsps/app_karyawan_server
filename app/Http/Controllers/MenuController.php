@@ -23,6 +23,18 @@ class MenuController extends Controller
             ->where('kategori', 'web')      // load submenunya
             ->orderBy('sort_order')
             ->get();
-        return view('admin.menu.index', compact('holding', 'menus'));
+        $get_menus = Menu::whereNull('parent_id')->with('children')->where('kategori', 'web')->orderBy('sort_order')->get();
+        $parenPts = Menu::whereNull('parent_id')->where('kategori', 'web')->orderBy('sort_order')->get();
+        // dd($get_menus);
+        return view('admin.menu.index', compact('holding', 'menus', 'get_menus', 'parenPts'));
+    }
+    public function save_all_change(Request $request)
+    {
+        dd($request->all());
+        $menus = Menu::all();
+        foreach ($menus as $menu) {
+            $menu->save();
+        }
+        return response()->json(['status' => 'success']);
     }
 }

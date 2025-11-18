@@ -634,6 +634,7 @@ Route::middleware('admin')->group(function () {
 
     // MASTER MENU
     Route::get('/menu/{holding}', [MenuController::class, 'index']);
+    Route::post('/menu/save_all_change', [MenuController::class, 'save_all_change']);
 
     // ROLE
     Route::get('/role/{holding}', [RoleController::class, 'index']);
