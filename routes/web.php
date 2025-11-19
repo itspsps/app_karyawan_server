@@ -41,6 +41,7 @@ use App\Http\Controllers\FingerController;
 use App\Http\Controllers\HoldingController;
 use App\Http\Controllers\InterviewController;
 use App\Http\Controllers\IzinController;
+use App\Http\Controllers\KaryawanRiwayatController;
 use App\Http\Controllers\MappingShiftController;
 use App\Http\Controllers\MenuController;
 use App\Http\Controllers\PenugasanController;
@@ -274,11 +275,11 @@ Route::middleware('admin')->group(function () {
     Route::post('/karyawan/DeletePendidikan/', [karyawanController::class, 'delete_pendidikan']);
 
     // Riwayat Pekerjaan
-    Route::get('/karyawan/riwayat/{id}', [karyawanController::class, 'riwayat_datatable']);
-    Route::post('/karyawan/riwayat_update', [karyawanController::class, 'riwayat_update']);
-    Route::post('/karyawan/riwayat_post', [karyawanController::class, 'riwayat_post']);
-    Route::post('/karyawan/delete_riwayat/{id}', [karyawanController::class, 'delete_riwayat']);
-    Route::get('/karyawan/button_riwayat/{id?}', [karyawanController::class, 'button_riwayat'])->name('button_riwayat');
+    Route::get('/karyawan/riwayat/{id}', [KaryawanRiwayatController::class, 'riwayat_datatable']);
+    Route::post('/karyawan/riwayat_update', [karyawanRiwayatController::class, 'riwayat_update']);
+    Route::post('/karyawan/riwayat_post', [karyawanRiwayatController::class, 'riwayat_post']);
+    Route::post('/karyawan/delete_riwayat/{id}', [karyawanRiwayatController::class, 'delete_riwayat']);
+    Route::get('/karyawan/button_riwayat/{id?}', [karyawanRiwayatController::class, 'button_riwayat'])->name('button_riwayat');
 
 
     // KEAHLIAN KARYAWAN

@@ -136,8 +136,16 @@
                                         <button type="button" class="nav-link" role="tab" data-bs-toggle="tab"
                                             data-bs-target="#nav_riwayat" aria-controls="nav_riwayat"
                                             aria-selected="false">
-                                            <i class="tf-icons mdi mdi-file-document-multiple-outline me-1"></i>
+                                            <i class="mdi mdi-briefcase-outline me-1"></i>
                                             PENGALAMAN
+                                        </button>
+                                    </li>
+                                    <li class="nav-item">
+                                        <button type="button" class="nav-link" role="tab" data-bs-toggle="tab"
+                                            data-bs-target="#nav_kesehatan" aria-controls="nav_kesehatan"
+                                            aria-selected="false">
+                                            <i class="mdi mdi-medication-outline me-1"></i>
+                                            KESEHATAN
                                         </button>
                                     </li>
                                 </ul>
@@ -2443,6 +2451,9 @@
                                                 </div>
                                             </div>
                                         </div>
+                                    </div>
+                                    <div class="tab-pane fade" id="nav_kesehatan" role="tabpanel">
+                                        mmmmm
                                     </div>
                                     <div class="mt-4">
                                         <button type="submit" class="btn btn-primary me-2">Simpan</button>
