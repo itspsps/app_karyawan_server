@@ -273,6 +273,14 @@ Route::middleware('admin')->group(function () {
     Route::post('/karyawan/UpdatePendidikan/', [karyawanController::class, 'update_pendidikan']);
     Route::post('/karyawan/DeletePendidikan/', [karyawanController::class, 'delete_pendidikan']);
 
+    // Riwayat Pekerjaan
+    Route::get('/karyawan/riwayat/{id}', [karyawanController::class, 'riwayat_datatable']);
+    Route::post('/karyawan/riwayat_update', [karyawanController::class, 'riwayat_update']);
+    Route::post('/karyawan/riwayat_post', [karyawanController::class, 'riwayat_post']);
+    Route::post('/karyawan/delete_riwayat/{id}', [karyawanController::class, 'delete_riwayat']);
+    Route::get('/karyawan/button_riwayat/{id?}', [karyawanController::class, 'button_riwayat'])->name('button_riwayat');
+
+
     // KEAHLIAN KARYAWAN
     Route::get('/karyawan/keahlian/{id}', [karyawanController::class, 'keahlian_datatable']);
     Route::post('/karyawan/AddKeahlian/', [karyawanController::class, 'add_keahlian']);

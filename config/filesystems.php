@@ -48,6 +48,13 @@ return [
             'visibility' => 'public',
             'throw' => false,
         ],
+        'surat_keterangan' => [
+            'driver' => 'local',
+            'root' => storage_path('app/public/surat_keterangan'),
+            'url' => env('APP_URL') . '/storage/app/public/surat_keterangan',
+            'visibility' => 'public',
+            'throw' => false,
+        ],
         's3' => [
             'driver' => 's3',
             'key' => env('AWS_ACCESS_KEY_ID'),

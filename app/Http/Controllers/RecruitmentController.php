@@ -2655,10 +2655,12 @@ http://192.168.101.241:8001/cpanel/recruitment_detail/$request->id
                             'id_riwayat'            => Uuid::uuid4(),
                             'id_karyawan'           => $id_karyawan,
                             'nama_perusahaan'       => $rw->nama_perusahaan,
+                            'gaji'                  => $rw->gaji,
                             'alamat_perusahaan'     => $rw->alamat_perusahaan,
                             'posisi'                => $rw->posisi,
                             'tanggal_masuk'         => $rw->tanggal_masuk,
                             'tanggal_keluar'        => $rw->tanggal_keluar,
+                            'alasan_keluar'         => $rw->alasan_keluar,
                             'surat_keterangan'      => $rw->surat_keterangan,
                             'nomor_referensi'       => $rw->nomor_referensi,
                             'jabatan_referensi'     => $rw->jabatan_referensi,
@@ -2810,8 +2812,6 @@ http://192.168.101.241:8001/cpanel/recruitment_detail/$request->id
                 ->make(true);
         }
     }
-
-
     function dt_ujian()
     {
         $data = Ujian::with([

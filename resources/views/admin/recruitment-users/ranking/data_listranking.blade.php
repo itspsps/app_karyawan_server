@@ -692,7 +692,7 @@
                 [2, 'desc']
             ]
         });
-        $('#progres-tab').on('shown.bs.tab', function(e) {
+        $('#nav_riwayat').on('shown.bs.tab', function(e) {
             table2.columns.adjust().draw().responsive.recalc();
             // table.draw();
         });
