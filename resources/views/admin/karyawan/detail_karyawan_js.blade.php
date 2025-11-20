@@ -2623,6 +2623,1346 @@
 
         })
     });
+    // Kesehatan
+    $(document).ready(function() {
+        $('#sebutkan_alergi').hide();
+        let alergi = '{{ $karyawan->karyawanKesehatan->alergi }}'
+        if (alergi == 1) {
+
+            $('#sebutkan_alergi').show();
+        } else if (alergi == '2') {
+            $('#sebutkan_alergi').hide();
+            $('#sebutkan_alergi').val('');
+
+        } else {
+            $('#sebutkan_alergi').hide();
+        }
+    });
+    $('#sebutkan_alergi').hide();
+    $('#alergi_add').on('change', function() {
+        let value = $(this).val();
+        if (value == '1') {
+            $('#sebutkan_alergi').show();
+        } else {
+            $('#sebutkan_alergi').hide();
+            $('#sebutkan_alergi_add').val('');
+        }
+    });
+    $(document).ready(function() {
+        $('#sebutkan_phobia').hide();
+        let alergi = '{{ $karyawan->karyawanKesehatan->phobia }}'
+        if (alergi == 1) {
+
+            $('#sebutkan_phobia').show();
+        } else if (alergi == '2') {
+            $('#sebutkan_phobia').hide();
+            $('#sebutkan_phobia').val('');
+
+        } else {
+            $('#sebutkan_phobia').hide();
+        }
+    });
+    $('#sebutkan_phobia').hide();
+    $('#phobia_add').on('change', function() {
+        let value = $(this).val();
+        if (value == '1') {
+            $('#sebutkan_phobia').show();
+        } else {
+            $('#sebutkan_phobia').hide();
+            $('#sebutkan_phobia_add').val('');
+        }
+
+    });
+    $(document).ready(function() {
+        $('#sebutkan_keterbatasan_fisik').hide();
+        let alergi = '{{ $karyawan->karyawanKesehatan->keterbatasan_fisik }}'
+        if (alergi == 1) {
+
+            $('#sebutkan_keterbatasan_fisik').show();
+        } else if (alergi == '2') {
+            $('#sebutkan_keterbatasan_fisik').hide();
+            $('#sebutkan_keterbatasan_fisik').val('');
+
+        } else {
+            $('#sebutkan_keterbatasan_fisik').hide();
+        }
+    });
+    $('#sebutkan_keterbatasan_fisik').hide();
+    $('#keterbatasan_fisik_add').on('change', function() {
+        let value = $(this).val();
+        if (value == '1') {
+            $('#sebutkan_keterbatasan_fisik').show();
+        } else {
+            $('#sebutkan_keterbatasan_fisik').hide();
+            $('#sebutkan_keterbatasan_fisik_add').val('');
+
+        }
+
+    });
+    $(document).ready(function() {
+        let alergi = '{{ $karyawan->karyawanKesehatan->pengobatan_rutin }}'
+        if (alergi == '1') {
+            // console.log(alergi);
+            $('#sebutkan_pengobatan_rutin').show();
+        } else if (alergi == '2') {
+            $('#sebutkan_pengobatan_rutin').hide();
+        } else {
+            $('#sebutkan_pengobatan_rutin').hide();
+        }
+    });
+    $('#sebutkan_pengobatan_rutin').hide();
+    $('#pengobatan_rutin_add').on('change', function() {
+        let value = $(this).val();
+        if (value == '1') {
+            $('#sebutkan_pengobatan_rutin').show();
+        } else {
+            $('#sebutkan_pengobatan_rutin').hide();
+            $.ajax({
+                type: "GET",
+                url: "{{ url('/cpanel/cv/kesehatan/pengobatan_count/' . $karyawan->id) }}",
+                error: function(error) {
+                    Swal.fire({
+                        title: 'error',
+                        text: error.responseJSON.message,
+                        icon: 'error',
+                        timer: 4500
+                    })
+                },
+                success: function(data_pengobatan) {
+                    if (code = 200) {
+                        // console.log(data_pengobatan);
+                        if (data_pengobatan.data_pengobatan != 0) {
+                            var id_pengobatan = $('#id_user_pengobatan_add').val();
+                            Swal.fire({
+                                title: 'Konfirmasi',
+                                icon: 'warning',
+                                text: "Apakah benar-benar ingin menghapus data ini?",
+                                showCancelButton: true,
+                                inputValue: 0,
+                                confirmButtonText: 'Yes',
+                            }).then(function(result) {
+                                if (result.value) {
+                                    // console.log(id_pengobatan);
+                                    Swal.fire({
+                                        title: 'Harap Tuggu Sebentar!',
+                                        html: 'Proses Menghapus Data...', // add html attribute if you want or remove
+                                        allowOutsideClick: false,
+                                        onBeforeOpen: () => {
+                                            Swal.showLoading()
+                                            $.ajax({
+                                                data: {
+                                                    "_token": "{{ csrf_token() }}",
+                                                    id_pengobatan: id_pengobatan,
+                                                },
+                                                url: "{{ route('pengobatan_reset') }}",
+                                                type: "POST",
+                                                dataType: 'json',
+                                                beforeSend: function() {
+                                                    Swal.fire({
+                                                        title: 'Memuat Data...',
+                                                        html: 'Mohon tunggu sebentar',
+                                                        allowOutsideClick: false,
+                                                        allowEscapeKey: false,
+                                                        didOpen: () => {
+                                                            Swal
+                                                                .showLoading();
+                                                        }
+                                                    });
+                                                },
+                                                success: function(
+                                                    data) {
+                                                    Swal.close();
+                                                    if (data.code ==
+                                                        200) {
+                                                        $('#tabel_pengobatan')
+                                                            .DataTable()
+                                                            .ajax
+                                                            .reload();
+                                                        Swal.fire({
+                                                            title: 'success',
+                                                            text: 'Data Berhasil dihapus',
+                                                            icon: 'success',
+                                                            timer: 1500
+                                                        })
+                                                    } else {
+                                                        $('#tabel_pengobatan')
+                                                            .DataTable()
+                                                            .ajax
+                                                            .reload();
+                                                        Swal.fire({
+                                                            title: 'error',
+                                                            text: 'Data gagal dihapus',
+                                                            icon: 'success',
+                                                            timer: 1500
+                                                        })
+                                                    }
+                                                },
+                                                error: function(data) {
+                                                    Swal.fire({
+                                                        title: 'Gagal',
+                                                        text: 'Data Gagal dihapus',
+                                                        icon: 'error',
+                                                        timer: 1500
+                                                    })
+                                                }
+                                            });
+                                        },
+                                    });
+
+                                } else {
+                                    Swal.fire({
+                                        title: 'Gagal !',
+                                        text: 'Data gagal dihapus',
+                                        icon: 'warning',
+                                        timer: 1500
+                                    })
+                                }
+
+                            });
+                        }
+                    }
+                }
+            });
+            // $('#modal_delete_riwayat').modal('show');
+
+
+        }
+        // console.log('asoy');
+
+    });
+    $(document).ready(function() {
+        let alergi = '{{ $karyawan->karyawanKesehatan->pernah_dirawat_rs }}'
+        if (alergi == '1') {
+            // console.log(alergi);
+            $('#pernah_dirawat_sebutkan').show();
+        } else if (alergi == '2') {
+            $('#pernah_dirawat_sebutkan').hide();
+        } else {
+            $('#pernah_dirawat_sebutkan').hide();
+        }
+    });
+    $('#pernah_dirawat_sebutkan').hide();
+    $('#pernah_dirawat_rs_add').on('change', function() {
+        let value = $(this).val();
+        if (value == '1') {
+            $('#pernah_dirawat_sebutkan').show();
+        } else {
+            $('#pernah_dirawat_sebutkan').hide();
+            $.ajax({
+                type: "GET",
+                url: "{{ url('') }}",
+                error: function(error) {
+                    Swal.fire({
+                        title: 'error',
+                        text: error.responseJSON.message,
+                        icon: 'error',
+                        timer: 4500
+                    })
+                },
+                success: function(rumah_sakit) {
+                    if (code = 200) {
+                        // console.log(rumah_sakit);
+                        if (rumah_sakit.rumah_sakit != 0) {
+                            var id_karyawan = $('#id_user_rs_add').val();
+                            Swal.fire({
+                                title: 'Konfirmasi',
+                                icon: 'warning',
+                                text: "Apakah benar-benar ingin menghapus data ini?",
+                                showCancelButton: true,
+                                inputValue: 0,
+                                confirmButtonText: 'Yes',
+                            }).then(function(result) {
+                                if (result.value) {
+                                    // console.log(id_karyawan);
+                                    Swal.fire({
+                                        title: 'Harap Tuggu Sebentar!',
+                                        html: 'Proses Menghapus Data...', // add html attribute if you want or remove
+                                        allowOutsideClick: false,
+                                        onBeforeOpen: () => {
+                                            Swal.showLoading()
+                                            $.ajax({
+                                                data: {
+                                                    "_token": "{{ csrf_token() }}",
+                                                    id_karyawan: id_karyawan,
+                                                },
+                                                url: "{{ route('rumah_sakit_reset') }}",
+                                                type: "POST",
+                                                dataType: 'json',
+                                                beforeSend: function() {
+                                                    Swal.fire({
+                                                        title: 'Memuat Data...',
+                                                        html: 'Mohon tunggu sebentar',
+                                                        allowOutsideClick: false,
+                                                        allowEscapeKey: false,
+                                                        didOpen: () => {
+                                                            Swal
+                                                                .showLoading();
+                                                        }
+                                                    });
+                                                },
+                                                success: function(
+                                                    data
+                                                ) {
+                                                    Swal.close();
+                                                    if (data
+                                                        .code ==
+                                                        200
+                                                    ) {
+                                                        $('#tabel_rs')
+                                                            .DataTable()
+                                                            .ajax
+                                                            .reload();
+                                                        Swal.fire({
+                                                            title: 'success',
+                                                            text: 'Data Berhasil dihapus',
+                                                            icon: 'success',
+                                                            timer: 1500
+                                                        })
+                                                    } else {
+                                                        $('#tabel_rs')
+                                                            .DataTable()
+                                                            .ajax
+                                                            .reload();
+                                                        Swal.fire({
+                                                            title: 'error',
+                                                            text: 'Data gagal dihapus',
+                                                            icon: 'success',
+                                                            timer: 1500
+                                                        })
+                                                    }
+                                                },
+                                                error: function(
+                                                    data
+                                                ) {
+                                                    Swal.fire({
+                                                        title: 'Gagal',
+                                                        text: 'Data Gagal dihapus',
+                                                        icon: 'error',
+                                                        timer: 1500
+                                                    })
+                                                }
+                                            });
+                                        },
+                                    });
+
+                                } else {
+                                    Swal.fire({
+                                        title: 'Gagal !',
+                                        text: 'Data gagal dihapus',
+                                        icon: 'warning',
+                                        timer: 1500
+                                    })
+                                }
+
+                            });
+                        }
+                    }
+                }
+            });
+        }
+        // console.log('asoy');
+
+    });
+    $(document).ready(function() {
+        let alergi = '{{ $karyawan->karyawanKesehatan->kecelakaan_serius }}'
+        if (alergi == '1') {
+            // console.log(alergi);
+            $('#kecelakaan_serius_sebutkan').show();
+        } else if (alergi == '2') {
+            $('#kecelakaan_serius_sebutkan').hide();
+        } else {
+            $('#kecelakaan_serius_sebutkan').hide();
+        }
+    });
+    $('#kecelakaan_serius_sebutkan').hide();
+    $('#kecelakaan_serius_add').on('change', function() {
+        let value = $(this).val();
+        if (value == '1') {
+            $('#kecelakaan_serius_sebutkan').show();
+        } else {
+            $('#kecelakaan_serius_sebutkan').hide();
+            $.ajax({
+                type: "GET",
+                url: "{{ url('/cpanel/cv/kesehatan/kecelakaan_count/' . $karyawan->id) }}",
+                error: function(error) {
+                    Swal.fire({
+                        title: 'error',
+                        text: error.responseJSON.message,
+                        icon: 'error',
+                        timer: 4500
+                    })
+                },
+                success: function(kecelakaan) {
+                    if (code = 200) {
+                        // console.log(kecelakaan);
+                        if (kecelakaan.kecelakaan != 0) {
+                            var id_karyawan = $('#id_user_kecelakaan_add').val();
+                            Swal.fire({
+                                title: 'Konfirmasi',
+                                icon: 'warning',
+                                text: "Apakah benar-benar ingin menghapus data ini?",
+                                showCancelButton: true,
+                                inputValue: 0,
+                                confirmButtonText: 'Yes',
+                            }).then(function(result) {
+                                if (result.value) {
+                                    // console.log(id_karyawan);
+                                    Swal.fire({
+                                        title: 'Harap Tuggu Sebentar!',
+                                        html: 'Proses Menghapus Data...', // add html attribute if you want or remove
+                                        allowOutsideClick: false,
+                                        onBeforeOpen: () => {
+                                            Swal.showLoading()
+                                            $.ajax({
+                                                data: {
+                                                    "_token": "{{ csrf_token() }}",
+                                                    id_karyawan: id_karyawan,
+                                                },
+                                                url: "{{ route('kecelakaan_reset') }}",
+                                                type: "POST",
+                                                dataType: 'json',
+                                                beforeSend: function() {
+                                                    Swal.fire({
+                                                        title: 'Memuat Data...',
+                                                        html: 'Mohon tunggu sebentar',
+                                                        allowOutsideClick: false,
+                                                        allowEscapeKey: false,
+                                                        didOpen: () => {
+                                                            Swal
+                                                                .showLoading();
+                                                        }
+                                                    });
+                                                },
+                                                success: function(
+                                                    data) {
+                                                    Swal.close();
+                                                    if (data.code ==
+                                                        200) {
+                                                        $('#tabel_kecelakaan')
+                                                            .DataTable()
+                                                            .ajax
+                                                            .reload();
+                                                        Swal.fire({
+                                                            title: 'success',
+                                                            text: 'Data Berhasil dihapus',
+                                                            icon: 'success',
+                                                            timer: 1500
+                                                        })
+                                                    } else {
+                                                        $('#tabel_kecelakaan')
+                                                            .DataTable()
+                                                            .ajax
+                                                            .reload();
+                                                        Swal.fire({
+                                                            title: 'error',
+                                                            text: 'Data gagal dihapus',
+                                                            icon: 'success',
+                                                            timer: 1500
+                                                        })
+                                                    }
+                                                },
+                                                error: function(data) {
+                                                    Swal.fire({
+                                                        title: 'Gagal',
+                                                        text: 'Data Gagal dihapus',
+                                                        icon: 'error',
+                                                        timer: 1500
+                                                    })
+                                                }
+                                            });
+                                        },
+                                    });
+
+                                } else {
+                                    Swal.fire({
+                                        title: 'Gagal !',
+                                        text: 'Data gagal dihapus',
+                                        icon: 'warning',
+                                        timer: 1500
+                                    })
+                                }
+
+                            });
+                        }
+                    }
+                }
+            });
+
+
+        }
+        // console.log('asoy');
+    });
+    $(document).ready(function() {
+        $('#pemeriksaan_sebelumnya_hasil').hide();
+        let alergi = '{{ $karyawan->karyawanKesehatan->pemeriksaan_kerja_sebelumnya }}'
+        if (alergi == 1) {
+
+            $('#pemeriksaan_sebelumnya_hasil').show();
+        } else if (alergi == '2') {
+            $('#pemeriksaan_sebelumnya_hasil').hide();
+
+        } else {
+            $('#pemeriksaan_sebelumnya_hasil').hide();
+        }
+    });
+    $('#pemeriksaan_sebelumnya_hasil').hide();
+    $('#pemeriksaan_kerja_sebelumnya_add').on('change', function() {
+        let value = $(this).val();
+        if (value == '1') {
+            $('#pemeriksaan_sebelumnya_hasil').show();
+        } else {
+            $('#pemeriksaan_sebelumnya_hasil').hide();
+        }
+        // console.log('asoy');
+
+    });
+    $(document).ready(function() {
+        $('#gangguan_sebutkan').hide();
+        let alergi = '{{ $karyawan->karyawanKesehatan->gangguan_lainnya }}'
+        if (alergi == 'on') {
+
+            $('#gangguan_sebutkan').show();
+        } else {
+            $('#gangguan_sebutkan').hide();
+        }
+    });
+
+    $('#gangguan_sebutkan').hide();
+    $('#gangguan_lainnya_add').on('change', function() {
+        if ($(this).prop('checked')) {
+            $('#gangguan_sebutkan').show();
+        } else {
+            $('#gangguan_sebutkan').hide();
+            $('#sebutkan_gangguan_add').val('');
+        }
+    })
+    $(document).ready(function() {
+        $('#sebutkan_vaksin_lainnya').hide();
+        let alergi = '{{ $karyawan->karyawanKesehatan->vaksin_lainnya }}'
+        if (alergi == 'on') {
+            console.log(alergi);
+            $('#sebutkan_vaksin_lainnya').show();
+        } else {
+            $('#sebutkan_vaksin_lainnya').val('');
+            $('#sebutkan_vaksin_lainnya').hide();
+        }
+    });
+    $('#sebutkan_vaksin_lainnya').hide();
+    $('#vaksin_lainnya_add').on('change', function() {
+        if ($(this).prop('checked')) {
+            $('#sebutkan_vaksin_lainnya').show();
+        } else {
+            $('#sebutkan_vaksin_lainnya').hide();
+            $('#sebutkan_vaksin_lainnya_add').val('');
+
+        }
+    })
+    // $(document).ready(function() {
+    //     var maxField = 10; //Input fields increment limitation
+    //     var wrapper = $('.field_pengobatan'); //Input field wrapper
+    //     var fieldHTML =
+    //         `<div class="row" id="asoy">
+    //             <div class="col-lg p-2">
+    //                 <input type="text" name="jenis_obat[]"
+    //                     id="jenis_obat_add[]" value=""
+    //                     class="form-control">
+    //             </div>
+    //             <div class="col-lg p-2">
+    //                 <input type="text" name="alasan_obat[]"
+    //                     id="alasan_obat_add[]" value=""
+    //                     class="form-control">
+    //             </div>
+    //             <div class="col-lg p-2">
+    //                 <button class="btn btn-danger" id="kurangi_pengobatan"> Batal </button>
+    //             </div>
+    //         </div>`; //New input field html
+    //     var addButton = $('#tambah_pengobatan'); //Add button selector
+    //     var x = 1; //Initial field counter is 1
+
+    //     // Once add button is clicked
+    //     $(addButton).click(function() {
+    //         //Check maximum number of input fields
+    //         if (x < maxField) {
+    //             x++; //Increase field counter
+    //             $(wrapper).append(fieldHTML); //Add field html
+    //         } else {
+    //             alert('A maximum of ' + maxField + ' fields are allowed to be added. ');
+    //         }
+    //     });
+
+    //     // Once remove button is clicked
+    //     $(wrapper).on('click', '#kurangi_pengobatan', function(e) {
+    //         e.preventDefault();
+    //         $(this).closest('#asoy').remove(); //Remove field html
+    //         x--; //Decrease field counter
+    //     });
+    // });
+    var table = $('#tabel_pengobatan').DataTable({
+        "bPaginate": false,
+        "bFilter": false,
+        "scrollY": true,
+        "scrollX": true,
+        processing: true,
+        serverSide: true,
+        ajax: {
+            url: "{{ url('/cpanel/cv/kesehatan/dt_pengobatan/' . $karyawan->id) }}",
+        },
+        columns: [{
+                data: 'jenis_obat',
+                name: 'jenis_obat'
+            },
+            {
+                data: 'alasan_obat',
+                name: 'alasan_obat'
+            },
+            {
+                data: 'option',
+                name: 'option'
+            },
+
+        ],
+    });
+    $('#tambah_pengobatan').on('click', function(e) {
+        e.preventDefault();
+        var formData = new FormData();
+
+        formData.append('_token', '{{ csrf_token() }}');
+        formData.append('jenis_obat', $('#jenis_obat_add').val());
+        formData.append('id_karyawan', $('#id_user_pengobatan_add').val());
+        formData.append('alasan_obat', $('#alasan_obat_add').val());
+        $.ajax({
+            type: "POST",
+
+            url: "{{ route('pengobatan_post') }}",
+            data: formData,
+            contentType: false,
+            processData: false,
+            beforeSend: function() {
+                Swal.fire({
+                    title: 'Memuat Data...',
+                    html: 'Mohon tunggu sebentar',
+                    allowOutsideClick: false,
+                    allowEscapeKey: false,
+                    didOpen: () => {
+                        Swal.showLoading();
+                    }
+                });
+            },
+            error: function() {
+                Swal.close();
+                alert('Something is wrong');
+                // console.log(formData);
+            },
+            success: function(data) {
+                Swal.close();
+                // console.log(data.data_user.ijazah);
+                if (data.code == 200) {
+                    Swal.fire({
+                        // title: data.message,
+                        text: 'Data Pengobatan ditambah',
+                        icon: 'success',
+                        timer: 4500
+                    })
+
+                    $('#jenis_obat_add').val('');
+                    $('#alasan_obat_add').val('');
+                    $('#tabel_pengobatan').DataTable().ajax.reload();
+                    // if (currentStep < totalSteps) {
+                    //     showStep(currentStep + 1);
+                    // }
+                    //mengosongkan modal dan menyembunyikannya
+
+                } else if (data.code == 400) {
+                    let errors = data.errors;
+                    // console.log(errors);
+                    let errorMessages = '';
+
+                    Object.keys(errors).forEach(function(key) {
+                        errors[key].forEach(function(message) {
+                            errorMessages += `• ${message}\n`;
+                        });
+                    });
+                    Swal.fire({
+                        // title: data.message,
+                        text: errorMessages,
+                        icon: 'warning',
+                        timer: 4500
+                    })
+
+                } else {
+                    Swal.fire({
+                        title: 'Gagal',
+                        text: data.error,
+                        icon: 'error',
+                        timer: 10000
+                    })
+
+                }
+            }
+
+        });
+    });
+    $(document).on('click', '#btn_delete_pengobatan', function() {
+        // $('#modal_delete_riwayat').modal('show');
+        var id_pengobatan = $(this).data('id_pengobatan');
+        Swal.fire({
+            title: 'Konfirmasi',
+            icon: 'warning',
+            text: "Apakah benar-benar ingin menghapus data ini?",
+            showCancelButton: true,
+            inputValue: 0,
+            confirmButtonText: 'Yes',
+        }).then(function(result) {
+            if (result.value) {
+                // console.log(id_pengobatan);
+                Swal.fire({
+                    title: 'Harap Tuggu Sebentar!',
+                    html: 'Proses Menghapus Data...', // add html attribute if you want or remove
+                    allowOutsideClick: false,
+                    onBeforeOpen: () => {
+                        Swal.showLoading()
+                        $.ajax({
+                            data: {
+                                "_token": "{{ csrf_token() }}",
+                                id_pengobatan: id_pengobatan,
+                            },
+                            url: "{{ route('pengobatan_delete') }}",
+                            type: "POST",
+                            dataType: 'json',
+                            beforeSend: function() {
+                                Swal.fire({
+                                    title: 'Memuat Data...',
+                                    html: 'Mohon tunggu sebentar',
+                                    allowOutsideClick: false,
+                                    allowEscapeKey: false,
+                                    didOpen: () => {
+                                        Swal.showLoading();
+                                    }
+                                });
+                            },
+                            success: function(data) {
+                                Swal.close();
+                                if (data.code == 200) {
+                                    $('#tabel_pengobatan').DataTable().ajax
+                                        .reload();
+                                    Swal.fire({
+                                        title: 'success',
+                                        text: 'Data Berhasil dihapus',
+                                        icon: 'success',
+                                        timer: 1500
+                                    })
+                                } else {
+                                    $('#tabel_pengobatan').DataTable().ajax
+                                        .reload();
+                                    Swal.fire({
+                                        title: 'error',
+                                        text: 'Data gagal dihapus',
+                                        icon: 'success',
+                                        timer: 1500
+                                    })
+                                }
+                            },
+                            error: function(data) {
+                                Swal.fire({
+                                    title: 'Gagal',
+                                    text: 'Data Gagal dihapus',
+                                    icon: 'error',
+                                    timer: 1500
+                                })
+                            }
+                        });
+                    },
+                });
+
+            } else {
+                Swal.fire({
+                    title: 'Gagal !',
+                    text: 'Data gagal dihapus',
+                    icon: 'warning',
+                    timer: 1500
+                })
+            }
+
+        });
+    });
+    // end pengobatan
+    // rumah sakit
+    var table = $('#tabel_rs').DataTable({
+        "bPaginate": false,
+        "bFilter": false,
+        "scrollY": true,
+        "scrollX": true,
+        processing: true,
+        serverSide: true,
+        ajax: {
+            url: "{{ url('/cpanel/cv/kesehatan/dt_rumah_sakit/' . $karyawan->id) }}",
+        },
+        columns: [{
+                data: 'tahun_rs',
+                name: 'tahun_rs'
+            },
+            {
+                data: 'penyebab_rs',
+                name: 'penyebab_rs'
+            },
+            {
+                data: 'option',
+                name: 'option'
+            },
+
+        ],
+    });
+    $('#tambah_rs').on('click', function(e) {
+        e.preventDefault();
+        var formData = new FormData();
+
+        formData.append('_token', '{{ csrf_token() }}');
+        formData.append('tahun_rs', $('#tahun_rs_add').val());
+        formData.append('id_karyawan', $('#id_user_rs_add').val());
+        formData.append('penyebab_rs', $('#penyebab_rs_add').val());
+        $.ajax({
+            type: "POST",
+
+            url: "{{ route('rumah_sakit_post') }}",
+            data: formData,
+            contentType: false,
+            processData: false,
+            beforeSend: function() {
+                Swal.fire({
+                    title: 'Memuat Data...',
+                    html: 'Mohon tunggu sebentar',
+                    allowOutsideClick: false,
+                    allowEscapeKey: false,
+                    didOpen: () => {
+                        Swal.showLoading();
+                    }
+                });
+            },
+            error: function() {
+                alert('Something is wrong');
+                // console.log(formData);
+            },
+            success: function(data) {
+                Swal.close();
+                // console.log(data.data_user.ijazah);
+
+                if (data.code == 200) {
+                    Swal.fire({
+                        // title: data.message,
+                        text: 'Riwayat masuk RS ditambah',
+                        icon: 'success',
+                        timer: 4500
+                    })
+                    $('#tahun_rs_add').val('');
+                    $('#penyebab_rs_add').val('');
+                    $('#tabel_rs').DataTable().ajax.reload();
+                    // if (currentStep < totalSteps) {
+                    //     showStep(currentStep + 1);
+                    // }
+                    //mengosongkan modal dan menyembunyikannya
+
+                } else if (data.code == 400) {
+                    let errors = data.errors;
+                    // console.log(errors);
+                    let errorMessages = '';
+
+                    Object.keys(errors).forEach(function(key) {
+                        errors[key].forEach(function(message) {
+                            errorMessages += `• ${message}\n`;
+                        });
+                    });
+                    Swal.fire({
+                        // title: data.message,
+                        text: errorMessages,
+                        icon: 'warning',
+                        timer: 4500
+                    })
+
+                } else {
+                    Swal.fire({
+                        title: 'Gagal',
+                        text: data.error,
+                        icon: 'error',
+                        timer: 10000
+                    })
+
+                }
+            }
+
+        });
+    });
+    $(document).on('click', '#btn_delete_rumah_sakit', function() {
+        // $('#modal_delete_riwayat').modal('show');
+        var id_kesehatan_rs = $(this).data('id_kesehatan_rs');
+        Swal.fire({
+            title: 'Konfirmasi',
+            icon: 'warning',
+            text: "Apakah benar-benar ingin menghapus data ini?",
+            showCancelButton: true,
+            inputValue: 0,
+            confirmButtonText: 'Yes',
+        }).then(function(result) {
+            if (result.value) {
+                // console.log(id_kesehatan_rs);
+                Swal.fire({
+                    title: 'Harap Tuggu Sebentar!',
+                    html: 'Proses Menghapus Data...', // add html attribute if you want or remove
+                    allowOutsideClick: false,
+                    onBeforeOpen: () => {
+                        Swal.showLoading()
+                        $.ajax({
+                            data: {
+                                "_token": "{{ csrf_token() }}",
+                                id_kesehatan_rs: id_kesehatan_rs,
+                            },
+                            url: "{{ route('rumah_sakit_delete') }}",
+                            type: "POST",
+                            dataType: 'json',
+                            beforeSend: function() {
+                                Swal.fire({
+                                    title: 'Memuat Data...',
+                                    html: 'Mohon tunggu sebentar',
+                                    allowOutsideClick: false,
+                                    allowEscapeKey: false,
+                                    didOpen: () => {
+                                        Swal.showLoading();
+                                    }
+                                });
+                            },
+                            success: function(data) {
+                                Swal.close();
+                                if (data.code == 200) {
+                                    $('#tabel_rs').DataTable().ajax
+                                        .reload();
+                                    Swal.fire({
+                                        title: 'success',
+                                        text: 'Data Berhasil dihapus',
+                                        icon: 'success',
+                                        timer: 1500
+                                    })
+                                } else {
+                                    $('#tabel_rs').DataTable().ajax
+                                        .reload();
+                                    Swal.fire({
+                                        title: 'error',
+                                        text: 'Data gagal dihapus',
+                                        icon: 'success',
+                                        timer: 1500
+                                    })
+                                }
+                            },
+                            error: function(data) {
+                                Swal.fire({
+                                    title: 'Gagal',
+                                    text: 'Data Gagal dihapus',
+                                    icon: 'error',
+                                    timer: 1500
+                                })
+                            }
+                        });
+                    },
+                });
+
+            } else {
+                Swal.fire({
+                    title: 'Gagal !',
+                    text: 'Data gagal dihapus',
+                    icon: 'warning',
+                    timer: 1500
+                })
+            }
+
+        });
+    });
+    // kecelakaan
+    var table = $('#tabel_kecelakaan').DataTable({
+        "bPaginate": false,
+        "bFilter": false,
+        "scrollY": true,
+        "scrollX": true,
+        processing: true,
+        serverSide: true,
+        ajax: {
+            url: "{{ url('/cpanel/cv/kesehatan/dt_kecelakaan/' . $karyawan->id) }}",
+        },
+        columns: [{
+                data: 'tahun_kecelakaan',
+                name: 'tahun_kecelakaan'
+            },
+            {
+                data: 'penyebab_kecelakaan',
+                name: 'penyebab_kecelakaan'
+            },
+            {
+                data: 'option',
+                name: 'option'
+            },
+
+        ],
+    });
+    $('#tambah_kecelakaan').on('click', function(e) {
+        e.preventDefault();
+        var formData = new FormData();
+
+        formData.append('_token', '{{ csrf_token() }}');
+        formData.append('tahun_kecelakaan', $('#tahun_kecelakaan_add').val());
+        formData.append('id_karyawan', $('#id_user_kecelakaan_add').val());
+        formData.append('penyebab_kecelakaan', $('#penyebab_kecelakaan_add').val());
+        $.ajax({
+            type: "POST",
+
+            url: "{{ route('kecelakaan_post') }}",
+            data: formData,
+            contentType: false,
+            processData: false,
+            beforeSend: function() {
+                Swal.fire({
+                    title: 'Memuat Data...',
+                    html: 'Mohon tunggu sebentar',
+                    allowOutsideClick: false,
+                    allowEscapeKey: false,
+                    didOpen: () => {
+                        Swal.showLoading();
+                    }
+                });
+            },
+            error: function() {
+                Swal.close();
+                alert('Something is wrong');
+                // console.log(formData);
+            },
+            success: function(data) {
+                Swal.close();
+                // console.log(data.data_user.ijazah);
+                if (data.code == 200) {
+                    Swal.fire({
+                        // title: data.message,
+                        text: 'Data Pengobatan ditambah',
+                        icon: 'success',
+                        timer: 4500
+                    })
+
+                    $('#tahun_kecelakaan_add').val('');
+                    $('#penyebab_kecelakaan_add').val('');
+                    $('#tabel_kecelakaan').DataTable().ajax.reload();
+                    // if (currentStep < totalSteps) {
+                    //     showStep(currentStep + 1);
+                    // }
+                    //mengosongkan modal dan menyembunyikannya
+
+                } else if (data.code == 400) {
+                    let errors = data.errors;
+                    // console.log(errors);
+                    let errorMessages = '';
+
+                    Object.keys(errors).forEach(function(key) {
+                        errors[key].forEach(function(message) {
+                            errorMessages += `• ${message}\n`;
+                        });
+                    });
+                    Swal.fire({
+                        // title: data.message,
+                        text: errorMessages,
+                        icon: 'warning',
+                        timer: 4500
+                    })
+
+                } else {
+                    Swal.fire({
+                        title: 'Gagal',
+                        text: data.error,
+                        icon: 'error',
+                        timer: 10000
+                    })
+
+                }
+            }
+
+        });
+    });
+    $(document).on('click', '#btn_delete_kecelakaan', function() {
+        // $('#modal_delete_riwayat').modal('show');
+        var id_kecelakaan = $(this).data('id_kecelakaan');
+        Swal.fire({
+            title: 'Konfirmasi',
+            icon: 'warning',
+            text: "Apakah benar-benar ingin menghapus data ini?",
+            showCancelButton: true,
+            inputValue: 0,
+            confirmButtonText: 'Yes',
+        }).then(function(result) {
+            if (result.value) {
+                // console.log(id_kecelakaan);
+                Swal.fire({
+                    title: 'Harap Tuggu Sebentar!',
+                    html: 'Proses Menghapus Data...', // add html attribute if you want or remove
+                    allowOutsideClick: false,
+                    onBeforeOpen: () => {
+                        Swal.showLoading()
+                        $.ajax({
+                            data: {
+                                "_token": "{{ csrf_token() }}",
+                                id_kecelakaan: id_kecelakaan,
+                            },
+                            url: "{{ route('kecelakaan_delete') }}",
+                            type: "POST",
+                            dataType: 'json',
+                            beforeSend: function() {
+                                Swal.fire({
+                                    title: 'Memuat Data...',
+                                    html: 'Mohon tunggu sebentar',
+                                    allowOutsideClick: false,
+                                    allowEscapeKey: false,
+                                    didOpen: () => {
+                                        Swal.showLoading();
+                                    }
+                                });
+                            },
+                            success: function(data) {
+                                Swal.close();
+                                if (data.code == 200) {
+                                    $('#tabel_kecelakaan').DataTable().ajax
+                                        .reload();
+                                    Swal.fire({
+                                        title: 'success',
+                                        text: 'Data Berhasil dihapus',
+                                        icon: 'success',
+                                        timer: 1500
+                                    })
+                                } else {
+                                    $('#tabel_kecelakaan').DataTable().ajax
+                                        .reload();
+                                    Swal.fire({
+                                        title: 'error',
+                                        text: 'Data gagal dihapus',
+                                        icon: 'success',
+                                        timer: 1500
+                                    })
+                                }
+                            },
+                            error: function(data) {
+                                Swal.fire({
+                                    title: 'Gagal',
+                                    text: 'Data Gagal dihapus',
+                                    icon: 'error',
+                                    timer: 1500
+                                })
+                            }
+                        });
+                    },
+                });
+
+            } else {
+                Swal.fire({
+                    title: 'Gagal !',
+                    text: 'Data gagal dihapus',
+                    icon: 'warning',
+                    timer: 1500
+                })
+            }
+
+        });
+    });
+    // end kecelakaan
+    // Add kesehatan
+    $('#btn_update_kesehatan').on('click', function(e) {
+        e.preventDefault();
+        var formData = new FormData();
+
+        //ambil data dari form
+        formData.append('_token', '{{ csrf_token() }}');
+        formData.append('id_karyawan', $('#id_user_kesehatan_add').val());
+        formData.append('perokok', $('#perokok_add').val());
+        formData.append('alkohol', $('#alkohol_add').val());
+        formData.append('alergi', $('#alergi_add').val());
+        formData.append('sebutkan_alergi', $('#sebutkan_alergi_add').val());
+        formData.append('phobia', $('#phobia_add').val());
+        formData.append('sebutkan_phobia', $('#sebutkan_phobia_add').val());
+        formData.append('keterbatasan_fisik', $('#keterbatasan_fisik_add').val());
+        formData.append('sebutkan_keterbatasan_fisik', $('#sebutkan_keterbatasan_fisik_add').val());
+        formData.append('pengobatan_rutin', $('#pengobatan_rutin_add').val());
+        formData.append('jenis_obat', $('#jenis_obat_add').val());
+        formData.append('alasan_obat', $('#alasan_obat_add').val());
+        if ($('#asma_add').is(':checked')) {
+            formData.append('asma', $('#asma_add').val());
+        } else {
+            formData.append('asma', '');
+        }
+        if ($('#diabetes_add').is(':checked')) {
+            formData.append('diabetes', $('#diabetes_add').val());
+        } else {
+            formData.append('diabetes', '');
+        }
+        if ($('#hipertensi_add').is(':checked')) {
+            formData.append('hipertensi', $('#hipertensi_add').val());
+        } else {
+            formData.append('hipertensi', '');
+        }
+        if ($('#jantung_add').is(':checked')) {
+            formData.append('jantung', $('#jantung_add').val());
+        } else {
+            formData.append('jantung', '');
+        }
+        if ($('#tbc_add').is(':checked')) {
+            formData.append('tbc', $('#tbc_add').val());
+        } else {
+            formData.append('tbc', '');
+        }
+        if ($('#hepatitis_add').is(':checked')) {
+            formData.append('hepatitis', $('#hepatitis_add').val());
+        } else {
+            formData.append('hepatitis', '');
+        }
+        if ($('#epilepsi_add').is(':checked')) {
+            formData.append('epilepsi', $('#epilepsi_add').val());
+        } else {
+            formData.append('epilepsi', '');
+        }
+        if ($('#gangguan_mental_add').is(':checked')) {
+            formData.append('gangguan_mental', $('#gangguan_mental_add').val());
+        } else {
+            formData.append('gangguan_mental', '');
+        }
+        if ($('#gangguan_pengelihatan_add').is(':checked')) {
+            formData.append('gangguan_pengelihatan', $('#gangguan_pengelihatan_add').val());
+        } else {
+            formData.append('gangguan_pengelihatan', '');
+        }
+        if ($('#gangguan_lainnya_add').is(':checked')) {
+            formData.append('gangguan_lainnya', $('#gangguan_lainnya_add').val());
+        } else {
+            formData.append('gangguan_lainnya', '');
+        }
+        formData.append('pernah_dirawat_rs', $('#pernah_dirawat_rs_add').val());
+        formData.append('sebutkan_gangguan', $('#sebutkan_gangguan_add').val());
+        formData.append('tahun_rs', $('#tahun_rs_add').val());
+        formData.append('penyebab_rs', $('#penyebab_rs_add').val());
+        formData.append('kecelakaan_serius', $('#kecelakaan_serius_add').val());
+        formData.append('mampu_shift', $('#mampu_shift_add').val());
+        formData.append('pemeriksaan_kerja_sebelumnya', $('#pemeriksaan_kerja_sebelumnya_add').val());
+        formData.append('pemeriksaan_sebelumnya_hasil', $('#pemeriksaan_sebelumnya_hasil_add').val());
+        if ($('#covid_add').is(':checked')) {
+            formData.append('covid', $('#covid_add').val());
+        } else {
+            formData.append('covid', '');
+        }
+        if ($('#hepatitis_add').is(':checked')) {
+            formData.append('hepatitis', $('#hepatitis_add').val());
+        } else {
+            formData.append('hepatitis', '');
+        }
+        if ($('#tetanus_add').is(':checked')) {
+            formData.append('tetanus', $('#tetanus_add').val());
+        } else {
+            formData.append('tetanus', '');
+        }
+        if ($('#vaksin_lainnya_add').is(':checked')) {
+            formData.append('vaksin_lainnya', $('#vaksin_lainnya_add').val());
+        } else {
+            formData.append('vaksin_lainnya', '');
+        }
+        formData.append('sebutkan_vaksin_lainnya', $('#sebutkan_vaksin_lainnya_add').val());
+        if ($('#persetujuan_kesehatan_add').is(':checked')) {
+            formData.append('persetujuan_kesehatan', $('#persetujuan_kesehatan_add').val());
+        } else {
+            formData.append('persetujuan_kesehatan', '');
+        }
+
+        var fileInput = $('#surat_keterangan_add')[0];
+        if (fileInput.files.length > 0) {
+            formData.append('surat_keterangan', fileInput.files[0]);
+        }
+        // post
+        $.ajax({
+            type: "POST",
+
+            url: "{{ route('kesehatan_post') }}",
+            data: formData,
+            contentType: false,
+            processData: false,
+            beforeSend: function() {
+                Swal.fire({
+                    title: 'Memuat Data...',
+                    html: 'Mohon tunggu sebentar',
+                    allowOutsideClick: false,
+                    allowEscapeKey: false,
+                    didOpen: () => {
+                        Swal.showLoading();
+                    }
+                });
+            },
+            error: function() {
+                Swal.close();
+                alert('Something is wrong!');
+                // console.log(formData);
+            },
+            success: function(data) {
+                Swal.close();
+                if (data.code == 200) {
+                    Swal.fire({
+                        title: 'Berhasil',
+                        text: data.message,
+                        icon: 'success',
+                        timer: 5000
+                    })
+                    //mengosongkan modal dan menyembunyikannya
+                    // $('#perokok_add').val('');
+                } else if (data.code == 400) {
+                    let errors = data.errors;
+                    // console.log(errors);
+                    let errorMessages = '';
+
+                    Object.keys(errors).forEach(function(key) {
+                        errors[key].forEach(function(message) {
+                            errorMessages += `• ${message}\n`;
+                        });
+                    });
+                    Swal.fire({
+                        // title: data.message,
+                        text: errorMessages,
+                        icon: 'warning',
+                        timer: 4500
+                    })
+
+                } else {
+                    Swal.fire({
+                        title: 'Gagal',
+                        text: data.error,
+                        icon: 'error',
+                        timer: 4500
+                    })
+
+                }
+            }
+        });
+    });
+    $.ajax({
+        type: "GET",
+        url: "{{ url('/cpanel/cv/kesehatan/kesehatan_get/' . $karyawan->id) }}",
+        error: function(error) {
+            Swal.fire({
+                title: 'error',
+                text: error.responseJSON.message,
+                icon: 'error',
+                timer: 4500
+            })
+
+        },
+        success: function(kesehatan_get) {
+            // console.log(kesehatan_get.kesehatan_get);
+            $('#sebutkan_alergi_add').val(kesehatan_get.kesehatan_get.sebutkan_alergi);
+            $('#sebutkan_gangguan_add').val(kesehatan_get.kesehatan_get.sebutkan_gangguan);
+            $('#sebutkan_keterbatasan_fisik_add').val(kesehatan_get.kesehatan_get
+                .sebutkan_keterbatasan_fisik);
+            $('#sebutkan_phobia_add').val(kesehatan_get.kesehatan_get.sebutkan_phobia);
+            $('#sebutkan_vaksin_lainnya_add').val(kesehatan_get.kesehatan_get.sebutkan_vaksin_lainnya);
+
+        }
+    });
+    // end kesehatan
+
+
+    // End Kesehatan
 </script>
 {{-- riwayat pekerjaan --}}
 <script></script>

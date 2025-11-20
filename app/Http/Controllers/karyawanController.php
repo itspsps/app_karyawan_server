@@ -1507,7 +1507,28 @@ class karyawanController extends Controller
             ->where('kategori', 'web')      // load submenunya
             ->orderBy('sort_order')
             ->get();
-        $karyawan = Karyawan::with('KontrakKerja')->find($id);
+        $karyawan = Karyawan::with('KontrakKerja')
+            ->with([
+                'karyawanKesehatan' => function ($query) {
+                    $query->orderBy('id_kesehatan', 'ASC');
+                },
+            ])
+            ->with([
+                'karyawanKesehatanPengobatan' => function ($query) {
+                    $query;
+                },
+            ])
+            ->with([
+                'karyawanKesehatanRS' => function ($query) {
+                    $query;
+                },
+            ])
+            ->with([
+                'karyawanKesehatanKecelakaan' => function ($query) {
+                    $query;
+                },
+            ])
+            ->find($id);
         if ($karyawan == NULL) {
             return redirect()->back()->with('error', 'Karyawan Tidak Ada', 1500);
         } else {

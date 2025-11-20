@@ -41,6 +41,7 @@ use App\Http\Controllers\FingerController;
 use App\Http\Controllers\HoldingController;
 use App\Http\Controllers\InterviewController;
 use App\Http\Controllers\IzinController;
+use App\Http\Controllers\KaryawanKesehatanController;
 use App\Http\Controllers\KaryawanRiwayatController;
 use App\Http\Controllers\MappingShiftController;
 use App\Http\Controllers\MenuController;
@@ -281,6 +282,30 @@ Route::middleware('admin')->group(function () {
     Route::post('/karyawan/delete_riwayat/{id}', [karyawanRiwayatController::class, 'delete_riwayat']);
     Route::get('/karyawan/button_riwayat/{id?}', [karyawanRiwayatController::class, 'button_riwayat'])->name('button_riwayat');
 
+    // kesehatan
+    Route::get('/cpanel/cv/kesehatan/kesehatan_get/{id}', [KaryawanKesehatanController::class, 'kesehatan_get'])->name('kesehatan_get');
+    Route::post('/cpanel/cv/kesehatan/kesehatan_post', [KaryawanKesehatanController::class, 'kesehatan_post'])->name('kesehatan_post');
+
+    Route::post('/cpanel/cv/kesehatan/pengobatan_post', [KaryawanKesehatanController::class, 'pengobatan_post'])->name('pengobatan_post');
+    Route::post('/cpanel/cv/kesehatan/pengobatan_delete', [KaryawanKesehatanController::class, 'pengobatan_delete'])->name('pengobatan_delete');
+    Route::post('/cpanel/cv/kesehatan/pengobatan_reset', [KaryawanKesehatanController::class, 'pengobatan_reset'])->name('pengobatan_reset');
+    Route::get('/cpanel/cv/kesehatan/dt_pengobatan/{id}', [KaryawanKesehatanController::class, 'dt_pengobatan'])->name('dt_pengobatan');
+    Route::get('/cpanel/cv/kesehatan/pengobatan_count/{id}', [KaryawanKesehatanController::class, 'pengobatan_count'])->name('pengobatan_count');
+
+    Route::post('/cpanel/cv/kesehatan/rumah_sakit_post', [KaryawanKesehatanController::class, 'rumah_sakit_post'])->name('rumah_sakit_post');
+    Route::post('/cpanel/cv/kesehatan/rumah_sakit_delete', [KaryawanKesehatanController::class, 'rumah_sakit_delete'])->name('rumah_sakit_delete');
+    Route::post('/cpanel/cv/kesehatan/rumah_sakit_reset', [KaryawanKesehatanController::class, 'rumah_sakit_reset'])->name('rumah_sakit_reset');
+    Route::get('/cpanel/cv/kesehatan/dt_rumah_sakit/{id}', [KaryawanKesehatanController::class, 'dt_rumah_sakit'])->name('dt_rumah_sakit');
+    Route::get('/cpanel/cv/kesehatan/rumah_sakit_count/{id}', [KaryawanKesehatanController::class, 'rumah_sakit_count'])->name('rumah_sakit_count');
+
+
+    Route::post('/cpanel/cv/kesehatan/kecelakaan_post', [KaryawanKesehatanController::class, 'kecelakaan_post'])->name('kecelakaan_post');
+    Route::post('/cpanel/cv/kesehatan/kecelakaan_delete', [KaryawanKesehatanController::class, 'kecelakaan_delete'])->name('kecelakaan_delete');
+    Route::post('/cpanel/cv/kesehatan/kecelakaan_reset', [KaryawanKesehatanController::class, 'kecelakaan_reset'])->name('kecelakaan_reset');
+    Route::get('/cpanel/cv/kesehatan/rumah_sakit_count', [KaryawanKesehatanController::class, 'rumah_sakit_count'])->name('rumah_sakit_count');
+    Route::get('/cpanel/cv/kesehatan/dt_kecelakaan/{id}', [KaryawanKesehatanController::class, 'dt_kecelakaan'])->name('dt_kecelakaan');
+    Route::get('/cpanel/cv/kesehatan/kecelakaan_count/{id}', [KaryawanKesehatanController::class, 'kecelakaan_count'])->name('kecelakaan_count');
+    // kesehatan end
 
     // KEAHLIAN KARYAWAN
     Route::get('/karyawan/keahlian/{id}', [karyawanController::class, 'keahlian_datatable']);

@@ -2453,7 +2453,610 @@
                                         </div>
                                     </div>
                                     <div class="tab-pane fade" id="nav_kesehatan" role="tabpanel">
-                                        mmmmm
+                                        <div class="p-3">
+                                            <div class="row">
+                                                <div class="col-lg p-2">
+                                                    <label class="text-muted" for="">Apakah anda
+                                                        perokok?</label>
+                                                    <select class="form-select" name="perokok" id="perokok_add">
+                                                        <option value="2"
+                                                            {{ '2' == old('2', $karyawan->karyawanKesehatan->perokok) ? 'selected' : '' }}>
+                                                            Tidak</option>
+                                                        <option value="1"
+                                                            {{ '1' == old('1', $karyawan->karyawanKesehatan->perokok) ? 'selected' : '' }}>
+                                                            Ya</option>
+                                                    </select>
+                                                    <input type="hidden" value="{{ $karyawan->id }}"
+                                                        id="id_user_kesehatan_add" name="id_karyawan">
+                                                </div>
+                                                <div class="col-lg p-2">
+                                                    <label class="text-muted" for="">Apakah Anda
+                                                        mengonsumsi
+                                                        alkohol?</label>
+                                                    <select class="form-select" name="alkohol" id="alkohol_add">
+                                                        <option value="2"
+                                                            {{ '2' == old('2', $karyawan->karyawanKesehatan->alkohol) ? 'selected' : '' }}>
+                                                            Tidak</option>
+                                                        <option value="1"
+                                                            {{ '1' == old('1', $karyawan->karyawanKesehatan->alkohol) ? 'selected' : '' }}>
+                                                            Ya</option>
+                                                    </select>
+                                                </div>
+                                                <div class="col-lg p-2">
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-lg p-2">
+                                                    <label class="text-muted" for="">Apakah Anda memiliki
+                                                        alergi?</label>
+                                                    <select class="form-select" name="alergi" id="alergi_add">
+                                                        <option value="2"
+                                                            {{ '2' == old('2', $karyawan->karyawanKesehatan->alergi) ? 'selected' : '' }}>
+                                                            Tidak</option>
+                                                        <option value="1"
+                                                            {{ '1' == old('1', $karyawan->karyawanKesehatan->alergi) ? 'selected' : '' }}>
+                                                            Ya</option>
+                                                    </select>
+                                                </div>
+                                                <div class="col-lg p-2" id="">
+                                                    <div id="sebutkan_alergi">
+                                                        <label class="text-muted" for="">Jika Ya,
+                                                            sebutkan:</label>
+                                                        <input type="text" name="sebutkan_alergi"
+                                                            id="sebutkan_alergi_add" value=""
+                                                            class="form-control"
+                                                            placeholder="Contoh :  alergi kulit, alergi debu, alergi obat">
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg p-2">
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-lg p-2">
+                                                    <label class="text-muted" for="">Apakah anda memiliki
+                                                        Phobia ?</label>
+                                                    <select class="form-select" name="phobia" id="phobia_add">
+                                                        <option value="2"
+                                                            {{ '2' == old('2', $karyawan->karyawanKesehatan->phobia) ? 'selected' : '' }}>
+                                                            Tidak</option>
+                                                        <option value="1"
+                                                            {{ '1' == old('1', $karyawan->karyawanKesehatan->phobia) ? 'selected' : '' }}>
+                                                            Ya</option>
+                                                    </select>
+                                                </div>
+                                                <div class="col-lg p-2">
+                                                    <div id="sebutkan_phobia">
+                                                        <label class="text-muted" for="">Jika Ya,
+                                                            sebutkan:</label>
+                                                        <input type="text" name="sebutkan_phobia"
+                                                            id="sebutkan_phobia_add"
+                                                            placeholder="Contoh : ketinggian, laba-laba, petir"
+                                                            class="form-control">
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg p-2">
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-lg p-2">
+                                                    <label class="text-muted" for="">Apakah anda memiliki
+                                                        Keterbatasan Fisik ?</label>
+                                                    <select class="form-select" name="keterbatasan_fisik"
+                                                        id="keterbatasan_fisik_add">
+                                                        <option value="2"
+                                                            {{ '2' == old('2', $karyawan->karyawanKesehatan->keterbatasan_fisik) ? 'selected' : '' }}>
+                                                            Tidak</option>
+                                                        <option value="1"
+                                                            {{ '1' == old('1', $karyawan->karyawanKesehatan->keterbatasan_fisik) ? 'selected' : '' }}>
+                                                            Ya</option>
+                                                    </select>
+                                                </div>
+                                                <div class="col-lg p-2">
+                                                    <div id="sebutkan_keterbatasan_fisik">
+                                                        <label class="text-muted" for="">Jika Ya,
+                                                            sebutkan:</label>
+                                                        <input type="text" name="sebutkan_keterbatasan_fisik"
+                                                            id="sebutkan_keterbatasan_fisik_add" value=""
+                                                            placeholder="Contoh : kehilangan anggota tubuh (amputasi), cerebral palsy"
+                                                            class="form-control">
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg p-2">
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-lg p-2">
+                                                    <label class="text-muted" for="">Apakah Anda sedang
+                                                        dalam
+                                                        pengobatan rutin?</label>
+                                                    <select class="form-select" name="pengobatan_rutin"
+                                                        id="pengobatan_rutin_add">
+                                                        <option value="2"
+                                                            {{ '2' == old('2', $karyawan->karyawanKesehatan->pengobatan_rutin) ? 'selected' : '' }}>
+                                                            Tidak</option>
+                                                        <option value="1"
+                                                            {{ '1' == old('1', $karyawan->karyawanKesehatan->pengobatan_rutin) ? 'selected' : '' }}>
+                                                            Ya</option>
+                                                    </select>
+                                                </div>
+                                                <div class="col-lg p-2">
+                                                </div>
+                                                <div class="col-lg p-2">
+                                                </div>
+                                            </div>
+                                            <div id="sebutkan_pengobatan_rutin">
+                                                <div class="row">
+                                                    <div class="col-lg p-2">
+                                                        <label class="text-muted" for="">Sebutkan
+                                                            Jenis
+                                                            Obat</label>
+                                                        <input type="hidden" value="{{ $karyawan->id }}"
+                                                            id="id_user_pengobatan_add" name="id_karyawan">
+                                                        <input type="text" name="jenis_obat" id="jenis_obat_add"
+                                                            value="" class="form-control">
+                                                    </div>
+                                                    <div class="col-lg p-2">
+                                                        <label class="text-muted" for="">Sebutkan
+                                                            Alasan</label>
+                                                        <input type="text" name="alasan_obat" id="alasan_obat_add"
+                                                            value="" class="form-control">
+                                                    </div>
+                                                    <div class="col-lg p-2">
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-lg p-2">
+                                                        <button class="btn btn-primary" type="button"
+                                                            id="tambah_pengobatan">Tambah
+                                                            Pengobatan</button>
+                                                    </div>
+                                                    <div class="col-lg p-2">
+                                                        <div class="col-lg p-2">
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-lg p-2">
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="table py-2">
+                                                        <table id="tabel_pengobatan"
+                                                            class="text-left text-nowrap display" style="width: 100%;">
+                                                            <thead class="">
+                                                                <tr>
+                                                                    <th>Jenis Obat</th>
+                                                                    <th>Alasan</th>
+                                                                    <th>Hapus</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody class="table-border-bottom-0">
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row mt-2">
+                                                Apakah Anda pernah atau sedang menderita penyakit kronis berikut
+                                                ini?
+                                                (Centang jika pernah/sedang)
+                                            </div>
+                                            <div class="p-3">
+                                                <div class="row">
+                                                    <div class="col-lg p-2">
+                                                        <input class="form-check-input border" type="checkbox"
+                                                            name="asma" id="asma_add"
+                                                            {{ 'on' == old('on', $karyawan->karyawanKesehatan->asma) ? 'checked' : '' }}>
+                                                        <label class="form-check-label text-dark"
+                                                            for="flexCheckDefault">
+                                                            Asma
+                                                        </label>
+                                                    </div>
+                                                    <div class="col-lg p-2">
+                                                        <input class="form-check-input border" type="checkbox"
+                                                            name="diabetes" id="diabetes_add"
+                                                            {{ 'on' == old('on', $karyawan->karyawanKesehatan->diabetes) ? 'checked' : '' }}>
+                                                        <label class="form-check-label text-dark"
+                                                            for="flexCheckDefault">
+                                                            Diabetes
+                                                        </label>
+                                                    </div>
+                                                    <div class="col-lg p-2">
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-lg p-2">
+                                                        <input class="form-check-input border" type="checkbox"
+                                                            name="hipertensi" id="hipertensi_add"
+                                                            {{ 'on' == old('on', $karyawan->karyawanKesehatan->hipertensi) ? 'checked' : '' }}>
+                                                        <label class="form-check-label text-dark"
+                                                            for="flexCheckDefault">
+                                                            Hipertensi (Tekanan Darah Tinggi)
+                                                        </label>
+                                                    </div>
+                                                    <div class="col-lg p-2">
+                                                        <input class="form-check-input border" type="checkbox"
+                                                            name="jantung" id="jantung_add"
+                                                            {{ 'on' == old('on', $karyawan->karyawanKesehatan->jantung) ? 'checked' : '' }}>
+                                                        <label class="form-check-label text-dark"
+                                                            for="flexCheckDefault">
+                                                            Jantung
+                                                        </label>
+                                                    </div>
+                                                    <div class="col-lg p-2">
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-lg p-2">
+                                                        <input class="form-check-input border" type="checkbox"
+                                                            name="tbc" id="tbc_add"
+                                                            {{ 'on' == old('on', $karyawan->karyawanKesehatan->tbc) ? 'checked' : '' }}>
+                                                        <label class="form-check-label text-dark"
+                                                            for="flexCheckDefault">
+                                                            TBC
+                                                        </label>
+                                                    </div>
+                                                    <div class="col-lg p-2">
+                                                        <input class="form-check-input border" type="checkbox"
+                                                            name="hepatitis" id="hepatitis_add"
+                                                            {{ 'on' == old('on', $karyawan->karyawanKesehatan->hepatitis) ? 'checked' : '' }}>
+                                                        <label class="form-check-label text-dark"
+                                                            for="flexCheckDefault">
+                                                            Hepatitis
+                                                        </label>
+                                                    </div>
+
+                                                    <div class="col-lg p-2">
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-lg p-2">
+                                                        <input class="form-check-input border" type="checkbox"
+                                                            name="epilepsi" id="epilepsi_add"
+                                                            {{ 'on' == old('on', $karyawan->karyawanKesehatan->epilepsi) ? 'checked' : '' }}>
+                                                        <label class="form-check-label text-dark"
+                                                            for="flexCheckDefault">
+                                                            Epilepsi
+                                                        </label>
+                                                    </div>
+                                                    <div class="col-lg p-2">
+                                                    </div>
+                                                    <div class="col-lg p-2">
+                                                    </div>
+                                                </div>
+
+                                                <div class="row">
+                                                    <div class="col-lg p-2">
+                                                        <input class="form-check-input border" type="checkbox"
+                                                            name="gangguan_mental" id="gangguan_mental_add"
+                                                            {{ 'on' == old('on', $karyawan->karyawanKesehatan->gangguan_mental) ? 'checked' : '' }}>
+                                                        <label class="form-check-label text-dark"
+                                                            for="flexCheckDefault">
+                                                            Gangguan Mental (depresi, bipolar, dll)
+                                                        </label>
+                                                    </div>
+                                                    <div class="col-lg p-2">
+                                                        <input class="form-check-input border" type="checkbox"
+                                                            name="gangguan_pengelihatan" id="gangguan_pengelihatan_add"
+                                                            {{ 'on' == old('on', $karyawan->karyawanKesehatan->gangguan_pengelihatan) ? 'checked' : '' }}>
+                                                        <label class="form-check-label text-dark"
+                                                            for="flexCheckDefault">
+                                                            Gangguan penglihatan/pendengaran
+                                                        </label>
+                                                    </div>
+                                                    <div class="col-lg p-2">
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-lg p-2">
+                                                        <input class="form-check-input border" type="checkbox"
+                                                            name="gangguan_lainnya" id="gangguan_lainnya_add"
+                                                            {{ 'on' == old('on', $karyawan->karyawanKesehatan->gangguan_lainnya) ? 'checked' : '' }}>
+                                                        <label class="form-check-label text-dark"
+                                                            for="flexCheckDefault">
+                                                            Lainnya
+                                                        </label>
+                                                    </div>
+                                                    <div class="col-lg p-2">
+                                                    </div>
+                                                    <div class="col-lg p-2">
+                                                    </div>
+                                                </div>
+                                                <div id="gangguan_sebutkan">
+                                                    <div class="row">
+                                                        <div class="col-lg p-2">
+                                                            <label class="text-muted" for="">Sebutkan</label>
+                                                            <input type="text" name="sebutkan_gangguan"
+                                                                id="sebutkan_gangguan_add" value=""
+                                                                class="form-control">
+                                                        </div>
+                                                        <div class="col-lg p-2">
+
+                                                        </div>
+                                                        <div class="col-lg p-2">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="row">
+                                                <div class="col-lg p-2">
+                                                    <label class="text-muted" for="">Pernahkah Anda
+                                                        dirawat di
+                                                        rumah sakit?</label>
+                                                    <select class="form-select" name="pernah_dirawat_rs"
+                                                        id="pernah_dirawat_rs_add">
+                                                        <option value="2"
+                                                            {{ '2' == old('2', $karyawan->karyawanKesehatan->pernah_dirawat_rs) ? 'selected' : '' }}>
+                                                            Tidak</option>
+                                                        <option value="1"
+                                                            {{ '1' == old('1', $karyawan->karyawanKesehatan->pernah_dirawat_rs) ? 'selected' : '' }}>
+                                                            Ya</option>
+                                                    </select>
+                                                </div>
+                                                <div class="col-lg p-2">
+                                                </div>
+                                                <div class="col-lg p-2">
+                                                </div>
+                                            </div>
+                                            <div id="pernah_dirawat_sebutkan">
+                                                <div class="row">
+                                                    <div class="col-lg p-2">
+                                                        <label class="text-muted" for="">Tahun</label>
+                                                        <input type="hidden" value="{{ $karyawan->id }}"
+                                                            id="id_user_rs_add" name="id_karyawan">
+                                                        <input type="text" name="tahun_rs" id="tahun_rs_add"
+                                                            value="" class="form-control" maxlength="4">
+                                                    </div>
+                                                    <div class="col-lg p-2">
+                                                        <label class="text-muted" for="">Penyebab</label>
+                                                        <input type="text" name="penyebab_rs" id="penyebab_rs_add"
+                                                            value="" class="form-control">
+                                                    </div>
+                                                    <div class="col-lg p-2">
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-lg p-2">
+                                                        <button class="btn btn-primary" type="button"
+                                                            id="tambah_rs">Tambah</button>
+                                                    </div>
+                                                    <div class="col-lg p-2">
+                                                    </div>
+                                                    <div class="col-lg p-2">
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="table py-2">
+                                                        <table id="tabel_rs" class="text-left text-nowrap display"
+                                                            style="width: 100%;">
+                                                            <thead class="">
+                                                                <tr>
+                                                                    <th>Tahun</th>
+                                                                    <th>Penyebab</th>
+                                                                    <th>Hapus</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody class="table-border-bottom-0">
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-lg p-2">
+                                                    <label class="text-muted" for="">Pernahkah Anda
+                                                        mengalami
+                                                        kecelakaan serius?
+                                                    </label>
+                                                    <select class="form-select" name="kecelakaan_serius"
+                                                        id="kecelakaan_serius_add">
+                                                        <option value="2"
+                                                            {{ '2' == old('2', $karyawan->karyawanKesehatan->kecelakaan_serius) ? 'selected' : '' }}>
+                                                            Tidak</option>
+                                                        <option value="1"
+                                                            {{ '1' == old('1', $karyawan->karyawanKesehatan->kecelakaan_serius) ? 'selected' : '' }}>
+                                                            Ya</option>
+                                                    </select>
+                                                </div>
+                                                <div class="col-lg p-2">
+                                                </div>
+                                                <div class="col-lg p-2">
+                                                </div>
+                                            </div>
+                                            <div id="kecelakaan_serius_sebutkan">
+                                                <div class="row">
+                                                    <div class="col-lg p-2">
+                                                        <label class="text-muted" for="">Tahun</label>
+                                                        <input type="hidden" value="{{ $karyawan->id }}"
+                                                            id="id_user_kecelakaan_add" name="id_karyawan">
+                                                        <input type="text" name="tahun_kecelakaan"
+                                                            id="tahun_kecelakaan_add" value=""
+                                                            class="form-control" maxlength="4">
+                                                    </div>
+                                                    <div class="col-lg p-2">
+                                                        <label class="text-muted" for="">Penyebab</label>
+                                                        <input type="text" name="penyebab_kecelakaan"
+                                                            id="penyebab_kecelakaan_add" value=""
+                                                            class="form-control">
+                                                    </div>
+                                                    <div class="col-lg p-2">
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-lg p-2">
+                                                        <button class="btn btn-primary" type="button"
+                                                            id="tambah_kecelakaan">Tambah</button>
+                                                        <div class="col-lg p-2">
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-lg p-2">
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="table py-2">
+                                                        <table id="tabel_kecelakaan"
+                                                            class="text-left text-nowrap display" style="width: 100%;">
+                                                            <thead class="">
+                                                                <tr>
+                                                                    <th>Tahun</th>
+                                                                    <th>Penyebab</th>
+                                                                    <th>Hapus</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody class="table-border-bottom-0">
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-lg p-2">
+                                                    <label class="text-muted" for="">Apakah Anda mampu
+                                                        bekerja
+                                                        dalam shift malam/lembur?</label>
+                                                    <select class="form-select" name="mampu_shift"
+                                                        id="mampu_shift_add">
+                                                        <option value="2"
+                                                            {{ '2' == old('2', $karyawan->karyawanKesehatan->mampu_shift) ? 'selected' : '' }}>
+                                                            Tidak</option>
+                                                        <option value="1"
+                                                            {{ '1' == old('1', $karyawan->karyawanKesehatan->mampu_shift) ? 'selected' : '' }}>
+                                                            Ya</option>
+                                                    </select>
+                                                </div>
+                                                <div class="col-lg p-2">
+                                                </div>
+                                                <div class="col-lg p-2">
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-lg p-2">
+                                                    <label class="text-muted" for="">Apakah Anda pernah
+                                                        menjalani pemeriksaan kesehatan kerja sebelumnya?</label>
+                                                    <select class="form-select" name="pemeriksaan_kerja_sebelumnya"
+                                                        id="pemeriksaan_kerja_sebelumnya_add">
+                                                        <option value="2"
+                                                            {{ '2' == old('2', $karyawan->karyawanKesehatan->pemeriksaan_kerja_sebelumnya) ? 'selected' : '' }}>
+                                                            Tidak</option>
+                                                        <option value="1"
+                                                            {{ '1' == old('1', $karyawan->karyawanKesehatan->pemeriksaan_kerja_sebelumnya) ? 'selected' : '' }}>
+                                                            Ya</option>
+                                                    </select>
+                                                </div>
+                                                <div class="col-lg p-2">
+                                                    <div id="pemeriksaan_sebelumnya_hasil">
+                                                        <label class="text-muted" for="">Jika Ya, apakah
+                                                            dinyatakan layak bekerja? </label>
+                                                        <select class="form-select" name="pemeriksaan_sebelumnya_hasil"
+                                                            id="pemeriksaan_sebelumnya_hasil_add">
+                                                            <option value="2"
+                                                                {{ '2' == old('2', $karyawan->karyawanKesehatan->pemeriksaan_sebelumnya_hasil) ? 'selected' : '' }}>
+                                                                Tidak</option>
+                                                            <option value="1"
+                                                                {{ '1' == old('1', $karyawan->karyawanKesehatan->pemeriksaan_sebelumnya_hasil) ? 'selected' : '' }}>
+                                                                Ya</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg p-2">
+                                                </div>
+                                            </div>
+                                            <div class="row mt-2">
+
+                                                <div class="row">
+                                                    Riwayat Vaksinasi (Opsional)
+                                                </div>
+                                            </div>
+                                            <div class="row p-3">
+                                                <div class="row">
+                                                    <div class="col-lg p-2">
+                                                        <input class="form-check-input border" type="checkbox"
+                                                            name="covid" id="covid_add"
+                                                            {{ 'on' == old('on', $karyawan->karyawanKesehatan->covid) ? 'checked' : '' }}>
+                                                        <label class="form-check-label text-dark"
+                                                            for="flexCheckDefault">
+                                                            COVID-19 (dosis lengkap)
+                                                        </label>
+                                                    </div>
+                                                    <div class="col-lg p-2">
+                                                        <input class="form-check-input border" type="checkbox"
+                                                            name="hepatitis" id="hepatitis_add"
+                                                            {{ 'on' == old('on', $karyawan->karyawanKesehatan->hepatitis) ? 'checked' : '' }}>
+                                                        <label class="form-check-label text-dark"
+                                                            for="flexCheckDefault">
+                                                            Hepatitis B
+                                                        </label>
+                                                    </div>
+                                                    <div class="col-lg p-2">
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-lg p-2">
+                                                        <input class="form-check-input border" type="checkbox"
+                                                            name="tetanus" id="tetanus_add"
+                                                            {{ 'on' == old('on', $karyawan->karyawanKesehatan->tetanus) ? 'checked' : '' }}>
+                                                        <label class="form-check-label text-dark"
+                                                            for="flexCheckDefault">
+                                                            Tetanus
+                                                        </label>
+                                                    </div>
+                                                    <div class="col-lg p-2">
+                                                    </div>
+                                                    <div class="col-lg p-2">
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-lg p-2">
+                                                        <input class="form-check-input border" type="checkbox"
+                                                            name="vaksin_lainnya" id="vaksin_lainnya_add"
+                                                            {{ 'on' == old('on', $karyawan->karyawanKesehatan->vaksin_lainnya) ? 'checked' : '' }}>
+                                                        <label class="form-check-label text-dark"
+                                                            for="flexCheckDefault">
+                                                            Lainnya
+                                                        </label>
+                                                    </div>
+                                                    <div class="col-lg p-2">
+                                                    </div>
+                                                    <div class="col-lg p-2">
+                                                    </div>
+                                                </div>
+                                                <div id="sebutkan_vaksin_lainnya">
+                                                    <div class="row">
+                                                        <div class="col-lg p-2">
+                                                            <label class="text-muted" for="">Sebutkan</label>
+                                                            <input type="text" name="sebutkan_vaksin_lainnya"
+                                                                id="sebutkan_vaksin_lainnya_add" class="form-control">
+                                                        </div>
+                                                        <div class="col-lg p-2">
+                                                        </div>
+                                                        <div class="col-lg p-2">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                "Saya menyatakan bahwa semua informasi yang saya berikan adalah
+                                                benar
+                                                dan dapat dipertanggungjawabkan. Saya bersedia menjalani tes
+                                                kesehatan
+                                                jika dibutuhkan oleh perusahaan."
+                                            </div>
+                                            <div class="row px-3">
+                                                <div class="col-lg p-2">
+                                                    <input class="form-check-input border" type="checkbox"
+                                                        name="persetujuan_kesehatan" id="persetujuan_kesehatan_add"
+                                                        {{ 'on' == old('on', $karyawan->karyawanKesehatan->persetujuan_kesehatan) ? 'checked' : '' }}>
+                                                    <label class="form-check-label text-dark" for="flexCheckDefault">
+                                                        Setuju
+                                                    </label>
+                                                </div>
+                                            </div>
+                                            <div class="d-flex justify-content-center">
+                                                <button class="btn btn-primary" type="button"
+                                                    id="btn_update_kesehatan">Simpan
+                                                    Data</button>
+                                            </div>
+
+                                        </div>
                                     </div>
                                     <div class="mt-4">
                                         <button type="submit" class="btn btn-primary me-2">Simpan</button>
