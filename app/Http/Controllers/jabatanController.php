@@ -10,6 +10,7 @@ use App\Models\Jabatan;
 use App\Models\Karyawan;
 use App\Models\LevelJabatan;
 use App\Models\Menu;
+use App\Models\RoleUsers;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
@@ -22,17 +23,27 @@ class jabatanController extends Controller
     public function index($holding)
     {
         $holding = Holding::where('holding_code', $holding)->first();
-        $roleId = Auth::user();
-        $menus = Menu::whereIn('id', function ($query) use ($roleId) {
-            $query->select('menu_id')
-                ->from('role_menus')
-                ->where('role_id', $roleId->role);
-        })
-            ->whereNull('parent_id') // menu utama
-            ->with('children')
-            ->where('kategori', 'web')      // load submenunya
-            ->orderBy('sort_order')
-            ->get();
+        $get_role = RoleUsers::where('role_user_id', Auth::user()->id)->pluck('role_menu_id')->toArray();
+        // dd($get_role);
+        if (count($get_role) == 0) {
+            $roleId = null;
+        } else {
+            $roleId = $get_role;
+        }
+        if ($roleId == null) {
+            $menus = collect();
+        } else {
+            $menus = Menu::whereIn('id', function ($query) use ($roleId) {
+                $query->select('menu_id')
+                    ->from('role_menus')
+                    ->whereIn('role_id', $roleId);
+            })
+                ->whereNull('parent_id') // menu utama
+                ->with('children')
+                ->where('kategori', 'web')      // load submenunya
+                ->orderBy('sort_order')
+                ->get();
+        }
         $data_divisi = Divisi::with(['Departemen' => function ($query) {
             $query->orderBy('nama_departemen', 'ASC');
         }])->with(['Jabatan' => function ($query) use ($holding) {
@@ -103,10 +114,32 @@ class jabatanController extends Controller
             ->where('bagians.holding', $holding->id)
             ->select('bagians.*', 'divisis.nama_divisi')
             ->get();
+        $get_role = RoleUsers::where('role_user_id', Auth::user()->id)->pluck('role_menu_id')->toArray();
+        // dd($get_role);
+        if (count($get_role) == 0) {
+            $roleId = null;
+        } else {
+            $roleId = $get_role;
+        }
+        if ($roleId == null) {
+            $menus = collect();
+        } else {
+            $menus = Menu::whereIn('id', function ($query) use ($roleId) {
+                $query->select('menu_id')
+                    ->from('role_menus')
+                    ->whereIn('role_id', $roleId);
+            })
+                ->whereNull('parent_id') // menu utama
+                ->with('children')
+                ->where('kategori', 'web')      // load submenunya
+                ->orderBy('sort_order')
+                ->get();
+        }
         $level = LevelJabatan::orderBy('level_jabatan', 'ASC')->get();
         return view('admin.jabatan.detail_jabatan', [
             'title' => 'Master Jabatan',
             'holding' => $holding,
+            'menus' => $menus,
             'data_divisi' => $data_divisi,
             'divisi' => $divisi,
             'data_jabatan' => $data_jabatan,
@@ -533,9 +566,31 @@ class jabatanController extends Controller
     public function create()
     {
         $holding = Holding::where('holding_code', $holding)->first();
+        $get_role = RoleUsers::where('role_user_id', Auth::user()->id)->pluck('role_menu_id')->toArray();
+        // dd($get_role);
+        if (count($get_role) == 0) {
+            $roleId = null;
+        } else {
+            $roleId = $get_role;
+        }
+        if ($roleId == null) {
+            $menus = collect();
+        } else {
+            $menus = Menu::whereIn('id', function ($query) use ($roleId) {
+                $query->select('menu_id')
+                    ->from('role_menus')
+                    ->whereIn('role_id', $roleId);
+            })
+                ->whereNull('parent_id') // menu utama
+                ->with('children')
+                ->where('kategori', 'web')      // load submenunya
+                ->orderBy('sort_order')
+                ->get();
+        }
         return view('jabatan.create', [
             'title' => 'Tambah Data Jabatan',
             'holding' => $holding,
+            'menus' => $menus,
             'get_bagian' => Bagian::get(),
             'get_level' => LevelJabatan::orderBy('level_jabatan', 'ASC')->get(),
         ]);
@@ -568,10 +623,32 @@ class jabatanController extends Controller
     public function edit($id, $holding)
     {
         $holding = Holding::where('holding_code', $holding)->first();
+        $get_role = RoleUsers::where('role_user_id', Auth::user()->id)->pluck('role_menu_id')->toArray();
+        // dd($get_role);
+        if (count($get_role) == 0) {
+            $roleId = null;
+        } else {
+            $roleId = $get_role;
+        }
+        if ($roleId == null) {
+            $menus = collect();
+        } else {
+            $menus = Menu::whereIn('id', function ($query) use ($roleId) {
+                $query->select('menu_id')
+                    ->from('role_menus')
+                    ->whereIn('role_id', $roleId);
+            })
+                ->whereNull('parent_id') // menu utama
+                ->with('children')
+                ->where('kategori', 'web')      // load submenunya
+                ->orderBy('sort_order')
+                ->get();
+        }
         return view('jabatan.edit', [
             'title' => 'Edit Data Jabatan',
             'get_bagian' => Bagian::get(),
             'holding' => $holding,
+            'menus' => $menus,
             'get_level' => LevelJabatan::get(),
             'data_jabatan' => Jabatan::with('Bagian')->with('LevelJabatan')->findOrFail($id)
         ]);

@@ -6,6 +6,8 @@ use App\Models\Lokasi;
 use Illuminate\Http\Request;
 use App\Models\ActivityLog;
 use App\Models\Holding;
+use App\Models\Menu;
+use App\Models\RoleUsers;
 use App\Models\Site;
 use App\Models\Titik;
 use Illuminate\Routing\Controller;
@@ -18,8 +20,30 @@ class LokasiController extends Controller
     public function index($holding)
     {
         $holding = Holding::where('holding_code', $holding)->first();
+        $get_role = RoleUsers::where('role_user_id', Auth::user()->id)->pluck('role_menu_id')->toArray();
+        // dd($get_role);
+        if (count($get_role) == 0) {
+            $roleId = null;
+        } else {
+            $roleId = $get_role;
+        }
+        if ($roleId == null) {
+            $menus = collect();
+        } else {
+            $menus = Menu::whereIn('id', function ($query) use ($roleId) {
+                $query->select('menu_id')
+                    ->from('role_menus')
+                    ->whereIn('role_id', $roleId);
+            })
+                ->whereNull('parent_id') // menu utama
+                ->with('children')
+                ->where('kategori', 'web')      // load submenunya
+                ->orderBy('sort_order')
+                ->get();
+        }
         return view('admin.lokasi.index', [
             'title' => 'Setting Lokasi Kantor',
+            'menus' => $menus,
             'holding' => $holding,
             'data_site' => Site::where('site_holding_category', $holding->id)->get(),
             'lokasi' => Lokasi::all()

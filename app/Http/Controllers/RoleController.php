@@ -5,8 +5,11 @@ namespace App\Http\Controllers;
 use App\Models\Holding;
 use App\Models\Menu;
 use App\Models\Role;
+use App\Models\RoleMenu;
+use App\Models\RoleUsers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
 use ParagonIE\Sodium\Core\Curve25519\H;
 
 class RoleController extends Controller
@@ -19,18 +22,27 @@ class RoleController extends Controller
     public function index($holding)
     {
         $holding = Holding::where('holding_code', $holding)->first();
-        $roleId = Auth::user();
-        // dd($roleId);
-        $menus = Menu::whereIn('id', function ($query) use ($roleId) {
-            $query->select('menu_id')
-                ->from('role_menus')
-                ->where('role_id', $roleId->role);
-        })
-            ->whereNull('parent_id') // menu utama
-            ->with('children')
-            ->where('kategori', 'web')      // load submenunya
-            ->orderBy('sort_order')
-            ->get();
+        $get_role = RoleUsers::where('role_user_id', Auth::user()->id)->pluck('role_menu_id')->toArray();
+        // dd($get_role);
+        if (count($get_role) == 0) {
+            $roleId = null;
+        } else {
+            $roleId = $get_role;
+        }
+        if ($roleId == null) {
+            $menus = collect();
+        } else {
+            $menus = Menu::whereIn('id', function ($query) use ($roleId) {
+                $query->select('menu_id')
+                    ->from('role_menus')
+                    ->whereIn('role_id', $roleId);
+            })
+                ->whereNull('parent_id') // menu utama
+                ->with('children')
+                ->where('kategori', 'web')      // load submenunya
+                ->orderBy('sort_order')
+                ->get();
+        }
         return view('admin.role.index', [
             'title' => 'Role Management',
             'holding' => $holding,
@@ -76,14 +88,15 @@ class RoleController extends Controller
                     return '<ul>' . $menuList . '</ul>';
                 })
                 ->addColumn('action', function ($row) use ($holding) {
-                    $btn = '<a href="" class="btn btn-primary btn-sm"><i class="fas fa-edit"></i></a>';
+                    $btn = '<button  data-id="' . $row->id . '" data-role_name="' . $row->role_name . '" data-description="' . $row->role_description . '" class="btn_edit_role btn btn-warning btn-sm"><i class="mdi mdi-pencil"></i></button>';
+                    $btn = $btn . '<button id="btn_delete_role" data-id="' . $row->id . '"  class="btn btn-danger btn-sm"><i class="mdi mdi-trash-can"></i></button>';
                     return $btn;
                 })
                 ->rawColumns(['role_name', 'description', 'action', 'list_menu'])
                 ->make(true);
         }
     }
-    public function datatable_menu($holding)
+    public function datatable_menu($holding, Request $request)
     {
         $holding = Holding::where('holding_code', $holding)->first();
         $table = Menu::all();
@@ -105,8 +118,14 @@ class RoleController extends Controller
                     }
                     return $kategori;
                 })
-                ->addColumn('option', function ($row) use ($holding) {
-                    $btn = ' <div class="form-check mb-2"><input class="form-check-input" type="checkbox" id="menu_id" name="menu_id[]" value="' . $row->id . '"><label class="form-check-label" for="menu_id"> Buka Access</label></div>';
+                ->addColumn('option', function ($row) use ($request) {
+                    $role_menu = RoleMenu::where('role_id', $request->id)->where('menu_id', $row->id)->first();
+                    if ($role_menu != null) {
+                        $checked = 'checked';
+                    } else {
+                        $checked = '';
+                    }
+                    $btn = ' <div class="form-check mb-2"><input class="form-check-input" type="checkbox" ' . $checked . ' id="menu_id" name="menu_id[]" value="' . $row->id . '"><label class="form-check-label" for="menu_id"> Buka Access</label></div>';
                     return $btn;
                 })
                 ->rawColumns(['nama_menu', 'option', 'kategori'])
@@ -147,6 +166,42 @@ class RoleController extends Controller
         }
 
         return redirect()->back()->with('success', 'Role berhasil ditambahkan.');
+    }
+    public function role_save_update(Request $request)
+    {
+        // dd($request->all());
+        $validate = Validator::make($request->all(), [
+            'role_name_update' => 'required|string|max:255',
+            'role_description_update' => 'nullable|string|max:500',
+        ], [
+            'role_name_update.required' => 'Nama role harus diisi.',
+        ]);
+
+        if ($validate->fails()) {
+            return redirect()->back()->withErrors($validate)->withInput();
+        }
+        $delete = Role::where('id', $request->id_role)->delete();
+        $delete = RoleMenu::where('role_id', $request->id_role)->delete();
+        $role = Role::create([
+            'role_name' => $request->role_name_update,
+            'role_description' => $request->role_description_update,
+        ]);
+
+        if ($request->has('menu_id')) {
+            $menuData = [];
+            foreach ($request->menu_id as $menuId) {
+                $menuData[$menuId] = [
+                    'can_view' => in_array('can_view_' . $menuId, $request->all()) ? 1 : 0,
+                    'can_create' => in_array('can_create_' . $menuId, $request->all()) ? 1 : 0,
+                    'can_edit' => in_array('can_edit_' . $menuId, $request->all()) ? 1 : 0,
+                    'can_delete' => in_array('can_delete_' . $menuId, $request->all()) ? 1 : 0,
+                ];
+            }
+            // dd($menuData, $request->all());
+            $role->menus()->sync($menuData);
+        }
+
+        return redirect()->back()->with('success', 'Role berhasil Diubah.');
     }
 
     /**

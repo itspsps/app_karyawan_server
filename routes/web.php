@@ -635,6 +635,8 @@ Route::middleware('admin')->group(function () {
     // MASTER MENU
     Route::get('/menu/{holding}', [MenuController::class, 'index']);
     Route::post('/menu/save_all_change', [MenuController::class, 'save_all_change']);
+    Route::post('/menu/store/{holding}', [MenuController::class, 'store']);
+    Route::get('/menu/delete/{id}', [MenuController::class, 'delete']);
 
     // ROLE
     Route::get('/role/{holding}', [RoleController::class, 'index']);
@@ -642,6 +644,7 @@ Route::middleware('admin')->group(function () {
     Route::get('/menu-datatable/{holding}', [RoleController::class, 'datatable_menu']);
     Route::get('/role/add_role/{id}/{holding}', [RoleController::class, 'add_role']);
     Route::post('/role/role_save_add/{holding}', [RoleController::class, 'role_save_add']);
+    Route::post('/role/role_save_update/{holding}', [RoleController::class, 'role_save_update']);
 
 
     Route::get('/rekap-data/sp', [RekapDataController::class, 'index']);

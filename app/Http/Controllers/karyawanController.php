@@ -39,6 +39,7 @@ use Illuminate\Support\Str;
 use Laravolt\Indonesia\IndonesiaService;
 use App\Models\Provincies;
 use App\Models\Regencies;
+use App\Models\RoleUsers;
 use App\Models\Site;
 use App\Models\UserNonActive;
 use App\Models\Village;
@@ -67,18 +68,27 @@ class karyawanController extends Controller
             Alert::error('Error', 'Holding Tidak Ditemukan');
             return redirect()->route('dashboard/holding');
         }
-        $roleId = Auth::user();
-        // dd($roleId);
-        $menus = Menu::whereIn('id', function ($query) use ($roleId) {
-            $query->select('menu_id')
-                ->from('role_menus')
-                ->where('role_id', $roleId->role);
-        })
-            ->whereNull('parent_id') // menu utama
-            ->with('children')
-            ->where('kategori', 'web')      // load submenunya
-            ->orderBy('sort_order')
-            ->get();
+        $get_role = RoleUsers::where('role_user_id', Auth::user()->id)->pluck('role_menu_id')->toArray();
+        // dd($get_role);
+        if (count($get_role) == 0) {
+            $roleId = null;
+        } else {
+            $roleId = $get_role;
+        }
+        if ($roleId == null) {
+            $menus = collect();
+        } else {
+            $menus = Menu::whereIn('id', function ($query) use ($roleId) {
+                $query->select('menu_id')
+                    ->from('role_menus')
+                    ->whereIn('role_id', $roleId);
+            })
+                ->whereNull('parent_id') // menu utama
+                ->with('children')
+                ->where('kategori', 'web')      // load submenunya
+                ->orderBy('sort_order')
+                ->get();
+        }
         $departemen = Departemen::orderBy('nama_departemen', 'ASC')->where('holding', $getHolding->id)->get();
         $user = Karyawan::where('kontrak_kerja', $getHolding->id)->where('status_aktif', 'AKTIF')->get();
         $jabatan = Jabatan::orderBy('nama_jabatan', 'ASC')->where('holding', $getHolding->id)->get();
@@ -105,9 +115,31 @@ class karyawanController extends Controller
     {
 
         $holding = request()->segment(count(request()->segments()));
+        $get_role = RoleUsers::where('role_user_id', Auth::user()->id)->pluck('role_menu_id')->toArray();
+        // dd($get_role);
+        if (count($get_role) == 0) {
+            $roleId = null;
+        } else {
+            $roleId = $get_role;
+        }
+        if ($roleId == null) {
+            $menus = collect();
+        } else {
+            $menus = Menu::whereIn('id', function ($query) use ($roleId) {
+                $query->select('menu_id')
+                    ->from('role_menus')
+                    ->whereIn('role_id', $roleId);
+            })
+                ->whereNull('parent_id') // menu utama
+                ->with('children')
+                ->where('kategori', 'web')      // load submenunya
+                ->orderBy('sort_order')
+                ->get();
+        }
         return view('admin.karyawan.karyawan_non_aktif', [
             // return view('karyawan.index', [
             'title' => 'Karyawan',
+            'menus' => $menus,
             "data_departemen" => Departemen::orderBy('nama_departemen', 'ASC')->where('holding', $holding)->get(),
             'holding' => $holding,
             'data_user' => Karyawan::where('kontrak_kerja', $holding)->where('status_aktif', 'NON AKTIF')->get(),
@@ -123,11 +155,33 @@ class karyawanController extends Controller
     {
 
         $holding = request()->segment(count(request()->segments()));
+        $get_role = RoleUsers::where('role_user_id', Auth::user()->id)->pluck('role_menu_id')->toArray();
+        // dd($get_role);
+        if (count($get_role) == 0) {
+            $roleId = null;
+        } else {
+            $roleId = $get_role;
+        }
+        if ($roleId == null) {
+            $menus = collect();
+        } else {
+            $menus = Menu::whereIn('id', function ($query) use ($roleId) {
+                $query->select('menu_id')
+                    ->from('role_menus')
+                    ->whereIn('role_id', $roleId);
+            })
+                ->whereNull('parent_id') // menu utama
+                ->with('children')
+                ->where('kategori', 'web')      // load submenunya
+                ->orderBy('sort_order')
+                ->get();
+        }
         return view('admin.karyawan.karyawan_ingin_bergabung', [
             // return view('karyawan.index', [
             'title' => 'Karyawan',
             "data_departemen" => Departemen::orderBy('nama_departemen', 'ASC')->where('holding', $holding)->get(),
             'holding' => $holding,
+            'menus' => $menus,
             'data_user' => Karyawan::where('kontrak_kerja', $holding)->where('status_aktif', 'WAITING')->get(),
             "data_jabatan" => Jabatan::orderBy('nama_jabatan', 'ASC')->where('holding', $holding)->get(),
             "data_lokasi" => Lokasi::orderBy('lokasi_kantor', 'ASC')->get(),
@@ -337,11 +391,33 @@ class karyawanController extends Controller
         $date_30day = Carbon::now()->addDay('30');
         $date_now = Carbon::now()->addDay('-30');
         $date_now1 = Carbon::now();
+        $get_role = RoleUsers::where('role_user_id', Auth::user()->id)->pluck('role_menu_id')->toArray();
+        // dd($get_role);
+        if (count($get_role) == 0) {
+            $roleId = null;
+        } else {
+            $roleId = $get_role;
+        }
+        if ($roleId == null) {
+            $menus = collect();
+        } else {
+            $menus = Menu::whereIn('id', function ($query) use ($roleId) {
+                $query->select('menu_id')
+                    ->from('role_menus')
+                    ->whereIn('role_id', $roleId);
+            })
+                ->whereNull('parent_id') // menu utama
+                ->with('children')
+                ->where('kategori', 'web')      // load submenunya
+                ->orderBy('sort_order')
+                ->get();
+        }
         return view('admin.karyawan.karyawan_masa_tenggang_kontrak', [
             // return view('karyawan.index', [
             'title' => 'Karyawan',
             "data_departemen" => Departemen::orderBy('nama_departemen', 'ASC')->where('holding', $holding)->get(),
             'holding' => $holding,
+            'menus' => $menus,
             'data_user' => Karyawan::where('kontrak_kerja', $holding)->where('status_aktif', 'AKTIF')->get(),
             "data_jabatan" => Jabatan::orderBy('nama_jabatan', 'ASC')->where('holding', $holding)->get(),
             "karyawan_laki" => Karyawan::where('gender', "1")->where('kontrak_kerja', $holding)->where('status_aktif', 'AKTIF')->where('kategori', 'Karyawan Bulanan')->whereBetween('tgl_selesai_kontrak', [$date_now, $date_30day])->count(),
@@ -801,11 +877,33 @@ class karyawanController extends Controller
         $getHoldingall = Holding::get();
         // dd($getHoldingall);
         $holding_category = $getHolding->holding_category;
+        $get_role = RoleUsers::where('role_user_id', Auth::user()->id)->pluck('role_menu_id')->toArray();
+        // dd($get_role);
+        if (count($get_role) == 0) {
+            $roleId = null;
+        } else {
+            $roleId = $get_role;
+        }
+        if ($roleId == null) {
+            $menus = collect();
+        } else {
+            $menus = Menu::whereIn('id', function ($query) use ($roleId) {
+                $query->select('menu_id')
+                    ->from('role_menus')
+                    ->whereIn('role_id', $roleId);
+            })
+                ->whereNull('parent_id') // menu utama
+                ->with('children')
+                ->where('kategori', 'web')      // load submenunya
+                ->orderBy('sort_order')
+                ->get();
+        }
         return view('admin.karyawan.tambah_karyawan', [
             'title' => 'Karyawan',
             "data_departemen" => Departemen::orderBy('nama_departemen', 'ASC')->where('holding', $getHolding->id)->get(),
             'holding' => $getHolding,
             'holdingAll' => $getHoldingall,
+            'menus' => $menus,
             "data_jabatan" => Jabatan::orderBy('nama_jabatan', 'ASC')->where('holding', $getHolding->id)->get(),
             "data_provinsi" => Provincies::orderBy('name', 'ASC')->get(),
             "data_lokasi" => Lokasi::orderBy('nama_lokasi', 'ASC')->get(),
@@ -1494,18 +1592,27 @@ class karyawanController extends Controller
         $getHolding = Holding::where('holding_code', $holding)->first();
 
         $getHoldingall = Holding::get();
-        $roleId = Auth::user();
-        // dd($roleId);
-        $menus = Menu::whereIn('id', function ($query) use ($roleId) {
-            $query->select('menu_id')
-                ->from('role_menus')
-                ->where('role_id', $roleId->role);
-        })
-            ->whereNull('parent_id') // menu utama
-            ->with('children')
-            ->where('kategori', 'web')      // load submenunya
-            ->orderBy('sort_order')
-            ->get();
+        $get_role = RoleUsers::where('role_user_id', Auth::user()->id)->pluck('role_menu_id')->toArray();
+        // dd($get_role);
+        if (count($get_role) == 0) {
+            $roleId = null;
+        } else {
+            $roleId = $get_role;
+        }
+        if ($roleId == null) {
+            $menus = collect();
+        } else {
+            $menus = Menu::whereIn('id', function ($query) use ($roleId) {
+                $query->select('menu_id')
+                    ->from('role_menus')
+                    ->whereIn('role_id', $roleId);
+            })
+                ->whereNull('parent_id') // menu utama
+                ->with('children')
+                ->where('kategori', 'web')      // load submenunya
+                ->orderBy('sort_order')
+                ->get();
+        }
         $karyawan = Karyawan::with('KontrakKerja')->find($id);
         if ($karyawan == NULL) {
             return redirect()->back()->with('error', 'Karyawan Tidak Ada', 1500);
@@ -2254,12 +2361,34 @@ class karyawanController extends Controller
         $no = 1;
         $no1 = 1;
         // dd($jabatan);
+        $get_role = RoleUsers::where('role_user_id', Auth::user()->id)->pluck('role_menu_id')->toArray();
+        // dd($get_role);
+        if (count($get_role) == 0) {
+            $roleId = null;
+        } else {
+            $roleId = $get_role;
+        }
+        if ($roleId == null) {
+            $menus = collect();
+        } else {
+            $menus = Menu::whereIn('id', function ($query) use ($roleId) {
+                $query->select('menu_id')
+                    ->from('role_menus')
+                    ->whereIn('role_id', $roleId);
+            })
+                ->whereNull('parent_id') // menu utama
+                ->with('children')
+                ->where('kategori', 'web')      // load submenunya
+                ->orderBy('sort_order')
+                ->get();
+        }
         return view('admin.karyawan.mappingshift', [
             'title' => 'Mapping Shift',
             'karyawan' => $user,
             'holding' => $holding,
             'shift_karyawan' => MappingShift::where('user_id', $id)->orderBy('created_at', 'desc')->limit(100)->get(),
             'shift' => Shift::all(),
+            'menus' => $menus,
             'jabatan_karyawan' => $jabatan,
             'divisi_karyawan' => $divisi,
             'no' => $no,
@@ -2488,8 +2617,30 @@ class karyawanController extends Controller
     public function editShift($id)
     {
         $holding = request()->segment(count(request()->segments()));
+        $get_role = RoleUsers::where('role_user_id', Auth::user()->id)->pluck('role_menu_id')->toArray();
+        // dd($get_role);
+        if (count($get_role) == 0) {
+            $roleId = null;
+        } else {
+            $roleId = $get_role;
+        }
+        if ($roleId == null) {
+            $menus = collect();
+        } else {
+            $menus = Menu::whereIn('id', function ($query) use ($roleId) {
+                $query->select('menu_id')
+                    ->from('role_menus')
+                    ->whereIn('role_id', $roleId);
+            })
+                ->whereNull('parent_id') // menu utama
+                ->with('children')
+                ->where('kategori', 'web')      // load submenunya
+                ->orderBy('sort_order')
+                ->get();
+        }
         return view('karyawan.editshift', [
             'title' => 'Edit Shift',
+            'menu' => $menus,
             'shift_karyawan' => MappingShift::find($id),
             'holding' => $holding,
             'shift' => Shift::all()

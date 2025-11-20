@@ -231,22 +231,30 @@
                                             <div class="modal-body">
                                                 <input type="hidden" name="id" id="menu_id">
                                                 <div class="mb-3">
+                                                    <label class="form-label">Kategori</label>
+                                                    <select class="form-control" name="kategori" id="kategori">
+                                                        <option value="">Pliih Kategori</option>
+                                                        <option value="web">WEB</option>
+                                                        <option value="mobile">MOBILE</option>
+                                                    </select>
+                                                </div>
+                                                <div class="mb-3">
                                                     <label class="form-label">Nama Menu</label>
-                                                    <input type="text" class="form-control" name="nama" id="menu_name" required>
+                                                    <input type="text" class="form-control" name="name" id="name" value="">
                                                 </div>
                                                 <div class="mb-3">
                                                     <label class="form-label">Route (kosongi jika sebagai Parent)</label>
-                                                    <input type="text" class="form-control" name="route" id="route">
+                                                    <input type="text" class="form-control" name="route" id="route" value="">
                                                 </div>
                                                 <div class="mb-3">
                                                     <label class="form-label">Icon (mdi class)</label>
-                                                    <input type="text" class="form-control" name="icon" id="icon" placeholder="mdi-folder">
+                                                    <input type="text" class="form-control" name="icon" id="icon" value="" placeholder="mdi-folder">
                                                 </div>
                                                 <div class="mb-3">
                                                     <label class="form-label">Parent(Kosongi Jika Tidak Ada )</label>
                                                     <select class="form-select" name="parent_id" id="parent_id">
-                                                        <option value="">-- Pilih Parent --
-                                                            @foreach($parenPts as $p)
+                                                        <option value="">-- Pilih Parent --</option>
+                                                        @foreach($parenPts as $p)
                                                         <option value="{{ $p->id }}">{{ $p->name }}</option>
                                                         @endforeach
                                                     </select>
@@ -254,7 +262,7 @@
                                             </div>
                                             <div class="modal-footer">
                                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                                                <button class="btn btn-primary" id="menuSaveBtn" type="submit">Save</button>
+                                                <button class="btn btn-primary" id="menuSaveBtn" type="button">Save</button>
                                             </div>
                                         </div>
                                     </form>
@@ -262,7 +270,7 @@
                             </div>
                             <div id="menuTreeArea">
                                 <ul class="tree" id="menuTree">
-                                    @foreach($menus as $menu)
+                                    @foreach($get_menus as $menu)
                                     @include('admin.menu.tree_item', ['item' => $menu])
                                     @endforeach
                                 </ul>
@@ -289,7 +297,7 @@
 @section('js')
 <script src="https://cdn.datatables.net/2.0.5/js/dataTables.js"></script>
 <script src="https://cdn.datatables.net/2.0.5/js/dataTables.bootstrap5.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <!-- For convenience use CDN version that attaches Sortable to window -->
 <script src="https://unpkg.com/sortablejs@1.15.2/Sortable.min.js"></script>
 <script>
@@ -337,7 +345,7 @@
         });
     }
     $(document).ready(function() {
-
+        var holding = "{{ $holding->holding_code }}";
         // console.log('test');
         initSortables();
 
@@ -351,13 +359,92 @@
             $('#menuModal .modal-title').text('Tambah Menu');
             new bootstrap.Modal($('#menuModal')).show();
         });
+        $('#menuSaveBtn').on('click', function(e) {
+            e.preventDefault();
+            var menu_id = $('#menu_id').val();
+            var name = $('#name').val();
+            var route = $('#route').val();
+            var icon = $('#icon').val();
+            var parent_id = $('#parent_id').val();
+            var kategori = $('#kategori').val();
+            var url = "{{ url('menu/store') }}/" + holding;
+            // console.log(url);
+            $.ajax({
+                url: url,
+                type: 'POST',
+                data: {
+                    '_token': "{{ csrf_token() }}",
+                    'menu_id': menu_id,
+                    'name': name,
+                    'route': route,
+                    'kategori': kategori,
+                    'icon': icon,
+                    'parent_id': parent_id
+                },
+                beforeSend: function() {
+                    Swal.fire({
+                        title: 'Mohon tunggu...',
+                        text: 'Sedang memproses data',
+                        allowOutsideClick: false,
+                        didOpen: () => {
+                            Swal.showLoading();
+                        }
+                    });
+                },
+                success: function(resp) {
+                    console.log(resp);
+                    if (resp.code == 200) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Berhasil',
+                            text: resp.message,
+                        })
+                        $('#menuModal').modal('hide');
+                        initSortables();
+                        window.location.reload();
+                    } else {
+                        let messages = [];
 
+                        if (Array.isArray(resp.message)) {
+                            messages = resp.message;
+                        } else if (typeof resp.message === 'string') {
+                            messages = [resp.message];
+                        } else if (typeof resp.message === 'object') {
+                            for (let key in resp.message) {
+                                messages.push(resp.message[key]);
+                            }
+                        } else {
+                            messages = ["Terjadi kesalahan tidak diketahui."];
+                        }
+                        Swal.close();
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Gagal menyimpan data',
+                            html: `<ul style="text-align:left;padding-left:20px;">${messages.map(msg => `<li>${msg}</li>`).join('')}</ul>`,
+                            // timer: 5000
+                        });
+
+                    }
+                },
+                error: function(error) {
+                    Swal.close();
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Gagal',
+                        text: error.responseJSON.message,
+                        // timer: 5000
+                    })
+                }
+            })
+        });
         // Add child from node action
         $(document).on('click', '.btn-add-child', function(e) {
             e.stopPropagation();
             const parentId = $(this).closest('li').data('id');
+            const kategori = $(this).data('kategori');
             $('#menuForm')[0].reset();
             $('#menu_id').val('');
+            $('#kategori').val(kategori);
             $('#parent_id').val(parentId);
             $('#menuModal .modal-title').text('Tambah Sub Menu');
             new bootstrap.Modal($('#menuModal')).show();
@@ -370,11 +457,13 @@
             const name = $li.find('.tree-text').text().trim();
             const icon = $li.data('icon') || '';
             const route = $li.data('route') || '';
-
+            const kategori = $li.data('kategori') || '';
+            console.log(id, name, icon, route, kategori);
             $('#menu_id').val(id);
-            $('#menu_name').val(name);
+            $('#name').val(name);
             $('#icon').val(icon);
             $('#route').val(route);
+            $('#kategori').val(kategori);
             $('#parent_id').val($li.data('parent') || '');
             $('#menuModal .modal-title').text('Edit Menu');
             new bootstrap.Modal($('#menuModal')).show();
@@ -387,14 +476,48 @@
             Swal.fire({
                 icon: 'warning',
                 title: 'Delete menu?',
-                text: 'This will remove the menu (children will be orphaned).',
+                text: 'Kamu tidak dapat mengembalikan data ini.',
                 showCancelButton: true
             }).then(res => {
                 if (res.isConfirmed) {
-                    $.post("{{ url('menu/delete', ['id'=>'']) }}".replace(/\/$/, '') + '/' + id, {}, function(resp) {
-                        if (resp.status == 'ok') {
-                            $li.remove();
-                            Swal.fire('Deleted', 'Menu removed', 'success');
+                    $.ajax({
+                        url: "{{ url('menu/delete') }}/" + id,
+                        type: "GET",
+                        beforeSend: function() {
+                            Swal.fire({
+                                title: 'Mohon tunggu...',
+                                text: 'Sedang memproses data',
+                                allowOutsideClick: false,
+                                didOpen: () => {
+                                    Swal.showLoading();
+                                }
+                            });
+                        },
+                        success: function(resp) {
+                            console.log(resp);
+                            if (resp.code == 200) {
+                                $li.remove();
+                                Swal.fire({
+                                    title: 'Berhasil',
+                                    text: 'Data menu berhasil dihapus',
+                                    icon: 'success'
+                                });
+                            } else {
+                                Swal.fire({
+                                    title: 'Gagal',
+                                    text: 'Data menu gagal dihapus',
+                                    icon: 'error'
+                                });
+                            }
+
+                        },
+                        error: function(error) {
+                            Swal.fire({
+                                title: 'Gagal',
+                                text: 'Data menu gagal dihapus',
+                                icon: 'error'
+                            });
+                            Swal.close();
                         }
                     });
                 }

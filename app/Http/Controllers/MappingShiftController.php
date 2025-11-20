@@ -11,6 +11,7 @@ use App\Models\Jabatan;
 use App\Models\Karyawan;
 use App\Models\MappingShift;
 use App\Models\Menu;
+use App\Models\RoleUsers;
 use App\Models\Shift;
 use App\Models\User;
 use Carbon\Carbon;
@@ -27,17 +28,27 @@ class MappingShiftController extends Controller
     function mapping_shift_index(Request $request, $holding)
     {
         // dd('test');
-        $roleId = Auth::user();
-        $menus = Menu::whereIn('id', function ($query) use ($roleId) {
-            $query->select('menu_id')
-                ->from('role_menus')
-                ->where('role_id', $roleId->role);
-        })
-            ->whereNull('parent_id') // menu utama
-            ->with('children')
-            ->where('kategori', 'web')      // load submenunya
-            ->orderBy('sort_order')
-            ->get();
+        $get_role = RoleUsers::where('role_user_id', Auth::user()->id)->pluck('role_menu_id')->toArray();
+        // dd($get_role);
+        if (count($get_role) == 0) {
+            $roleId = null;
+        } else {
+            $roleId = $get_role;
+        }
+        if ($roleId == null) {
+            $menus = collect();
+        } else {
+            $menus = Menu::whereIn('id', function ($query) use ($roleId) {
+                $query->select('menu_id')
+                    ->from('role_menus')
+                    ->whereIn('role_id', $roleId);
+            })
+                ->whereNull('parent_id') // menu utama
+                ->with('children')
+                ->where('kategori', 'web')      // load submenunya
+                ->orderBy('sort_order')
+                ->get();
+        }
         // dd($menus);
         $holding = Holding::where('holding_code', $holding)->first();
         // dd($holding);
@@ -214,18 +225,24 @@ class MappingShiftController extends Controller
                 ['name' => 'Andi', 'shift' => 'Siang (12:00 - 20:00)'],
             ],
         ];
-        $roleId = Auth::user()->role;
-        // dd($roleId);
-        if ($roleId == null) {
-            $all_menus = collect();
+        $get_role = RoleUsers::where('role_user_id', Auth::user()->id)->pluck('role_menu_id')->toArray();
+        // dd($get_role);
+        if (count($get_role) == 0) {
+            $roleId = null;
         } else {
-            $all_menus  = Menu::whereIn('id', function ($query) use ($roleId) {
+            $roleId = $get_role;
+        }
+        if ($roleId == null) {
+            $menus = collect();
+        } else {
+            $menus = Menu::whereIn('id', function ($query) use ($roleId) {
                 $query->select('menu_id')
                     ->from('role_menus')
-                    ->where('role_id', $roleId);
+                    ->whereIn('role_id', $roleId);
             })
                 ->whereNull('parent_id') // menu utama
-                ->with('children')       // load submenunya
+                ->with('children')
+                ->where('kategori', 'web')      // load submenunya
                 ->orderBy('sort_order')
                 ->get();
         }
@@ -1059,12 +1076,33 @@ class MappingShiftController extends Controller
         $no1 = 1;
         $oke = $user->MappingShift->last();
         // $shift = Carbon::parse($oke->tanggal_masuk)->addDay(1)->format('Y-m-d');
-
+        $get_role = RoleUsers::where('role_user_id', Auth::user()->id)->pluck('role_menu_id')->toArray();
+        // dd($get_role);
+        if (count($get_role) == 0) {
+            $roleId = null;
+        } else {
+            $roleId = $get_role;
+        }
+        if ($roleId == null) {
+            $menus = collect();
+        } else {
+            $menus = Menu::whereIn('id', function ($query) use ($roleId) {
+                $query->select('menu_id')
+                    ->from('role_menus')
+                    ->whereIn('role_id', $roleId);
+            })
+                ->whereNull('parent_id') // menu utama
+                ->with('children')
+                ->where('kategori', 'web')      // load submenunya
+                ->orderBy('sort_order')
+                ->get();
+        }
         // dd($shift);
         return view('admin.karyawan.mappingshift', [
             'title'             => 'Mapping Shift',
             'karyawan'          => $user,
             'holding'           => $holding,
+            'menu'              => $menus,
             // 'shift_karyawan'    => $shift,
             'shift'             => Shift::all(),
             'jabatan_karyawan'  => $jabatan,

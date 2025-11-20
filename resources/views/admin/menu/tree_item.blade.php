@@ -1,4 +1,4 @@
-<li data-id="{{ $item->id }}" data-icon="{{ $item->icon }}" data-route="{{ $item->route }}" data-parent="{{ $item->parent_id }}">
+<li data-id="{{ $item->id }}" data-icon="{{ $item->icon }}" data-route="{{ $item->route }}" data-kategori="{{$item->kategori}}" data-parent="{{ $item->parent_id }}">
     <div class="label">
         <span class="drag-handle"><i class="mdi mdi-drag"></i></span>
 
@@ -12,7 +12,7 @@
         <span class="tree-text">{{ $item->name }}</span>
 
         <div class="node-actions">
-            <button class="btn btn-sm btn-success btn-add-child" title="Add child"><i class="mdi mdi-plus"></i></button>
+            <button class="btn btn-sm btn-success btn-add-child" data-kategori="{{$item->kategori}}" title="Add child"><i class="mdi mdi-plus"></i></button>
             <button class="btn btn-sm btn-warning btn-edit" title="Edit"><i class="mdi mdi-pencil"></i></button>
             <button class="btn btn-sm btn-danger btn-delete" title="Delete"><i class="mdi mdi-delete"></i></button>
         </div>

@@ -96,45 +96,7 @@
         @endforeach
         <!-- ABSENSI KARYAWAN -->
 
-        <li
-            class="menu-item {{ Request::is('pg-data-recruitment*') ? 'active open' : '' }}{{ Request::is('pg-data-interview*') ? 'active open' : '' }} {{ Request::is('pg-data-ranking*') ? 'active open' : '' }} {{ Request::is('pg-data-ujian*') ? 'active open' : '' }}">
-            <a href="javascript:void(0);" class="menu-link menu-toggle">
-                <i class="menu-icon tf-icons mdi mdi-table-account"></i>
-                <div style="font-size: 10pt;" data-i18n="Data Master">Recruitment</div>
-            </a>
-            <ul class="menu-sub">
-                <li class="menu-item {{ Request::is('pg-data-recruitment*') ? 'active' : '' }}">
-                    <a href="{{ url('/pg-data-recruitment/' . $holding->holding_code) }}" class=" menu-link">
-                        <div style="font-size: 10pt;" data-i18n="Without navbar"><i
-                                class="mdi mdi-account-arrow-left"></i>&nbsp;Data&nbsp;Recruitment</div>
-                    </a>
-                </li>
-                <li class="menu-item {{ Request::is('pg-data-interview*') ? 'active' : '' }}">
-                    <a href="{{ url('/pg-data-interview/' . $holding->holding_code) }}" class="menu-link">
-                        <div style="font-size: 10pt;" data-i18n="Container"><i
-                                class="mdi mdi-file-chart-check-outline"></i>&nbsp;Data&nbsp;Interview</div>
-                    </a>
-                </li>
-                <li class="menu-item {{ Request::is('pg-data-ranking*') ? 'active' : '' }}">
-                    <a href="{{ url('/pg-data-ranking/' . $holding->holding_code) }}" class="menu-link">
-                        <div style="font-size: 10pt;" data-i18n="Container"><i
-                                class="mdi mdi-file-chart-check-outline"></i>&nbsp;Data&nbsp;Rangking</div>
-                    </a>
-                </li>
-                <li class="menu-item {{ Request::is('laporan_recruitment*') ? 'active' : '' }}">
-                    <a href="{{ url('/laporan_recruitment/' . $holding->holding_code) }}" class="menu-link">
-                        <div style="font-size: 10pt;" data-i18n="Container"><i
-                                class="mdi mdi-file-chart-check-outline"></i>&nbsp;Laporan&nbsp;Recruitment</div>
-                    </a>
-                </li>
-                <li class="menu-item {{ Request::is('pg-data-ujian*') ? 'active' : '' }}">
-                    <a href="{{ url('/pg-data-ujian/' . $holding->holding_code) }}" class=" menu-link">
-                        <div style="font-size: 10pt;" data-i18n="Without navbar"><i
-                                class="mdi mdi-account-arrow-left"></i>&nbsp;Data&nbsp;Ujian</div>
-                    </a>
-                </li>
-            </ul>
-        </li>
+
         <li class="menu-item {{ Request::is('izin*') ? 'active' : '' }}">
             <a href="{{ url('/izin/' . $holding->holding_code) }}" class=" menu-link">
                 <i class="menu-icon tf-icons mdi mdi-calendar-filter-outline"></i>

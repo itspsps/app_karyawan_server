@@ -13,6 +13,7 @@ use App\Models\Holding;
 use App\Models\Jabatan;
 use App\Models\Karyawan;
 use App\Models\Menu;
+use App\Models\RoleUsers;
 use Carbon\Carbon;
 use Carbon\CarbonPeriod;
 use Illuminate\Support\Facades\Auth;
@@ -27,18 +28,27 @@ class dashboardController extends Controller
         $getHolding = Holding::where('holding_code', $holding)->first();
         // dd($holding, $getHolding);
         $getHoldingAll = Holding::all();
-        $roleId = Auth::user();
-        // dd($roleId);
-        $menus = Menu::whereIn('id', function ($query) use ($roleId) {
-            $query->select('menu_id')
-                ->from('role_menus')
-                ->where('role_id', $roleId->role);
-        })
-            ->whereNull('parent_id') // menu utama
-            ->with('children')
-            ->where('kategori', 'web')      // load submenunya
-            ->orderBy('sort_order')
-            ->get();
+        $get_role = RoleUsers::where('role_user_id', Auth::user()->id)->pluck('role_menu_id')->toArray();
+        // dd($get_role);
+        if (count($get_role) == 0) {
+            $roleId = null;
+        } else {
+            $roleId = $get_role;
+        }
+        if ($roleId == null) {
+            $menus = collect();
+        } else {
+            $menus = Menu::whereIn('id', function ($query) use ($roleId) {
+                $query->select('menu_id')
+                    ->from('role_menus')
+                    ->whereIn('role_id', $roleId);
+            })
+                ->whereNull('parent_id') // menu utama
+                ->with('children')
+                ->where('kategori', 'web')      // load submenunya
+                ->orderBy('sort_order')
+                ->get();
+        }
 
         // dd($menus);
         return view('admin.dashboard.dashboard_option', [

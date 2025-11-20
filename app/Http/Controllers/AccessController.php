@@ -25,17 +25,27 @@ class AccessController extends Controller
     {
         $get_holding = Holding::where('holding_code', $holding)->first();
         $roleId = Auth::user();
-        $menus = Menu::whereIn('id', function ($query) use ($roleId) {
-            $query->select('menu_id')
-                ->from('role_menus')
-                ->where('role_id', $roleId->role);
-        })
-            ->whereNull('parent_id') // menu utama
-            ->with('children')
-            ->where('kategori', 'web')      // load submenunya
-            ->orderBy('sort_order')
-            ->get();
-
+        $get_role = RoleUsers::where('role_user_id', Auth::user()->id)->pluck('role_menu_id')->toArray();
+        // dd($get_role);
+        if (count($get_role) == 0) {
+            $roleId = null;
+        } else {
+            $roleId = $get_role;
+        }
+        if ($roleId == null) {
+            $menus = collect();
+        } else {
+            $menus = Menu::whereIn('id', function ($query) use ($roleId) {
+                $query->select('menu_id')
+                    ->from('role_menus')
+                    ->whereIn('role_id', $roleId);
+            })
+                ->whereNull('parent_id') // menu utama
+                ->with('children')
+                ->where('kategori', 'web')      // load submenunya
+                ->orderBy('sort_order')
+                ->get();
+        }
         return view('admin.access.index', [
             // return view('karyawan.index', [
             'title' => 'Karyawan',
@@ -57,14 +67,16 @@ class AccessController extends Controller
         $table = User::with(['roleUsers' => function ($query) {
             $query->with('roleMenu');
         }])
-            ->with(['Karyawan' => function ($query) use ($holding) {
-                $query->with('Departemen', 'Divisi', 'Jabatan')->where('kontrak_kerja', $holding->id)
-                    ->orderBy('name', 'ASC');
-            }])
-            ->whereHas('Karyawan', function ($query) use ($holding) {
-                $query->where('kontrak_kerja', $holding->id)
-                    ->orderBy('name', 'ASC');
-            })
+            // ->with(['Karyawan' => function ($query) use ($holding) {
+            //     $query->with('Departemen', 'Divisi', 'Jabatan')
+            //         ->whereIn('kontrak_kerja', [$holding->id, NULL])
+            //         ->orderBy('name', 'ASC');
+            // }])
+            // ->whereHas('Karyawan', function ($query) use ($holding) {
+            //     $query->whereIn('kontrak_kerja', [$holding->id, NULL])
+            //         ->orderBy('name', 'ASC');
+            // })
+            ->where('is_admin', 'admin')
             // ->limit(10)
             // ->where('username', 'cerdasbadrus')
             ->get();
@@ -150,7 +162,7 @@ class AccessController extends Controller
                     return $html;
                 })
                 ->addColumn('option', function ($row) use ($holding) {
-                    $btn = '<button id="btn_add_access_karyawan" data-id="' . $row->id . '" data-idkaryawan="' . $row->karyawan_id . '" data-jabatan="' . $row->jabatan . '" data-divisi="' . $row->divisi . '" data-departemen="' . $row->departemen . '" data data-holding="' . $holding->id . '" data-kontrak="' . $row->kontrak_kerja . '" data-access="' . $row->access . '" data-name="' . $row->name . '" class="btn btn-icon btn-primary waves-effect waves-light" data-bs-toggle="tooltip" data-bs-placement="top" title="Tambah Access"><span class="tf-icons mdi mdi-plus-outline"></span></button>';
+                    $btn = '<button  data-id="' . $row->id . '" data-idkaryawan="' . $row->karyawan_id . '" data-jabatan="' . $row->jabatan . '" data-divisi="' . $row->divisi . '" data-departemen="' . $row->departemen . '" data data-holding="' . $holding->id . '" data-kontrak="' . $row->kontrak_kerja . '" data-access="' . $row->access . '" data-name="' . $row->name . '" class="btn_add_access_karyawan btn btn-icon btn-primary waves-effect waves-light" data-bs-toggle="tooltip" data-bs-placement="top" title="Tambah Access"><span class="tf-icons mdi mdi-plus-outline"></span></button>';
                     $btn = $btn . '<button type="button" id="btn_delete_karyawan" data-id="' . $row->id . '" data-holding="' . $holding->id . '" class="btn btn-icon btn-danger waves-effect waves-light" data-bs-toggle="tooltip" data-bs-placement="top" title="Hapus Access"><span class="tf-icons mdi mdi-delete-outline"></span></button>';
                     return $btn;
                 })
