@@ -16,10 +16,12 @@ class KaryawanRiwayat extends Model
     protected $fillable = [
         'id_karyawan',
         'nama_perusahaan',
+        'gaji',
         'alamat_perusahaan',
         'posisi',
         'tanggal_masuk',
         'tanggal_keluar',
+        'alasan_keluar',
         'surat_keterangan',
         'nomor_referensi',
         'jabatan_referensi',

@@ -6,6 +6,7 @@ use App\Traits\UuidTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use maliklibs\Zkteco\Lib\Helper\Attendance;
 
 class Karyawan extends Model
@@ -214,5 +215,25 @@ class Karyawan extends Model
     public function Desa(): BelongsTo
     {
         return $this->belongsTo(Village::class, 'code', 'desa');
+    }
+    public function karyawanKesehatan(): HasOne
+    {
+        return $this->hasOne(KaryawanKesehatan::class, 'id_karyawan', 'id');
+    }
+    public function karyawanPendidikan(): HasOne
+    {
+        return $this->hasOne(KaryawanPendidikan::class, 'id_karyawan', 'id');
+    }
+    public function karyawanKesehatanRS(): HasOne
+    {
+        return $this->hasOne(KaryawanKesehatanRS::class, 'id_karyawan', 'id');
+    }
+    public function karyawanKesehatanPengobatan(): HasOne
+    {
+        return $this->hasOne(KaryawanKesehatanPengobatan::class, 'id_karyawan', 'id');
+    }
+    public function karyawanKesehatanKecelakaan(): HasOne
+    {
+        return $this->hasOne(KaryawanKesehatanKecelakaan::class, 'id_karyawan', 'id');
     }
 }

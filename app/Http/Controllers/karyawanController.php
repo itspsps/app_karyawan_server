@@ -31,6 +31,7 @@ use App\Models\Karyawan;
 use App\Models\KaryawanKeahlian;
 use App\Models\KaryawanNonActive;
 use App\Models\KaryawanPendidikan;
+use App\Models\KaryawanRiwayat;
 use App\Models\Lokasi;
 use App\Models\Menu;
 use Illuminate\Support\Facades\Auth;
@@ -1879,6 +1880,8 @@ class karyawanController extends Controller
             ]);
         }
     }
+
+
     public function editKaryawanProses(Request $request, $id)
     {
         // dd($id);
