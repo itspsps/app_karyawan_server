@@ -195,7 +195,29 @@
             $('#tahun_keluar').val('');
             $('#modal_add_pendidikan').modal('show');
         });
-        $('#btn_add_keahlian').click(function() {
+        $('#pesan_disabled_keahlian').hide();
+        $.ajax({
+            type: "GET",
+            url: "{{ url('/karyawan/button_keahlian/' . $karyawan->id) }}",
+            error: function(error) {
+                Swal.fire({
+                    title: 'error',
+                    text: error.responseJSON.message,
+                    icon: 'error',
+                    timer: 4500
+                })
+
+            },
+            success: function(data_keahlian) {
+                // console.log(data_keahlian);
+                if (data_keahlian.data_keahlian >= 5) {
+                    $('#pesan_disabled_keahlian').show();
+                    $('#btn_tambah_keahlian').attr("disabled", true);
+
+                }
+            }
+        });
+        $('#btn_tambah_keahlian').click(function() {
             $(this).find(':focus').blur(); // lepas focus dari elemen apapun di modal
             $('#nama_keahlian').val('');
             $('#file_keahlian').val('');
@@ -257,7 +279,7 @@
             processing: true,
             serverSide: true,
             ajax: {
-                url: "@if (Auth::user()->is_admin == 'hrd') {{ url('hrd/karyawan/keahlian/' . $karyawan->id) }}@else{{ url('karyawan/keahlian/' . $karyawan->id) }}@endif",
+                url: "{{ url('karyawan/keahlian/' . $karyawan->id) }}",
             },
             columns: [{
                     data: "aksi",
@@ -1031,7 +1053,7 @@
             }
             // console.log(id_karyawan, nama_keahlian, file_keahlian);
             $.ajax({
-                url: "@if (Auth::user()->is_admin == 'hrd'){{ url('hrd/karyawan/AddKeahlian') }}@else{{ url('karyawan/AddKeahlian') }}@endif",
+                url: "{{ url('karyawan/AddKeahlian/') }}",
                 type: 'POST',
                 data: formData,
                 processData: false, // WAJIB
@@ -1066,10 +1088,15 @@
                             html: errors,
                         })
                     }
-
                     $('#form_add_keahlian').trigger('reset');
-
                     table1.ajax.reload();
+                    console.log(response.data_keahlian);
+                    if (response.data_keahlian >= 5) {
+                        $('#btn_tambah_keahlian').attr("disabled", true);
+                        $('#pesan_disabled_keahlian').show();
+                    }
+
+
                 },
                 error: function(data) {
                     Swal.close();
@@ -1110,7 +1137,7 @@
             }
             // console.log(id_karyawan, nama_keahlian, file_keahlian);
             $.ajax({
-                url: "@if (Auth::user()->is_admin == 'hrd'){{ url('hrd/karyawan/UpdateKeahlian') }}@else{{ url('karyawan/UpdateKeahlian') }}@endif",
+                url: "{{ url('karyawan/UpdateKeahlian') }}",
                 type: 'POST',
                 data: formData,
                 processData: false, // WAJIB
@@ -1183,7 +1210,7 @@
             }).then((result) => {
                 if (result.value) { // v9 pakai result.value, bukan result.isConfirmed
                     $.ajax({
-                        url: "{{ url('karyawan/DeleteKeahlian') }}",
+                        url: "{{ url('karyawan/DeleteKeahlian/' . $karyawan->id) }}",
                         type: "POST",
                         data: {
                             _token: "{{ csrf_token() }}",
@@ -1214,6 +1241,11 @@
                                     title: 'Gagal',
                                     text: response.message
                                 });
+                            }
+                            if (response.data_keahlian <= 5) {
+                                $('#btn_tambah_keahlian').attr(
+                                    "disabled", false);
+                                $('#pesan_disabled_keahlian').hide();
                             }
                         },
                         error: function() {

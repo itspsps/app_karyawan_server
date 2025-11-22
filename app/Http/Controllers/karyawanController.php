@@ -1631,6 +1631,16 @@ class karyawanController extends Controller
             ]);
         }
     }
+    public function button_keahlian($id)
+    {
+        $data_keahlian = KaryawanKeahlian::select()->where('id_karyawan', $id)->count();
+        return response()->json([
+            'code' => 200,
+            // 'data' => $get_data,
+            'data_keahlian' => $data_keahlian,
+            // 'message' => 'Data Berhasil Diupdate'
+        ]);
+    }
 
     public function keahlian_datatable($id)
     {
@@ -1682,8 +1692,10 @@ class karyawanController extends Controller
                     'created_at' => now(),
                 ]
             );
+            $data_keahlian = KaryawanKeahlian::select()->where('id_karyawan', $request->id_karyawan)->count();
             return response()->json([
                 'code' => 200,
+                'data_keahlian' => $data_keahlian,
                 'message' => 'Data berhasil ditambahkan'
             ]);
         } catch (ValidationException $e) {
@@ -1739,12 +1751,13 @@ class karyawanController extends Controller
             ]);
         }
     }
-    public function delete_keahlian(Request $request)
+    public function delete_keahlian(Request $request, $id)
     {
         $get = KaryawanKeahlian::where('id_keahlian', $request->id_keahlian);
         if ($get->exists()) {
             $cek_old_file = $get->first();
             $get->delete();
+            $data_keahlian = KaryawanKeahlian::select()->where('id_karyawan', $id)->count();
             if ($cek_old_file->file_keahlian) {
                 $delete_old = storage_path('app/public/file_keahlian/' . $cek_old_file->file_keahlian);
                 if (file_exists($delete_old)) {
@@ -1753,6 +1766,7 @@ class karyawanController extends Controller
             }
             return response()->json([
                 'code' => 200,
+                'data_keahlian' => $data_keahlian,
                 'message' => 'Data berhasil Dihapus'
             ]);
         } else {

@@ -2135,9 +2135,19 @@
                                         </div>
                                         <hr class="m-0 mb-3">
                                         <div class="row mt-2 gy-4">
-                                            <div class="col-md-6">
-                                                <button type="button" id="btn_add_keahlian"
-                                                    class="btn btn-sm btn-primary"><i class="mdi mdi-plus"></i></button>
+                                            <div class="d-flex justify-content-center py-2">
+                                                <button class="btn btn-primary" id="btn_tambah_keahlian"
+                                                    type="button">Tambah
+                                                    Keahlian</button>
+                                            </div>
+                                            <div class="d-flex justify-content-center">
+                                                <p class="" id="pesan_disabled_keahlian">
+                                                    *Silakan
+                                                    edit atau hapus data untuk
+                                                    menambahkan
+                                                    data lain
+                                                    (max : 5)
+                                                </p>
                                             </div>
                                             <div class="col-lg-12">
                                                 <table class="table table-bordered" id="table_keahlian"

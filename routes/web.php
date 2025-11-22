@@ -310,10 +310,11 @@ Route::middleware('admin')->group(function () {
     // kesehatan end
 
     // KEAHLIAN KARYAWAN
+    Route::get('/karyawan/button_keahlian/{id}', [karyawanController::class, 'button_keahlian'])->name('button_keahlian');
     Route::get('/karyawan/keahlian/{id}', [karyawanController::class, 'keahlian_datatable']);
     Route::post('/karyawan/AddKeahlian/', [karyawanController::class, 'add_keahlian']);
     Route::post('/karyawan/UpdateKeahlian/', [karyawanController::class, 'update_keahlian']);
-    Route::post('/karyawan/DeleteKeahlian/', [karyawanController::class, 'delete_keahlian']);
+    Route::post('/karyawan/DeleteKeahlian/{id}', [karyawanController::class, 'delete_keahlian']);
 
     Route::get('/karyawan_non_aktif/sp', [karyawanController::class, 'karyawan_non_aktif']);
     Route::get('/karyawan_non_aktif/sps', [karyawanController::class, 'karyawan_non_aktif']);
