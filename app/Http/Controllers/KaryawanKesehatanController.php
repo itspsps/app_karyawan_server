@@ -179,7 +179,7 @@ class KaryawanKesehatanController extends Controller
                     $btn =
                         '<button type="button" id="btn_delete_pengobatan"
                             data-id_pengobatan="' . $row->id_pengobatan . '"
-                            class="btn btn-icon btn-danger waves-effect waves-light">
+                            class="btn btn-small btn-danger waves-effect waves-light">
                             Hapus
                         </button>
                         ';
@@ -303,7 +303,7 @@ class KaryawanKesehatanController extends Controller
                     $btn =
                         '<button type="button" id="btn_delete_rumah_sakit"
                             data-id_kesehatan_rs="' . $row->id_kesehatan_rs . '"
-                            class="btn btn-icon btn-danger waves-effect waves-light">
+                            class="btn btn-small btn-danger waves-effect waves-light">
                             Hapus
                         </button>
                         ';
@@ -426,7 +426,7 @@ class KaryawanKesehatanController extends Controller
                     $btn =
                         '<button type="button" id="btn_delete_kecelakaan"
                             data-id_kecelakaan="' . $row->id_kecelakaan . '"
-                            class="btn btn-icon btn-danger waves-effect waves-light">
+                            class="btn btn-small btn-danger waves-effect waves-light">
                             Hapus
                         </button>
                         ';

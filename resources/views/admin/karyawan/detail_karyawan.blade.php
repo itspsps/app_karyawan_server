@@ -124,12 +124,20 @@
                                             BPJS
                                         </button>
                                     </li>
-                                    <li class="nav-item">
+                                    {{-- <li class="nav-item">
                                         <button type="button" class="nav-link" role="tab" data-bs-toggle="tab"
                                             data-bs-target="#nav_dokumen" aria-controls="nav_dokumen"
                                             aria-selected="false">
                                             <i class="tf-icons mdi mdi-file-document-multiple-outline me-1"></i>
                                             DOKUMEN
+                                        </button>
+                                    </li> --}}
+                                    <li class="nav-item">
+                                        <button type="button" class="nav-link" role="tab" data-bs-toggle="tab"
+                                            data-bs-target="#nav_dokumen" aria-controls="nav_dokumen"
+                                            aria-selected="false">
+                                            <i class="mdi mdi-hammer-screwdriver me-1"></i>
+                                            KEAHLIAN
                                         </button>
                                     </li>
                                     <li class="nav-item">
@@ -886,91 +894,6 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="modal fade" id="modal_add_keahlian" tabindex="-1"
-                                        aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                        <div class="modal-dialog modal-md">
-                                            <div class="modal-content">
-                                                <div class="modal-header">
-                                                    <h5 class="modal-title" id="exampleModalLabel">Tambah Keahlian</h5>
-                                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                                        aria-label="Close"></button>
-                                                </div>
-                                                <div class="modal-body">
-                                                    <form id="form_add_keahlian" enctype="multipart/form-data">
-                                                        <div class="col-md-12 mb-3">
-                                                            <div class="form-floating form-floating-outline">
-                                                                <input type="text" name="nama_keahlian"
-                                                                    id="nama_keahlian" class="form-control"
-                                                                    value="">
-                                                                <label for="nama_keahlian">Nama Keahlian</label>
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-md-12 mb-3">
-                                                            <div class="form-floating form-floating-outline">
-                                                                <input type="file" name="file_keahlian"
-                                                                    id="file_keahlian" class="form-control" hidden
-                                                                    value="" accept=".pdf">
-                                                                <button type="button" id="btn_upload_keahlian"
-                                                                    class="btn btn-sm btn-secondary"><i
-                                                                        class="mdi mdi-upload"></i> Upload</button>
-                                                                <p class="text-primary">format: PDF</p>
-                                                                <div class="group-button-keahlian align-items-center">
-                                                                </div>
-                                                                <label for="file_keahlian">File</label>
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-md-12 mb-3">
-                                                            <button type="button" id="btn_simpan_keahlian"
-                                                                class="btn btn-sm btn-primary"><i
-                                                                    class="mdi mdi-content-save"></i> Simpan</button>
-                                                        </div>
-                                                    </form>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="modal fade" id="modal_edit_keahlian" tabindex="-1"
-                                        aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                        <div class="modal-dialog modal-md">
-                                            <div class="modal-content">
-                                                <div class="modal-header">
-                                                    <h5 class="modal-title" id="exampleModalLabel">Edit Keahlian</h5>
-                                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                                        aria-label="Close"></button>
-                                                </div>
-                                                <div class="modal-body">
-                                                    <form id="form_edit_keahlian">
-                                                        <div class="col-md-12 mb-3">
-                                                            <input type="hidden" name="id_keahlian" id="id_keahlian"
-                                                                value="">
-                                                            <div class="form-floating form-floating-outline">
-                                                                <input type="text" name="nama_keahlian_update"
-                                                                    id="nama_keahlian_update" class="form-control"
-                                                                    value="">
-                                                                <label for="nama_keahlian_update">Nama Keahlian</label>
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-md-12 mb-3">
-                                                            <label for="file_keahlian_update">File Keahlian</label>
-                                                            <input type="file" name="file_keahlian_update"
-                                                                id="file_keahlian_update" hidden accept=".pdf"
-                                                                class="form-control" value="">
-                                                            <input type="hidden" name="file_keahlian_old_update"
-                                                                id="file_keahlian_old_update" value="">
-                                                            <div class="group-update-keahlian align-items-center">
-                                                            </div>
-
-                                                        </div>
-                                                        <div class="col-md-12 mb-3">
-                                                            <button type="button" id="btn_simpan_edit_keahlian"
-                                                                class="btn btn-sm btn-primary"><i
-                                                                    class="mdi mdi-content-save"></i> Simpan</button>
-                                                        </div>
-                                                    </form>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
                                     <div class="modal fade" id="modal_cv" tabindex="-1"
                                         aria-labelledby="exampleModalLabel" aria-hidden="true">
                                         <div class="modal-dialog modal-lg">
@@ -1003,6 +926,39 @@
                                                 <span
                                                     class="mdi mdi-account-school-outline badge bg-label-primary">&nbsp;RIWAYAT
                                                     PENDIDIKAN</span>
+                                            </div>
+                                            <div class="row mt-2 gy-4">
+                                                <div class="d-flex justify-content-center py-2">
+                                                    <button class="btn btn-primary" type="button"
+                                                        id="btn_tambah_pendidikan">Tambah
+                                                        Riwayat
+                                                        Pendidikan</button>
+                                                </div>
+                                                <div class="d-flex justify-content-center">
+                                                    <p class="" id="pesan_disabled_pendidikan">*Silakan
+                                                        edit atau hapus data untuk
+                                                        menambahkan
+                                                        data lain
+                                                        (max : 3)
+                                                    </p>
+                                                </div>
+                                                <table class="table table-bordered" id="table_pendidikan"
+                                                    style="width:100%;">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Aksi</th>
+                                                            <th>No</th>
+                                                            <th>Nama&nbsp;Instansi</th>
+                                                            <th>Jenjang</th>
+                                                            <th>jurusan</th>
+                                                            <th>Tahun&nbsp;Masuk</th>
+                                                            <th>Tahun&nbsp;Lulus</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+
+                                                    </tbody>
+                                                </table>
                                             </div>
                                             <hr class="m-0 mb-3">
                                             <div class="row mt-2 gy-4">
@@ -1084,57 +1040,6 @@
                                                             </div>
                                                         @endif
                                                     </div>
-                                                </div>
-                                            </div>
-                                            <div class="row mt-2 gy-4">
-                                                <div class="col-md-6">
-                                                    <button type="button" id="btn_add_pendidikan"
-                                                        class="btn btn-sm btn-primary"><i
-                                                            class="mdi mdi-plus"></i></button>
-                                                </div>
-                                                <table class="table table-bordered" id="table_pendidikan"
-                                                    style="width: 100%;">
-                                                    <thead>
-                                                        <tr>
-                                                            <th>Aksi</th>
-                                                            <th>No</th>
-                                                            <th>Nama&nbsp;Instansi</th>
-                                                            <th>Jenjang</th>
-                                                            <th>jurusan</th>
-                                                            <th>Tahun&nbsp;Masuk</th>
-                                                            <th>Tahun&nbsp;Lulus</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
-
-                                                    </tbody>
-                                                </table>
-                                            </div>
-                                            <div class="col-md-3 mt-3">
-                                                <span
-                                                    class="mdi mdi-account-school-outline badge bg-label-success">&nbsp;KEAHLIAN</span>
-                                            </div>
-                                            <hr class="m-0 mb-3">
-                                            <div class="row mt-2 gy-4">
-                                                <div class="col-md-6">
-                                                    <button type="button" id="btn_add_keahlian"
-                                                        class="btn btn-sm btn-primary"><i
-                                                            class="mdi mdi-plus"></i></button>
-                                                </div>
-                                                <div class="col-lg-12">
-                                                    <table class="table table-bordered" id="table_keahlian"
-                                                        style="width: 100%;">
-                                                        <thead>
-                                                            <tr>
-                                                                <th>Aksi</th>
-                                                                <th>No</th>
-                                                                <th>Nama&nbsp;Keahlian</th>
-                                                                <th>File</th>
-                                                            </tr>
-                                                        </thead>
-                                                        <tbody>
-                                                        </tbody>
-                                                    </table>
                                                 </div>
                                             </div>
                                         </div>
@@ -1497,8 +1402,7 @@
                                                 // echo $kec;
                                                 ?>
                                                 <div class="form-floating form-floating-outline">
-                                                    <select style="font-size: small;" name="jabatan_id"
-                                                        id="id_jabatan"
+                                                    <select style="font-size: small;" name="jabatan_id" id="id_jabatan"
                                                         class="form-control @error('jabatan_id') is-invalid @enderror">
                                                         <option value="">Pilih Jabatan</option>
                                                         <optgroup label='Daftar Jabatan'>
@@ -2198,7 +2102,7 @@
                                         </div>
                                     </div>
                                     <div class="tab-pane fade" id="nav_dokumen" role="tabpanel">
-                                        <div class="col-md-6">
+                                        {{-- <div class="col-md-6">
                                             <div class="d-flex align-items-start align-items-sm-center gap-4">
                                                 <img src="{{ asset('admin/assets/img/avatars/cv.png') }}"
                                                     alt="user-avatar" class="d-block w-px-120 h-px-120 rounded"
@@ -2223,6 +2127,117 @@
                                                         MB</div>
                                                 </div>
 
+                                            </div>
+                                        </div> --}}
+                                        <div class="col-md-3 mt-3">
+                                            <span
+                                                class="mdi mdi-account-school-outline badge bg-label-success">&nbsp;KEAHLIAN</span>
+                                        </div>
+                                        <hr class="m-0 mb-3">
+                                        <div class="row mt-2 gy-4">
+                                            <div class="col-md-6">
+                                                <button type="button" id="btn_add_keahlian"
+                                                    class="btn btn-sm btn-primary"><i class="mdi mdi-plus"></i></button>
+                                            </div>
+                                            <div class="col-lg-12">
+                                                <table class="table table-bordered" id="table_keahlian"
+                                                    style="width: 100%;">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Aksi</th>
+                                                            <th>No</th>
+                                                            <th>Nama&nbsp;Keahlian</th>
+                                                            <th>File</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="modal fade" id="modal_add_keahlian" tabindex="-1"
+                                        aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                        <div class="modal-dialog modal-md">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="exampleModalLabel">Tambah Keahlian</h5>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                        aria-label="Close"></button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <form id="form_add_keahlian" enctype="multipart/form-data">
+                                                        <div class="col-md-12 mb-3">
+                                                            <div class="form-floating form-floating-outline">
+                                                                <input type="text" name="nama_keahlian"
+                                                                    id="nama_keahlian" class="form-control"
+                                                                    value="">
+                                                                <label for="nama_keahlian">Nama Keahlian</label>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-12 mb-3">
+                                                            <div class="form-floating form-floating-outline">
+                                                                <input type="file" name="file_keahlian"
+                                                                    id="file_keahlian" class="form-control" hidden
+                                                                    value="" accept=".pdf">
+                                                                <button type="button" id="btn_upload_keahlian"
+                                                                    class="btn btn-sm btn-secondary"><i
+                                                                        class="mdi mdi-upload"></i> Upload</button>
+                                                                <p class="text-primary">format: PDF</p>
+                                                                <div class="group-button-keahlian align-items-center">
+                                                                </div>
+                                                                <label for="file_keahlian">File</label>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-12 mb-3">
+                                                            <button type="button" id="btn_simpan_keahlian"
+                                                                class="btn btn-sm btn-primary"><i
+                                                                    class="mdi mdi-content-save"></i> Simpan</button>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="modal fade" id="modal_edit_keahlian" tabindex="-1"
+                                        aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                        <div class="modal-dialog modal-md">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="exampleModalLabel">Edit Keahlian</h5>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                        aria-label="Close"></button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <form id="form_edit_keahlian">
+                                                        <div class="col-md-12 mb-3">
+                                                            <input type="hidden" name="id_keahlian" id="id_keahlian"
+                                                                value="">
+                                                            <div class="form-floating form-floating-outline">
+                                                                <input type="text" name="nama_keahlian_update"
+                                                                    id="nama_keahlian_update" class="form-control"
+                                                                    value="">
+                                                                <label for="nama_keahlian_update">Nama Keahlian</label>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-12 mb-3">
+                                                            <label for="file_keahlian_update">File Keahlian</label>
+                                                            <input type="file" name="file_keahlian_update"
+                                                                id="file_keahlian_update" hidden accept=".pdf"
+                                                                class="form-control" value="">
+                                                            <input type="hidden" name="file_keahlian_old_update"
+                                                                id="file_keahlian_old_update" value="">
+                                                            <div class="group-update-keahlian align-items-center">
+                                                            </div>
+
+                                                        </div>
+                                                        <div class="col-md-12 mb-3">
+                                                            <button type="button" id="btn_simpan_edit_keahlian"
+                                                                class="btn btn-sm btn-primary"><i
+                                                                    class="mdi mdi-content-save"></i> Simpan</button>
+                                                        </div>
+                                                    </form>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>

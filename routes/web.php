@@ -42,6 +42,7 @@ use App\Http\Controllers\HoldingController;
 use App\Http\Controllers\InterviewController;
 use App\Http\Controllers\IzinController;
 use App\Http\Controllers\KaryawanKesehatanController;
+use App\Http\Controllers\KaryawanPendidikanController;
 use App\Http\Controllers\KaryawanRiwayatController;
 use App\Http\Controllers\MappingShiftController;
 use App\Http\Controllers\MenuController;
@@ -270,10 +271,11 @@ Route::middleware('admin')->group(function () {
     Route::get('/karyawan/pdfKaryawan/{holding}', [karyawanController::class, 'download_pdf_karyawan']);
 
     // PENDIDIKAN KARYAWAN
-    Route::get('/karyawan/pendidikan/{id}', [karyawanController::class, 'pendidikan_datatable']);
-    Route::post('/karyawan/AddPendidikan/', [karyawanController::class, 'add_pendidikan']);
-    Route::post('/karyawan/UpdatePendidikan/', [karyawanController::class, 'update_pendidikan']);
-    Route::post('/karyawan/DeletePendidikan/', [karyawanController::class, 'delete_pendidikan']);
+    Route::get('/karyawan/pendidikan/button_pendidikan/{id}', [KaryawanPendidikanController::class, 'button_pendidikan'])->name('button_pendidikan');
+    Route::get('/karyawan/pendidikan/{id}', [KaryawanPendidikanController::class, 'pendidikan_datatable']);
+    Route::post('/karyawan/AddPendidikan/', [karyawanPendidikanController::class, 'add_pendidikan']);
+    Route::post('/karyawan/UpdatePendidikan/', [karyawanPendidikanController::class, 'update_pendidikan']);
+    Route::post('/karyawan/DeletePendidikan/{id}', [karyawanPendidikanController::class, 'delete_pendidikan']);
 
     // Riwayat Pekerjaan
     Route::get('/karyawan/riwayat/{id}', [KaryawanRiwayatController::class, 'riwayat_datatable']);

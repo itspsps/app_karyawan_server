@@ -164,7 +164,29 @@
                 );
         });
         // BUTTON PENDIDIKAN
-        $('#btn_add_pendidikan').click(function() {
+        $('#pesan_disabled_pendidikan').hide();
+        $.ajax({
+            type: "GET",
+            url: "{{ url('/karyawan/pendidikan/button_pendidikan/' . $karyawan->id) }}",
+            error: function(error) {
+                Swal.fire({
+                    title: 'error',
+                    text: error.responseJSON.message,
+                    icon: 'error',
+                    timer: 4500
+                })
+
+            },
+            success: function(data_pendidikan) {
+                // console.log(data_pendidikan);
+                if (data_pendidikan.data_pendidikan >= 3) {
+                    $('#pesan_disabled_pendidikan').show();
+                    $('#btn_tambah_pendidikan').attr("disabled", true);
+
+                }
+            }
+        });
+        $('#btn_tambah_pendidikan').click(function() {
             $(this).find(':focus').blur(); // lepas focus dari elemen apapun di modal
             $('#nama_instansi').val('');
             $('#jurusan').val('');
@@ -187,7 +209,7 @@
             processing: true,
             serverSide: true,
             ajax: {
-                url: "@if (Auth::user()->is_admin == 'hrd') {{ url('hrd/karyawan/pendidikan/' . $karyawan->id) }}@else{{ url('karyawan/pendidikan/' . $karyawan->id) }}@endif",
+                url: "{{ url('karyawan/pendidikan/' . $karyawan->id) }}",
             },
             columns: [{
                     data: "aksi",
@@ -223,6 +245,10 @@
             order: [
                 [2, 'asc']
             ]
+        });
+        $('#nav_pendidikan').on('shown.bs.tab', function(e) {
+            table.columns.adjust().draw().responsive.recalc();
+            // table.draw();
         });
         var table1 = $('#table_keahlian').DataTable({
             pageLength: 50,
@@ -269,7 +295,6 @@
                         icon: 'error',
                         timer: 4500
                     })
-
                 },
                 success: function(data_riwayat) {
                     // console.log(data_riwayat);
@@ -335,7 +360,7 @@
 
             ],
         });
-        $('#progres-tab').on('shown.bs.tab', function(e) {
+        $('#nav_riwayat').on('shown.bs.tab', function(e) {
             table2.columns.adjust().draw().responsive.recalc();
             // table.draw();
         });
@@ -690,7 +715,7 @@
             var nama_instansi = $('#nama_instansi').val();
             // console.log(id_karyawan, jenjang, jurusan, tahun_masuk, tahun_lulus, nama_instansi);
             $.ajax({
-                url: "@if (Auth::user()->is_admin == 'hrd'){{ url('hrd/karyawan/AddPendidikan') }}@else{{ url('karyawan/AddPendidikan') }}@endif",
+                url: "{{ url('karyawan/AddPendidikan') }}",
                 type: 'POST',
                 data: {
                     _token: "{{ csrf_token() }}",
@@ -731,8 +756,14 @@
                             html: errors,
                         })
                     }
+
                     $('#form_add_pendidikan').trigger('reset');
+                    console.log(response.data_pendidikan);
                     table.ajax.reload();
+                    if (response.data_pendidikan >= 3) {
+                        $('#btn_tambah_pendidikan').attr("disabled", true);
+                        $('#pesan_disabled_pendidikan').show();
+                    }
                 },
                 error: function(data) {
                     Swal.close();
@@ -779,7 +810,7 @@
             var nama_instansi = $('#nama_instansi_update').val();
             // console.log(id_karyawan, jenjang, jurusan, tahun_masuk, tahun_lulus, nama_instansi);
             $.ajax({
-                url: "@if (Auth::user()->is_admin == 'hrd'){{ url('hrd/karyawan/UpdatePendidikan') }}@else{{ url('karyawan/UpdatePendidikan') }}@endif",
+                url: "{{ url('karyawan/UpdatePendidikan') }}",
                 type: 'POST',
                 data: {
                     _token: "{{ csrf_token() }}",
@@ -861,11 +892,11 @@
             }).then((result) => {
                 if (result.value) { // v9 pakai result.value, bukan result.isConfirmed
                     $.ajax({
-                        url: "{{ url('karyawan/DeletePendidikan') }}",
+                        url: "{{ url('karyawan/DeletePendidikan/' . $karyawan->id) }}",
                         type: "POST",
                         data: {
                             _token: "{{ csrf_token() }}",
-                            id_pendidikan: id
+                            id_pendidikan: id,
                         },
                         beforeSend: function() {
                             Swal.fire({
@@ -886,6 +917,11 @@
                                     text: response.message
                                 });
                                 table.ajax.reload(); // reload datatable
+                                if (response.data_pendidikan <= 3) {
+                                    $('#btn_tambah_pendidikan').attr(
+                                        "disabled", false);
+                                    $('#pesan_disabled_pendidikan').hide();
+                                }
                             } else {
                                 Swal.fire({
                                     icon: 'error',
@@ -2743,70 +2779,62 @@
                             }).then(function(result) {
                                 if (result.value) {
                                     // console.log(id_pengobatan);
-                                    Swal.fire({
-                                        title: 'Harap Tuggu Sebentar!',
-                                        html: 'Proses Menghapus Data...', // add html attribute if you want or remove
-                                        allowOutsideClick: false,
-                                        onBeforeOpen: () => {
-                                            Swal.showLoading()
-                                            $.ajax({
-                                                data: {
-                                                    "_token": "{{ csrf_token() }}",
-                                                    id_pengobatan: id_pengobatan,
-                                                },
-                                                url: "{{ route('pengobatan_reset') }}",
-                                                type: "POST",
-                                                dataType: 'json',
-                                                beforeSend: function() {
-                                                    Swal.fire({
-                                                        title: 'Memuat Data...',
-                                                        html: 'Mohon tunggu sebentar',
-                                                        allowOutsideClick: false,
-                                                        allowEscapeKey: false,
-                                                        didOpen: () => {
-                                                            Swal
-                                                                .showLoading();
-                                                        }
-                                                    });
-                                                },
-                                                success: function(
-                                                    data) {
-                                                    Swal.close();
-                                                    if (data.code ==
-                                                        200) {
-                                                        $('#tabel_pengobatan')
-                                                            .DataTable()
-                                                            .ajax
-                                                            .reload();
-                                                        Swal.fire({
-                                                            title: 'success',
-                                                            text: 'Data Berhasil dihapus',
-                                                            icon: 'success',
-                                                            timer: 1500
-                                                        })
-                                                    } else {
-                                                        $('#tabel_pengobatan')
-                                                            .DataTable()
-                                                            .ajax
-                                                            .reload();
-                                                        Swal.fire({
-                                                            title: 'error',
-                                                            text: 'Data gagal dihapus',
-                                                            icon: 'success',
-                                                            timer: 1500
-                                                        })
-                                                    }
-                                                },
-                                                error: function(data) {
-                                                    Swal.fire({
-                                                        title: 'Gagal',
-                                                        text: 'Data Gagal dihapus',
-                                                        icon: 'error',
-                                                        timer: 1500
-                                                    })
+                                    $.ajax({
+                                        data: {
+                                            "_token": "{{ csrf_token() }}",
+                                            id_pengobatan: id_pengobatan,
+                                        },
+                                        url: "{{ route('pengobatan_reset') }}",
+                                        type: "POST",
+                                        dataType: 'json',
+                                        beforeSend: function() {
+                                            Swal.fire({
+                                                title: 'Memuat Data...',
+                                                html: 'Mohon tunggu sebentar',
+                                                allowOutsideClick: false,
+                                                allowEscapeKey: false,
+                                                didOpen: () => {
+                                                    Swal
+                                                        .showLoading();
                                                 }
                                             });
                                         },
+                                        success: function(
+                                            data) {
+                                            Swal.close();
+                                            if (data.code ==
+                                                200) {
+                                                $('#tabel_pengobatan')
+                                                    .DataTable()
+                                                    .ajax
+                                                    .reload();
+                                                Swal.fire({
+                                                    title: 'success',
+                                                    text: 'Data Berhasil dihapus',
+                                                    icon: 'success',
+                                                    timer: 1500
+                                                })
+                                            } else {
+                                                $('#tabel_pengobatan')
+                                                    .DataTable()
+                                                    .ajax
+                                                    .reload();
+                                                Swal.fire({
+                                                    title: 'error',
+                                                    text: 'Data gagal dihapus',
+                                                    icon: 'success',
+                                                    timer: 1500
+                                                })
+                                            }
+                                        },
+                                        error: function(data) {
+                                            Swal.fire({
+                                                title: 'Gagal',
+                                                text: 'Data Gagal dihapus',
+                                                icon: 'error',
+                                                timer: 1500
+                                            })
+                                        }
                                     });
 
                                 } else {
@@ -2874,75 +2902,67 @@
                             }).then(function(result) {
                                 if (result.value) {
                                     // console.log(id_karyawan);
-                                    Swal.fire({
-                                        title: 'Harap Tuggu Sebentar!',
-                                        html: 'Proses Menghapus Data...', // add html attribute if you want or remove
-                                        allowOutsideClick: false,
-                                        onBeforeOpen: () => {
-                                            Swal.showLoading()
-                                            $.ajax({
-                                                data: {
-                                                    "_token": "{{ csrf_token() }}",
-                                                    id_karyawan: id_karyawan,
-                                                },
-                                                url: "{{ route('rumah_sakit_reset') }}",
-                                                type: "POST",
-                                                dataType: 'json',
-                                                beforeSend: function() {
-                                                    Swal.fire({
-                                                        title: 'Memuat Data...',
-                                                        html: 'Mohon tunggu sebentar',
-                                                        allowOutsideClick: false,
-                                                        allowEscapeKey: false,
-                                                        didOpen: () => {
-                                                            Swal
-                                                                .showLoading();
-                                                        }
-                                                    });
-                                                },
-                                                success: function(
-                                                    data
-                                                ) {
-                                                    Swal.close();
-                                                    if (data
-                                                        .code ==
-                                                        200
-                                                    ) {
-                                                        $('#tabel_rs')
-                                                            .DataTable()
-                                                            .ajax
-                                                            .reload();
-                                                        Swal.fire({
-                                                            title: 'success',
-                                                            text: 'Data Berhasil dihapus',
-                                                            icon: 'success',
-                                                            timer: 1500
-                                                        })
-                                                    } else {
-                                                        $('#tabel_rs')
-                                                            .DataTable()
-                                                            .ajax
-                                                            .reload();
-                                                        Swal.fire({
-                                                            title: 'error',
-                                                            text: 'Data gagal dihapus',
-                                                            icon: 'success',
-                                                            timer: 1500
-                                                        })
-                                                    }
-                                                },
-                                                error: function(
-                                                    data
-                                                ) {
-                                                    Swal.fire({
-                                                        title: 'Gagal',
-                                                        text: 'Data Gagal dihapus',
-                                                        icon: 'error',
-                                                        timer: 1500
-                                                    })
+                                    $.ajax({
+                                        data: {
+                                            "_token": "{{ csrf_token() }}",
+                                            id_karyawan: id_karyawan,
+                                        },
+                                        url: "{{ route('rumah_sakit_reset') }}",
+                                        type: "POST",
+                                        dataType: 'json',
+                                        beforeSend: function() {
+                                            Swal.fire({
+                                                title: 'Memuat Data...',
+                                                html: 'Mohon tunggu sebentar',
+                                                allowOutsideClick: false,
+                                                allowEscapeKey: false,
+                                                didOpen: () => {
+                                                    Swal
+                                                        .showLoading();
                                                 }
                                             });
                                         },
+                                        success: function(
+                                            data
+                                        ) {
+                                            Swal.close();
+                                            if (data
+                                                .code ==
+                                                200
+                                            ) {
+                                                $('#tabel_rs')
+                                                    .DataTable()
+                                                    .ajax
+                                                    .reload();
+                                                Swal.fire({
+                                                    title: 'success',
+                                                    text: 'Data Berhasil dihapus',
+                                                    icon: 'success',
+                                                    timer: 1500
+                                                })
+                                            } else {
+                                                $('#tabel_rs')
+                                                    .DataTable()
+                                                    .ajax
+                                                    .reload();
+                                                Swal.fire({
+                                                    title: 'error',
+                                                    text: 'Data gagal dihapus',
+                                                    icon: 'success',
+                                                    timer: 1500
+                                                })
+                                            }
+                                        },
+                                        error: function(
+                                            data
+                                        ) {
+                                            Swal.fire({
+                                                title: 'Gagal',
+                                                text: 'Data Gagal dihapus',
+                                                icon: 'error',
+                                                timer: 1500
+                                            })
+                                        }
                                     });
 
                                 } else {
@@ -3007,70 +3027,62 @@
                             }).then(function(result) {
                                 if (result.value) {
                                     // console.log(id_karyawan);
-                                    Swal.fire({
-                                        title: 'Harap Tuggu Sebentar!',
-                                        html: 'Proses Menghapus Data...', // add html attribute if you want or remove
-                                        allowOutsideClick: false,
-                                        onBeforeOpen: () => {
-                                            Swal.showLoading()
-                                            $.ajax({
-                                                data: {
-                                                    "_token": "{{ csrf_token() }}",
-                                                    id_karyawan: id_karyawan,
-                                                },
-                                                url: "{{ route('kecelakaan_reset') }}",
-                                                type: "POST",
-                                                dataType: 'json',
-                                                beforeSend: function() {
-                                                    Swal.fire({
-                                                        title: 'Memuat Data...',
-                                                        html: 'Mohon tunggu sebentar',
-                                                        allowOutsideClick: false,
-                                                        allowEscapeKey: false,
-                                                        didOpen: () => {
-                                                            Swal
-                                                                .showLoading();
-                                                        }
-                                                    });
-                                                },
-                                                success: function(
-                                                    data) {
-                                                    Swal.close();
-                                                    if (data.code ==
-                                                        200) {
-                                                        $('#tabel_kecelakaan')
-                                                            .DataTable()
-                                                            .ajax
-                                                            .reload();
-                                                        Swal.fire({
-                                                            title: 'success',
-                                                            text: 'Data Berhasil dihapus',
-                                                            icon: 'success',
-                                                            timer: 1500
-                                                        })
-                                                    } else {
-                                                        $('#tabel_kecelakaan')
-                                                            .DataTable()
-                                                            .ajax
-                                                            .reload();
-                                                        Swal.fire({
-                                                            title: 'error',
-                                                            text: 'Data gagal dihapus',
-                                                            icon: 'success',
-                                                            timer: 1500
-                                                        })
-                                                    }
-                                                },
-                                                error: function(data) {
-                                                    Swal.fire({
-                                                        title: 'Gagal',
-                                                        text: 'Data Gagal dihapus',
-                                                        icon: 'error',
-                                                        timer: 1500
-                                                    })
+                                    $.ajax({
+                                        data: {
+                                            "_token": "{{ csrf_token() }}",
+                                            id_karyawan: id_karyawan,
+                                        },
+                                        url: "{{ route('kecelakaan_reset') }}",
+                                        type: "POST",
+                                        dataType: 'json',
+                                        beforeSend: function() {
+                                            Swal.fire({
+                                                title: 'Memuat Data...',
+                                                html: 'Mohon tunggu sebentar',
+                                                allowOutsideClick: false,
+                                                allowEscapeKey: false,
+                                                didOpen: () => {
+                                                    Swal
+                                                        .showLoading();
                                                 }
                                             });
                                         },
+                                        success: function(
+                                            data) {
+                                            Swal.close();
+                                            if (data.code ==
+                                                200) {
+                                                $('#tabel_kecelakaan')
+                                                    .DataTable()
+                                                    .ajax
+                                                    .reload();
+                                                Swal.fire({
+                                                    title: 'success',
+                                                    text: 'Data Berhasil dihapus',
+                                                    icon: 'success',
+                                                    timer: 1500
+                                                })
+                                            } else {
+                                                $('#tabel_kecelakaan')
+                                                    .DataTable()
+                                                    .ajax
+                                                    .reload();
+                                                Swal.fire({
+                                                    title: 'error',
+                                                    text: 'Data gagal dihapus',
+                                                    icon: 'success',
+                                                    timer: 1500
+                                                })
+                                            }
+                                        },
+                                        error: function(data) {
+                                            Swal.fire({
+                                                title: 'Gagal',
+                                                text: 'Data Gagal dihapus',
+                                                icon: 'error',
+                                                timer: 1500
+                                            })
+                                        }
                                     });
 
                                 } else {
@@ -3315,63 +3327,55 @@
         }).then(function(result) {
             if (result.value) {
                 // console.log(id_pengobatan);
-                Swal.fire({
-                    title: 'Harap Tuggu Sebentar!',
-                    html: 'Proses Menghapus Data...', // add html attribute if you want or remove
-                    allowOutsideClick: false,
-                    onBeforeOpen: () => {
-                        Swal.showLoading()
-                        $.ajax({
-                            data: {
-                                "_token": "{{ csrf_token() }}",
-                                id_pengobatan: id_pengobatan,
-                            },
-                            url: "{{ route('pengobatan_delete') }}",
-                            type: "POST",
-                            dataType: 'json',
-                            beforeSend: function() {
-                                Swal.fire({
-                                    title: 'Memuat Data...',
-                                    html: 'Mohon tunggu sebentar',
-                                    allowOutsideClick: false,
-                                    allowEscapeKey: false,
-                                    didOpen: () => {
-                                        Swal.showLoading();
-                                    }
-                                });
-                            },
-                            success: function(data) {
-                                Swal.close();
-                                if (data.code == 200) {
-                                    $('#tabel_pengobatan').DataTable().ajax
-                                        .reload();
-                                    Swal.fire({
-                                        title: 'success',
-                                        text: 'Data Berhasil dihapus',
-                                        icon: 'success',
-                                        timer: 1500
-                                    })
-                                } else {
-                                    $('#tabel_pengobatan').DataTable().ajax
-                                        .reload();
-                                    Swal.fire({
-                                        title: 'error',
-                                        text: 'Data gagal dihapus',
-                                        icon: 'success',
-                                        timer: 1500
-                                    })
-                                }
-                            },
-                            error: function(data) {
-                                Swal.fire({
-                                    title: 'Gagal',
-                                    text: 'Data Gagal dihapus',
-                                    icon: 'error',
-                                    timer: 1500
-                                })
+                $.ajax({
+                    data: {
+                        "_token": "{{ csrf_token() }}",
+                        id_pengobatan: id_pengobatan,
+                    },
+                    url: "{{ route('pengobatan_delete') }}",
+                    type: "POST",
+                    dataType: 'json',
+                    beforeSend: function() {
+                        Swal.fire({
+                            title: 'Memuat Data...',
+                            html: 'Mohon tunggu sebentar',
+                            allowOutsideClick: false,
+                            allowEscapeKey: false,
+                            didOpen: () => {
+                                Swal.showLoading();
                             }
                         });
                     },
+                    success: function(data) {
+                        Swal.close();
+                        if (data.code == 200) {
+                            $('#tabel_pengobatan').DataTable().ajax
+                                .reload();
+                            Swal.fire({
+                                title: 'success',
+                                text: 'Data Berhasil dihapus',
+                                icon: 'success',
+                                timer: 1500
+                            })
+                        } else {
+                            $('#tabel_pengobatan').DataTable().ajax
+                                .reload();
+                            Swal.fire({
+                                title: 'error',
+                                text: 'Data gagal dihapus',
+                                icon: 'success',
+                                timer: 1500
+                            })
+                        }
+                    },
+                    error: function(data) {
+                        Swal.fire({
+                            title: 'Gagal',
+                            text: 'Data Gagal dihapus',
+                            icon: 'error',
+                            timer: 1500
+                        })
+                    }
                 });
 
             } else {
@@ -3504,63 +3508,55 @@
         }).then(function(result) {
             if (result.value) {
                 // console.log(id_kesehatan_rs);
-                Swal.fire({
-                    title: 'Harap Tuggu Sebentar!',
-                    html: 'Proses Menghapus Data...', // add html attribute if you want or remove
-                    allowOutsideClick: false,
-                    onBeforeOpen: () => {
-                        Swal.showLoading()
-                        $.ajax({
-                            data: {
-                                "_token": "{{ csrf_token() }}",
-                                id_kesehatan_rs: id_kesehatan_rs,
-                            },
-                            url: "{{ route('rumah_sakit_delete') }}",
-                            type: "POST",
-                            dataType: 'json',
-                            beforeSend: function() {
-                                Swal.fire({
-                                    title: 'Memuat Data...',
-                                    html: 'Mohon tunggu sebentar',
-                                    allowOutsideClick: false,
-                                    allowEscapeKey: false,
-                                    didOpen: () => {
-                                        Swal.showLoading();
-                                    }
-                                });
-                            },
-                            success: function(data) {
-                                Swal.close();
-                                if (data.code == 200) {
-                                    $('#tabel_rs').DataTable().ajax
-                                        .reload();
-                                    Swal.fire({
-                                        title: 'success',
-                                        text: 'Data Berhasil dihapus',
-                                        icon: 'success',
-                                        timer: 1500
-                                    })
-                                } else {
-                                    $('#tabel_rs').DataTable().ajax
-                                        .reload();
-                                    Swal.fire({
-                                        title: 'error',
-                                        text: 'Data gagal dihapus',
-                                        icon: 'success',
-                                        timer: 1500
-                                    })
-                                }
-                            },
-                            error: function(data) {
-                                Swal.fire({
-                                    title: 'Gagal',
-                                    text: 'Data Gagal dihapus',
-                                    icon: 'error',
-                                    timer: 1500
-                                })
+                $.ajax({
+                    data: {
+                        "_token": "{{ csrf_token() }}",
+                        id_kesehatan_rs: id_kesehatan_rs,
+                    },
+                    url: "{{ route('rumah_sakit_delete') }}",
+                    type: "POST",
+                    dataType: 'json',
+                    beforeSend: function() {
+                        Swal.fire({
+                            title: 'Memuat Data...',
+                            html: 'Mohon tunggu sebentar',
+                            allowOutsideClick: false,
+                            allowEscapeKey: false,
+                            didOpen: () => {
+                                Swal.showLoading();
                             }
                         });
                     },
+                    success: function(data) {
+                        Swal.close();
+                        if (data.code == 200) {
+                            $('#tabel_rs').DataTable().ajax
+                                .reload();
+                            Swal.fire({
+                                title: 'success',
+                                text: 'Data Berhasil dihapus',
+                                icon: 'success',
+                                timer: 1500
+                            })
+                        } else {
+                            $('#tabel_rs').DataTable().ajax
+                                .reload();
+                            Swal.fire({
+                                title: 'error',
+                                text: 'Data gagal dihapus',
+                                icon: 'success',
+                                timer: 1500
+                            })
+                        }
+                    },
+                    error: function(data) {
+                        Swal.fire({
+                            title: 'Gagal',
+                            text: 'Data Gagal dihapus',
+                            icon: 'error',
+                            timer: 1500
+                        })
+                    }
                 });
 
             } else {
@@ -3693,63 +3689,55 @@
         }).then(function(result) {
             if (result.value) {
                 // console.log(id_kecelakaan);
-                Swal.fire({
-                    title: 'Harap Tuggu Sebentar!',
-                    html: 'Proses Menghapus Data...', // add html attribute if you want or remove
-                    allowOutsideClick: false,
-                    onBeforeOpen: () => {
-                        Swal.showLoading()
-                        $.ajax({
-                            data: {
-                                "_token": "{{ csrf_token() }}",
-                                id_kecelakaan: id_kecelakaan,
-                            },
-                            url: "{{ route('kecelakaan_delete') }}",
-                            type: "POST",
-                            dataType: 'json',
-                            beforeSend: function() {
-                                Swal.fire({
-                                    title: 'Memuat Data...',
-                                    html: 'Mohon tunggu sebentar',
-                                    allowOutsideClick: false,
-                                    allowEscapeKey: false,
-                                    didOpen: () => {
-                                        Swal.showLoading();
-                                    }
-                                });
-                            },
-                            success: function(data) {
-                                Swal.close();
-                                if (data.code == 200) {
-                                    $('#tabel_kecelakaan').DataTable().ajax
-                                        .reload();
-                                    Swal.fire({
-                                        title: 'success',
-                                        text: 'Data Berhasil dihapus',
-                                        icon: 'success',
-                                        timer: 1500
-                                    })
-                                } else {
-                                    $('#tabel_kecelakaan').DataTable().ajax
-                                        .reload();
-                                    Swal.fire({
-                                        title: 'error',
-                                        text: 'Data gagal dihapus',
-                                        icon: 'success',
-                                        timer: 1500
-                                    })
-                                }
-                            },
-                            error: function(data) {
-                                Swal.fire({
-                                    title: 'Gagal',
-                                    text: 'Data Gagal dihapus',
-                                    icon: 'error',
-                                    timer: 1500
-                                })
+                $.ajax({
+                    data: {
+                        "_token": "{{ csrf_token() }}",
+                        id_kecelakaan: id_kecelakaan,
+                    },
+                    url: "{{ route('kecelakaan_delete') }}",
+                    type: "POST",
+                    dataType: 'json',
+                    beforeSend: function() {
+                        Swal.fire({
+                            title: 'Memuat Data...',
+                            html: 'Mohon tunggu sebentar',
+                            allowOutsideClick: false,
+                            allowEscapeKey: false,
+                            didOpen: () => {
+                                Swal.showLoading();
                             }
                         });
                     },
+                    success: function(data) {
+                        Swal.close();
+                        if (data.code == 200) {
+                            $('#tabel_kecelakaan').DataTable().ajax
+                                .reload();
+                            Swal.fire({
+                                title: 'success',
+                                text: 'Data Berhasil dihapus',
+                                icon: 'success',
+                                timer: 1500
+                            })
+                        } else {
+                            $('#tabel_kecelakaan').DataTable().ajax
+                                .reload();
+                            Swal.fire({
+                                title: 'error',
+                                text: 'Data gagal dihapus',
+                                icon: 'success',
+                                timer: 1500
+                            })
+                        }
+                    },
+                    error: function(data) {
+                        Swal.fire({
+                            title: 'Gagal',
+                            text: 'Data Gagal dihapus',
+                            icon: 'error',
+                            timer: 1500
+                        })
+                    }
                 });
 
             } else {
