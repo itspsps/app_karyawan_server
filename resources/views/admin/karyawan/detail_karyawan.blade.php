@@ -1768,7 +1768,7 @@
 
                                     </div>
                                     <div class="tab-pane fade" id="nav_bank" role="tabpanel">
-                                        <div class="row mt-2 gy-4">
+                                        <div class="row mt-2 mb-2 gy-4">
                                             <div class="col-md-6">
                                                 <div class="form-floating form-floating-outline">
                                                     <?php $bank = [
@@ -1838,6 +1838,11 @@
                                                     <p class="alert alert-danger">{{ $message }}</p>
                                                 @enderror
                                             </div>
+                                        </div>
+
+                                        <div class="d-flex justify-content-center py-2">
+                                            <button class="btn btn-primary" type="button" id="btn_update_bank">Simpan
+                                                Data</button>
                                         </div>
                                     </div>
                                     <div class="tab-pane fade" id="nav_pajak" role="tabpanel">

@@ -304,6 +304,8 @@
                 [2, 'asc']
             ]
         });
+
+
         // riwayat
         $('#pesan_disabled').hide();
         $(document).ready(function() {
@@ -1368,7 +1370,7 @@
         });
     });
 
-
+    // Perbankan
     function bankCheck(that) {
         if (that.value == "BBRI") {
             Swal.fire({
@@ -1417,6 +1419,101 @@
             // document.getElementById("ifBRI").style.display = "none";
         }
     }
+    $('#nomor_rekening').keyup(function(e) {
+        if ($(this).val().length >= bankdigit) {
+            $(this).val($(this).val().substr(0, bankdigit));
+            document.getElementById("nomor_rekening").focus();
+            Swal.fire({
+                customClass: {
+                    container: 'my-swal'
+                },
+                target: document.getElementById('modal_tambah_karyawan'),
+                position: 'top',
+                icon: 'warning',
+                title: 'Nomor Rekening harus ' + bankdigit +
+                    ' karakter. Mohon cek kembali!',
+                showConfirmButton: false,
+                timer: 1500
+            });
+        }
+    });
+    $('#btn_update_bank').on('click', function(e) {
+        e.preventDefault();
+        var formData = new FormData();
+
+        //ambil data dari form
+        formData.append('_token', '{{ csrf_token() }}');
+        formData.append('nama_bank', $('#nama_bank').val());
+        formData.append('nama_pemilik_rekening', $('#nama_pemilik_rekening').val());
+        formData.append('nomor_rekening', $('#nomor_rekening').val());
+
+        var fileInput = $('#surat_keterangan_add')[0];
+        if (fileInput.files.length > 0) {
+            formData.append('surat_keterangan', fileInput.files[0]);
+        }
+        // post
+        $.ajax({
+            type: "POST",
+
+            url: "{{ url('/karyawan/proses-edit/' . $karyawan->id) }}",
+            data: formData,
+            contentType: false,
+            processData: false,
+            beforeSend: function() {
+                Swal.fire({
+                    title: 'Memuat Data...',
+                    html: 'Mohon tunggu sebentar',
+                    allowOutsideClick: false,
+                    allowEscapeKey: false,
+                    didOpen: () => {
+                        Swal.showLoading();
+                    }
+                });
+            },
+            error: function() {
+                Swal.close();
+                alert('Something is wrong!');
+                // console.log(formData);
+            },
+            success: function(data) {
+                Swal.close();
+                if (data.code == 200) {
+                    Swal.fire({
+                        title: 'Berhasil',
+                        text: data.message,
+                        icon: 'success',
+                        timer: 5000
+                    })
+                } else if (data.code == 400) {
+                    let errors = data.errors;
+                    // console.log(errors);
+                    let errorMessages = '';
+
+                    Object.keys(errors).forEach(function(key) {
+                        errors[key].forEach(function(message) {
+                            errorMessages += `• ${message}\n`;
+                        });
+                    });
+                    Swal.fire({
+                        // title: data.message,
+                        text: errorMessages,
+                        icon: 'warning',
+                        timer: 4500
+                    })
+
+                } else {
+                    Swal.fire({
+                        title: 'Gagal',
+                        text: data.error,
+                        icon: 'error',
+                        timer: 4500
+                    })
+
+                }
+            }
+        });
+    });
+    // Perbankan end
     $(function() {
         var kategori = '{{ $karyawan->kategori }}';
         if (kategori == 'Karyawan Harian') {
@@ -1572,10 +1669,6 @@
                     showConfirmButton: false,
                     timer: 1500
                 });
-                // if (length !== bankdigit) {
-                //     document.getElementById('nomor_rekening').value;
-                //     alert('Nomor Rekening harus ' + bankdigit + ' karakter. Mohon cek kembali!');
-                //     document.getElementById('nomor_rekening').focus();
             }
         });
         $('#npwp').keyup(function(e) {
@@ -1593,36 +1686,8 @@
                     showConfirmButton: false,
                     timer: 1500
                 });
-                // if (length !== bankdigit) {
-                //     document.getElementById('nomor_rekening').value;
-                //     alert('Nomor Rekening harus ' + bankdigit + ' karakter. Mohon cek kembali!');
-                //     document.getElementById('nomor_rekening').focus();
             }
         });
-        $('#nomor_rekening').keyup(function(e) {
-            if ($(this).val().length >= bankdigit) {
-                $(this).val($(this).val().substr(0, bankdigit));
-                document.getElementById("nomor_rekening").focus();
-                Swal.fire({
-                    customClass: {
-                        container: 'my-swal'
-                    },
-                    target: document.getElementById('modal_tambah_karyawan'),
-                    position: 'top',
-                    icon: 'warning',
-                    title: 'Nomor Rekening harus ' + bankdigit +
-                        ' karakter. Mohon cek kembali!',
-                    showConfirmButton: false,
-                    timer: 1500
-                });
-                // if (length !== bankdigit) {
-                //     document.getElementById('nomor_rekening').value;
-                //     alert('Nomor Rekening harus ' + bankdigit + ' karakter. Mohon cek kembali!');
-                //     document.getElementById('nomor_rekening').focus();
-            }
-        });
-
-
         $('#id_provinsi').on('change', function() {
             let id_provinsi = $(this).val();
             let url =
@@ -3980,11 +4045,4 @@
         }
     });
     // end kesehatan
-
-
-    // End Kesehatan
 </script>
-{{-- riwayat pekerjaan --}}
-<script></script>
-
-{{-- end riwayat pekerjaan --}}

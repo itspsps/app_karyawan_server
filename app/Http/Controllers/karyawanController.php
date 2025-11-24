@@ -1777,6 +1777,48 @@ class karyawanController extends Controller
         }
     }
 
+    public function editBank(Request $request, $id)
+    {
+        $validator = Validator::make(
+            $request->all(),
+            [
+                'nama_bank' => 'required',
+                'nama_pemilik_rekening' => 'required',
+                'nomor_rekening' => 'required',
+                // 'nomor_referensi' => 'numeric',
+            ],
+            [
+                'required' => ':attribute Tidak boleh kosong!',
+            ]
+        );
+        if ($validator->fails()) {
+            return response()->json([
+                'code' => 400,
+                'message' => 'Validasi gagal',
+                'errors' => $validator->errors()
+            ]);
+        }
+        try {
+            Karyawan::where('id', $id)->update(
+                [
+                    'nama_bank'                             => $request->nama_bank,
+                    'nama_pemilik_rekening'                 => $request->nama_pemilik_rekening,
+                    'nomor_rekening'                        => $request->nomor_rekening,
+                ]
+            );
+            return response()->json([
+                'code' => 200,
+                // 'data' => $get_data,
+                // 'data2' => $get_data2,
+                'message' => 'Data Berhasil Diupdate'
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'code' => 500,
+                'error' => $e->getMessage(),
+            ]);
+        }
+    }
 
     public function editKaryawanProses(Request $request, $id)
     {

@@ -255,9 +255,9 @@ Route::middleware('admin')->group(function () {
     Route::get('/karyawan/tambah-karyawan/{holding}', [karyawanController::class, 'tambahKaryawan']);
     Route::post('/karyawan/tambah-karyawan-proses', [karyawanController::class, 'tambahKaryawanProses']);
     Route::get('/karyawan/detail/{id}/{holding}', [karyawanController::class, 'detail']);
-    Route::post('/karyawan/proses-edit/{id}/sp', [karyawanController::class, 'editKaryawanProses']);
-    Route::post('/karyawan/proses-edit/{id}/sps', [karyawanController::class, 'editKaryawanProses']);
-    Route::post('/karyawan/proses-edit/{id}/sip', [karyawanController::class, 'editKaryawanProses']);
+    // Route::post('/karyawan/proses-edit/{id}/sp', [karyawanController::class, 'editKaryawanProses']);
+    // Route::post('/karyawan/proses-edit/{id}/sps', [karyawanController::class, 'editKaryawanProses']);
+    // Route::post('/karyawan/proses-edit/{id}/sip', [karyawanController::class, 'editKaryawanProses']);
     Route::get('/karyawan/delete/{id}/sp', [karyawanController::class, 'deleteKaryawan']);
     Route::get('/karyawan/delete/{id}/sps', [karyawanController::class, 'deleteKaryawan']);
     Route::get('/karyawan/delete/{id}/sip', [karyawanController::class, 'deleteKaryawan']);
@@ -269,6 +269,9 @@ Route::middleware('admin')->group(function () {
     Route::post('/karyawan/ImportUpdateKaryawan/sip', [karyawanController::class, 'ImportUpdateKaryawan']);
     Route::get('/karyawan/ExportKaryawan/{holding}', [karyawanController::class, 'ExportKaryawan']);
     Route::get('/karyawan/pdfKaryawan/{holding}', [karyawanController::class, 'download_pdf_karyawan']);
+
+    // MASTER KARYAWAN TAB
+    Route::post('/karyawan/proses-edit/{id}', [karyawanController::class, 'editBank']);
 
     // PENDIDIKAN KARYAWAN
     Route::get('/karyawan/pendidikan/button_pendidikan/{id}', [KaryawanPendidikanController::class, 'button_pendidikan'])->name('button_pendidikan');
