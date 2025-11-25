@@ -1887,6 +1887,89 @@ class karyawanController extends Controller
             ]);
         }
     }
+    public function ijazah_update(Request $request, $id)
+    {
+        // dd($request->all());
+        if ($request->old_ijazah == NULL) {
+            $ijazah_val = 'required|mimes:pdf|max:5000';
+        } elseif ($request->old_ijazah != NULL) {
+            $ijazah_val = 'nullable';
+        }
+        if ($request->old_transkrip_nilai == NULL) {
+            $transkrip_nilai_val = 'required|mimes:pdf|max:5000';
+        } elseif ($request->old_transkrip_nilai != NULL) {
+            $transkrip_nilai_val = 'nullable';
+        }
+        $validator = Validator::make(
+            $request->all(),
+            [
+                'ijazah' => $ijazah_val,
+                'ipk' => 'required|max:4',
+                'transkrip_nilai' => $transkrip_nilai_val,
+            ],
+            [
+                'required' => ':attribute tidak boleh kosong!',
+                'max' => ':attribute Melebihi ketentuan!',
+            ]
+        );
+        if ($validator->fails()) {
+            return response()->json([
+                'code' => 400,
+                'message' => 'Validasi gagal',
+                'errors' => $validator->errors()
+
+            ]);
+        }
+        //memasukkan data
+        try {
+            if ($request->ijazah != null) {
+                if ($request->old_ijazah != null) {
+                    if (Storage::disk('ijazah')->exists($request->old_ijazah)) {
+                        Storage::disk('ijazah')->delete($request->old_ijazah);
+                    }
+                }
+                $ijazah = $request->file('ijazah')->store('ijazah');
+                $ijazah_save = basename($ijazah);
+            } else {
+                $ijazah_save = $request->old_ijazah;
+            }
+            if ($request->transkrip_nilai != null) {
+                if ($request->old_transkrip_nilai != null) {
+                    if (Storage::disk('transkrip_nilai')->exists($request->old_transkrip_nilai)) {
+                        Storage::disk('transkrip_nilai')->delete($request->old_transkrip_nilai);
+                    }
+                }
+                $transkrip_nilai = $request->file('transkrip_nilai')->store('transkrip_nilai');
+                $transkrip_nilai_save = basename($transkrip_nilai);
+            } else {
+                $transkrip_nilai_save = $request->old_transkrip_nilai;
+            }
+            $datadiri = Karyawan::where('id', $id)->first();
+            $datadiri->ijazah = $ijazah_save;
+            $datadiri->transkrip_nilai = $transkrip_nilai_save;
+            $datadiri->ipk = $request->ipk;
+            $datadiri->updated_at = date('Y-m-d H:i:s');
+            $datadiri->save();
+            // $data_user = Karyawan::select()
+            //     ->where('users_career_id', Auth::user()->id)
+            //     ->with([
+            //         'ToUser' => function ($query) {
+            //             $query;
+            //         }
+            //     ])->first();
+            return response()->json([
+                'code' => 200,
+                // 'data' => $get_data,
+                // 'data_user' => $data_user,
+                'message' => 'Data Berhasil Diupdate'
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'code' => 500,
+                'error' => $e->getMessage(),
+            ]);
+        }
+    }
     public function editBPJS(Request $request, $id)
     {
         if ($request->bpjs_kesehatan == 'on') {
@@ -2205,7 +2288,7 @@ class karyawanController extends Controller
             }
         }
         if ($request['file_cv']) {
-            // dd('ok');
+            // dd('o    ');
             $file_path = 'https://hrd.sumberpangan.store:4430/storage/app/public/file_cv/' . $request->file_cv_lama;
             // dd($file_path);
             if (File::exists($file_path)) {

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Karyawan;
 use App\Models\KaryawanPendidikan;
 use Yajra\DataTables\DataTables;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Http\Request;
@@ -83,6 +84,7 @@ class KaryawanPendidikanController extends Controller
             ]);
         }
     }
+
     public function update_pendidikan(Request $request)
     {
         try {

@@ -1703,6 +1703,87 @@
         });
     });
     // BPJS Edit
+    // Ijazah Edit
+    $('#btn_update_doc_pend').on('click', function(e) {
+        e.preventDefault();
+        var formData = new FormData();
+
+        formData.append('_token', '{{ csrf_token() }}');
+        formData.append('ipk', $('#ipk').val());
+        formData.append('old_ijazah', $('#file_ijazah_old').val());
+        var ijazah = $('#file_ijazah')[0];
+        if (ijazah.files.length > 0) {
+            formData.append('ijazah', ijazah.files[0]);
+        }
+        formData.append('old_transkrip_nilai', $('#transkrip_nilai_old').val());
+        var transkrip = $('#file_transkrip_nilai')[0];
+        if (transkrip.files.length > 0) {
+            formData.append('transkrip_nilai', transkrip.files[0]);
+        }
+        $.ajax({
+            type: "POST",
+
+            url: "{{ url('/karyawan/ijazah-edit/' . $karyawan->id) }}",
+            data: formData,
+            contentType: false,
+            processData: false,
+            beforeSend: function() {
+                Swal.fire({
+                    title: 'Memuat Data...',
+                    html: 'Mohon tunggu sebentar',
+                    allowOutsideClick: false,
+                    allowEscapeKey: false,
+                    didOpen: () => {
+                        Swal.showLoading();
+                    }
+                });
+            },
+            error: function() {
+                Swal.close();
+                alert('Something is wrong');
+                // console.log(formData);
+            },
+            success: function(data) {
+                Swal.close();
+                if (data.code == 200) {
+                    Swal.fire({
+                        title: 'Berhasil',
+                        text: data.message,
+                        icon: 'success',
+                        timer: 5000
+                    })
+                    //mengosongkan modal dan menyembunyikannya
+                } else if (data.code == 400) {
+                    let errors = data.errors;
+                    // console.log(errors);
+                    let errorMessages = '';
+
+                    Object.keys(errors).forEach(function(key) {
+                        errors[key].forEach(function(message) {
+                            errorMessages += `• ${message}\n`;
+                        });
+                    });
+                    Swal.fire({
+                        // title: data.message,
+                        text: errorMessages,
+                        icon: 'warning',
+                        timer: 4500
+                    })
+
+                } else {
+                    Swal.fire({
+                        title: 'Gagal',
+                        text: data.error,
+                        icon: 'error',
+                        timer: 10000
+                    })
+
+                }
+            }
+
+        });
+    });
+    // Ijazah End
 
     $(function() {
         var kategori = '{{ $karyawan->kategori }}';
@@ -1808,7 +1889,6 @@
 
     });
     $(function() {
-
         $('#atasan').on('change', function() {
             let id = $('#id_jabatan').val();
             let divisi = $('#id_divisi').val();

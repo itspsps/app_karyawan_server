@@ -55,6 +55,20 @@ return [
             'visibility' => 'public',
             'throw' => false,
         ],
+        'ijazah' => [
+            'driver' => 'local',
+            'root' => storage_path('app/public/ijazah'),
+            'url' => env('APP_URL') . '/storage/app/public/ijazah',
+            'visibility' => 'public',
+            'throw' => false,
+        ],
+        'transkrip_nilai' => [
+            'driver' => 'local',
+            'root' => storage_path('app/public/transkrip_nilai'),
+            'url' => env('APP_URL') . '/storage/app/public/transkrip_nilai',
+            'visibility' => 'public',
+            'throw' => false,
+        ],
         's3' => [
             'driver' => 's3',
             'key' => env('AWS_ACCESS_KEY_ID'),

@@ -998,7 +998,8 @@
                                                                 <button type="button" id="btn_delete_file_ijazah"
                                                                     class="btn btn-sm bottom-0"><i
                                                                         class="mdi mdi-delete text-primary"></i> <span
-                                                                        class="text-primary">Hapus</span></button>
+                                                                        class="text-primary">Hapus</span>
+                                                                </button>
                                                             </div>
                                                         @endif
                                                     </div>
@@ -1042,6 +1043,11 @@
                                                     </div>
                                                 </div>
                                             </div>
+                                        </div>
+                                        <div class="d-flex justify-content-center py-2">
+                                            <button class="btn btn-primary" type="button"
+                                                id="btn_update_doc_pend">Simpan
+                                                Data Pendidikan</button>
                                         </div>
                                     </div>
                                     <div class="tab-pane fade" id="nav_info_hr" role="tabpanel">
@@ -1191,6 +1197,10 @@
                                                     <p class="alert alert-danger">{{ $message }}</p>
                                                 @enderror
                                             </div>
+                                        </div>
+                                        <div class="d-flex justify-content-center py-2">
+                                            <button class="btn btn-primary" type="button" id="btn_update_hr">Simpan
+                                                INFO HR</button>
                                         </div>
                                     </div>
 

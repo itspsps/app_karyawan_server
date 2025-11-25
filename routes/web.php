@@ -274,6 +274,7 @@ Route::middleware('admin')->group(function () {
     Route::post('/karyawan/bank-edit/{id}', [karyawanController::class, 'editBank']);
     Route::post('/karyawan/pajak-edit/{id}', [karyawanController::class, 'editPajak']);
     Route::post('/karyawan/bpjs-edit/{id}', [karyawanController::class, 'editBPJS']);
+    Route::post('/karyawan/ijazah-edit/{id}', [karyawanController::class, 'ijazah_update']);
 
     // PENDIDIKAN KARYAWAN
     Route::get('/karyawan/pendidikan/button_pendidikan/{id}', [KaryawanPendidikanController::class, 'button_pendidikan'])->name('button_pendidikan');
