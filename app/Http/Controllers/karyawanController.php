@@ -1869,11 +1869,11 @@ class karyawanController extends Controller
 
                 ]
             );
-            ActivityLog::create([
-                'user_id' => Auth::user()->id,
-                'activity' => 'update',
-                'description' => 'Mengubah data karyawan ' . $request->name,
-            ]);
+            // ActivityLog::create([
+            //     'user_id' => Auth::user()->id,
+            //     'activity' => 'update',
+            //     'description' => 'Mengubah data karyawan ' . $request->name,
+            // ]);
             return response()->json([
                 'code' => 200,
                 // 'data' => $get_data,
@@ -1887,7 +1887,94 @@ class karyawanController extends Controller
             ]);
         }
     }
+    public function editBPJS(Request $request, $id)
+    {
+        if ($request->bpjs_kesehatan == 'on') {
+            $nama_pemilik_bpjs_kesehatan = 'required';
+            $no_bpjs_kesehatan = 'required';
+            $kelas_bpjs = 'required';
+        } else if ($request->bpjs_kesehatan == 'off') {
+            $nama_pemilik_bpjs_kesehatan = 'nullable';
+            $no_bpjs_kesehatan = 'nullable';
+            $kelas_bpjs = 'nullable';
+        } else {
+            $nama_pemilik_bpjs_kesehatan = 'nullable';
+            $no_bpjs_kesehatan = 'nullable';
+            $kelas_bpjs = 'nullable';
+        }
+        if ($request->bpjs_ketenagakerjaan == 'on') {
+            $nama_pemilik_bpjs_ketenagakerjaan = 'required';
+            $no_bpjs_ketenagakerjaan = 'required';
+        } else if ($request->bpjs_ketenagakerjaan == 'off') {
+            $nama_pemilik_bpjs_ketenagakerjaan = 'nullable';
+            $no_bpjs_ketenagakerjaan = 'nullable';
+        } else {
+            $nama_pemilik_bpjs_ketenagakerjaan = 'nullable';
+            $no_bpjs_ketenagakerjaan = 'nullable';
+        }
 
+        $rules = [
+
+            'bpjs_ketenagakerjaan' => 'required',
+            'no_bpjs_ketenagakerjaan' => $no_bpjs_ketenagakerjaan . '|max:16',
+            'nama_pemilik_bpjs_ketenagakerjaan' => $nama_pemilik_bpjs_ketenagakerjaan,
+            'unique:karyawans,bpjs_ketenagakerjaan,' . $request->bpjs_ketenagakerjaan,
+            'bpjs_kesehatan' => 'required',
+            'nama_pemilik_bpjs_kesehatan' => $nama_pemilik_bpjs_kesehatan,
+            'no_bpjs_kesehatan' => $no_bpjs_kesehatan . '|max:16',
+            'unique:karyawans,no_bpjs_kesehatan,' . $request->no_bpjs_kesehatan,
+            'bpjs_pensiun' => 'required|max:16',
+            'kelas_bpjs' => $kelas_bpjs,
+            'updated_at' => date('Y-m-d H:i:s')
+
+        ];
+        $customMessages = [
+            'required' => ':attribute tidak boleh kosong.',
+            'unique' => ':attribute tidak boleh sama',
+            'email' => ':attribute format salah',
+            'min' => ':attribute Kurang',
+            'max' => ':attribute Melebihi Batas Maksimal'
+        ];
+        $validasi = Validator::make($request->all(), $rules, $customMessages);
+        // dd($validasi->errors());
+        if ($validasi->fails()) {
+            return response()->json([
+                'code' => 400,
+                'message' => 'Validasi gagal',
+                'errors' => $validasi->errors()
+            ]);
+        }
+        try {
+            Karyawan::where('id', $id)->update(
+                [
+                    'bpjs_ketenagakerjaan'                  => $request->bpjs_ketenagakerjaan,
+                    'no_bpjs_ketenagakerjaan'               => $request->no_bpjs_ketenagakerjaan,
+                    'nama_pemilik_bpjs_ketenagakerjaan'     => $request->nama_pemilik_bpjs_ketenagakerjaan,
+                    'bpjs_pensiun'                          => $request->bpjs_pensiun,
+                    'bpjs_kesehatan'                        => $request->bpjs_kesehatan,
+                    'nama_pemilik_bpjs_kesehatan'           => $request->nama_pemilik_bpjs_kesehatan,
+                    'no_bpjs_kesehatan'                     => $request->no_bpjs_kesehatan,
+                    'kelas_bpjs'                            => $request->kelas_bpjs,
+                ]
+            );
+            // ActivityLog::create([
+            //     'user_id' => Auth::user()->id,
+            //     'activity' => 'update',
+            //     'description' => 'Mengubah data karyawan ' . $request->name,
+            // ]);
+            return response()->json([
+                'code' => 200,
+                // 'data' => $get_data,
+                // 'data2' => $get_data2,
+                'message' => 'Data Berhasil Diupdate'
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'code' => 500,
+                'error' => $e->getMessage(),
+            ]);
+        }
+    }
     public function editKaryawanProses(Request $request, $id)
     {
 
@@ -1937,39 +2024,6 @@ class karyawanController extends Controller
                 $kategori_jabatan = 'required';
             } else {
                 $kategori_jabatan = 'nullable';
-            }
-            if ($request->status_npwp == 'on') {
-                $nama_pemilik_npwp = 'required';
-                $npwp = 'required';
-            } else if ($request->status_npwp == 'off') {
-                $nama_pemilik_npwp = 'nullable';
-                $npwp = 'nullable';
-            } else {
-                $nama_pemilik_npwp = 'nullable';
-                $npwp = 'nullable';
-            }
-            if ($request->bpjs_kesehatan == 'on') {
-                $nama_pemilik_bpjs_kesehatan = 'required';
-                $no_bpjs_kesehatan = 'required';
-                $kelas_bpjs = 'required';
-            } else if ($request->bpjs_kesehatan == 'off') {
-                $nama_pemilik_bpjs_kesehatan = 'nullable';
-                $no_bpjs_kesehatan = 'nullable';
-                $kelas_bpjs = 'nullable';
-            } else {
-                $nama_pemilik_bpjs_kesehatan = 'nullable';
-                $no_bpjs_kesehatan = 'nullable';
-                $kelas_bpjs = 'nullable';
-            }
-            if ($request->bpjs_ketenagakerjaan == 'on') {
-                $nama_pemilik_bpjs_ketenagakerjaan = 'required';
-                $no_bpjs_ketenagakerjaan = 'required';
-            } else if ($request->bpjs_ketenagakerjaan == 'off') {
-                $nama_pemilik_bpjs_ketenagakerjaan = 'nullable';
-                $no_bpjs_ketenagakerjaan = 'nullable';
-            } else {
-                $nama_pemilik_bpjs_ketenagakerjaan = 'nullable';
-                $no_bpjs_ketenagakerjaan = 'nullable';
             }
             if ($request->pilihan_alamat_domisili == "ya") {
                 $provinsi_domisili = 'nullable';
@@ -2060,19 +2114,6 @@ class karyawanController extends Controller
                 'bagian4_id' => 'nullable|max:255',
                 'jabatan4_id' => 'nullable|max:255',
                 'status_npwp' => 'required',
-                'nama_pemilik_npwp' => $nama_pemilik_npwp,
-                'npwp' => $npwp . '|max:16',
-                'unique:karyawans,npwp,' . $request->npwp,
-                'bpjs_ketenagakerjaan' => 'required',
-                'nama_pemilik_bpjs_ketenagakerjaan' => $nama_pemilik_bpjs_ketenagakerjaan,
-                'no_bpjs_ketenagakerjaan' => $no_bpjs_ketenagakerjaan . '|max:16',
-                'unique:karyawans,bpjs_ketenagakerjaan,' . $request->bpjs_ketenagakerjaan,
-                'bpjs_kesehatan' => 'required',
-                'nama_pemilik_bpjs_kesehatan' => $nama_pemilik_bpjs_kesehatan,
-                'no_bpjs_kesehatan' => $no_bpjs_kesehatan . '|max:16',
-                'unique:karyawans,no_bpjs_kesehatan,' . $request->no_bpjs_kesehatan,
-                'bpjs_pensiun' => 'required|max:16',
-                'kelas_bpjs' => $kelas_bpjs,
                 'ptkp' => 'required',
                 'file_cv' => 'max:255',
             ];
@@ -2121,16 +2162,6 @@ class karyawanController extends Controller
                 'divisi_id' => 'required|max:255',
                 'bagian_id' => 'required|max:255',
                 'jabatan_id' => 'required|max:255',
-                'npwp' => 'nullable|max:16',
-                'unique:karyawans,npwp,' . $request->npwp,
-                'no_bpjs_ketenagakerjaan' => 'max:16',
-                'no_bpjs_kesehatan' => 'max:16',
-                'bpjs_ketenagakerjaan' => 'max:16',
-                'bpjs_kesehatan' => 'max:16',
-                'bpjs_pensiun' => 'max:16',
-                'kelas_bpjs' => 'max:16',
-                'ptkp' => 'max:16',
-                'status_npwp' => 'max:16',
                 'file_cv' => 'max:255',
                 'kategori_jabatan' => 'max:255'
             ];
@@ -2260,16 +2291,6 @@ class karyawanController extends Controller
                 'rw_domisili'                           => $validatedData['rw_domisili'],
                 'alamat_domisili'                       => $validatedData['alamat_domisili'],
                 'detail_alamat_domisili'                => Provincies::where('code', $provinsi1)->value('name') . ' , ' . Cities::where('code', $kabupaten1)->value('name') . ' , ' . District::where('code', $kecamatan1)->value('name') . ' , ' . Village::where('code', $desa1)->value('name') . ' , RT. ' . $validatedData['rt_domisili'] . ' , RW. ' . $validatedData['rw_domisili'] . ' , ' . $validatedData['alamat_domisili'],
-                'bpjs_ketenagakerjaan'                  => $validatedData['bpjs_ketenagakerjaan'],
-                'no_bpjs_ketenagakerjaan'               => $validatedData['no_bpjs_ketenagakerjaan'],
-                'nama_pemilik_bpjs_ketenagakerjaan'     => $validatedData['nama_pemilik_bpjs_ketenagakerjaan'],
-                'bpjs_pensiun'                          => $validatedData['bpjs_pensiun'],
-                'bpjs_kesehatan'                        => $validatedData['bpjs_kesehatan'],
-                'nama_pemilik_bpjs_kesehatan'           => $validatedData['nama_pemilik_bpjs_kesehatan'],
-                'no_bpjs_kesehatan'                     => $validatedData['no_bpjs_kesehatan'],
-                'ptkp'                                  => $validatedData['ptkp'],
-                'status_npwp'                           => $validatedData['status_npwp'],
-                'kelas_bpjs'                            => $validatedData['kelas_bpjs'],
                 'dept_id'                               => Departemen::where('id', $validatedData["departemen_id"])->value('id'),
                 'divisi_id'                             => Divisi::where('id', $validatedData["divisi_id"])->value('id'),
                 'bagian_id'                             => Bagian::where('id', $validatedData["bagian_id"])->value('id'),

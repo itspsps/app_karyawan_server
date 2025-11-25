@@ -2111,6 +2111,10 @@
                                                 @enderror
                                             </div>
                                         </div>
+                                        <div class="d-flex justify-content-center py-2">
+                                            <button class="btn btn-primary" type="button" id="btn_update_bpjs">Simpan
+                                                Data BPJS</button>
+                                        </div>
                                     </div>
                                     <div class="tab-pane fade" id="nav_dokumen" role="tabpanel">
                                         {{-- <div class="col-md-6">

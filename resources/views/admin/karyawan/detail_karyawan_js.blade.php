@@ -1610,6 +1610,99 @@
         });
     });
     // pajak end
+    $('#btn_update_bpjs').on('click', function(e) {
+        e.preventDefault();
+        var formData = new FormData();
+
+        //ambil data dari form
+        formData.append('_token', '{{ csrf_token() }}');
+        bpjs_ketenagakerjaan = $('#bpjs_ketenagakerjaan_ya').is(':checked');
+        if (bpjs_ketenagakerjaan) {
+            formData.append('bpjs_ketenagakerjaan', $('#bpjs_ketenagakerjaan_ya').val());
+        } else {
+            formData.append('bpjs_ketenagakerjaan', $('#bpjs_ketenagakerjaan_tidak').val());
+        }
+        bpjs_pensiun = $('#bpjs_pensiun_ya').is(':checked');
+        if (bpjs_pensiun) {
+            formData.append('bpjs_pensiun', $('#bpjs_pensiun_ya').val());
+        } else {
+            formData.append('bpjs_pensiun', $('#bpjs_pensiun_tidak').val());
+        }
+        bpjs_kesehatan = $('#bpjs_kesehatan_ya').is(':checked');
+        if (bpjs_kesehatan) {
+            formData.append('bpjs_kesehatan', $('#bpjs_kesehatan_ya').val());
+        } else {
+            formData.append('bpjs_kesehatan', $('#bpjs_kesehatan_tidak').val());
+        }
+
+        formData.append('no_bpjs_ketenagakerjaan', $('#no_bpjs_ketenagakerjaan').val());
+        formData.append('nama_pemilik_bpjs_kesehatan', $('#nama_pemilik_bpjs_kesehatan').val());
+        formData.append('no_bpjs_kesehatan', $('#no_bpjs_kesehatan').val());
+        formData.append('nama_pemilik_bpjs_ketenagakerjaan', $('#nama_pemilik_bpjs_ketenagakerjaan').val());
+        formData.append('kelas_bpjs', $('#kelas_bpjs').val());
+        // post
+        $.ajax({
+            type: "POST",
+
+            url: "{{ url('/karyawan/bpjs-edit/' . $karyawan->id) }}",
+            data: formData,
+            contentType: false,
+            processData: false,
+            beforeSend: function() {
+                Swal.fire({
+                    title: 'Memuat Data...',
+                    html: 'Mohon tunggu sebentar',
+                    allowOutsideClick: false,
+                    allowEscapeKey: false,
+                    didOpen: () => {
+                        Swal.showLoading();
+                    }
+                });
+            },
+            error: function() {
+                Swal.close();
+                alert('Something is wrong!');
+                // console.log(formData);
+            },
+            success: function(data) {
+                Swal.close();
+                if (data.code == 200) {
+                    Swal.fire({
+                        title: 'Berhasil',
+                        text: data.message,
+                        icon: 'success',
+                        timer: 5000
+                    })
+                } else if (data.code == 400) {
+                    let errors = data.errors;
+                    // console.log(errors);
+                    let errorMessages = '';
+
+                    Object.keys(errors).forEach(function(key) {
+                        errors[key].forEach(function(message) {
+                            errorMessages += `• ${message}\n`;
+                        });
+                    });
+                    Swal.fire({
+                        // title: data.message,
+                        text: errorMessages,
+                        icon: 'warning',
+                        timer: 4500
+                    })
+
+                } else {
+                    Swal.fire({
+                        title: 'Gagal',
+                        text: data.error,
+                        icon: 'error',
+                        timer: 4500
+                    })
+
+                }
+            }
+        });
+    });
+    // BPJS Edit
 
     $(function() {
         var kategori = '{{ $karyawan->kategori }}';
@@ -2026,8 +2119,9 @@
             $('#row_npwp').hide();
         } else {
             $('#row_npwp').show();
-
         }
+        $('#nama_pemilik_npwp').val('');
+        $('#npwp').val('');
     });
     $(document).on("click", "#bpjs_ketenagakerjaan_ya", function() {
         var id = $(this).val();
@@ -2046,6 +2140,8 @@
             $('#row_bpjs_ketenagakerjaan').show();
 
         }
+        $('#nama_pemilik_bpjs_ketenagakerjaan').val('');
+        $('#no_bpjs_ketenagakerjaan').val('');
     });
     $(document).on("click", "#bpjs_kesehatan_ya", function() {
         var id = $(this).val();
@@ -2066,8 +2162,10 @@
         } else {
             $('#row_bpjs_kesehatan').show();
             $('#row_kelas_bpjs').show();
-
         }
+        $('#nama_pemilik_bpjs_kesehatan').val('');
+        $('#no_bpjs_kesehatan').val('');
+        $('#kelas_bpjs').val('');
     });
     var file_cv = '{{ $karyawan->file_cv }}';
     if (file_cv == '') {
