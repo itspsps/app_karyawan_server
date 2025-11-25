@@ -1804,8 +1804,76 @@ class karyawanController extends Controller
                     'nama_bank'                             => $request->nama_bank,
                     'nama_pemilik_rekening'                 => $request->nama_pemilik_rekening,
                     'nomor_rekening'                        => $request->nomor_rekening,
+                    'updated_at'                            => date('Y-m-d H:i:s')
                 ]
             );
+            return response()->json([
+                'code' => 200,
+                // 'data' => $get_data,
+                // 'data2' => $get_data2,
+                'message' => 'Data Berhasil Diupdate'
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'code' => 500,
+                'error' => $e->getMessage(),
+            ]);
+        }
+    }
+    public function editPajak(Request $request, $id)
+    {
+        // dd($request->all());
+        if ($request->status_npwp == 'on') {
+            $nama_pemilik_npwp = 'required';
+            $npwp = 'required';
+        } else if ($request->status_npwp == 'off') {
+            $nama_pemilik_npwp = 'nullable';
+            $npwp = 'nullable';
+        } else {
+            $nama_pemilik_npwp = 'nullable';
+            $npwp = 'nullable';
+        }
+        $rules = [
+            'nama_pemilik_npwp' => $nama_pemilik_npwp,
+            'npwp' => $npwp . '|max:16',
+            'unique:karyawans,npwp,' . $request->npwp,
+            'ptkp' => 'required',
+        ];
+
+
+        $customMessages = [
+            'required' => ':attribute tidak boleh kosong.',
+            'unique' => ':attribute tidak boleh sama',
+            'email' => ':attribute format salah',
+            'min' => ':attribute Kurang',
+            'max' => ':attribute Melebihi Batas Maksimal'
+        ];
+        $validasi = Validator::make($request->all(), $rules, $customMessages);
+        // dd($validasi->errors());
+
+        if ($validasi->fails()) {
+            return response()->json([
+                'code' => 400,
+                'message' => 'Validasi gagal',
+                'errors' => $validasi->errors()
+            ]);
+        }
+        try {
+            Karyawan::where('id', $id)->update(
+                [
+                    'status_npwp'         => $request->status_npwp,
+                    'ptkp'                => $request->ptkp,
+                    'nama_pemilik_npwp'   => $request->nama_pemilik_npwp,
+                    'npwp'                => $request->npwp,
+                    'updated_at'          => date('Y-m-d H:i:s')
+
+                ]
+            );
+            ActivityLog::create([
+                'user_id' => Auth::user()->id,
+                'activity' => 'update',
+                'description' => 'Mengubah data karyawan ' . $request->name,
+            ]);
             return response()->json([
                 'code' => 200,
                 // 'data' => $get_data,
@@ -1822,8 +1890,7 @@ class karyawanController extends Controller
 
     public function editKaryawanProses(Request $request, $id)
     {
-        // dd($id);
-        // dd($request->departemen1_id, $request->divisi1_id, $request->bagian1_id, $request->jabatan1_id);
+
         if ($request->status_nomor == "tidak") {
             $status_nomor = 'required';
         } else if ($request->status_nomor == "ya") {
@@ -1851,8 +1918,6 @@ class karyawanController extends Controller
                 'strata_pendidikan' => 'required|max:255',
                 'instansi_pendidikan' => 'required|max:255',
                 'jurusan_akademik' => 'nullable',
-                'nama_bank' => 'nullable|required',
-                'nomor_rekening' => 'required',
                 'is_admin' => 'required',
                 'alamat' => 'required|max:255',
                 'kuota_cuti' => 'required|max:11',
@@ -1994,9 +2059,6 @@ class karyawanController extends Controller
                 'divisi4_id' => 'nullable|max:255',
                 'bagian4_id' => 'nullable|max:255',
                 'jabatan4_id' => 'nullable|max:255',
-                'nama_bank' => 'required',
-                'nama_pemilik_rekening' => 'required',
-                'nomor_rekening' => 'required',
                 'status_npwp' => 'required',
                 'nama_pemilik_npwp' => $nama_pemilik_npwp,
                 'npwp' => $npwp . '|max:16',
@@ -2059,9 +2121,6 @@ class karyawanController extends Controller
                 'divisi_id' => 'required|max:255',
                 'bagian_id' => 'required|max:255',
                 'jabatan_id' => 'required|max:255',
-                'nama_bank' => 'required',
-                'nama_pemilik_rekening' => 'required',
-                'nomor_rekening' => 'required',
                 'npwp' => 'nullable|max:16',
                 'unique:karyawans,npwp,' . $request->npwp,
                 'no_bpjs_ketenagakerjaan' => 'max:16',
@@ -2179,9 +2238,6 @@ class karyawanController extends Controller
                 'strata_pendidikan'                     => $validatedData['strata_pendidikan'],
                 'instansi_pendidikan'                   => $validatedData['instansi_pendidikan'],
                 'jurusan_akademik'                      => $validatedData['jurusan_akademik'],
-                'nama_bank'                             => $validatedData['nama_bank'],
-                'nama_pemilik_rekening'                 => $validatedData['nama_pemilik_rekening'],
-                'nomor_rekening'                        => $validatedData['nomor_rekening'],
                 'kuota_cuti_tahunan'                    => $validatedData['kuota_cuti'],
                 'site_job'                              => $site_job,
                 'kategori'                              => $validatedData['kategori'],

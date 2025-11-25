@@ -1842,7 +1842,7 @@
 
                                         <div class="d-flex justify-content-center py-2">
                                             <button class="btn btn-primary" type="button" id="btn_update_bank">Simpan
-                                                Data</button>
+                                                Data Bank</button>
                                         </div>
                                     </div>
                                     <div class="tab-pane fade" id="nav_pajak" role="tabpanel">
@@ -1938,7 +1938,13 @@
                                                 @enderror
                                             </div>
                                         </div>
+                                        <div class="d-flex justify-content-center py-2">
+                                            <button class="btn btn-primary" type="button"
+                                                id="btn_update_pajak">Simpan
+                                                Data Pajak</button>
+                                        </div>
                                     </div>
+
                                     <div class="tab-pane fade" id="nav_bpjs" role="tabpanel">
                                         <div class="row mt-2 gy-4">
                                             <div class="col mb-12">

@@ -271,7 +271,8 @@ Route::middleware('admin')->group(function () {
     Route::get('/karyawan/pdfKaryawan/{holding}', [karyawanController::class, 'download_pdf_karyawan']);
 
     // MASTER KARYAWAN TAB
-    Route::post('/karyawan/proses-edit/{id}', [karyawanController::class, 'editBank']);
+    Route::post('/karyawan/bank-edit/{id}', [karyawanController::class, 'editBank']);
+    Route::post('/karyawan/pajak-edit/{id}', [karyawanController::class, 'editPajak']);
 
     // PENDIDIKAN KARYAWAN
     Route::get('/karyawan/pendidikan/button_pendidikan/{id}', [KaryawanPendidikanController::class, 'button_pendidikan'])->name('button_pendidikan');

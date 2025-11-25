@@ -1447,15 +1447,12 @@
         formData.append('nama_pemilik_rekening', $('#nama_pemilik_rekening').val());
         formData.append('nomor_rekening', $('#nomor_rekening').val());
 
-        var fileInput = $('#surat_keterangan_add')[0];
-        if (fileInput.files.length > 0) {
-            formData.append('surat_keterangan', fileInput.files[0]);
-        }
+
         // post
         $.ajax({
             type: "POST",
 
-            url: "{{ url('/karyawan/proses-edit/' . $karyawan->id) }}",
+            url: "{{ url('/karyawan/bank-edit/' . $karyawan->id) }}",
             data: formData,
             contentType: false,
             processData: false,
@@ -1514,6 +1511,106 @@
         });
     });
     // Perbankan end
+
+    // pajak
+    $('#npwp').keyup(function(e) {
+        if ($(this).val().length >= 16) {
+            $(this).val($(this).val().substr(0, 16));
+            document.getElementById("npwp").focus();
+            Swal.fire({
+                customClass: {
+                    container: 'my-swal'
+                },
+                target: document.getElementById('modal_tambah_karyawan'),
+                position: 'top',
+                icon: 'warning',
+                title: 'Nomor NPWP harus ' + 16 + ' karakter. Mohon cek kembali!',
+                showConfirmButton: false,
+                timer: 1500
+            });
+        }
+    });
+    $('#btn_update_pajak').on('click', function(e) {
+        e.preventDefault();
+        var formData = new FormData();
+
+        //ambil data dari form
+        formData.append('_token', '{{ csrf_token() }}');
+        formData.append('ptkp', $('#ptkp').val());
+        formData.append('nama_pemilik_npwp', $('#nama_pemilik_npwp').val());
+        formData.append('npwp', $('#npwp').val());
+
+        fileInput = $('#status_npwp_ya').is(':checked');
+        console.log(fileInput);
+        if (fileInput) {
+            formData.append('status_npwp', $('#status_npwp_ya').val());
+        } else {
+            formData.append('status_npwp', $('#status_npwp_tidak').val());
+        }
+        // post
+        $.ajax({
+            type: "POST",
+
+            url: "{{ url('/karyawan/pajak-edit/' . $karyawan->id) }}",
+            data: formData,
+            contentType: false,
+            processData: false,
+            beforeSend: function() {
+                Swal.fire({
+                    title: 'Memuat Data...',
+                    html: 'Mohon tunggu sebentar',
+                    allowOutsideClick: false,
+                    allowEscapeKey: false,
+                    didOpen: () => {
+                        Swal.showLoading();
+                    }
+                });
+            },
+            error: function() {
+                Swal.close();
+                alert('Something is wrong!');
+                // console.log(formData);
+            },
+            success: function(data) {
+                Swal.close();
+                if (data.code == 200) {
+                    Swal.fire({
+                        title: 'Berhasil',
+                        text: data.message,
+                        icon: 'success',
+                        timer: 5000
+                    })
+                } else if (data.code == 400) {
+                    let errors = data.errors;
+                    // console.log(errors);
+                    let errorMessages = '';
+
+                    Object.keys(errors).forEach(function(key) {
+                        errors[key].forEach(function(message) {
+                            errorMessages += `• ${message}\n`;
+                        });
+                    });
+                    Swal.fire({
+                        // title: data.message,
+                        text: errorMessages,
+                        icon: 'warning',
+                        timer: 4500
+                    })
+
+                } else {
+                    Swal.fire({
+                        title: 'Gagal',
+                        text: data.error,
+                        icon: 'error',
+                        timer: 4500
+                    })
+
+                }
+            }
+        });
+    });
+    // pajak end
+
     $(function() {
         var kategori = '{{ $karyawan->kategori }}';
         if (kategori == 'Karyawan Harian') {
@@ -1666,23 +1763,6 @@
                     position: 'top',
                     icon: 'warning',
                     title: 'Nomor NIK harus ' + 16 + ' karakter. Mohon cek kembali!',
-                    showConfirmButton: false,
-                    timer: 1500
-                });
-            }
-        });
-        $('#npwp').keyup(function(e) {
-            if ($(this).val().length >= 16) {
-                $(this).val($(this).val().substr(0, 16));
-                document.getElementById("npwp").focus();
-                Swal.fire({
-                    customClass: {
-                        container: 'my-swal'
-                    },
-                    target: document.getElementById('modal_tambah_karyawan'),
-                    position: 'top',
-                    icon: 'warning',
-                    title: 'Nomor NPWP harus ' + 16 + ' karakter. Mohon cek kembali!',
                     showConfirmButton: false,
                     timer: 1500
                 });
