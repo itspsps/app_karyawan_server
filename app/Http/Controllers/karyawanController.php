@@ -2008,7 +2008,6 @@ class karyawanController extends Controller
             'unique:karyawans,no_bpjs_kesehatan,' . $request->no_bpjs_kesehatan,
             'bpjs_pensiun' => 'required|max:16',
             'kelas_bpjs' => $kelas_bpjs,
-            'updated_at' => date('Y-m-d H:i:s')
 
         ];
         $customMessages = [
@@ -2038,6 +2037,8 @@ class karyawanController extends Controller
                     'nama_pemilik_bpjs_kesehatan'           => $request->nama_pemilik_bpjs_kesehatan,
                     'no_bpjs_kesehatan'                     => $request->no_bpjs_kesehatan,
                     'kelas_bpjs'                            => $request->kelas_bpjs,
+                    'updated_at'                            => date('Y-m-d H:i:s')
+
                 ]
             );
             // ActivityLog::create([
@@ -2058,9 +2059,157 @@ class karyawanController extends Controller
             ]);
         }
     }
+    public function editProfil(Request $request, $id)
+    {
+        // dd($request->all());
+
+        if ($request->status_nomor == "tidak") {
+            $status_nomor = 'required';
+            $wa = $request->nomor_wa;
+        } else if ($request->status_nomor == "ya") {
+            $wa = $request->telepon;
+            $status_nomor = 'nullable';
+            // dd($wa);
+        } else {
+            $status_nomor = 'required';
+        }
+
+        if ($request->pilihan_alamat_domisili == "ya") {
+            $provinsi_domisili = 'nullable';
+            $kabupaten_domisili = 'nullable';
+            $kecamatan_domisili = 'nullable';
+            $desa_domisili = 'nullable';
+            $rt_domisili = 'nullable|max:255';
+            $rw_domisili = 'nullable|max:255';
+            $alamat_domisili = 'nullable|max:255';
+        } else if ($request->pilihan_alamat_domisili == "tidak") {
+            $provinsi_domisili = 'required';
+            $kabupaten_domisili = 'required';
+            $kecamatan_domisili = 'required';
+            $desa_domisili = 'required';
+            $rt_domisili = 'required|max:255';
+            $rw_domisili = 'required|max:255';
+            $alamat_domisili = 'required|max:255';
+        } else if ($request->pilihan_alamat_domisili == NULL) {
+            $provinsi_domisili = 'nullable';
+            $kabupaten_domisili = 'nullable';
+            $kecamatan_domisili = 'nullable';
+            $desa_domisili = 'nullable';
+            $rt_domisili = 'nullable|max:255';
+            $rw_domisili = 'nullable|max:255';
+            $alamat_domisili = 'nullable|max:255';
+        }
+        $rules = [
+            'name' => 'required|max:255',
+            'nik' => 'required|max:16',
+            'unique:karyawans,nik,' . $request->nik,
+            'email' => 'max:255|nullable',
+            'email:rfc,dns',
+            'email_address',
+            'unique:karyawans,email,' . $request->email,
+            'telepon' => 'max:13',
+            'nomor_wa' => 'max:13|' . $status_nomor . '|min:11',
+            'nullable',
+            'min:11',
+            'status_nomor' => 'required',
+            'tempat_lahir' => 'required|max:255',
+            'tgl_lahir' => 'required|max:255',
+            // 'golongan_darah' => 'required|max:255',
+            'agama' => 'required|max:255',
+            'gender' => 'required',
+            'status_nikah' => 'required',
+            'provinsi' => 'required',
+            'kabupaten' => 'required',
+            'kecamatan' => 'required',
+            'desa' => 'required',
+            'rt' => 'required|max:255',
+            'rw' => 'required|max:255',
+            'alamat' => 'required|max:255',
+            'pilihan_alamat_domisili' => 'required|max:11',
+            'provinsi_domisili' => $provinsi_domisili,
+            'kabupaten_domisili' => $kabupaten_domisili,
+            'kecamatan_domisili' => $kecamatan_domisili,
+            'desa_domisili' => $desa_domisili,
+            'rt_domisili' => $rt_domisili,
+            'rw_domisili' => $rw_domisili,
+            'alamat_domisili' => $alamat_domisili,
+
+        ];
+
+        $customMessages = [
+            'required' => ':attribute tidak boleh kosong.',
+            'unique' => ':attribute tidak boleh sama',
+            'email' => ':attribute format salah',
+            'min' => ':attribute Kurang',
+            'max' => ':attribute Melebihi Batas Maksimal'
+        ];
+        $validasi = Validator::make($request->all(), $rules, $customMessages);
+        // dd($validasi->errors());
+        if ($validasi->fails()) {
+            return response()->json([
+                'code' => 400,
+                'message' => 'Validasi gagal',
+                'errors' => $validasi->errors()
+            ]);
+        }
+        try {
+            Karyawan::where('id', $id)->update(
+                [
+                    'nik'                                   => $request->nik,
+                    'name'                                  => $request->name,
+                    'email'                                 => $request->email,
+                    'telepon'                               => $request->telepon,
+                    'nomor_wa'                              => $wa,
+                    'status_nomor'                          => $request->status_nomor,
+                    'tempat_lahir'                          => $request->tempat_lahir,
+                    'tgl_lahir'                             => $request->tgl_lahir,
+                    'agama'                                 => $request->agama,
+                    'gender'                                => $request->gender,
+                    'status_nikah'                          => $request->status_nikah,
+                    'jumlah_anak'                           => $request->jumlah_anak,
+                    'provinsi'                              => $request->provinsi,
+                    'kabupaten'                             => $request->kabupaten,
+                    'kecamatan'                             => $request->kecamatan,
+                    'desa'                                  => $request->desa,
+                    'rt'                                    => $request->rt,
+                    'rw'                                    => $request->rw,
+                    'alamat'                                => $request->alamat,
+                    'status_alamat'                         => $request->pilihan_alamat_domisili,
+                    'provinsi_domisili'                     => $request->provinsi_domisili,
+                    'kabupaten_domisili'                    => $request->kabupaten_domisili,
+                    'kecamatan_domisili'                    => $request->kecamatan_domisili,
+                    'desa_domisili'                         => $request->desa_domisili,
+                    'rt_domisili'                           => $request->rt_domisili,
+                    'rw_domisili'                           => $request->rw_domisili,
+                    'alamat_domisili'                       => $request->alamat_domisili,
+                    'updated_at'                            => date('Y-m-d H:i:s')
+                ]
+            );
+            // ActivityLog::create([
+            //     'user_id' => Auth::user()->id,
+            //     'activity' => 'update',
+            //     'description' => 'Mengubah data karyawan ' . $request->name,
+            // ]);
+            return response()->json([
+                'code' => 200,
+                // 'data' => $get_data,
+                // 'data2' => $get_data2,
+                'message' => 'Data Berhasil Diupdate'
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'code' => 500,
+                'error' => $e->getMessage(),
+            ]);
+        }
+
+
+
+        $request->session()->flash('success', 'data berhasil diupdate');
+        return redirect()->back();
+    }
     public function editKaryawanProses(Request $request, $id)
     {
-
         if ($request->status_nomor == "tidak") {
             $status_nomor = 'required';
         } else if ($request->status_nomor == "ya") {

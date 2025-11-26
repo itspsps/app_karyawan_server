@@ -347,7 +347,7 @@
                                                             @endif
                                                         @endforeach
                                                     </select>
-                                                    <label for="gender">Kelamin</label>
+                                                    <label for="gender">Jenis Kelamin</label>
                                                 </div>
                                                 @error('gender')
                                                     <p class="alert alert-danger">{{ $message }}</p>
@@ -731,6 +731,10 @@
                                                     <p class="alert alert-danger">{{ $message }}</p>
                                                 @enderror
                                             </div>
+                                        </div>
+                                        <div class="d-flex justify-content-center py-2">
+                                            <button class="btn btn-primary" type="button" id="btn_update_profil">Simpan
+                                                Data</button>
                                         </div>
                                     </div>
                                     <div class="modal fade" id="modal_add_pendidikan" tabindex="-1"

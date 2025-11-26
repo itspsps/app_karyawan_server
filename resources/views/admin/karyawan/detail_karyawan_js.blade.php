@@ -1784,6 +1784,114 @@
         });
     });
     // Ijazah End
+    // Profil Ajax
+    $('#btn_update_profil').on('click', function(e) {
+        e.preventDefault();
+        var formData = new FormData();
+
+        //ambil data dari form
+        formData.append('_token', '{{ csrf_token() }}');
+        formData.append('nik', $('#nik').val());
+        formData.append('name', $('#name').val());
+        formData.append('email', $('#email').val());
+        formData.append('telepon', $('#telepon').val());
+        formData.append('nomor_wa', $('#nomor_wa').val());
+        formData.append('status_nomor', $('#status_nomor').val());
+        formData.append('tempat_lahir', $('#tempat_lahir').val());
+        formData.append('tgl_lahir', $('#tgl_lahir').val());
+        formData.append('agama', $('#agama').val());
+        formData.append('status_nikah', $('#status_nikah').val());
+        formData.append('jumlah_anak', $('#jumlah_anak').val());
+        formData.append('gender', $('#gender').val());
+        formData.append('provinsi', $('#id_provinsi').val());
+        formData.append('kabupaten', $('#id_kabupaten').val());
+        formData.append('kecamatan', $('#id_kecamatan').val());
+        formData.append('desa', $('#id_desa').val());
+        formData.append('rt', $('#rt').val());
+        formData.append('rw', $('#rw').val());
+        formData.append('alamat', $('#alamat').val());
+        formData.append('provinsi_domisili', $('#id_provinsi_domisili').val());
+        formData.append('kabupaten_domisili', $('#id_kabupaten_domisili').val());
+        formData.append('kecamatan_domisili', $('#id_kecamatan_domisili').val());
+        formData.append('desa_domisili', $('#id_desa_domisili').val());
+        formData.append('rt_domisili', $('#rt_domisili').val());
+        formData.append('rw_domisili', $('#rw_domisili').val());
+        formData.append('alamat_domisili', $('#alamat_domisili').val());
+        bpjs_ketenagakerjaan = $('#btn_status_no_ya').is(':checked');
+        if (bpjs_ketenagakerjaan) {
+            formData.append('status_nomor', $('#btn_status_no_ya').val());
+        } else {
+            formData.append('status_nomor', $('#btnradio_tidak').val());
+        }
+        pilihan_alamat_domisili = $('#btnradio_ya').is(':checked');
+        if (pilihan_alamat_domisili) {
+            formData.append('pilihan_alamat_domisili', $('#btnradio_ya').val());
+        } else {
+            formData.append('pilihan_alamat_domisili', $('#btn_status_no_tidak').val());
+        }
+        // post
+        $.ajax({
+            type: "POST",
+
+            url: "{{ url('/karyawan/profil-edit/' . $karyawan->id) }}",
+            data: formData,
+            contentType: false,
+            processData: false,
+            beforeSend: function() {
+                Swal.fire({
+                    title: 'Memuat Data...',
+                    html: 'Mohon tunggu sebentar',
+                    allowOutsideClick: false,
+                    allowEscapeKey: false,
+                    didOpen: () => {
+                        Swal.showLoading();
+                    }
+                });
+            },
+            error: function() {
+                Swal.close();
+                alert('Something is wrong!');
+                // console.log(formData);
+            },
+            success: function(data) {
+                Swal.close();
+                if (data.code == 200) {
+                    Swal.fire({
+                        title: 'Berhasil',
+                        text: data.message,
+                        icon: 'success',
+                        timer: 5000
+                    })
+                } else if (data.code == 400) {
+                    let errors = data.errors;
+                    // console.log(errors);
+                    let errorMessages = '';
+
+                    Object.keys(errors).forEach(function(key) {
+                        errors[key].forEach(function(message) {
+                            errorMessages += `• ${message}\n`;
+                        });
+                    });
+                    Swal.fire({
+                        // title: data.message,
+                        text: errorMessages,
+                        icon: 'warning',
+                        timer: 4500
+                    })
+
+                } else {
+                    Swal.fire({
+                        title: 'Gagal',
+                        text: data.error,
+                        icon: 'error',
+                        timer: 4500
+                    })
+
+                }
+            }
+        });
+    });
+    // Profil Ajax End
 
     $(function() {
         var kategori = '{{ $karyawan->kategori }}';
@@ -1895,7 +2003,7 @@
             let id_karyawan = $('#id_karyawan').val();
             let holding = '{{ $holding }}';
             let url =
-                "@if (Auth::user()->is_admin == 'hrd'){{ url('hrd/karyawan/atasan2/get_jabatan') }}@else{{ url('karyawan/atasan2/get_jabatan') }}@endif" +
+                "{{ url('karyawan/atasan2/get_jabatan') }}" +
                 "/" + holding;
             // console.log(divisi);
             // console.log(url);
@@ -1943,11 +2051,7 @@
         });
         $('#id_provinsi').on('change', function() {
             let id_provinsi = $(this).val();
-            let url =
-                "@if (Auth::user()->is_admin == 'hrd'){{ url('/hrd/karyawan/get_kabupaten') }}@else{{ url('/karyawan/get_kabupaten') }}@endif" +
-                "/" + id_provinsi;
-            // console.log(id_provinsi);
-            // console.log(url);
+            let url = "{{ url('/karyawan/get_kabupaten') }}" + "/" + id_provinsi;
             $.ajax({
                 url: url,
                 method: 'GET',
@@ -1972,8 +2076,7 @@
         $('#id_kabupaten').on('change', function() {
             let id_kabupaten = $(this).val();
             let url =
-                "@if (Auth::user()->is_admin == 'hrd'){{ url('/hrd/karyawan/get_kecamatan') }}@else{{ url('/karyawan/get_kecamatan') }}@endif" +
-                "/" + id_kabupaten;
+                "{{ url('/karyawan/get_kecamatan') }}" + "/" + id_kabupaten;
             // console.log(id_kabupaten);
             // console.log(url);
             $.ajax({
@@ -1999,10 +2102,7 @@
         $('#id_kecamatan').on('change', function() {
             let id_kecamatan = $(this).val();
             let url =
-                "@if (Auth::user()->is_admin == 'hrd'){{ url('/hrd/karyawan/get_desa') }}@else{{ url('/karyawan/get_desa') }}@endif" +
-                "/" + id_kecamatan;
-            // console.log(id_kecamatan);
-            // console.log(url);
+                "{{ url('/karyawan/get_desa') }}" + "/" + id_kecamatan;
             $.ajax({
                 url: url,
                 method: 'GET',
@@ -2026,10 +2126,7 @@
         $('#id_provinsi_domisili').on('change', function() {
             let id_provinsi = $(this).val();
             let url =
-                "@if (Auth::user()->is_admin == 'hrd'){{ url('/hrd/karyawan/get_kabupaten') }}@else{{ url('/karyawan/get_kabupaten') }}@endif" +
-                "/" + id_provinsi;
-            // console.log(id_provinsi);
-            // console.log(url);
+                "{{ url('/karyawan/get_kabupaten') }}" + "/" + id_provinsi;
             $.ajax({
                 url: url,
                 method: 'GET',
@@ -2055,7 +2152,7 @@
         $('#id_kabupaten_domisili').on('change', function() {
             let id_kabupaten = $(this).val();
             let url =
-                "@if (Auth::user()->is_admin == 'hrd'){{ url('/hrd/karyawan/get_kecamatan') }}@else{{ url('/karyawan/get_kecamatan') }}@endif" +
+                "{{ url('/karyawan/get_kecamatan') }}" +
                 "/" + id_kabupaten;
             // console.log(id_kabupaten);
             // console.log(url);
@@ -2082,10 +2179,8 @@
         $('#id_kecamatan_domisili').on('change', function() {
             let id_kecamatan = $(this).val();
             let url =
-                "@if (Auth::user()->is_admin == 'hrd'){{ url('/hrd/karyawan/get_desa') }}@else{{ url('/karyawan/get_desa') }}@endif" +
+                "{{ url('/karyawan/get_desa') }}" +
                 "/" + id_kecamatan;
-            // console.log(id_kecamatan);
-            // console.log(url);
             $.ajax({
                 url: url,
                 method: 'GET',
