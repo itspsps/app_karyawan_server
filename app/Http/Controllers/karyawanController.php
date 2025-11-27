@@ -2153,8 +2153,31 @@ class karyawanController extends Controller
             ]);
         }
         try {
+            if ($request->foto_karyawan != null) {
+                if ($request->foto_karyawan_old != null) {
+                    if (Storage::disk('foto_karyawan')->exists($request->foto_karyawan_old)) {
+                        Storage::disk('foto_karyawan')->delete($request->foto_karyawan_old);
+                    }
+                }
+                $foto_karyawan = $request->file('foto_karyawan')->store('foto_karyawan');
+                $foto_karyawan_save = basename($foto_karyawan);
+            } else {
+                $foto_karyawan_save = $request->foto_karyawan_old;
+            }
+            if ($request->ktp != null) {
+                if ($request->ktp_old != null) {
+                    if (Storage::disk('ktp')->exists($request->ktp_old)) {
+                        Storage::disk('ktp')->delete($request->ktp_old);
+                    }
+                }
+                $ktp = $request->file('ktp')->store('ktp');
+                $ktp_save = basename($ktp);
+            } else {
+                $ktp_save = $request->ktp_old;
+            }
             Karyawan::where('id', $id)->update(
                 [
+                    'foto_karyawan'                         => $foto_karyawan_save,
                     'nik'                                   => $request->nik,
                     'name'                                  => $request->name,
                     'email'                                 => $request->email,
@@ -2167,6 +2190,7 @@ class karyawanController extends Controller
                     'gender'                                => $request->gender,
                     'status_nikah'                          => $request->status_nikah,
                     'jumlah_anak'                           => $request->jumlah_anak,
+                    'ktp'                                   => $ktp_save,
                     'provinsi'                              => $request->provinsi,
                     'kabupaten'                             => $request->kabupaten,
                     'kecamatan'                             => $request->kecamatan,

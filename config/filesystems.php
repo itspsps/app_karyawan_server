@@ -69,6 +69,20 @@ return [
             'visibility' => 'public',
             'throw' => false,
         ],
+        'foto_karyawan' => [
+            'driver' => 'local',
+            'root' => storage_path('app/public/foto_karyawan'),
+            'url' => env('APP_URL') . '/storage/app/public/foto_karyawan',
+            'visibility' => 'public',
+            'throw' => false,
+        ],
+        'ktp' => [
+            'driver' => 'local',
+            'root' => storage_path('app/public/ktp'),
+            'url' => env('APP_URL') . '/storage/app/public/ktp',
+            'visibility' => 'public',
+            'throw' => false,
+        ],
         's3' => [
             'driver' => 's3',
             'key' => env('AWS_ACCESS_KEY_ID'),

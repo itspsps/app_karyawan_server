@@ -133,6 +133,7 @@
             );
 
         }
+
         $(document).on('click', '#btn_edit_foto', function() {
             $('#foto_karyawan').click();
         });
@@ -142,7 +143,6 @@
             reader.onload = function(e) {
                 $('#template_foto_karyawan').attr('src', e.target.result);
             };
-            // $('#group-button-foto').empty();
             $('#group-button-foto')
                 .empty()
                 .append(
@@ -161,6 +161,103 @@
                 .empty()
                 .append(
                     '<button type="button" id="btn_edit_foto" class="btn btn-sm me-2 mb-3"><i class="mdi mdi-pencil-outline text-primary"></i><span class="text-primary">&nbsp;Edit Foto</span></button>'
+                );
+        });
+        $('#foto_karyawan').change(function() {
+            var file = this.files[0];
+            var reader = new FileReader();
+            reader.onload = function(e) {
+                $('#template_foto_karyawan').attr('src', e.target.result);
+            };
+            $('#group-button-foto')
+                .empty()
+                .append(
+                    '<button type="button" id="btn_edit_foto" class="btn btn-sm me-2 mb-3"><i class="mdi mdi-pencil-outline text-primary"></i><span class="text-primary">&nbsp;Edit Foto</span></button>'
+                )
+                .append(
+                    '<button type="button" id="btn_reset_foto" class="btn btn-sm me-2 mb-3"><i class="mdi mdi-reload text-danger"></i><span class="text-danger">&nbsp;Reset</span></button>'
+                );
+            reader.readAsDataURL(file);
+        });
+        $(document).on('click', '#btn_reset_foto', function() {
+            $('#foto_karyawan').val('');
+            $('#template_foto_karyawan').attr('src',
+                '{{ asset('storage/foto_karyawan/default_profil.jpg') }}');
+            $('#group-button-foto')
+                .empty()
+                .append(
+                    '<button type="button" id="btn_edit_foto" class="btn btn-sm me-2 mb-3"><i class="mdi mdi-pencil-outline text-primary"></i><span class="text-primary">&nbsp;Edit Foto</span></button>'
+                );
+        });
+
+        // KTP
+        var ktp = '{{ $karyawan->ktp }}';
+        console.log(ktp);
+        if (ktp == null) {
+            $('#group-button-ktp').empty();
+            $('#group-button-ktp').append(
+                '<button type="button" id="btn_edit_ktp" class="btn btn-sm me-2 mb-3"><i class="mdi mdi-pencil-outline text-primary"></i><span class="text-primary">&nbsp;Edit KTP</span></button>'
+            );
+        } else {
+            $('#group-button-ktp').empty();
+            $('#group-button-ktp').append(
+                '<button type="button" id="btn_edit_ktp" class="btn btn-sm me-2 mb-3"><i class="mdi mdi-pencil-outline text-primary"></i><span class="text-primary">&nbsp;Edit KTP</span></button>'
+            );
+
+        }
+        $(document).on('click', '#btn_edit_ktp', function() {
+            $('#ktp').click();
+        });
+        $('#ktp').change(function() {
+            var file = this.files[0];
+            var reader = new FileReader();
+            reader.onload = function(e) {
+                $('#template_ktp').attr('src', e.target.result);
+            };
+            $('#group-button-ktp')
+                .empty()
+                .append(
+                    '<button type="button" id="btn_edit_ktp" class="btn btn-sm me-2 mb-3"><i class="mdi mdi-pencil-outline text-primary"></i><span class="text-primary">&nbsp;Edit KTP</span></button>'
+                )
+                .append(
+                    '<button type="button" id="btn_reset_ktp" class="btn btn-sm me-2 mb-3"><i class="mdi mdi-reload text-danger"></i><span class="text-danger">&nbsp;Reset</span></button>'
+                );
+            reader.readAsDataURL(file);
+        });
+        $(document).on('click', '#btn_reset_ktp', function() {
+            $('#ktp').val('');
+            $('#template_ktp').attr('src',
+                '{{ asset('storage/ktp/default_ktp.jpg') }}');
+            $('#group-button-ktp')
+                .empty()
+                .append(
+                    '<button type="button" id="btn_edit_ktp" class="btn btn-sm me-2 mb-3"><i class="mdi mdi-pencil-outline text-primary"></i><span class="text-primary">&nbsp;Edit KTP</span></button>'
+                );
+        });
+        $('#ktp').change(function() {
+            var file = this.files[0];
+            var reader = new FileReader();
+            reader.onload = function(e) {
+                $('#template_ktp').attr('src', e.target.result);
+            };
+            $('#group-button-ktp')
+                .empty()
+                .append(
+                    '<button type="button" id="btn_edit_ktp" class="btn btn-sm me-2 mb-3"><i class="mdi mdi-pencil-outline text-primary"></i><span class="text-primary">&nbsp;Edit KTP</span></button>'
+                )
+                .append(
+                    '<button type="button" id="btn_reset_ktp" class="btn btn-sm me-2 mb-3"><i class="mdi mdi-reload text-danger"></i><span class="text-danger">&nbsp;Reset</span></button>'
+                );
+            reader.readAsDataURL(file);
+        });
+        $(document).on('click', '#btn_reset_ktp', function() {
+            $('#ktp').val('');
+            $('#template_ktp').attr('src',
+                '{{ asset('storage/ktp/default_ktp.jpg') }}');
+            $('#group-button-ktp')
+                .empty()
+                .append(
+                    '<button type="button" id="btn_edit_ktp" class="btn btn-sm me-2 mb-3"><i class="mdi mdi-pencil-outline text-primary"></i><span class="text-primary">&nbsp;Edit KTP</span></button>'
                 );
         });
         // BUTTON PENDIDIKAN
@@ -1715,7 +1812,7 @@
         if (ijazah.files.length > 0) {
             formData.append('ijazah', ijazah.files[0]);
         }
-        formData.append('old_transkrip_nilai', $('#transkrip_nilai_old').val());
+        formData.append('foto_karyawan_old', $('#transkrip_nilai_old').val());
         var transkrip = $('#file_transkrip_nilai')[0];
         if (transkrip.files.length > 0) {
             formData.append('transkrip_nilai', transkrip.files[0]);
@@ -1828,6 +1925,16 @@
             formData.append('pilihan_alamat_domisili', $('#btnradio_ya').val());
         } else {
             formData.append('pilihan_alamat_domisili', $('#btn_status_no_tidak').val());
+        }
+        formData.append('foto_karyawan_old', $('#foto_karyawan_old').val());
+        var file_pp = $('#foto_karyawan')[0];
+        if (file_pp.files.length > 0) {
+            formData.append('foto_karyawan', file_pp.files[0]);
+        }
+        formData.append('ktp_old', $('#ktp_old').val());
+        var ktp = $('#ktp')[0];
+        if (ktp.files.length > 0) {
+            formData.append('ktp', ktp.files[0]);
         }
         // post
         $.ajax({

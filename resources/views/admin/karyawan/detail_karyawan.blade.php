@@ -159,7 +159,6 @@
                                 </ul>
                                 <div class="tab-content">
                                     <div class="tab-pane fade show active" id="nav_profile" role="tabpanel">
-
                                         <div class="col-md-3">
                                             <span class="mdi mdi-account-badge badge bg-label-secondary">&nbsp;Foto
                                                 Profil</span>
@@ -169,12 +168,12 @@
                                             <div class="col-md-4">
                                                 @if ($karyawan->foto_karyawan)
                                                     <img src="{{ asset('storage/foto_karyawan/' . $karyawan->foto_karyawan) }}"
-                                                        id="template_foto_karyawan" max-width="200" max-height="200"
-                                                        width="200" height="200" class="rounded" alt="">
+                                                        id="template_foto_karyawan" max-height="200" height="200"
+                                                        class="rounded" alt="">
                                                 @else
                                                     <img src="{{ asset('storage/foto_karyawan/default_profil.jpg') }}"
-                                                        id="template_foto_karyawan" max-width="200" max-height="200"
-                                                        width="200" height="200" class="rounded" alt="">
+                                                        id="template_foto_karyawan" max-height="200" height="200"
+                                                        class="rounded" alt="">
                                                 @endif
                                                 <br>
                                                 <input type="file" name="foto_karyawan" id="foto_karyawan" hidden
@@ -238,7 +237,7 @@
                                                 @enderror
                                             </div>
                                             <div class="col-md-12">
-                                                <h6>Apakah Nomor Telepon Terhubung WhatsApps ?</h6>
+                                                <h6>Apakah Nomor Telepon Terhubung WhatsApp ?</h6>
                                                 <div class="btn-group" role="group"
                                                     aria-label="Basic radio toggle button group">
                                                     <input type="radio"
@@ -406,7 +405,7 @@
                                                     <p class="alert alert-danger">{{ $message }}</p>
                                                 @enderror
                                             </div>
-                                            <div class="col-md-6">
+                                            {{-- <div class="col-md-6">
                                                 <h5>KTP</h5>
                                                 <div class="form-floating form-floating-outline">
                                                     <input type="file" hidden id="ktp" name="ktp"
@@ -424,16 +423,28 @@
                                                                 class="text-primary">Ganti</span>
                                                         @endif
                                                     </button>
-                                                    @if ($karyawan->ktp != null)
-                                                        <button type="button" id="btn_hapus_ktp"
-                                                            class="btn btn-sm bottom-0"><i
-                                                                class="mdi mdi-download text-primary"></i> <span
-                                                                class="text-primary">Download</span></button>
-                                                    @endif
                                                 </div>
                                                 @error('ktp')
                                                     <p class="alert alert-danger">{{ $message }}</p>
                                                 @enderror
+                                            </div> --}}
+                                            <div class="col-md-6">
+                                                <h5>KTP</h5>
+                                                @if ($karyawan->foto_karyawan)
+                                                    <img src="{{ asset('storage/ktp/' . $karyawan->ktp) }}"
+                                                        id="template_ktp" max-height="200" height="200"
+                                                        class="rounded" alt="">
+                                                @else
+                                                    <img src="{{ asset('storage/ktp/default_ktp.jpg') }}"
+                                                        id="template_ktp" max-height="200" height="200"
+                                                        class="rounded" alt="">
+                                                @endif
+                                                <br>
+                                                <input type="file" name="ktp" id="ktp" hidden
+                                                    value="" accept="image/png, image/jpeg">
+                                                <input type="hidden" name="ktp_old" id="ktp_old"
+                                                    value="{{ $karyawan->ktp }}">
+                                                <div id="group-button-ktp"></div>
                                             </div>
                                             <div class="col-md-3">
                                                 <span class="mdi mdi-card-account-details-outline badge bg-label-info">
@@ -445,7 +456,7 @@
                                                     <select style="font-size: small;"
                                                         class="form-control @error('provinsi') is-invalid @enderror"
                                                         id="id_provinsi" name="provinsi">
-                                                        <option value=""> Pilih Provinsi </option>
+                                                        <option value="">Pilih Provinsi </option>
                                                         @foreach ($data_provinsi as $data)
                                                             <option value="{{ $data->code }}"
                                                                 {{ $data->code == old('provinsi', $karyawan->provinsi) ? 'selected' : '' }}>
@@ -3112,11 +3123,11 @@
 
                                         </div>
                                     </div>
-                                    <div class="mt-4">
+                                    {{-- <div class="mt-4">
                                         <button type="submit" class="btn btn-primary me-2">Simpan</button>
                                         <a href="@if (Auth::user()->is_admin == 'hrd') {{ url('/hrd/karyawan/' . $holding->holding_code) }}@else{{ url('/karyawan/' . $holding->holding_code) }} @endif"
                                             type="button" class="btn btn-outline-secondary">Kembali</a>
-                                    </div>
+                                    </div> --}}
                                 </div>
                             </div>
 
