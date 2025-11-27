@@ -1205,7 +1205,7 @@ Terima kasih telah melamar di $holdings->holding_name. Setelah proses seleksi ad
 
 Mohon konfirmasi kehadiran Anda pada link di bawah ini (Max. 24 Jam):
 
-http://192.168.101.241:8001/cpanel/recruitment_detail/$request->recruitment_user_id
+https://karir.sumberpangan.store/cpanel/recruitment_detail/$request->recruitment_user_id
 ",
 
                     'countryCode' => '62', //optional
@@ -1925,7 +1925,7 @@ Selamat, Anda lolos tahap wawancara awal. Kami mengundang Anda untuk melanjutkan
 📍 Lokasi/Link Zoom : $tempat, $map
 
 Mohon konfirmasi kehadiran Anda pada link di bawah ini (Max. 24 Jam):
-http://192.168.101.241:8001/cpanel/recruitment_detail/$request->id
+https://karir.sumberpangan.store/cpanel/recruitment_detail/$request->id
 
 ",
                         'countryCode' => '62', //optional
@@ -2026,7 +2026,7 @@ Untuk penjelasan lebih lanjut terkait administrasi dan training karyawan baru. H
 Catatan : $request->notes_langsung
 
 Mohon konfirmasi kehadiran Anda pada link di bawah ini (Max. 24 Jam):
-http://192.168.101.241:8001/cpanel/recruitment_detail/$request->id
+https://karir.sumberpangan.store/cpanel/recruitment_detail/$request->id
 
 ",
                         'countryCode' => '62', //optional
@@ -2207,7 +2207,7 @@ Kami mengundang Anda untuk melanjutkan ke wawancara bersama Manager pada:
 📍 Lokasi/Link Zoom : $tempat, $map
 
 Mohon konfirmasi kehadiran Anda pada link di bawah ini (Max. 24 Jam):
-http://192.168.101.241:8001/cpanel/recruitment_detail/$request->id
+https://karir.sumberpangan.store/cpanel/recruitment_detail/$request->id
 ",
                         'countryCode' => '62', //optional
                     ),
@@ -2330,7 +2330,7 @@ Kami mengundang Anda untuk hadir pada:
 Untuk penjelasan lebih lanjut terkait administrasi dan training karyawan baru. Harap membawa dokumen yang diperlukan sesuai instruksi yang akan kami kirimkan.
 
 Mohon konfirmasi kehadiran Anda pada link di bawah ini (Max. 24 Jam):
-http://192.168.101.241:8001/cpanel/recruitment_detail/$request->id
+https://karir.sumberpangan.store/cpanel/recruitment_detail/$request->id
 ",
                         'countryCode' => '62', //optional
                     ),
