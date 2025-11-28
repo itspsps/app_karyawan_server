@@ -252,8 +252,8 @@ Route::middleware('admin')->group(function () {
     Route::get('/karyawan_harian-datatable/{holding}', [karyawanController::class, 'datatable_harian']);
     Route::get('/karyawan/{holding}', [karyawanController::class, 'index']);
     Route::get('/karyawan_harian-datatable/{holding}', [karyawanController::class, 'datatable_harian']);
-    Route::get('/karyawan/tambah-karyawan/{holding}', [karyawanController::class, 'tambahKaryawan']);
-    Route::post('/karyawan/tambah-karyawan-proses', [karyawanController::class, 'tambahKaryawanProses']);
+    Route::post('/karyawan/tambah-karyawan/{id}', [karyawanController::class, 'tambahKaryawan']);
+    Route::post('/karyawan/tambah-karyawan-proses/{id}', [karyawanController::class, 'tambahKaryawanProses']);
     Route::get('/karyawan/detail/{id}/{holding}', [karyawanController::class, 'detail']);
     // Route::post('/karyawan/proses-edit/{id}/sp', [karyawanController::class, 'editKaryawanProses']);
     // Route::post('/karyawan/proses-edit/{id}/sps', [karyawanController::class, 'editKaryawanProses']);

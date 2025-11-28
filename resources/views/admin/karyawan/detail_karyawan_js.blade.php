@@ -117,7 +117,18 @@
         });
 
 
-
+        $(document).on('click', '#pendidikan_nav', function() {
+            console.log('asoy');
+            $('#table_pendidikan').DataTable().ajax.reload();
+        });
+        $(document).on('click', '#keahlian_nav', function() {
+            console.log('asoy');
+            $('#table_keahlian').DataTable().ajax.reload();
+        });
+        $(document).on('click', '#pengalaman_nav', function() {
+            console.log('asoy');
+            $('#tabel_riwayat').DataTable().ajax.reload();
+        });
 
         // BUTTON FOTO
         var foto_karyawan = '{{ $karyawan->foto_karyawan }}';
@@ -3219,7 +3230,7 @@
     // Kesehatan
     $(document).ready(function() {
         $('#sebutkan_alergi').hide();
-        let alergi = '{{ $karyawan->karyawanKesehatan->alergi }}'
+        let alergi = '{{ $karyawan->karyawanKesehatan == null ? '' : $karyawan->karyawanKesehatan->alergi }}'
         if (alergi == 1) {
 
             $('#sebutkan_alergi').show();
@@ -3243,7 +3254,7 @@
     });
     $(document).ready(function() {
         $('#sebutkan_phobia').hide();
-        let alergi = '{{ $karyawan->karyawanKesehatan->phobia }}'
+        let alergi = '{{ $karyawan->karyawanKesehatan == null ? '' : $karyawan->karyawanKesehatan->phobia }}'
         if (alergi == 1) {
 
             $('#sebutkan_phobia').show();
@@ -3268,7 +3279,8 @@
     });
     $(document).ready(function() {
         $('#sebutkan_keterbatasan_fisik').hide();
-        let alergi = '{{ $karyawan->karyawanKesehatan->keterbatasan_fisik }}'
+        let alergi =
+            '{{ $karyawan->karyawanKesehatan == null ? '' : $karyawan->karyawanKesehatan->keterbatasan_fisik }}'
         if (alergi == 1) {
 
             $('#sebutkan_keterbatasan_fisik').show();
@@ -3293,7 +3305,8 @@
 
     });
     $(document).ready(function() {
-        let alergi = '{{ $karyawan->karyawanKesehatan->pengobatan_rutin }}'
+        let alergi =
+            '{{ $karyawan->karyawanKesehatan == null ? '' : $karyawan->karyawanKesehatan->pengobatan_rutin }}'
         if (alergi == '1') {
             // console.log(alergi);
             $('#sebutkan_pengobatan_rutin').show();
@@ -3416,7 +3429,8 @@
 
     });
     $(document).ready(function() {
-        let alergi = '{{ $karyawan->karyawanKesehatan->pernah_dirawat_rs }}'
+        let alergi =
+            '{{ $karyawan->karyawanKesehatan == null ? '' : $karyawan->karyawanKesehatan->pernah_dirawat_rs }}'
         if (alergi == '1') {
             // console.log(alergi);
             $('#pernah_dirawat_sebutkan').show();
@@ -3541,7 +3555,8 @@
 
     });
     $(document).ready(function() {
-        let alergi = '{{ $karyawan->karyawanKesehatan->kecelakaan_serius }}'
+        let alergi =
+            '{{ $karyawan->karyawanKesehatan == null ? '' : $karyawan->karyawanKesehatan->kecelakaan_serius }}'
         if (alergi == '1') {
             // console.log(alergi);
             $('#kecelakaan_serius_sebutkan').show();
@@ -3663,7 +3678,8 @@
     });
     $(document).ready(function() {
         $('#pemeriksaan_sebelumnya_hasil').hide();
-        let alergi = '{{ $karyawan->karyawanKesehatan->pemeriksaan_kerja_sebelumnya }}'
+        let alergi =
+            '{{ $karyawan->karyawanKesehatan == null ? '' : $karyawan->karyawanKesehatan->pemeriksaan_kerja_sebelumnya }}'
         if (alergi == 1) {
 
             $('#pemeriksaan_sebelumnya_hasil').show();
@@ -3687,7 +3703,8 @@
     });
     $(document).ready(function() {
         $('#gangguan_sebutkan').hide();
-        let alergi = '{{ $karyawan->karyawanKesehatan->gangguan_lainnya }}'
+        let alergi =
+            '{{ $karyawan->karyawanKesehatan == null ? '' : $karyawan->karyawanKesehatan->gangguan_lainnya }}'
         if (alergi == 'on') {
 
             $('#gangguan_sebutkan').show();
@@ -3707,7 +3724,8 @@
     })
     $(document).ready(function() {
         $('#sebutkan_vaksin_lainnya').hide();
-        let alergi = '{{ $karyawan->karyawanKesehatan->vaksin_lainnya }}'
+        let alergi =
+            '{{ $karyawan->karyawanKesehatan == null ? '' : $karyawan->karyawanKesehatan->vaksin_lainnya }}'
         if (alergi == 'on') {
             console.log(alergi);
             $('#sebutkan_vaksin_lainnya').show();
