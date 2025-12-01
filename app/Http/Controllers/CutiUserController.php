@@ -58,8 +58,8 @@ class CutiUserController extends Controller
                 $get_nama_jabatan = Karyawan::where('jabatan_id', $IdLevelAtasan->id)
                     ->orWhere('jabatan1_id', $IdLevelAtasan->id)
                     ->orWhere('jabatan2_id', $IdLevelAtasan->id)
-                    ->orWhere('jabatan3_id', $IdLevelAtasan->id)
-                    ->orWhere('jabatan4_id', $IdLevelAtasan->id)
+                    // ->orWhere('jabatan3_id', $IdLevelAtasan->id)
+                    // ->orWhere('jabatan4_id', $IdLevelAtasan->id)
                     ->whereIn('site_job', ['ALL SITES (SPS)', 'ALL SITES (SP, SPS, SIP)', $site_job])
                     ->first();
                 // dd($get_nama_jabatan);
@@ -232,8 +232,8 @@ class CutiUserController extends Controller
                 $get_nama_jabatan = Karyawan::where('jabatan_id', $IdLevelAtasan->id)
                     ->orWhere('jabatan1_id', $IdLevelAtasan->id)
                     ->orWhere('jabatan2_id', $IdLevelAtasan->id)
-                    ->orWhere('jabatan3_id', $IdLevelAtasan->id)
-                    ->orWhere('jabatan4_id', $IdLevelAtasan->id)
+                    // ->orWhere('jabatan3_id', $IdLevelAtasan->id)
+                    // ->orWhere('jabatan4_id', $IdLevelAtasan->id)
                     ->whereIn('site_job', ['ALL SITES (SP)', 'ALL SITES (SP, SPS, SIP)', $site_job])
                     ->first();
                 // dd($get_nama_jabatan);
@@ -407,8 +407,8 @@ class CutiUserController extends Controller
                 $get_nama_jabatan = Karyawan::where('jabatan_id', $IdLevelAtasan->id)
                     ->orWhere('jabatan1_id', $IdLevelAtasan->id)
                     ->orWhere('jabatan2_id', $IdLevelAtasan->id)
-                    ->orWhere('jabatan3_id', $IdLevelAtasan->id)
-                    ->orWhere('jabatan4_id', $IdLevelAtasan->id)
+                    // ->orWhere('jabatan3_id', $IdLevelAtasan->id)
+                    // ->orWhere('jabatan4_id', $IdLevelAtasan->id)
                     ->whereIn('site_job', ['ALL SITES (SP, SPS, SIP)', $site_job])
                     ->first();
                 // dd($get_nama_jabatan);
@@ -586,8 +586,8 @@ class CutiUserController extends Controller
                 $get_nama_jabatan = Karyawan::where('jabatan_id', $IdLevelAtasan->id)
                     ->orWhere('jabatan1_id', $IdLevelAtasan->id)
                     ->orWhere('jabatan2_id', $IdLevelAtasan->id)
-                    ->orWhere('jabatan3_id', $IdLevelAtasan->id)
-                    ->orWhere('jabatan4_id', $IdLevelAtasan->id)
+                    // ->orWhere('jabatan3_id', $IdLevelAtasan->id)
+                    // ->orWhere('jabatan4_id', $IdLevelAtasan->id)
                     ->whereNotIn('site_job', ['ALL SITES (SP)', 'CV. SUMBER PANGAN - KEDIRI', 'CV. SUMBER PANGAN - TUBAN'])
                     ->first();
                 // dd($get_nama_jabatan);
@@ -762,8 +762,8 @@ class CutiUserController extends Controller
                 $get_nama_jabatan = Karyawan::where('jabatan_id', $IdLevelAtasan->id)
                     ->orWhere('jabatan1_id', $IdLevelAtasan->id)
                     ->orWhere('jabatan2_id', $IdLevelAtasan->id)
-                    ->orWhere('jabatan3_id', $IdLevelAtasan->id)
-                    ->orWhere('jabatan4_id', $IdLevelAtasan->id)
+                    // ->orWhere('jabatan3_id', $IdLevelAtasan->id)
+                    // ->orWhere('jabatan4_id', $IdLevelAtasan->id)
                     ->whereNotIn('site_job', ['ALL SITES (SPS)', 'ALL SITES (SIP)', 'CV. SURYA INTI PANGAN - MAKASAR', 'PT. SURYA PANGAN SEMESTA - KEDIRI', 'PT. SURYA PANGAN SEMESTA - NGAWI', 'PT. SURYA PANGAN SEMESTA - SUBANG'])
                     ->first();
                 // dd($get_nama_jabatan);
@@ -942,8 +942,8 @@ class CutiUserController extends Controller
                 $get_nama_jabatan = Karyawan::where('jabatan_id', $IdLevelAtasan->id)
                     ->orWhere('jabatan1_id', $IdLevelAtasan->id)
                     ->orWhere('jabatan2_id', $IdLevelAtasan->id)
-                    ->orWhere('jabatan3_id', $IdLevelAtasan->id)
-                    ->orWhere('jabatan4_id', $IdLevelAtasan->id)
+                    // ->orWhere('jabatan3_id', $IdLevelAtasan->id)
+                    // ->orWhere('jabatan4_id', $IdLevelAtasan->id)
                     ->whereNotIn('site_job', ['ALL SITES (SPS)', 'ALL SITES (SP)', 'CV. SUMBER PANGAN - TUBAN', 'CV. SUMBER PANGAN - KEDIRI', 'PT. SURYA PANGAN SEMESTA - KEDIRI', 'PT. SURYA PANGAN SEMESTA - NGAWI', 'PT. SURYA PANGAN SEMESTA - SUBANG'])
                     ->first();
                 // dd($get_nama_jabatan);
@@ -1119,8 +1119,8 @@ class CutiUserController extends Controller
                 $get_nama_jabatan = Karyawan::where('jabatan_id', $IdLevelAtasan->id)
                     ->orWhere('jabatan1_id', $IdLevelAtasan->id)
                     ->orWhere('jabatan2_id', $IdLevelAtasan->id)
-                    ->orWhere('jabatan3_id', $IdLevelAtasan->id)
-                    ->orWhere('jabatan4_id', $IdLevelAtasan->id)
+                    // ->orWhere('jabatan3_id', $IdLevelAtasan->id)
+                    // ->orWhere('jabatan4_id', $IdLevelAtasan->id)
                     // ->orWhere('d.nama_jabatan', $get_name_jabatan->nama_jabatan)
                     ->first();
                 // dd($get_nama_jabatan);

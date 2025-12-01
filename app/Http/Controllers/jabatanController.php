@@ -181,8 +181,8 @@ class jabatanController extends Controller
                         ->where('jabatan_id', $row->id)
                         ->orWhere('jabatan1_id', $row->id)
                         ->orWhere('jabatan2_id', $row->id)
-                        ->orWhere('jabatan3_id', $row->id)
-                        ->orWhere('jabatan4_id', $row->id)
+                        // ->orWhere('jabatan3_id', $row->id)
+                        // ->orWhere('jabatan4_id', $row->id)
                         ->where('b.is_admin', 'user')
                         ->count();
                     if ($karyawan == 0) {
@@ -257,8 +257,8 @@ class jabatanController extends Controller
                         ->where('jabatan_id', $row->id)
                         ->orWhere('jabatan1_id', $row->id)
                         ->orWhere('jabatan2_id', $row->id)
-                        ->orWhere('jabatan3_id', $row->id)
-                        ->orWhere('jabatan4_id', $row->id)
+                        // ->orWhere('jabatan3_id', $row->id)
+                        // ->orWhere('jabatan4_id', $row->id)
                         ->where('b.is_admin', 'user')
                         ->count();
 
@@ -284,8 +284,8 @@ class jabatanController extends Controller
             ->where('jabatan_id', $id)
             ->orWhere('jabatan1_id', $id)
             ->orWhere('jabatan2_id', $id)
-            ->orWhere('jabatan3_id', $id)
-            ->orWhere('jabatan4_id', $id)
+            // ->orWhere('jabatan3_id', $id)
+            // ->orWhere('jabatan4_id', $id)
             ->where('b.is_admin', 'user')
             ->get();
         // dd($table);

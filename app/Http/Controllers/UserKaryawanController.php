@@ -473,8 +473,8 @@ class UserKaryawanController extends Controller
             $join->on('jabatans.id', '=', 'karyawans.jabatan_id');
             $join->orOn('jabatans.id', '=', 'karyawans.jabatan1_id');
             $join->orOn('jabatans.id', '=', 'karyawans.jabatan2_id');
-            $join->orOn('jabatans.id', '=', 'karyawans.jabatan3_id');
-            $join->orOn('jabatans.id', '=', 'karyawans.jabatan4_id');
+            // $join->orOn('jabatans.id', '=', 'karyawans.jabatan3_id');
+            // $join->orOn('jabatans.id', '=', 'karyawans.jabatan4_id');
         })
             ->Join('users', 'users.karyawan_id', 'karyawans.id')
             ->where('users.id', $id)
