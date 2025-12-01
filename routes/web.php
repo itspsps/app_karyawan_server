@@ -658,6 +658,8 @@ Route::middleware('admin')->group(function () {
     Route::get('/access/role_access_datatable/{id}/{holding}', [AccessController::class, 'role_access_datatable']);
     Route::get('/access/add_access/{id}/{holding}', [AccessController::class, 'add_access']);
     Route::post('/access/access_save_add/{holding}', [AccessController::class, 'access_save_add']);
+
+    // Absen
     Route::get('/data-absen', [AbsenController::class, 'dataAbsen']);
     Route::get('/data-absen/{id}/edit-masuk', [AbsenController::class, 'editMasuk']);
     Route::put('/data-absen/{id}/proses-edit-masuk', [AbsenController::class, 'prosesEditMasuk']);
@@ -886,7 +888,7 @@ Route::get('/logout', [authController::class, 'logout'])->name('logout');
 // Include file route tambahan
 require __DIR__ . '/api_hrd.php';
 
-// RECRUITMENT DASHBOARD ADMIN heheheghe
+// RECRUITMENT DASHBOARD ADMIN
 Route::get('/pg-data-recruitment/{holding}', [RecruitmentController::class, 'pg_recruitment'])->middleware('admin');
 
 Route::post('/recruitment/create/{holding}', [RecruitmentController::class, 'create'])->middleware('admin');
