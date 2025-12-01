@@ -90,11 +90,6 @@
             placeholder: "Pilih Penempatan Kerja",
             allowClear: true
         });
-        $('#approval_site').select2({
-            theme: 'bootstrap-5',
-            placeholder: "Pilih Approval Job",
-            allowClear: true
-        });
         $('#id_departemen').select2({
             theme: 'bootstrap-5',
             placeholder: "Pilih Departemen",
@@ -2010,7 +2005,95 @@
         });
     });
     // Profil Ajax End
+    // jabatan ajax
+    $('#btn_update_jabatan').on('click', function(e) {
+        e.preventDefault();
+        var formData = new FormData();
 
+        //ambil data dari form
+        formData.append('_token', '{{ csrf_token() }}');
+        formData.append('departemen_id', $('#id_departemen').val());
+        formData.append('divisi_id', $('#id_divisi').val());
+        formData.append('bagian_id', $('#id_bagian').val());
+        formData.append('jabatan_id', $('#id_jabatan').val());
+        formData.append('departemen1_id', $('#id_departemen1').val());
+        formData.append('divisi1_id', $('#id_divisi1').val());
+        formData.append('bagian1_id', $('#id_bagian1').val());
+        formData.append('jabatan1_id', $('#id_jabatan1').val());
+        formData.append('departemen2_id', $('#id_departemen2').val());
+        formData.append('divisi2_id', $('#id_divisi2').val());
+        formData.append('bagian2_id', $('#id_bagian2').val());
+        formData.append('jabatan2_id', $('#id_jabatan2').val());
+        // formData.append('departemen3_id', $('#departemen3_id').val());
+        // formData.append('divisi3_id', $('#divisi3_id').val());
+        // formData.append('bagian3_id', $('#bagian3_id').val());
+        // formData.append('jabatan3_id', $('#jabatan3_id').val());
+        // formData.append('departemen4_id', $('#departemen4_id').val());
+        // formData.append('divisi4_id', $('#divisi4_id').val());
+        // formData.append('bagian4_id', $('#bagian4_id').val());
+        // formData.append('jabatan4_id', $('#jabatan4_id').val());
+        // post
+        $.ajax({
+            type: "POST",
+            url: "{{ url('/karyawan/jabatan-edit/' . $karyawan->id) }}",
+            data: formData,
+            contentType: false,
+            processData: false,
+            beforeSend: function() {
+                Swal.fire({
+                    title: 'Memuat Data...',
+                    html: 'Mohon tunggu sebentar',
+                    allowOutsideClick: false,
+                    allowEscapeKey: false,
+                    didOpen: () => {
+                        Swal.showLoading();
+                    }
+                });
+            },
+            error: function() {
+                Swal.close();
+                alert('Something is wrong!');
+                // console.log(formData);
+            },
+            success: function(data) {
+                Swal.close();
+                if (data.code == 200) {
+                    Swal.fire({
+                        title: 'Berhasil',
+                        text: data.message,
+                        icon: 'success',
+                        timer: 5000
+                    })
+                } else if (data.code == 400) {
+                    let errors = data.errors;
+                    // console.log(errors);
+                    let errorMessages = '';
+
+                    Object.keys(errors).forEach(function(key) {
+                        errors[key].forEach(function(message) {
+                            errorMessages += `• ${message}\n`;
+                        });
+                    });
+                    Swal.fire({
+                        // title: data.message,
+                        text: errorMessages,
+                        icon: 'warning',
+                        timer: 4500
+                    })
+
+                } else {
+                    Swal.fire({
+                        title: 'Gagal',
+                        text: data.error,
+                        icon: 'error',
+                        timer: 4500
+                    })
+
+                }
+            }
+        });
+    });
+    // jabatan ajax end
     $(function() {
         var kategori = '{{ $karyawan->kategori }}';
         if (kategori == 'Karyawan Harian') {

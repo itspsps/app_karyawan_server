@@ -1198,39 +1198,13 @@
                                             INFO HR</button>
                                     </div>
                                 </div>
-
                                 <div class="tab-pane fade" id="nav_jabatan" role="tabpanel">
                                     <div class="row mt-2 gy-4">
-                                        <div id="form_site" class="col-md-6">
-                                            <div class="form-floating form-floating-outline">
-                                                <select style="font-size: small;"
-                                                    class="form-control @error('approval_site') is-invalid @enderror"
-                                                    id="approval_site" name="approval_site[]" multiple>
-                                                    <option disabled value=""> Pilih Approval Site</option>
-                                                    @foreach ($data_lokasi as $a)
-                                                        @if (old('approval_site', $karyawan->approval_site) == $a['id'])
-                                                            <option value="{{ $a['id'] }}" selected>
-                                                                {{ $a['site_name'] }}
-                                                            </option>
-                                                        @else
-                                                            <option value="{{ $a['id'] }}">
-                                                                {{ $a['site_name'] }}
-                                                            </option>
-                                                        @endif
-                                                    @endforeach
-                                                </select>
-                                                <label for="approval_site">Approval Site</label>
-                                            </div>
-                                            <p class="text-info">Untuk Kebutuhan Approval</p>
-                                            @error('approval_site')
-                                                <p class="alert alert-danger">{{ $message }}</p>
-                                            @enderror
-                                        </div>
                                         <div class="col-md-6">
                                             <div class="form-floating form-floating-outline">
                                                 <select style="font-size: small;"
                                                     class="form-control @error('penempatan_kerja') is-invalid @enderror"
-                                                    id="penempatan_kerja" name="penempatan_kerja[]" multiple>
+                                                    id="penempatan_kerja" name="penempatan_kerja[]" multiple disabled>
                                                     <option disabled value=""> Pilih Lokasi Penempatan
                                                     </option>
                                                     @foreach ($data_lokasi1 as $a)
@@ -1750,8 +1724,8 @@
                                                                                 3</label>
                                                                         </div>
                                                                     </div>
-                                                                </div>
 
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -1759,7 +1733,10 @@
                                             </div>
                                         </div>
                                     </div>
-
+                                    <div class="d-flex justify-content-center py-2">
+                                        <button class="btn btn-primary" type="button" id="btn_update_jabatan">Simpan
+                                            Data Jabatan</button>
+                                    </div>
                                 </div>
                                 <div class="tab-pane fade" id="nav_bank" role="tabpanel">
                                     <div class="row mt-2 mb-2 gy-4">

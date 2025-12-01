@@ -26,7 +26,7 @@ class KaryawanPendidikanController extends Controller
     public function pendidikan_datatable($id)
     {
         $pendidikan = KaryawanPendidikan::where('id_karyawan', $id)->get();
-        // dd($pendidikan, $id);
+        // dd($pendidikan, $id);  
         return DataTables::of($pendidikan)
             ->addColumn('aksi', function ($row) {
                 $btn = '<a href="javascript:void(0)" class="btn_edit_pendidikan" data-id_pendidikan="' . $row->id_pendidikan . '" data-jenjang="' . $row->jenjang . '" data-nama_instansi="' . $row->institusi . '" data-jurusan="' . $row->jurusan . '" data-tahun_masuk="' . $row->tanggal_masuk . '" data-tahun_lulus="' . $row->tanggal_keluar . '"><i class="mdi mdi-pencil"></i></a>';

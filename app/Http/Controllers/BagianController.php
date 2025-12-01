@@ -25,10 +25,7 @@ class BagianController extends Controller
     public function index($holding)
     {
         $holding = Holding::where('holding_code', $holding)->first();
-        // $get = Bagian::with('Divisi')->get();
-        // dd($get);
         $get_role = RoleUsers::where('role_user_id', Auth::user()->id)->pluck('role_menu_id')->toArray();
-        // dd($get_role);
         if (count($get_role) == 0) {
             $roleId = null;
         } else {
@@ -127,8 +124,8 @@ class BagianController extends Controller
                         ->where('bagian_id', $row->id)
                         ->orWhere('bagian1_id', $row->id)
                         ->orWhere('bagian2_id', $row->id)
-                        ->orWhere('bagian3_id', $row->id)
-                        ->orWhere('bagian4_id', $row->id)
+                        // ->orWhere('bagian3_id', $row->id)
+                        // ->orWhere('bagian4_id', $row->id)
                         ->where('kontrak_kerja', $holding->id)
                         ->where('status_aktif', 'AKTIF')
                         ->count();

@@ -1631,11 +1631,86 @@ class karyawanController extends Controller
                 'error' => $e->getMessage(),
             ]);
         }
+    }
+    public function editJabatan(Request $request, $id)
+    {
+        // $lokasi_kerja = Lokasi::where('lokasi_kantor', $request->site_job)->value('kategori_kantor');
+        // if ($lokasi_kerja == 'all') {
+        //     $kategori_jabatan = 'required';
+        // } else {
+        //     $kategori_jabatan = 'nullable';
+        // }
+        $rules = [
+            // 'kategori_jabatan' => $kategori_jabatan . '|max:255',
+            'departemen_id' => 'required|max:255',
+            'divisi_id' => 'required|max:255',
+            'bagian_id' => 'required|max:255',
+            'jabatan_id' => 'required|max:255',
+            'file_cv' => 'max:255',
+            'kategori_jabatan' => 'max:255'
+        ];
 
+        $customMessages = [
+            'required' => ':attribute tidak boleh kosong.',
+            'unique' => ':attribute tidak boleh sama',
+            'email' => ':attribute format salah',
+            'min' => ':attribute Kurang',
+            'max' => ':attribute Melebihi Batas Maksimal'
+        ];
+        $validasi = Validator::make($request->all(), $rules, $customMessages);
+        // dd($validasi->errors());
 
+        try {
+            if ($validasi->fails()) {
+                return response()->json([
+                    'code' => 400,
+                    'message' => 'Validasi gagal',
+                    'errors' => $validasi->errors()
+                ]);
+            }
+            Karyawan::where('id', $id)->update(
+                [
 
-        $request->session()->flash('success', 'data berhasil diupdate');
-        return redirect()->back();
+                    // 'kategori_jabatan'                      => $request->kategori_jabatan,
+                    'dept_id'                               => $request->departemen_id,
+                    'divisi_id'                             => $request->divisi_id,
+                    'bagian_id'                             => $request->bagian_id,
+                    'jabatan_id'                            => $request->jabatan_id,
+                    'dept1_id'                              => $request->departemen1_id,
+                    'divisi1_id'                            => $request->divisi1_id,
+                    'bagian1_id'                            => $request->bagian1_id,
+                    'jabatan1_id'                           => $request->jabatan1_id,
+                    'dept2_id'                              => $request->departemen2_id,
+                    'divisi2_id'                            => $request->divisi2_id,
+                    'bagian2_id'                            => $request->bagian2_id,
+                    'jabatan2_id'                           => $request->jabatan2_id,
+                    // 'dept3_id'                              => $request->departemen3_id,
+                    // 'divisi3_id'                            => $request->divisi3_id,
+                    // 'bagian3_id'                            => $request->bagian3_id,
+                    // 'jabatan3_id'                           => $request->jabatan3_id,
+                    // 'dept4_id'                              => $request->departemen4_id,
+                    // 'divisi4_id'                            => $request->divisi4_id,
+                    // 'bagian4_id'                            => $request->bagian4_id,
+                    // 'jabatan4_id'                           => $request->jabatan4_id,
+                ]
+            );
+            // ActivityLog::create([
+            //     'user_id' => Auth::user()->id,
+            //     'activity' => 'update',
+            //     'description' => 'Mengubah data karyawan ' . $request->name,
+            // ]);
+            return response()->json([
+                'code' => 200,
+                // 'data' => $get_data,
+                // 'data2' => $get_data2,
+                'message' => 'Data Berhasil Diupdate'
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'code' => 500,
+                'error' => $e->getMessage(),
+            ]);
+        }
     }
     public function editKaryawanProses(Request $request, $id)
     {
