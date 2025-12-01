@@ -42,6 +42,7 @@ use App\Http\Controllers\HoldingController;
 use App\Http\Controllers\InterviewController;
 use App\Http\Controllers\IzinController;
 use App\Http\Controllers\KaryawanKesehatanController;
+use App\Http\Controllers\KaryawanPendidikanController;
 use App\Http\Controllers\KaryawanRiwayatController;
 use App\Http\Controllers\MappingShiftController;
 use App\Http\Controllers\MenuController;
@@ -251,12 +252,12 @@ Route::middleware('admin')->group(function () {
     Route::get('/karyawan_harian-datatable/{holding}', [karyawanController::class, 'datatable_harian']);
     Route::get('/karyawan/{holding}', [karyawanController::class, 'index']);
     Route::get('/karyawan_harian-datatable/{holding}', [karyawanController::class, 'datatable_harian']);
-    Route::get('/karyawan/tambah-karyawan/{holding}', [karyawanController::class, 'tambahKaryawan']);
-    Route::post('/karyawan/tambah-karyawan-proses', [karyawanController::class, 'tambahKaryawanProses']);
+    Route::post('/karyawan/tambah-karyawan/{id}', [karyawanController::class, 'tambahKaryawan']);
+    Route::post('/karyawan/tambah-karyawan-proses/{id}', [karyawanController::class, 'tambahKaryawanProses']);
     Route::get('/karyawan/detail/{id}/{holding}', [karyawanController::class, 'detail']);
-    Route::post('/karyawan/proses-edit/{id}/sp', [karyawanController::class, 'editKaryawanProses']);
-    Route::post('/karyawan/proses-edit/{id}/sps', [karyawanController::class, 'editKaryawanProses']);
-    Route::post('/karyawan/proses-edit/{id}/sip', [karyawanController::class, 'editKaryawanProses']);
+    // Route::post('/karyawan/proses-edit/{id}/sp', [karyawanController::class, 'editKaryawanProses']);
+    // Route::post('/karyawan/proses-edit/{id}/sps', [karyawanController::class, 'editKaryawanProses']);
+    // Route::post('/karyawan/proses-edit/{id}/sip', [karyawanController::class, 'editKaryawanProses']);
     Route::get('/karyawan/delete/{id}/sp', [karyawanController::class, 'deleteKaryawan']);
     Route::get('/karyawan/delete/{id}/sps', [karyawanController::class, 'deleteKaryawan']);
     Route::get('/karyawan/delete/{id}/sip', [karyawanController::class, 'deleteKaryawan']);
@@ -269,11 +270,20 @@ Route::middleware('admin')->group(function () {
     Route::get('/karyawan/ExportKaryawan/{holding}', [karyawanController::class, 'ExportKaryawan']);
     Route::get('/karyawan/pdfKaryawan/{holding}', [karyawanController::class, 'download_pdf_karyawan']);
 
+    // MASTER KARYAWAN TAB
+    Route::post('/karyawan/profil-edit/{id}', [karyawanController::class, 'editProfil']);
+    Route::post('/karyawan/bank-edit/{id}', [karyawanController::class, 'editBank']);
+    Route::post('/karyawan/pajak-edit/{id}', [karyawanController::class, 'editPajak']);
+    Route::post('/karyawan/bpjs-edit/{id}', [karyawanController::class, 'editBPJS']);
+    Route::post('/karyawan/jabatan-edit/{id}', [karyawanController::class, 'editJabatan']);
+    Route::post('/karyawan/ijazah-edit/{id}', [karyawanController::class, 'ijazah_update']);
+
     // PENDIDIKAN KARYAWAN
-    Route::get('/karyawan/pendidikan/{id}', [karyawanController::class, 'pendidikan_datatable']);
-    Route::post('/karyawan/AddPendidikan/', [karyawanController::class, 'add_pendidikan']);
-    Route::post('/karyawan/UpdatePendidikan/', [karyawanController::class, 'update_pendidikan']);
-    Route::post('/karyawan/DeletePendidikan/', [karyawanController::class, 'delete_pendidikan']);
+    Route::get('/karyawan/pendidikan/button_pendidikan/{id}', [KaryawanPendidikanController::class, 'button_pendidikan'])->name('button_pendidikan');
+    Route::get('/karyawan/pendidikan/{id}', [KaryawanPendidikanController::class, 'pendidikan_datatable']);
+    Route::post('/karyawan/AddPendidikan/', [karyawanPendidikanController::class, 'add_pendidikan']);
+    Route::post('/karyawan/UpdatePendidikan/', [karyawanPendidikanController::class, 'update_pendidikan']);
+    Route::post('/karyawan/DeletePendidikan/{id}', [karyawanPendidikanController::class, 'delete_pendidikan']);
 
     // Riwayat Pekerjaan
     Route::get('/karyawan/riwayat/{id}', [KaryawanRiwayatController::class, 'riwayat_datatable']);
@@ -308,10 +318,11 @@ Route::middleware('admin')->group(function () {
     // kesehatan end
 
     // KEAHLIAN KARYAWAN
+    Route::get('/karyawan/button_keahlian/{id}', [karyawanController::class, 'button_keahlian'])->name('button_keahlian');
     Route::get('/karyawan/keahlian/{id}', [karyawanController::class, 'keahlian_datatable']);
     Route::post('/karyawan/AddKeahlian/', [karyawanController::class, 'add_keahlian']);
     Route::post('/karyawan/UpdateKeahlian/', [karyawanController::class, 'update_keahlian']);
-    Route::post('/karyawan/DeleteKeahlian/', [karyawanController::class, 'delete_keahlian']);
+    Route::post('/karyawan/DeleteKeahlian/{id}', [karyawanController::class, 'delete_keahlian']);
 
     Route::get('/karyawan_non_aktif/sp', [karyawanController::class, 'karyawan_non_aktif']);
     Route::get('/karyawan_non_aktif/sps', [karyawanController::class, 'karyawan_non_aktif']);

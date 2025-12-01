@@ -25,10 +25,7 @@ class BagianController extends Controller
     public function index($holding)
     {
         $holding = Holding::where('holding_code', $holding)->first();
-        // $get = Bagian::with('Divisi')->get();
-        // dd($get);
         $get_role = RoleUsers::where('role_user_id', Auth::user()->id)->pluck('role_menu_id')->toArray();
-        // dd($get_role);
         if (count($get_role) == 0) {
             $roleId = null;
         } else {
@@ -127,8 +124,8 @@ class BagianController extends Controller
                         ->where('bagian_id', $row->id)
                         ->orWhere('bagian1_id', $row->id)
                         ->orWhere('bagian2_id', $row->id)
-                        ->orWhere('bagian3_id', $row->id)
-                        ->orWhere('bagian4_id', $row->id)
+                        // ->orWhere('bagian3_id', $row->id)
+                        // ->orWhere('bagian4_id', $row->id)
                         ->where('kontrak_kerja', $holding->id)
                         ->where('status_aktif', 'AKTIF')
                         ->count();
@@ -166,8 +163,8 @@ class BagianController extends Controller
                         ->where('jabatan_id', $row->id)
                         ->orWhere('jabatan1_id', $row->id)
                         ->orWhere('jabatan2_id', $row->id)
-                        ->orWhere('jabatan3_id', $row->id)
-                        ->orWhere('jabatan4_id', $row->id)
+                        // ->orWhere('jabatan3_id', $row->id)
+                        // ->orWhere('jabatan4_id', $row->id)
                         ->where('kontrak_kerja', $holding->id)
                         ->where('b.is_admin', 'user')
                         ->count();
@@ -185,8 +182,8 @@ class BagianController extends Controller
             ->where('bagian_id', $id)
             ->orWhere('bagian1_id', $id)
             ->orWhere('bagian2_id', $id)
-            ->orWhere('bagian3_id', $id)
-            ->orWhere('bagian4_id', $id)
+            // ->orWhere('bagian3_id', $id)
+            // ->orWhere('bagian4_id', $id)
             ->where('b.is_admin', 'user')
             ->where('kontrak_kerja', $holding->id)
             ->get();

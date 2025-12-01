@@ -604,7 +604,7 @@ class KaryawanImport implements ToModel, WithStartRow, WithCalculatedFormulas
                 "dept3_id"                                      => $departemen3,
                 "divisi3_id"                                    => $divisi3,
                 "bagian3_id"                                    => $bagian3,
-                "jabatan3_id"                                   => $jabatan3,
+                // "jabatan3_id"                                   => $jabatan3,
                 "dept4_id"                                      => $departemen4,
                 "divisi4_id"                                    => $divisi4,
                 "bagian4_id"                                    => $bagian4,
